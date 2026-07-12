@@ -234,12 +234,12 @@ export const reviewPartnerApplication = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: {
     id: string;
-    status: "under_review" | "information_required" | "approved" | "rejected" | "on_hold";
+    status: "under_review" | "more_info_required" | "approved" | "rejected" | "suspended";
     note?: string;
   }) =>
     z.object({
       id: z.string().uuid(),
-      status: z.enum(["under_review", "information_required", "approved", "rejected", "on_hold"]),
+      status: z.enum(["under_review", "more_info_required", "approved", "rejected", "suspended"]),
       note: z.string().max(1000).optional(),
     }).parse(d),
   )
