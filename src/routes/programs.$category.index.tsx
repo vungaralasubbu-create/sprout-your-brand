@@ -8,16 +8,53 @@ import { Section, Container } from "@/components/shared/section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryBySlug, listCourses, formatPrice } from "@/lib/programs";
+import { getCategorySeo } from "@/lib/seo";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 
+const SITE_URL = "https://glintr.com";
+
 export const Route = createFileRoute("/programs/$category/")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${prettify(params.category)} Programs — Glintr` },
-      { name: "description", content: `Explore Glintr programs in ${prettify(params.category)}.` },
-      { property: "og:title", content: `${prettify(params.category)} Programs — Glintr` },
-    ],
-  }),
+  loader: async ({ params }) => ({ seo: await getCategorySeo(params.category) }),
+  head: ({ params, loaderData }) => {
+    const seo = loaderData?.seo;
+    const canonical = `${SITE_URL}/programs/${params.category}`;
+    const name = seo?.name ?? prettify(params.category);
+    const title = seo?.seo_title ?? `${name} Programs | Glintr`;
+    const description =
+      seo?.seo_description ??
+      seo?.short_description ??
+      `Explore ${name} career programs on Glintr — practical, mentor-led courses with placement support.`;
+    const image = seo?.hero_image_url ?? undefined;
+    const meta: Array<Record<string, string>> = [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: canonical },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
+    ];
+    if (image) {
+      meta.push({ property: "og:image", content: image });
+      meta.push({ name: "twitter:image", content: image });
+    }
+    const breadcrumbs = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Programs", item: `${SITE_URL}/programs` },
+        { "@type": "ListItem", position: 3, name, item: canonical },
+      ],
+    };
+    return {
+      meta,
+      links: [{ rel: "canonical", href: canonical }],
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(breadcrumbs) }],
+    };
+  },
   component: CategoryPage,
   notFoundComponent: () => <NotFoundState />,
   errorComponent: ({ error }) => <div className="p-10 text-center">Failed to load: {String(error)}</div>,
