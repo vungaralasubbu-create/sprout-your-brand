@@ -57,7 +57,7 @@ const nav: NavEntry[] = [
       },
       {
         items: [
-          { label: "Explore All Programs", description: "Browse the full catalog", href: "/categories", icon: Layers },
+          { label: "Explore All Programs", description: "Browse the full catalog", href: "/programs", icon: Layers },
         ],
       },
     ],

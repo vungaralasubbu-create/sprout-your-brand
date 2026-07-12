@@ -555,6 +555,101 @@ export type Database = {
           },
         ]
       }
+      brochure_leads: {
+        Row: {
+          course_id: string
+          created_at: string
+          email: string | null
+          id: string
+          mobile: string | null
+          name: string
+          partner_ref: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          mobile?: string | null
+          name: string
+          partner_ref?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          mobile?: string | null
+          name?: string
+          partner_ref?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brochure_leads_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      career_roles: {
+        Row: {
+          created_at: string
+          currency: string | null
+          description: string | null
+          experience_level: string | null
+          id: string
+          is_visible: boolean
+          region: string | null
+          salary_date: string | null
+          salary_max: number | null
+          salary_min: number | null
+          salary_period: string | null
+          salary_source: string | null
+          salary_source_url: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          experience_level?: string | null
+          id?: string
+          is_visible?: boolean
+          region?: string | null
+          salary_date?: string | null
+          salary_max?: number | null
+          salary_min?: number | null
+          salary_period?: string | null
+          salary_source?: string | null
+          salary_source_url?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          experience_level?: string | null
+          id?: string
+          is_visible?: boolean
+          region?: string | null
+          salary_date?: string | null
+          salary_max?: number | null
+          salary_min?: number | null
+          salary_period?: string | null
+          salary_source?: string | null
+          salary_source_url?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       commissions: {
         Row: {
           admin_notes: string | null
@@ -634,6 +729,885 @@ export type Database = {
           {
             foreignKeyName: "commissions_revenue_share_rule_id_fkey"
             columns: ["revenue_share_rule_id"]
+            isOneToOne: false
+            referencedRelation: "revenue_share_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_applications: {
+        Row: {
+          city: string | null
+          consent: boolean
+          course_id: string
+          created_at: string
+          current_role_title: string | null
+          education: string | null
+          email: string
+          full_name: string
+          graduation_year: number | null
+          id: string
+          mobile: string
+          partner_ref: string | null
+          preferred_mode: string | null
+          source: string | null
+          start_timeline: string | null
+          state: string | null
+          status: Database["public"]["Enums"]["course_app_status"]
+          updated_at: string
+          work_experience: string | null
+        }
+        Insert: {
+          city?: string | null
+          consent?: boolean
+          course_id: string
+          created_at?: string
+          current_role_title?: string | null
+          education?: string | null
+          email: string
+          full_name: string
+          graduation_year?: number | null
+          id?: string
+          mobile: string
+          partner_ref?: string | null
+          preferred_mode?: string | null
+          source?: string | null
+          start_timeline?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["course_app_status"]
+          updated_at?: string
+          work_experience?: string | null
+        }
+        Update: {
+          city?: string | null
+          consent?: boolean
+          course_id?: string
+          created_at?: string
+          current_role_title?: string | null
+          education?: string | null
+          email?: string
+          full_name?: string
+          graduation_year?: number | null
+          id?: string
+          mobile?: string
+          partner_ref?: string | null
+          preferred_mode?: string | null
+          source?: string | null
+          start_timeline?: string | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["course_app_status"]
+          updated_at?: string
+          work_experience?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_applications_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_brochures: {
+        Row: {
+          capture_lead: boolean
+          course_id: string
+          created_at: string
+          file_url: string
+          id: string
+          is_published: boolean
+          updated_at: string
+          version: string | null
+        }
+        Insert: {
+          capture_lead?: boolean
+          course_id: string
+          created_at?: string
+          file_url: string
+          id?: string
+          is_published?: boolean
+          updated_at?: string
+          version?: string | null
+        }
+        Update: {
+          capture_lead?: boolean
+          course_id?: string
+          created_at?: string
+          file_url?: string
+          id?: string
+          is_published?: boolean
+          updated_at?: string
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_brochures_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_career_roles: {
+        Row: {
+          career_role_id: string
+          course_id: string
+          display_order: number
+        }
+        Insert: {
+          career_role_id: string
+          course_id: string
+          display_order?: number
+        }
+        Update: {
+          career_role_id?: string
+          course_id?: string
+          display_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_career_roles_career_role_id_fkey"
+            columns: ["career_role_id"]
+            isOneToOne: false
+            referencedRelation: "career_roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_career_roles_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_categories: {
+        Row: {
+          accent_style: string | null
+          created_at: string
+          created_by: string | null
+          display_order: number
+          full_description: string | null
+          hero_image_url: string | null
+          hero_subtitle: string | null
+          hero_title: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          name: string
+          seo_description: string | null
+          seo_keywords: string[] | null
+          seo_title: string | null
+          short_description: string | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"]
+          thumbnail_url: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          accent_style?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          full_description?: string | null
+          hero_image_url?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          name: string
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          short_description?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["content_status"]
+          thumbnail_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          accent_style?: string | null
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          full_description?: string | null
+          hero_image_url?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          name?: string
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          short_description?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          thumbnail_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      course_certifications: {
+        Row: {
+          course_id: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_enabled: boolean
+          issuer: string | null
+          name: string
+          requirements: string | null
+          updated_at: string
+          verification_available: boolean
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_enabled?: boolean
+          issuer?: string | null
+          name: string
+          requirements?: string | null
+          updated_at?: string
+          verification_available?: boolean
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_enabled?: boolean
+          issuer?: string | null
+          name?: string
+          requirements?: string | null
+          updated_at?: string
+          verification_available?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_certifications_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_faqs: {
+        Row: {
+          answer: string
+          course_id: string
+          display_order: number
+          id: string
+          is_enabled: boolean
+          question: string
+        }
+        Insert: {
+          answer: string
+          course_id: string
+          display_order?: number
+          id?: string
+          is_enabled?: boolean
+          question: string
+        }
+        Update: {
+          answer?: string
+          course_id?: string
+          display_order?: number
+          id?: string
+          is_enabled?: boolean
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_faqs_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_lessons: {
+        Row: {
+          created_at: string
+          display_order: number
+          duration: string | null
+          id: string
+          is_free_preview: boolean
+          is_published: boolean
+          lesson_type: Database["public"]["Enums"]["lesson_type"]
+          name: string
+          resource_url: string | null
+          topic_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          duration?: string | null
+          id?: string
+          is_free_preview?: boolean
+          is_published?: boolean
+          lesson_type?: Database["public"]["Enums"]["lesson_type"]
+          name: string
+          resource_url?: string | null
+          topic_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          duration?: string | null
+          id?: string
+          is_free_preview?: boolean
+          is_published?: boolean
+          lesson_type?: Database["public"]["Enums"]["lesson_type"]
+          name?: string
+          resource_url?: string | null
+          topic_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_lessons_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "course_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_modules: {
+        Row: {
+          course_id: string
+          created_at: string
+          description: string | null
+          display_order: number
+          duration: string | null
+          id: string
+          is_published: boolean
+          learning_outcomes: string[] | null
+          name: string
+          number: number | null
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          duration?: string | null
+          id?: string
+          is_published?: boolean
+          learning_outcomes?: string[] | null
+          name: string
+          number?: number | null
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          duration?: string | null
+          id?: string
+          is_published?: boolean
+          learning_outcomes?: string[] | null
+          name?: string
+          number?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_placement_support: {
+        Row: {
+          course_id: string
+          description: string | null
+          display_order: number
+          id: string
+          is_enabled: boolean
+          support_type: string
+        }
+        Insert: {
+          course_id: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_enabled?: boolean
+          support_type: string
+        }
+        Update: {
+          course_id?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_enabled?: boolean
+          support_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_placement_support_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_project_templates: {
+        Row: {
+          created_at: string
+          difficulty: string | null
+          duration: string | null
+          full_description: string | null
+          id: string
+          image_url: string | null
+          industry: string | null
+          is_active: boolean
+          learning_outcomes: string[] | null
+          name: string
+          project_type: string | null
+          short_description: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty?: string | null
+          duration?: string | null
+          full_description?: string | null
+          id?: string
+          image_url?: string | null
+          industry?: string | null
+          is_active?: boolean
+          learning_outcomes?: string[] | null
+          name: string
+          project_type?: string | null
+          short_description?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: string | null
+          duration?: string | null
+          full_description?: string | null
+          id?: string
+          image_url?: string | null
+          industry?: string | null
+          is_active?: boolean
+          learning_outcomes?: string[] | null
+          name?: string
+          project_type?: string | null
+          short_description?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      course_projects: {
+        Row: {
+          course_id: string
+          display_order: number
+          project_id: string
+        }
+        Insert: {
+          course_id: string
+          display_order?: number
+          project_id: string
+        }
+        Update: {
+          course_id?: string
+          display_order?: number
+          project_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_projects_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_projects_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "course_project_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_related: {
+        Row: {
+          course_id: string
+          display_order: number
+          is_manual: boolean
+          related_course_id: string
+        }
+        Insert: {
+          course_id: string
+          display_order?: number
+          is_manual?: boolean
+          related_course_id: string
+        }
+        Update: {
+          course_id?: string
+          display_order?: number
+          is_manual?: boolean
+          related_course_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_related_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_related_related_course_id_fkey"
+            columns: ["related_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_sections: {
+        Row: {
+          content: Json | null
+          course_id: string
+          created_at: string
+          display_order: number
+          id: string
+          is_enabled: boolean
+          section_type: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          content?: Json | null
+          course_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_enabled?: boolean
+          section_type: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: Json | null
+          course_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_enabled?: boolean
+          section_type?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_sections_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_skills: {
+        Row: {
+          course_id: string
+          display_order: number
+          skill_id: string
+        }
+        Insert: {
+          course_id: string
+          display_order?: number
+          skill_id: string
+        }
+        Update: {
+          course_id?: string
+          display_order?: number
+          skill_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_skills_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_tools: {
+        Row: {
+          course_id: string
+          display_order: number
+          tool_id: string
+        }
+        Insert: {
+          course_id: string
+          display_order?: number
+          tool_id: string
+        }
+        Update: {
+          course_id?: string
+          display_order?: number
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_tools_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_tools_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_topics: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          module_id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          module_id: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          module_id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_topics_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          base_price: number | null
+          canonical_url: string | null
+          category_id: string
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          default_revenue_rule_id: string | null
+          discount_pct: number | null
+          display_order: number
+          duration: string | null
+          eligibility: string | null
+          emi_available: boolean
+          emi_starting: number | null
+          format: string | null
+          full_description: string | null
+          hero_image_url: string | null
+          id: string
+          is_bestseller: boolean
+          is_featured: boolean
+          is_popular: boolean
+          is_published: boolean
+          is_trending: boolean
+          language: string | null
+          learning_mode: string | null
+          level: string | null
+          name: string
+          offer_price: number | null
+          og_image_url: string | null
+          partner_sale_eligible: boolean
+          prerequisites: string | null
+          pricing_notes: string | null
+          pricing_visibility: string | null
+          promo_video_url: string | null
+          scholarship_available: boolean
+          seo_description: string | null
+          seo_keywords: string[] | null
+          seo_title: string | null
+          short_description: string | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"]
+          supported_sales_eligible: boolean
+          target_audience: string | null
+          tax_config: Json | null
+          thumbnail_url: string | null
+          updated_at: string
+          updated_by: string | null
+          weekly_commitment: string | null
+          white_label_eligible: boolean
+        }
+        Insert: {
+          base_price?: number | null
+          canonical_url?: string | null
+          category_id: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          default_revenue_rule_id?: string | null
+          discount_pct?: number | null
+          display_order?: number
+          duration?: string | null
+          eligibility?: string | null
+          emi_available?: boolean
+          emi_starting?: number | null
+          format?: string | null
+          full_description?: string | null
+          hero_image_url?: string | null
+          id?: string
+          is_bestseller?: boolean
+          is_featured?: boolean
+          is_popular?: boolean
+          is_published?: boolean
+          is_trending?: boolean
+          language?: string | null
+          learning_mode?: string | null
+          level?: string | null
+          name: string
+          offer_price?: number | null
+          og_image_url?: string | null
+          partner_sale_eligible?: boolean
+          prerequisites?: string | null
+          pricing_notes?: string | null
+          pricing_visibility?: string | null
+          promo_video_url?: string | null
+          scholarship_available?: boolean
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          short_description?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["content_status"]
+          supported_sales_eligible?: boolean
+          target_audience?: string | null
+          tax_config?: Json | null
+          thumbnail_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          weekly_commitment?: string | null
+          white_label_eligible?: boolean
+        }
+        Update: {
+          base_price?: number | null
+          canonical_url?: string | null
+          category_id?: string
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          default_revenue_rule_id?: string | null
+          discount_pct?: number | null
+          display_order?: number
+          duration?: string | null
+          eligibility?: string | null
+          emi_available?: boolean
+          emi_starting?: number | null
+          format?: string | null
+          full_description?: string | null
+          hero_image_url?: string | null
+          id?: string
+          is_bestseller?: boolean
+          is_featured?: boolean
+          is_popular?: boolean
+          is_published?: boolean
+          is_trending?: boolean
+          language?: string | null
+          learning_mode?: string | null
+          level?: string | null
+          name?: string
+          offer_price?: number | null
+          og_image_url?: string | null
+          partner_sale_eligible?: boolean
+          prerequisites?: string | null
+          pricing_notes?: string | null
+          pricing_visibility?: string | null
+          promo_video_url?: string | null
+          scholarship_available?: boolean
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          short_description?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          supported_sales_eligible?: boolean
+          target_audience?: string | null
+          tax_config?: Json | null
+          thumbnail_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          weekly_commitment?: string | null
+          white_label_eligible?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "course_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "courses_default_revenue_rule_id_fkey"
+            columns: ["default_revenue_rule_id"]
             isOneToOne: false
             referencedRelation: "revenue_share_rules"
             referencedColumns: ["id"]
@@ -798,6 +1772,44 @@ export type Database = {
           years_experience?: string | null
         }
         Relationships: []
+      }
+      partner_referral_events: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          event_type: Database["public"]["Enums"]["referral_event"]
+          id: string
+          metadata: Json | null
+          partner_ref: string | null
+          session_id: string | null
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          event_type: Database["public"]["Enums"]["referral_event"]
+          id?: string
+          metadata?: Json | null
+          partner_ref?: string | null
+          session_id?: string | null
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          event_type?: Database["public"]["Enums"]["referral_event"]
+          id?: string
+          metadata?: Json | null
+          partner_ref?: string | null
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_referral_events_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       partners: {
         Row: {
@@ -1084,6 +2096,78 @@ export type Database = {
           },
         ]
       }
+      skills: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tools: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          slug: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          slug: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1191,6 +2275,14 @@ export type Database = {
         | "paid"
         | "cancelled"
         | "refund_adjusted"
+      content_status: "draft" | "published" | "archived"
+      course_app_status:
+        | "new"
+        | "contacted"
+        | "qualified"
+        | "enrolled"
+        | "rejected"
+        | "archived"
       enrollment_status:
         | "received"
         | "under_verification"
@@ -1201,6 +2293,15 @@ export type Database = {
         | "fraud_review"
         | "duplicate"
       lead_model: "own_leads" | "supported" | "not_sure"
+      lesson_type:
+        | "video"
+        | "text"
+        | "pdf"
+        | "quiz"
+        | "assignment"
+        | "live"
+        | "project"
+        | "external"
       partner_status: "active" | "suspended" | "revoked"
       payout_status:
         | "queued"
@@ -1209,6 +2310,7 @@ export type Database = {
         | "failed"
         | "on_hold"
         | "cancelled"
+      referral_event: "visit" | "lead" | "application" | "enrollment"
       working_pref: "part_time" | "full_time" | "freelance" | "launch_brand"
     }
     CompositeTypes: {
@@ -1411,6 +2513,15 @@ export const Constants = {
         "cancelled",
         "refund_adjusted",
       ],
+      content_status: ["draft", "published", "archived"],
+      course_app_status: [
+        "new",
+        "contacted",
+        "qualified",
+        "enrolled",
+        "rejected",
+        "archived",
+      ],
       enrollment_status: [
         "received",
         "under_verification",
@@ -1422,6 +2533,16 @@ export const Constants = {
         "duplicate",
       ],
       lead_model: ["own_leads", "supported", "not_sure"],
+      lesson_type: [
+        "video",
+        "text",
+        "pdf",
+        "quiz",
+        "assignment",
+        "live",
+        "project",
+        "external",
+      ],
       partner_status: ["active", "suspended", "revoked"],
       payout_status: [
         "queued",
@@ -1431,6 +2552,7 @@ export const Constants = {
         "on_hold",
         "cancelled",
       ],
+      referral_event: ["visit", "lead", "application", "enrollment"],
       working_pref: ["part_time", "full_time", "freelance", "launch_brand"],
     },
   },
