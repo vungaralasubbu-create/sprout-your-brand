@@ -1,14 +1,20 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BrainCircuit, Briefcase, Cog, Cpu } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { Container, Section, SectionHeader } from "@/components/shared/section";
-import {
-  FALLBACK_CATEGORIES,
-  type CourseCategory,
-} from "@/data/cms";
+import { listCategories, listCourses, type DbCategory, type DbCourse } from "@/lib/programs";
 
 export function CategoriesSection() {
-  const categories = FALLBACK_CATEGORIES.slice(0, 4);
+  const { data: categories = [] } = useQuery({
+    queryKey: ["home", "program-categories"],
+    queryFn: listCategories,
+  });
+  const { data: courses = [] } = useQuery({
+    queryKey: ["home", "published-programs"],
+    queryFn: () => listCourses(),
+  });
+  const visibleCategories = categories.slice(0, 4);
 
   return (
     <Section id="programs" tone="default" padding="lg">
@@ -20,14 +26,18 @@ export function CategoriesSection() {
         />
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {categories.map((c) => (
-            <CategoryCard key={c.slug} category={c} />
+          {visibleCategories.map((c) => (
+            <CategoryCard
+              key={c.slug}
+              category={c}
+              courses={courses.filter((course) => course.category_id === c.id)}
+            />
           ))}
         </div>
 
         <div className="mt-12 flex justify-center">
           <Button variant="outline" size="lg" asChild>
-            <a href="/categories">
+            <a href="/programs">
               Explore All Programs <ArrowRight className="size-4" />
             </a>
           </Button>
@@ -37,22 +47,28 @@ export function CategoriesSection() {
   );
 }
 
-function CategoryCard({ category }: { category: CourseCategory }) {
-  const Icon = category.icon;
-  const sample = category.topics.slice(0, 3);
+function CategoryCard({
+  category,
+  courses,
+}: {
+  category: DbCategory;
+  courses: Array<DbCourse & { category: { slug: string; name: string } }>;
+}) {
+  const Icon = CATEGORY_ICONS[category.slug] ?? BrainCircuit;
+  const sample = courses.slice(0, 3).map((course) => course.name);
   return (
     <article className="group flex flex-col rounded-2xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <span className="grid size-12 place-items-center rounded-xl bg-primary-soft text-primary">
           <Icon className="size-5" />
         </span>
-        <span className="text-caption">{category.courseCount} programs</span>
+        <span className="text-caption">{courses.length} programs</span>
       </div>
       <h3 className="mt-5 font-display text-xl font-semibold tracking-tight text-foreground">
         {category.name}
       </h3>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-        {category.description}
+        {category.short_description}
       </p>
 
       <ul className="mt-5 flex flex-col gap-2">
@@ -73,3 +89,10 @@ function CategoryCard({ category }: { category: CourseCategory }) {
     </article>
   );
 }
+
+const CATEGORY_ICONS: Record<string, typeof BrainCircuit> = {
+  "computer-science": BrainCircuit,
+  "electronics-electrical": Cpu,
+  "mechanical-engineering": Cog,
+  management: Briefcase,
+};

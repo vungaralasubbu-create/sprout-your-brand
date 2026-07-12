@@ -36,6 +36,7 @@ function CoursePage() {
     queryKey: ["course", category, course],
     queryFn: () => getCourseBySlug(category, course),
   });
+  const { data: related = [] } = useRelated(data?.id, data?.category_id);
 
   useEffect(() => {
     if (!ref || !data) return;
@@ -54,7 +55,6 @@ function CoursePage() {
   if (!data) return <PageShell><NotFound /></PageShell>;
 
   const c = data;
-  const { data: related = [] } = useRelated(c.id, c.category_id);
 
   return (
     <PageShell>
