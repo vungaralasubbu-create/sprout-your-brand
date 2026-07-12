@@ -53,6 +53,39 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_finance_actions: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          reason: string | null
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reason?: string | null
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: []
+      }
       brand_applications: {
         Row: {
           admin_notes: string | null
@@ -1712,6 +1745,64 @@ export type Database = {
           },
         ]
       }
+      lead_assignment_history: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          from_partner_id: string | null
+          id: string
+          lead_id: string
+          metadata: Json | null
+          reason: string | null
+          to_partner_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          from_partner_id?: string | null
+          id?: string
+          lead_id: string
+          metadata?: Json | null
+          reason?: string | null
+          to_partner_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          from_partner_id?: string | null
+          id?: string
+          lead_id?: string
+          metadata?: Json | null
+          reason?: string | null
+          to_partner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_assignment_history_from_partner_id_fkey"
+            columns: ["from_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_assignment_history_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_assignment_history_to_partner_id_fkey"
+            columns: ["to_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_agreement_acceptances: {
         Row: {
           accepted_at: string
@@ -2932,11 +3023,20 @@ export type Database = {
         Row: {
           admin_notes: string | null
           amount: number
+          approved_amount: number | null
           created_at: string
+          hold_reason: string | null
           id: string
           partner_id: string
+          payment_reference: string | null
+          payout_method: string | null
           processed_at: string | null
+          processed_by: string | null
           reference: string | null
+          rejection_reason: string | null
+          requested_amount: number | null
+          requested_at: string | null
+          requested_by: string | null
           scheduled_for: string | null
           status: Database["public"]["Enums"]["payout_status"]
           updated_at: string
@@ -2944,11 +3044,20 @@ export type Database = {
         Insert: {
           admin_notes?: string | null
           amount: number
+          approved_amount?: number | null
           created_at?: string
+          hold_reason?: string | null
           id?: string
           partner_id: string
+          payment_reference?: string | null
+          payout_method?: string | null
           processed_at?: string | null
+          processed_by?: string | null
           reference?: string | null
+          rejection_reason?: string | null
+          requested_amount?: number | null
+          requested_at?: string | null
+          requested_by?: string | null
           scheduled_for?: string | null
           status?: Database["public"]["Enums"]["payout_status"]
           updated_at?: string
@@ -2956,11 +3065,20 @@ export type Database = {
         Update: {
           admin_notes?: string | null
           amount?: number
+          approved_amount?: number | null
           created_at?: string
+          hold_reason?: string | null
           id?: string
           partner_id?: string
+          payment_reference?: string | null
+          payout_method?: string | null
           processed_at?: string | null
+          processed_by?: string | null
           reference?: string | null
+          rejection_reason?: string | null
+          requested_amount?: number | null
+          requested_at?: string | null
+          requested_by?: string | null
           scheduled_for?: string | null
           status?: Database["public"]["Enums"]["payout_status"]
           updated_at?: string
@@ -2978,29 +3096,47 @@ export type Database = {
       refund_adjustments: {
         Row: {
           adjustment_amount: number
+          adjustment_type: Database["public"]["Enums"]["refund_adjustment_type"]
+          approval_status: Database["public"]["Enums"]["refund_adjustment_status"]
+          approved_at: string | null
+          approved_by: string | null
           commission_id: string
           created_at: string
           created_by: string | null
           enrollment_id: string | null
           id: string
+          notes: string | null
+          original_amount: number | null
           reason: string
         }
         Insert: {
           adjustment_amount: number
+          adjustment_type?: Database["public"]["Enums"]["refund_adjustment_type"]
+          approval_status?: Database["public"]["Enums"]["refund_adjustment_status"]
+          approved_at?: string | null
+          approved_by?: string | null
           commission_id: string
           created_at?: string
           created_by?: string | null
           enrollment_id?: string | null
           id?: string
+          notes?: string | null
+          original_amount?: number | null
           reason: string
         }
         Update: {
           adjustment_amount?: number
+          adjustment_type?: Database["public"]["Enums"]["refund_adjustment_type"]
+          approval_status?: Database["public"]["Enums"]["refund_adjustment_status"]
+          approved_at?: string | null
+          approved_by?: string | null
           commission_id?: string
           created_at?: string
           created_by?: string | null
           enrollment_id?: string | null
           id?: string
+          notes?: string | null
+          original_amount?: number | null
           reason?: string
         }
         Relationships: [
@@ -3298,6 +3434,12 @@ export type Database = {
         | "paid"
         | "cancelled"
         | "refund_adjusted"
+        | "tracking"
+        | "pending_verification"
+        | "eligible"
+        | "available_for_payout"
+        | "reversed"
+        | "rejected"
       content_status: "draft" | "published" | "archived"
       course_app_status:
         | "new"
@@ -3410,7 +3552,27 @@ export type Database = {
         | "failed"
         | "on_hold"
         | "cancelled"
+        | "requested"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "reversed"
       referral_event: "visit" | "lead" | "application" | "enrollment"
+      refund_adjustment_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "applied"
+        | "reversed"
+      refund_adjustment_type:
+        | "full_refund"
+        | "partial_refund"
+        | "chargeback"
+        | "cancelled_enrollment"
+        | "failed_payment"
+        | "duplicate_enrollment"
+        | "fraud_review"
+        | "manual_adjustment"
       support_ticket_category:
         | "lead_attribution"
         | "revenue_share"
@@ -3628,6 +3790,12 @@ export const Constants = {
         "paid",
         "cancelled",
         "refund_adjusted",
+        "tracking",
+        "pending_verification",
+        "eligible",
+        "available_for_payout",
+        "reversed",
+        "rejected",
       ],
       content_status: ["draft", "published", "archived"],
       course_app_status: [
@@ -3751,8 +3919,30 @@ export const Constants = {
         "failed",
         "on_hold",
         "cancelled",
+        "requested",
+        "under_review",
+        "approved",
+        "rejected",
+        "reversed",
       ],
       referral_event: ["visit", "lead", "application", "enrollment"],
+      refund_adjustment_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "applied",
+        "reversed",
+      ],
+      refund_adjustment_type: [
+        "full_refund",
+        "partial_refund",
+        "chargeback",
+        "cancelled_enrollment",
+        "failed_payment",
+        "duplicate_enrollment",
+        "fraud_review",
+        "manual_adjustment",
+      ],
       support_ticket_category: [
         "lead_attribution",
         "revenue_share",
