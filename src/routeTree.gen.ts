@@ -24,11 +24,17 @@ import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$ca
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
+import { Route as AuthenticatedAdminPartnerProgramsRouteImport } from './routes/_authenticated/admin.partner-programs'
+import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
+import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
+import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/programs.$category.$course.index'
+import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
+import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
 
 const EarnRoute = EarnRouteImport.update({
@@ -108,6 +114,30 @@ const AuthenticatedPartnerDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedAdminPartnerProgramsRoute =
+  AuthenticatedAdminPartnerProgramsRouteImport.update({
+    id: '/partner-programs',
+    path: '/partner-programs',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPartnerApplicationsRoute =
+  AuthenticatedAdminPartnerApplicationsRouteImport.update({
+    id: '/partner-applications',
+    path: '/partner-applications',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminModelApprovalsRoute =
+  AuthenticatedAdminModelApprovalsRouteImport.update({
+    id: '/model-approvals',
+    path: '/model-approvals',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminDashboardRoute =
+  AuthenticatedAdminDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCategoriesRoute =
   AuthenticatedAdminCategoriesRouteImport.update({
     id: '/categories',
@@ -126,6 +156,12 @@ const ProgramsCategoryCourseIndexRoute =
     path: '/programs/$category/$course/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminPartnersIndexRoute =
+  AuthenticatedAdminPartnersIndexRouteImport.update({
+    id: '/partners/',
+    path: '/partners/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCoursesIndexRoute =
   AuthenticatedAdminCoursesIndexRouteImport.update({
     id: '/courses/',
@@ -137,6 +173,12 @@ const ProgramsCategoryCourseApplyRoute =
     id: '/programs/$category/$course/apply',
     path: '/programs/$category/$course/apply',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedAdminPartnersIdRoute =
+  AuthenticatedAdminPartnersIdRouteImport.update({
+    id: '/partners/$id',
+    path: '/partners/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCoursesIdRoute =
   AuthenticatedAdminCoursesIdRouteImport.update({
@@ -158,13 +200,19 @@ export interface FileRoutesByFullPath {
   '/programs/': typeof ProgramsIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
+  '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
+  '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRoutesByTo {
@@ -179,13 +227,19 @@ export interface FileRoutesByTo {
   '/programs': typeof ProgramsIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
+  '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
+  '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRoutesById {
@@ -203,13 +257,19 @@ export interface FileRoutesById {
   '/programs/': typeof ProgramsIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
+  '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
+  '/_authenticated/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRouteTypes {
@@ -227,13 +287,19 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/admin/applications'
     | '/admin/categories'
+    | '/admin/dashboard'
+    | '/admin/model-approvals'
+    | '/admin/partner-applications'
+    | '/admin/partner-programs'
     | '/partner/dashboard'
     | '/partner/onboarding'
     | '/admin/'
     | '/programs/$category/'
     | '/admin/courses/$id'
+    | '/admin/partners/$id'
     | '/programs/$category/$course/apply'
     | '/admin/courses/'
+    | '/admin/partners/'
     | '/programs/$category/$course/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -248,13 +314,19 @@ export interface FileRouteTypes {
     | '/programs'
     | '/admin/applications'
     | '/admin/categories'
+    | '/admin/dashboard'
+    | '/admin/model-approvals'
+    | '/admin/partner-applications'
+    | '/admin/partner-programs'
     | '/partner/dashboard'
     | '/partner/onboarding'
     | '/admin'
     | '/programs/$category'
     | '/admin/courses/$id'
+    | '/admin/partners/$id'
     | '/programs/$category/$course/apply'
     | '/admin/courses'
+    | '/admin/partners'
     | '/programs/$category/$course'
   id:
     | '__root__'
@@ -271,13 +343,19 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/categories'
+    | '/_authenticated/admin/dashboard'
+    | '/_authenticated/admin/model-approvals'
+    | '/_authenticated/admin/partner-applications'
+    | '/_authenticated/admin/partner-programs'
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/onboarding'
     | '/_authenticated/admin/'
     | '/programs/$category/'
     | '/_authenticated/admin/courses/$id'
+    | '/_authenticated/admin/partners/$id'
     | '/programs/$category/$course/apply'
     | '/_authenticated/admin/courses/'
+    | '/_authenticated/admin/partners/'
     | '/programs/$category/$course/'
   fileRoutesById: FileRoutesById
 }
@@ -403,6 +481,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerDashboardRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/admin/partner-programs': {
+      id: '/_authenticated/admin/partner-programs'
+      path: '/partner-programs'
+      fullPath: '/admin/partner-programs'
+      preLoaderRoute: typeof AuthenticatedAdminPartnerProgramsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/partner-applications': {
+      id: '/_authenticated/admin/partner-applications'
+      path: '/partner-applications'
+      fullPath: '/admin/partner-applications'
+      preLoaderRoute: typeof AuthenticatedAdminPartnerApplicationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/model-approvals': {
+      id: '/_authenticated/admin/model-approvals'
+      path: '/model-approvals'
+      fullPath: '/admin/model-approvals'
+      preLoaderRoute: typeof AuthenticatedAdminModelApprovalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/dashboard': {
+      id: '/_authenticated/admin/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/categories': {
       id: '/_authenticated/admin/categories'
       path: '/categories'
@@ -424,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/partners/': {
+      id: '/_authenticated/admin/partners/'
+      path: '/partners'
+      fullPath: '/admin/partners/'
+      preLoaderRoute: typeof AuthenticatedAdminPartnersIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/courses/': {
       id: '/_authenticated/admin/courses/'
       path: '/courses'
@@ -438,6 +551,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/partners/$id': {
+      id: '/_authenticated/admin/partners/$id'
+      path: '/partners/$id'
+      fullPath: '/admin/partners/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/courses/$id': {
       id: '/_authenticated/admin/courses/$id'
       path: '/courses/$id'
@@ -451,17 +571,31 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
+  AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
+  AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
+  AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
+  AuthenticatedAdminPartnerProgramsRoute: typeof AuthenticatedAdminPartnerProgramsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
+  AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
+  AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
+  AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
+  AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
+  AuthenticatedAdminPartnerApplicationsRoute:
+    AuthenticatedAdminPartnerApplicationsRoute,
+  AuthenticatedAdminPartnerProgramsRoute:
+    AuthenticatedAdminPartnerProgramsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
+  AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
   AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
+  AuthenticatedAdminPartnersIndexRoute: AuthenticatedAdminPartnersIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
