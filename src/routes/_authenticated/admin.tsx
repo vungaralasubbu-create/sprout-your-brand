@@ -6,7 +6,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { Logo } from "@/components/shared/logo";
+import { GlintrLogo } from "@/components/shared/logo";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -19,12 +19,13 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminShell,
 });
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const NAV: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/categories", label: "Categories", icon: FolderTree },
   { to: "/admin/courses", label: "Courses", icon: GraduationCap },
   { to: "/admin/applications", label: "Applications", icon: FileText },
-] as const;
+];
 
 function AdminShell() {
   const [open, setOpen] = useState(false);
@@ -48,7 +49,7 @@ function AdminShell() {
         )}
       >
         <div className="h-16 flex items-center justify-between px-5 border-b border-border">
-          <Link to="/" className="flex items-center gap-2"><Logo className="h-7 w-auto" /></Link>
+          <Link to="/" className="flex items-center gap-2"><GlintrLogo className="h-7 w-auto" /></Link>
           <button className="lg:hidden" onClick={() => setOpen(false)}><X className="size-5" /></button>
         </div>
         <nav className="p-3 space-y-1">
@@ -58,7 +59,7 @@ function AdminShell() {
             return (
               <Link
                 key={item.to}
-                to={item.to}
+                to={item.to as any}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
