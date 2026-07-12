@@ -124,6 +124,7 @@ function CoursePage() {
   const c = data;
   const price = c.offer_price ?? c.base_price;
   const applyTo = { category, course };
+  const counsellorCtx = { course_id: c.id, course_name: c.name, category_name: c.category.name };
 
   // ---- Derive dynamic content with graceful fallbacks ----
   const highlights = buildHighlights(c);
@@ -180,12 +181,7 @@ function CoursePage() {
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline">
-                  <Link to="/launch-your-brand/consultation">
-                    <Phone className="size-4" />
-                    Talk To A Counsellor
-                  </Link>
-                </Button>
+                <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
                 {c.brochure ? (
                   <a
                     href={c.brochure.file_url}
