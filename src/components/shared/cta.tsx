@@ -69,7 +69,7 @@ export function CtaBanner({
               {secondary ? (
                 <Button
                   size="xl"
-                  variant={variant === "gradient" ? "glass" : "outline"}
+                  variant="outline"
                   onClick={secondary.onClick}
                 >
                   {secondary.label}
