@@ -52,7 +52,7 @@ export const submitCounsellorLead = createServerFn({ method: "POST" })
       course_id: data.course_id ?? null,
       owner_partner_id,
       status: "new",
-      attribution_status: owner_partner_id ? "pending" : "unattributed",
+      attribution_status: "admin_review",
       notes: notesParts.join(" · ") || null,
     });
 
