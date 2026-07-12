@@ -159,10 +159,11 @@ export async function getCourseBySlug(
       }>;
       skills: string[];
       tools: Array<{ name: string; logo_url: string | null }>;
-      career_roles: Array<{ title: string; salary_min: number | null; salary_max: number | null; currency: string | null; salary_period: string | null }>;
+      career_roles: Array<{ title: string; description?: string | null; salary_min: number | null; salary_max: number | null; currency: string | null; salary_period: string | null }>;
       certifications: Array<{ name: string; description: string | null; image_url: string | null; issuer: string | null }>;
       placement: Array<{ support_type: string; description: string | null }>;
       faqs: Array<{ question: string; answer: string }>;
+      projects: Array<{ id: string; name: string; slug: string; short_description: string | null; image_url: string | null; project_type: string | null; difficulty: string | null; duration: string | null; industry: string | null; learning_outcomes: string[] | null }>;
       brochure: { file_url: string; capture_lead: boolean } | null;
     })
   | null
@@ -184,16 +185,17 @@ export async function getCourseBySlug(
   if (error) throw error;
   if (!course) return null;
 
-  const [sections, modules, skillsJoin, toolsJoin, rolesJoin, certs, placement, faqs, brochures] = await Promise.all([
+  const [sections, modules, skillsJoin, toolsJoin, rolesJoin, certs, placement, faqs, brochures, projectsJoin] = await Promise.all([
     supabase.from("course_sections").select("section_type,title,content,display_order").eq("course_id", course.id).order("display_order"),
     supabase.from("course_modules").select("id,number,name,description,duration,display_order").eq("course_id", course.id).order("display_order"),
     supabase.from("course_skills").select("skills(name)").eq("course_id", course.id),
     supabase.from("course_tools").select("tools(name,logo_url)").eq("course_id", course.id),
-    supabase.from("course_career_roles").select("career_roles(title,salary_min,salary_max,currency,salary_period)").eq("course_id", course.id),
+    supabase.from("course_career_roles").select("career_roles(title,description,salary_min,salary_max,currency,salary_period)").eq("course_id", course.id),
     supabase.from("course_certifications").select("name,description,image_url,issuer").eq("course_id", course.id),
     supabase.from("course_placement_support").select("support_type,description").eq("course_id", course.id).order("display_order"),
     supabase.from("course_faqs").select("question,answer").eq("course_id", course.id).order("display_order"),
     supabase.from("course_brochures").select("file_url,capture_lead").eq("course_id", course.id).limit(1),
+    supabase.from("course_projects").select("display_order,course_project_templates(id,name,slug,short_description,image_url,project_type,difficulty,duration,industry,learning_outcomes)").eq("course_id", course.id).order("display_order"),
   ]);
 
   const moduleIds = (modules.data ?? []).map((m) => m.id);
@@ -221,6 +223,7 @@ export async function getCourseBySlug(
     certifications: (certs.data ?? []) as never,
     placement: (placement.data ?? []) as never,
     faqs: (faqs.data ?? []) as never,
+    projects: ((projectsJoin.data ?? []) as any[]).map((r) => r.course_project_templates).filter(Boolean),
     brochure: (brochures.data ?? [])[0] ?? null,
   };
 }
