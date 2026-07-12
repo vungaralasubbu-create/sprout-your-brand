@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as EarnRouteImport } from './routes/earn'
@@ -61,6 +62,11 @@ import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
   id: '/sales-opportunity',
   path: '/sales-opportunity',
@@ -355,6 +361,7 @@ export interface FileRoutesByFullPath {
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -407,6 +414,7 @@ export interface FileRoutesByTo {
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
@@ -459,6 +467,7 @@ export interface FileRoutesById {
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -513,6 +522,7 @@ export interface FileRouteTypes {
     | '/earn'
     | '/join'
     | '/sales-opportunity'
+    | '/sitemap.xml'
     | '/admin'
     | '/brand'
     | '/partner'
@@ -565,6 +575,7 @@ export interface FileRouteTypes {
     | '/earn'
     | '/join'
     | '/sales-opportunity'
+    | '/sitemap.xml'
     | '/brand'
     | '/partner'
     | '/launch-your-brand/consultation'
@@ -616,6 +627,7 @@ export interface FileRouteTypes {
     | '/earn'
     | '/join'
     | '/sales-opportunity'
+    | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/_authenticated/brand'
     | '/_authenticated/partner'
@@ -670,6 +682,7 @@ export interface RootRouteChildren {
   EarnRoute: typeof EarnRoute
   JoinRoute: typeof JoinRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -683,6 +696,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sales-opportunity': {
       id: '/sales-opportunity'
       path: '/sales-opportunity'
@@ -1171,6 +1191,7 @@ const rootRouteChildren: RootRouteChildren = {
   EarnRoute: EarnRoute,
   JoinRoute: JoinRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
@@ -1184,13 +1205,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

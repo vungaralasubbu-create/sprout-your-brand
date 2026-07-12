@@ -49,7 +49,19 @@ export const Route = createFileRoute("/sitemap.xml")({
                 priority: "0.8",
               });
             }
-            for (const c of (courses ?? []) as Array<{ slug: string; updated_at: string | null; category: { slug: string; status: string; is_active: boolean } }>) {
+            for (const c of (courses ?? []) as unknown as Array<{ slug: string; updated_at: string | null; category: { slug: string; status: string; is_active: boolean } | Array<{ slug: string; status: string; is_active: boolean }> }>) {
+              const cat = Array.isArray(c.category) ? c.category[0] : c.category;
+              if (!cat || cat.status !== "published" || !cat.is_active) continue;
+              entries.push({
+                path: `/programs/${cat.slug}/${c.slug}`,
+                lastmod: c.updated_at ?? undefined,
+                changefreq: "weekly",
+                priority: "0.7",
+              });
+              continue;
+            }
+            // legacy no-op to keep block shape
+            for (const _ of [] as never[]) {
               if (!c.category || c.category.status !== "published" || !c.category.is_active) continue;
               entries.push({
                 path: `/programs/${c.category.slug}/${c.slug}`,
