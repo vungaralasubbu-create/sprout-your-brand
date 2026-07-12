@@ -364,7 +364,7 @@ function StepName({ draft, update }: StepProps) {
           {draft.name_check_result === "available" ? (
             <Badge className="bg-primary-soft text-primary hover:bg-primary-soft">Available on Glintr</Badge>
           ) : draft.name_check_result === "conflict" ? (
-            <Badge variant="destructive">Conflict on Glintr</Badge>
+            <Badge variant="danger">Conflict on Glintr</Badge>
           ) : null}
         </div>
         <p className="mt-2 flex items-start gap-2 rounded-md bg-muted/60 p-3 text-xs text-muted-foreground">

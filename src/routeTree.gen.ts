@@ -13,6 +13,8 @@ import { Route as EarnRouteImport } from './routes/earn'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
+import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
+import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
 
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
@@ -34,16 +36,31 @@ const PartnerApplyRoute = PartnerApplyRouteImport.update({
   path: '/partner/apply',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LaunchYourBrandStartRoute = LaunchYourBrandStartRouteImport.update({
+  id: '/launch-your-brand/start',
+  path: '/launch-your-brand/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LaunchYourBrandConsultationRoute =
+  LaunchYourBrandConsultationRouteImport.update({
+    id: '/launch-your-brand/consultation',
+    path: '/launch-your-brand/consultation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/earn': typeof EarnRoute
+  '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
+  '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/earn': typeof EarnRoute
+  '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
+  '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
 }
@@ -51,20 +68,43 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/earn': typeof EarnRoute
+  '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
+  '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/earn' | '/partner/apply' | '/launch-your-brand/'
+  fullPaths:
+    | '/'
+    | '/earn'
+    | '/launch-your-brand/consultation'
+    | '/launch-your-brand/start'
+    | '/partner/apply'
+    | '/launch-your-brand/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/earn' | '/partner/apply' | '/launch-your-brand'
-  id: '__root__' | '/' | '/earn' | '/partner/apply' | '/launch-your-brand/'
+  to:
+    | '/'
+    | '/earn'
+    | '/launch-your-brand/consultation'
+    | '/launch-your-brand/start'
+    | '/partner/apply'
+    | '/launch-your-brand'
+  id:
+    | '__root__'
+    | '/'
+    | '/earn'
+    | '/launch-your-brand/consultation'
+    | '/launch-your-brand/start'
+    | '/partner/apply'
+    | '/launch-your-brand/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EarnRoute: typeof EarnRoute
+  LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
+  LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
 }
@@ -99,12 +139,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartnerApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/launch-your-brand/start': {
+      id: '/launch-your-brand/start'
+      path: '/launch-your-brand/start'
+      fullPath: '/launch-your-brand/start'
+      preLoaderRoute: typeof LaunchYourBrandStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/launch-your-brand/consultation': {
+      id: '/launch-your-brand/consultation'
+      path: '/launch-your-brand/consultation'
+      fullPath: '/launch-your-brand/consultation'
+      preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EarnRoute: EarnRoute,
+  LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
+  LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
 }
