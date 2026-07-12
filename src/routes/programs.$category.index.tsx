@@ -8,6 +8,7 @@ import { Section, Container } from "@/components/shared/section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getCategoryBySlug, listCourses, formatPrice } from "@/lib/programs";
+import { CounsellorForm } from "@/components/shared/counsellor-form";
 
 export const Route = createFileRoute("/programs/$category/")({
   head: ({ params }) => ({
@@ -111,8 +112,12 @@ function CategoryPage() {
             <p className="mt-3 text-muted-foreground">Talk to a Glintr counsellor to pick the right program for your goals.</p>
             <div className="mt-6 flex justify-center gap-3">
               <Button asChild size="lg" variant="gradient"><Link to="/programs">Browse all programs</Link></Button>
-              <Button asChild size="lg" variant="outline"><Link to="/earn">Earn with Glintr</Link></Button>
-            </div>
+              <CounsellorForm
+                size="lg"
+                variant="outline"
+                label="Need Help Choosing?"
+                context={{ category_name: prettify(slug) }}
+              />
           </Container>
         </Section>
       </main>
