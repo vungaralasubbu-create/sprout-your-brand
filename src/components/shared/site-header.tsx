@@ -47,7 +47,7 @@ const nav: NavEntry[] = [
     width: "lg",
     groups: [
       {
-        title: "Categories",
+        title: "Program Areas",
         items: [
           { label: "Computer Science", description: "AI, ML, Data, Cloud, Cyber", href: "/programs/computer-science", icon: GraduationCap },
           { label: "Electronics & Electrical", description: "VLSI, IoT, Embedded, Robotics", href: "/programs/electronics-electrical", icon: Cpu },
@@ -221,9 +221,6 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2 ml-auto">
-          <Button variant="ghost" size="sm" className="hidden md:inline-flex" asChild>
-            <a href="/#programs">Explore Programs</a>
-          </Button>
           <Button variant="gradient" size="sm" className="hidden md:inline-flex" asChild>
             <a href="/#income-calculator">
               <Sparkles className="size-4" />
@@ -296,10 +293,7 @@ export function SiteHeader() {
                 </div>
               );
             })}
-            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border mt-2">
-              <Button variant="outline" size="sm" asChild>
-                <a href="/#programs">Explore Programs</a>
-              </Button>
+            <div className="grid gap-2 pt-3 border-t border-border mt-2">
               <Button variant="gradient" size="sm" asChild>
                 <a href="/#income-calculator">Start Earning</a>
               </Button>

@@ -1,25 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container, Section, SectionHeader } from "@/components/shared/section";
 import {
-  fetchFeaturedCategories,
   FALLBACK_CATEGORIES,
   type CourseCategory,
 } from "@/data/cms";
 
 export function CategoriesSection() {
-  const categoriesQuery = useQuery({
-    queryKey: ["home", "featured-categories"],
-    queryFn: fetchFeaturedCategories,
-    initialData: FALLBACK_CATEGORIES,
-  });
-
-  const categories = (categoriesQuery.data && categoriesQuery.data.length > 0
-    ? categoriesQuery.data
-    : FALLBACK_CATEGORIES
-  ).slice(0, 4);
+  const categories = FALLBACK_CATEGORIES.slice(0, 4);
 
   return (
     <Section id="programs" tone="default" padding="lg">
