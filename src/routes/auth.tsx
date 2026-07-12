@@ -33,19 +33,43 @@ async function routeAfterAuth(userId: string, navigate: ReturnType<typeof useNav
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "recovery">("signin");
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) routeAfterAuth(data.session.user.id, navigate);
+    const isRecovery =
+      typeof window !== "undefined" && window.location.hash.includes("type=recovery");
+    if (isRecovery) setMode("recovery");
+
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") setMode("recovery");
     });
+
+    if (!isRecovery) {
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session?.user) routeAfterAuth(data.session.user.id, navigate);
+      });
+    }
+    return () => sub.subscription.unsubscribe();
   }, [navigate]);
 
   async function handle(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (loading) return;
     const fd = new FormData(e.currentTarget);
+    if (mode === "recovery") {
+      const pw = String(fd.get("password") ?? "");
+      if (pw.length < 6) return toast.error("Password must be at least 6 characters.");
+      setLoading(true);
+      const { error } = await supabase.auth.updateUser({ password: pw });
+      setLoading(false);
+      if (error) return toast.error(error.message);
+      toast.success("Password updated.");
+      const { data } = await supabase.auth.getUser();
+      if (data.user) await routeAfterAuth(data.user.id, navigate);
+      return;
+    }
     const parsed = schema.safeParse(Object.fromEntries(fd));
     if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
     setLoading(true);
@@ -89,24 +113,38 @@ function AuthPage() {
           <Container className="max-w-md">
             <div className="card-elevated p-8">
               <h1 className="text-heading-xl font-display font-semibold">
-                {mode === "signin" ? "Welcome Back To Glintr" : "Create your Glintr account"}
+                {mode === "recovery"
+                  ? "Set a new password"
+                  : mode === "signin"
+                  ? "Welcome Back To Glintr"
+                  : "Create your Glintr account"}
               </h1>
               <p className="text-caption mt-2">
-                {mode === "signin"
+                {mode === "recovery"
+                  ? "Choose a new password for your Glintr account."
+                  : mode === "signin"
                   ? "Access your workspace and continue where you left off."
                   : "Get started with Glintr in seconds."}
               </p>
               <form onSubmit={handle} className="mt-6 space-y-4">
+                {mode !== "recovery" && (
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" name="email" type="email" required className="mt-2 h-11" />
+                  </div>
+                )}
                 <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" name="email" type="email" required className="mt-2 h-11" />
-                </div>
-                <div>
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{mode === "recovery" ? "New password" : "Password"}</Label>
                   <Input id="password" name="password" type="password" required minLength={6} className="mt-2 h-11" />
                 </div>
                 <Button type="submit" size="lg" variant="gradient" className="w-full" disabled={loading}>
-                  {loading ? "…" : mode === "signin" ? "Sign In" : "Create account"}
+                  {loading
+                    ? "…"
+                    : mode === "recovery"
+                    ? "Update password"
+                    : mode === "signin"
+                    ? "Sign In"
+                    : "Create account"}
                 </Button>
                 {mode === "signin" && (
                   <Button
@@ -120,12 +158,14 @@ function AuthPage() {
                   </Button>
                 )}
               </form>
-              <button
-                onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-                className="mt-4 text-caption text-primary hover:underline"
-              >
-                {mode === "signin" ? "New here? Create an account" : "Already have an account? Sign in"}
-              </button>
+              {mode !== "recovery" && (
+                <button
+                  onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+                  className="mt-4 text-caption text-primary hover:underline"
+                >
+                  {mode === "signin" ? "New here? Create an account" : "Already have an account? Sign in"}
+                </button>
+              )}
               <p className="mt-6 text-caption">
                 <Link to="/" className="hover:text-foreground">← Back to home</Link>
               </p>
