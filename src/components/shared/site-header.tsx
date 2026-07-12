@@ -42,7 +42,6 @@ interface NavEntry {
 }
 
 const nav: NavEntry[] = [
-  { label: "Home", href: "/" },
   {
     label: "Programs",
     width: "lg",
@@ -56,9 +55,13 @@ const nav: NavEntry[] = [
           { label: "Management", description: "Marketing, Finance, HR, Analytics", href: "/programs/management", icon: Briefcase },
         ],
       },
+      {
+        items: [
+          { label: "Explore All Programs", description: "Browse the full catalog", href: "/categories", icon: Layers },
+        ],
+      },
     ],
   },
-  { label: "Categories", href: "/categories" },
   {
     label: "Earn With Us",
     width: "lg",
@@ -66,17 +69,16 @@ const nav: NavEntry[] = [
       {
         title: "Revenue Models",
         items: [
-          { label: "Become a Sales Partner", description: "Up to 70% revenue share, own leads", href: "/earn/partner", icon: Handshake, meta: "70%" },
-          { label: "Sell With Company Leads", description: "Company-supported sales, up to 50%", href: "/earn/company-leads", icon: Users, meta: "50%" },
+          { label: "Become a Sales Partner", description: "Overview of the partner program", href: "/earn", icon: Handshake },
+          { label: "Own Leads Model", description: "Up to 70% revenue share", href: "/earn#own-leads", icon: Users, meta: "70%" },
+          { label: "Supported Sales Model", description: "Company-supported, up to 50%", href: "/earn#supported", icon: Briefcase, meta: "50%" },
         ],
       },
       {
-        title: "Work Style & Payouts",
+        title: "Tools & Payouts",
         items: [
-          { label: "Work Part-Time", description: "Sell during your free time", href: "/earn/part-time", icon: Clock },
-          { label: "Work Full-Time", description: "Structured opportunities", href: "/earn/full-time", icon: Briefcase },
-          { label: "Income Calculator", description: "Estimate your earnings", href: "/#income-calculator", icon: Calculator },
-          { label: "Payout System", description: "48-hour payout workflow", href: "/earn/payouts", icon: Wallet },
+          { label: "Income Calculator", description: "Estimate your earnings", href: "/#calculator", icon: Calculator },
+          { label: "Payout System", description: "48-hour processing workflow", href: "/earn#payouts", icon: Wallet },
         ],
       },
     ],
@@ -88,40 +90,41 @@ const nav: NavEntry[] = [
       {
         title: "White-Label EdTech",
         items: [
-          { label: "How It Works", description: "End-to-end brand launch flow", href: "/launch/how-it-works", icon: Rocket },
+          { label: "Launch Your EdTech Brand", description: "Overview & pricing", href: "/launch", icon: Rocket },
+          { label: "How It Works", description: "End-to-end launch flow", href: "/launch/how-it-works", icon: Clock },
           { label: "What's Included", description: "LMS, CRM, website, creatives", href: "/launch/included", icon: Layers },
-          { label: "Brand Launch Timeline", description: "Under 24 hrs for standard setup", href: "/launch/timeline", icon: Clock },
         ],
       },
       {
         title: "Support & Tech",
         items: [
-          { label: "Marketing Support", description: "Creatives, campaigns, social", href: "/launch/marketing", icon: Sparkles },
           { label: "LMS & Technology", description: "Full learning + operations stack", href: "/launch/lms", icon: BookOpen },
-          { label: "Book Brand Consultation", description: "Talk to our brand team", href: "/launch/consult", icon: Building2 },
+          { label: "Marketing Support", description: "Creatives, campaigns, social", href: "/launch/marketing", icon: Sparkles },
+          { label: "Book Consultation", description: "Talk to our brand team", href: "/launch/consult", icon: Building2 },
         ],
       },
     ],
   },
-  { label: "Partner Network", href: "/partner-network" },
-  { label: "Success Stories", href: "/success-stories" },
-  { label: "About Us", href: "/about" },
+  { label: "About", href: "/about" },
   {
     label: "More",
     width: "sm",
     groups: [
       {
         items: [
+          { label: "Partner Network", href: "/partner-network" },
+          { label: "Success Stories", href: "/success-stories" },
+          { label: "Careers", href: "/careers" },
           { label: "Blog", href: "/blog" },
           { label: "FAQs", href: "/faq" },
-          { label: "Support", href: "/support" },
-          { label: "Careers", href: "/careers" },
           { label: "Contact", href: "/contact" },
+          { label: "Support", href: "/support" },
         ],
       },
     ],
   },
 ];
+
 
 function MegaPanel({ entry }: { entry: NavEntry }) {
   if (!entry.groups) return null;
