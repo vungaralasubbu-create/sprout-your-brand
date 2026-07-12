@@ -18,6 +18,7 @@ import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-b
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/programs.$category.$course.index'
+import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
@@ -66,6 +67,12 @@ const ProgramsCategoryCourseIndexRoute =
     path: '/programs/$category/$course/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ProgramsCategoryCourseApplyRoute =
+  ProgramsCategoryCourseApplyRouteImport.update({
+    id: '/programs/$category/$course/apply',
+    path: '/programs/$category/$course/apply',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -76,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRoutesByTo {
@@ -87,6 +95,7 @@ export interface FileRoutesByTo {
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
+  '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRoutesById {
@@ -99,6 +108,7 @@ export interface FileRoutesById {
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRouteTypes {
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/'
     | '/programs/'
     | '/programs/$category/'
+    | '/programs/$category/$course/apply'
     | '/programs/$category/$course/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand'
     | '/programs'
     | '/programs/$category'
+    | '/programs/$category/$course/apply'
     | '/programs/$category/$course'
   id:
     | '__root__'
@@ -134,6 +146,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/'
     | '/programs/'
     | '/programs/$category/'
+    | '/programs/$category/$course/apply'
     | '/programs/$category/$course/'
   fileRoutesById: FileRoutesById
 }
@@ -146,6 +159,7 @@ export interface RootRouteChildren {
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
+  ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
 }
 
@@ -214,6 +228,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/programs/$category/$course/apply': {
+      id: '/programs/$category/$course/apply'
+      path: '/programs/$category/$course/apply'
+      fullPath: '/programs/$category/$course/apply'
+      preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -226,6 +247,7 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
+  ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
 }
 export const routeTree = rootRouteImport
