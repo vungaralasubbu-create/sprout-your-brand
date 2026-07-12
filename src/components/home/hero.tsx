@@ -110,7 +110,9 @@ function EarningsCard() {
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col">
-            <span className="text-label">Earn Based On Your Sales</span>
+            <span className="text-xs font-bold tracking-wide text-muted-foreground">
+              Earn Based On Your Sales
+            </span>
             <span className="text-caption mt-0.5">
               Revenue share depends on the model you choose
             </span>
