@@ -77,30 +77,24 @@ function EarnHero() {
               <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Sales Partner Program
             </Badge>
             <h1 className="text-display text-balance">
-              Sell career programs.{" "}
+              Sell Career Programs.{" "}
               <span className="bg-gradient-brand bg-clip-text text-transparent">
-                Keep up to 70%.
+                Earn Revenue Share.
               </span>
             </h1>
             <p className="text-subheading text-muted-foreground max-w-xl">
-              Two clear ways to earn with Glintr. Choose leads you own or use
-              company-supplied leads — both come with weekly payouts, transparent
-              dashboards, and no earning cap.
+              Two clear ways to earn — sell with your Own Leads (up to 70% revenue share)
+              or work on Supported Sales opportunities (up to 50% revenue share).
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" variant="gradient">
                 <Link to="/partner/apply">
-                  Apply as Sales Partner <ArrowRight className="ml-2 h-4 w-4" />
+                  Start Earning <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <a href="#estimator">See your earnings</a>
+                <a href="#estimator">See Your Earnings</a>
               </Button>
-            </div>
-            <div className="grid grid-cols-3 gap-6 pt-6 border-t">
-              <HeroStat value="₹4.2Cr+" label="Partner payouts" />
-              <HeroStat value="1,200+" label="Active partners" />
-              <HeroStat value="48h" label="Payout SLA" />
             </div>
           </div>
           <ModelHighlightCards />
@@ -132,13 +126,12 @@ function ModelHighlightCards() {
             <div className="mt-1 font-display text-xl font-semibold">Own Leads</div>
           </div>
           <div className="text-right">
-            <div className="font-display text-4xl font-semibold text-primary">70%</div>
-            <div className="text-caption text-muted-foreground">revenue share</div>
+            <div className="font-display text-4xl font-semibold text-primary">Up to 70%</div>
+            <div className="text-caption text-muted-foreground">Revenue Share</div>
           </div>
         </div>
         <p className="relative text-sm text-muted-foreground mt-3">
-          You bring the customer. We handle the delivery, LMS, and support. You
-          keep the majority of the revenue on every sale.
+          You bring the customer. We handle the delivery, LMS and support.
         </p>
       </div>
       <div className="rounded-3xl border bg-card p-6 shadow-card">
@@ -147,16 +140,15 @@ function ModelHighlightCards() {
             <div className="flex items-center gap-2 text-caption text-muted-foreground">
               <Users className="h-4 w-4" /> Model 02
             </div>
-            <div className="mt-1 font-display text-xl font-semibold">Company Leads</div>
+            <div className="mt-1 font-display text-xl font-semibold">Supported Sales</div>
           </div>
           <div className="text-right">
-            <div className="font-display text-4xl font-semibold">50%</div>
-            <div className="text-caption text-muted-foreground">revenue share</div>
+            <div className="font-display text-4xl font-semibold">Up to 50%</div>
+            <div className="text-caption text-muted-foreground">Revenue Share</div>
           </div>
         </div>
         <p className="text-sm text-muted-foreground mt-3">
-          We supply verified inbound leads. You focus on closing. Great for
-          full-time closers who want volume without prospecting.
+          Work on eligible supported sales opportunities with CRM tools and sales resources when available.
         </p>
       </div>
     </div>
@@ -167,15 +159,15 @@ function ModelHighlightCards() {
 
 const modelBenefits = {
   own: [
-    { icon: Banknote, title: "Up to 70% share", copy: "Highest split in the industry for owned leads." },
+    { icon: Banknote, title: "Up to 70% Revenue Share", copy: "Highest share tier for owned leads." },
     { icon: ShieldCheck, title: "No inventory risk", copy: "We deliver the program — you don't touch content or ops." },
     { icon: Clock, title: "Flexible hours", copy: "Sell part-time or full-time. Your schedule, your pace." },
-    { icon: LineChart, title: "Live dashboard", copy: "Track leads, conversions, and payouts in real time." },
+    { icon: LineChart, title: "Live dashboard", copy: "Track leads, conversions, and revenue share in real time." },
   ],
   supported: [
-    { icon: Target, title: "Warm inbound leads", copy: "Marketing-qualified leads routed automatically." },
+    { icon: Target, title: "Eligible opportunities", copy: "Work on supported sales opportunities where available." },
     { icon: Users, title: "Sales enablement", copy: "Scripts, objection handling, and coaching included." },
-    { icon: Banknote, title: "Up to 50% share", copy: "No lead cost, no ad spend, no risk on your side." },
+    { icon: Banknote, title: "Up to 50% Revenue Share", copy: "Focused on closing, not lead generation." },
     { icon: BadgeCheck, title: "Certified programs", copy: "Sell only verified, high-conversion programs." },
   ],
 };
@@ -186,29 +178,29 @@ function TwoModels() {
       <Container size="xl">
         <SectionHeader
           eyebrow="Two ways to earn"
-          title="Pick the model that fits your strengths"
-          description="Both models pay weekly, have no earning cap, and give you the same partner dashboard, CRM, and support."
+          title="Choose How You Want To Work"
+          description="Both models give you the same partner dashboard, CRM, and sales support."
         />
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           <ModelCard
             variant="primary"
             eyebrow="Model 01 · Own Leads"
-            title="Become a Sales Partner"
-            share="70%"
-            description="You own the customer relationship. We deliver the program. You keep the majority of every sale."
+            title="Sell With Your Own Leads"
+            share="Up to 70%"
+            description="You own the customer relationship. We deliver the program."
             perfectFor="Sales pros with a network, freelancers, ex-consultants."
             benefits={modelBenefits.own}
-            cta="Apply as Sales Partner"
+            cta="Start As Sales Partner"
           />
           <ModelCard
             variant="secondary"
-            eyebrow="Model 02 · Company Leads"
-            title="Sell With Company Leads"
-            share="50%"
-            description="We provide the leads and enablement. You focus on what you do best — closing."
+            eyebrow="Model 02 · Supported Sales"
+            title="Work On Supported Opportunities"
+            share="Up to 50%"
+            description="Work on eligible supported sales opportunities where available."
             perfectFor="Full-time closers who want steady inbound flow."
             benefits={modelBenefits.supported}
-            cta="Apply to close leads"
+            cta="Apply For Supported Sales"
           />
         </div>
       </Container>
