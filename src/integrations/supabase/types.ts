@@ -2212,6 +2212,52 @@ export type Database = {
           },
         ]
       }
+      partner_program_interests: {
+        Row: {
+          category_id: string | null
+          course_id: string | null
+          created_at: string
+          id: string
+          partner_id: string
+        }
+        Insert: {
+          category_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          partner_id: string
+        }
+        Update: {
+          category_id?: string | null
+          course_id?: string | null
+          created_at?: string
+          id?: string
+          partner_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_program_interests_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "course_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_program_interests_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_program_interests_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_program_links: {
         Row: {
           course_id: string
@@ -2521,70 +2567,142 @@ export type Database = {
       }
       partners: {
         Row: {
+          agreement_status: string
           application_id: string | null
+          approved_sales_model: string | null
           bank_account_last4: string | null
           bank_name: string | null
+          city: string | null
+          country: string | null
           created_at: string
           default_revenue_share: number
           display_name: string
+          dual_model_enabled: boolean
           email: string
           first_name: string | null
           id: string
+          income_situation: string | null
           kyc_completed: boolean
           lead_model: Database["public"]["Enums"]["lead_model"]
+          lead_reach_range: string | null
+          lead_sources: string[]
           manager_id: string | null
           mobile: string | null
+          monthly_sales_target: string | null
           onboarding_completed_at: string | null
+          onboarding_current_step: number
+          onboarding_draft: Json
+          onboarding_last_saved_at: string | null
+          onboarding_status: string
           partner_code: string | null
           payout_details_verified: boolean
           payout_min_threshold: number
+          payout_profile_status: string
+          role_title: string | null
+          role_title_other: string | null
+          sales_domains: string[]
+          sales_experience: string | null
+          sales_model_approval_status: string
+          sales_model_approved_at: string | null
+          sales_model_approved_by: string | null
+          sales_model_selected_at: string | null
           sales_model_selection: string | null
+          sold_education_before: boolean | null
+          state: string | null
           status: Database["public"]["Enums"]["partner_status"]
           updated_at: string
           user_id: string | null
         }
         Insert: {
+          agreement_status?: string
           application_id?: string | null
+          approved_sales_model?: string | null
           bank_account_last4?: string | null
           bank_name?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           default_revenue_share?: number
           display_name: string
+          dual_model_enabled?: boolean
           email: string
           first_name?: string | null
           id?: string
+          income_situation?: string | null
           kyc_completed?: boolean
           lead_model?: Database["public"]["Enums"]["lead_model"]
+          lead_reach_range?: string | null
+          lead_sources?: string[]
           manager_id?: string | null
           mobile?: string | null
+          monthly_sales_target?: string | null
           onboarding_completed_at?: string | null
+          onboarding_current_step?: number
+          onboarding_draft?: Json
+          onboarding_last_saved_at?: string | null
+          onboarding_status?: string
           partner_code?: string | null
           payout_details_verified?: boolean
           payout_min_threshold?: number
+          payout_profile_status?: string
+          role_title?: string | null
+          role_title_other?: string | null
+          sales_domains?: string[]
+          sales_experience?: string | null
+          sales_model_approval_status?: string
+          sales_model_approved_at?: string | null
+          sales_model_approved_by?: string | null
+          sales_model_selected_at?: string | null
           sales_model_selection?: string | null
+          sold_education_before?: boolean | null
+          state?: string | null
           status?: Database["public"]["Enums"]["partner_status"]
           updated_at?: string
           user_id?: string | null
         }
         Update: {
+          agreement_status?: string
           application_id?: string | null
+          approved_sales_model?: string | null
           bank_account_last4?: string | null
           bank_name?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           default_revenue_share?: number
           display_name?: string
+          dual_model_enabled?: boolean
           email?: string
           first_name?: string | null
           id?: string
+          income_situation?: string | null
           kyc_completed?: boolean
           lead_model?: Database["public"]["Enums"]["lead_model"]
+          lead_reach_range?: string | null
+          lead_sources?: string[]
           manager_id?: string | null
           mobile?: string | null
+          monthly_sales_target?: string | null
           onboarding_completed_at?: string | null
+          onboarding_current_step?: number
+          onboarding_draft?: Json
+          onboarding_last_saved_at?: string | null
+          onboarding_status?: string
           partner_code?: string | null
           payout_details_verified?: boolean
           payout_min_threshold?: number
+          payout_profile_status?: string
+          role_title?: string | null
+          role_title_other?: string | null
+          sales_domains?: string[]
+          sales_experience?: string | null
+          sales_model_approval_status?: string
+          sales_model_approved_at?: string | null
+          sales_model_approved_by?: string | null
+          sales_model_selected_at?: string | null
           sales_model_selection?: string | null
+          sold_education_before?: boolean | null
+          state?: string | null
           status?: Database["public"]["Enums"]["partner_status"]
           updated_at?: string
           user_id?: string | null

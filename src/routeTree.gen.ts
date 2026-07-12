@@ -22,6 +22,7 @@ import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
@@ -95,6 +96,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedPartnerOnboardingRoute =
+  AuthenticatedPartnerOnboardingRouteImport.update({
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerDashboardRoute =
   AuthenticatedPartnerDashboardRouteImport.update({
     id: '/dashboard',
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
+  '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
@@ -172,6 +180,7 @@ export interface FileRoutesByTo {
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
+  '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
@@ -195,6 +204,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
+  '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/admin/applications'
     | '/admin/categories'
     | '/partner/dashboard'
+    | '/partner/onboarding'
     | '/admin/'
     | '/programs/$category/'
     | '/admin/courses/$id'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/admin/applications'
     | '/admin/categories'
     | '/partner/dashboard'
+    | '/partner/onboarding'
     | '/admin'
     | '/programs/$category'
     | '/admin/courses/$id'
@@ -260,6 +272,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/categories'
     | '/_authenticated/partner/dashboard'
+    | '/_authenticated/partner/onboarding'
     | '/_authenticated/admin/'
     | '/programs/$category/'
     | '/_authenticated/admin/courses/$id'
@@ -376,6 +389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/partner/onboarding': {
+      id: '/_authenticated/partner/onboarding'
+      path: '/onboarding'
+      fullPath: '/partner/onboarding'
+      preLoaderRoute: typeof AuthenticatedPartnerOnboardingRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/partner/dashboard': {
       id: '/_authenticated/partner/dashboard'
       path: '/dashboard'
@@ -449,10 +469,12 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
+  AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
 }
 
 const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerDashboardRoute: AuthenticatedPartnerDashboardRoute,
+  AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
 }
 
 const AuthenticatedPartnerRouteWithChildren =

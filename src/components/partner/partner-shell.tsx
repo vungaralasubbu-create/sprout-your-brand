@@ -27,6 +27,7 @@ import { Badge } from "@/components/ui/badge";
 
 const NAV = [
   { to: "/partner/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/partner/onboarding", label: "Onboarding", icon: UserCheck },
   { to: "/partner/programs", label: "Programs", icon: Package },
   { to: "/partner/leads", label: "My Leads", icon: Users },
   { to: "/partner/assigned-leads", label: "Assigned Leads", icon: UserCheck },
