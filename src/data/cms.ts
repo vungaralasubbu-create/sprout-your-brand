@@ -99,7 +99,7 @@ const CATEGORIES: CourseCategory[] = [
     name: "Computer Science",
     icon: BrainCircuit,
     accent: "brand",
-    description: "AI, ML, Data Science, Web & App Development, Cloud, Cyber Security.",
+    description: "Build future-ready technology skills across software, data, AI, and digital infrastructure.",
     topics: [
       "Artificial Intelligence",
       "Machine Learning",
@@ -119,7 +119,7 @@ const CATEGORIES: CourseCategory[] = [
     name: "Electronics & Electrical",
     icon: Cpu,
     accent: "cyan",
-    description: "VLSI, embedded systems, IoT and robotics programs.",
+    description: "Explore intelligent hardware, semiconductor systems, connected devices, and automation technologies.",
     topics: ["VLSI Design", "Embedded Systems", "Internet of Things (IoT)", "Robotics"],
     courseCount: 18,
     featured: true,
@@ -130,7 +130,7 @@ const CATEGORIES: CourseCategory[] = [
     name: "Mechanical Engineering",
     icon: Cog,
     accent: "violet",
-    description: "CAD, CAM, drones, product & manufacturing design.",
+    description: "Develop practical engineering and design skills for modern product and manufacturing industries.",
     topics: [
       "AutoCAD",
       "Drone Engineering",
@@ -148,7 +148,7 @@ const CATEGORIES: CourseCategory[] = [
     name: "Management",
     icon: Briefcase,
     accent: "lime",
-    description: "HR, marketing, finance, banking, stock market and operations.",
+    description: "Build business, finance, marketing, people management, and strategic decision-making skills.",
     topics: [
       "Human Resource Management",
       "Digital Marketing",
@@ -343,8 +343,12 @@ async function delay<T>(v: T) {
   return v;
 }
 
+export const FALLBACK_CATEGORIES: CourseCategory[] = CATEGORIES.filter(
+  (c) => c.published && c.featured,
+);
+
 export async function fetchFeaturedCategories(): Promise<CourseCategory[]> {
-  return delay(CATEGORIES.filter((c) => c.published && c.featured));
+  return delay(FALLBACK_CATEGORIES);
 }
 
 export async function fetchFeaturedPrograms(): Promise<Program[]> {
