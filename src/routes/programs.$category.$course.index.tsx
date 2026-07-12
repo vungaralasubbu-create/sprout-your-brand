@@ -207,6 +207,13 @@ function CoursePage() {
   const price = c.offer_price ?? c.base_price;
   const applyTo = { category, course };
   const counsellorCtx = { course_id: c.id, course_name: c.name, category_name: c.category.name };
+  const onApplyClick = () =>
+    trackApplyClick({
+      id: c.id,
+      name: c.name,
+      category: c.category.name,
+      partner_code: ref ?? null,
+    });
 
   // ---- Derive dynamic content with graceful fallbacks ----
   const highlights = buildHighlights(c);
