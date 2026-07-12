@@ -14,7 +14,6 @@ import {
   Handshake,
   Scale,
   Wallet,
-  BadgeDollarSign,
   RefreshCw,
   Building2,
   Rocket,
