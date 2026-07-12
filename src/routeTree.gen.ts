@@ -18,9 +18,11 @@ import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-b
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
+import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/programs.$category.$course.index'
@@ -73,6 +75,11 @@ const LaunchYourBrandConsultationRoute =
     path: '/launch-your-brand/consultation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
+  id: '/partner',
+  path: '/partner',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -88,6 +95,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedPartnerDashboardRoute =
+  AuthenticatedPartnerDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedAdminCategoriesRoute =
   AuthenticatedAdminCategoriesRouteImport.update({
     id: '/categories',
@@ -130,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -137,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/programs/': typeof ProgramsIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
@@ -148,6 +163,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -155,6 +171,7 @@ export interface FileRoutesByTo {
   '/programs': typeof ProgramsIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
@@ -169,6 +186,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -176,6 +194,7 @@ export interface FileRoutesById {
   '/programs/': typeof ProgramsIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
@@ -190,6 +209,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/earn'
     | '/admin'
+    | '/partner'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -197,6 +217,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/admin/applications'
     | '/admin/categories'
+    | '/partner/dashboard'
     | '/admin/'
     | '/programs/$category/'
     | '/admin/courses/$id'
@@ -208,6 +229,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/earn'
+    | '/partner'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -215,6 +237,7 @@ export interface FileRouteTypes {
     | '/programs'
     | '/admin/applications'
     | '/admin/categories'
+    | '/partner/dashboard'
     | '/admin'
     | '/programs/$category'
     | '/admin/courses/$id'
@@ -228,6 +251,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/earn'
     | '/_authenticated/admin'
+    | '/_authenticated/partner'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -235,6 +259,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/categories'
+    | '/_authenticated/partner/dashboard'
     | '/_authenticated/admin/'
     | '/programs/$category/'
     | '/_authenticated/admin/courses/$id'
@@ -323,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/partner': {
+      id: '/_authenticated/partner'
+      path: '/partner'
+      fullPath: '/partner'
+      preLoaderRoute: typeof AuthenticatedPartnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -343,6 +375,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/partner/dashboard': {
+      id: '/_authenticated/partner/dashboard'
+      path: '/dashboard'
+      fullPath: '/partner/dashboard'
+      preLoaderRoute: typeof AuthenticatedPartnerDashboardRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/admin/categories': {
       id: '/_authenticated/admin/categories'
@@ -408,12 +447,25 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedPartnerRouteChildren {
+  AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
+}
+
+const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
+  AuthenticatedPartnerDashboardRoute: AuthenticatedPartnerDashboardRoute,
+}
+
+const AuthenticatedPartnerRouteWithChildren =
+  AuthenticatedPartnerRoute._addFileChildren(AuthenticatedPartnerRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =

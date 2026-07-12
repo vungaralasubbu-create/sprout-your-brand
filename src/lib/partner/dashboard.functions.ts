@@ -49,7 +49,7 @@ export const getDashboardStats = createServerFn({ method: "GET" })
       "application_started",
       "application_submitted",
       "payment_pending",
-    ];
+    ] as const;
 
     const [
       activeLeads,
