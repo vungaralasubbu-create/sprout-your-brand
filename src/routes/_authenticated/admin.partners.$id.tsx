@@ -99,7 +99,7 @@ function PartnerDetail() {
         <div className="flex gap-2 flex-wrap">
           <Dialog open={modelOpen} onOpenChange={setModelOpen}>
             <DialogTrigger asChild>
-              <Button variant="default" size="sm"><Shield className="size-4" /> Review Model</Button>
+              <Button variant="primary" size="sm"><Shield className="size-4" /> Review Model</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>Review Sales Model</DialogTitle></DialogHeader>

@@ -52,7 +52,7 @@ function AttentionRow({ icon: Icon, label, count, to }: any) {
         <div className="text-sm font-medium truncate">{label}</div>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <Badge variant={empty ? "outline" : "secondary"} className={empty ? "text-muted-foreground" : "bg-amber-50 text-amber-800 border-amber-200"}>
+        <Badge variant={empty ? "outline" : "muted"} className={empty ? "text-muted-foreground" : "bg-amber-50 text-amber-800 border-amber-200"}>
           {count}
         </Badge>
         <ArrowRight className="size-3.5 text-muted-foreground group-hover:text-primary" />
