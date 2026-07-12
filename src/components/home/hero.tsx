@@ -1,19 +1,22 @@
 import * as React from "react";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  ChevronRight,
+  LineChart,
+  ShoppingBag,
+  Wallet,
+  Clock,
+  Activity,
+  Zap,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container, Section } from "@/components/shared/section";
 
-const INR = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  maximumFractionDigits: 0,
-});
-
 export function HomeHero() {
   return (
     <Section tone="default" padding="sm" className="relative overflow-hidden">
-      {/* Very soft brand wash — light-first, no crypto glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[480px] -z-10"
@@ -24,7 +27,6 @@ export function HomeHero() {
       />
       <Container>
         <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
-          {/* Copy */}
           <div className="flex flex-col gap-5">
             <h1 className="text-hero text-balance">
               Your Sales Skills Deserve{" "}
@@ -53,7 +55,6 @@ export function HomeHero() {
             </ul>
           </div>
 
-          {/* Earnings card */}
           <EarningsCard />
         </div>
       </Container>
@@ -83,9 +84,20 @@ function TrustPoint({ children }: { children: React.ReactNode }) {
   );
 }
 
-function EarningsCard() {
-  const earnings = 105000;
+const FLOW_STEPS = [
+  { label: "Choose Programs", icon: BookOpen },
+  { label: "Make Successful Sales", icon: ShoppingBag },
+  { label: "Track Revenue", icon: LineChart },
+  { label: "Earn Your Share", icon: Wallet },
+];
 
+const METRICS = [
+  { label: "Flexible Selling", icon: Clock },
+  { label: "Live Tracking", icon: Activity },
+  { label: "Fast Payout Processing", icon: Zap },
+];
+
+function EarningsCard() {
   return (
     <div className="relative">
       <div
@@ -93,99 +105,61 @@ function EarningsCard() {
         className="absolute -inset-4 rounded-[28px] bg-gradient-brand opacity-[0.05] blur-2xl"
       />
       <article
-        className="relative rounded-2xl border border-border bg-card p-4 md:p-5 shadow-sm"
-        aria-label="Potential earnings preview"
+        className="relative rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
+        aria-label="Earnings opportunity preview"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col">
-            <span className="text-label">Potential Earnings</span>
+            <span className="text-label">Earn Based On Your Sales</span>
             <span className="text-caption mt-0.5">
-              Example based on selected sales inputs
+              Revenue share depends on the model you choose
             </span>
           </div>
+          <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded-md bg-primary-soft text-primary">
+            Partner Model
+          </span>
         </div>
 
-        <p className="mt-3 font-display text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-          {INR.format(earnings)}
+        <div className="mt-5 flex items-end gap-2">
+          <span className="font-display text-5xl md:text-6xl font-bold tracking-tight text-gradient-brand leading-none">
+            70%
+          </span>
+          <span className="text-sm font-medium text-muted-foreground pb-2">
+            up to
+          </span>
+        </div>
+        <p className="mt-1 text-sm font-semibold text-foreground/85">
+          Revenue Share
         </p>
 
-        <TrendSpark className="mt-4 h-10 w-full" />
+        <ol className="mt-5 flex flex-col gap-2">
+          {FLOW_STEPS.map((s, i) => (
+            <li
+              key={s.label}
+              className="flex items-center gap-3 text-sm"
+            >
+              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                <s.icon className="size-4" />
+              </span>
+              <span className="font-medium text-foreground/90">{s.label}</span>
+              {i < FLOW_STEPS.length - 1 ? (
+                <ChevronRight className="ml-auto size-4 text-muted-foreground/60" />
+              ) : null}
+            </li>
+          ))}
+        </ol>
 
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-4 text-sm">
-          <MetricCell label="Sales" value="5" />
-          <MetricCell label="Avg. Program" value="₹30K" />
-          <MetricCell label="Revenue Share" value="70%" accent />
+        <div className="mt-5 grid grid-cols-3 gap-2 border-t border-border pt-4">
+          {METRICS.map((m) => (
+            <div key={m.label} className="flex flex-col items-start gap-1">
+              <m.icon className="size-4 text-primary" />
+              <span className="text-[11px] font-semibold leading-tight text-foreground/85">
+                {m.label}
+              </span>
+            </div>
+          ))}
         </div>
-
-        <a
-          href="/#calculator"
-          className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80"
-        >
-          Try the calculator <ArrowUpRight className="size-3.5" />
-        </a>
       </article>
     </div>
-  );
-}
-
-function MetricCell({
-  label,
-  value,
-  accent,
-}: {
-  label: string;
-  value: string;
-  accent?: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-0.5">
-      <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-        {label}
-      </span>
-      <span
-        className={
-          "text-sm font-semibold " +
-          (accent ? "text-primary" : "text-foreground")
-        }
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
-
-function TrendSpark({ className }: { className?: string }) {
-  // Simple SVG upward trend — subtle, financial insight feel.
-  return (
-    <svg
-      viewBox="0 0 400 120"
-      className={className}
-      preserveAspectRatio="none"
-      role="img"
-      aria-label="Upward earnings trend"
-    >
-      <defs>
-        <linearGradient id="hero-spark-fill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="oklch(0.62 0.19 245)" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="oklch(0.62 0.19 245)" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="hero-spark-stroke" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0%" stopColor="oklch(0.78 0.16 175)" />
-          <stop offset="100%" stopColor="oklch(0.55 0.24 265)" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M0,100 L40,92 L80,86 L120,78 L160,74 L200,60 L240,52 L280,44 L320,32 L360,24 L400,12 L400,120 L0,120 Z"
-        fill="url(#hero-spark-fill)"
-      />
-      <path
-        d="M0,100 L40,92 L80,86 L120,78 L160,74 L200,60 L240,52 L280,44 L320,32 L360,24 L400,12"
-        fill="none"
-        stroke="url(#hero-spark-stroke)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }

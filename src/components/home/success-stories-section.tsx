@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Quote } from "lucide-react";
+import { ArrowRight, Quote, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container, Section, SectionHeader } from "@/components/shared/section";
-import { EmptyState } from "@/components/shared/empty-state";
 import { fetchSuccessStories, type SuccessStory } from "@/data/cms";
 
 export function SuccessStoriesSection() {
@@ -12,7 +11,10 @@ export function SuccessStoriesSection() {
     queryFn: fetchSuccessStories,
   });
 
-  const stories = data.slice(0, 3);
+  const stories = data.filter((s) => s.published).slice(0, 3);
+
+  // Hide entire section when no approved published stories exist.
+  if (stories.length === 0) return null;
 
   return (
     <Section id="stories" tone="surface" padding="lg">
@@ -20,20 +22,13 @@ export function SuccessStoriesSection() {
         <SectionHeader
           eyebrow="Success stories"
           title={<>Real People. Real Growth.</>}
-          description="Verified stories from partners, brand owners, and career-transition students."
+          description="Stories from partners, brand owners, and career-transition students."
         />
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {stories.length === 0 ? (
-            <div className="md:col-span-3">
-              <EmptyState
-                title="Stories coming soon"
-                description="Real success stories will appear here once verified by the team."
-              />
-            </div>
-          ) : (
-            stories.map((s) => <StoryCard key={s.id} story={s} />)
-          )}
+          {stories.map((s) => (
+            <StoryCard key={s.id} story={s} />
+          ))}
         </div>
 
         <div className="mt-12 flex justify-center">
@@ -56,8 +51,13 @@ function StoryCard({ story }: { story: SuccessStory }) {
         {story.quote}
       </p>
       <div className="mt-6 border-t border-border pt-5">
-        <p className="font-display text-base font-semibold text-foreground">
+        <p className="font-display text-base font-semibold text-foreground flex items-center gap-2">
           {story.name}
+          {story.verified ? (
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+              <ShieldCheck className="size-3" /> Verified
+            </span>
+          ) : null}
         </p>
         <p className="text-caption mt-0.5">{story.role}</p>
         <div className="mt-3 flex flex-col gap-1 text-[13px] leading-relaxed">
@@ -70,11 +70,6 @@ function StoryCard({ story }: { story: SuccessStory }) {
             {story.current}
           </p>
         </div>
-        {!story.verified ? (
-          <p className="mt-3 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-            Development placeholder
-          </p>
-        ) : null}
       </div>
     </article>
   );
