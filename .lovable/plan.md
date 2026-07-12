@@ -1,89 +1,125 @@
-# Dynamic Course CMS + Public Program Pages
+# Sales Partner Dashboard & Revenue Workspace
 
-Scope is very large. I'll ship it in 3 tightly-scoped phases so each is reviewable and the site stays deployable between them. No changes to homepage, design system, revenue module, brand module, or auth.
+Scope is very large (30 sections, 20+ routes, RBAC, payouts, statements). To ship this reliably I'll build it in **4 phases**, each independently usable in Preview. Each phase ends with a working Preview state so you can review before I continue.
 
-## Phase 1 — Data Model + Seed + Public Read Layer
+I'll reuse the existing schema (`partner_applications`, `partners`, `commissions`, `payouts`, `payout_items`, `revenue_share_rules`, `enrollments`, `partner_referral_events`, `course_applications`, `user_roles`) — no duplicate systems. New tables only where truly missing (leads, follow-ups, agreements, sales enablement, notifications, support tickets, statements, attribution reviews).
 
-**DB migration** (single migration, all with GRANTs + RLS):
+---
 
-Tables (all with `id`, `created_at`, `updated_at`, `created_by`, `updated_by` where noted):
+## Phase A — Foundation & Access (this turn)
 
-- `course_categories` — name, slug (unique), short_description, full_description, icon, thumbnail_url, hero_image_url, hero_title, hero_subtitle, accent_style, display_order, is_featured, is_active, status (draft/published/archived), seo_title, seo_description, seo_keywords[]
-- `skills` — name (unique), slug, description, icon
-- `tools` — name (unique), slug, logo_url, description, website_url, category, is_active
-- `career_roles` — title, slug, description, experience_level, salary_min, salary_max, currency, salary_period, salary_source, salary_source_url, salary_date, region, is_visible
-- `projects` — name, slug, short_description, full_description, image_url, difficulty, duration, industry, project_type, learning_outcomes[]
-- `courses` — category_id (FK), name, slug (unique per category), short_description, full_description, thumbnail_url, hero_image_url, promo_video_url, status, is_published, is_featured, is_trending, is_popular, is_bestseller, white_label_eligible, partner_sale_eligible, supported_sales_eligible, display_order, duration, learning_mode, level, language, weekly_commitment, format, prerequisites, eligibility, target_audience, base_price, offer_price, discount_pct, currency, emi_available, emi_starting, scholarship_available, pricing_visibility, tax_config jsonb, pricing_notes, default_revenue_rule_id (FK to `revenue_share_rules`), seo_title, seo_description, seo_keywords[], og_image_url, canonical_url
-- `course_sections` — course_id, section_type, title, content jsonb, display_order, is_enabled (drives modular section ordering)
-- `course_modules` — course_id, number, name, description, duration, learning_outcomes[], display_order
-- `course_topics` — module_id, name, description, display_order
-- `course_lessons` — topic_id, name, lesson_type (video/text/pdf/quiz/assignment/live/project/external), duration, is_free_preview, is_published, resource_url, display_order
-- `course_skills` — course_id, skill_id (many-to-many)
-- `course_tools` — course_id, tool_id
-- `course_projects` — course_id, project_id
-- `course_career_roles` — course_id, career_role_id
-- `course_certifications` — course_id, name, description, image_url, issuer, verification_available, requirements
-- `course_placement_support` — course_id, support_type, description, is_enabled
-- `course_faqs` — course_id, question, answer, display_order
-- `course_related` — course_id, related_course_id, is_manual (manual > auto)
-- `course_brochures` — course_id, file_url, version, is_published, capture_lead
-- `course_applications` — course_id, full_name, mobile, email, city, state, education, graduation_year, current_role, work_experience, preferred_mode, start_timeline, source, consent, partner_ref (nullable → partners.code), status
-- `brochure_leads` — course_id, name, mobile, email
-- `partner_referral_events` — partner_id, course_id, session_id, event_type (visit/lead/application/enrollment), metadata jsonb
+**DB migration** (single migration, RLS + GRANTs on every new table):
+- `partner_leads` — own + assigned leads, `owner_partner_id`, `assigned_partner_id`, `lead_model` (`own` | `supported`), normalized phone/email, status enum, source, notes, timestamps.
+- `partner_lead_activities` — timeline (note, follow_up, stage_change, link_shared, application_started, payment_recorded, enrollment_verified, revenue_pending, revenue_approved).
+- `partner_follow_ups` — lead_id, due_at, type, status, result, next_follow_up_id.
+- `partner_agreements` + `partner_agreement_acceptances` — versioned terms consent.
+- `partner_program_links` — partner_id, course_id, ref_code, click/session/application/enrollment/revenue counters (backed by joins to `partner_referral_events`).
+- `partner_sales_enablement` — per-course admin content (icp, pain points, positioning, whatsapp/email pitch, objection handling, talking points).
+- `partner_notifications` + `partner_notification_preferences`.
+- `partner_support_tickets` + `partner_support_messages`.
+- `partner_statements` (materialized monthly rollup metadata; PDFs generated on demand).
+- `partner_lead_attribution_reviews` — duplicate/conflict workflow.
+- Extend `partners` with `sales_model` (`own` | `supported` | `dual`), `partner_code` (unique), `onboarding_status`, `payout_min_threshold`, `bank_account_last4`, masked banking columns.
+- Extend `user_roles` app_role enum to include `partner` if not present.
+- Helper functions: `is_partner(uuid)`, `partner_id_for(uuid)`, `normalize_phone(text)`, `normalize_email(text)`.
+- RLS everywhere: partners see only their own rows via `partner_id_for(auth.uid())`. Bank/payout columns unreadable except via masked view. Admins via existing `is_admin()`.
 
-**RLS pattern**:
-- Public SELECT on published rows (`is_published = true` and/or `status = 'published'`) with `TO anon, authenticated`.
-- Admin ALL via `public.is_admin(auth.uid())`.
-- Applications/leads: INSERT open to `anon`; SELECT admin-only.
-- Owner reads for course drafts via admin role.
+**Auth & routing shell**:
+- Add `src/routes/_authenticated/partner/` gated subtree (uses integration-managed `_authenticated` layout).
+- Nested layout `_authenticated/partner/route.tsx` — checks `has_role('partner')` via server fn; redirects non-partners to `/partner/apply`.
+- Left sidebar navigation (`PartnerShell`) with 14 items, mobile bottom nav.
+- Server fns in `src/lib/partner/*.functions.ts` (all with `requireSupabaseAuth`): `getPartnerProfile`, `getDashboardStats`, `getEligiblePrograms`, `listLeads`, `createLead`, `listAssignedLeads`, `getLeadDetail`, `addLeadActivity`, `listFollowUps`, `createFollowUp`, `listLinks`, `createLink`, `listEarnings`, `listPayouts`, `requestPayout`, `getRevenueRulesExplanation`, `listNotifications`, `listStatements`, `createSupportTicket`.
+- Dashboard overview page (`/partner/dashboard`) — greeting, 4 KPI cards, active model card, quick actions grid, today's follow-ups.
 
-**Seed migration**: 4 default categories + all named default courses (Computer Science, Electronics & Electrical, Mechanical Engineering, Management) with short descriptions from the brief, `status = 'published'`, sensible defaults for pricing/duration (admin-editable). Idempotent via `ON CONFLICT (slug) DO NOTHING`.
+**Preview verify**: signed-in partner lands on `/partner/dashboard`, sees zero-state KPIs, sidebar navigation works.
 
-## Phase 2 — Public Program Pages
+---
 
-Routes (all leaf `head()` with SEO, all read via TanStack Query + server publishable client for anon):
+## Phase B — Sales workflow (leads, follow-ups, programs)
 
-- `/programs` — discovery: search (name/skill/tool/role/category), filters (category, duration, mode, level, price range, EMI, featured, popular), sorted grid using existing `CourseCard`.
-- `/programs/$category` — category hero + featured + all programs + skills + roles + FAQ + CTA. Dynamic for any published category slug.
-- `/programs/$category/$course` — hero (breadcrumb, name, rating/enrollment only if data), sticky apply card (desktop) + mobile sticky Apply, sections rendered in admin-defined order (fallback to default), hides empty sections, related programs (manual > auto by category/skills/tools).
-- `/programs/$course/apply` — application form; captures `?ref=CODE` from query/session; writes to `course_applications` + `partner_referral_events`.
-- Brochure download: modal on course page — if `capture_lead`, collect name/mobile/email then serve URL.
+- `/partner/programs` marketplace — reads `courses` where `partner_sale_eligible=true` via existing publishable client; filters, search.
+- `/partner/programs/$course` sales enablement page — pulls `partner_sales_enablement` (admin CMS content), Copy Message / Copy Email buttons using `navigator.clipboard`.
+- `/partner/leads` — Kanban + Table view, Add Lead modal with dedupe check (normalized phone/email) → attribution review row if collision.
+- `/partner/leads/$leadId` — profile, timeline, notes, stage change, follow-up scheduling, "Start Application" using existing `course_applications` insert with `partner_id` + `lead_id` attribution.
+- `/partner/assigned-leads` — supported model workspace, filtered by `assigned_partner_id`.
+- `/partner/follow-ups` — Today/Overdue/Upcoming/Completed tabs.
+- `/partner/links` — generate `?ref=PARTNERCODE`, copy + QR (using `qrcode` lib), aggregate counters from `partner_referral_events` and `commissions`.
 
-Referral tracking: `?ref=CODE` sets sessionStorage, logs `visit` event on program view, and attaches to application/brochure lead.
+**Preview verify**: add a lead, schedule a follow-up, generate a link, start an application for a lead.
 
-Server fns (public, publishable-key client):
-- `listPublishedCategories`, `getCategoryBySlug`, `listPublishedCourses(filters)`, `getCourseBySlug(category, slug)`, `submitCourseApplication`, `submitBrochureLead`, `logReferralEvent`.
+---
 
-Update `src/data/cms.ts` fallback hook to prefer live categories, keep fallback only if fetch fails (homepage stays untouched visually).
+## Phase C — Earnings, revenue, payouts
 
-## Phase 3 — Admin CMS
+- `/partner/earnings` — table over `commissions`, KPI cards for each status bucket. Snapshot of the `revenue_share_rules` row applied is already stored per-commission — display it.
+- `/partner/revenue-rules` — plain-language explanation page with the illustrative 70%/50% examples clearly labelled "Illustrative only".
+- `/partner/payouts` — history table, request modal (locks selected commissions), status timeline, 48-hour language.
+- Server-side payout request: validates min threshold, locks commissions via `payout_items` insert inside a transaction (RPC `request_partner_payout`).
+- `/partner/performance` — aggregate metrics over date filters (7/30/90/custom) with real data.
+- `/partner/statements` — monthly rollup list with "Partner Earnings Statement" label (explicitly NOT payslip); on-demand PDF via server fn using `pdf-lib`.
 
-Route tree under `_authenticated/admin/`:
+**Preview verify**: earnings zero-state, payout button disabled until threshold met, revenue rules page renders with illustrative examples.
 
-- `/admin/categories` — table with reorder (drag handle), publish/unpublish/archive, create/edit drawer.
-- `/admin/courses` — table with search, filters, bulk actions (publish, unpublish, archive, category change, featured, WL eligibility, partner/supported eligibility). Row actions: edit, duplicate, delete (safe: only if no enrollments).
-- `/admin/courses/new` and `/admin/courses/$id/edit` — 10-step guided builder (Basic, Category & Eligibility, Pricing, Details, Curriculum, Skills & Tools, Projects, Career, Certification & Support, SEO & Publishing). Save Draft / Preview / Publish. Auto-save.
-- `/admin/skills`, `/admin/tools`, `/admin/projects`, `/admin/career-roles` — simple CRUD tables.
-- `/admin/applications`, `/admin/brochures`, `/admin/brochure-leads` — read tables with status.
-- Curriculum builder inside course edit: modules → topics → lessons with reorder + duplicate.
-- Section ordering: drag-to-reorder in course edit "Sections" tab (writes `course_sections.display_order` + `is_enabled`).
+---
 
-Access: gated by `_authenticated` layout + `has_role(uid, 'admin' | 'super_admin')` check via server fn; non-admins get 403.
+## Phase D — Onboarding, profile, notifications, support, admin, careers
 
-Uploads: use existing Supabase Storage; create a `course-assets` public bucket in the same migration.
+- First-time onboarding wizard (7 steps as specified) — persists to `partners.onboarding_status`, agreement acceptance rows, sales model choice, bank details (last 4 stored on `partners`, full details in `partner_payout_details` with column-level restricted read).
+- `/partner/profile` — sections per spec; bank change triggers `partner_verification_requests` row instead of direct update.
+- `/partner/notifications` — center + prefs.
+- `/partner/support` — tickets + messages.
+- `/careers/sales-pathways` — public informational page contrasting Independent Partner vs Employment.
+- Admin extensions under `_authenticated/admin/partners/*`: approve/reject/suspend, model toggles, program assignment, attribution review queue, revenue approve/hold/reverse, payout approve/mark-paid, statements viewer, agreements viewer, support triage.
 
-## Technical Notes
+**Preview verify**: full onboarding flow, admin can approve a partner, notifications and support work end-to-end.
 
-- Reuse existing `CourseCard`, `CategoryCard`, `FAQ`, `Timeline`, `EmptyState` primitives.
-- All course reads go through server functions using publishable key (no service role on public pages).
-- Pricing/eligibility read on public pages; commission math stays in existing revenue module.
-- Sitemap: extend existing sitemap route (or create `src/routes/sitemap[.]xml.ts`) to include published categories + courses.
-- Never render "coming soon" / empty placeholders on public pages — sections return `null` when empty.
+---
 
-## Delivery Order
+## Design & security guardrails (applied to every phase)
 
-1. Phase 1 migration (categories, skills, tools, roles, projects, courses, sections, modules/topics/lessons, joins, applications, brochures, referrals) + seed + storage bucket.
-2. Phase 2 public routes + server fns + brochure/apply forms + referral tracking + sitemap update.
-3. Phase 3 admin CMS (categories/courses list, 10-step builder, curriculum builder, skills/tools/projects/roles CRUD, applications/brochure leads, bulk actions).
+- Light-first, white cards, soft grey surfaces, navy text, blue/cyan accents — same tokens as homepage. No crypto/MLM vibes.
+- Every partner query gated by `partner_id_for(auth.uid())` in RLS AND server fn — no frontend-only filtering.
+- Bank/payout details: full number never returned to client; only `bank_account_last4` and `bank_name` exposed.
+- All revenue math server-side using existing `revenue_share_rules` priority order (partner-specific → program → campaign → default). No frontend percent hardcoding.
+- Clicks in `partner_referral_events` are analytics only — never inserted into `commissions`.
+- Sensitive changes (bank account, sales model) require verification row before taking effect.
+- All CMS content (sales enablement, agreements, revenue rules copy) editable by admin, not hardcoded in components.
 
-I'll pause between phases so you can review before I proceed. Confirm to start Phase 1 (DB migration + seed) — that's the only step that needs your approval before running.
+---
+
+## Technical notes
+
+```text
+src/routes/_authenticated/partner/
+  route.tsx                (partner role gate + sidebar shell)
+  dashboard.tsx
+  programs.index.tsx
+  programs.$course.tsx
+  leads.index.tsx
+  leads.$leadId.tsx
+  assigned-leads.tsx
+  follow-ups.tsx
+  links.tsx
+  earnings.tsx
+  revenue-rules.tsx
+  payouts.tsx
+  performance.tsx
+  statements.tsx
+  profile.tsx
+  notifications.tsx
+  support.tsx
+  onboarding.tsx
+
+src/lib/partner/
+  *.functions.ts           (all createServerFn + requireSupabaseAuth)
+  attribution.server.ts    (dedupe + review workflow)
+  revenue.server.ts        (rule resolution)
+  payouts.server.ts        (request + lock)
+
+src/components/partner/
+  partner-shell.tsx, kpi-card.tsx, model-card.tsx,
+  lead-kanban.tsx, lead-table.tsx, lead-form.tsx,
+  follow-up-form.tsx, earnings-table.tsx, payout-request-modal.tsx, etc.
+```
+
+I'll start Phase A now: DB migration first (needs your approval), then build the shell + dashboard on top of it. Say "go" to proceed, or tell me to reorder / trim phases.
