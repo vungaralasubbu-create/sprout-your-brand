@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { submitCounsellorLead } from "@/lib/leads/counsellor.functions";
+import { trackEvent } from "@/lib/analytics/client";
 
 export type CounsellorContext = {
   course_id?: string | null;
@@ -116,6 +117,13 @@ export function CounsellorForm({
       });
       if (res.ok) {
         setSuccess(true);
+        trackEvent("counsellor_request", {
+          course_id: context?.course_id ?? null,
+          course_name: context?.course_name ?? null,
+          category: context?.category_name ?? null,
+          partner_code: referral.code ?? null,
+          dedupe_key: (res as any).lead_id ?? `${context?.course_id ?? "site"}:${Date.now()}`,
+        });
       } else {
         toast.error(res.error ?? "Something went wrong.");
       }
