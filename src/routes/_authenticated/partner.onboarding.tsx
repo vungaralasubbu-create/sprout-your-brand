@@ -1107,7 +1107,7 @@ function StepTerms({
                   Version {a.version} · Effective {new Date(a.effective_from).toLocaleDateString()}
                 </div>
               </div>
-              {opened[a.id] && <Badge variant="secondary">Reviewed</Badge>}
+              {opened[a.id] && <Badge variant="muted">Reviewed</Badge>}
               <ChevronDown className={cn("size-4 transition", expanded[a.id] && "rotate-180")} />
             </button>
             {expanded[a.id] && (
