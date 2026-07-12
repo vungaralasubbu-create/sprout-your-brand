@@ -93,7 +93,7 @@ function EarningsCard() {
         className="absolute -inset-4 rounded-[28px] bg-gradient-brand opacity-[0.05] blur-2xl"
       />
       <article
-        className="relative rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
+        className="relative rounded-2xl border border-border bg-card p-4 md:p-5 shadow-sm"
         aria-label="Potential earnings preview"
       >
         <div className="flex items-center justify-between">
