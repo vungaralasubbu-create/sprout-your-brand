@@ -1673,6 +1673,81 @@ export type Database = {
           },
         ]
       }
+      partner_agreement_acceptances: {
+        Row: {
+          accepted_at: string
+          agreement_id: string
+          id: string
+          ip_address: string | null
+          partner_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          accepted_at?: string
+          agreement_id: string
+          id?: string
+          ip_address?: string | null
+          partner_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          accepted_at?: string
+          agreement_id?: string
+          id?: string
+          ip_address?: string | null
+          partner_id?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_agreement_acceptances_agreement_id_fkey"
+            columns: ["agreement_id"]
+            isOneToOne: false
+            referencedRelation: "partner_agreements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_agreement_acceptances_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_agreements: {
+        Row: {
+          body_markdown: string
+          created_at: string
+          effective_from: string
+          id: string
+          is_active: boolean
+          kind: Database["public"]["Enums"]["partner_agreement_kind"]
+          title: string
+          version: string
+        }
+        Insert: {
+          body_markdown: string
+          created_at?: string
+          effective_from?: string
+          id?: string
+          is_active?: boolean
+          kind: Database["public"]["Enums"]["partner_agreement_kind"]
+          title: string
+          version: string
+        }
+        Update: {
+          body_markdown?: string
+          created_at?: string
+          effective_from?: string
+          id?: string
+          is_active?: boolean
+          kind?: Database["public"]["Enums"]["partner_agreement_kind"]
+          title?: string
+          version?: string
+        }
+        Relationships: []
+      }
       partner_applications: {
         Row: {
           admin_notes: string | null
@@ -1773,6 +1848,415 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_follow_ups: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          due_at: string
+          id: string
+          lead_id: string
+          next_follow_up_id: string | null
+          notes: string | null
+          partner_id: string
+          reminder_sent: boolean
+          result: string | null
+          status: Database["public"]["Enums"]["follow_up_status"]
+          type: Database["public"]["Enums"]["follow_up_type"]
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          due_at: string
+          id?: string
+          lead_id: string
+          next_follow_up_id?: string | null
+          notes?: string | null
+          partner_id: string
+          reminder_sent?: boolean
+          result?: string | null
+          status?: Database["public"]["Enums"]["follow_up_status"]
+          type?: Database["public"]["Enums"]["follow_up_type"]
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          due_at?: string
+          id?: string
+          lead_id?: string
+          next_follow_up_id?: string | null
+          notes?: string | null
+          partner_id?: string
+          reminder_sent?: boolean
+          result?: string | null
+          status?: Database["public"]["Enums"]["follow_up_status"]
+          type?: Database["public"]["Enums"]["follow_up_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_follow_ups_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_follow_ups_next_follow_up_id_fkey"
+            columns: ["next_follow_up_id"]
+            isOneToOne: false
+            referencedRelation: "partner_follow_ups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_follow_ups_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_lead_activities: {
+        Row: {
+          activity_type: Database["public"]["Enums"]["partner_activity_type"]
+          content: string | null
+          created_at: string
+          id: string
+          lead_id: string
+          metadata: Json | null
+          partner_id: string | null
+        }
+        Insert: {
+          activity_type: Database["public"]["Enums"]["partner_activity_type"]
+          content?: string | null
+          created_at?: string
+          id?: string
+          lead_id: string
+          metadata?: Json | null
+          partner_id?: string | null
+        }
+        Update: {
+          activity_type?: Database["public"]["Enums"]["partner_activity_type"]
+          content?: string | null
+          created_at?: string
+          id?: string
+          lead_id?: string
+          metadata?: Json | null
+          partner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_lead_activities_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_lead_activities_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_lead_attribution_reviews: {
+        Row: {
+          admin_notes: string | null
+          claiming_partner_id: string
+          created_at: string
+          existing_lead_id: string | null
+          id: string
+          lead_id: string
+          reason: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          status: Database["public"]["Enums"]["partner_lead_attribution_status"]
+        }
+        Insert: {
+          admin_notes?: string | null
+          claiming_partner_id: string
+          created_at?: string
+          existing_lead_id?: string | null
+          id?: string
+          lead_id: string
+          reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["partner_lead_attribution_status"]
+        }
+        Update: {
+          admin_notes?: string | null
+          claiming_partner_id?: string
+          created_at?: string
+          existing_lead_id?: string | null
+          id?: string
+          lead_id?: string
+          reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          status?: Database["public"]["Enums"]["partner_lead_attribution_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_lead_attribution_reviews_claiming_partner_id_fkey"
+            columns: ["claiming_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_lead_attribution_reviews_existing_lead_id_fkey"
+            columns: ["existing_lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_lead_attribution_reviews_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_leads: {
+        Row: {
+          assigned_partner_id: string | null
+          attribution_status: Database["public"]["Enums"]["partner_lead_attribution_status"]
+          city: string | null
+          course_id: string | null
+          created_at: string
+          email: string | null
+          email_normalized: string | null
+          full_name: string
+          id: string
+          last_activity_at: string | null
+          lead_model: Database["public"]["Enums"]["lead_model"]
+          mobile: string
+          mobile_normalized: string | null
+          next_follow_up_at: string | null
+          notes: string | null
+          owner_partner_id: string | null
+          preferred_contact_time: string | null
+          priority: string | null
+          program_interest: string | null
+          source: Database["public"]["Enums"]["partner_lead_source"]
+          state: string | null
+          status: Database["public"]["Enums"]["partner_lead_status"]
+          updated_at: string
+        }
+        Insert: {
+          assigned_partner_id?: string | null
+          attribution_status?: Database["public"]["Enums"]["partner_lead_attribution_status"]
+          city?: string | null
+          course_id?: string | null
+          created_at?: string
+          email?: string | null
+          email_normalized?: string | null
+          full_name: string
+          id?: string
+          last_activity_at?: string | null
+          lead_model?: Database["public"]["Enums"]["lead_model"]
+          mobile: string
+          mobile_normalized?: string | null
+          next_follow_up_at?: string | null
+          notes?: string | null
+          owner_partner_id?: string | null
+          preferred_contact_time?: string | null
+          priority?: string | null
+          program_interest?: string | null
+          source?: Database["public"]["Enums"]["partner_lead_source"]
+          state?: string | null
+          status?: Database["public"]["Enums"]["partner_lead_status"]
+          updated_at?: string
+        }
+        Update: {
+          assigned_partner_id?: string | null
+          attribution_status?: Database["public"]["Enums"]["partner_lead_attribution_status"]
+          city?: string | null
+          course_id?: string | null
+          created_at?: string
+          email?: string | null
+          email_normalized?: string | null
+          full_name?: string
+          id?: string
+          last_activity_at?: string | null
+          lead_model?: Database["public"]["Enums"]["lead_model"]
+          mobile?: string
+          mobile_normalized?: string | null
+          next_follow_up_at?: string | null
+          notes?: string | null
+          owner_partner_id?: string | null
+          preferred_contact_time?: string | null
+          priority?: string | null
+          program_interest?: string | null
+          source?: Database["public"]["Enums"]["partner_lead_source"]
+          state?: string | null
+          status?: Database["public"]["Enums"]["partner_lead_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_leads_assigned_partner_id_fkey"
+            columns: ["assigned_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_leads_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_leads_owner_partner_id_fkey"
+            columns: ["owner_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          link_url: string | null
+          partner_id: string
+          title: string
+          type: Database["public"]["Enums"]["partner_notification_type"]
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link_url?: string | null
+          partner_id: string
+          title: string
+          type: Database["public"]["Enums"]["partner_notification_type"]
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link_url?: string | null
+          partner_id?: string
+          title?: string
+          type?: Database["public"]["Enums"]["partner_notification_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_notifications_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_payout_details: {
+        Row: {
+          account_holder_name: string | null
+          bank_account_number: string | null
+          bank_name: string | null
+          ifsc_code: string | null
+          legal_name: string | null
+          pan: string | null
+          partner_id: string
+          tax_status: string | null
+          updated_at: string
+          upi_id: string | null
+        }
+        Insert: {
+          account_holder_name?: string | null
+          bank_account_number?: string | null
+          bank_name?: string | null
+          ifsc_code?: string | null
+          legal_name?: string | null
+          pan?: string | null
+          partner_id: string
+          tax_status?: string | null
+          updated_at?: string
+          upi_id?: string | null
+        }
+        Update: {
+          account_holder_name?: string | null
+          bank_account_number?: string | null
+          bank_name?: string | null
+          ifsc_code?: string | null
+          legal_name?: string | null
+          pan?: string | null
+          partner_id?: string
+          tax_status?: string | null
+          updated_at?: string
+          upi_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_payout_details_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: true
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_program_links: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          label: string | null
+          partner_id: string
+          ref_code: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          partner_id: string
+          ref_code: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string | null
+          partner_id?: string
+          ref_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_program_links_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_program_links_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_referral_events: {
         Row: {
           course_id: string | null
@@ -1811,51 +2295,296 @@ export type Database = {
           },
         ]
       }
+      partner_sales_enablement: {
+        Row: {
+          course_id: string
+          created_at: string
+          email_body: string | null
+          email_subject: string | null
+          icp: string | null
+          id: string
+          key_benefits: Json | null
+          objection_handling: Json | null
+          pain_points: string | null
+          sales_angle: string | null
+          short_pitch: string | null
+          talking_points: Json | null
+          updated_at: string
+          updated_by: string | null
+          value_proposition: string | null
+          whatsapp_pitch: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          email_body?: string | null
+          email_subject?: string | null
+          icp?: string | null
+          id?: string
+          key_benefits?: Json | null
+          objection_handling?: Json | null
+          pain_points?: string | null
+          sales_angle?: string | null
+          short_pitch?: string | null
+          talking_points?: Json | null
+          updated_at?: string
+          updated_by?: string | null
+          value_proposition?: string | null
+          whatsapp_pitch?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          email_body?: string | null
+          email_subject?: string | null
+          icp?: string | null
+          id?: string
+          key_benefits?: Json | null
+          objection_handling?: Json | null
+          pain_points?: string | null
+          sales_angle?: string | null
+          short_pitch?: string | null
+          talking_points?: Json | null
+          updated_at?: string
+          updated_by?: string | null
+          value_proposition?: string | null
+          whatsapp_pitch?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_sales_enablement_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_statements: {
+        Row: {
+          adjustments: number
+          approved_revenue_share: number
+          attributed_revenue: number
+          closing_balance: number
+          generated_at: string
+          id: string
+          partner_id: string
+          payouts: number
+          period_month: string
+          reversals: number
+        }
+        Insert: {
+          adjustments?: number
+          approved_revenue_share?: number
+          attributed_revenue?: number
+          closing_balance?: number
+          generated_at?: string
+          id?: string
+          partner_id: string
+          payouts?: number
+          period_month: string
+          reversals?: number
+        }
+        Update: {
+          adjustments?: number
+          approved_revenue_share?: number
+          attributed_revenue?: number
+          closing_balance?: number
+          generated_at?: string
+          id?: string
+          partner_id?: string
+          payouts?: number
+          period_month?: string
+          reversals?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_statements_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_support_messages: {
+        Row: {
+          author_user_id: string | null
+          body: string
+          created_at: string
+          id: string
+          is_admin: boolean
+          ticket_id: string
+        }
+        Insert: {
+          author_user_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          ticket_id: string
+        }
+        Update: {
+          author_user_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_support_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "partner_support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_support_tickets: {
+        Row: {
+          attachment_url: string | null
+          category: Database["public"]["Enums"]["support_ticket_category"]
+          created_at: string
+          description: string
+          id: string
+          partner_id: string
+          priority: string | null
+          related_commission_id: string | null
+          related_lead_id: string | null
+          related_payout_id: string | null
+          status: Database["public"]["Enums"]["support_ticket_status"]
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          attachment_url?: string | null
+          category: Database["public"]["Enums"]["support_ticket_category"]
+          created_at?: string
+          description: string
+          id?: string
+          partner_id: string
+          priority?: string | null
+          related_commission_id?: string | null
+          related_lead_id?: string | null
+          related_payout_id?: string | null
+          status?: Database["public"]["Enums"]["support_ticket_status"]
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          attachment_url?: string | null
+          category?: Database["public"]["Enums"]["support_ticket_category"]
+          created_at?: string
+          description?: string
+          id?: string
+          partner_id?: string
+          priority?: string | null
+          related_commission_id?: string | null
+          related_lead_id?: string | null
+          related_payout_id?: string | null
+          status?: Database["public"]["Enums"]["support_ticket_status"]
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_support_tickets_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_support_tickets_related_commission_id_fkey"
+            columns: ["related_commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_support_tickets_related_lead_id_fkey"
+            columns: ["related_lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_support_tickets_related_payout_id_fkey"
+            columns: ["related_payout_id"]
+            isOneToOne: false
+            referencedRelation: "payouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partners: {
         Row: {
           application_id: string | null
+          bank_account_last4: string | null
+          bank_name: string | null
           created_at: string
           default_revenue_share: number
           display_name: string
           email: string
+          first_name: string | null
           id: string
           kyc_completed: boolean
           lead_model: Database["public"]["Enums"]["lead_model"]
           manager_id: string | null
           mobile: string | null
+          onboarding_completed_at: string | null
           partner_code: string | null
+          payout_details_verified: boolean
+          payout_min_threshold: number
+          sales_model_selection: string | null
           status: Database["public"]["Enums"]["partner_status"]
           updated_at: string
           user_id: string | null
         }
         Insert: {
           application_id?: string | null
+          bank_account_last4?: string | null
+          bank_name?: string | null
           created_at?: string
           default_revenue_share?: number
           display_name: string
           email: string
+          first_name?: string | null
           id?: string
           kyc_completed?: boolean
           lead_model?: Database["public"]["Enums"]["lead_model"]
           manager_id?: string | null
           mobile?: string | null
+          onboarding_completed_at?: string | null
           partner_code?: string | null
+          payout_details_verified?: boolean
+          payout_min_threshold?: number
+          sales_model_selection?: string | null
           status?: Database["public"]["Enums"]["partner_status"]
           updated_at?: string
           user_id?: string | null
         }
         Update: {
           application_id?: string | null
+          bank_account_last4?: string | null
+          bank_name?: string | null
           created_at?: string
           default_revenue_share?: number
           display_name?: string
           email?: string
+          first_name?: string | null
           id?: string
           kyc_completed?: boolean
           lead_model?: Database["public"]["Enums"]["lead_model"]
           manager_id?: string | null
           mobile?: string | null
+          onboarding_completed_at?: string | null
           partner_code?: string | null
+          payout_details_verified?: boolean
+          payout_min_threshold?: number
+          sales_model_selection?: string | null
           status?: Database["public"]["Enums"]["partner_status"]
           updated_at?: string
           user_id?: string | null
@@ -2206,6 +2935,10 @@ export type Database = {
         Args: { _brand_id: string; _user_id: string }
         Returns: boolean
       }
+      is_partner: { Args: { _user_id: string }; Returns: boolean }
+      normalize_email: { Args: { _email: string }; Returns: string }
+      normalize_phone: { Args: { _phone: string }; Returns: string }
+      partner_id_for: { Args: { _user_id: string }; Returns: string }
     }
     Enums: {
       app_role:
@@ -2292,6 +3025,13 @@ export type Database = {
         | "refund_partial"
         | "fraud_review"
         | "duplicate"
+      follow_up_status:
+        | "scheduled"
+        | "completed"
+        | "missed"
+        | "rescheduled"
+        | "cancelled"
+      follow_up_type: "call" | "whatsapp" | "email" | "meeting" | "other"
       lead_model: "own_leads" | "supported" | "not_sure"
       lesson_type:
         | "video"
@@ -2302,6 +3042,76 @@ export type Database = {
         | "live"
         | "project"
         | "external"
+      partner_activity_type:
+        | "note"
+        | "stage_change"
+        | "follow_up_scheduled"
+        | "follow_up_completed"
+        | "link_shared"
+        | "application_started"
+        | "application_submitted"
+        | "payment_recorded"
+        | "enrollment_verified"
+        | "revenue_pending"
+        | "revenue_approved"
+        | "revenue_reversed"
+        | "assigned"
+        | "reassigned"
+      partner_agreement_kind:
+        | "partner_terms"
+        | "revenue_share"
+        | "payout"
+        | "lead_handling"
+        | "data_privacy"
+        | "anti_spam"
+        | "refund_reversal"
+      partner_lead_attribution_status:
+        | "confirmed"
+        | "duplicate_review"
+        | "conflict"
+        | "admin_review"
+        | "rejected"
+      partner_lead_source:
+        | "personal_network"
+        | "referral"
+        | "social_media"
+        | "whatsapp"
+        | "instagram"
+        | "linkedin"
+        | "website"
+        | "event"
+        | "college_network"
+        | "assigned"
+        | "other"
+      partner_lead_status:
+        | "new"
+        | "contacted"
+        | "interested"
+        | "follow_up"
+        | "application_started"
+        | "application_submitted"
+        | "payment_pending"
+        | "enrolled"
+        | "not_interested"
+        | "lost"
+        | "invalid"
+        | "duplicate"
+        | "refunded"
+      partner_notification_type:
+        | "new_lead_assigned"
+        | "follow_up_due"
+        | "application_submitted"
+        | "payment_pending"
+        | "enrollment_verified"
+        | "revenue_pending"
+        | "revenue_approved"
+        | "payout_available"
+        | "payout_processing"
+        | "payout_paid"
+        | "revenue_reversed"
+        | "program_update"
+        | "agreement_update"
+        | "support_reply"
       partner_status: "active" | "suspended" | "revoked"
       payout_status:
         | "queued"
@@ -2311,6 +3121,22 @@ export type Database = {
         | "on_hold"
         | "cancelled"
       referral_event: "visit" | "lead" | "application" | "enrollment"
+      support_ticket_category:
+        | "lead_attribution"
+        | "revenue_share"
+        | "payout"
+        | "program_information"
+        | "technical"
+        | "application"
+        | "account"
+        | "other"
+      support_ticket_status:
+        | "open"
+        | "assigned"
+        | "waiting_partner"
+        | "under_review"
+        | "resolved"
+        | "closed"
       working_pref: "part_time" | "full_time" | "freelance" | "launch_brand"
     }
     CompositeTypes: {
@@ -2532,6 +3358,14 @@ export const Constants = {
         "fraud_review",
         "duplicate",
       ],
+      follow_up_status: [
+        "scheduled",
+        "completed",
+        "missed",
+        "rescheduled",
+        "cancelled",
+      ],
+      follow_up_type: ["call", "whatsapp", "email", "meeting", "other"],
       lead_model: ["own_leads", "supported", "not_sure"],
       lesson_type: [
         "video",
@@ -2543,6 +3377,82 @@ export const Constants = {
         "project",
         "external",
       ],
+      partner_activity_type: [
+        "note",
+        "stage_change",
+        "follow_up_scheduled",
+        "follow_up_completed",
+        "link_shared",
+        "application_started",
+        "application_submitted",
+        "payment_recorded",
+        "enrollment_verified",
+        "revenue_pending",
+        "revenue_approved",
+        "revenue_reversed",
+        "assigned",
+        "reassigned",
+      ],
+      partner_agreement_kind: [
+        "partner_terms",
+        "revenue_share",
+        "payout",
+        "lead_handling",
+        "data_privacy",
+        "anti_spam",
+        "refund_reversal",
+      ],
+      partner_lead_attribution_status: [
+        "confirmed",
+        "duplicate_review",
+        "conflict",
+        "admin_review",
+        "rejected",
+      ],
+      partner_lead_source: [
+        "personal_network",
+        "referral",
+        "social_media",
+        "whatsapp",
+        "instagram",
+        "linkedin",
+        "website",
+        "event",
+        "college_network",
+        "assigned",
+        "other",
+      ],
+      partner_lead_status: [
+        "new",
+        "contacted",
+        "interested",
+        "follow_up",
+        "application_started",
+        "application_submitted",
+        "payment_pending",
+        "enrolled",
+        "not_interested",
+        "lost",
+        "invalid",
+        "duplicate",
+        "refunded",
+      ],
+      partner_notification_type: [
+        "new_lead_assigned",
+        "follow_up_due",
+        "application_submitted",
+        "payment_pending",
+        "enrollment_verified",
+        "revenue_pending",
+        "revenue_approved",
+        "payout_available",
+        "payout_processing",
+        "payout_paid",
+        "revenue_reversed",
+        "program_update",
+        "agreement_update",
+        "support_reply",
+      ],
       partner_status: ["active", "suspended", "revoked"],
       payout_status: [
         "queued",
@@ -2553,6 +3463,24 @@ export const Constants = {
         "cancelled",
       ],
       referral_event: ["visit", "lead", "application", "enrollment"],
+      support_ticket_category: [
+        "lead_attribution",
+        "revenue_share",
+        "payout",
+        "program_information",
+        "technical",
+        "application",
+        "account",
+        "other",
+      ],
+      support_ticket_status: [
+        "open",
+        "assigned",
+        "waiting_partner",
+        "under_review",
+        "resolved",
+        "closed",
+      ],
       working_pref: ["part_time", "full_time", "freelance", "launch_brand"],
     },
   },
