@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ArrowRight, ArrowUpRight, TrendingUp } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container, Section } from "@/components/shared/section";
