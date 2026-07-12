@@ -1,34 +1,183 @@
 import * as React from "react";
-import { Menu, Search, Sparkles, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import {
+  BookOpen,
+  Briefcase,
+  Building2,
+  Calculator,
+  ChevronDown,
+  Clock,
+  Cpu,
+  Cog,
+  GraduationCap,
+  Handshake,
+  Layers,
+  Menu,
+  Rocket,
+  Sparkles,
+  Users,
+  Wallet,
+  X,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { GlintrLogo } from "@/components/shared/logo";
 import { cn } from "@/lib/utils";
 
-interface NavItem {
+type MegaItem = {
   label: string;
+  description?: string;
   href: string;
-  children?: { label: string; description?: string; href: string }[];
+  icon?: React.ComponentType<{ className?: string }>;
+  meta?: string;
+};
+
+type NavGroup = { title?: string; items: MegaItem[] };
+
+interface NavEntry {
+  label: string;
+  href?: string;
+  width?: "sm" | "md" | "lg";
+  groups?: NavGroup[];
 }
 
-const defaultNav: NavItem[] = [
+const nav: NavEntry[] = [
+  { label: "Home", href: "/" },
   {
-    label: "Solutions",
-    href: "#",
-    children: [
-      { label: "Sales Partner Program", description: "Earn 70% with your own leads", href: "#" },
-      { label: "Company Leads", description: "Sell using our lead pipeline, keep 50%", href: "#" },
-      { label: "White-Label EdTech", description: "Launch your brand in 24 hours", href: "#" },
+    label: "Programs",
+    width: "lg",
+    groups: [
+      {
+        title: "Categories",
+        items: [
+          { label: "Computer Science", description: "AI, ML, Data, Cloud, Cyber", href: "/programs/computer-science", icon: GraduationCap },
+          { label: "Electronics & Electrical", description: "VLSI, IoT, Embedded, Robotics", href: "/programs/electronics-electrical", icon: Cpu },
+          { label: "Mechanical Engineering", description: "CAD/CAM, Drones, Product design", href: "/programs/mechanical-engineering", icon: Cog },
+          { label: "Management", description: "Marketing, Finance, HR, Analytics", href: "/programs/management", icon: Briefcase },
+        ],
+      },
     ],
   },
-  { label: "Courses", href: "#" },
-  { label: "Pricing", href: "#" },
-  { label: "Resources", href: "#" },
+  { label: "Categories", href: "/categories" },
+  {
+    label: "Earn With Us",
+    width: "lg",
+    groups: [
+      {
+        title: "Revenue Models",
+        items: [
+          { label: "Become a Sales Partner", description: "Up to 70% revenue share, own leads", href: "/earn/partner", icon: Handshake, meta: "70%" },
+          { label: "Sell With Company Leads", description: "Company-supported sales, up to 50%", href: "/earn/company-leads", icon: Users, meta: "50%" },
+        ],
+      },
+      {
+        title: "Work Style & Payouts",
+        items: [
+          { label: "Work Part-Time", description: "Sell during your free time", href: "/earn/part-time", icon: Clock },
+          { label: "Work Full-Time", description: "Structured opportunities", href: "/earn/full-time", icon: Briefcase },
+          { label: "Income Calculator", description: "Estimate your earnings", href: "/#income-calculator", icon: Calculator },
+          { label: "Payout System", description: "48-hour payout workflow", href: "/earn/payouts", icon: Wallet },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Launch Your Brand",
+    width: "lg",
+    groups: [
+      {
+        title: "White-Label EdTech",
+        items: [
+          { label: "How It Works", description: "End-to-end brand launch flow", href: "/launch/how-it-works", icon: Rocket },
+          { label: "What's Included", description: "LMS, CRM, website, creatives", href: "/launch/included", icon: Layers },
+          { label: "Brand Launch Timeline", description: "Under 24 hrs for standard setup", href: "/launch/timeline", icon: Clock },
+        ],
+      },
+      {
+        title: "Support & Tech",
+        items: [
+          { label: "Marketing Support", description: "Creatives, campaigns, social", href: "/launch/marketing", icon: Sparkles },
+          { label: "LMS & Technology", description: "Full learning + operations stack", href: "/launch/lms", icon: BookOpen },
+          { label: "Book Brand Consultation", description: "Talk to our brand team", href: "/launch/consult", icon: Building2 },
+        ],
+      },
+    ],
+  },
+  { label: "Partner Network", href: "/partner-network" },
+  { label: "Success Stories", href: "/success-stories" },
+  { label: "About Us", href: "/about" },
+  {
+    label: "More",
+    width: "sm",
+    groups: [
+      {
+        items: [
+          { label: "Blog", href: "/blog" },
+          { label: "FAQs", href: "/faq" },
+          { label: "Support", href: "/support" },
+          { label: "Careers", href: "/careers" },
+          { label: "Contact", href: "/contact" },
+        ],
+      },
+    ],
+  },
 ];
 
-export function SiteHeader({ nav = defaultNav }: { nav?: NavItem[] }) {
+function MegaPanel({ entry }: { entry: NavEntry }) {
+  if (!entry.groups) return null;
+  const widthCls =
+    entry.width === "sm" ? "w-[240px]" : entry.width === "md" ? "w-[420px]" : "w-[640px]";
+  return (
+    <div
+      className={cn(
+        "invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0",
+        "transition-all duration-200 absolute left-0 top-full pt-3",
+        widthCls,
+      )}
+    >
+      <div className="card-elevated p-4 shadow-xl grid gap-4 md:grid-cols-2">
+        {entry.groups.map((g, gi) => (
+          <div key={gi} className="flex flex-col gap-1">
+            {g.title ? (
+              <p className="text-label px-2 pb-1">{g.title}</p>
+            ) : null}
+            {g.items.map((it) => (
+              <a
+                key={it.label}
+                href={it.href}
+                className="rounded-lg p-2.5 hover:bg-accent transition-colors flex gap-3 items-start group/item"
+              >
+                {it.icon ? (
+                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                    <it.icon className="size-4" />
+                  </span>
+                ) : null}
+                <span className="flex-1 min-w-0">
+                  <span className="flex items-center gap-2">
+                    <span className="text-sm font-semibold">{it.label}</span>
+                    {it.meta ? (
+                      <span className="text-[10px] font-bold tracking-wide px-1.5 py-0.5 rounded bg-gradient-brand text-primary-foreground">
+                        {it.meta}
+                      </span>
+                    ) : null}
+                  </span>
+                  {it.description ? (
+                    <span className="block text-caption mt-0.5">{it.description}</span>
+                  ) : null}
+                </span>
+              </a>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function SiteHeader() {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const [openMobile, setOpenMobile] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -41,55 +190,47 @@ export function SiteHeader({ nav = defaultNav }: { nav?: NavItem[] }) {
     <header
       className={cn(
         "sticky top-0 z-40 w-full transition-all duration-300",
-        scrolled ? "surface-glass-strong shadow-sm" : "bg-transparent",
+        scrolled ? "surface-glass-strong shadow-sm border-b border-border/60" : "bg-transparent",
       )}
     >
-      <div className="mx-auto flex max-w-[1440px] items-center gap-6 px-6 md:px-8 h-16">
-        <a href="/" className="flex items-center gap-2 shrink-0">
+      <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 md:px-8 h-16">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
           <GlintrLogo className="h-8" />
-        </a>
-        <nav className="hidden md:flex items-center gap-1 flex-1">
+        </Link>
+        <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center">
           {nav.map((item) => (
             <div key={item.label} className="relative group">
-              <button className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                {item.label}
-              </button>
-              {item.children ? (
-                <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all absolute left-0 top-full pt-2 w-[380px]">
-                  <div className="card-elevated p-3 flex flex-col gap-1 shadow-xl">
-                    {item.children.map((c) => (
-                      <a
-                        key={c.label}
-                        href={c.href}
-                        className="rounded-lg p-3 hover:bg-accent transition-colors flex flex-col gap-0.5"
-                      >
-                        <span className="text-sm font-semibold">{c.label}</span>
-                        {c.description ? (
-                          <span className="text-caption">{c.description}</span>
-                        ) : null}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
+              {item.href ? (
+                <a
+                  href={item.href}
+                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <button className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1">
+                  {item.label}
+                  <ChevronDown className="size-3.5 opacity-70" />
+                </button>
+              )}
+              <MegaPanel entry={item} />
             </div>
           ))}
         </nav>
         <div className="flex items-center gap-2 ml-auto">
-          <Button variant="ghost" size="icon" aria-label="Search" className="hidden md:inline-flex">
-            <Search className="size-4" />
+          <Button variant="ghost" size="sm" className="hidden md:inline-flex" asChild>
+            <a href="/#programs">Explore Programs</a>
           </Button>
-          <Button variant="ghost" size="sm" className="hidden md:inline-flex">
-            Sign in
-          </Button>
-          <Button variant="gradient" size="sm" className="hidden md:inline-flex">
-            <Sparkles className="size-4" />
-            Get started
+          <Button variant="gradient" size="sm" className="hidden md:inline-flex" asChild>
+            <a href="/#income-calculator">
+              <Sparkles className="size-4" />
+              Start Earning
+            </a>
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
           >
@@ -98,20 +239,67 @@ export function SiteHeader({ nav = defaultNav }: { nav?: NavItem[] }) {
         </div>
       </div>
       {open ? (
-        <div className="md:hidden border-t border-border bg-background">
+        <div className="lg:hidden border-t border-border bg-background max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="p-4 flex flex-col gap-1">
-            {nav.map((n) => (
-              <a
-                key={n.label}
-                href={n.href}
-                className="px-3 py-3 rounded-lg hover:bg-accent text-sm font-medium"
-              >
-                {n.label}
-              </a>
-            ))}
+            {nav.map((n) => {
+              const isOpen = openMobile === n.label;
+              if (n.href && !n.groups) {
+                return (
+                  <a
+                    key={n.label}
+                    href={n.href}
+                    className="px-3 py-3 rounded-lg hover:bg-accent text-sm font-medium"
+                    onClick={() => setOpen(false)}
+                  >
+                    {n.label}
+                  </a>
+                );
+              }
+              return (
+                <div key={n.label} className="flex flex-col">
+                  <button
+                    className="px-3 py-3 rounded-lg hover:bg-accent text-sm font-medium flex items-center justify-between"
+                    onClick={() => setOpenMobile(isOpen ? null : n.label)}
+                  >
+                    {n.label}
+                    <ChevronDown
+                      className={cn("size-4 transition-transform", isOpen && "rotate-180")}
+                    />
+                  </button>
+                  {isOpen && n.groups ? (
+                    <div className="pl-3 pb-2 flex flex-col gap-2">
+                      {n.groups.map((g, gi) => (
+                        <div key={gi}>
+                          {g.title ? (
+                            <p className="text-label px-2 pt-2 pb-1">{g.title}</p>
+                          ) : null}
+                          {g.items.map((it) => (
+                            <a
+                              key={it.label}
+                              href={it.href}
+                              onClick={() => setOpen(false)}
+                              className="px-3 py-2 rounded-lg hover:bg-accent text-sm block"
+                            >
+                              {it.label}
+                              {it.description ? (
+                                <span className="block text-caption">{it.description}</span>
+                              ) : null}
+                            </a>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
             <div className="grid grid-cols-2 gap-2 pt-3 border-t border-border mt-2">
-              <Button variant="outline" size="sm">Sign in</Button>
-              <Button variant="gradient" size="sm">Get started</Button>
+              <Button variant="outline" size="sm" asChild>
+                <a href="/#programs">Explore Programs</a>
+              </Button>
+              <Button variant="gradient" size="sm" asChild>
+                <a href="/#income-calculator">Start Earning</a>
+              </Button>
             </div>
           </div>
         </div>
