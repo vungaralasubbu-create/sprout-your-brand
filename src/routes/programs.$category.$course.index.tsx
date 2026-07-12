@@ -42,6 +42,7 @@ import { getCourseSeo } from "@/lib/seo";
 import { CourseHeroVisual } from "@/components/course/hero-visual";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
+import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/client";
 import { cn } from "@/lib/utils";
 
 const SITE_URL = "https://glintr.com";
@@ -168,6 +169,17 @@ function CoursePage() {
       .then(() => {});
   }, [ref, data]);
 
+  // Fire program_view once per session per course.
+  useEffect(() => {
+    if (!data) return;
+    trackProgramView({
+      id: data.id,
+      name: data.name,
+      category: data.category?.name ?? null,
+      partner_code: ref ?? null,
+    });
+  }, [data, ref]);
+
   // sticky bar visibility
   const [showSticky, setShowSticky] = useState(false);
   useEffect(() => {
@@ -195,6 +207,13 @@ function CoursePage() {
   const price = c.offer_price ?? c.base_price;
   const applyTo = { category, course };
   const counsellorCtx = { course_id: c.id, course_name: c.name, category_name: c.category.name };
+  const onApplyClick = () =>
+    trackApplyClick({
+      id: c.id,
+      name: c.name,
+      category: c.category.name,
+      partner_code: ref ?? null,
+    });
 
   // ---- Derive dynamic content with graceful fallbacks ----
   const highlights = buildHighlights(c);
@@ -246,7 +265,7 @@ function CoursePage() {
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" variant="gradient">
-                  <Link to="/programs/$category/$course/apply" params={applyTo}>
+                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                     Apply Now
                     <ArrowRight className="size-4" />
                   </Link>
@@ -650,7 +669,7 @@ function CoursePage() {
 
                 <div className="mt-7 flex flex-col gap-2.5">
                   <Button asChild size="lg" variant="gradient">
-                    <Link to="/programs/$category/$course/apply" params={applyTo}>
+                    <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                       Apply Now
                       <ArrowRight className="size-4" />
                     </Link>
@@ -731,7 +750,7 @@ function CoursePage() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg" variant="gradient">
-                <Link to="/programs/$category/$course/apply" params={applyTo}>
+                <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                   Apply Now
                   <ArrowRight className="size-4" />
                 </Link>
@@ -766,7 +785,7 @@ function CoursePage() {
               ) : null}
               <CounsellorForm size="sm" variant="outline" context={counsellorCtx} label="Request A Call" />
               <Button asChild size="sm" variant="gradient">
-                <Link to="/programs/$category/$course/apply" params={applyTo}>
+                <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                   Apply Now
                 </Link>
               </Button>
@@ -781,7 +800,7 @@ function CoursePage() {
           <Link to="/launch-your-brand/consultation">Talk To Us</Link>
         </Button>
         <Button asChild variant="gradient" className="flex-1">
-          <Link to="/programs/$category/$course/apply" params={applyTo}>
+          <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
             Apply Now
           </Link>
         </Button>

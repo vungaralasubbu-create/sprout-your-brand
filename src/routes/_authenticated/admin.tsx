@@ -103,7 +103,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/content", label: "Content", icon: FileText },
       { to: "/admin/agreements", label: "Agreements", icon: FileSignature },
       { to: "/admin/notifications", label: "Notifications", icon: Bell },
-      { to: "/admin/settings", label: "Settings", icon: Settings },
+      { to: "/admin/settings", label: "Analytics & Settings", icon: Settings },
       { to: "/admin/audit-logs", label: "Audit Logs", icon: History },
     ],
   },

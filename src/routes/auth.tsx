@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
+import { trackEvent } from "@/lib/analytics/client";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — Glintr" }, { name: "robots", content: "noindex" }] }),
@@ -62,6 +63,7 @@ function AuthPage() {
       });
       setLoading(false);
       if (error) return toast.error(error.message);
+      trackEvent("student_signup", { dedupe_key: parsed.data.email });
       toast.success("Account created. You can sign in now.");
       setMode("signin");
     }
