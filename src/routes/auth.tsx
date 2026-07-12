@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — Glintr" }, { name: "robots", content: "noindex" }] }),
@@ -21,14 +22,23 @@ const schema = z.object({
   password: z.string().min(6).max(72),
 });
 
+async function routeAfterAuth(userId: string, navigate: ReturnType<typeof useNavigate>) {
+  const { path, role } = await resolveRedirectForUser(userId);
+  if (!role) {
+    toast.message("Your account workspace is not configured yet.");
+  }
+  navigate({ to: path as any });
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [loading, setLoading] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/admin" });
+      if (data.session?.user) routeAfterAuth(data.session.user.id, navigate);
     });
   }, [navigate]);
 
@@ -39,13 +49,13 @@ function AuthPage() {
     if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
     setLoading(true);
     if (mode === "signin") {
-      const { error } = await supabase.auth.signInWithPassword(parsed.data);
+      const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
       setLoading(false);
       if (error) return toast.error(error.message);
       toast.success("Signed in");
-      navigate({ to: "/admin" });
+      if (data.user) await routeAfterAuth(data.user.id, navigate);
     } else {
-      const redirectTo = `${window.location.origin}/admin`;
+      const redirectTo = `${window.location.origin}/auth`;
       const { error } = await supabase.auth.signUp({
         ...parsed.data,
         options: { emailRedirectTo: redirectTo },
@@ -57,6 +67,18 @@ function AuthPage() {
     }
   }
 
+  async function handleForgot() {
+    const email = (document.getElementById("email") as HTMLInputElement | null)?.value?.trim();
+    if (!email) return toast.error("Enter your email above, then click Forgot Password.");
+    setResetting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth`,
+    });
+    setResetting(false);
+    if (error) return toast.error(error.message);
+    toast.success("Password reset email sent.");
+  }
+
   return (
     <>
       <SiteHeader />
@@ -64,8 +86,14 @@ function AuthPage() {
         <Section className="py-20">
           <Container className="max-w-md">
             <div className="card-elevated p-8">
-              <h1 className="text-heading-xl font-display font-semibold">{mode === "signin" ? "Sign in" : "Create account"}</h1>
-              <p className="text-caption mt-2">Admin & team access to Glintr.</p>
+              <h1 className="text-heading-xl font-display font-semibold">
+                {mode === "signin" ? "Welcome Back To Glintr" : "Create your Glintr account"}
+              </h1>
+              <p className="text-caption mt-2">
+                {mode === "signin"
+                  ? "Access your workspace and continue where you left off."
+                  : "Get started with Glintr in seconds."}
+              </p>
               <form onSubmit={handle} className="mt-6 space-y-4">
                 <div>
                   <Label htmlFor="email">Email</Label>
@@ -76,8 +104,19 @@ function AuthPage() {
                   <Input id="password" name="password" type="password" required minLength={6} className="mt-2 h-11" />
                 </div>
                 <Button type="submit" size="lg" variant="gradient" className="w-full" disabled={loading}>
-                  {loading ? "…" : mode === "signin" ? "Sign in" : "Create account"}
+                  {loading ? "…" : mode === "signin" ? "Sign In" : "Create account"}
                 </Button>
+                {mode === "signin" && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full"
+                    onClick={handleForgot}
+                    disabled={resetting}
+                  >
+                    {resetting ? "Sending…" : "Forgot Password"}
+                  </Button>
+                )}
               </form>
               <button
                 onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
