@@ -14,29 +14,29 @@ interface Model {
 
 const MODELS: Model[] = [
   {
-    eyebrow: "UP TO 70%",
-    title: "Bring Your Own Leads",
+    eyebrow: "OWN LEADS · UP TO 70%",
+    title: "Sell With Your Own Leads",
     description:
-      "Use your own network or leads to sell eligible career programs.",
-    cta: "Explore Partner Model",
-    href: "/earn/partner",
+      "Use your own network to sell eligible career programs and earn revenue share on every successful sale.",
+    cta: "Become A Sales Partner",
+    href: "/partner/apply",
   },
   {
-    eyebrow: "UP TO 50%",
-    title: "Get Sales Support",
+    eyebrow: "SUPPORTED SALES · UP TO 50%",
+    title: "Sell With Supported Opportunities",
     description:
-      "Access supported sales opportunities, CRM tools, and sales resources.",
-    cta: "Join Supported Sales",
-    href: "/earn/company-leads",
+      "Work on eligible supported sales opportunities with CRM tools and sales resources when available.",
+    cta: "Explore Supported Sales",
+    href: "/sales-opportunity",
     featured: true,
   },
   {
     eyebrow: "YOUR BRAND",
-    title: "Launch Your EdTech Company",
+    title: "Launch Your Own EdTech Brand",
     description:
-      "Your brand, website, LMS, programs, and business infrastructure.",
+      "Your brand, website, LMS and programs — powered by Glintr's learning and business infrastructure.",
     cta: "Launch My Brand",
-    href: "/launch/how-it-works",
+    href: "/launch-your-brand",
   },
 ];
 

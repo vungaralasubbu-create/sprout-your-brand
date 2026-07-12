@@ -755,7 +755,7 @@ function CoursePage() {
                   <ArrowRight className="size-4" />
                 </Link>
               </Button>
-              <CounsellorForm size="lg" variant="outline" context={counsellorCtx} label="Get Program Guidance" />
+              <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
             </div>
           </div>
         </Container>
@@ -783,7 +783,7 @@ function CoursePage() {
                   {formatPrice(price, c.currency ?? "INR")}
                 </span>
               ) : null}
-              <CounsellorForm size="sm" variant="outline" context={counsellorCtx} label="Request A Call" />
+              <CounsellorForm size="sm" variant="outline" context={counsellorCtx} />
               <Button asChild size="sm" variant="gradient">
                 <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                   Apply Now
@@ -796,9 +796,7 @@ function CoursePage() {
 
       {/* Mobile */}
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t bg-background/95 backdrop-blur p-3 flex gap-2">
-        <Button asChild variant="outline" className="flex-1">
-          <Link to="/launch-your-brand/consultation">Talk To Us</Link>
-        </Button>
+        <CounsellorForm size="md" variant="outline" context={counsellorCtx} className="flex-1" />
         <Button asChild variant="gradient" className="flex-1">
           <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
             Apply Now
