@@ -349,8 +349,8 @@ function EarningsEstimator() {
             <CardContent className="p-6 space-y-6">
               <Tabs value={mode} onValueChange={(v) => setMode(v as "own" | "supported")}>
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="own">Own leads · 70%</TabsTrigger>
-                  <TabsTrigger value="supported">Company leads · 50%</TabsTrigger>
+                  <TabsTrigger value="own">Own Leads · Up to 70%</TabsTrigger>
+                  <TabsTrigger value="supported">Supported Sales · Up to 50%</TabsTrigger>
                 </TabsList>
                 <TabsContent value="own" className="text-caption text-muted-foreground pt-3">
                   You bring the customer. Highest split.
@@ -407,7 +407,7 @@ function EarningsEstimator() {
 
               <Button asChild size="lg" variant="gradient" className="w-full">
                 <Link to="/partner/apply">
-                  Apply and unlock your dashboard{" "}
+                  Start Earning{" "}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

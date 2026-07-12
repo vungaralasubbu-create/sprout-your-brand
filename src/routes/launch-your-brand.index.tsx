@@ -80,14 +80,12 @@ function Hero() {
               White-Label EdTech
             </Badge>
             <h1 className="font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
-              You Know How To Sell.
-              <br />
-              <span className="text-primary">Now Build A Brand You Own.</span>
+              Launch Your EdTech Brand{" "}
+              <span className="text-primary">In As Little As 24 Hours.</span>
             </h1>
             <p className="max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Choose your brand name. Select your programs. Glintr provides the
-              technology and infrastructure to help you launch your own
-              education business.
+              Choose eligible programs and build your brand using Glintr's
+              learning and business infrastructure.
             </p>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               Launch. Sell. Grow.
