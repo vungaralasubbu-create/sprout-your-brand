@@ -14,14 +14,39 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { listCategories, listCourses, formatPrice } from "@/lib/programs";
 
 export const Route = createFileRoute("/programs/")({
-  head: () => ({
-    meta: [
-      { title: "Career Programs — Glintr" },
-      { name: "description", content: "Explore Glintr's premium career programs across Computer Science, Electronics, Mechanical, and Management. Search, filter, and apply." },
-      { property: "og:title", content: "Career Programs — Glintr" },
-      { property: "og:description", content: "Discover future-ready programs designed to launch, sell, and grow your career." },
-    ],
-  }),
+  head: () => {
+    const canonical = "https://glintr.com/programs";
+    const title = "Career Programs | Glintr";
+    const description =
+      "Explore Glintr's premium career programs across Computer Science, Electronics, Mechanical, and Management. Search, filter, and apply.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: canonical },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: canonical }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://glintr.com" },
+              { "@type": "ListItem", position: 2, name: "Programs", item: canonical },
+            ],
+          }),
+        },
+      ],
+    };
+  },
   component: ProgramsIndex,
 });
 
