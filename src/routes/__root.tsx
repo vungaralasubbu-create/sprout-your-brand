@@ -93,6 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Glintr" },
+      { property: "og:url", content: "https://glintr.com" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Glintr — Launch. Sell. Grow." },
       {
@@ -108,6 +109,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Glintr",
+          url: "https://glintr.com",
+          logo: "https://glintr.com/__l5e/assets-v1/d12f985f-d4a9-44a8-ae66-6ea6d0a3b725/glintr-mark.png",
+          slogan: "Launch. Sell. Grow.",
+          description:
+            "Premium EdTech platform for sales professionals — become a revenue partner or launch your own white-label EdTech brand.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Glintr",
+          url: "https://glintr.com",
+        }),
       },
     ],
   }),
