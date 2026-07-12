@@ -31,9 +31,9 @@ export const listAdminLeads = createServerFn({ method: "POST" })
       .select("id, full_name, mobile, email, program_interest, course_id, lead_model, source, status, attribution_status, priority, owner_partner_id, assigned_partner_id, last_activity_at, created_at")
       .order("created_at", { ascending: false })
       .limit(data.limit ?? 200);
-    if (data.leadModel) q = q.eq("lead_model", data.leadModel);
-    if (data.stage) q = q.eq("status", data.stage);
-    if (data.attribution) q = q.eq("attribution_status", data.attribution);
+    if (data.leadModel) q = q.eq("lead_model", data.leadModel as any);
+    if (data.stage) q = q.eq("status", data.stage as any);
+    if (data.attribution) q = q.eq("attribution_status", data.attribution as any);
     if (data.partnerId) q = q.or(`owner_partner_id.eq.${data.partnerId},assigned_partner_id.eq.${data.partnerId}`);
     if (data.courseId) q = q.eq("course_id", data.courseId);
     if (data.from) q = q.gte("created_at", data.from);
@@ -183,7 +183,7 @@ export const listAttributionReviews = createServerFn({ method: "POST" })
       .from("partner_lead_attribution_reviews")
       .select("id, lead_id, existing_lead_id, claiming_partner_id, status, reason, admin_notes, resolved_at, created_at")
       .order("created_at", { ascending: false });
-    if (data.status) q = q.eq("status", data.status);
+    if (data.status) q = q.eq("status", data.status as any);
     const { data: rows, error } = await q;
     if (error) throw error;
 
@@ -227,13 +227,13 @@ export const resolveAttributionReview = createServerFn({ method: "POST" })
 
     const resolvedTerminal = ["confirmed","rejected","conflict"].includes(data.decision);
     await context.supabase.from("partner_lead_attribution_reviews").update({
-      status: data.decision, admin_notes: data.notes,
+      status: data.decision as any, admin_notes: data.notes,
       resolved_at: resolvedTerminal ? new Date().toISOString() : null,
       resolved_by: resolvedTerminal ? context.userId : null,
     }).eq("id", data.reviewId);
 
     // Reflect on lead
-    await context.supabase.from("partner_leads").update({ attribution_status: data.decision }).eq("id", review.lead_id);
+    await context.supabase.from("partner_leads").update({ attribution_status: data.decision as any }).eq("id", review.lead_id);
 
     if (data.decision === "confirmed") {
       const newOwner = data.newOwnerPartnerId ?? review.claiming_partner_id;
@@ -258,7 +258,7 @@ export const listRevenueRecords = createServerFn({ method: "POST" })
       .select("id, partner_id, enrollment_id, program_id, gross_revenue, eligible_revenue, revenue_share_rule_id, revenue_share_pct, commission_amount, status, refund_adjustment, lead_source, verified_at, approved_at, payout_at, created_at, admin_notes")
       .order("created_at", { ascending: false })
       .limit(300);
-    if (data.status) q = q.eq("status", data.status);
+    if (data.status) q = q.eq("status", data.status as any);
     if (data.partnerId) q = q.eq("partner_id", data.partnerId);
     if (data.verifyOnly) q = q.in("status", ["calculated","under_verification","pending_verification","tracking"]);
     const { data: rows, error } = await q;
@@ -339,7 +339,7 @@ export const listPayouts = createServerFn({ method: "POST" })
       .from("payouts")
       .select("id, partner_id, amount, requested_amount, approved_amount, payout_method, payment_reference, requested_at, processed_at, status, reference, created_at")
       .order("created_at", { ascending: false }).limit(300);
-    if (data.status) q = q.eq("status", data.status);
+    if (data.status) q = q.eq("status", data.status as any);
     if (data.partnerId) q = q.eq("partner_id", data.partnerId);
     if (data.from) q = q.gte("created_at", data.from);
     if (data.to) q = q.lte("created_at", data.to);
@@ -484,8 +484,8 @@ export const listAdjustments = createServerFn({ method: "POST" })
     let q = context.supabase.from("refund_adjustments")
       .select("id, commission_id, enrollment_id, reason, adjustment_amount, original_amount, adjustment_type, approval_status, approved_at, notes, created_at, created_by")
       .order("created_at", { ascending: false }).limit(300);
-    if (data.status) q = q.eq("approval_status", data.status);
-    if (data.type) q = q.eq("adjustment_type", data.type);
+    if (data.status) q = q.eq("approval_status", data.status as any);
+    if (data.type) q = q.eq("adjustment_type", data.type as any);
     const { data: rows, error } = await q;
     if (error) throw error;
 
