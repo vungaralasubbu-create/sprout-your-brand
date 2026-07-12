@@ -118,6 +118,7 @@ function CategoryPage() {
                 label="Need Help Choosing?"
                 context={{ category_name: prettify(slug) }}
               />
+            </div>
           </Container>
         </Section>
       </main>
