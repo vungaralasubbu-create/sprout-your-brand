@@ -51,7 +51,7 @@ export const listAdminLeads = createServerFn({ method: "POST" })
     const courseIds = Array.from(new Set((leads ?? []).map((l: any) => l.course_id).filter(Boolean)));
 
     const [{ data: partners }, { data: courses }] = await Promise.all([
-      partnerIds.length ? context.supabase.from("partners").select("id, display_name, email, first_name").in("id", partnerIds) : Promise.resolve({ data: [] as any[] }),
+      partnerIds.length ? context.supabase.from("partners").select("id, full_name:display_name, email, first_name").in("id", partnerIds) : Promise.resolve({ data: [] as any[] }),
       courseIds.length ? context.supabase.from("courses").select("id, title, slug").in("id", courseIds) : Promise.resolve({ data: [] as any[] }),
     ]);
     const pmap = new Map((partners ?? []).map((p: any) => [p.id, p]));
@@ -192,7 +192,7 @@ export const listAttributionReviews = createServerFn({ method: "POST" })
 
     const [{ data: leads }, { data: partners }] = await Promise.all([
       leadIds.length ? context.supabase.from("partner_leads").select("id, full_name, source, course_id, program_interest, created_at, owner_partner_id, assigned_partner_id").in("id", leadIds) : Promise.resolve({ data: [] as any[] }),
-      partnerIds.length ? context.supabase.from("partners").select("id, display_name, email, first_name").in("id", partnerIds) : Promise.resolve({ data: [] as any[] }),
+      partnerIds.length ? context.supabase.from("partners").select("id, full_name:display_name, email, first_name").in("id", partnerIds) : Promise.resolve({ data: [] as any[] }),
     ]);
     const lmap = new Map((leads ?? []).map((l: any) => [l.id, l]));
     const pmap = new Map((partners ?? []).map((p: any) => [p.id, p]));
@@ -269,7 +269,7 @@ export const listRevenueRecords = createServerFn({ method: "POST" })
     const ruleIds = Array.from(new Set((rows ?? []).map((r: any) => r.revenue_share_rule_id).filter(Boolean)));
 
     const [{ data: partners }, { data: enrollments }, { data: rules }] = await Promise.all([
-      partnerIds.length ? context.supabase.from("partners").select("id, display_name, email, first_name").in("id", partnerIds) : Promise.resolve({ data: [] as any[] }),
+      partnerIds.length ? context.supabase.from("partners").select("id, full_name:display_name, email, first_name").in("id", partnerIds) : Promise.resolve({ data: [] as any[] }),
       enrollmentIds.length ? context.supabase.from("enrollments").select("id, program_title, student_name, gross_revenue, status, enrolled_at").in("id", enrollmentIds) : Promise.resolve({ data: [] as any[] }),
       ruleIds.length ? context.supabase.from("revenue_share_rules").select("id, name, program_id, partner_type, share_percentage, effective_from, effective_to").in("id", ruleIds) : Promise.resolve({ data: [] as any[] }),
     ]);
@@ -350,7 +350,7 @@ export const listPayouts = createServerFn({ method: "POST" })
 
     const partnerIds = Array.from(new Set((rows ?? []).map((r: any) => r.partner_id)));
     const { data: partners } = partnerIds.length
-      ? await context.supabase.from("partners").select("id, display_name, email, status, first_name").in("id", partnerIds)
+      ? await context.supabase.from("partners").select("id, full_name:display_name, email, status, first_name").in("id", partnerIds)
       : { data: [] as any[] };
     const pmap = new Map((partners ?? []).map((p: any) => [p.id, p]));
     return (rows ?? []).map((r: any) => ({ ...r, partner: pmap.get(r.partner_id) }));
@@ -365,7 +365,7 @@ export const getPayoutDetail = createServerFn({ method: "POST" })
     if (error) throw error;
     if (!payout) throw new Error("Payout not found");
     const [{ data: partner }, { data: bank }, { data: items }, { data: history }] = await Promise.all([
-      context.supabase.from("partners").select("id, display_name, email, first_name, status, kyc_completed, sales_model_approval_status").eq("id", payout.partner_id).maybeSingle(),
+      context.supabase.from("partners").select("id, full_name:display_name, email, first_name, status, kyc_status:kyc_completed, sales_model_approval_status").eq("id", payout.partner_id).maybeSingle(),
       context.supabase.from("partner_payout_details").select("*").eq("partner_id", payout.partner_id).maybeSingle(),
       context.supabase.from("payout_items").select("id, commission_id, amount").eq("payout_id", data.payoutId),
       context.supabase.from("admin_finance_actions").select("*").eq("target_type", "payout").eq("target_id", data.payoutId).order("created_at", { ascending: false }),
@@ -603,6 +603,6 @@ export const listPartnersLiteFinance = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await ensureAdmin(context);
-    const { data } = await context.supabase.from("partners").select("id, display_name, email, first_name").order("display_name").limit(500);
+    const { data } = await context.supabase.from("partners").select("id, full_name:display_name, email, first_name").order("display_name").limit(500);
     return data ?? [];
   });
