@@ -585,9 +585,7 @@ function CoursePage() {
                       <ArrowRight className="size-4" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline">
-                    <Link to="/launch-your-brand/consultation">Talk To A Counsellor</Link>
-                  </Button>
+                  <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
                 </div>
               </div>
             </div>
@@ -668,9 +666,7 @@ function CoursePage() {
                   <ArrowRight className="size-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/launch-your-brand/consultation">Talk To A Counsellor</Link>
-              </Button>
+              <CounsellorForm size="lg" variant="outline" context={counsellorCtx} label="Get Program Guidance" />
             </div>
           </div>
         </Container>
@@ -698,9 +694,7 @@ function CoursePage() {
                   {formatPrice(price, c.currency ?? "INR")}
                 </span>
               ) : null}
-              <Button asChild variant="outline" size="sm">
-                <Link to="/launch-your-brand/consultation">Talk To A Counsellor</Link>
-              </Button>
+              <CounsellorForm size="sm" variant="outline" context={counsellorCtx} label="Request A Call" />
               <Button asChild size="sm" variant="gradient">
                 <Link to="/programs/$category/$course/apply" params={applyTo}>
                   Apply Now
