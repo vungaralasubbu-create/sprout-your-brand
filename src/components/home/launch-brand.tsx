@@ -1,103 +1,130 @@
-import * as React from "react";
 import {
   ArrowRight,
   BookOpen,
-  Building2,
-  Globe2,
+  Globe,
   GraduationCap,
-  Handshake,
   LayoutDashboard,
-  Megaphone,
-  Palette,
-  Rocket,
   Sparkles,
-  Wrench,
+  Users,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container, Section } from "@/components/shared/section";
 
-const included = [
-  { icon: Palette, label: "Brand Identity" },
-  { icon: Globe2, label: "Website" },
-  { icon: BookOpen, label: "LMS" },
-  { icon: GraduationCap, label: "Course Catalogue" },
-  { icon: LayoutDashboard, label: "Student Dashboard" },
-  { icon: Handshake, label: "CRM" },
-  { icon: Sparkles, label: "Certificates" },
-  { icon: Megaphone, label: "Marketing Creatives" },
-  { icon: Building2, label: "Social Media Setup" },
-  { icon: Wrench, label: "Operational Support" },
+const ITEMS = [
+  { label: "Your Brand", icon: Sparkles },
+  { label: "Your Website", icon: Globe },
+  { label: "Your LMS", icon: BookOpen },
+  { label: "Your Programs", icon: GraduationCap },
+  { label: "Your Students", icon: Users },
+  { label: "Your Dashboard", icon: LayoutDashboard },
 ];
 
 export function LaunchBrandSection() {
   return (
-    <Section id="launch-brand" padding="lg" className="relative overflow-hidden">
+    <section
+      id="launch"
+      className="relative overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(180deg, oklch(0.16 0.04 260) 0%, oklch(0.13 0.04 265) 100%)",
+      }}
+    >
+      {/* subtle brand glow */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-br from-brand-royal via-brand-azure to-brand-cyan opacity-90"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(50% 60% at 85% 20%, oklch(0.62 0.19 245 / 0.28), transparent 60%), radial-gradient(45% 55% at 10% 90%, oklch(0.78 0.16 175 / 0.18), transparent 60%)",
+        }}
       />
-      <div aria-hidden className="absolute inset-0 bg-mesh opacity-20" />
-      <Container className="relative text-primary-foreground">
-        <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] items-center">
-          <div className="flex flex-col gap-5">
-            <span className="inline-flex items-center gap-2 w-fit rounded-full bg-white/15 text-white/95 px-3 py-1 text-xs font-semibold backdrop-blur">
-              <Rocket className="size-3.5" /> White-Label EdTech
-            </span>
-            <h2 className="text-display text-balance">
-              What if the next EdTech brand had{" "}
-              <span className="text-brand-lime">your name on it?</span>
+      <Container className="relative py-20 md:py-28 lg:py-32">
+        <div className="grid gap-14 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+          <div className="flex flex-col gap-8 text-white">
+            <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
+              Don't Want Another Sales Job?
+              <br />
+              <span
+                style={{
+                  backgroundImage:
+                    "linear-gradient(90deg, oklch(0.85 0.15 175) 0%, oklch(0.78 0.16 235) 60%, oklch(0.82 0.22 140) 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                Build Your Own EdTech Brand.
+              </span>
             </h2>
-            <p className="text-subheading text-white/90 text-pretty max-w-xl">
-              You already understand sales. We provide the technology and operational
-              infrastructure to help you launch your own education brand.
+            <p className="max-w-lg text-lg leading-relaxed text-white/70">
+              Choose your brand name. We provide the technology and backend
+              infrastructure to help you launch.
             </p>
-
-            <div className="mt-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
-                From
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-3 font-display text-lg md:text-2xl font-semibold">
-                <span className="opacity-80">Sales Executive</span>
-                <ArrowRight className="size-5 opacity-70" />
-                <span>Sales Partner</span>
-                <ArrowRight className="size-5 opacity-70" />
-                <span className="text-brand-lime">Brand Owner</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Button variant="secondary" size="lg" asChild>
-                <a href="/launch">
-                  <Rocket className="size-4" /> Build My EdTech Brand
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Button variant="gradient" size="lg" asChild>
+                <a href="/launch/how-it-works">
+                  Launch My Brand <ArrowRight className="size-4" />
                 </a>
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-                className="bg-transparent border-white/40 text-white hover:bg-white/10 hover:text-white"
                 asChild
+                className="border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white"
               >
                 <a href="/launch/included">See What's Included</a>
               </Button>
             </div>
           </div>
 
-          <ul className="grid grid-cols-2 gap-3">
-            {included.map((f) => (
-              <li
-                key={f.label}
-                className="rounded-xl bg-white/10 backdrop-blur border border-white/15 p-4 flex items-center gap-3"
-              >
-                <span className="grid size-9 place-items-center rounded-lg bg-white/15 text-white">
-                  <f.icon className="size-4" />
+          {/* Brand-launch visual: dashboard-style grid of what's yours */}
+          <div className="relative">
+            <div
+              aria-hidden
+              className="absolute -inset-4 rounded-[36px]"
+              style={{
+                background:
+                  "linear-gradient(135deg, oklch(0.78 0.16 175 / 0.25), oklch(0.55 0.24 265 / 0.25))",
+                filter: "blur(40px)",
+              }}
+            />
+            <div
+              className="relative rounded-3xl border p-6 md:p-8 backdrop-blur"
+              style={{
+                background: "oklch(1 0 0 / 0.04)",
+                borderColor: "oklch(1 0 0 / 0.12)",
+              }}
+            >
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-2">
+                  <span className="size-2.5 rounded-full bg-red-400/70" />
+                  <span className="size-2.5 rounded-full bg-yellow-400/70" />
+                  <span className="size-2.5 rounded-full bg-green-400/70" />
+                </div>
+                <span className="text-mono text-xs text-white/50">
+                  yourbrand.glintr.app
                 </span>
-                <span className="text-sm font-medium">{f.label}</span>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                {ITEMS.map((it) => (
+                  <div
+                    key={it.label}
+                    className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5"
+                  >
+                    <span className="grid size-9 place-items-center rounded-lg bg-white/10 text-white">
+                      <it.icon className="size-4" />
+                    </span>
+                    <span className="text-sm font-medium text-white/90">
+                      {it.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </Container>
-    </Section>
+    </section>
   );
 }

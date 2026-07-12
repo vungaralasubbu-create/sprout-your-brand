@@ -1,85 +1,81 @@
-import * as React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { BadgeCheck, Quote } from "lucide-react";
+import { ArrowRight, Quote } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Container, Section, SectionHeader } from "@/components/shared/section";
-import { EmptyState, LoadingSkeleton } from "@/components/shared/empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import { fetchSuccessStories, type SuccessStory } from "@/data/cms";
 
-const typeLabel: Record<SuccessStory["type"], string> = {
-  partner: "Sales Partner",
-  student: "Student",
-  brand_owner: "Brand Owner",
-  career_transition: "Career Transition",
-};
-
 export function SuccessStoriesSection() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["home", "stories"],
+  const { data = [] } = useQuery({
+    queryKey: ["home", "success-stories"],
     queryFn: fetchSuccessStories,
   });
 
+  const stories = data.slice(0, 3);
+
   return (
-    <Section padding="md">
+    <Section id="stories" tone="surface" padding="lg">
       <Container>
         <SectionHeader
           eyebrow="Success stories"
-          title={
-            <>
-              Real journeys.{" "}
-              <span className="text-gradient-brand">Verified in the CMS.</span>
-            </>
-          }
-          description="Only stories marked verified by an admin appear on the live site. Development mode may show placeholder content."
+          title={<>Real People. Real Growth.</>}
+          description="Verified stories from partners, brand owners, and career-transition students."
         />
 
-        {isLoading ? (
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {[0, 1, 2].map((i) => (
-              <LoadingSkeleton key={i} />
-            ))}
-          </div>
-        ) : error || !data || data.length === 0 ? (
-          <div className="mt-12">
-            <EmptyState
-              title="No verified stories yet"
-              description="Verified success stories will appear here as they're published."
-            />
-          </div>
-        ) : (
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {data.map((s) => (
-              <article key={s.id} className="card-elevated hover-lift p-6 flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                  <Badge variant="certified">{typeLabel[s.type]}</Badge>
-                  {s.verified ? (
-                    <span className="inline-flex items-center gap-1 text-caption text-brand-lime">
-                      <BadgeCheck className="size-3.5" /> Verified
-                    </span>
-                  ) : null}
-                </div>
-                <Quote className="size-5 text-primary/60" />
-                <p className="text-sm text-pretty">"{s.quote}"</p>
-                <div className="mt-auto border-t border-border pt-4">
-                  <p className="font-semibold text-sm">{s.name}</p>
-                  <p className="text-caption">{s.role}</p>
-                  <dl className="mt-3 grid gap-1 text-xs">
-                    <div className="flex gap-2">
-                      <dt className="text-muted-foreground min-w-16">Before:</dt>
-                      <dd>{s.previous}</dd>
-                    </div>
-                    <div className="flex gap-2">
-                      <dt className="text-brand-lime min-w-16">Now:</dt>
-                      <dd className="text-foreground">{s.current}</dd>
-                    </div>
-                  </dl>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
+          {stories.length === 0 ? (
+            <div className="md:col-span-3">
+              <EmptyState
+                title="Stories coming soon"
+                description="Real success stories will appear here once verified by the team."
+              />
+            </div>
+          ) : (
+            stories.map((s) => <StoryCard key={s.id} story={s} />)
+          )}
+        </div>
+
+        <div className="mt-12 flex justify-center">
+          <Button variant="outline" size="lg" asChild>
+            <a href="/success-stories">
+              View All Success Stories <ArrowRight className="size-4" />
+            </a>
+          </Button>
+        </div>
       </Container>
     </Section>
+  );
+}
+
+function StoryCard({ story }: { story: SuccessStory }) {
+  return (
+    <article className="flex flex-col rounded-2xl border border-border bg-card p-7 shadow-sm">
+      <Quote className="size-5 text-primary/70" />
+      <p className="mt-4 flex-1 text-[15px] leading-relaxed text-foreground/90">
+        {story.quote}
+      </p>
+      <div className="mt-6 border-t border-border pt-5">
+        <p className="font-display text-base font-semibold text-foreground">
+          {story.name}
+        </p>
+        <p className="text-caption mt-0.5">{story.role}</p>
+        <div className="mt-3 flex flex-col gap-1 text-[13px] leading-relaxed">
+          <p className="text-muted-foreground">
+            <span className="text-label mr-1">Before</span>
+            {story.previous}
+          </p>
+          <p className="text-foreground/85">
+            <span className="text-label mr-1 text-primary">Now</span>
+            {story.current}
+          </p>
+        </div>
+        {!story.verified ? (
+          <p className="mt-3 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            Development placeholder
+          </p>
+        ) : null}
+      </div>
+    </article>
   );
 }

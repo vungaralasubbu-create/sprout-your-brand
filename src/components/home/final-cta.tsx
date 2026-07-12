@@ -1,89 +1,61 @@
-import * as React from "react";
-import { ArrowRight, BookOpen, Handshake, Rocket, Users } from "lucide-react";
+import { ArrowRight, Rocket } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Container, Section } from "@/components/shared/section";
-
-const paths = [
-  {
-    icon: BookOpen,
-    title: "Explore Programs",
-    desc: "Browse career-focused programs and pick your track.",
-    href: "/programs",
-    cta: "Explore",
-  },
-  {
-    icon: Handshake,
-    title: "Earn With My Own Leads",
-    desc: "Sell to your network on the 70% revenue-share model.",
-    href: "/earn/partner",
-    cta: "Become a Partner",
-  },
-  {
-    icon: Users,
-    title: "Sell With Company Support",
-    desc: "Join the supported sales model with company leads.",
-    href: "/earn/company-leads",
-    cta: "Join Supported",
-  },
-  {
-    icon: Rocket,
-    title: "Launch My Own Brand",
-    desc: "White-label EdTech on our full technology stack.",
-    href: "/launch",
-    cta: "Launch Brand",
-  },
-];
+import { Container } from "@/components/shared/section";
 
 export function FinalCtaSection() {
   return (
-    <Section padding="lg" className="relative overflow-hidden">
+    <section
+      className="relative overflow-hidden"
+      style={{
+        background:
+          "linear-gradient(135deg, oklch(0.16 0.04 260) 0%, oklch(0.22 0.09 260) 55%, oklch(0.30 0.14 250) 100%)",
+      }}
+    >
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-brand-soft"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(45% 60% at 20% 20%, oklch(0.78 0.16 175 / 0.28), transparent 60%), radial-gradient(45% 60% at 85% 80%, oklch(0.55 0.24 265 / 0.35), transparent 60%)",
+        }}
       />
-      <Container className="relative">
-        <div className="max-w-3xl mx-auto text-center flex flex-col gap-4">
-          <h2 className="text-display text-balance">
-            You can keep chasing targets.{" "}
-            <span className="text-gradient-brand">
-              Or start building something of your own.
+      <Container className="relative py-24 md:py-32">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center text-white">
+          <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl text-balance">
+            You Already Know How To Sell.
+            <br />
+            <span
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, oklch(0.85 0.15 175) 0%, oklch(0.78 0.16 235) 100%)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              Now Build Something For Yourself.
             </span>
           </h2>
-          <p className="text-subheading text-pretty">
-            Choose the path that matches your goals. Every path is on the same platform.
-          </p>
-        </div>
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {paths.map((p) => (
-            <a
-              key={p.title}
-              href={p.href}
-              className="card-elevated hover:card-elevated-hover p-6 flex flex-col gap-3 group"
-            >
-              <span className="grid size-11 place-items-center rounded-xl bg-gradient-brand text-primary-foreground">
-                <p.icon className="size-5" />
-              </span>
-              <h3 className="font-display text-lg font-semibold">{p.title}</h3>
-              <p className="text-caption text-pretty flex-1">{p.desc}</p>
-              <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                {p.cta}
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            </a>
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <p className="text-caption max-w-2xl mx-auto">
-            Your sales skills should build your income — and eventually, your own brand.
-          </p>
-          <div className="mt-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <Button variant="gradient" size="lg" asChild>
-              <a href="#income-calculator">Start with the Income Calculator</a>
+              <a href="/#three-models">
+                Start Earning <ArrowRight className="size-4" />
+              </a>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              asChild
+              className="border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+            >
+              <a href="/launch/how-it-works">
+                <Rocket className="size-4" /> Launch My Brand
+              </a>
             </Button>
           </div>
         </div>
       </Container>
-    </Section>
+    </section>
   );
 }
