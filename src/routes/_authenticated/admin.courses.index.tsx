@@ -97,7 +97,7 @@ function CoursesList() {
       if (!full) return;
       const { id: _omit, created_at, updated_at, created_by, updated_by, ...rest } = full as any;
       const copy = { ...rest, name: `${rest.name} (copy)`, slug: `${rest.slug}-copy-${Date.now().toString(36)}`, status: "draft" };
-      const { error } = await supabase.from("courses").insert(copy);
+      const { error } = await supabase.from("courses").insert(copy as any);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Duplicated"); qc.invalidateQueries({ queryKey: ["admin-courses"] }); },

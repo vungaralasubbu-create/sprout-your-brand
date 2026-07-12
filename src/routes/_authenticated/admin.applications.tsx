@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/admin/applications")({
   component: Applications,
 });
 
-const STATUSES = ["pending", "contacted", "qualified", "enrolled", "rejected"] as const;
+const STATUSES = ["new", "contacted", "qualified", "enrolled", "rejected", "archived"] as const;
 
 function Applications() {
   const qc = useQueryClient();
@@ -27,7 +27,7 @@ function Applications() {
 
   const update = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const { error } = await supabase.from("course_applications").update({ status }).eq("id", id);
+      const { error } = await supabase.from("course_applications").update({ status: status as any }).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => { toast.success("Updated"); qc.invalidateQueries({ queryKey: ["admin-applications"] }); },
