@@ -63,6 +63,7 @@ export interface DbCourse {
 
 export interface CourseFilters {
   category?: string;
+  categoryId?: string;
   level?: string;
   mode?: string;
   emi?: boolean;
@@ -76,6 +77,8 @@ export async function listCategories(): Promise<DbCategory[]> {
   const { data, error } = await supabase
     .from("course_categories")
     .select("*")
+    .eq("status", "published")
+    .eq("is_active", true)
     .order("display_order", { ascending: true });
   if (error) throw error;
   return (data ?? []) as DbCategory[];
@@ -86,6 +89,8 @@ export async function getCategoryBySlug(slug: string): Promise<DbCategory | null
     .from("course_categories")
     .select("*")
     .eq("slug", slug)
+    .eq("status", "published")
+    .eq("is_active", true)
     .maybeSingle();
   if (error) throw error;
   return (data ?? null) as DbCategory | null;
@@ -97,8 +102,16 @@ export async function listCourses(filters: CourseFilters = {}): Promise<
   let q = supabase
     .from("courses")
     .select("*, category:course_categories!inner(slug,name)")
+    .eq("is_published", true)
+    .eq("status", "published")
     .order("display_order", { ascending: true });
-  if (filters.category) q = q.eq("category.slug", filters.category);
+  if (filters.categoryId) {
+    q = q.eq("category_id", filters.categoryId);
+  } else if (filters.category) {
+    const category = await getCategoryBySlug(filters.category);
+    if (!category) return [];
+    q = q.eq("category_id", category.id);
+  }
   if (filters.level) q = q.eq("level", filters.level);
   if (filters.mode) q = q.eq("learning_mode", filters.mode);
   if (filters.emi) q = q.eq("emi_available", true);
@@ -144,6 +157,8 @@ export async function getCourseBySlug(
     .select("*")
     .eq("category_id", category.id)
     .eq("slug", courseSlug)
+    .eq("is_published", true)
+    .eq("status", "published")
     .maybeSingle();
   if (error) throw error;
   if (!course) return null;
@@ -194,6 +209,8 @@ export async function getRelatedCourses(courseId: string, categoryId: string, li
     .from("courses")
     .select("id,name,slug,short_description,duration,level,offer_price,base_price,currency,category:course_categories!inner(slug,name)")
     .eq("category_id", categoryId)
+    .eq("is_published", true)
+    .eq("status", "published")
     .neq("id", courseId)
     .limit(limit);
   return data ?? [];

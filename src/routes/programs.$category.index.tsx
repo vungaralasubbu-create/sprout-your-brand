@@ -30,8 +30,8 @@ function CategoryPage() {
   const { category: slug } = Route.useParams();
   const { data: category } = useQuery({ queryKey: ["category", slug], queryFn: () => getCategoryBySlug(slug) });
   const { data: courses = [] } = useQuery({
-    queryKey: ["courses", "cat", slug],
-    queryFn: () => listCourses({ category: slug }),
+    queryKey: ["courses", "cat", category?.id ?? slug],
+    queryFn: () => listCourses({ categoryId: category?.id }),
     enabled: Boolean(category),
   });
 
