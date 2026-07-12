@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -57,6 +58,11 @@ import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
 
+const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
+  id: '/sales-opportunity',
+  path: '/sales-opportunity',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
   path: '/earn',
@@ -328,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/sales-opportunity': typeof SalesOpportunityRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
@@ -376,6 +383,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/sales-opportunity': typeof SalesOpportunityRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
@@ -424,6 +432,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/sales-opportunity': typeof SalesOpportunityRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
@@ -474,6 +483,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/earn'
+    | '/sales-opportunity'
     | '/admin'
     | '/partner'
     | '/student'
@@ -522,6 +532,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/earn'
+    | '/sales-opportunity'
     | '/partner'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
@@ -569,6 +580,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/earn'
+    | '/sales-opportunity'
     | '/_authenticated/admin'
     | '/_authenticated/partner'
     | '/_authenticated/student'
@@ -619,6 +631,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   EarnRoute: typeof EarnRoute
+  SalesOpportunityRoute: typeof SalesOpportunityRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -632,6 +645,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sales-opportunity': {
+      id: '/sales-opportunity'
+      path: '/sales-opportunity'
+      fullPath: '/sales-opportunity'
+      preLoaderRoute: typeof SalesOpportunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/earn': {
       id: '/earn'
       path: '/earn'
@@ -1077,6 +1097,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   EarnRoute: EarnRoute,
+  SalesOpportunityRoute: SalesOpportunityRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
