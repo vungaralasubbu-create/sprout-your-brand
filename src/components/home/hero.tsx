@@ -120,12 +120,12 @@ function EarningsCard() {
           </span>
         </div>
 
-        <div className="mt-5 flex items-end gap-2">
+        <div className="mt-5 flex flex-col gap-1">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            UP TO
+          </span>
           <span className="font-display text-5xl md:text-6xl font-bold tracking-tight text-gradient-brand leading-none">
             70%
-          </span>
-          <span className="text-sm font-medium text-muted-foreground pb-2">
-            up to
           </span>
         </div>
         <p className="mt-1 text-sm font-semibold text-foreground/85">
