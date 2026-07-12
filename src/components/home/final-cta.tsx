@@ -20,10 +20,13 @@ export function FinalCtaSection() {
             "radial-gradient(45% 60% at 20% 20%, oklch(0.78 0.16 175 / 0.28), transparent 60%), radial-gradient(45% 60% at 85% 80%, oklch(0.55 0.24 265 / 0.35), transparent 60%)",
         }}
       />
-      <Container className="relative py-24 md:py-32">
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center text-white">
+      <Container className="relative py-20 md:py-24">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center text-white">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
+            Choose How You Want To Work
+          </p>
           <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl text-balance">
-            You Already Know How To Sell.
+            Sell Programs. Earn Revenue Share.
             <br />
             <span
               style={{
@@ -34,10 +37,10 @@ export function FinalCtaSection() {
                 color: "transparent",
               }}
             >
-              Now Build Something For Yourself.
+              Or Launch Your Own Brand.
             </span>
           </h2>
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Button variant="gradient" size="lg" asChild>
               <a href="/join">
                 Start Earning <ArrowRight className="size-4" />
@@ -49,7 +52,7 @@ export function FinalCtaSection() {
               asChild
               className="border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white"
             >
-              <a href="/launch/how-it-works">
+              <a href="/launch-your-brand">
                 <Rocket className="size-4" /> Launch My Brand
               </a>
             </Button>

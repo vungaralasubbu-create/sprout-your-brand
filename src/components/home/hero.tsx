@@ -29,12 +29,13 @@ export function HomeHero() {
         <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
           <div className="flex flex-col gap-5">
             <h1 className="text-hero text-balance">
-              Your Sales Skills Deserve{" "}
-              <span className="text-gradient-brand">Better Earnings.</span>
+              Your Sales Skills.<br />
+              Your Growth.<br />
+              <span className="text-gradient-brand">Your Choice.</span>
             </h1>
             <p className="text-subheading max-w-xl text-pretty">
-              Earn up to 70% revenue share by selling career-focused programs
-              — or launch your own EdTech brand.
+              Sell eligible career programs, earn revenue share from successful sales,
+              or launch your own EdTech brand with Glintr infrastructure.
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -44,13 +45,13 @@ export function HomeHero() {
                 </a>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <a href="/#programs">Explore Programs</a>
+                <a href="/launch-your-brand">Launch My Brand</a>
               </Button>
             </div>
 
             <ul className="flex flex-wrap gap-x-8 gap-y-2 pt-1 text-sm text-muted-foreground">
-              <TrustPoint>Up to 70% Revenue Share</TrustPoint>
-              <TrustPoint>48-Hour Payout Processing</TrustPoint>
+              <TrustPoint>Own Leads · Up to 70% Revenue Share</TrustPoint>
+              <TrustPoint>Supported Sales · Up to 50% Revenue Share</TrustPoint>
               <TrustPoint>No Joining Fee</TrustPoint>
             </ul>
           </div>

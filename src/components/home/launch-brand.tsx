@@ -39,12 +39,11 @@ export function LaunchBrandSection() {
             "radial-gradient(50% 60% at 85% 20%, oklch(0.62 0.19 245 / 0.28), transparent 60%), radial-gradient(45% 55% at 10% 90%, oklch(0.78 0.16 175 / 0.18), transparent 60%)",
         }}
       />
-      <Container className="relative py-20 md:py-28 lg:py-32">
-        <div className="grid gap-14 lg:grid-cols-[1.05fr_1fr] lg:items-center">
-          <div className="flex flex-col gap-8 text-white">
+      <Container className="relative py-16 md:py-20 lg:py-24">
+        <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+          <div className="flex flex-col gap-6 text-white">
             <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
-              Don't Want Another Sales Job?
-              <br />
+              Launch Your EdTech Brand{" "}
               <span
                 style={{
                   backgroundImage:
@@ -54,14 +53,14 @@ export function LaunchBrandSection() {
                   color: "transparent",
                 }}
               >
-                Build Your Own EdTech Brand.
+                In As Little As 24 Hours.
               </span>
             </h2>
             <p className="max-w-lg text-lg leading-relaxed text-white/70">
-              Choose your brand name. We provide the technology and backend
-              infrastructure to help you launch.
+              Choose eligible programs and build your brand using Glintr's
+              learning and business infrastructure.
             </p>
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <Button variant="gradient" size="lg" asChild>
                 <a href="/launch-your-brand/start">
                   Launch My Brand <ArrowRight className="size-4" />
