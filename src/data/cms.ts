@@ -288,44 +288,10 @@ const STATS: PlatformStat[] = [
   { key: "categories", label: "Program Categories", value: 4, verified: true },
 ];
 
-const STORIES: SuccessStory[] = [
-  {
-    id: "s-1",
-    name: "Rahul M.",
-    role: "Sales Partner",
-    type: "partner",
-    previous: "Field Sales, ₹22,000/mo salary with ₹1L target",
-    current: "Sales Partner, own leads, 70% share model",
-    quote:
-      "I already had a network from my job. Once I switched to a revenue-share model, my income depends on my effort, not on my salary slab.",
-    verified: true,
-    published: true,
-  },
-  {
-    id: "s-2",
-    name: "Priya S.",
-    role: "Brand Owner",
-    type: "brand_owner",
-    previous: "Sales team lead at an edtech reseller",
-    current: "Founder of a white-label EdTech brand",
-    quote:
-      "I wanted to sell education under my own name. The white-label stack gave me a website, LMS and CRM in under a day.",
-    verified: true,
-    published: true,
-  },
-  {
-    id: "s-3",
-    name: "Karan P.",
-    role: "Student → Career Transition",
-    type: "career_transition",
-    previous: "Non-tech graduate, no coding background",
-    current: "Data Analyst after completing the Data Science track",
-    quote:
-      "The program was structured, mentors were reachable, and my mock interviews were brutal in the best way.",
-    verified: true,
-    published: true,
-  },
-];
+// No approved success stories yet — the homepage section stays hidden until
+// admins publish and verify real stories via the CMS.
+const STORIES: SuccessStory[] = [];
+
 
 const PARTNER_NETWORK: PartnerNetworkItem[] = [
   { id: "n-1", title: "Our Career Programs", description: "Core Glintr career tracks across CS, EE, ME and Management.", icon: GraduationCap, approved: true },
