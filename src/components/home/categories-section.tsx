@@ -3,26 +3,23 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container, Section, SectionHeader } from "@/components/shared/section";
-import { EmptyState } from "@/components/shared/empty-state";
 import {
   fetchFeaturedCategories,
-  fetchFeaturedPrograms,
+  FALLBACK_CATEGORIES,
   type CourseCategory,
-  type Program,
 } from "@/data/cms";
 
 export function CategoriesSection() {
   const categoriesQuery = useQuery({
     queryKey: ["home", "featured-categories"],
     queryFn: fetchFeaturedCategories,
-  });
-  const programsQuery = useQuery({
-    queryKey: ["home", "featured-programs"],
-    queryFn: fetchFeaturedPrograms,
+    initialData: FALLBACK_CATEGORIES,
   });
 
-  const categories = categoriesQuery.data ?? [];
-  const programs = programsQuery.data ?? [];
+  const categories = (categoriesQuery.data && categoriesQuery.data.length > 0
+    ? categoriesQuery.data
+    : FALLBACK_CATEGORIES
+  ).slice(0, 4);
 
   return (
     <Section id="programs" tone="default" padding="lg">
@@ -30,28 +27,13 @@ export function CategoriesSection() {
         <SectionHeader
           eyebrow="Programs"
           title={<>Career Programs People Want To Learn</>}
-          description="Focused, career-outcome programs across four core disciplines — sourced from the CMS."
+          description="Focused, career-outcome programs across four core disciplines."
         />
 
         <div className="mt-14 grid gap-6 md:grid-cols-2">
-          {categories.length === 0 ? (
-            <div className="md:col-span-2">
-              <EmptyState
-                title="No categories yet"
-                description="Categories will appear here once the CMS is populated."
-              />
-            </div>
-          ) : (
-            categories.map((c) => (
-              <CategoryCard
-                key={c.slug}
-                category={c}
-                sample={programs
-                  .filter((p) => p.categorySlug === c.slug)
-                  .slice(0, 3)}
-              />
-            ))
-          )}
+          {categories.map((c) => (
+            <CategoryCard key={c.slug} category={c} />
+          ))}
         </div>
 
         <div className="mt-12 flex justify-center">
@@ -66,14 +48,9 @@ export function CategoriesSection() {
   );
 }
 
-function CategoryCard({
-  category,
-  sample,
-}: {
-  category: CourseCategory;
-  sample: Program[];
-}) {
+function CategoryCard({ category }: { category: CourseCategory }) {
   const Icon = category.icon;
+  const sample = category.topics.slice(0, 3);
   return (
     <article className="group flex flex-col rounded-2xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
@@ -89,19 +66,14 @@ function CategoryCard({
         {category.description}
       </p>
 
-      {sample.length > 0 ? (
-        <ul className="mt-5 flex flex-col gap-2">
-          {sample.map((p) => (
-            <li key={p.id} className="flex items-center gap-2 text-sm">
-              <span
-                aria-hidden
-                className="size-1.5 rounded-full bg-primary/70"
-              />
-              <span className="text-foreground/85">{p.title}</span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      <ul className="mt-5 flex flex-col gap-2">
+        {sample.map((t) => (
+          <li key={t} className="flex items-center gap-2 text-sm">
+            <span aria-hidden className="size-1.5 rounded-full bg-primary/70" />
+            <span className="text-foreground/85">{t}</span>
+          </li>
+        ))}
+      </ul>
 
       <a
         href={`/programs/${category.slug}`}
