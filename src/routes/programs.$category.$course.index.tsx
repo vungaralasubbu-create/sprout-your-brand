@@ -42,6 +42,7 @@ import { getCourseSeo } from "@/lib/seo";
 import { CourseHeroVisual } from "@/components/course/hero-visual";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
+import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/client";
 import { cn } from "@/lib/utils";
 
 const SITE_URL = "https://glintr.com";
@@ -167,6 +168,17 @@ function CoursePage() {
       })
       .then(() => {});
   }, [ref, data]);
+
+  // Fire program_view once per session per course.
+  useEffect(() => {
+    if (!data) return;
+    trackProgramView({
+      id: data.id,
+      name: data.name,
+      category: data.category?.name ?? null,
+      partner_code: ref ?? null,
+    });
+  }, [data, ref]);
 
   // sticky bar visibility
   const [showSticky, setShowSticky] = useState(false);
