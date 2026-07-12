@@ -550,7 +550,7 @@ function CoursePage() {
               />
               <div className="relative">
                 <div className="flex items-center gap-2">
-                  <Badge variant="gradient">Program Fee</Badge>
+                  <Badge variant="primary">Program Fee</Badge>
                   {c.emi_available ? <Badge variant="outline">EMI available</Badge> : null}
                 </div>
                 <div className="mt-4 flex items-baseline gap-3">
