@@ -38,13 +38,13 @@ export function HomeHero() {
               or launch your own EdTech brand with Glintr infrastructure.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <Button variant="gradient" size="lg" asChild>
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
+              <Button variant="gradient" size="lg" className="w-full sm:w-auto" asChild>
                 <a href="/join">
                   Start Earning <ArrowRight className="size-4" />
                 </a>
               </Button>
-              <Button variant="outline" size="lg" asChild>
+              <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
                 <a href="/launch-your-brand">Launch My Brand</a>
               </Button>
             </div>
