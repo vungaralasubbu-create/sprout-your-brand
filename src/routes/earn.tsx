@@ -73,7 +73,7 @@ function EarnHero() {
       <Container size="xl">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="flex flex-col gap-6">
-            <Badge variant="soft" className="w-fit">
+            <Badge variant="info" className="w-fit">
               <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Sales Partner Program
             </Badge>
             <h1 className="text-display text-balance">
@@ -280,7 +280,7 @@ function ModelCard({
         <Button
           asChild
           size="lg"
-          variant={isPrimary ? "gradient" : "default"}
+          variant={isPrimary ? "gradient" : "primary"}
           className="w-full"
         >
           <Link to="/partner/apply">
@@ -557,7 +557,7 @@ function FinalCTA() {
       <div className="absolute inset-0 bg-gradient-brand opacity-20 pointer-events-none" />
       <Container size="lg" className="relative">
         <div className="text-center flex flex-col items-center gap-6">
-          <Badge variant="soft" className="bg-white/10 text-white border-white/20">
+          <Badge variant="info" className="bg-white/10 text-white border-white/20">
             <Rocket className="mr-1.5 h-3.5 w-3.5" /> Ready when you are
           </Badge>
           <h2 className="text-hero text-balance text-white">
