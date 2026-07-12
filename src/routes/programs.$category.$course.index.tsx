@@ -40,6 +40,7 @@ import {
 import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs";
 import { CourseHeroVisual } from "@/components/course/hero-visual";
 import { supabase } from "@/integrations/supabase/client";
+import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/programs/$category/$course/")({
