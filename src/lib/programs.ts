@@ -73,6 +73,17 @@ export interface CourseFilters {
   search?: string;
 }
 
+function logProgramQueryResult(label: string, data: unknown[] | null, error: unknown) {
+  if (!import.meta.env.DEV) return;
+
+  if (error) {
+    console.error(`[programs] ${label} query failed`, error);
+    return;
+  }
+
+  console.debug(`[programs] ${label} query returned ${data?.length ?? 0} records`, data);
+}
+
 export async function listCategories(): Promise<DbCategory[]> {
   const { data, error } = await supabase
     .from("course_categories")
@@ -80,6 +91,7 @@ export async function listCategories(): Promise<DbCategory[]> {
     .eq("status", "published")
     .eq("is_active", true)
     .order("display_order", { ascending: true });
+  logProgramQueryResult("categories", data, error);
   if (error) throw error;
   return (data ?? []) as DbCategory[];
 }
@@ -92,6 +104,10 @@ export async function getCategoryBySlug(slug: string): Promise<DbCategory | null
     .eq("status", "published")
     .eq("is_active", true)
     .maybeSingle();
+  if (import.meta.env.DEV) {
+    if (error) console.error(`[programs] category query failed for ${slug}`, error);
+    else console.debug(`[programs] category query for ${slug}`, data);
+  }
   if (error) throw error;
   return (data ?? null) as DbCategory | null;
 }
@@ -120,6 +136,7 @@ export async function listCourses(filters: CourseFilters = {}): Promise<
   if (filters.maxPrice !== undefined) q = q.lte("offer_price", filters.maxPrice);
   if (filters.search) q = q.ilike("name", `%${filters.search}%`);
   const { data, error } = await q;
+  logProgramQueryResult("courses", data, error);
   if (error) throw error;
   return (data ?? []) as never;
 }
@@ -160,6 +177,10 @@ export async function getCourseBySlug(
     .eq("is_published", true)
     .eq("status", "published")
     .maybeSingle();
+  if (import.meta.env.DEV) {
+    if (error) console.error(`[programs] course query failed for ${categorySlug}/${courseSlug}`, error);
+    else console.debug(`[programs] course query for ${categorySlug}/${courseSlug}`, course);
+  }
   if (error) throw error;
   if (!course) return null;
 
@@ -213,6 +234,9 @@ export async function getRelatedCourses(courseId: string, categoryId: string, li
     .eq("status", "published")
     .neq("id", courseId)
     .limit(limit);
+  if (import.meta.env.DEV) {
+    console.debug(`[programs] related courses query returned ${data?.length ?? 0} records`, data);
+  }
   return data ?? [];
 }
 

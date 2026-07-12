@@ -28,12 +28,14 @@ function prettify(slug: string) {
 
 function CategoryPage() {
   const { category: slug } = Route.useParams();
-  const { data: category } = useQuery({ queryKey: ["category", slug], queryFn: () => getCategoryBySlug(slug) });
-  const { data: courses = [] } = useQuery({
+  const { data: category, isLoading: categoryLoading, error: categoryError } = useQuery({ queryKey: ["category", slug], queryFn: () => getCategoryBySlug(slug) });
+  const { data: courses = [], isLoading: coursesLoading, error: coursesError } = useQuery({
     queryKey: ["courses", "cat", category?.id ?? slug],
     queryFn: () => listCourses({ categoryId: category?.id }),
     enabled: Boolean(category),
   });
+  const isLoading = categoryLoading || coursesLoading || category === undefined;
+  const loadError = categoryError || coursesError;
 
   if (category === null) return <NotFoundState />;
 
@@ -66,8 +68,16 @@ function CategoryPage() {
           <Container>
             <div className="mb-6 flex items-baseline justify-between">
               <h2 className="text-heading-lg font-display font-semibold">All programs</h2>
-              <span className="text-caption">{courses.length} programs</span>
+              <span className="text-caption">
+                {isLoading ? "Loading programs…" : `${courses.length} program${courses.length === 1 ? "" : "s"}`}
+              </span>
             </div>
+            {loadError ? (
+              <div className="mb-6 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-muted-foreground">
+                We couldn't load programs right now. Please refresh and try again.
+                {import.meta.env.DEV ? <pre className="mt-2 whitespace-pre-wrap text-xs">{String(loadError)}</pre> : null}
+              </div>
+            ) : null}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {courses.map((c: any) => (
                 <Link

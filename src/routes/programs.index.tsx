@@ -30,8 +30,8 @@ function ProgramsIndex() {
   const [category, setCategory] = useState<string>("all");
   const [level, setLevel] = useState<string>("all");
 
-  const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: listCategories });
-  const { data: courses = [] } = useQuery({
+  const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useQuery({ queryKey: ["categories"], queryFn: listCategories });
+  const { data: courses = [], isLoading: coursesLoading, error: coursesError } = useQuery({
     queryKey: ["courses", { category, level, search }],
     queryFn: () =>
       listCourses({
@@ -42,6 +42,8 @@ function ProgramsIndex() {
   });
 
   const filtered = useMemo(() => courses, [courses]);
+  const isLoading = categoriesLoading || coursesLoading;
+  const loadError = categoriesError || coursesError;
 
   return (
     <>
@@ -102,11 +104,19 @@ function ProgramsIndex() {
         <Section className="py-12">
           <Container>
             <div className="mb-6 flex items-center justify-between">
-              <p className="text-caption">{filtered.length} program{filtered.length === 1 ? "" : "s"}</p>
+              <p className="text-caption">
+                {isLoading ? "Loading programs…" : `${filtered.length} program${filtered.length === 1 ? "" : "s"}`}
+              </p>
               <div className="flex items-center gap-2 text-caption">
                 <Filter className="size-3.5" /> Sorted by featured
               </div>
             </div>
+            {loadError ? (
+              <div className="mb-6 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-muted-foreground">
+                We couldn't load programs right now. Please refresh and try again.
+                {import.meta.env.DEV ? <pre className="mt-2 whitespace-pre-wrap text-xs">{String(loadError)}</pre> : null}
+              </div>
+            ) : null}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((c: any) => (
                 <Link
