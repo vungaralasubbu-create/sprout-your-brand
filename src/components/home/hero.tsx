@@ -12,7 +12,7 @@ const INR = new Intl.NumberFormat("en-IN", {
 
 export function HomeHero() {
   return (
-    <Section tone="default" padding="lg" className="relative overflow-hidden">
+    <Section tone="default" padding="md" className="relative overflow-hidden">
       {/* Very soft brand wash — light-first, no crypto glow */}
       <div
         aria-hidden
@@ -23,9 +23,9 @@ export function HomeHero() {
         }}
       />
       <Container>
-        <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
           {/* Copy */}
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-6">
             <h1 className="text-hero text-balance">
               Your Sales Skills Deserve{" "}
               <span className="text-gradient-brand">Better Earnings.</span>
@@ -46,7 +46,7 @@ export function HomeHero() {
               </Button>
             </div>
 
-            <ul className="flex flex-wrap gap-x-8 gap-y-3 pt-2 text-sm text-muted-foreground">
+            <ul className="flex flex-wrap gap-x-8 gap-y-2 pt-1 text-sm text-muted-foreground">
               <TrustPoint>Up to 70% Revenue Share</TrustPoint>
               <TrustPoint>48-Hour Payout Processing</TrustPoint>
               <TrustPoint>No Joining Fee</TrustPoint>
@@ -90,37 +90,36 @@ function EarningsCard() {
     <div className="relative">
       <div
         aria-hidden
-        className="absolute -inset-6 rounded-[36px] bg-gradient-brand opacity-[0.06] blur-2xl"
+        className="absolute -inset-4 rounded-[28px] bg-gradient-brand opacity-[0.05] blur-2xl"
       />
       <article
-        className="relative rounded-3xl border border-border bg-card p-6 md:p-8 shadow-sm"
+        className="relative rounded-2xl border border-border bg-card p-5 md:p-6 shadow-sm"
         aria-label="Potential earnings preview"
       >
-        <header className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-label">Potential Earnings</span>
-            <span className="text-caption mt-1">This month · estimate</span>
+            <span className="text-caption mt-0.5">
+              Example based on selected sales inputs
+            </span>
           </div>
-          <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2.5 py-1 text-xs font-semibold text-success">
-            <TrendingUp className="size-3.5" /> +42%
-          </span>
-        </header>
+        </div>
 
-        <p className="mt-5 font-display text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+        <p className="mt-3 font-display text-4xl md:text-5xl font-bold tracking-tight text-foreground">
           {INR.format(earnings)}
         </p>
 
-        <TrendSpark className="mt-6" />
+        <TrendSpark className="mt-4 h-10 w-full" />
 
-        <dl className="mt-6 grid grid-cols-3 gap-4 border-t border-border pt-5">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-4 text-sm">
           <MetricCell label="Sales" value="5" />
           <MetricCell label="Avg. Program" value="₹30K" />
           <MetricCell label="Revenue Share" value="70%" accent />
-        </dl>
+        </div>
 
         <a
           href="/#calculator"
-          className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80"
+          className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80"
         >
           Try the calculator <ArrowUpRight className="size-3.5" />
         </a>
@@ -139,18 +138,18 @@ function MetricCell({
   accent?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+    <div className="flex flex-col gap-0.5">
+      <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
         {label}
-      </dt>
-      <dd
+      </span>
+      <span
         className={
-          "text-mono text-base font-semibold " +
+          "text-sm font-semibold " +
           (accent ? "text-primary" : "text-foreground")
         }
       >
         {value}
-      </dd>
+      </span>
     </div>
   );
 }
@@ -183,7 +182,7 @@ function TrendSpark({ className }: { className?: string }) {
         d="M0,100 L40,92 L80,86 L120,78 L160,74 L200,60 L240,52 L280,44 L320,32 L360,24 L400,12"
         fill="none"
         stroke="url(#hero-spark-stroke)"
-        strokeWidth="2.5"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
