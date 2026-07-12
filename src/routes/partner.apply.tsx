@@ -31,6 +31,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { trackEvent } from "@/lib/analytics/client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/partner/apply")({
@@ -245,6 +246,11 @@ function ApplyForm() {
     }
     localStorage.removeItem(STORAGE_KEY);
     setSubmitted(true);
+    trackEvent("partner_signup", { source: "partner_apply", dedupe_key: `apply:${Date.now()}` });
+    trackEvent("application_submitted", {
+      application_type: "partner",
+      dedupe_key: `partner_apply:${Date.now()}`,
+    });
     toast.success("Application submitted!");
   };
 
