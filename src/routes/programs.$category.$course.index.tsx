@@ -40,6 +40,7 @@ import {
 import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs";
 import { CourseHeroVisual } from "@/components/course/hero-visual";
 import { supabase } from "@/integrations/supabase/client";
+import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/programs/$category/$course/")({
@@ -123,6 +124,7 @@ function CoursePage() {
   const c = data;
   const price = c.offer_price ?? c.base_price;
   const applyTo = { category, course };
+  const counsellorCtx = { course_id: c.id, course_name: c.name, category_name: c.category.name };
 
   // ---- Derive dynamic content with graceful fallbacks ----
   const highlights = buildHighlights(c);
@@ -179,12 +181,7 @@ function CoursePage() {
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline">
-                  <Link to="/launch-your-brand/consultation">
-                    <Phone className="size-4" />
-                    Talk To A Counsellor
-                  </Link>
-                </Button>
+                <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
                 {c.brochure ? (
                   <a
                     href={c.brochure.file_url}
@@ -588,9 +585,7 @@ function CoursePage() {
                       <ArrowRight className="size-4" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline">
-                    <Link to="/launch-your-brand/consultation">Talk To A Counsellor</Link>
-                  </Button>
+                  <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
                 </div>
               </div>
             </div>
@@ -671,9 +666,7 @@ function CoursePage() {
                   <ArrowRight className="size-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/launch-your-brand/consultation">Talk To A Counsellor</Link>
-              </Button>
+              <CounsellorForm size="lg" variant="outline" context={counsellorCtx} label="Get Program Guidance" />
             </div>
           </div>
         </Container>
@@ -701,9 +694,7 @@ function CoursePage() {
                   {formatPrice(price, c.currency ?? "INR")}
                 </span>
               ) : null}
-              <Button asChild variant="outline" size="sm">
-                <Link to="/launch-your-brand/consultation">Talk To A Counsellor</Link>
-              </Button>
+              <CounsellorForm size="sm" variant="outline" context={counsellorCtx} label="Request A Call" />
               <Button asChild size="sm" variant="gradient">
                 <Link to="/programs/$category/$course/apply" params={applyTo}>
                   Apply Now

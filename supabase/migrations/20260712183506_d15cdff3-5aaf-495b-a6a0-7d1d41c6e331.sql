@@ -1,0 +1,1 @@
+ALTER TYPE public.partner_lead_source ADD VALUE IF NOT EXISTS 'website_counsellor';

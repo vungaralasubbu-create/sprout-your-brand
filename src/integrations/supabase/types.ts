@@ -4094,6 +4094,7 @@ export type Database = {
         | "college_network"
         | "assigned"
         | "other"
+        | "website_counsellor"
       partner_lead_status:
         | "new"
         | "contacted"
@@ -4458,6 +4459,7 @@ export const Constants = {
         "college_network",
         "assigned",
         "other",
+        "website_counsellor",
       ],
       partner_lead_status: [
         "new",
