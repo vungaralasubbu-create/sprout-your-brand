@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 
 const EarnRoute = EarnRouteImport.update({
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
+  id: '/launch-your-brand/',
+  path: '/launch-your-brand/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnerApplyRoute = PartnerApplyRouteImport.update({
   id: '/partner/apply',
   path: '/partner/apply',
@@ -33,30 +39,34 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/earn': typeof EarnRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/earn': typeof EarnRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/launch-your-brand': typeof LaunchYourBrandIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/earn': typeof EarnRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/earn' | '/partner/apply'
+  fullPaths: '/' | '/earn' | '/partner/apply' | '/launch-your-brand/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/earn' | '/partner/apply'
-  id: '__root__' | '/' | '/earn' | '/partner/apply'
+  to: '/' | '/earn' | '/partner/apply' | '/launch-your-brand'
+  id: '__root__' | '/' | '/earn' | '/partner/apply' | '/launch-your-brand/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EarnRoute: typeof EarnRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
+  LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/launch-your-brand/': {
+      id: '/launch-your-brand/'
+      path: '/launch-your-brand'
+      fullPath: '/launch-your-brand/'
+      preLoaderRoute: typeof LaunchYourBrandIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partner/apply': {
       id: '/partner/apply'
       path: '/partner/apply'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EarnRoute: EarnRoute,
   PartnerApplyRoute: PartnerApplyRoute,
+  LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -90,17 +90,17 @@ const nav: NavEntry[] = [
       {
         title: "White-Label EdTech",
         items: [
-          { label: "Launch Your EdTech Brand", description: "Overview & pricing", href: "/launch", icon: Rocket },
-          { label: "How It Works", description: "End-to-end launch flow", href: "/launch/how-it-works", icon: Clock },
-          { label: "What's Included", description: "LMS, CRM, website, creatives", href: "/launch/included", icon: Layers },
+          { label: "Launch Your EdTech Brand", description: "Overview & what's included", href: "/launch-your-brand", icon: Rocket },
+          { label: "Start Brand Builder", description: "8-step interactive setup", href: "/launch-your-brand/start", icon: Sparkles },
+          { label: "What's Included", description: "LMS, CRM, website, creatives", href: "/launch-your-brand#included", icon: Layers },
         ],
       },
       {
-        title: "Support & Tech",
+        title: "Support & Timeline",
         items: [
-          { label: "LMS & Technology", description: "Full learning + operations stack", href: "/launch/lms", icon: BookOpen },
-          { label: "Marketing Support", description: "Creatives, campaigns, social", href: "/launch/marketing", icon: Sparkles },
-          { label: "Book Consultation", description: "Talk to our brand team", href: "/launch/consult", icon: Building2 },
+          { label: "Launch Timeline", description: "Under 24-hour eligible setup", href: "/launch-your-brand#pricing", icon: Clock },
+          { label: "FAQs", description: "Common brand launch questions", href: "/launch-your-brand#faq", icon: BookOpen },
+          { label: "Book Consultation", description: "Talk to our brand team", href: "/launch-your-brand/consultation", icon: Building2 },
         ],
       },
     ],
