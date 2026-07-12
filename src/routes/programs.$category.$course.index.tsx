@@ -265,7 +265,7 @@ function CoursePage() {
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" variant="gradient">
-                  <Link to="/programs/$category/$course/apply" params={applyTo}>
+                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                     Apply Now
                     <ArrowRight className="size-4" />
                   </Link>
@@ -669,7 +669,7 @@ function CoursePage() {
 
                 <div className="mt-7 flex flex-col gap-2.5">
                   <Button asChild size="lg" variant="gradient">
-                    <Link to="/programs/$category/$course/apply" params={applyTo}>
+                    <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                       Apply Now
                       <ArrowRight className="size-4" />
                     </Link>
@@ -750,7 +750,7 @@ function CoursePage() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg" variant="gradient">
-                <Link to="/programs/$category/$course/apply" params={applyTo}>
+                <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                   Apply Now
                   <ArrowRight className="size-4" />
                 </Link>
@@ -785,7 +785,7 @@ function CoursePage() {
               ) : null}
               <CounsellorForm size="sm" variant="outline" context={counsellorCtx} label="Request A Call" />
               <Button asChild size="sm" variant="gradient">
-                <Link to="/programs/$category/$course/apply" params={applyTo}>
+                <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                   Apply Now
                 </Link>
               </Button>
@@ -800,7 +800,7 @@ function CoursePage() {
           <Link to="/launch-your-brand/consultation">Talk To Us</Link>
         </Button>
         <Button asChild variant="gradient" className="flex-1">
-          <Link to="/programs/$category/$course/apply" params={applyTo}>
+          <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
             Apply Now
           </Link>
         </Button>
