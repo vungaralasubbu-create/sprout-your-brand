@@ -61,7 +61,7 @@ function Hero() {
 
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Button size="lg" asChild>
-              <Link to="/partner/apply">Start Earning <ArrowRight className="size-4" /></Link>
+              <Link to="/join">Start Earning <ArrowRight className="size-4" /></Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <a href="#how-it-works">See How It Works</a>
@@ -403,7 +403,7 @@ function HowItWorks() {
 
         <div className="mt-10 flex flex-col sm:flex-row gap-3">
           <Button size="lg" asChild>
-            <Link to="/partner/apply">Start Earning <ArrowRight className="size-4" /></Link>
+            <Link to="/join">Start Earning <ArrowRight className="size-4" /></Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
             <Link to="/earn">Learn More About Revenue Share</Link>

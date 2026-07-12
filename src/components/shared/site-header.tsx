@@ -223,7 +223,7 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-2 ml-auto">
           <Button variant="gradient" size="sm" className="hidden md:inline-flex" asChild>
-            <a href="/#income-calculator">
+            <a href="/join">
               <Sparkles className="size-4" />
               Start Earning
             </a>
@@ -296,7 +296,7 @@ export function SiteHeader() {
             })}
             <div className="grid gap-2 pt-3 border-t border-border mt-2">
               <Button variant="gradient" size="sm" asChild>
-                <a href="/#income-calculator">Start Earning</a>
+                <a href="/join">Start Earning</a>
               </Button>
             </div>
           </div>
