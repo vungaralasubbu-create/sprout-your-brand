@@ -28,17 +28,17 @@ export const getAdminOverview = createServerFn({ method: "GET" })
       s.from("courses").select("id", { count: "exact", head: true }).eq("status", "published"),
       s.from("partners").select("id", { count: "exact", head: true }).eq("status", "active"),
       s.from("partner_applications").select("id", { count: "exact", head: true })
-        .in("status", ["submitted", "under_review", "information_required"]),
+        .in("status", ["submitted", "under_review", "more_info_required"]),
       s.from("brand_applications").select("id", { count: "exact", head: true })
         .in("status", ["submitted", "under_review", "information_required"]),
       s.from("commissions").select("commission_amount")
-        .in("status", ["pending", "verified"]),
+        .in("status", ["calculated", "under_verification"]),
       s.from("payouts").select("id", { count: "exact", head: true })
-        .in("status", ["pending", "processing"]),
+        .in("status", ["queued", "processing"]),
       s.from("partners").select("id", { count: "exact", head: true })
         .eq("sales_model_approval_status", "under_review"),
       s.from("partner_lead_attribution_reviews").select("id", { count: "exact", head: true })
-        .eq("status", "pending"),
+        .eq("status", "admin_review"),
       s.from("brand_launch_tasks").select("id", { count: "exact", head: true })
         .lt("due_date", new Date().toISOString())
         .not("status", "in", "(completed,cancelled)"),
