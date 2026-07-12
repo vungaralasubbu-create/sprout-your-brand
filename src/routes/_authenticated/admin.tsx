@@ -85,7 +85,7 @@ const NAV: NavGroup[] = [
     label: "Finance",
     items: [
       { to: "/admin/revenue", label: "Revenue", icon: Wallet },
-      { to: "/admin/commissions", label: "Commissions", icon: BadgeDollarSign },
+      { to: "/admin/revenue-verification", label: "Revenue Verification", icon: Shield },
       { to: "/admin/payouts", label: "Payouts", icon: FileText },
       { to: "/admin/adjustments", label: "Adjustments", icon: RefreshCw },
     ],
