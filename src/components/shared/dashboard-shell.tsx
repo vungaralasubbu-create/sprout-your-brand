@@ -149,7 +149,7 @@ export function DashboardShell({
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-dashboard-title">{title}</h1>
-              <Badge variant="soft">{role}</Badge>
+              <Badge variant="primary">{role}</Badge>
             </div>
             {subtitle ? <p className="text-caption mt-1">{subtitle}</p> : null}
           </div>

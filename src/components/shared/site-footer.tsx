@@ -31,7 +31,7 @@ export function SiteFooter() {
               <label className="text-label">Get the newsletter</label>
               <div className="flex gap-2">
                 <Input placeholder="you@work.com" className="max-w-[240px]" />
-                <Button variant="gradient" size="default">Subscribe</Button>
+                <Button variant="gradient" size="md">Subscribe</Button>
               </div>
             </div>
             <div className="flex items-center gap-1 mt-2">
