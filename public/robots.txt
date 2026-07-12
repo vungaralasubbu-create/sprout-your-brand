@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin
+Disallow: /admin/
+Disallow: /partner/dashboard
+Disallow: /partner/onboarding
+Disallow: /partner/apply
+Disallow: /student
+Disallow: /student/
+Disallow: /brand
+Disallow: /brand/
+Disallow: /auth
+Disallow: /_authenticated
+Disallow: /_authenticated/
+
+Sitemap: https://glintr.com/sitemap.xml
