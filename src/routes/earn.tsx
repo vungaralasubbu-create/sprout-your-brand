@@ -104,14 +104,6 @@ function EarnHero() {
   );
 }
 
-function HeroStat({ value, label }: { value: string; label: string }) {
-  return (
-    <div>
-      <div className="font-display text-2xl md:text-3xl font-semibold">{value}</div>
-      <div className="text-caption text-muted-foreground mt-1">{label}</div>
-    </div>
-  );
-}
 
 function ModelHighlightCards() {
   return (
