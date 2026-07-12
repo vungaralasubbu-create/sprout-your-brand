@@ -223,6 +223,7 @@ export async function getCourseBySlug(
     certifications: (certs.data ?? []) as never,
     placement: (placement.data ?? []) as never,
     faqs: (faqs.data ?? []) as never,
+    projects: ((projectsJoin.data ?? []) as any[]).map((r) => r.course_project_templates).filter(Boolean),
     brochure: (brochures.data ?? [])[0] ?? null,
   };
 }
