@@ -26,6 +26,7 @@ import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_au
 import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/programs.$category.$course.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
+import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
 
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
@@ -117,6 +118,12 @@ const ProgramsCategoryCourseApplyRoute =
     path: '/programs/$category/$course/apply',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminCoursesIdRoute =
+  AuthenticatedAdminCoursesIdRouteImport.update({
+    id: '/courses/$id',
+    path: '/courses/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
@@ -149,6 +157,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
+  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
@@ -169,6 +178,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/'
     | '/programs/$category/'
+    | '/admin/courses/$id'
     | '/programs/$category/$course/apply'
     | '/admin/courses/'
     | '/programs/$category/$course/'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin'
     | '/programs/$category'
+    | '/admin/courses/$id'
     | '/programs/$category/$course/apply'
     | '/admin/courses'
     | '/programs/$category/$course'
@@ -225,6 +237,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/'
     | '/programs/$category/'
+    | '/_authenticated/admin/courses/$id'
     | '/programs/$category/$course/apply'
     | '/_authenticated/admin/courses/'
     | '/programs/$category/$course/'
@@ -366,6 +379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/courses/$id': {
+      id: '/_authenticated/admin/courses/$id'
+      path: '/courses/$id'
+      fullPath: '/admin/courses/$id'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
@@ -373,6 +393,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
 }
 
@@ -380,6 +401,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
   AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
 }
 
