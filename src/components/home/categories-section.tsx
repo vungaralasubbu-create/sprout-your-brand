@@ -90,7 +90,7 @@ function CategoryCard({
   );
 }
 
-const CATEGORY_ICONS = {
+const CATEGORY_ICONS: Record<string, typeof BrainCircuit> = {
   "computer-science": BrainCircuit,
   "electronics-electrical": Cpu,
   "mechanical-engineering": Cog,
