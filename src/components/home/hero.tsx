@@ -23,9 +23,9 @@ export function HomeHero() {
         }}
       />
       <Container>
-        <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
+        <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
           {/* Copy */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5">
             <h1 className="text-hero text-balance">
               Your Sales Skills Deserve{" "}
               <span className="text-gradient-brand">Better Earnings.</span>
