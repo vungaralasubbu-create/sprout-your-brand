@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
+import { Route as JoinRouteImport } from './routes/join'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -63,6 +64,11 @@ import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authe
 const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
   id: '/sales-opportunity',
   path: '/sales-opportunity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EarnRoute = EarnRouteImport.update({
@@ -347,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -398,6 +405,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -449,6 +457,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
+  '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -502,6 +511,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/earn'
+    | '/join'
     | '/sales-opportunity'
     | '/admin'
     | '/brand'
@@ -553,6 +563,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/earn'
+    | '/join'
     | '/sales-opportunity'
     | '/brand'
     | '/partner'
@@ -603,6 +614,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/earn'
+    | '/join'
     | '/sales-opportunity'
     | '/_authenticated/admin'
     | '/_authenticated/brand'
@@ -656,6 +668,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   EarnRoute: typeof EarnRoute
+  JoinRoute: typeof JoinRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
@@ -675,6 +688,13 @@ declare module '@tanstack/react-router' {
       path: '/sales-opportunity'
       fullPath: '/sales-opportunity'
       preLoaderRoute: typeof SalesOpportunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/earn': {
@@ -1149,6 +1169,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   EarnRoute: EarnRoute,
+  JoinRoute: JoinRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
