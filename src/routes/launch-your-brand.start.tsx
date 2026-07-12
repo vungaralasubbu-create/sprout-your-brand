@@ -34,6 +34,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 
 import { supabase } from "@/integrations/supabase/client";
+import { trackEvent } from "@/lib/analytics/client";
 import {
   BRAND_AUDIENCE_OPTIONS,
   BRAND_BUSINESS_TYPES,
@@ -193,6 +194,10 @@ function BrandBuilderPage() {
       const payload = draftToRow(draft, user.id);
       const { error } = await supabase.from("brand_applications").insert(payload);
       if (error) throw error;
+      trackEvent("brand_application", {
+        source: "brand_start",
+        dedupe_key: `brand:${user.id}`,
+      });
       toast.success("Brand launch request submitted! Our team will review shortly.");
       localStorage.removeItem(STORAGE_KEY);
       navigate({ to: "/launch-your-brand" });
