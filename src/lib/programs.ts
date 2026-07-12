@@ -159,10 +159,11 @@ export async function getCourseBySlug(
       }>;
       skills: string[];
       tools: Array<{ name: string; logo_url: string | null }>;
-      career_roles: Array<{ title: string; salary_min: number | null; salary_max: number | null; currency: string | null; salary_period: string | null }>;
+      career_roles: Array<{ title: string; description?: string | null; salary_min: number | null; salary_max: number | null; currency: string | null; salary_period: string | null }>;
       certifications: Array<{ name: string; description: string | null; image_url: string | null; issuer: string | null }>;
       placement: Array<{ support_type: string; description: string | null }>;
       faqs: Array<{ question: string; answer: string }>;
+      projects: Array<{ id: string; name: string; slug: string; short_description: string | null; image_url: string | null; project_type: string | null; difficulty: string | null; duration: string | null; industry: string | null; learning_outcomes: string[] | null }>;
       brochure: { file_url: string; capture_lead: boolean } | null;
     })
   | null
