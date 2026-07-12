@@ -1,149 +1,192 @@
 import * as React from "react";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Calculator,
-  Clock,
-  Rocket,
-  Sparkles,
-  TrendingUp,
-  Wallet,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, TrendingUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Container, Section } from "@/components/shared/section";
 
-const trustPoints = [
-  { icon: TrendingUp, label: "Up to 70% Revenue Share" },
-  { icon: Wallet, label: "48-Hour Payouts" },
-  { icon: BadgeCheck, label: "No Joining Fee" },
-  { icon: Clock, label: "Part-Time or Full-Time" },
-  { icon: Rocket, label: "Own Brand Option" },
-];
+const INR = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0,
+});
 
 export function HomeHero() {
   return (
-    <Section tone="mesh" padding="lg" className="overflow-hidden">
-      <Container className="grid gap-12 lg:grid-cols-[1.05fr_1fr] items-center">
-        <div className="flex flex-col gap-6 animate-fade-in">
-          <Badge variant="muted" className="w-fit">
-            <Sparkles className="size-3.5" />
-            For sales professionals, freelancers & entrepreneurs
-          </Badge>
-          <h1 className="text-hero text-balance">
-            Stop chasing impossible targets.{" "}
-            <span className="text-gradient-brand">Start building your own income.</span>
-          </h1>
-          <p className="text-subheading text-pretty max-w-xl">
-            Turn your sales skills into your biggest asset. Sell career-focused programs,
-            earn up to <strong className="text-foreground">70% revenue share</strong>, receive
-            payouts within <strong className="text-foreground">48 hours</strong>, or launch
-            your own EdTech brand in less than 24 hours.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Button variant="gradient" size="lg" asChild>
-              <a href="#income-calculator">
-                <Calculator className="size-4" />
-                Calculate My Earnings
-              </a>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <a href="#programs">Explore Programs</a>
-            </Button>
-            <Button variant="ghost" size="lg" asChild>
-              <a href="#launch-brand" className="inline-flex items-center gap-2">
-                Launch My Own Brand <ArrowRight className="size-4" />
-              </a>
-            </Button>
-          </div>
-          <ul className="flex flex-wrap gap-x-5 gap-y-2 pt-2">
-            {trustPoints.map((t) => (
-              <li key={t.label} className="inline-flex items-center gap-2 text-caption">
-                <t.icon className="size-4 text-brand-lime" />
-                <span className="text-foreground/85">{t.label}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <Section tone="default" padding="lg" className="relative overflow-hidden">
+      {/* Very soft brand wash — light-first, no crypto glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[520px] -z-10"
+        style={{
+          background:
+            "radial-gradient(60% 60% at 15% 0%, oklch(0.78 0.16 175 / 0.10), transparent 60%), radial-gradient(60% 60% at 85% 10%, oklch(0.62 0.19 245 / 0.10), transparent 60%)",
+        }}
+      />
+      <Container>
+        <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+          {/* Copy */}
+          <div className="flex flex-col gap-8">
+            <h1 className="text-hero text-balance">
+              Your Sales Skills Deserve{" "}
+              <span className="text-gradient-brand">Better Earnings.</span>
+            </h1>
+            <p className="text-subheading max-w-xl text-pretty">
+              Earn up to 70% revenue share by selling career-focused programs
+              — or launch your own EdTech brand.
+            </p>
 
-        <HeroTransform />
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="gradient" size="lg" asChild>
+                <a href="/#three-models">
+                  Start Earning <ArrowRight className="size-4" />
+                </a>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <a href="/#programs">Explore Programs</a>
+              </Button>
+            </div>
+
+            <ul className="flex flex-wrap gap-x-8 gap-y-3 pt-2 text-sm text-muted-foreground">
+              <TrustPoint>Up to 70% Revenue Share</TrustPoint>
+              <TrustPoint>48-Hour Payout Processing</TrustPoint>
+              <TrustPoint>No Joining Fee</TrustPoint>
+            </ul>
+          </div>
+
+          {/* Earnings card */}
+          <EarningsCard />
+        </div>
       </Container>
     </Section>
   );
 }
 
-function HeroTransform() {
+function TrustPoint({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative animate-slide-left">
+    <li className="flex items-center gap-2">
+      <span
+        aria-hidden
+        className="grid size-5 place-items-center rounded-full bg-primary-soft"
+      >
+        <svg
+          viewBox="0 0 20 20"
+          className="size-3 text-primary"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+        >
+          <path d="M4 10.5l4 4 8-9" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+      <span className="font-medium text-foreground/85">{children}</span>
+    </li>
+  );
+}
+
+function EarningsCard() {
+  const earnings = 105000;
+
+  return (
+    <div className="relative">
       <div
         aria-hidden
-        className="absolute -inset-8 bg-gradient-brand opacity-20 blur-3xl rounded-[3rem]"
+        className="absolute -inset-6 rounded-[36px] bg-gradient-brand opacity-[0.06] blur-2xl"
       />
-      <div className="relative grid gap-4">
-        {/* Before */}
-        <article className="card-elevated p-5 border-danger/20">
-          <div className="flex items-center justify-between">
-            <span className="text-label text-danger">Current Job</span>
-            <span className="text-caption">Employee mindset</span>
+      <article
+        className="relative rounded-3xl border border-border bg-card p-6 md:p-8 shadow-sm"
+        aria-label="Potential earnings preview"
+      >
+        <header className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-label">Potential Earnings</span>
+            <span className="text-caption mt-1">This month · estimate</span>
           </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <Metric label="Salary" value="₹18,000" tone="muted" />
-            <Metric label="Monthly Target" value="₹1,00,000" tone="muted" />
-            <Metric label="Pressure" value="High" tone="muted" />
-            <Metric label="Incentives" value="Limited" tone="muted" />
-          </div>
-        </article>
+          <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2.5 py-1 text-xs font-semibold text-success">
+            <TrendingUp className="size-3.5" /> +42%
+          </span>
+        </header>
 
-        <div className="flex items-center justify-center">
-          <div className="size-10 grid place-items-center rounded-full bg-gradient-brand text-primary-foreground shadow-lg animate-pulse-ring">
-            <ArrowRight className="size-5 rotate-90" />
-          </div>
-        </div>
+        <p className="mt-5 font-display text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+          {INR.format(earnings)}
+        </p>
 
-        {/* After */}
-        <article className="card-elevated p-5 relative overflow-hidden ring-brand">
-          <div
-            aria-hidden
-            className="absolute -top-16 -right-16 size-40 rounded-full bg-gradient-brand opacity-25 blur-2xl"
-          />
-          <div className="flex items-center justify-between relative">
-            <span className="text-label text-primary">Your Sales. Your Income.</span>
-            <Badge variant="certified">Partner</Badge>
-          </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 relative">
-            <Metric label="Revenue Share" value="Up to 70%" tone="brand" />
-            <Metric label="Payout" value="48 hours" tone="brand" />
-            <Metric label="Work Style" value="Flexible" tone="brand" />
-            <Metric label="Option" value="Own Brand" tone="brand" />
-          </div>
-        </article>
-      </div>
+        <TrendSpark className="mt-6" />
+
+        <dl className="mt-6 grid grid-cols-3 gap-4 border-t border-border pt-5">
+          <MetricCell label="Sales" value="5" />
+          <MetricCell label="Avg. Program" value="₹30K" />
+          <MetricCell label="Revenue Share" value="70%" accent />
+        </dl>
+
+        <a
+          href="/#calculator"
+          className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80"
+        >
+          Try the calculator <ArrowUpRight className="size-3.5" />
+        </a>
+      </article>
     </div>
   );
 }
 
-function Metric({
+function MetricCell({
   label,
   value,
-  tone = "muted",
+  accent,
 }: {
   label: string;
   value: string;
-  tone?: "muted" | "brand";
+  accent?: boolean;
 }) {
   return (
-    <div className="rounded-lg border border-border bg-surface-2/40 p-3">
-      <p className="text-caption">{label}</p>
-      <p
+    <div className="flex flex-col gap-1">
+      <dt className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+        {label}
+      </dt>
+      <dd
         className={
-          tone === "brand"
-            ? "text-mono text-lg font-semibold text-gradient-brand"
-            : "text-mono text-lg font-semibold text-foreground/70"
+          "text-mono text-base font-semibold " +
+          (accent ? "text-primary" : "text-foreground")
         }
       >
         {value}
-      </p>
+      </dd>
     </div>
+  );
+}
+
+function TrendSpark({ className }: { className?: string }) {
+  // Simple SVG upward trend — subtle, financial insight feel.
+  return (
+    <svg
+      viewBox="0 0 400 120"
+      className={className}
+      preserveAspectRatio="none"
+      role="img"
+      aria-label="Upward earnings trend"
+    >
+      <defs>
+        <linearGradient id="hero-spark-fill" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stopColor="oklch(0.62 0.19 245)" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="oklch(0.62 0.19 245)" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="hero-spark-stroke" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stopColor="oklch(0.78 0.16 175)" />
+          <stop offset="100%" stopColor="oklch(0.55 0.24 265)" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M0,100 L40,92 L80,86 L120,78 L160,74 L200,60 L240,52 L280,44 L320,32 L360,24 L400,12 L400,120 L0,120 Z"
+        fill="url(#hero-spark-fill)"
+      />
+      <path
+        d="M0,100 L40,92 L80,86 L120,78 L160,74 L200,60 L240,52 L280,44 L320,32 L360,24 L400,12"
+        fill="none"
+        stroke="url(#hero-spark-stroke)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
