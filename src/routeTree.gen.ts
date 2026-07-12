@@ -39,6 +39,7 @@ import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_a
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
+import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './routes/_authenticated/admin.revenue-verification'
 import { Route as AuthenticatedAdminRevenueRouteImport } from './routes/_authenticated/admin.revenue'
 import { Route as AuthenticatedAdminPartnerProgramsRouteImport } from './routes/_authenticated/admin.partner-programs'
@@ -223,6 +224,12 @@ const AuthenticatedBrandDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedBrandRoute,
   } as any)
+const AuthenticatedAdminSettingsRoute =
+  AuthenticatedAdminSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminRevenueVerificationRoute =
   AuthenticatedAdminRevenueVerificationRouteImport.update({
     id: '/revenue-verification',
@@ -384,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
@@ -435,6 +443,7 @@ export interface FileRoutesByTo {
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
@@ -490,6 +499,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/_authenticated/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/_authenticated/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
@@ -545,6 +555,7 @@ export interface FileRouteTypes {
     | '/admin/partner-programs'
     | '/admin/revenue'
     | '/admin/revenue-verification'
+    | '/admin/settings'
     | '/brand/dashboard'
     | '/partner/dashboard'
     | '/partner/onboarding'
@@ -596,6 +607,7 @@ export interface FileRouteTypes {
     | '/admin/partner-programs'
     | '/admin/revenue'
     | '/admin/revenue-verification'
+    | '/admin/settings'
     | '/brand/dashboard'
     | '/partner/dashboard'
     | '/partner/onboarding'
@@ -650,6 +662,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partner-programs'
     | '/_authenticated/admin/revenue'
     | '/_authenticated/admin/revenue-verification'
+    | '/_authenticated/admin/settings'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/onboarding'
@@ -906,6 +919,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBrandDashboardRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
+    '/_authenticated/admin/settings': {
+      id: '/_authenticated/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AuthenticatedAdminSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/revenue-verification': {
       id: '/_authenticated/admin/revenue-verification'
       path: '/revenue-verification'
@@ -1076,6 +1096,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnerProgramsRoute: typeof AuthenticatedAdminPartnerProgramsRoute
   AuthenticatedAdminRevenueRoute: typeof AuthenticatedAdminRevenueRoute
   AuthenticatedAdminRevenueVerificationRoute: typeof AuthenticatedAdminRevenueVerificationRoute
+  AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
@@ -1102,6 +1123,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminRevenueRoute: AuthenticatedAdminRevenueRoute,
   AuthenticatedAdminRevenueVerificationRoute:
     AuthenticatedAdminRevenueVerificationRoute,
+  AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
