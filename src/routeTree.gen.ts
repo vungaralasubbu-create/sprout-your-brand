@@ -18,6 +18,7 @@ import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-b
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
+import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
@@ -90,6 +91,11 @@ const LaunchYourBrandConsultationRoute =
     path: '/launch-your-brand/consultation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedStudentRoute = AuthenticatedStudentRouteImport.update({
+  id: '/student',
+  path: '/student',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
   id: '/partner',
   path: '/partner',
@@ -248,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/earn': typeof EarnRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
+  '/student': typeof AuthenticatedStudentRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -283,6 +290,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
+  '/student': typeof AuthenticatedStudentRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/earn': typeof EarnRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
+  '/_authenticated/student': typeof AuthenticatedStudentRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -359,6 +368,7 @@ export interface FileRouteTypes {
     | '/earn'
     | '/admin'
     | '/partner'
+    | '/student'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -394,6 +404,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/earn'
     | '/partner'
+    | '/student'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -431,6 +442,7 @@ export interface FileRouteTypes {
     | '/earn'
     | '/_authenticated/admin'
     | '/_authenticated/partner'
+    | '/_authenticated/student'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -541,6 +553,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/launch-your-brand/consultation'
       preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/student': {
+      id: '/_authenticated/student'
+      path: '/student'
+      fullPath: '/student'
+      preLoaderRoute: typeof AuthenticatedStudentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/partner': {
       id: '/_authenticated/partner'
@@ -794,11 +813,13 @@ const AuthenticatedPartnerRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
+  AuthenticatedStudentRoute: typeof AuthenticatedStudentRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
+  AuthenticatedStudentRoute: AuthenticatedStudentRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

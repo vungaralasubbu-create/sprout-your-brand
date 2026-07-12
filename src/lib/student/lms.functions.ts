@@ -420,14 +420,14 @@ async function tryCompleteCourse(context: any, enrollmentId: string, courseId: s
       .eq("course_id", courseId)
       .eq("is_required", true)
       .eq("is_published", true);
-    const ids = (assigns ?? []).map((a) => a.id);
+    const ids = (assigns ?? []).map((a: any) => a.id);
     if (ids.length) {
       const { data: subs } = await context.supabase
         .from("assignment_submissions")
         .select("assignment_id, status")
         .eq("student_user_id", context.userId)
         .in("assignment_id", ids);
-      const approved = new Set((subs ?? []).filter((s) => s.status === "approved").map((s) => s.assignment_id));
+      const approved = new Set((subs ?? []).filter((s: any) => s.status === "approved").map((s: any) => s.assignment_id));
       if (approved.size < ids.length) return;
     }
   }
@@ -439,14 +439,14 @@ async function tryCompleteCourse(context: any, enrollmentId: string, courseId: s
       .eq("course_id", courseId)
       .eq("is_required", true)
       .eq("is_published", true);
-    const ids = (asx ?? []).map((a) => a.id);
+    const ids = (asx ?? []).map((a: any) => a.id);
     if (ids.length) {
       const { data: attempts } = await context.supabase
         .from("assessment_attempts")
         .select("assessment_id, passed")
         .eq("student_user_id", context.userId)
         .in("assessment_id", ids);
-      const passed = new Set((attempts ?? []).filter((a) => a.passed).map((a) => a.assessment_id));
+      const passed = new Set((attempts ?? []).filter((a: any) => a.passed).map((a: any) => a.assessment_id));
       if (passed.size < ids.length) return;
     }
   }
@@ -537,7 +537,7 @@ export const listStudentAssignments = createServerFn({ method: "GET" })
     const subMap = new Map<string, any>();
     for (const s of subs ?? []) subMap.set(s.assignment_id, s);
 
-    return (assigns ?? []).map((a) => ({
+    return (assigns ?? []).map((a: any) => ({
       ...a,
       course: courseMap.get(a.course_id) ?? null,
       submission: subMap.get(a.id) ?? null,
@@ -621,7 +621,7 @@ export const listStudentAssessments = createServerFn({ method: "GET" })
       const prev = bestAttempt.get(a.assessment_id);
       if (!prev || (a.percentage ?? 0) > (prev.percentage ?? 0)) bestAttempt.set(a.assessment_id, a);
     }
-    return (asx ?? []).map((a) => ({
+    return (asx ?? []).map((a: any) => ({
       ...a,
       course: courseMap.get(a.course_id) ?? null,
       bestAttempt: bestAttempt.get(a.id) ?? null,
