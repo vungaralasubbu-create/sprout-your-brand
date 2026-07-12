@@ -3298,6 +3298,12 @@ export type Database = {
         | "paid"
         | "cancelled"
         | "refund_adjusted"
+        | "tracking"
+        | "pending_verification"
+        | "eligible"
+        | "available_for_payout"
+        | "reversed"
+        | "rejected"
       content_status: "draft" | "published" | "archived"
       course_app_status:
         | "new"
@@ -3410,6 +3416,11 @@ export type Database = {
         | "failed"
         | "on_hold"
         | "cancelled"
+        | "requested"
+        | "under_review"
+        | "approved"
+        | "rejected"
+        | "reversed"
       referral_event: "visit" | "lead" | "application" | "enrollment"
       support_ticket_category:
         | "lead_attribution"
@@ -3628,6 +3639,12 @@ export const Constants = {
         "paid",
         "cancelled",
         "refund_adjusted",
+        "tracking",
+        "pending_verification",
+        "eligible",
+        "available_for_payout",
+        "reversed",
+        "rejected",
       ],
       content_status: ["draft", "published", "archived"],
       course_app_status: [
@@ -3751,6 +3768,11 @@ export const Constants = {
         "failed",
         "on_hold",
         "cancelled",
+        "requested",
+        "under_review",
+        "approved",
+        "rejected",
+        "reversed",
       ],
       referral_event: ["visit", "lead", "application", "enrollment"],
       support_ticket_category: [
