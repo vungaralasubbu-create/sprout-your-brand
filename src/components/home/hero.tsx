@@ -12,11 +12,11 @@ const INR = new Intl.NumberFormat("en-IN", {
 
 export function HomeHero() {
   return (
-    <Section tone="default" padding="md" className="relative overflow-hidden">
+    <Section tone="default" padding="sm" className="relative overflow-hidden">
       {/* Very soft brand wash — light-first, no crypto glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[520px] -z-10"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[480px] -z-10"
         style={{
           background:
             "radial-gradient(60% 60% at 15% 0%, oklch(0.78 0.16 175 / 0.10), transparent 60%), radial-gradient(60% 60% at 85% 10%, oklch(0.62 0.19 245 / 0.10), transparent 60%)",
