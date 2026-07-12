@@ -38,25 +38,95 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs";
+import { getCourseSeo } from "@/lib/seo";
 import { CourseHeroVisual } from "@/components/course/hero-visual";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { cn } from "@/lib/utils";
 
+const SITE_URL = "https://glintr.com";
+
 export const Route = createFileRoute("/programs/$category/$course/")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${pretty(params.course)} — Glintr` },
-      { name: "description", content: `Explore the ${pretty(params.course)} program on Glintr.` },
-      { property: "og:title", content: `${pretty(params.course)} — Glintr` },
-    ],
-  }),
+  loader: async ({ params }) => ({ seo: await getCourseSeo(params.category, params.course) }),
+  head: ({ params, loaderData }) => {
+    const seo = loaderData?.seo;
+    const canonical = `${SITE_URL}/programs/${params.category}/${params.course}`;
+    const name = seo?.name ?? pretty(params.course);
+    const title = seo?.seo_title ?? `${name} Course | Glintr`;
+    const description =
+      seo?.seo_description ??
+      seo?.short_description ??
+      `Learn ${name} with Glintr — a career-focused program with mentorship, projects, and placement support.`;
+    const image = seo?.og_image_url ?? seo?.hero_image_url ?? seo?.thumbnail_url ?? undefined;
+    const meta: Array<Record<string, string>> = [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: canonical },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
+    ];
+    if (image) {
+      meta.push({ property: "og:image", content: image });
+      meta.push({ name: "twitter:image", content: image });
+    }
+    const breadcrumbs = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Programs", item: `${SITE_URL}/programs` },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: seo?.category.name ?? pretty(params.category),
+          item: `${SITE_URL}/programs/${params.category}`,
+        },
+        { "@type": "ListItem", position: 4, name, item: canonical },
+      ],
+    };
+    const scripts: Array<{ type: string; children: string }> = [
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbs) },
+    ];
+    if (seo) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Course",
+          name,
+          description,
+          url: canonical,
+          ...(image ? { image } : {}),
+          provider: {
+            "@type": "Organization",
+            name: "Glintr",
+            sameAs: SITE_URL,
+          },
+          ...(seo.language ? { inLanguage: seo.language } : {}),
+          ...(seo.duration ? { timeRequired: seo.duration } : {}),
+          ...(seo.level ? { educationalLevel: seo.level } : {}),
+          about: seo.category.name,
+        }),
+      });
+    }
+    return {
+      meta,
+      links: [{ rel: "canonical", href: canonical }],
+      scripts,
+    };
+  },
   component: CoursePage,
 });
 
 function pretty(s: string) {
   return s.split("-").map((w) => w[0]?.toUpperCase() + w.slice(1)).join(" ");
 }
+
+
 
 /** Look up a course_sections entry by section_type; returns its `content`. */
 function useSectionMap(
