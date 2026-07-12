@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
+import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
@@ -22,7 +23,15 @@ import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
+import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedStudentSupportRouteImport } from './routes/_authenticated/student.support'
+import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
+import { Route as AuthenticatedStudentDashboardRouteImport } from './routes/_authenticated/student.dashboard'
+import { Route as AuthenticatedStudentCoursesRouteImport } from './routes/_authenticated/student.courses'
+import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_authenticated/student.certificates'
+import { Route as AuthenticatedStudentAssignmentsRouteImport } from './routes/_authenticated/student.assignments'
+import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './routes/_authenticated/admin.revenue-verification'
@@ -38,10 +47,12 @@ import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
 import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/programs.$category.$course.index'
+import { Route as AuthenticatedStudentLearnIndexRouteImport } from './routes/_authenticated/student.learn.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
+import { Route as AuthenticatedStudentLearnSlugRouteImport } from './routes/_authenticated/student.learn.$slug'
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
@@ -73,6 +84,11 @@ const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
 const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
   id: '/launch-your-brand/',
   path: '/launch-your-brand/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
+  id: '/verify-certificate/$code',
+  path: '/verify-certificate/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerApplyRoute = PartnerApplyRouteImport.update({
@@ -111,11 +127,59 @@ const ProgramsCategoryIndexRoute = ProgramsCategoryIndexRouteImport.update({
   path: '/programs/$category/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStudentIndexRoute =
+  AuthenticatedStudentIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedStudentSupportRoute =
+  AuthenticatedStudentSupportRouteImport.update({
+    id: '/support',
+    path: '/support',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentProfileRoute =
+  AuthenticatedStudentProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentDashboardRoute =
+  AuthenticatedStudentDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentCoursesRoute =
+  AuthenticatedStudentCoursesRouteImport.update({
+    id: '/courses',
+    path: '/courses',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentCertificatesRoute =
+  AuthenticatedStudentCertificatesRouteImport.update({
+    id: '/certificates',
+    path: '/certificates',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentAssignmentsRoute =
+  AuthenticatedStudentAssignmentsRouteImport.update({
+    id: '/assignments',
+    path: '/assignments',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentAssessmentsRoute =
+  AuthenticatedStudentAssessmentsRouteImport.update({
+    id: '/assessments',
+    path: '/assessments',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedPartnerOnboardingRoute =
   AuthenticatedPartnerOnboardingRouteImport.update({
     id: '/onboarding',
@@ -205,6 +269,12 @@ const ProgramsCategoryCourseIndexRoute =
     path: '/programs/$category/$course/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedStudentLearnIndexRoute =
+  AuthenticatedStudentLearnIndexRouteImport.update({
+    id: '/learn/',
+    path: '/learn/',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedAdminPayoutsIndexRoute =
   AuthenticatedAdminPayoutsIndexRouteImport.update({
     id: '/payouts/',
@@ -228,6 +298,12 @@ const ProgramsCategoryCourseApplyRoute =
     id: '/programs/$category/$course/apply',
     path: '/programs/$category/$course/apply',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedStudentLearnSlugRoute =
+  AuthenticatedStudentLearnSlugRouteImport.update({
+    id: '/learn/$slug',
+    path: '/learn/$slug',
+    getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
 const AuthenticatedAdminPayoutsIdRoute =
   AuthenticatedAdminPayoutsIdRouteImport.update({
@@ -254,10 +330,11 @@ export interface FileRoutesByFullPath {
   '/earn': typeof EarnRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
-  '/student': typeof AuthenticatedStudentRoute
+  '/student': typeof AuthenticatedStudentRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
@@ -274,15 +351,25 @@ export interface FileRoutesByFullPath {
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
+  '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
+  '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
+  '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
+  '/student/courses': typeof AuthenticatedStudentCoursesRoute
+  '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
+  '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/student/support': typeof AuthenticatedStudentSupportRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
+  '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRoutesByTo {
@@ -290,10 +377,10 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
-  '/student': typeof AuthenticatedStudentRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
@@ -310,15 +397,25 @@ export interface FileRoutesByTo {
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
+  '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
+  '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
+  '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
+  '/student/courses': typeof AuthenticatedStudentCoursesRoute
+  '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
+  '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/student/support': typeof AuthenticatedStudentSupportRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
+  '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/student/learn': typeof AuthenticatedStudentLearnIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRoutesById {
@@ -329,10 +426,11 @@ export interface FileRoutesById {
   '/earn': typeof EarnRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
-  '/_authenticated/student': typeof AuthenticatedStudentRoute
+  '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/_authenticated/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
@@ -349,15 +447,25 @@ export interface FileRoutesById {
   '/_authenticated/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
+  '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
+  '/_authenticated/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
+  '/_authenticated/student/certificates': typeof AuthenticatedStudentCertificatesRoute
+  '/_authenticated/student/courses': typeof AuthenticatedStudentCoursesRoute
+  '/_authenticated/student/dashboard': typeof AuthenticatedStudentDashboardRoute
+  '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/_authenticated/student/support': typeof AuthenticatedStudentSupportRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
+  '/_authenticated/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/_authenticated/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
 }
 export interface FileRouteTypes {
@@ -372,6 +480,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/verify-certificate/$code'
     | '/launch-your-brand/'
     | '/programs/'
     | '/admin/adjustments'
@@ -388,15 +497,25 @@ export interface FileRouteTypes {
     | '/admin/revenue-verification'
     | '/partner/dashboard'
     | '/partner/onboarding'
+    | '/student/assessments'
+    | '/student/assignments'
+    | '/student/certificates'
+    | '/student/courses'
+    | '/student/dashboard'
+    | '/student/profile'
+    | '/student/support'
     | '/admin/'
+    | '/student/'
     | '/programs/$category/'
     | '/admin/courses/$id'
     | '/admin/partners/$id'
     | '/admin/payouts/$id'
+    | '/student/learn/$slug'
     | '/programs/$category/$course/apply'
     | '/admin/courses/'
     | '/admin/partners/'
     | '/admin/payouts/'
+    | '/student/learn/'
     | '/programs/$category/$course/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -404,10 +523,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/earn'
     | '/partner'
-    | '/student'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/verify-certificate/$code'
     | '/launch-your-brand'
     | '/programs'
     | '/admin/adjustments'
@@ -424,15 +543,25 @@ export interface FileRouteTypes {
     | '/admin/revenue-verification'
     | '/partner/dashboard'
     | '/partner/onboarding'
+    | '/student/assessments'
+    | '/student/assignments'
+    | '/student/certificates'
+    | '/student/courses'
+    | '/student/dashboard'
+    | '/student/profile'
+    | '/student/support'
     | '/admin'
+    | '/student'
     | '/programs/$category'
     | '/admin/courses/$id'
     | '/admin/partners/$id'
     | '/admin/payouts/$id'
+    | '/student/learn/$slug'
     | '/programs/$category/$course/apply'
     | '/admin/courses'
     | '/admin/partners'
     | '/admin/payouts'
+    | '/student/learn'
     | '/programs/$category/$course'
   id:
     | '__root__'
@@ -446,6 +575,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/verify-certificate/$code'
     | '/launch-your-brand/'
     | '/programs/'
     | '/_authenticated/admin/adjustments'
@@ -462,15 +592,25 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/revenue-verification'
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/onboarding'
+    | '/_authenticated/student/assessments'
+    | '/_authenticated/student/assignments'
+    | '/_authenticated/student/certificates'
+    | '/_authenticated/student/courses'
+    | '/_authenticated/student/dashboard'
+    | '/_authenticated/student/profile'
+    | '/_authenticated/student/support'
     | '/_authenticated/admin/'
+    | '/_authenticated/student/'
     | '/programs/$category/'
     | '/_authenticated/admin/courses/$id'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payouts/$id'
+    | '/_authenticated/student/learn/$slug'
     | '/programs/$category/$course/apply'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/partners/'
     | '/_authenticated/admin/payouts/'
+    | '/_authenticated/student/learn/'
     | '/programs/$category/$course/'
   fileRoutesById: FileRoutesById
 }
@@ -482,6 +622,7 @@ export interface RootRouteChildren {
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
+  VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
@@ -533,6 +674,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LaunchYourBrandIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify-certificate/$code': {
+      id: '/verify-certificate/$code'
+      path: '/verify-certificate/$code'
+      fullPath: '/verify-certificate/$code'
+      preLoaderRoute: typeof VerifyCertificateCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partner/apply': {
       id: '/partner/apply'
       path: '/partner/apply'
@@ -582,12 +730,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/student/': {
+      id: '/_authenticated/student/'
+      path: '/'
+      fullPath: '/student/'
+      preLoaderRoute: typeof AuthenticatedStudentIndexRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/student/support': {
+      id: '/_authenticated/student/support'
+      path: '/support'
+      fullPath: '/student/support'
+      preLoaderRoute: typeof AuthenticatedStudentSupportRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/profile': {
+      id: '/_authenticated/student/profile'
+      path: '/profile'
+      fullPath: '/student/profile'
+      preLoaderRoute: typeof AuthenticatedStudentProfileRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/dashboard': {
+      id: '/_authenticated/student/dashboard'
+      path: '/dashboard'
+      fullPath: '/student/dashboard'
+      preLoaderRoute: typeof AuthenticatedStudentDashboardRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/courses': {
+      id: '/_authenticated/student/courses'
+      path: '/courses'
+      fullPath: '/student/courses'
+      preLoaderRoute: typeof AuthenticatedStudentCoursesRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/certificates': {
+      id: '/_authenticated/student/certificates'
+      path: '/certificates'
+      fullPath: '/student/certificates'
+      preLoaderRoute: typeof AuthenticatedStudentCertificatesRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/assignments': {
+      id: '/_authenticated/student/assignments'
+      path: '/assignments'
+      fullPath: '/student/assignments'
+      preLoaderRoute: typeof AuthenticatedStudentAssignmentsRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/assessments': {
+      id: '/_authenticated/student/assessments'
+      path: '/assessments'
+      fullPath: '/student/assessments'
+      preLoaderRoute: typeof AuthenticatedStudentAssessmentsRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/partner/onboarding': {
       id: '/_authenticated/partner/onboarding'
@@ -694,6 +898,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/student/learn/': {
+      id: '/_authenticated/student/learn/'
+      path: '/learn'
+      fullPath: '/student/learn/'
+      preLoaderRoute: typeof AuthenticatedStudentLearnIndexRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
     '/_authenticated/admin/payouts/': {
       id: '/_authenticated/admin/payouts/'
       path: '/payouts'
@@ -721,6 +932,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/programs/$category/$course/apply'
       preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/student/learn/$slug': {
+      id: '/_authenticated/student/learn/$slug'
+      path: '/learn/$slug'
+      fullPath: '/student/learn/$slug'
+      preLoaderRoute: typeof AuthenticatedStudentLearnSlugRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/admin/payouts/$id': {
       id: '/_authenticated/admin/payouts/$id'
@@ -810,16 +1028,45 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
 const AuthenticatedPartnerRouteWithChildren =
   AuthenticatedPartnerRoute._addFileChildren(AuthenticatedPartnerRouteChildren)
 
+interface AuthenticatedStudentRouteChildren {
+  AuthenticatedStudentAssessmentsRoute: typeof AuthenticatedStudentAssessmentsRoute
+  AuthenticatedStudentAssignmentsRoute: typeof AuthenticatedStudentAssignmentsRoute
+  AuthenticatedStudentCertificatesRoute: typeof AuthenticatedStudentCertificatesRoute
+  AuthenticatedStudentCoursesRoute: typeof AuthenticatedStudentCoursesRoute
+  AuthenticatedStudentDashboardRoute: typeof AuthenticatedStudentDashboardRoute
+  AuthenticatedStudentProfileRoute: typeof AuthenticatedStudentProfileRoute
+  AuthenticatedStudentSupportRoute: typeof AuthenticatedStudentSupportRoute
+  AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
+  AuthenticatedStudentLearnSlugRoute: typeof AuthenticatedStudentLearnSlugRoute
+  AuthenticatedStudentLearnIndexRoute: typeof AuthenticatedStudentLearnIndexRoute
+}
+
+const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
+  AuthenticatedStudentAssessmentsRoute: AuthenticatedStudentAssessmentsRoute,
+  AuthenticatedStudentAssignmentsRoute: AuthenticatedStudentAssignmentsRoute,
+  AuthenticatedStudentCertificatesRoute: AuthenticatedStudentCertificatesRoute,
+  AuthenticatedStudentCoursesRoute: AuthenticatedStudentCoursesRoute,
+  AuthenticatedStudentDashboardRoute: AuthenticatedStudentDashboardRoute,
+  AuthenticatedStudentProfileRoute: AuthenticatedStudentProfileRoute,
+  AuthenticatedStudentSupportRoute: AuthenticatedStudentSupportRoute,
+  AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
+  AuthenticatedStudentLearnSlugRoute: AuthenticatedStudentLearnSlugRoute,
+  AuthenticatedStudentLearnIndexRoute: AuthenticatedStudentLearnIndexRoute,
+}
+
+const AuthenticatedStudentRouteWithChildren =
+  AuthenticatedStudentRoute._addFileChildren(AuthenticatedStudentRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
-  AuthenticatedStudentRoute: typeof AuthenticatedStudentRoute
+  AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
-  AuthenticatedStudentRoute: AuthenticatedStudentRoute,
+  AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -833,6 +1080,7 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
+  VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
