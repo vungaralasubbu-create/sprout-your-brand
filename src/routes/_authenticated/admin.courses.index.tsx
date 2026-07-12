@@ -78,7 +78,7 @@ function CoursesList() {
       if (action === "archive") patch.status = "archived";
       if (action === "feature") patch.is_featured = true;
       if (action === "unfeature") patch.is_featured = false;
-      const { error } = await supabase.from("courses").update(patch).in("id", ids);
+      const { error } = await supabase.from("courses").update(patch as any).in("id", ids);
       if (error) throw error;
     },
     onSuccess: () => {
