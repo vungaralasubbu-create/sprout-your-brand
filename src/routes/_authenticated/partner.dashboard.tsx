@@ -75,23 +75,44 @@ function PartnerDashboard() {
     );
   }
 
-  const model = partner?.sales_model_selection ?? partner?.lead_model ?? null;
+  const p = partner as (typeof partner & {
+    onboarding_status?: string;
+    onboarding_current_step?: number;
+    sales_model_approval_status?: string;
+    approved_sales_model?: string | null;
+    payout_profile_status?: string;
+    agreement_status?: string;
+  }) | null | undefined;
+
+  const onboardingComplete = p?.onboarding_status === "completed";
+  const approvalStatus = p?.sales_model_approval_status ?? "selected";
+  const activeModelKey =
+    p?.approved_sales_model ??
+    (approvalStatus === "approved" || approvalStatus === "partially_approved"
+      ? p?.sales_model_selection
+      : p?.sales_model_selection) ??
+    null;
+
+  const displayModel = activeModelKey;
   const modelLabel =
-    model === "own" || model === "own_leads"
+    displayModel === "own_leads" || displayModel === "own"
       ? "Own Leads"
-      : model === "supported"
+      : displayModel === "supported_sales" || displayModel === "supported"
       ? "Supported Sales"
-      : model === "dual"
-      ? "Dual (Own + Supported)"
+      : displayModel === "dual_model" || displayModel === "dual"
+      ? "Dual — Own + Supported"
       : "Not selected";
   const modelRateLabel =
-    model === "dual"
+    displayModel === "dual_model" || displayModel === "dual"
       ? "Up to 70% (Own) · Up to 50% (Supported)"
-      : model === "supported"
+      : displayModel === "supported_sales" || displayModel === "supported"
       ? "Up to 50%"
-      : model === "own" || model === "own_leads"
+      : displayModel === "own_leads" || displayModel === "own"
       ? "Up to 70%"
       : "—";
+  const approvalLabel = approvalStatus
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
     <div className="p-6 lg:p-10 space-y-8">
