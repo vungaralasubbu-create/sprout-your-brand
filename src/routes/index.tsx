@@ -100,11 +100,8 @@ const partnerRows: PartnerRow[] = [
 ];
 
 function DesignSystemPreview() {
-  const [pwd, setPwd] = (globalThis as unknown as { React?: unknown }).React
-    ? // Bypass — we use React's useState via imported hook below.
-      [undefined, () => {}]
-    : ["", () => {}];
   return (
+
     <>
       <SiteHeader />
       <main className="relative">
