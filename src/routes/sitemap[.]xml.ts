@@ -58,17 +58,6 @@ export const Route = createFileRoute("/sitemap.xml")({
                 changefreq: "weekly",
                 priority: "0.7",
               });
-              continue;
-            }
-            // legacy no-op to keep block shape
-            for (const _ of [] as never[]) {
-              if (!c.category || c.category.status !== "published" || !c.category.is_active) continue;
-              entries.push({
-                path: `/programs/${c.category.slug}/${c.slug}`,
-                lastmod: c.updated_at ?? undefined,
-                changefreq: "weekly",
-                priority: "0.7",
-              });
             }
           } catch (e) {
             console.error("[sitemap] failed to load CMS entries", e);
