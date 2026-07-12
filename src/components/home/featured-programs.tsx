@@ -78,7 +78,7 @@ function ProgramCard({ program: p }: { program: Program }) {
           {p.badge ? (
             <Badge variant={p.badge.variant as never}>{p.badge.label}</Badge>
           ) : null}
-          <Badge variant="soft">{p.level}</Badge>
+          <Badge variant="muted">{p.level}</Badge>
         </div>
       </div>
       <div className="p-5 flex flex-col gap-3 flex-1">

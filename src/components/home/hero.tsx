@@ -27,7 +27,7 @@ export function HomeHero() {
     <Section tone="mesh" padding="lg" className="overflow-hidden">
       <Container className="grid gap-12 lg:grid-cols-[1.05fr_1fr] items-center">
         <div className="flex flex-col gap-6 animate-fade-in">
-          <Badge variant="soft" className="w-fit">
+          <Badge variant="muted" className="w-fit">
             <Sparkles className="size-3.5" />
             For sales professionals, freelancers & entrepreneurs
           </Badge>
