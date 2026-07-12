@@ -147,6 +147,43 @@ function PartnerDashboard() {
         </div>
       </header>
 
+      {/* Onboarding banner */}
+      {!onboardingComplete && (
+        <section className="rounded-2xl border border-primary/30 bg-primary/[0.05] p-5 lg:p-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="text-caption font-mono uppercase tracking-widest text-primary">
+              Complete Your Partner Setup
+            </div>
+            <p className="mt-1 text-body">
+              Finish onboarding to activate your sales model, program interests
+              and payout profile. Your progress is saved automatically.
+            </p>
+          </div>
+          <Button asChild variant="gradient">
+            <Link to="/partner/onboarding">
+              Continue Onboarding <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+        </section>
+      )}
+
+      {onboardingComplete && approvalStatus === "under_review" && (
+        <section className="rounded-2xl border bg-white p-5 lg:p-6 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div className="text-caption font-mono uppercase tracking-widest text-primary">
+              Your Partner Model Is Under Review
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
+              You can continue setting up your profile and exploring eligible
+              programs while your partner model is reviewed. Certain actions
+              will unlock after approval.
+            </p>
+          </div>
+          <Badge variant="warning">Under Review</Badge>
+        </section>
+      )}
+
+
       {/* KPI cards */}
       <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
