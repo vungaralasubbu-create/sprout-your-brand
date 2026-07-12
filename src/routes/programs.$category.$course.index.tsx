@@ -133,7 +133,7 @@ function CoursePage() {
         <SectionBlock title="Skills you'll learn">
           <div className="flex flex-wrap gap-2">
             {c.skills.map((s) => (
-              <Badge key={s} variant="secondary" className="text-sm px-3 py-1.5">{s}</Badge>
+              <Badge key={s} variant="outline" className="text-sm px-3 py-1.5">{s}</Badge>
             ))}
           </div>
         </SectionBlock>
