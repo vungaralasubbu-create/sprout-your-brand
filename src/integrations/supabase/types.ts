@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_activity_log: {
+        Row: {
+          actor_label: string | null
+          actor_user_id: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          actor_label?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          actor_label?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          summary?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       brand_applications: {
         Row: {
           admin_notes: string | null
@@ -1748,6 +1787,44 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_application_status_history: {
+        Row: {
+          application_id: string
+          changed_by: string | null
+          created_at: string
+          from_status: string | null
+          id: string
+          note: string | null
+          to_status: string
+        }
+        Insert: {
+          application_id: string
+          changed_by?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          to_status: string
+        }
+        Update: {
+          application_id?: string
+          changed_by?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_application_status_history_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "partner_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_applications: {
         Row: {
           admin_notes: string | null
@@ -2124,6 +2201,50 @@ export type Database = {
           },
         ]
       }
+      partner_model_approval_history: {
+        Row: {
+          approved_model: string | null
+          changed_by: string | null
+          created_at: string
+          from_status: string | null
+          id: string
+          partner_id: string
+          reason: string | null
+          selected_model: string | null
+          to_status: string
+        }
+        Insert: {
+          approved_model?: string | null
+          changed_by?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          partner_id: string
+          reason?: string | null
+          selected_model?: string | null
+          to_status: string
+        }
+        Update: {
+          approved_model?: string | null
+          changed_by?: string | null
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          partner_id?: string
+          reason?: string | null
+          selected_model?: string | null
+          to_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_model_approval_history_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_notifications: {
         Row: {
           body: string | null
@@ -2207,6 +2328,57 @@ export type Database = {
             foreignKeyName: "partner_payout_details_partner_id_fkey"
             columns: ["partner_id"]
             isOneToOne: true
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_program_eligibility: {
+        Row: {
+          assigned_by: string | null
+          course_id: string
+          created_at: string
+          id: string
+          internal_notes: string | null
+          partner_id: string
+          reason: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          internal_notes?: string | null
+          partner_id: string
+          reason?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          internal_notes?: string | null
+          partner_id?: string
+          reason?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_program_eligibility_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_program_eligibility_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
             referencedRelation: "partners"
             referencedColumns: ["id"]
           },
