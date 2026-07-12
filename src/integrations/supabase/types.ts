@@ -14,6 +14,547 @@ export type Database = {
   }
   public: {
     Tables: {
+      brand_applications: {
+        Row: {
+          admin_notes: string | null
+          alternative_name_1: string | null
+          alternative_name_2: string | null
+          brand_colors: Json | null
+          brand_personality: string[] | null
+          brand_type: string | null
+          brand_vision: string | null
+          business_email: string | null
+          business_mobile: string | null
+          business_type: string | null
+          city: string | null
+          consent_confirmed: boolean
+          country: string | null
+          created_at: string
+          current_step: number
+          domain_name: string | null
+          has_domain: string | null
+          id: string
+          logo_url: string | null
+          name_availability_checked: boolean
+          needs_logo_help: boolean
+          preferred_brand_name: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selected_category_slugs: string[] | null
+          selected_program_ids: string[] | null
+          selected_services: string[] | null
+          setup_type: string | null
+          social_profiles: Json | null
+          state: string | null
+          status: Database["public"]["Enums"]["brand_application_status"]
+          submitted_at: string | null
+          tagline: string | null
+          target_audience: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          alternative_name_1?: string | null
+          alternative_name_2?: string | null
+          brand_colors?: Json | null
+          brand_personality?: string[] | null
+          brand_type?: string | null
+          brand_vision?: string | null
+          business_email?: string | null
+          business_mobile?: string | null
+          business_type?: string | null
+          city?: string | null
+          consent_confirmed?: boolean
+          country?: string | null
+          created_at?: string
+          current_step?: number
+          domain_name?: string | null
+          has_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name_availability_checked?: boolean
+          needs_logo_help?: boolean
+          preferred_brand_name?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selected_category_slugs?: string[] | null
+          selected_program_ids?: string[] | null
+          selected_services?: string[] | null
+          setup_type?: string | null
+          social_profiles?: Json | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["brand_application_status"]
+          submitted_at?: string | null
+          tagline?: string | null
+          target_audience?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          alternative_name_1?: string | null
+          alternative_name_2?: string | null
+          brand_colors?: Json | null
+          brand_personality?: string[] | null
+          brand_type?: string | null
+          brand_vision?: string | null
+          business_email?: string | null
+          business_mobile?: string | null
+          business_type?: string | null
+          city?: string | null
+          consent_confirmed?: boolean
+          country?: string | null
+          created_at?: string
+          current_step?: number
+          domain_name?: string | null
+          has_domain?: string | null
+          id?: string
+          logo_url?: string | null
+          name_availability_checked?: boolean
+          needs_logo_help?: boolean
+          preferred_brand_name?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selected_category_slugs?: string[] | null
+          selected_program_ids?: string[] | null
+          selected_services?: string[] | null
+          setup_type?: string | null
+          social_profiles?: Json | null
+          state?: string | null
+          status?: Database["public"]["Enums"]["brand_application_status"]
+          submitted_at?: string | null
+          tagline?: string | null
+          target_audience?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      brand_consultations: {
+        Row: {
+          created_at: string
+          current_role_title: string | null
+          email: string
+          full_name: string
+          has_leads: string | null
+          id: string
+          launch_timeline: string | null
+          lead_network_size: string | null
+          mobile: string
+          notes: string | null
+          preferred_brand_name: string | null
+          programs_interested: string[] | null
+          sales_experience: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          current_role_title?: string | null
+          email: string
+          full_name: string
+          has_leads?: string | null
+          id?: string
+          launch_timeline?: string | null
+          lead_network_size?: string | null
+          mobile: string
+          notes?: string | null
+          preferred_brand_name?: string | null
+          programs_interested?: string[] | null
+          sales_experience?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          current_role_title?: string | null
+          email?: string
+          full_name?: string
+          has_leads?: string | null
+          id?: string
+          launch_timeline?: string | null
+          lead_network_size?: string | null
+          mobile?: string
+          notes?: string | null
+          preferred_brand_name?: string | null
+          programs_interested?: string[] | null
+          sales_experience?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      brand_launch_tasks: {
+        Row: {
+          application_id: string | null
+          assigned_to: string | null
+          brand_id: string | null
+          completion_date: string | null
+          created_at: string
+          department: string | null
+          display_order: number
+          due_date: string | null
+          id: string
+          internal_notes: string | null
+          priority: Database["public"]["Enums"]["brand_task_priority"]
+          status: Database["public"]["Enums"]["brand_task_status"]
+          task_name: string
+          updated_at: string
+        }
+        Insert: {
+          application_id?: string | null
+          assigned_to?: string | null
+          brand_id?: string | null
+          completion_date?: string | null
+          created_at?: string
+          department?: string | null
+          display_order?: number
+          due_date?: string | null
+          id?: string
+          internal_notes?: string | null
+          priority?: Database["public"]["Enums"]["brand_task_priority"]
+          status?: Database["public"]["Enums"]["brand_task_status"]
+          task_name: string
+          updated_at?: string
+        }
+        Update: {
+          application_id?: string | null
+          assigned_to?: string | null
+          brand_id?: string | null
+          completion_date?: string | null
+          created_at?: string
+          department?: string | null
+          display_order?: number
+          due_date?: string | null
+          id?: string
+          internal_notes?: string | null
+          priority?: Database["public"]["Enums"]["brand_task_priority"]
+          status?: Database["public"]["Enums"]["brand_task_status"]
+          task_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_launch_tasks_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "brand_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brand_launch_tasks_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brand_packages: {
+        Row: {
+          active: boolean
+          annual_fee: number | null
+          created_at: string
+          description: string | null
+          display_order: number
+          features: Json | null
+          id: string
+          included_programs: number | null
+          includes_crm: boolean
+          includes_custom_domain: boolean
+          includes_lms: boolean
+          includes_marketing_support: boolean
+          includes_social_setup: boolean
+          includes_website: boolean
+          monthly_fee: number | null
+          name: string
+          public_listed: boolean
+          revenue_share_percent: number | null
+          setup_fee: number | null
+          slug: string
+          storage_limit_gb: number | null
+          student_limit: number | null
+          support_level: string | null
+          team_member_limit: number | null
+          tier: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          annual_fee?: number | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          features?: Json | null
+          id?: string
+          included_programs?: number | null
+          includes_crm?: boolean
+          includes_custom_domain?: boolean
+          includes_lms?: boolean
+          includes_marketing_support?: boolean
+          includes_social_setup?: boolean
+          includes_website?: boolean
+          monthly_fee?: number | null
+          name: string
+          public_listed?: boolean
+          revenue_share_percent?: number | null
+          setup_fee?: number | null
+          slug: string
+          storage_limit_gb?: number | null
+          student_limit?: number | null
+          support_level?: string | null
+          team_member_limit?: number | null
+          tier: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          annual_fee?: number | null
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          features?: Json | null
+          id?: string
+          included_programs?: number | null
+          includes_crm?: boolean
+          includes_custom_domain?: boolean
+          includes_lms?: boolean
+          includes_marketing_support?: boolean
+          includes_social_setup?: boolean
+          includes_website?: boolean
+          monthly_fee?: number | null
+          name?: string
+          public_listed?: boolean
+          revenue_share_percent?: number | null
+          setup_fee?: number | null
+          slug?: string
+          storage_limit_gb?: number | null
+          student_limit?: number | null
+          support_level?: string | null
+          team_member_limit?: number | null
+          tier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      brand_programs: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          brand_id: string
+          category_slug: string | null
+          created_at: string
+          display_price: number | null
+          enrollment_status: string
+          id: string
+          offer_price: number | null
+          program_id: string
+          program_title: string | null
+          revenue_model: string | null
+          status: Database["public"]["Enums"]["brand_program_status"]
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          brand_id: string
+          category_slug?: string | null
+          created_at?: string
+          display_price?: number | null
+          enrollment_status?: string
+          id?: string
+          offer_price?: number | null
+          program_id: string
+          program_title?: string | null
+          revenue_model?: string | null
+          status?: Database["public"]["Enums"]["brand_program_status"]
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          brand_id?: string
+          category_slug?: string | null
+          created_at?: string
+          display_price?: number | null
+          enrollment_status?: string
+          id?: string
+          offer_price?: number | null
+          program_id?: string
+          program_title?: string | null
+          revenue_model?: string | null
+          status?: Database["public"]["Enums"]["brand_program_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_programs_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brand_team_members: {
+        Row: {
+          brand_id: string
+          created_at: string
+          id: string
+          invited_email: string | null
+          role: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          brand_id: string
+          created_at?: string
+          id?: string
+          invited_email?: string | null
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          brand_id?: string
+          created_at?: string
+          id?: string
+          invited_email?: string | null
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_team_members_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brands: {
+        Row: {
+          about: string | null
+          accent_color: string | null
+          application_id: string | null
+          brand_name: string
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          custom_domain_status: string
+          domain: string | null
+          favicon_url: string | null
+          footer_content: Json | null
+          hero_content: Json | null
+          id: string
+          launched_at: string | null
+          lms_status: string
+          logo_url: string | null
+          owner_user_id: string
+          package_id: string | null
+          primary_color: string | null
+          secondary_color: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          social_links: Json | null
+          stage: Database["public"]["Enums"]["brand_stage"]
+          tagline: string | null
+          tenant_id: string
+          updated_at: string
+          website_status: string
+          whatsapp: string | null
+        }
+        Insert: {
+          about?: string | null
+          accent_color?: string | null
+          application_id?: string | null
+          brand_name: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          custom_domain_status?: string
+          domain?: string | null
+          favicon_url?: string | null
+          footer_content?: Json | null
+          hero_content?: Json | null
+          id?: string
+          launched_at?: string | null
+          lms_status?: string
+          logo_url?: string | null
+          owner_user_id: string
+          package_id?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          social_links?: Json | null
+          stage?: Database["public"]["Enums"]["brand_stage"]
+          tagline?: string | null
+          tenant_id?: string
+          updated_at?: string
+          website_status?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          about?: string | null
+          accent_color?: string | null
+          application_id?: string | null
+          brand_name?: string
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          custom_domain_status?: string
+          domain?: string | null
+          favicon_url?: string | null
+          footer_content?: Json | null
+          hero_content?: Json | null
+          id?: string
+          launched_at?: string | null
+          lms_status?: string
+          logo_url?: string | null
+          owner_user_id?: string
+          package_id?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          social_links?: Json | null
+          stage?: Database["public"]["Enums"]["brand_stage"]
+          tagline?: string | null
+          tenant_id?: string
+          updated_at?: string
+          website_status?: string
+          whatsapp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brands_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "brand_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brands_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "brand_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           admin_notes: string | null
@@ -577,6 +1118,10 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_brand_owner: {
+        Args: { _brand_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role:
@@ -594,6 +1139,49 @@ export type Database = {
         | "approved"
         | "rejected"
         | "suspended"
+      brand_application_status:
+        | "draft"
+        | "submitted"
+        | "under_review"
+        | "information_required"
+        | "approved"
+        | "configuration_started"
+        | "brand_design"
+        | "website_setup"
+        | "lms_setup"
+        | "program_configuration"
+        | "quality_review"
+        | "launch_ready"
+        | "launched"
+        | "on_hold"
+        | "rejected"
+        | "suspended"
+      brand_program_status:
+        | "requested"
+        | "under_review"
+        | "approved"
+        | "published"
+        | "paused"
+        | "rejected"
+      brand_stage:
+        | "configuration"
+        | "brand_design"
+        | "website_setup"
+        | "lms_setup"
+        | "program_configuration"
+        | "quality_review"
+        | "launch_ready"
+        | "launched"
+        | "on_hold"
+        | "suspended"
+      brand_task_priority: "low" | "medium" | "high" | "urgent"
+      brand_task_status:
+        | "not_started"
+        | "in_progress"
+        | "waiting_for_client"
+        | "review_required"
+        | "completed"
+        | "blocked"
       commission_status:
         | "calculated"
         | "under_verification"
@@ -765,6 +1353,53 @@ export const Constants = {
         "approved",
         "rejected",
         "suspended",
+      ],
+      brand_application_status: [
+        "draft",
+        "submitted",
+        "under_review",
+        "information_required",
+        "approved",
+        "configuration_started",
+        "brand_design",
+        "website_setup",
+        "lms_setup",
+        "program_configuration",
+        "quality_review",
+        "launch_ready",
+        "launched",
+        "on_hold",
+        "rejected",
+        "suspended",
+      ],
+      brand_program_status: [
+        "requested",
+        "under_review",
+        "approved",
+        "published",
+        "paused",
+        "rejected",
+      ],
+      brand_stage: [
+        "configuration",
+        "brand_design",
+        "website_setup",
+        "lms_setup",
+        "program_configuration",
+        "quality_review",
+        "launch_ready",
+        "launched",
+        "on_hold",
+        "suspended",
+      ],
+      brand_task_priority: ["low", "medium", "high", "urgent"],
+      brand_task_status: [
+        "not_started",
+        "in_progress",
+        "waiting_for_client",
+        "review_required",
+        "completed",
+        "blocked",
       ],
       commission_status: [
         "calculated",

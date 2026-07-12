@@ -63,7 +63,7 @@ export function LaunchBrandSection() {
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Button variant="gradient" size="lg" asChild>
-                <a href="/launch/how-it-works">
+                <a href="/launch-your-brand/start">
                   Launch My Brand <ArrowRight className="size-4" />
                 </a>
               </Button>
@@ -73,7 +73,7 @@ export function LaunchBrandSection() {
                 asChild
                 className="border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white"
               >
-                <a href="/launch/included">See What's Included</a>
+                <a href="/launch-your-brand#included">See What's Included</a>
               </Button>
             </div>
           </div>
