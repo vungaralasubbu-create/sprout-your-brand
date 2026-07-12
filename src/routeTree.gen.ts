@@ -16,6 +16,7 @@ import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-b
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
+import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
@@ -53,6 +54,11 @@ const LaunchYourBrandConsultationRoute =
     path: '/launch-your-brand/consultation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ProgramsCategoryIndexRoute = ProgramsCategoryIndexRouteImport.update({
+  id: '/programs/$category/',
+  path: '/programs/$category/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/partner/apply': typeof PartnerApplyRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/programs/$category/': typeof ProgramsCategoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByTo {
   '/partner/apply': typeof PartnerApplyRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/programs': typeof ProgramsIndexRoute
+  '/programs/$category': typeof ProgramsCategoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -81,6 +89,7 @@ export interface FileRoutesById {
   '/partner/apply': typeof PartnerApplyRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/programs/$category/': typeof ProgramsCategoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -92,6 +101,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/launch-your-brand/'
     | '/programs/'
+    | '/programs/$category/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -101,6 +111,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/launch-your-brand'
     | '/programs'
+    | '/programs/$category'
   id:
     | '__root__'
     | '/'
@@ -110,6 +121,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/launch-your-brand/'
     | '/programs/'
+    | '/programs/$category/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -120,6 +132,7 @@ export interface RootRouteChildren {
   PartnerApplyRoute: typeof PartnerApplyRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
+  ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -173,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/programs/$category/': {
+      id: '/programs/$category/'
+      path: '/programs/$category'
+      fullPath: '/programs/$category/'
+      preLoaderRoute: typeof ProgramsCategoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -184,6 +204,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnerApplyRoute: PartnerApplyRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
+  ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
