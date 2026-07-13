@@ -980,19 +980,17 @@ function ProjectCard({
 }) {
   return (
     <div className="group rounded-2xl border border-border/60 bg-surface-1 overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all">
-      <div className="aspect-video bg-gradient-to-br from-primary/15 via-accent/10 to-transparent relative overflow-hidden">
-        {project.image_url ? (
+      {project.image_url ? (
+        <div className="aspect-video overflow-hidden">
           <img
             src={project.image_url}
             alt={project.name}
             className="h-full w-full object-cover"
           />
-        ) : (
-          <div className="h-full w-full grid place-items-center">
-            <Hammer className="size-10 text-primary/60" />
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <ProjectVisual name={project.name} className="aspect-video" />
+      )}
       <div className="p-5">
         {project.project_type ? (
           <div className="text-caption font-mono uppercase tracking-widest text-primary">
