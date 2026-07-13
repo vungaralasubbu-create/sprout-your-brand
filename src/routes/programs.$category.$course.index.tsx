@@ -40,6 +40,7 @@ import {
 import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs";
 import { getCourseSeo } from "@/lib/seo";
 import { CourseHeroVisual } from "@/components/course/hero-visual";
+import { ProjectVisual } from "@/components/course/project-visual";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/client";
