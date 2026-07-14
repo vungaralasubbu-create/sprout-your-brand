@@ -49,6 +49,17 @@ export function PartnerShell() {
   const [open, setOpen] = useState(false);
 
   const partner = data?.partner ?? null;
+  const isFullTime = partner?.work_model === "full_time" && !!data?.employeeProfile;
+
+  const navItems = [
+    ...NAV.slice(0, 11), // through Analytics
+    ...(isFullTime
+      ? [{ to: "/partner/employment", label: "Employment", icon: Briefcase } as const]
+      : []),
+    NAV[11]!, // Account
+  ];
+
+
 
   async function handleSignOut() {
     await queryClient.cancelQueries();
