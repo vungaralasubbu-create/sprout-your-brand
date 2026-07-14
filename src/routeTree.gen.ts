@@ -62,6 +62,7 @@ import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authe
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
+import { Route as AuthenticatedAmbassadorDashboardRouteImport } from './routes/_authenticated/ambassador.dashboard'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
@@ -429,6 +430,12 @@ const AuthenticatedBrandDashboardRoute =
     id: '/dashboard',
     path: '/dashboard',
     getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedAmbassadorDashboardRoute =
+  AuthenticatedAmbassadorDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
 const AuthenticatedAdminSupportRoute =
   AuthenticatedAdminSupportRouteImport.update({
@@ -870,7 +877,7 @@ export interface FileRoutesByFullPath {
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/ambassador': typeof AuthenticatedAmbassadorRoute
+  '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
@@ -913,6 +920,7 @@ export interface FileRoutesByFullPath {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -995,7 +1003,7 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/ambassador': typeof AuthenticatedAmbassadorRoute
+  '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
@@ -1037,6 +1045,7 @@ export interface FileRoutesByTo {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -1121,7 +1130,7 @@ export interface FileRoutesById {
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRoute
+  '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
@@ -1164,6 +1173,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/_authenticated/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -1292,6 +1302,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/ambassador/dashboard'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
@@ -1416,6 +1427,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/ambassador/dashboard'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
@@ -1542,6 +1554,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/support'
+    | '/_authenticated/ambassador/dashboard'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
@@ -2012,6 +2025,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/brand/dashboard'
       preLoaderRoute: typeof AuthenticatedBrandDashboardRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/ambassador/dashboard': {
+      id: '/_authenticated/ambassador/dashboard'
+      path: '/dashboard'
+      fullPath: '/ambassador/dashboard'
+      preLoaderRoute: typeof AuthenticatedAmbassadorDashboardRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
     }
     '/_authenticated/admin/support': {
       id: '/_authenticated/admin/support'
@@ -2654,6 +2674,21 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedAmbassadorRouteChildren {
+  AuthenticatedAmbassadorDashboardRoute: typeof AuthenticatedAmbassadorDashboardRoute
+}
+
+const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren =
+  {
+    AuthenticatedAmbassadorDashboardRoute:
+      AuthenticatedAmbassadorDashboardRoute,
+  }
+
+const AuthenticatedAmbassadorRouteWithChildren =
+  AuthenticatedAmbassadorRoute._addFileChildren(
+    AuthenticatedAmbassadorRouteChildren,
+  )
+
 interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandDashboardRoute: typeof AuthenticatedBrandDashboardRoute
 }
@@ -2889,7 +2924,7 @@ const AuthenticatedStudentRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
-  AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRoute
+  AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
@@ -2899,7 +2934,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
-  AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRoute,
+  AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
