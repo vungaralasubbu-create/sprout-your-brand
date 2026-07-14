@@ -16,6 +16,7 @@ import {
   BarChart3,
   UserCircle,
   Briefcase,
+  Scale,
   LogOut,
   Menu,
   X,
