@@ -607,7 +607,7 @@ function Page() {
     );
   }
 
-  const nextLocked = false; // access rules are enforced server-side; every lesson listed here is authorized
+  const nextLocked = data.next ? data.next.unlocked === false : false;
   const positionLabel = `Lesson ${current.position} of ${data.totalLessons}`;
 
   return (
