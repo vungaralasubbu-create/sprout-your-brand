@@ -2,8 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState, useEffect } from "react";
-import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import {
   ChevronLeft,
   ChevronRight,
@@ -47,8 +45,17 @@ const searchSchema = z.object({
   index: fallback(z.number().int(), 0).default(0),
 });
 
+type SearchParams = { filter: FollowUpFilter; index: number };
+
 export const Route = createFileRoute("/_authenticated/partner/my-leads")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (search: Record<string, unknown>): SearchParams => {
+    const rawFilter = String(search.filter ?? "today") as FollowUpFilter;
+    const allowed: FollowUpFilter[] = ["today", "overdue", "not_contacted", "no_answer_retry", "payment_follow_up", "all"];
+    const filter = allowed.includes(rawFilter) ? rawFilter : "today";
+    const rawIdx = Number(search.index ?? 0);
+    const index = Number.isFinite(rawIdx) && rawIdx >= 0 ? Math.floor(rawIdx) : 0;
+    return { filter, index };
+  },
   component: MyLeadsWorkspace,
 });
 
