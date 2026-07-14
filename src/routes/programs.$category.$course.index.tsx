@@ -462,21 +462,47 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
-      {/* ============ PROJECTS ============ */}
+      {/* ============ PROJECTS SLIDER ============ */}
       {c.projects.length > 0 ? (
-        <SectionBlock eyebrow="Projects" title="Build Work Worth Showing." tone="soft">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {c.projects.slice(0, 3).map((p) => (
-              <ProjectCard key={p.id} project={p} />
-            ))}
-          </div>
-          {c.projects.length > 3 ? (
-            <p className="mt-6 text-caption">
-              Additional project templates available inside the program.
-            </p>
-          ) : null}
+        <SectionBlock
+          eyebrow="Projects"
+          title="Build Projects That Show Your Skills."
+          tone="soft"
+        >
+          <ProjectSlider projects={c.projects as any} />
         </SectionBlock>
       ) : null}
+
+      {/* ============ REVIEWS (renders only when approved reviews are supplied) ============ */}
+      <CourseReviewsSection courseId={c.id} />
+
+      {/* ============ VISUAL BREAK ============ */}
+      <Section className="relative overflow-hidden py-20 lg:py-28 text-white">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.28_0.14_255),oklch(0.42_0.16_220),oklch(0.55_0.15_195))] bg-[length:200%_200%] animate-[gradient-shift_14s_ease-in-out_infinite]"
+        />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-black/10" />
+        <Container>
+          <Reveal>
+            <div className="max-w-3xl">
+              <span className="text-caption font-mono uppercase tracking-widest text-white/80">
+                {c.category.name}
+              </span>
+              <h2 className="mt-3 text-heading-xl lg:text-display-md font-display font-semibold tracking-tight text-balance text-white">
+                Build Skills.
+                <br className="hidden sm:block" /> Create Projects.
+                <br className="hidden sm:block" /> Show What You Can Do.
+              </h2>
+              <p className="mt-5 text-body-lg text-white/85 max-w-2xl">
+                {c.name} is designed to move you from learning to doing — through structured
+                practice, real projects and mentor support.
+              </p>
+            </div>
+          </Reveal>
+        </Container>
+      </Section>
+
 
       {/* ============ PROGRAM EXPERIENCE FEATURE ============ */}
       {programExperience.length > 0 ? (
