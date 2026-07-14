@@ -1,23 +1,33 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
 import {
-  Users,
-  CheckCircle2,
+  ShoppingBag,
+  IndianRupee,
   Clock,
-  Wallet,
-  ArrowRight,
+  CheckCircle2,
+  Users,
+  PhoneCall,
+  PhoneOff,
+  Gift,
   Plus,
-  Package,
+  ListChecks,
   Link2,
-  CalendarClock,
+  Upload,
+  ArrowRight,
   Receipt,
-  Info,
 } from "lucide-react";
 import {
-  getDashboardStats,
-  getPartnerContext,
-} from "@/lib/partner/dashboard.functions";
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
+import { getOverviewStats, getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/programs";
@@ -34,287 +44,300 @@ function greeting() {
 }
 
 function PartnerDashboard() {
-  const fetchStats = useServerFn(getDashboardStats);
+  const fetchStats = useServerFn(getOverviewStats);
   const fetchCtx = useServerFn(getPartnerContext);
   const { data: ctx } = useQuery({
     queryKey: ["partner-context"],
     queryFn: () => fetchCtx(),
   });
   const { data: stats, isLoading } = useQuery({
-    queryKey: ["partner-dashboard-stats"],
+    queryKey: ["partner-overview-stats"],
     queryFn: () => fetchStats(),
   });
+  const [range, setRange] = useState<"daily" | "monthly">("daily");
 
   const partner = ctx?.partner;
+  const first = partner?.first_name ?? partner?.display_name?.split(" ")[0] ?? "Partner";
 
-  // No partner record yet — show apply CTA.
-  if (ctx && !partner) {
-    return (
-      <div className="max-w-2xl mx-auto p-8 lg:p-16">
-        <div className="rounded-2xl bg-white border p-8">
-          <Badge variant="primary" className="mb-4">Not yet a partner</Badge>
-          <h1 className="text-display-sm font-display font-semibold tracking-tight">
-            Apply to become a Glintr Sales Partner.
-          </h1>
-          <p className="mt-3 text-body-lg text-muted-foreground">
-            Complete the partner application to unlock your sales workspace,
-            program marketplace, and revenue tracking.
-          </p>
-          <div className="mt-6 flex gap-3">
-            <Button asChild variant="gradient" size="lg">
-              <Link to="/partner/apply">
-                Start Application <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link to="/earn">Learn more</Link>
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const chartData =
+    range === "daily"
+      ? (stats?.daily ?? []).map((d) => ({
+          label: new Date(d.date).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short",
+          }),
+          amount: d.amount,
+          sales: d.sales,
+        }))
+      : (stats?.monthly ?? []).map((d) => {
+          const [y, m] = d.month.split("-");
+          const date = new Date(Number(y), Number(m) - 1, 1);
+          return {
+            label: date.toLocaleDateString("en-IN", {
+              month: "short",
+              year: "2-digit",
+            }),
+            amount: d.amount,
+            sales: d.sales,
+          };
+        });
 
-  const p = partner as (typeof partner & {
-    onboarding_status?: string;
-    onboarding_current_step?: number;
-    sales_model_approval_status?: string;
-    approved_sales_model?: string | null;
-    payout_profile_status?: string;
-    agreement_status?: string;
-  }) | null | undefined;
-
-  const onboardingComplete = p?.onboarding_status === "completed";
-  const approvalStatus = p?.sales_model_approval_status ?? "selected";
-  const activeModelKey =
-    p?.approved_sales_model ??
-    (approvalStatus === "approved" || approvalStatus === "partially_approved"
-      ? p?.sales_model_selection
-      : p?.sales_model_selection) ??
-    null;
-
-  const displayModel = activeModelKey;
-  const modelLabel =
-    displayModel === "own_leads" || displayModel === "own"
-      ? "Own Leads"
-      : displayModel === "supported_sales" || displayModel === "supported"
-      ? "Supported Sales"
-      : displayModel === "dual_model" || displayModel === "dual"
-      ? "Dual — Own + Supported"
-      : "Not selected";
-  const modelRateLabel =
-    displayModel === "dual_model" || displayModel === "dual"
-      ? "Up to 70% (Own) · Up to 50% (Supported)"
-      : displayModel === "supported_sales" || displayModel === "supported"
-      ? "Up to 50%"
-      : displayModel === "own_leads" || displayModel === "own"
-      ? "Up to 70%"
-      : "—";
-  const approvalLabel = approvalStatus
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  const hasChartData = chartData.some((d) => d.amount > 0 || d.sales > 0);
 
   return (
     <div className="p-6 lg:p-10 space-y-8">
       {/* Header */}
-      <header>
-        <div className="flex flex-wrap items-baseline justify-between gap-4">
-          <div>
-            <div className="text-caption font-mono uppercase tracking-widest text-primary">
-              {greeting()}
-            </div>
-            <h1 className="mt-1 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight">
-              {partner?.first_name ?? partner?.display_name?.split(" ")[0] ?? "Partner"}
-            </h1>
-            <p className="mt-1 text-muted-foreground">
-              Here's your sales and earnings workspace.
-            </p>
+      <header className="flex flex-wrap items-baseline justify-between gap-4">
+        <div>
+          <div className="text-caption font-mono uppercase tracking-widest text-primary">
+            {greeting()}
           </div>
-          <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link to="/partner/revenue-rules">
-                <Info className="size-4" />
-                Revenue Rules
-              </Link>
-            </Button>
-            <Button asChild variant="gradient" size="sm">
-              <Link to="/partner/leads">
-                <Plus className="size-4" />
-                Add Lead
-              </Link>
-            </Button>
-          </div>
+          <h1 className="mt-1 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight">
+            {first}
+          </h1>
+          <p className="mt-1 text-muted-foreground">
+            Your sales performance at a glance.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link to="/partner/coming-soon">
+              <ListChecks className="size-4" />
+              View My Leads
+            </Link>
+          </Button>
+          <Button asChild variant="gradient" size="sm">
+            <Link to="/partner/coming-soon">
+              <Plus className="size-4" />
+              Add Lead
+            </Link>
+          </Button>
         </div>
       </header>
 
-      {/* Onboarding banner */}
-      {!onboardingComplete && (
-        <section className="rounded-2xl border border-primary/30 bg-primary/[0.05] p-5 lg:p-6 flex flex-wrap items-center justify-between gap-4">
-          <div className="max-w-2xl">
-            <div className="text-caption font-mono uppercase tracking-widest text-primary">
-              Complete Your Partner Setup
-            </div>
-            <p className="mt-1 text-body">
-              Finish onboarding to activate your sales model, program interests
-              and payout profile. Your progress is saved automatically.
-            </p>
-          </div>
-          <Button asChild variant="gradient">
-            <Link to="/partner/onboarding">
-              Continue Onboarding <ArrowRight className="size-4" />
-            </Link>
-          </Button>
-        </section>
-      )}
-
-      {onboardingComplete && approvalStatus === "under_review" && (
-        <section className="rounded-2xl border bg-white p-5 lg:p-6 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <div className="text-caption font-mono uppercase tracking-widest text-primary">
-              Your Partner Model Is Under Review
-            </div>
-            <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
-              You can continue setting up your profile and exploring eligible
-              programs while your partner model is reviewed. Certain actions
-              will unlock after approval.
-            </p>
-          </div>
-          <Badge variant="warning">Under Review</Badge>
-        </section>
-      )}
-
-
-      {/* KPI cards */}
-      <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Row 1: sales & payments KPIs */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
         <KpiCard
-          icon={Users}
-          label="Active Leads"
-          value={isLoading ? "—" : String(stats?.activeLeads ?? 0)}
+          icon={ShoppingBag}
+          label="Total Sales"
+          value={isLoading ? "—" : String(stats?.totalSales ?? 0)}
+          tone="primary"
         />
         <KpiCard
-          icon={CheckCircle2}
-          label="Eligible Sales"
-          value={isLoading ? "—" : String(stats?.eligibleSales ?? 0)}
+          icon={IndianRupee}
+          label="Total Collected Amount"
+          value={isLoading ? "—" : formatPrice(stats?.totalCollected ?? 0, "INR")}
+          tone="primary"
+          highlight
         />
         <KpiCard
           icon={Clock}
-          label="Pending Revenue Share"
-          value={isLoading ? "—" : formatPrice(stats?.pendingRevenue ?? 0, "INR")}
-          hint="Pending verification / calculation"
+          label="Payments Pending Verification"
+          value={isLoading ? "—" : String(stats?.pendingVerification ?? 0)}
+          tone="warning"
         />
         <KpiCard
-          icon={Wallet}
-          label="Available For Payout"
-          value={isLoading ? "—" : formatPrice(stats?.availablePayout ?? 0, "INR")}
-          highlight
+          icon={CheckCircle2}
+          label="Verified Payments"
+          value={isLoading ? "—" : String(stats?.verifiedPayments ?? 0)}
+          tone="success"
         />
       </section>
 
-      {/* Active model */}
-      <section className="rounded-2xl border bg-gradient-to-br from-primary/[0.06] to-accent/[0.04] p-6 lg:p-8">
-        <div className="grid lg:grid-cols-[1fr_auto] gap-6 items-center">
+      {/* Row 2: leads & referral KPIs */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        <KpiCard
+          icon={Users}
+          label="Total Leads Assigned"
+          value={isLoading ? "—" : String(stats?.leadsAssigned ?? 0)}
+        />
+        <KpiCard
+          icon={PhoneCall}
+          label="Leads Contacted"
+          value={isLoading ? "—" : String(stats?.leadsContacted ?? 0)}
+          tone="success"
+        />
+        <KpiCard
+          icon={PhoneOff}
+          label="Leads Not Answered"
+          value={isLoading ? "—" : String(stats?.leadsNotAnswered ?? 0)}
+          tone="warning"
+        />
+        <KpiCard
+          icon={Gift}
+          label="Referral Earnings"
+          value={isLoading ? "—" : formatPrice(stats?.referralEarnings ?? 0, "INR")}
+          tone="primary"
+        />
+      </section>
+
+      {/* Chart */}
+      <section className="rounded-2xl border bg-white p-5 lg:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div>
-            <div className="text-caption font-mono uppercase tracking-widest text-primary">
-              Your Active Model
-            </div>
-            <div className="mt-2 flex items-baseline gap-4 flex-wrap">
-              <h2 className="text-display-sm font-display font-semibold tracking-tight">
-                {modelLabel}
-              </h2>
-              <span className="text-body-lg text-muted-foreground">
-                Eligible revenue share {modelRateLabel}
-              </span>
-            </div>
-            <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
-              Revenue share applies only to verified eligible collected revenue,
-              at the applicable program rate. Refunds and reversals may adjust
-              earnings.
+            <h2 className="text-heading-sm font-display font-semibold">
+              Sales Performance
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {range === "daily" ? "Last 30 days" : "Last 6 months"} · Collected revenue &amp; verified sales
             </p>
           </div>
-          <Button asChild variant="outline">
-            <Link to="/partner/revenue-rules">
-              Understand Revenue Rules
-              <ArrowRight className="size-4" />
-            </Link>
-          </Button>
+          <div className="inline-flex rounded-lg border p-0.5 bg-muted/40">
+            {(["daily", "monthly"] as const).map((r) => (
+              <button
+                key={r}
+                onClick={() => setRange(r)}
+                className={
+                  "px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-colors " +
+                  (range === r
+                    ? "bg-white shadow-sm text-foreground"
+                    : "text-muted-foreground hover:text-foreground")
+                }
+              >
+                {r}
+              </button>
+            ))}
+          </div>
         </div>
+
+        {!hasChartData ? (
+          <div className="h-64 flex flex-col items-center justify-center text-center rounded-xl bg-muted/30 border border-dashed">
+            <IndianRupee className="size-8 text-muted-foreground" />
+            <p className="mt-3 text-sm text-muted-foreground">
+              No sales yet. Once your first payment is verified, your performance
+              will appear here.
+            </p>
+          </div>
+        ) : (
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData} margin={{ left: -8, right: 8, top: 8, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="amtGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="oklch(0.68 0.16 220)" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="oklch(0.68 0.16 220)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.9 0.005 240)" />
+                <XAxis
+                  dataKey="label"
+                  tickLine={false}
+                  axisLine={false}
+                  fontSize={11}
+                  stroke="oklch(0.55 0 0)"
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  fontSize={11}
+                  stroke="oklch(0.55 0 0)"
+                  tickFormatter={(v) =>
+                    v >= 100000 ? `${(v / 100000).toFixed(1)}L` : v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)
+                  }
+                />
+                <Tooltip
+                  formatter={(value: number, name: string) =>
+                    name === "amount" ? [formatPrice(value, "INR"), "Collected"] : [value, "Sales"]
+                  }
+                  contentStyle={{
+                    borderRadius: 12,
+                    border: "1px solid oklch(0.9 0.005 240)",
+                    fontSize: 12,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="oklch(0.6 0.18 220)"
+                  strokeWidth={2}
+                  fill="url(#amtGradient)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </section>
 
-      {/* Quick actions */}
-      <section>
-        <h2 className="text-heading-sm font-display font-semibold mb-4">
-          Quick Actions
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          <QuickAction to="/partner/leads" icon={Plus} label="Add Lead" />
-          <QuickAction to="/partner/programs" icon={Package} label="Browse Programs" />
-          <QuickAction to="/partner/links" icon={Link2} label="Create Program Link" />
-          <QuickAction to="/partner/assigned-leads" icon={Users} label="Assigned Leads" />
-          <QuickAction to="/partner/follow-ups" icon={CalendarClock} label="Follow-Ups" />
-          <QuickAction to="/partner/earnings" icon={Wallet} label="View Earnings" />
-          <QuickAction to="/partner/payouts" icon={Receipt} label="Request Payout" />
-          <QuickAction to="/launch-your-brand" icon={ArrowRight} label="Launch My Brand" />
-        </div>
-      </section>
-
-      {/* Today's follow-ups */}
+      {/* Recent Payments */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-heading-sm font-display font-semibold">
-            Today's Follow-Ups
-          </h2>
+          <div>
+            <h2 className="text-heading-sm font-display font-semibold">
+              Recent Payments
+            </h2>
+            <p className="text-sm text-muted-foreground">Latest 5 transactions</p>
+          </div>
           <Button asChild variant="ghost" size="sm">
-            <Link to="/partner/follow-ups">
+            <Link to="/partner/coming-soon">
               View all <ArrowRight className="size-4" />
             </Link>
           </Button>
         </div>
         <div className="rounded-2xl border bg-white overflow-hidden">
-          {(stats?.todayFollowUps ?? []).length === 0 ? (
-            <div className="p-8 text-center">
-              <CalendarClock className="size-8 mx-auto text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">
-                No follow-ups scheduled for today.
+          {(stats?.recentPayments ?? []).length === 0 ? (
+            <div className="p-10 text-center">
+              <Receipt className="size-8 mx-auto text-muted-foreground" />
+              <p className="mt-3 text-sm font-medium">No payments yet</p>
+              <p className="text-xs text-muted-foreground max-w-sm mx-auto mt-1">
+                Once your leads convert and submit payments, they'll appear here
+                for tracking and verification.
               </p>
             </div>
           ) : (
-            <ul className="divide-y">
-              {stats!.todayFollowUps.map((f) => (
-                <li
-                  key={f.id}
-                  className="flex items-center justify-between gap-4 p-4"
-                >
-                  <div className="min-w-0">
-                    <div className="font-medium truncate">
-                      {f.partner_leads?.full_name ?? "Lead"}
-                    </div>
-                    <div className="text-caption text-muted-foreground truncate">
-                      {new Date(f.due_at).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}{" "}
-                      · {f.type} · {f.notes ?? "No notes"}
-                    </div>
-                  </div>
-                  <Button asChild variant="outline" size="sm">
-                    <Link
-                      to="/partner/leads/$leadId"
-                      params={{ leadId: f.lead_id }}
-                    >
-                      Open
-                    </Link>
-                  </Button>
-                </li>
-              ))}
-            </ul>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/40 text-caption uppercase tracking-wider text-muted-foreground">
+                  <tr>
+                    <th className="text-left font-medium px-5 py-3">Student</th>
+                    <th className="text-left font-medium px-5 py-3">Program</th>
+                    <th className="text-right font-medium px-5 py-3">Amount</th>
+                    <th className="text-left font-medium px-5 py-3">Status</th>
+                    <th className="text-left font-medium px-5 py-3">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {stats!.recentPayments.map((p) => (
+                    <tr key={p.id} className="hover:bg-muted/20">
+                      <td className="px-5 py-3 font-medium">{p.student_name}</td>
+                      <td className="px-5 py-3 text-muted-foreground">{p.program_title}</td>
+                      <td className="px-5 py-3 text-right font-mono tabular-nums">
+                        {formatPrice(p.amount, "INR")}
+                      </td>
+                      <td className="px-5 py-3">
+                        <PaymentBadge status={p.status} />
+                      </td>
+                      <td className="px-5 py-3 text-muted-foreground">
+                        {new Date(p.enrolled_at).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </section>
 
+      {/* Quick Actions */}
+      <section>
+        <h2 className="text-heading-sm font-display font-semibold mb-4">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <QuickAction to="/partner/coming-soon" icon={Plus} label="Add Lead" />
+          <QuickAction to="/partner/coming-soon" icon={ListChecks} label="View My Leads" />
+          <QuickAction to="/partner/coming-soon" icon={Link2} label="Create Payment Link" />
+          <QuickAction to="/partner/coming-soon" icon={Upload} label="Submit Payment Proof" />
+        </div>
+      </section>
+
       <p className="text-caption text-muted-foreground max-w-3xl">
-        Revenue share is not guaranteed income. Actual earnings depend on
-        approved program rules, verified eligible sales, collected revenue,
-        refund rules and applicable partner terms.
+        Revenue share is calculated on verified eligible collected revenue per
+        program rules. Refunds and reversals may adjust earnings.
       </p>
     </div>
   );
@@ -324,34 +347,50 @@ function KpiCard({
   icon: Icon,
   label,
   value,
-  hint,
+  tone = "neutral",
   highlight,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string;
-  hint?: string;
+  tone?: "neutral" | "primary" | "success" | "warning";
   highlight?: boolean;
 }) {
+  const toneClass =
+    tone === "success"
+      ? "bg-emerald-50 text-emerald-700"
+      : tone === "warning"
+      ? "bg-amber-50 text-amber-700"
+      : tone === "primary"
+      ? "bg-primary/10 text-primary"
+      : "bg-muted text-foreground";
   return (
     <div
       className={
-        "rounded-2xl border bg-white p-5 " +
+        "rounded-2xl border bg-white p-4 lg:p-5 " +
         (highlight ? "ring-1 ring-primary/30 shadow-sm" : "")
       }
     >
-      <div className="flex items-center justify-between">
-        <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <Icon className="size-4" />
-        </span>
+      <span
+        className={`inline-flex size-9 items-center justify-center rounded-lg ${toneClass}`}
+      >
+        <Icon className="size-4" />
+      </span>
+      <div className="mt-4 text-caption text-muted-foreground leading-tight">
+        {label}
       </div>
-      <div className="mt-4 text-caption text-muted-foreground">{label}</div>
-      <div className="mt-1 text-2xl lg:text-3xl font-display font-semibold tracking-tight tabular-nums">
+      <div className="mt-1 text-xl lg:text-2xl font-display font-semibold tracking-tight tabular-nums">
         {value}
       </div>
-      {hint ? <div className="mt-1 text-xs text-muted-foreground">{hint}</div> : null}
     </div>
   );
+}
+
+function PaymentBadge({ status }: { status: "pending" | "verified" | "rejected" }) {
+  if (status === "verified")
+    return <Badge variant="success">Verified</Badge>;
+  if (status === "rejected") return <Badge variant="destructive">Rejected</Badge>;
+  return <Badge variant="warning">Pending Verification</Badge>;
 }
 
 function QuickAction({
@@ -368,7 +407,7 @@ function QuickAction({
       to={to as never}
       className="group flex items-center gap-3 rounded-xl border bg-white p-4 hover:border-primary/50 hover:shadow-sm transition-all"
     >
-      <span className="inline-flex size-9 items-center justify-center rounded-lg bg-muted text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+      <span className="inline-flex size-10 items-center justify-center rounded-lg bg-muted text-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors">
         <Icon className="size-4" />
       </span>
       <span className="text-sm font-medium">{label}</span>
