@@ -32,6 +32,7 @@ import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedStudentSupportRouteImport } from './routes/_authenticated/student.support'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
+import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
 import { Route as AuthenticatedStudentMentorRouteImport } from './routes/_authenticated/student.mentor'
 import { Route as AuthenticatedStudentDashboardRouteImport } from './routes/_authenticated/student.dashboard'
 import { Route as AuthenticatedStudentCoursesRouteImport } from './routes/_authenticated/student.courses'
@@ -245,6 +246,12 @@ const AuthenticatedStudentProfileRoute =
   AuthenticatedStudentProfileRouteImport.update({
     id: '/profile',
     path: '/profile',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentNotificationsRoute =
+  AuthenticatedStudentNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
 const AuthenticatedStudentMentorRoute =
@@ -895,6 +902,7 @@ export interface FileRoutesByFullPath {
   '/student/courses': typeof AuthenticatedStudentCoursesRoute
   '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
+  '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -1013,6 +1021,7 @@ export interface FileRoutesByTo {
   '/student/courses': typeof AuthenticatedStudentCoursesRoute
   '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
+  '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
@@ -1134,6 +1143,7 @@ export interface FileRoutesById {
   '/_authenticated/student/courses': typeof AuthenticatedStudentCoursesRoute
   '/_authenticated/student/dashboard': typeof AuthenticatedStudentDashboardRoute
   '/_authenticated/student/mentor': typeof AuthenticatedStudentMentorRoute
+  '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
   '/_authenticated/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -1256,6 +1266,7 @@ export interface FileRouteTypes {
     | '/student/courses'
     | '/student/dashboard'
     | '/student/mentor'
+    | '/student/notifications'
     | '/student/profile'
     | '/student/support'
     | '/admin/'
@@ -1374,6 +1385,7 @@ export interface FileRouteTypes {
     | '/student/courses'
     | '/student/dashboard'
     | '/student/mentor'
+    | '/student/notifications'
     | '/student/profile'
     | '/admin'
     | '/student'
@@ -1494,6 +1506,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/courses'
     | '/_authenticated/student/dashboard'
     | '/_authenticated/student/mentor'
+    | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
     | '/_authenticated/student/support'
     | '/_authenticated/admin/'
@@ -1724,6 +1737,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/student/profile'
       preLoaderRoute: typeof AuthenticatedStudentProfileRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/notifications': {
+      id: '/_authenticated/student/notifications'
+      path: '/notifications'
+      fullPath: '/student/notifications'
+      preLoaderRoute: typeof AuthenticatedStudentNotificationsRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/student/mentor': {
@@ -2706,6 +2726,7 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentCoursesRoute: typeof AuthenticatedStudentCoursesRoute
   AuthenticatedStudentDashboardRoute: typeof AuthenticatedStudentDashboardRoute
   AuthenticatedStudentMentorRoute: typeof AuthenticatedStudentMentorRoute
+  AuthenticatedStudentNotificationsRoute: typeof AuthenticatedStudentNotificationsRoute
   AuthenticatedStudentProfileRoute: typeof AuthenticatedStudentProfileRoute
   AuthenticatedStudentSupportRoute: typeof AuthenticatedStudentSupportRouteWithChildren
   AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
@@ -2732,6 +2753,8 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentCoursesRoute: AuthenticatedStudentCoursesRoute,
   AuthenticatedStudentDashboardRoute: AuthenticatedStudentDashboardRoute,
   AuthenticatedStudentMentorRoute: AuthenticatedStudentMentorRoute,
+  AuthenticatedStudentNotificationsRoute:
+    AuthenticatedStudentNotificationsRoute,
   AuthenticatedStudentProfileRoute: AuthenticatedStudentProfileRoute,
   AuthenticatedStudentSupportRoute:
     AuthenticatedStudentSupportRouteWithChildren,
