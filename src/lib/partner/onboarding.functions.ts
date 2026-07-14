@@ -31,6 +31,12 @@ export const getOnboarding = createServerFn({ method: "GET" })
         .single();
       if (error) throw new Error(error.message);
       partner = created;
+
+      // Grant the partner role so /partner/* routes become accessible.
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
     }
 
     const partnerId = partner!.id;
