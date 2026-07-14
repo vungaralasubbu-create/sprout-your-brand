@@ -3094,6 +3094,94 @@ export type Database = {
           },
         ]
       }
+      live_sessions: {
+        Row: {
+          cancellation_note: string | null
+          course_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_minutes: number
+          id: string
+          is_published: boolean
+          join_window_minutes: number
+          learning_topics: string[]
+          meeting_url: string | null
+          mentor_id: string | null
+          module_id: string | null
+          previous_scheduled_at: string | null
+          recording_url: string | null
+          scheduled_at: string
+          status: Database["public"]["Enums"]["live_session_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cancellation_note?: string | null
+          course_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_published?: boolean
+          join_window_minutes?: number
+          learning_topics?: string[]
+          meeting_url?: string | null
+          mentor_id?: string | null
+          module_id?: string | null
+          previous_scheduled_at?: string | null
+          recording_url?: string | null
+          scheduled_at: string
+          status?: Database["public"]["Enums"]["live_session_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cancellation_note?: string | null
+          course_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          is_published?: boolean
+          join_window_minutes?: number
+          learning_topics?: string[]
+          meeting_url?: string | null
+          mentor_id?: string | null
+          module_id?: string | null
+          previous_scheduled_at?: string | null
+          recording_url?: string | null
+          scheduled_at?: string
+          status?: Database["public"]["Enums"]["live_session_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_sessions_mentor_id_fkey"
+            columns: ["mentor_id"]
+            isOneToOne: false
+            referencedRelation: "session_mentors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_sessions_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       module_completions: {
         Row: {
           completed_at: string
@@ -6036,6 +6124,172 @@ export type Database = {
           },
         ]
       }
+      session_attendance: {
+        Row: {
+          confirmed_at: string | null
+          confirmed_by: string | null
+          created_at: string
+          id: string
+          minutes_attended: number | null
+          notes: string | null
+          session_id: string
+          status: Database["public"]["Enums"]["session_attendance_status"]
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          id?: string
+          minutes_attended?: number | null
+          notes?: string | null
+          session_id: string
+          status?: Database["public"]["Enums"]["session_attendance_status"]
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          id?: string
+          minutes_attended?: number | null
+          notes?: string | null
+          session_id?: string
+          status?: Database["public"]["Enums"]["session_attendance_status"]
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_attendance_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_join_events: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          session_id: string
+          student_user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          session_id: string
+          student_user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          session_id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_join_events_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_join_events_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_mentors: {
+        Row: {
+          bio: string | null
+          created_at: string
+          expertise: string[]
+          id: string
+          is_active: boolean
+          name: string
+          photo_url: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          expertise?: string[]
+          id?: string
+          is_active?: boolean
+          name: string
+          photo_url?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          expertise?: string[]
+          id?: string
+          is_active?: boolean
+          name?: string
+          photo_url?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      session_resources: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_published: boolean
+          name: string
+          resource_type: Database["public"]["Enums"]["session_resource_type"]
+          session_id: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          name: string
+          resource_type?: Database["public"]["Enums"]["session_resource_type"]
+          session_id: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_published?: boolean
+          name?: string
+          resource_type?: Database["public"]["Enums"]["session_resource_type"]
+          session_id?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_resources_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       skills: {
         Row: {
           created_at: string
@@ -6349,6 +6603,13 @@ export type Database = {
         | "live"
         | "project"
         | "external"
+      live_session_status:
+        | "scheduled"
+        | "starting_soon"
+        | "live"
+        | "completed"
+        | "cancelled"
+        | "rescheduled"
       partner_activity_type:
         | "note"
         | "stage_change"
@@ -6496,6 +6757,20 @@ export type Database = {
         | "unusual_sales_activity"
         | "suspicious_referral_pattern"
         | "repeated_duplicate_lead_uploads"
+        | "other"
+      session_attendance_status:
+        | "not_marked"
+        | "attended"
+        | "partially_attended"
+        | "missed"
+        | "excused"
+      session_resource_type:
+        | "pdf"
+        | "presentation"
+        | "document"
+        | "dataset"
+        | "code"
+        | "link"
         | "other"
       support_ticket_category:
         | "lead_attribution"
@@ -6799,6 +7074,14 @@ export const Constants = {
         "project",
         "external",
       ],
+      live_session_status: [
+        "scheduled",
+        "starting_soon",
+        "live",
+        "completed",
+        "cancelled",
+        "rescheduled",
+      ],
       partner_activity_type: [
         "note",
         "stage_change",
@@ -6960,6 +7243,22 @@ export const Constants = {
         "unusual_sales_activity",
         "suspicious_referral_pattern",
         "repeated_duplicate_lead_uploads",
+        "other",
+      ],
+      session_attendance_status: [
+        "not_marked",
+        "attended",
+        "partially_attended",
+        "missed",
+        "excused",
+      ],
+      session_resource_type: [
+        "pdf",
+        "presentation",
+        "document",
+        "dataset",
+        "code",
+        "link",
         "other",
       ],
       support_ticket_category: [
