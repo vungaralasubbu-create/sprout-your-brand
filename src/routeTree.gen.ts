@@ -103,6 +103,7 @@ import { Route as AuthenticatedStudentProjectsIdRouteImport } from './routes/_au
 import { Route as AuthenticatedStudentProgramsSlugRouteImport } from './routes/_authenticated/student.programs.$slug'
 import { Route as AuthenticatedStudentLiveSessionsIdRouteImport } from './routes/_authenticated/student.live-sessions.$id'
 import { Route as AuthenticatedStudentLearnSlugRouteImport } from './routes/_authenticated/student.learn.$slug'
+import { Route as AuthenticatedStudentAssignmentsIdRouteImport } from './routes/_authenticated/student.assignments.$id'
 import { Route as AuthenticatedPartnerSupportIdRouteImport } from './routes/_authenticated/partner.support.$id'
 import { Route as AuthenticatedPartnerProgramsSlugRouteImport } from './routes/_authenticated/partner.programs.$slug'
 import { Route as AuthenticatedAdminTeamIdRouteImport } from './routes/_authenticated/admin.team.$id'
@@ -658,6 +659,12 @@ const AuthenticatedStudentLearnSlugRoute =
     path: '/learn/$slug',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedStudentAssignmentsIdRoute =
+  AuthenticatedStudentAssignmentsIdRouteImport.update({
+    id: '/assignments/$id',
+    path: '/assignments/$id',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedPartnerSupportIdRoute =
   AuthenticatedPartnerSupportIdRouteImport.update({
     id: '/$id',
@@ -811,6 +818,7 @@ export interface FileRoutesByFullPath {
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
+  '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
   '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/student/live-sessions/$id': typeof AuthenticatedStudentLiveSessionsIdRoute
   '/student/programs/$slug': typeof AuthenticatedStudentProgramsSlugRoute
@@ -915,6 +923,7 @@ export interface FileRoutesByTo {
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
+  '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
   '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/student/live-sessions/$id': typeof AuthenticatedStudentLiveSessionsIdRoute
   '/student/programs/$slug': typeof AuthenticatedStudentProgramsSlugRoute
@@ -1023,6 +1032,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/_authenticated/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/_authenticated/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
+  '/_authenticated/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
   '/_authenticated/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/_authenticated/student/live-sessions/$id': typeof AuthenticatedStudentLiveSessionsIdRoute
   '/_authenticated/student/programs/$slug': typeof AuthenticatedStudentProgramsSlugRoute
@@ -1131,6 +1141,7 @@ export interface FileRouteTypes {
     | '/admin/team/$id'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
+    | '/student/assignments/$id'
     | '/student/learn/$slug'
     | '/student/live-sessions/$id'
     | '/student/programs/$slug'
@@ -1235,6 +1246,7 @@ export interface FileRouteTypes {
     | '/admin/team/$id'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
+    | '/student/assignments/$id'
     | '/student/learn/$slug'
     | '/student/live-sessions/$id'
     | '/student/programs/$slug'
@@ -1342,6 +1354,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/team/$id'
     | '/_authenticated/partner/programs/$slug'
     | '/_authenticated/partner/support/$id'
+    | '/_authenticated/student/assignments/$id'
     | '/_authenticated/student/learn/$slug'
     | '/_authenticated/student/live-sessions/$id'
     | '/_authenticated/student/programs/$slug'
@@ -2043,6 +2056,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentLearnSlugRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/student/assignments/$id': {
+      id: '/_authenticated/student/assignments/$id'
+      path: '/assignments/$id'
+      fullPath: '/student/assignments/$id'
+      preLoaderRoute: typeof AuthenticatedStudentAssignmentsIdRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
     '/_authenticated/partner/support/$id': {
       id: '/_authenticated/partner/support/$id'
       path: '/$id'
@@ -2363,6 +2383,7 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentProfileRoute: typeof AuthenticatedStudentProfileRoute
   AuthenticatedStudentSupportRoute: typeof AuthenticatedStudentSupportRoute
   AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
+  AuthenticatedStudentAssignmentsIdRoute: typeof AuthenticatedStudentAssignmentsIdRoute
   AuthenticatedStudentLearnSlugRoute: typeof AuthenticatedStudentLearnSlugRoute
   AuthenticatedStudentLiveSessionsIdRoute: typeof AuthenticatedStudentLiveSessionsIdRoute
   AuthenticatedStudentProgramsSlugRoute: typeof AuthenticatedStudentProgramsSlugRoute
@@ -2382,6 +2403,8 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentProfileRoute: AuthenticatedStudentProfileRoute,
   AuthenticatedStudentSupportRoute: AuthenticatedStudentSupportRoute,
   AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
+  AuthenticatedStudentAssignmentsIdRoute:
+    AuthenticatedStudentAssignmentsIdRoute,
   AuthenticatedStudentLearnSlugRoute: AuthenticatedStudentLearnSlugRoute,
   AuthenticatedStudentLiveSessionsIdRoute:
     AuthenticatedStudentLiveSessionsIdRoute,
