@@ -54,6 +54,7 @@ const NAV: NavGroup[] = [
     label: null,
     items: [
       { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+      { to: "/admin/sales-command", label: "Sales Command Center", icon: Activity },
     ],
   },
   {
