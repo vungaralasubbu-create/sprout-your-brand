@@ -147,6 +147,16 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     ],
   },
   {
+    key: "risk_review",
+    label: "Risk Review",
+    permissions: [
+      { key: "risk_review.view", label: "View" },
+      { key: "risk_review.review", label: "Review" },
+      { key: "risk_review.resolve", label: "Resolve" },
+      { key: "risk_review.dismiss", label: "Dismiss" },
+    ],
+  },
+  {
     key: "admin_team",
     label: "Admin Team",
     permissions: [

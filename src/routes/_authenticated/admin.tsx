@@ -68,6 +68,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/assigned-leads", label: "Assigned Leads", icon: Handshake, perms: ["leads.view"] },
       { to: "/admin/attribution-reviews", label: "Attribution Reviews", icon: Scale, perms: ["lead_ownership.view"] },
       { to: "/admin/lead-ownership", label: "Ownership Reviews", icon: Scale, perms: ["lead_ownership.view"] },
+      { to: "/admin/risk-review", label: "Risk Review", icon: Shield, perms: ["risk_review.view"] },
     ],
   },
   {
