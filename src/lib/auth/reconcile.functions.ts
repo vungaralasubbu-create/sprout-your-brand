@@ -60,5 +60,31 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
       granted.push("partner");
     }
 
+    // If the user already has a partners row (e.g. via onboarding), ensure partner role.
+    const { data: partnerRow } = await supabaseAdmin
+      .from("partners")
+      .select("id")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (partnerRow) {
+      await supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
+      if (!granted.includes("partner")) granted.push("partner");
+    }
+
+    // Default fallback: every signed-in user gets at least the student role
+    // so they always land on a workspace dashboard instead of the homepage.
+    const { data: existingRoles } = await supabaseAdmin
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId);
+    if (!existingRoles || existingRoles.length === 0) {
+      await supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: userId, role: "student" as any }, { onConflict: "user_id,role" });
+      granted.push("student");
+    }
+
     return { granted };
   });
