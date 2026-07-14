@@ -217,24 +217,34 @@ export const getCoursePlayer = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!enrollment) throw new Error("Not enrolled");
 
-    const [{ data: modules }, { data: progress }] = await Promise.all([
+    const [{ data: modules }, { data: progress }, { data: reqs }] = await Promise.all([
       context.supabase
         .from("course_modules")
-        .select("id, name, display_order, course_topics(id, name, display_order, course_lessons(id, name, lesson_type, duration, is_free_preview, is_published, resource_url, display_order))")
+        .select("id, name, display_order, course_topics(id, name, display_order, course_lessons(id, name, lesson_type, duration, is_free_preview, is_published, resource_url, description, content, display_order))")
         .eq("course_id", course.id)
         .eq("is_published", true)
         .order("display_order"),
       context.supabase
         .from("lesson_progress")
-        .select("lesson_id, status, completed_at, last_accessed_at")
+        .select("lesson_id, status, completed_at, last_accessed_at, video_progress_pct, last_position_seconds")
         .eq("student_user_id", context.userId)
         .eq("course_id", course.id),
+      context.supabase
+        .from("course_completion_requirements")
+        .select("min_lesson_completion_pct")
+        .eq("course_id", course.id)
+        .maybeSingle(),
     ]);
 
     const progressMap = new Map((progress ?? []).map((p) => [p.lesson_id, p]));
-    const flatLessons: { id: string; moduleId: string; moduleName: string; topicId: string; name: string; type: string; content: any; resource_url: string | null; duration: string | null }[] = [];
+    const flatLessons: {
+      id: string; moduleId: string; moduleName: string; topicId: string;
+      name: string; type: string; description: string | null; content: string | null;
+      resource_url: string | null; duration: string | null;
+      video_progress_pct: number; last_position_seconds: number;
+    }[] = [];
 
-    const cleaned = (modules ?? []).map((m: any) => {
+    const cleaned = ((modules ?? []) as any[]).map((m: any, mi: number) => {
       const topics = (m.course_topics ?? [])
         .sort((a: any, b: any) => a.display_order - b.display_order)
         .map((t: any) => {
@@ -242,12 +252,15 @@ export const getCoursePlayer = createServerFn({ method: "POST" })
             .filter((l: any) => l.is_published)
             .sort((a: any, b: any) => a.display_order - b.display_order)
             .map((l: any) => {
+              const p = progressMap.get(l.id) as any;
               flatLessons.push({
                 id: l.id, moduleId: m.id, moduleName: m.name,
-                topicId: t.id, name: l.name, type: l.lesson_type, content: null,
+                topicId: t.id, name: l.name, type: l.lesson_type,
+                description: l.description ?? null, content: l.content ?? null,
                 resource_url: l.resource_url, duration: l.duration,
+                video_progress_pct: Number(p?.video_progress_pct ?? 0),
+                last_position_seconds: Number(p?.last_position_seconds ?? 0),
               });
-              const p = progressMap.get(l.id);
               return {
                 id: l.id,
                 name: l.name,
@@ -256,23 +269,23 @@ export const getCoursePlayer = createServerFn({ method: "POST" })
                 resource_url: l.resource_url,
                 status: p?.status ?? "not_started",
                 completed_at: p?.completed_at ?? null,
+                video_progress_pct: Number(p?.video_progress_pct ?? 0),
               };
             });
           return { id: t.id, name: t.name, lessons };
         });
-      return { id: m.id, name: m.name, topics };
+      return { id: m.id, number: mi + 1, name: m.name, topics };
     });
 
-    // Determine current lesson
+    // Determine current lesson (by lessonId, else last accessed incomplete, else first)
     let currentIndex = 0;
     if (data.lessonId) {
       const i = flatLessons.findIndex((l) => l.id === data.lessonId);
       if (i >= 0) currentIndex = i;
     } else {
-      // last accessed incomplete, else first
       const lastAccessed = (progress ?? [])
-        .filter((p) => p.status !== "completed")
-        .sort((a, b) => new Date(b.last_accessed_at).getTime() - new Date(a.last_accessed_at).getTime())[0];
+        .filter((p) => p.status !== "completed" && p.last_accessed_at)
+        .sort((a: any, b: any) => new Date(b.last_accessed_at).getTime() - new Date(a.last_accessed_at).getTime())[0];
       const target = lastAccessed?.lesson_id ?? flatLessons[0]?.id;
       const i = flatLessons.findIndex((l) => l.id === target);
       if (i >= 0) currentIndex = i;
@@ -281,17 +294,26 @@ export const getCoursePlayer = createServerFn({ method: "POST" })
     const current = flatLessons[currentIndex] ?? null;
     const prev = currentIndex > 0 ? flatLessons[currentIndex - 1] : null;
     const next = currentIndex < flatLessons.length - 1 ? flatLessons[currentIndex + 1] : null;
-    const currentStatus = current ? progressMap.get(current.id)?.status ?? "not_started" : "not_started";
+    const currentStatus = current ? (progressMap.get(current.id) as any)?.status ?? "not_started" : "not_started";
+    const currentPosition = current ? current.moduleId : null;
 
     const total = flatLessons.length;
     const completed = (progress ?? []).filter((p) => p.status === "completed").length;
+
+    // Position label (Lesson X of Y)
+    const currentModuleNumber = current
+      ? (cleaned.find((m) => m.id === current.moduleId)?.number ?? 1)
+      : 1;
 
     return {
       course,
       enrollmentId: enrollment.id,
       lmsStatus: enrollment.lms_status,
+      videoCompletionThresholdPct: Math.max(1, Math.min(100, Number(reqs?.min_lesson_completion_pct ?? 90))),
       modules: cleaned,
-      current: current ? { ...current, status: currentStatus } : null,
+      current: current
+        ? { ...current, status: currentStatus, moduleNumber: currentModuleNumber, position: currentIndex + 1 }
+        : null,
       prev,
       next,
       totalLessons: total,
@@ -299,6 +321,7 @@ export const getCoursePlayer = createServerFn({ method: "POST" })
       progressPct: total > 0 ? Math.round((completed / total) * 100) : 0,
     };
   });
+
 
 /* ============================================================
  * LESSON PROGRESS
@@ -1001,6 +1024,177 @@ export const recordProgramActivity = createServerFn({ method: "POST" })
       activity_type: data.activity,
       description: data.description ?? data.activity,
       entity_id: data.entityId ?? null,
+    });
+    return { ok: true };
+  });
+
+/* ============================================================
+ * LESSON PLAYER v2 (video progress, notes, resume)
+ * ============================================================ */
+
+export const saveVideoProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: {
+    lessonId: string;
+    courseId: string;
+    enrollmentId: string;
+    positionSeconds: number;
+    progressPct: number;
+  }) => d)
+  .handler(async ({ data, context }) => {
+    const now = new Date().toISOString();
+    const clampedPct = Math.max(0, Math.min(100, Math.round(data.progressPct)));
+    const posSec = Math.max(0, Number(data.positionSeconds ?? 0));
+
+    // Verify enrollment (RLS also enforces, but fail fast with a clean message)
+    const { data: enr } = await context.supabase
+      .from("enrollments")
+      .select("id")
+      .eq("id", data.enrollmentId)
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!enr) throw new Error("Not enrolled");
+
+    const { data: existing } = await context.supabase
+      .from("lesson_progress")
+      .select("id, status, video_progress_pct, last_position_seconds")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+
+    if (existing) {
+      // Never regress the highest watched pct; always update last position
+      const nextPct = Math.max(clampedPct, Number(existing.video_progress_pct ?? 0));
+      const patch = {
+        last_position_seconds: posSec,
+        video_progress_pct: nextPct,
+        last_accessed_at: now,
+        ...(existing.status !== "completed" && nextPct > 0 ? { status: "in_progress" } : {}),
+      };
+      await context.supabase.from("lesson_progress").update(patch).eq("id", existing.id);
+    } else {
+      await context.supabase.from("lesson_progress").insert({
+        student_user_id: context.userId,
+        enrollment_id: data.enrollmentId,
+        course_id: data.courseId,
+        lesson_id: data.lessonId,
+        status: clampedPct > 0 ? "in_progress" : "not_started",
+        started_at: now,
+        last_accessed_at: now,
+        video_progress_pct: clampedPct,
+        last_position_seconds: posSec,
+      });
+    }
+    return { ok: true, progressPct: clampedPct };
+  });
+
+export const getLessonProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { lessonId: string }) => d)
+  .handler(async ({ data, context }) => {
+    const { data: row } = await context.supabase
+      .from("lesson_progress")
+      .select("status, video_progress_pct, last_position_seconds, last_accessed_at")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+    return row ?? { status: "not_started", video_progress_pct: 0, last_position_seconds: 0, last_accessed_at: null };
+  });
+
+export const getLessonNotes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { lessonId: string }) => d)
+  .handler(async ({ data, context }) => {
+    const { data: row } = await context.supabase
+      .from("lesson_notes")
+      .select("id, notes, updated_at")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+    return row ?? { id: null, notes: "", updated_at: null };
+  });
+
+export const saveLessonNotes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { lessonId: string; courseId: string; notes: string }) => d)
+  .handler(async ({ data, context }) => {
+    const notes = String(data.notes ?? "").slice(0, 20000);
+
+    // Ensure enrollment before writing
+    const { data: enr } = await context.supabase
+      .from("enrollments")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!enr) throw new Error("Not enrolled");
+
+    const { data: existing } = await context.supabase
+      .from("lesson_notes")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+
+    if (existing) {
+      await context.supabase.from("lesson_notes").update({ notes }).eq("id", existing.id);
+    } else {
+      await context.supabase.from("lesson_notes").insert({
+        student_user_id: context.userId,
+        lesson_id: data.lessonId,
+        course_id: data.courseId,
+        notes,
+      });
+    }
+
+    // Log activity (deduped per 5 min via caller — we just insert once per save)
+    await context.supabase.from("student_activity").insert({
+      student_user_id: context.userId,
+      course_id: data.courseId,
+      activity_type: "notes_saved",
+      description: "Saved lesson notes",
+      entity_id: data.lessonId,
+    });
+    return { ok: true };
+  });
+
+export const logLessonEvent = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: {
+    courseId: string;
+    lessonId: string;
+    event: "lesson_opened" | "video_started" | "resource_opened";
+    description?: string;
+  }) => d)
+  .handler(async ({ data, context }) => {
+    // Verify enrollment
+    const { data: enr } = await context.supabase
+      .from("enrollments")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!enr) throw new Error("Not enrolled");
+
+    // Dedupe within 10 min for the same (event, lesson) so page refreshes don't flood
+    const tenMin = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { data: recent } = await context.supabase
+      .from("student_activity")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("activity_type", data.event)
+      .eq("entity_id", data.lessonId)
+      .gte("created_at", tenMin)
+      .limit(1);
+    if (recent && recent.length) return { ok: true, deduped: true };
+
+    await context.supabase.from("student_activity").insert({
+      student_user_id: context.userId,
+      course_id: data.courseId,
+      activity_type: data.event,
+      description: data.description ?? data.event,
+      entity_id: data.lessonId,
     });
     return { ok: true };
   });
