@@ -72,7 +72,7 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
         .gte("assigned_at", dayISO),
       s.from("partner_leads").select("id", { count: "exact", head: true })
         .eq("status", "new")
-        .is("updated_at", null),
+        .is("last_activity_at", null),
       s.from("partner_follow_ups").select("id", { count: "exact", head: true })
         .eq("status", "scheduled")
         .lt("due_at", nowISO),
