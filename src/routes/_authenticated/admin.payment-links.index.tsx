@@ -242,7 +242,7 @@ function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
               Cancel
             </Button>
             <Button
-              variant="destructive"
+              variant="danger"
               onClick={() => {
                 mut.mutate("disabled");
                 setConfirmDisable(false);

@@ -82,6 +82,7 @@ import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/progra
 import { Route as AuthenticatedStudentLearnIndexRouteImport } from './routes/_authenticated/student.learn.index'
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
+import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
 import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
@@ -511,6 +512,12 @@ const AuthenticatedAdminPayoutsIndexRoute =
     path: '/payouts/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPaymentLinksIndexRoute =
+  AuthenticatedAdminPaymentLinksIndexRouteImport.update({
+    id: '/payment-links/',
+    path: '/payment-links/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPartnersIndexRoute =
   AuthenticatedAdminPartnersIndexRouteImport.update({
     id: '/partners/',
@@ -657,6 +664,7 @@ export interface FileRoutesByFullPath {
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
+  '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
@@ -740,6 +748,7 @@ export interface FileRoutesByTo {
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
+  '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/learn': typeof AuthenticatedStudentLearnIndexRoute
@@ -827,6 +836,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
+  '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/_authenticated/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
@@ -914,6 +924,7 @@ export interface FileRouteTypes {
     | '/admin/courses/'
     | '/admin/employees/'
     | '/admin/partners/'
+    | '/admin/payment-links/'
     | '/admin/payouts/'
     | '/partner/employment/'
     | '/student/learn/'
@@ -997,6 +1008,7 @@ export interface FileRouteTypes {
     | '/admin/courses'
     | '/admin/employees'
     | '/admin/partners'
+    | '/admin/payment-links'
     | '/admin/payouts'
     | '/partner/employment'
     | '/student/learn'
@@ -1083,6 +1095,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/employees/'
     | '/_authenticated/admin/partners/'
+    | '/_authenticated/admin/payment-links/'
     | '/_authenticated/admin/payouts/'
     | '/_authenticated/partner/employment/'
     | '/_authenticated/student/learn/'
@@ -1623,6 +1636,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPayoutsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/payment-links/': {
+      id: '/_authenticated/admin/payment-links/'
+      path: '/payment-links'
+      fullPath: '/admin/payment-links/'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentLinksIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/partners/': {
       id: '/_authenticated/admin/partners/'
       path: '/partners'
@@ -1736,6 +1756,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
   AuthenticatedAdminEmployeesIndexRoute: typeof AuthenticatedAdminEmployeesIndexRoute
   AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
+  AuthenticatedAdminPaymentLinksIndexRoute: typeof AuthenticatedAdminPaymentLinksIndexRoute
   AuthenticatedAdminPayoutsIndexRoute: typeof AuthenticatedAdminPayoutsIndexRoute
 }
 
@@ -1780,6 +1801,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
   AuthenticatedAdminEmployeesIndexRoute: AuthenticatedAdminEmployeesIndexRoute,
   AuthenticatedAdminPartnersIndexRoute: AuthenticatedAdminPartnersIndexRoute,
+  AuthenticatedAdminPaymentLinksIndexRoute:
+    AuthenticatedAdminPaymentLinksIndexRoute,
   AuthenticatedAdminPayoutsIndexRoute: AuthenticatedAdminPayoutsIndexRoute,
 }
 
