@@ -172,7 +172,7 @@ function DashboardPage() {
         </Card>
       )}
 
-      <MetricGrid metrics={dashQ.data!.metrics} earnings={dashQ.data!.earnings} />
+      <MetricGrid metrics={dashQ.data!.metrics!} earnings={dashQ.data!.earnings!} />
 
       <div className="grid lg:grid-cols-[1.4fr_1fr] gap-4">
         <ReferralIdentityCard
