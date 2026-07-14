@@ -231,7 +231,7 @@ export const updatePaymentLink = createServerFn({ method: "POST" })
       patch.disabled_by = null;
       patch.disabled_at = null;
     }
-    const { error } = await supabase.from("payment_links").update(patch).eq("id", data.id);
+    const { error } = await supabase.from("payment_links").update(patch as any).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -255,7 +255,7 @@ export const setPaymentLinkStatus = createServerFn({ method: "POST" })
       patch.disabled_by = null;
       patch.disabled_at = null;
     }
-    const { error } = await supabase.from("payment_links").update(patch).eq("id", data.id);
+    const { error } = await supabase.from("payment_links").update(patch as any).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
