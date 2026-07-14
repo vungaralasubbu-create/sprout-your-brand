@@ -295,9 +295,9 @@ export const decideOwnershipReview = createServerFn({ method: "POST" })
       // Preserve submission as an activity note on the existing lead.
       await s.from("partner_lead_activities").insert({
         lead_id: existingLeadId,
-        actor_partner_id: claimingPartnerId,
-        activity_type: "note",
-        notes:
+        partner_id: claimingPartnerId,
+        activity_type: "note" as any,
+        content:
           `Merged ownership review submission by claiming partner. ` +
           `Submitted name: ${(r as any).submitted_full_name}. ` +
           `Notes: ${(r as any).submitted_notes ?? ""}. ` +
