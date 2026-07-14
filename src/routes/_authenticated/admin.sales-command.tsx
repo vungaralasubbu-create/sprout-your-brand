@@ -22,6 +22,8 @@ import {
   getCommandTopMetrics, getCommandAnalytics, getCommandOperational,
   getSalesWorkMonitoring, getRecentSalesActivity,
 } from "@/lib/admin/sales-command.functions";
+import { getRiskSummary } from "@/lib/admin/risk-review.functions";
+import { useAdminSession, hasPermission } from "@/hooks/use-admin-permissions";
 
 export const Route = createFileRoute("/_authenticated/admin/sales-command")({
   component: SalesCommandCenter,
