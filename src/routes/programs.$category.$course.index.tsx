@@ -412,51 +412,8 @@ function CoursePage() {
         </Container>
       </Section>
 
-      {/* ============ IMAGE STORY 1 ============ */}
-      <Section className="py-16 lg:py-24">
-        <Container>
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
-            <Reveal>
-              <div className="group relative rounded-3xl overflow-hidden border border-border/60 shadow-xl">
-                <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]">
-                  <CourseHeroVisual
-                    courseName={c.name}
-                    categoryName={c.category.name}
-                    imageUrl={null}
-                    className="aspect-[5/4]"
-                  />
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={100}>
-              <div>
-                <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                  Learn The Craft
-                </span>
-                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
-                  Understand The Technology.
-                </h2>
-                <p className="mt-5 text-body-lg text-muted-foreground">
-                  {c.short_description ??
-                    `${c.name} moves you from concepts to confident practice — grounded in real problems, industry tools and mentor-led guidance.`}
-                </p>
-                {c.skills.length > 0 ? (
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    {c.skills.slice(0, 6).map((s) => (
-                      <span
-                        key={s}
-                        className="inline-flex items-center rounded-full border border-border/60 bg-surface-1 px-3 py-1 text-xs font-medium"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </Reveal>
-          </div>
-        </Container>
-      </Section>
+      {/* Image Story removed — no real course imagery yet. Content flows directly into Why / Syllabus. */}
+
 
 
 
