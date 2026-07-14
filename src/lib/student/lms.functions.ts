@@ -935,15 +935,15 @@ export const getMyProgramDetails = createServerFn({ method: "POST" })
 
     return {
       program: {
-        id: course.id,
-        name: course.name,
-        slug: course.slug,
-        description: course.description ?? course.short_description,
-        thumbnail: course.thumbnail_url,
-        level: (course as any).level,
-        duration: (course as any).duration,
-        learningMode: (course as any).learning_mode,
-        category: (course as any).course_categories?.name ?? null,
+        id: courseRow.id,
+        name: courseRow.name,
+        slug: courseRow.slug,
+        description: courseRow.short_description,
+        thumbnail: courseRow.thumbnail_url,
+        level: courseRow.level,
+        duration: courseRow.duration,
+        learningMode: courseRow.learning_mode,
+        category: courseRow.course_categories?.name ?? null,
       },
       enrollment: {
         id: enrollment.id,
