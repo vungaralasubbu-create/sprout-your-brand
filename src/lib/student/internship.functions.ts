@@ -98,14 +98,24 @@ async function computeEligibility(
   const rules = (internship.eligibility ?? {}) as Record<string, any>;
   const courseId = internship.course_id;
 
-  // Learning percent — from enrollments.progress_percent if column exists,
-  // else compute from lesson_progress.
-  const enrProg = await context.supabase
-    .from("enrollments")
-    .select("progress_percent")
-    .eq("id", enrollment.id)
-    .maybeSingle();
-  const learningPercent = Number(enrProg.data?.progress_percent ?? 0) || 0;
+  // Learning percent — derive from lesson_progress across course lessons.
+  const { data: lessonsRes } = await context.supabase
+    .from("course_lessons")
+    .select("id, module:course_modules!inner(course_id)")
+    .eq("course_modules.course_id", internship.course_id);
+  const totalLessons = (lessonsRes ?? []).length;
+  const lessonIds = ((lessonsRes ?? []) as any[]).map((l) => l.id);
+  const { data: completedLp } = lessonIds.length
+    ? await context.supabase
+        .from("lesson_progress")
+        .select("lesson_id")
+        .eq("student_user_id", context.userId)
+        .eq("status", "completed")
+        .in("lesson_id", lessonIds)
+    : { data: [] as any[] };
+  const learningPercent = totalLessons
+    ? Math.round(((completedLp ?? []).length / totalLessons) * 100)
+    : 0;
 
   // Modules
   const [{ data: modules }, { data: modComps }] = await Promise.all([
