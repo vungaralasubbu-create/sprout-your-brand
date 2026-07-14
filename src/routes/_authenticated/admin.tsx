@@ -61,6 +61,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/categories", label: "Categories", icon: FolderTree },
       { to: "/admin/courses", label: "Courses", icon: GraduationCap },
       { to: "/admin/curriculum", label: "Curriculum", icon: BookOpen },
+      { to: "/admin/program-sales-content", label: "Program Sales Content", icon: Target },
       { to: "/admin/applications", label: "Applications", icon: FileText },
     ],
   },
