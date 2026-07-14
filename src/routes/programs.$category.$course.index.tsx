@@ -45,6 +45,7 @@ import { getCourseSeo } from "@/lib/seo";
 
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
+import { CourseTrustStats } from "@/components/course/trust-stats";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/client";
@@ -392,6 +393,9 @@ function CoursePage() {
 
         </Container>
       </Section>
+
+      {/* ============ TRUST STATS ============ */}
+      <CourseTrustStats />
 
       {/* ============ LEARNING JOURNEY ============ */}
       <Section className="py-16 lg:py-24 bg-surface-2/40 border-y">
