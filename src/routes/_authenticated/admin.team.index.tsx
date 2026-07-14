@@ -90,7 +90,7 @@ function AdminTeamPage() {
                       <Badge variant="outline">{ADMIN_ROLE_LABELS[r.admin_role] ?? r.admin_role}</Badge>
                     </td>
                     <td className="py-2.5 px-4">
-                      <Badge variant={r.account_status === "active" ? "default" : "destructive"}>
+                      <Badge variant={r.account_status === "active" ? "default" : "danger"}>
                         {ACCOUNT_STATUS_LABELS[r.account_status]}
                       </Badge>
                     </td>

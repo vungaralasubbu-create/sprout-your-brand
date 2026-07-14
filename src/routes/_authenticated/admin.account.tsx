@@ -39,7 +39,7 @@ function AdminAccountPage() {
               </Badge>
             } />
             <Row label="Status" value={
-              <Badge variant={admin?.account_status === "active" ? "default" : "destructive"}>
+              <Badge variant={admin?.account_status === "active" ? "default" : "danger"}>
                 {admin?.account_status ? ACCOUNT_STATUS_LABELS[admin.account_status] : "Active"}
               </Badge>
             } />
