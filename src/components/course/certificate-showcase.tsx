@@ -313,44 +313,44 @@ function CertificateArt({
         </span>
       </div>
 
-      {/* body */}
+      {/* content column — flex layout prevents overlap */}
       <div
-        className="absolute inset-x-0 flex flex-col items-center text-center px-[8%] z-10"
-        style={{ top: "24%" }}
+        className="absolute inset-x-0 z-10 flex flex-col items-center text-center px-[7%]"
+        style={{ top: "18%", bottom: "4%" }}
       >
+        {/* Title block */}
         <div
           className="font-display font-black tracking-tight text-slate-900"
-          style={{ fontSize: "clamp(22px, 6.8cqw, 68px)", lineHeight: 0.95 }}
+          style={{ fontSize: "clamp(20px, 6.6cqw, 64px)", lineHeight: 0.95 }}
         >
           CERTIFICATE
         </div>
         <div
-          className="mt-2 font-display font-semibold tracking-[0.28em]"
-          style={{ fontSize: "clamp(10px, 2.2cqw, 20px)", color: primaryColor }}
+          className="mt-[1.5%] font-display font-semibold tracking-[0.28em]"
+          style={{ fontSize: "clamp(9px, 2cqw, 18px)", color: primaryColor }}
         >
           {subtitle}
         </div>
-        {/* small divider with dots */}
-        <div className="mt-2 flex items-center gap-2">
-          <span className="block h-[1.5px] w-[40px] sm:w-[60px]" style={{ backgroundColor: primaryColor }} />
+        <div className="mt-[1.5%] flex items-center gap-2">
+          <span className="block h-[1.5px] w-[36px] sm:w-[56px]" style={{ backgroundColor: primaryColor }} />
           <span className="size-1 rounded-full" style={{ backgroundColor: primaryColor }} />
           <span className="size-1 rounded-full" style={{ backgroundColor: primaryColor }} />
           <span className="size-1 rounded-full" style={{ backgroundColor: primaryColor }} />
-          <span className="block h-[1.5px] w-[40px] sm:w-[60px]" style={{ backgroundColor: primaryColor }} />
+          <span className="block h-[1.5px] w-[36px] sm:w-[56px]" style={{ backgroundColor: primaryColor }} />
         </div>
 
         <div
-          className="mt-[4%] uppercase tracking-[0.35em] text-slate-500"
-          style={{ fontSize: "clamp(7px, 1.3cqw, 11px)" }}
+          className="mt-[3%] uppercase tracking-[0.35em] text-slate-500"
+          style={{ fontSize: "clamp(6px, 1.2cqw, 10px)" }}
         >
           This is to certify that
         </div>
 
         <div
-          className="mt-[2%] font-serif italic"
+          className="mt-[1.5%]"
           style={{
             fontFamily: '"Great Vibes","Pinyon Script","Dancing Script",cursive',
-            fontSize: "clamp(26px, 6.4cqw, 60px)",
+            fontSize: "clamp(22px, 5.6cqw, 54px)",
             lineHeight: 1.05,
             color: nameColor,
           }}
@@ -358,85 +358,57 @@ function CertificateArt({
           Sample Learner
         </div>
         <div
-          className="mt-1 h-px w-[55%] max-w-[360px]"
+          className="mt-[0.5%] h-px w-[55%] max-w-[360px]"
           style={{ backgroundColor: `${primaryColor}66` }}
         />
 
         <div
-          className="mt-[3%] text-slate-600"
-          style={{ fontSize: "clamp(8px, 1.5cqw, 13px)" }}
+          className="mt-[2%] text-slate-600"
+          style={{ fontSize: "clamp(7px, 1.35cqw, 12px)" }}
         >
           has successfully completed the
         </div>
         <div
-          className="mt-1 font-display font-bold tracking-[0.12em]"
-          style={{ fontSize: "clamp(11px, 2.4cqw, 22px)", color: primaryColor }}
+          className="mt-[0.5%] font-display font-bold tracking-[0.12em]"
+          style={{ fontSize: "clamp(10px, 2.2cqw, 20px)", color: primaryColor }}
         >
           {programLine}
         </div>
 
         <p
-          className="mt-[2.5%] max-w-[86%] text-slate-600 leading-snug"
-          style={{ fontSize: "clamp(8px, 1.35cqw, 12px)" }}
+          className="mt-[1.5%] max-w-[88%] text-slate-600 leading-snug"
+          style={{ fontSize: "clamp(7px, 1.25cqw, 11px)" }}
         >
           {bodyText}
         </p>
-      </div>
 
-      {/* metrics row */}
-      <div
-        className="absolute inset-x-0 z-10 grid grid-cols-4 gap-2 px-[10%]"
-        style={{ bottom: "22%" }}
-      >
-        <Metric
-          Icon={Calendar}
-          primary="12th May 2024"
-          secondary="Date of Completion"
-          color={primaryColor}
-        />
-        <Metric
-          Icon={Clock}
-          primary="8 Weeks"
-          secondary="Duration"
-          color={primaryColor}
-        />
-        {isIntern ? (
-          <Metric
-            Icon={Briefcase}
-            primary="Live Projects"
-            secondary="Work"
-            color={primaryColor}
-          />
-        ) : (
-          <Metric
-            Icon={BarChart3}
-            primary="Advanced"
-            secondary="Level"
-            color={primaryColor}
-          />
-        )}
-        <Metric
-          Icon={Award}
-          primary="Excellent"
-          secondary="Performance"
-          color={primaryColor}
-        />
-      </div>
+        {/* Spacer pushes rest to bottom */}
+        <div className="flex-1" />
 
-      {/* signature row */}
-      <div
-        className="absolute inset-x-0 z-10 grid grid-cols-3 items-end gap-2 px-[8%]"
-        style={{ bottom: "6%" }}
-      >
-        <Signature
-          role={isIntern ? "Program Manager" : "Program Director"}
-          path={SIG_A}
-          color="#1f2937"
-        />
-        <div className="flex justify-center">
-          <Seal color={primaryColor} />
+        {/* metrics */}
+        <div className="w-full grid grid-cols-4 gap-1.5 px-[3%]">
+          <Metric Icon={Calendar} primary="12th May 2024" secondary="Date of Completion" color={primaryColor} />
+          <Metric Icon={Clock} primary="8 Weeks" secondary="Duration" color={primaryColor} />
+          {isIntern ? (
+            <Metric Icon={Briefcase} primary="Live Projects" secondary="Work" color={primaryColor} />
+          ) : (
+            <Metric Icon={BarChart3} primary="Advanced" secondary="Level" color={primaryColor} />
+          )}
+          <Metric Icon={Award} primary="Excellent" secondary="Performance" color={primaryColor} />
         </div>
-        <Signature role="CEO & Founder" path={SIG_B} color="#1f2937" />
+
+        {/* signatures + seal */}
+        <div className="mt-[3%] w-full grid grid-cols-3 items-end gap-2 px-[1%]">
+          <Signature
+            role={isIntern ? "Program Manager" : "Program Director"}
+            path={SIG_A}
+            color="#1f2937"
+          />
+          <div className="flex justify-center">
+            <Seal color={primaryColor} />
+          </div>
+          <Signature role="CEO & Founder" path={SIG_B} color="#1f2937" />
+        </div>
       </div>
     </div>
   );
