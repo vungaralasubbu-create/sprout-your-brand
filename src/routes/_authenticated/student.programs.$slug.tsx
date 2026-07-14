@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  BookOpen, CheckCircle2, Circle, Clock, PlayCircle, Award,
+  BookOpen, CheckCircle2, Circle, Clock, PlayCircle, Award, Lock,
   ChevronDown, ChevronRight, ArrowLeft, FileText, Layers, GraduationCap, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,11 +23,13 @@ const STATUS_META: Record<string, { label: string; className: string }> = {
   access_expired: { label: "Access Expired", className: "bg-rose-50 text-rose-700 border-rose-200" },
 };
 
-function LessonIcon({ status }: { status: string }) {
+function LessonIcon({ status, locked }: { status: string; locked?: boolean }) {
+  if (locked) return <Lock className="size-4 text-muted-foreground/60" />;
   if (status === "completed") return <CheckCircle2 className="size-4 text-emerald-600" />;
   if (status === "in_progress") return <PlayCircle className="size-4 text-primary" />;
   return <Circle className="size-4 text-muted-foreground/50" />;
 }
+
 
 function Page() {
   const { slug } = Route.useParams();
@@ -46,8 +48,9 @@ function Page() {
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
   useEffect(() => {
     if (data?.modules?.length) {
-      const currentIdx = data.modules.findIndex((m: any) => m.totalLessons > 0 && m.completedLessons < m.totalLessons);
+      const currentIdx = data.modules.findIndex((m: any) => m.status === "in_progress" || m.status === "available");
       const target = currentIdx >= 0 ? data.modules[currentIdx] : data.modules[0];
+
       if (target) setOpenIds(new Set([target.id]));
     }
   }, [data?.program?.id]);
@@ -182,10 +185,11 @@ function Page() {
           <div className="space-y-2">
             {data.modules.map((m: any) => {
               const isOpen = openIds.has(m.id);
-              const moduleDone = m.totalLessons > 0 && m.completedLessons === m.totalLessons;
-              const modulePct = m.totalLessons ? Math.round((m.completedLessons / m.totalLessons) * 100) : 0;
+              const moduleDone = m.status === "completed";
+              const moduleLocked = m.unlocked === false;
+              const modulePct = m.progressPct ?? 0;
               return (
-                <Card key={m.id} className="p-0 overflow-hidden">
+                <Card key={m.id} className={cn("p-0 overflow-hidden", moduleLocked && "opacity-70")}>
                   <button
                     onClick={() => {
                       setOpenIds((prev) => {
@@ -201,12 +205,22 @@ function Page() {
                   >
                     <div className={cn(
                       "size-9 rounded-lg flex items-center justify-center text-sm font-mono font-semibold shrink-0",
-                      moduleDone ? "bg-emerald-50 text-emerald-700" : "bg-primary/10 text-primary",
+                      moduleDone ? "bg-emerald-50 text-emerald-700"
+                      : moduleLocked ? "bg-muted text-muted-foreground"
+                      : "bg-primary/10 text-primary",
                     )}>
-                      {String(m.number).padStart(2, "0")}
+                      {moduleLocked ? <Lock className="size-4" /> : String(m.number).padStart(2, "0")}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm truncate">{m.name}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="font-medium text-sm truncate">{m.name}</div>
+                        {!m.isRequired && (
+                          <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground border border-border rounded px-1 py-0.5">Optional</span>
+                        )}
+                        {moduleLocked && (
+                          <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">Locked</span>
+                        )}
+                      </div>
                       <div className="text-[11px] text-muted-foreground mt-0.5">
                         {m.completedLessons}/{m.totalLessons} lessons · {modulePct}% complete
                       </div>
@@ -217,22 +231,31 @@ function Page() {
                     <div className="border-t divide-y">
                       {m.lessons.length === 0 ? (
                         <div className="p-4 text-xs text-muted-foreground">No lessons yet.</div>
-                      ) : m.lessons.map((l: any) => (
-                        <div key={l.id} className="flex items-center gap-3 px-4 py-2.5">
-                          <LessonIcon status={l.status} />
+                      ) : m.lessons.map((l: any) => {
+                        const locked = l.unlocked === false;
+                        return (
+                        <div key={l.id} className={cn("flex items-center gap-3 px-4 py-2.5", locked && "opacity-70")}>
+                          <LessonIcon status={l.status} locked={locked} />
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm truncate">{l.name}</div>
+                            <div className="text-sm truncate flex items-center gap-2">
+                              {l.name}
+                              {!l.isRequired && (
+                                <span className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground border border-border rounded px-1">Opt</span>
+                              )}
+                            </div>
                             <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mt-0.5">
-                              {l.type ?? "Lesson"}{l.duration ? ` · ${l.duration}` : ""}
+                              {l.type ?? "Lesson"}{l.duration ? ` · ${l.duration}` : ""}{locked ? " · Locked" : ""}
                             </div>
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </Card>
               );
             })}
+
           </div>
         )}
       </div>

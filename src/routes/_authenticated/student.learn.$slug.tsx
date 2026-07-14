@@ -411,11 +411,26 @@ function CurriculumSidebar({
         </div>
       </div>
       <div className="space-y-4">
-        {data.modules.map((m: any) => (
-          <div key={m.id}>
-            <div className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">
-              Module {String(m.number).padStart(2, "0")} · {m.name}
+        {data.modules.map((m: any) => {
+          const moduleLocked = m.unlocked === false;
+          return (
+          <div key={m.id} className={cn(moduleLocked && "opacity-60")}>
+            <div className="flex items-center justify-between mb-1.5">
+              <div className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+                Module {String(m.number).padStart(2, "0")} · {m.name}
+              </div>
+              {m.status === "completed" ? (
+                <CheckCircle2 className="size-3.5 text-emerald-600" />
+              ) : moduleLocked ? (
+                <Lock className="size-3.5 text-muted-foreground" />
+              ) : null}
             </div>
+            {m.totalLessons > 0 && (
+              <div className="text-[10px] text-muted-foreground mb-1">
+                {m.completedLessons}/{m.totalLessons} lessons
+                {!m.isRequired && <span className="ml-1">· Optional</span>}
+              </div>
+            )}
             <div className="space-y-2">
               {m.topics.map((t: any) => (
                 <div key={t.id}>
@@ -426,16 +441,20 @@ function CurriculumSidebar({
                     {t.lessons.map((l: any) => {
                       const active = currentId === l.id;
                       const Icon = TYPE_ICON[l.type] ?? Play;
+                      const locked = l.unlocked === false;
                       return (
                         <button
                           key={l.id}
-                          onClick={() => onSelect(l.id)}
+                          onClick={() => !locked && onSelect(l.id)}
+                          disabled={locked}
                           className={cn(
                             "w-full text-left flex items-center gap-2 rounded-md px-2 py-1.5 text-xs transition-colors",
-                            active ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted",
+                            active ? "bg-primary/10 text-primary font-medium" : locked ? "cursor-not-allowed opacity-60" : "hover:bg-muted",
                           )}
                         >
-                          {l.status === "completed" ? (
+                          {locked ? (
+                            <Lock className="size-3.5 text-muted-foreground shrink-0" />
+                          ) : l.status === "completed" ? (
                             <CheckCircle2 className="size-3.5 text-emerald-600 shrink-0" />
                           ) : l.status === "in_progress" ? (
                             <PlayCircle className="size-3.5 text-primary shrink-0" />
@@ -443,6 +462,9 @@ function CurriculumSidebar({
                             <Icon className="size-3.5 text-muted-foreground shrink-0" />
                           )}
                           <span className="flex-1 truncate">{l.name}</span>
+                          {!l.isRequired && (
+                            <span className="text-[9px] font-mono uppercase text-muted-foreground">Opt</span>
+                          )}
                           {l.duration && <span className="text-[10px] text-muted-foreground">{l.duration}</span>}
                         </button>
                       );
@@ -452,8 +474,10 @@ function CurriculumSidebar({
               ))}
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
+
     </div>
   );
 }
@@ -583,7 +607,7 @@ function Page() {
     );
   }
 
-  const nextLocked = false; // access rules are enforced server-side; every lesson listed here is authorized
+  const nextLocked = data.next ? data.next.unlocked === false : false;
   const positionLabel = `Lesson ${current.position} of ${data.totalLessons}`;
 
   return (
