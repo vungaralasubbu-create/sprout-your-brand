@@ -121,6 +121,7 @@ const NAV: NavGroup[] = [
   {
     label: "Platform",
     items: [
+      { to: "/admin/support", label: "Support Tickets", icon: Bell },
       { to: "/admin/content", label: "Content", icon: FileText },
       { to: "/admin/agreements", label: "Agreements", icon: FileSignature },
       { to: "/admin/notifications", label: "Notifications", icon: Bell },
