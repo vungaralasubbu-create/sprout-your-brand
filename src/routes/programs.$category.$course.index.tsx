@@ -1589,7 +1589,12 @@ function ProjectSlider({
           aria-label="Previous projects"
           disabled={!canPrev}
           onClick={() => nudge(-1)}
-          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className={cn(
+            "inline-flex size-10 items-center justify-center rounded-full border transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
+            dark
+              ? "border-white/20 bg-white/10 text-white hover:bg-white/20 hover:border-white/40"
+              : "border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50",
+          )}
         >
           <ChevronLeft className="size-5" />
         </button>
@@ -1598,7 +1603,12 @@ function ProjectSlider({
           aria-label="Next projects"
           disabled={!canNext}
           onClick={() => nudge(1)}
-          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className={cn(
+            "inline-flex size-10 items-center justify-center rounded-full border transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
+            dark
+              ? "border-white/20 bg-white/10 text-white hover:bg-white/20 hover:border-white/40"
+              : "border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50",
+          )}
         >
           <ChevronRight className="size-5" />
         </button>
@@ -1607,6 +1617,7 @@ function ProjectSlider({
         ref={scrollerRef}
         className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
+
         {projects.map((p) => (
           <div
             key={p.id}
