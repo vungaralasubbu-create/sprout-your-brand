@@ -116,8 +116,8 @@ function Seal({ color }: { color: string }) {
     <div
       className="relative rounded-full flex items-center justify-center bg-[#0B1220] text-white shadow-lg"
       style={{
-        width: "clamp(52px, 11cqw, 108px)",
-        height: "clamp(52px, 11cqw, 108px)",
+        width: "clamp(42px, 8.5cqw, 84px)",
+        height: "clamp(42px, 8.5cqw, 84px)",
         border: `2px solid ${color}`,
       }}
     >
