@@ -683,83 +683,63 @@ function CoursePage() {
       </Section>
 
 
-      {/* ============ PROGRAM EXPERIENCE FEATURE ============ */}
-      {programExperience.length > 0 ? (
-        <Section className="py-14 lg:py-20 bg-[oklch(0.18_0.04_255)] text-white relative overflow-hidden">
+      {/* ============ CERTIFICATION (light gradient) ============ */}
+      {c.certifications.length > 0 ? (
+        <Section className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
           <div
             aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.6_0.18_220/0.25),transparent_60%)]"
+            className="absolute -top-32 -right-32 size-[420px] rounded-full bg-primary/10 blur-[110px]"
           />
           <Container className="relative">
-            <div className="max-w-2xl mb-10">
-              <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_180)]">
-                Program Experience
-              </span>
-              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-white text-balance">
-                More Than Lessons. A Complete Learning Experience.
-              </h2>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {programExperience.slice(0, 8).map((card, i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur p-5"
-                >
-                  <span className="inline-flex size-10 items-center justify-center rounded-lg bg-white/10 text-[oklch(0.9_0.15_180)]">
-                    <card.icon className="size-5" />
+            <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-16 items-center">
+              <Reveal>
+                <div>
+                  <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                    Certification
                   </span>
-                  <h3 className="mt-4 font-display text-lg font-semibold">{card.title}</h3>
-                  <p className="mt-1.5 text-sm text-white/70 line-clamp-3">{card.description}</p>
+                  <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(2rem,4vw,3.2rem)] leading-[1.02]">
+                    Finish The Program.<br />
+                    Show Your Progress.
+                  </h2>
+                  <p className="mt-5 text-body-lg text-muted-foreground max-w-lg">
+                    Complete the applicable program requirements and receive a course completion
+                    certificate you can share with employers and on your professional profiles.
+                  </p>
+                  <ul className="mt-6 space-y-2.5">
+                    {c.certifications.map((cert, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <div className="text-sm font-semibold">{cert.name}</div>
+                          {cert.issuer ? (
+                            <div className="text-caption">Issued by {cert.issuer}</div>
+                          ) : null}
+                          {cert.description ? (
+                            <div className="text-sm text-muted-foreground mt-0.5">
+                              {cert.description}
+                            </div>
+                          ) : null}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ))}
+              </Reveal>
+              <Reveal delay={150}>
+                <div className="relative animate-[float-y_6s_ease-in-out_infinite]">
+                  <div className="lg:rotate-[-4deg] lg:scale-[1.05] transition-transform">
+                    <CertificatePreview
+                      imageUrl={c.certifications.find((x) => x.image_url)?.image_url ?? null}
+                      courseName={c.name}
+                    />
+                  </div>
+                </div>
+              </Reveal>
             </div>
           </Container>
         </Section>
       ) : null}
 
-      {/* ============ CERTIFICATION ============ */}
-      {c.certifications.length > 0 ? (
-        <Section className="py-14 lg:py-20">
-          <Container>
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-              <div>
-                <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                  Certification
-                </span>
-                <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-                  Show What You've Learned.
-                </h2>
-                <p className="mt-5 text-body-lg text-muted-foreground">
-                  Complete the applicable program requirements and receive a course completion
-                  certificate you can share with employers and on your professional profiles.
-                </p>
-                <ul className="mt-6 space-y-2.5">
-                  {c.certifications.map((cert, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" />
-                      <div>
-                        <div className="text-sm font-semibold">{cert.name}</div>
-                        {cert.issuer ? (
-                          <div className="text-caption">Issued by {cert.issuer}</div>
-                        ) : null}
-                        {cert.description ? (
-                          <div className="text-sm text-muted-foreground mt-0.5">
-                            {cert.description}
-                          </div>
-                        ) : null}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <CertificatePreview
-                imageUrl={c.certifications.find((x) => x.image_url)?.image_url ?? null}
-                courseName={c.name}
-              />
-            </div>
-          </Container>
-        </Section>
-      ) : null}
 
       {/* ============ CAREER OPPORTUNITIES ============ */}
       {c.career_roles.length > 0 ? (
