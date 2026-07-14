@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 const NAV = [
   { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
   { to: "/partner/coming-soon", label: "My Leads", icon: Users },
-  { to: "/partner/coming-soon", label: "Add Leads", icon: UserPlus },
+  { to: "/partner/add-leads", label: "Add Leads", icon: UserPlus },
   { to: "/partner/coming-soon", label: "Payment Links", icon: Link2 },
   { to: "/partner/coming-soon", label: "Payment Verification", icon: ShieldCheck },
   { to: "/partner/coming-soon", label: "My Sales", icon: ShoppingBag },
@@ -58,9 +58,8 @@ export function PartnerShell() {
 
   const isActive = (to: string, label: string) => {
     if (label === "Overview") return pathname === "/partner/dashboard";
-    // Every other nav item currently routes to /partner/coming-soon; match by
-    // location hash (or fallback) so only the clicked item highlights.
-    return false;
+    if (to === "/partner/coming-soon") return false;
+    return pathname === to || pathname.startsWith(to + "/");
   };
 
   return (
