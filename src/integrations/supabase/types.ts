@@ -1127,6 +1127,90 @@ export type Database = {
           },
         ]
       }
+      career_activity: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json
+          student_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          metadata?: Json
+          student_user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json
+          student_user_id?: string
+        }
+        Relationships: []
+      }
+      career_profiles: {
+        Row: {
+          city: string | null
+          college: string | null
+          created_at: string
+          current_student_status: string | null
+          degree: string | null
+          education_level: string | null
+          full_name: string | null
+          graduation_year: number | null
+          headline: string | null
+          id: string
+          is_public: boolean
+          objective: string | null
+          specialisation: string | null
+          state: string | null
+          student_user_id: string
+          updated_at: string
+          years_of_experience: number | null
+        }
+        Insert: {
+          city?: string | null
+          college?: string | null
+          created_at?: string
+          current_student_status?: string | null
+          degree?: string | null
+          education_level?: string | null
+          full_name?: string | null
+          graduation_year?: number | null
+          headline?: string | null
+          id?: string
+          is_public?: boolean
+          objective?: string | null
+          specialisation?: string | null
+          state?: string | null
+          student_user_id: string
+          updated_at?: string
+          years_of_experience?: number | null
+        }
+        Update: {
+          city?: string | null
+          college?: string | null
+          created_at?: string
+          current_student_status?: string | null
+          degree?: string | null
+          education_level?: string | null
+          full_name?: string | null
+          graduation_year?: number | null
+          headline?: string | null
+          id?: string
+          is_public?: boolean
+          objective?: string | null
+          specialisation?: string | null
+          state?: string | null
+          student_user_id?: string
+          updated_at?: string
+          years_of_experience?: number | null
+        }
+        Relationships: []
+      }
       career_roles: {
         Row: {
           created_at: string
@@ -6870,6 +6954,93 @@ export type Database = {
           },
         ]
       }
+      student_career_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          open_to_entry_level: boolean
+          open_to_internship: boolean
+          open_to_opportunities: boolean
+          open_to_remote: boolean
+          preferred_industries: string[]
+          preferred_locations: string[]
+          preferred_role: string | null
+          preferred_work_types: string[]
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          open_to_entry_level?: boolean
+          open_to_internship?: boolean
+          open_to_opportunities?: boolean
+          open_to_remote?: boolean
+          preferred_industries?: string[]
+          preferred_locations?: string[]
+          preferred_role?: string | null
+          preferred_work_types?: string[]
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          open_to_entry_level?: boolean
+          open_to_internship?: boolean
+          open_to_opportunities?: boolean
+          open_to_remote?: boolean
+          preferred_industries?: string[]
+          preferred_locations?: string[]
+          preferred_role?: string | null
+          preferred_work_types?: string[]
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      student_education: {
+        Row: {
+          created_at: string
+          degree: string | null
+          display_order: number
+          end_year: number | null
+          id: string
+          institution: string
+          is_current: boolean
+          specialisation: string | null
+          start_year: number | null
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          degree?: string | null
+          display_order?: number
+          end_year?: number | null
+          id?: string
+          institution: string
+          is_current?: boolean
+          specialisation?: string | null
+          start_year?: number | null
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          degree?: string | null
+          display_order?: number
+          end_year?: number | null
+          id?: string
+          institution?: string
+          is_current?: boolean
+          specialisation?: string | null
+          start_year?: number | null
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       student_internship_activity: {
         Row: {
           event: string
@@ -7308,6 +7479,60 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "course_project_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_skills: {
+        Row: {
+          created_at: string
+          id: string
+          linked_course_id: string | null
+          linked_skill_id: string | null
+          show_in_profile: boolean
+          skill_level: string | null
+          skill_name: string
+          skill_source: string
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          linked_course_id?: string | null
+          linked_skill_id?: string | null
+          show_in_profile?: boolean
+          skill_level?: string | null
+          skill_name: string
+          skill_source?: string
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          linked_course_id?: string | null
+          linked_skill_id?: string | null
+          show_in_profile?: boolean
+          skill_level?: string | null
+          skill_name?: string
+          skill_source?: string
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_skills_linked_course_id_fkey"
+            columns: ["linked_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_skills_linked_skill_id_fkey"
+            columns: ["linked_skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
             referencedColumns: ["id"]
           },
         ]

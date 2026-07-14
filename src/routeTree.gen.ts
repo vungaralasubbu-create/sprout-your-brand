@@ -91,6 +91,7 @@ import { Route as AuthenticatedStudentProgramsIndexRouteImport } from './routes/
 import { Route as AuthenticatedStudentLiveSessionsIndexRouteImport } from './routes/_authenticated/student.live-sessions.index'
 import { Route as AuthenticatedStudentLearnIndexRouteImport } from './routes/_authenticated/student.learn.index'
 import { Route as AuthenticatedStudentInternshipIndexRouteImport } from './routes/_authenticated/student.internship.index'
+import { Route as AuthenticatedStudentCareerIndexRouteImport } from './routes/_authenticated/student.career.index'
 import { Route as AuthenticatedStudentAssignmentsIndexRouteImport } from './routes/_authenticated/student.assignments.index'
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
@@ -105,6 +106,8 @@ import { Route as AuthenticatedStudentProgramsSlugRouteImport } from './routes/_
 import { Route as AuthenticatedStudentLiveSessionsIdRouteImport } from './routes/_authenticated/student.live-sessions.$id'
 import { Route as AuthenticatedStudentLearnSlugRouteImport } from './routes/_authenticated/student.learn.$slug'
 import { Route as AuthenticatedStudentInternshipIdRouteImport } from './routes/_authenticated/student.internship.$id'
+import { Route as AuthenticatedStudentCareerResumeRouteImport } from './routes/_authenticated/student.career.resume'
+import { Route as AuthenticatedStudentCareerInterviewRouteImport } from './routes/_authenticated/student.career.interview'
 import { Route as AuthenticatedStudentAssignmentsIdRouteImport } from './routes/_authenticated/student.assignments.$id'
 import { Route as AuthenticatedPartnerSupportIdRouteImport } from './routes/_authenticated/partner.support.$id'
 import { Route as AuthenticatedPartnerProgramsSlugRouteImport } from './routes/_authenticated/partner.programs.$slug'
@@ -590,6 +593,12 @@ const AuthenticatedStudentInternshipIndexRoute =
     path: '/internship/',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedStudentCareerIndexRoute =
+  AuthenticatedStudentCareerIndexRouteImport.update({
+    id: '/career/',
+    path: '/career/',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedStudentAssignmentsIndexRoute =
   AuthenticatedStudentAssignmentsIndexRouteImport.update({
     id: '/assignments/',
@@ -672,6 +681,18 @@ const AuthenticatedStudentInternshipIdRoute =
   AuthenticatedStudentInternshipIdRouteImport.update({
     id: '/internship/$id',
     path: '/internship/$id',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentCareerResumeRoute =
+  AuthenticatedStudentCareerResumeRouteImport.update({
+    id: '/career/resume',
+    path: '/career/resume',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedStudentCareerInterviewRoute =
+  AuthenticatedStudentCareerInterviewRouteImport.update({
+    id: '/career/interview',
+    path: '/career/interview',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
 const AuthenticatedStudentAssignmentsIdRoute =
@@ -840,6 +861,8 @@ export interface FileRoutesByFullPath {
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
   '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
+  '/student/career/interview': typeof AuthenticatedStudentCareerInterviewRoute
+  '/student/career/resume': typeof AuthenticatedStudentCareerResumeRoute
   '/student/internship/$id': typeof AuthenticatedStudentInternshipIdRouteWithChildren
   '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/student/live-sessions/$id': typeof AuthenticatedStudentLiveSessionsIdRoute
@@ -854,6 +877,7 @@ export interface FileRoutesByFullPath {
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
+  '/student/career/': typeof AuthenticatedStudentCareerIndexRoute
   '/student/internship/': typeof AuthenticatedStudentInternshipIndexRoute
   '/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/student/live-sessions/': typeof AuthenticatedStudentLiveSessionsIndexRoute
@@ -948,6 +972,8 @@ export interface FileRoutesByTo {
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
   '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
+  '/student/career/interview': typeof AuthenticatedStudentCareerInterviewRoute
+  '/student/career/resume': typeof AuthenticatedStudentCareerResumeRoute
   '/student/internship/$id': typeof AuthenticatedStudentInternshipIdRouteWithChildren
   '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/student/live-sessions/$id': typeof AuthenticatedStudentLiveSessionsIdRoute
@@ -962,6 +988,7 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsIndexRoute
+  '/student/career': typeof AuthenticatedStudentCareerIndexRoute
   '/student/internship': typeof AuthenticatedStudentInternshipIndexRoute
   '/student/learn': typeof AuthenticatedStudentLearnIndexRoute
   '/student/live-sessions': typeof AuthenticatedStudentLiveSessionsIndexRoute
@@ -1060,6 +1087,8 @@ export interface FileRoutesById {
   '/_authenticated/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/_authenticated/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
   '/_authenticated/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
+  '/_authenticated/student/career/interview': typeof AuthenticatedStudentCareerInterviewRoute
+  '/_authenticated/student/career/resume': typeof AuthenticatedStudentCareerResumeRoute
   '/_authenticated/student/internship/$id': typeof AuthenticatedStudentInternshipIdRouteWithChildren
   '/_authenticated/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/_authenticated/student/live-sessions/$id': typeof AuthenticatedStudentLiveSessionsIdRoute
@@ -1074,6 +1103,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/_authenticated/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
+  '/_authenticated/student/career/': typeof AuthenticatedStudentCareerIndexRoute
   '/_authenticated/student/internship/': typeof AuthenticatedStudentInternshipIndexRoute
   '/_authenticated/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/_authenticated/student/live-sessions/': typeof AuthenticatedStudentLiveSessionsIndexRoute
@@ -1172,6 +1202,8 @@ export interface FileRouteTypes {
     | '/partner/programs/$slug'
     | '/partner/support/$id'
     | '/student/assignments/$id'
+    | '/student/career/interview'
+    | '/student/career/resume'
     | '/student/internship/$id'
     | '/student/learn/$slug'
     | '/student/live-sessions/$id'
@@ -1186,6 +1218,7 @@ export interface FileRouteTypes {
     | '/admin/team/'
     | '/partner/employment/'
     | '/student/assignments/'
+    | '/student/career/'
     | '/student/internship/'
     | '/student/learn/'
     | '/student/live-sessions/'
@@ -1280,6 +1313,8 @@ export interface FileRouteTypes {
     | '/partner/programs/$slug'
     | '/partner/support/$id'
     | '/student/assignments/$id'
+    | '/student/career/interview'
+    | '/student/career/resume'
     | '/student/internship/$id'
     | '/student/learn/$slug'
     | '/student/live-sessions/$id'
@@ -1294,6 +1329,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/partner/employment'
     | '/student/assignments'
+    | '/student/career'
     | '/student/internship'
     | '/student/learn'
     | '/student/live-sessions'
@@ -1391,6 +1427,8 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/programs/$slug'
     | '/_authenticated/partner/support/$id'
     | '/_authenticated/student/assignments/$id'
+    | '/_authenticated/student/career/interview'
+    | '/_authenticated/student/career/resume'
     | '/_authenticated/student/internship/$id'
     | '/_authenticated/student/learn/$slug'
     | '/_authenticated/student/live-sessions/$id'
@@ -1405,6 +1443,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/team/'
     | '/_authenticated/partner/employment/'
     | '/_authenticated/student/assignments/'
+    | '/_authenticated/student/career/'
     | '/_authenticated/student/internship/'
     | '/_authenticated/student/learn/'
     | '/_authenticated/student/live-sessions/'
@@ -2011,6 +2050,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentInternshipIndexRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/student/career/': {
+      id: '/_authenticated/student/career/'
+      path: '/career'
+      fullPath: '/student/career/'
+      preLoaderRoute: typeof AuthenticatedStudentCareerIndexRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
     '/_authenticated/student/assignments/': {
       id: '/_authenticated/student/assignments/'
       path: '/assignments'
@@ -2107,6 +2153,20 @@ declare module '@tanstack/react-router' {
       path: '/internship/$id'
       fullPath: '/student/internship/$id'
       preLoaderRoute: typeof AuthenticatedStudentInternshipIdRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/career/resume': {
+      id: '/_authenticated/student/career/resume'
+      path: '/career/resume'
+      fullPath: '/student/career/resume'
+      preLoaderRoute: typeof AuthenticatedStudentCareerResumeRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/student/career/interview': {
+      id: '/_authenticated/student/career/interview'
+      path: '/career/interview'
+      fullPath: '/student/career/interview'
+      preLoaderRoute: typeof AuthenticatedStudentCareerInterviewRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/student/assignments/$id': {
@@ -2459,12 +2519,15 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentSupportRoute: typeof AuthenticatedStudentSupportRoute
   AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
   AuthenticatedStudentAssignmentsIdRoute: typeof AuthenticatedStudentAssignmentsIdRoute
+  AuthenticatedStudentCareerInterviewRoute: typeof AuthenticatedStudentCareerInterviewRoute
+  AuthenticatedStudentCareerResumeRoute: typeof AuthenticatedStudentCareerResumeRoute
   AuthenticatedStudentInternshipIdRoute: typeof AuthenticatedStudentInternshipIdRouteWithChildren
   AuthenticatedStudentLearnSlugRoute: typeof AuthenticatedStudentLearnSlugRoute
   AuthenticatedStudentLiveSessionsIdRoute: typeof AuthenticatedStudentLiveSessionsIdRoute
   AuthenticatedStudentProgramsSlugRoute: typeof AuthenticatedStudentProgramsSlugRoute
   AuthenticatedStudentProjectsIdRoute: typeof AuthenticatedStudentProjectsIdRoute
   AuthenticatedStudentAssignmentsIndexRoute: typeof AuthenticatedStudentAssignmentsIndexRoute
+  AuthenticatedStudentCareerIndexRoute: typeof AuthenticatedStudentCareerIndexRoute
   AuthenticatedStudentInternshipIndexRoute: typeof AuthenticatedStudentInternshipIndexRoute
   AuthenticatedStudentLearnIndexRoute: typeof AuthenticatedStudentLearnIndexRoute
   AuthenticatedStudentLiveSessionsIndexRoute: typeof AuthenticatedStudentLiveSessionsIndexRoute
@@ -2482,6 +2545,9 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
   AuthenticatedStudentAssignmentsIdRoute:
     AuthenticatedStudentAssignmentsIdRoute,
+  AuthenticatedStudentCareerInterviewRoute:
+    AuthenticatedStudentCareerInterviewRoute,
+  AuthenticatedStudentCareerResumeRoute: AuthenticatedStudentCareerResumeRoute,
   AuthenticatedStudentInternshipIdRoute:
     AuthenticatedStudentInternshipIdRouteWithChildren,
   AuthenticatedStudentLearnSlugRoute: AuthenticatedStudentLearnSlugRoute,
@@ -2491,6 +2557,7 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentProjectsIdRoute: AuthenticatedStudentProjectsIdRoute,
   AuthenticatedStudentAssignmentsIndexRoute:
     AuthenticatedStudentAssignmentsIndexRoute,
+  AuthenticatedStudentCareerIndexRoute: AuthenticatedStudentCareerIndexRoute,
   AuthenticatedStudentInternshipIndexRoute:
     AuthenticatedStudentInternshipIndexRoute,
   AuthenticatedStudentLearnIndexRoute: AuthenticatedStudentLearnIndexRoute,

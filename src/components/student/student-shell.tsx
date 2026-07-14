@@ -16,6 +16,7 @@ import {
   Radio,
   Briefcase,
   Rocket,
+  Compass,
 } from "lucide-react";
 import { getStudentContext } from "@/lib/student/lms.functions";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ const NAV = [
   { to: "/student/internship", label: "Internship", icon: Rocket },
   { to: "/student/assessments", label: "Assessments", icon: GraduationCap },
   { to: "/student/certificates", label: "Certificates", icon: Award },
+  { to: "/student/career", label: "Career Center", icon: Compass },
   { to: "/student/support", label: "Support", icon: LifeBuoy },
   { to: "/student/profile", label: "Profile", icon: UserCircle },
 ] as const;
