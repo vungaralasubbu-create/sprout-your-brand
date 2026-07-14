@@ -43,7 +43,7 @@ export const adminListPaymentSubmissions = createServerFn({ method: "GET" })
     let q = supabase
       .from("partner_payment_submissions")
       .select(
-        "id, partner_id, plan, amount, utr_reference, status, submitted_at, is_duplicate_flag, courses:course_id(name), partner_leads:lead_id(full_name, mobile, mobile_normalized), partners:partner_id(partner_code, user_id, profiles:user_id(full_name))",
+        "id, partner_id, plan, amount, utr_reference, status, submitted_at, is_duplicate_flag, courses:course_id(name), partner_leads:lead_id(full_name, mobile, mobile_normalized), partners:partner_id(partner_code, display_name, first_name)",
       )
       .order("submitted_at", { ascending: false })
       .limit(300);
@@ -94,7 +94,7 @@ export const adminListPaymentSubmissions = createServerFn({ method: "GET" })
       lead_name: (r.partner_leads?.full_name as string) ?? "—",
       lead_mobile: (r.partner_leads?.mobile as string) ?? "",
       partner_code: (r.partners?.partner_code as string) ?? "—",
-      partner_name: (r.partners?.profiles?.full_name as string) ?? "—",
+      partner_name: ((r.partners?.display_name || r.partners?.first_name) as string) ?? "—",
     }));
   });
 
