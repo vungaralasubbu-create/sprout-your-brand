@@ -90,6 +90,7 @@ import { Route as AuthenticatedStudentProjectsIndexRouteImport } from './routes/
 import { Route as AuthenticatedStudentProgramsIndexRouteImport } from './routes/_authenticated/student.programs.index'
 import { Route as AuthenticatedStudentLiveSessionsIndexRouteImport } from './routes/_authenticated/student.live-sessions.index'
 import { Route as AuthenticatedStudentLearnIndexRouteImport } from './routes/_authenticated/student.learn.index'
+import { Route as AuthenticatedStudentAssignmentsIndexRouteImport } from './routes/_authenticated/student.assignments.index'
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
@@ -579,6 +580,12 @@ const AuthenticatedStudentLearnIndexRoute =
     path: '/learn/',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedStudentAssignmentsIndexRoute =
+  AuthenticatedStudentAssignmentsIndexRouteImport.update({
+    id: '/assignments/',
+    path: '/assignments/',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedPartnerEmploymentIndexRoute =
   AuthenticatedPartnerEmploymentIndexRouteImport.update({
     id: '/employment/',
@@ -816,6 +823,7 @@ export interface FileRoutesByFullPath {
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
+  '/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/student/live-sessions/': typeof AuthenticatedStudentLiveSessionsIndexRoute
   '/student/programs/': typeof AuthenticatedStudentProgramsIndexRoute
@@ -919,6 +927,7 @@ export interface FileRoutesByTo {
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
+  '/student/assignments': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/student/learn': typeof AuthenticatedStudentLearnIndexRoute
   '/student/live-sessions': typeof AuthenticatedStudentLiveSessionsIndexRoute
   '/student/programs': typeof AuthenticatedStudentProgramsIndexRoute
@@ -1026,6 +1035,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
+  '/_authenticated/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/_authenticated/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/_authenticated/student/live-sessions/': typeof AuthenticatedStudentLiveSessionsIndexRoute
   '/_authenticated/student/programs/': typeof AuthenticatedStudentProgramsIndexRoute
@@ -1133,6 +1143,7 @@ export interface FileRouteTypes {
     | '/admin/payouts/'
     | '/admin/team/'
     | '/partner/employment/'
+    | '/student/assignments/'
     | '/student/learn/'
     | '/student/live-sessions/'
     | '/student/programs/'
@@ -1236,6 +1247,7 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/team'
     | '/partner/employment'
+    | '/student/assignments'
     | '/student/learn'
     | '/student/live-sessions'
     | '/student/programs'
@@ -1342,6 +1354,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/payouts/'
     | '/_authenticated/admin/team/'
     | '/_authenticated/partner/employment/'
+    | '/_authenticated/student/assignments/'
     | '/_authenticated/student/learn/'
     | '/_authenticated/student/live-sessions/'
     | '/_authenticated/student/programs/'
@@ -1939,6 +1952,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentLearnIndexRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/student/assignments/': {
+      id: '/_authenticated/student/assignments/'
+      path: '/assignments'
+      fullPath: '/student/assignments/'
+      preLoaderRoute: typeof AuthenticatedStudentAssignmentsIndexRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
     '/_authenticated/partner/employment/': {
       id: '/_authenticated/partner/employment/'
       path: '/employment'
@@ -2347,6 +2367,7 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentLiveSessionsIdRoute: typeof AuthenticatedStudentLiveSessionsIdRoute
   AuthenticatedStudentProgramsSlugRoute: typeof AuthenticatedStudentProgramsSlugRoute
   AuthenticatedStudentProjectsIdRoute: typeof AuthenticatedStudentProjectsIdRoute
+  AuthenticatedStudentAssignmentsIndexRoute: typeof AuthenticatedStudentAssignmentsIndexRoute
   AuthenticatedStudentLearnIndexRoute: typeof AuthenticatedStudentLearnIndexRoute
   AuthenticatedStudentLiveSessionsIndexRoute: typeof AuthenticatedStudentLiveSessionsIndexRoute
   AuthenticatedStudentProgramsIndexRoute: typeof AuthenticatedStudentProgramsIndexRoute
@@ -2366,6 +2387,8 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
     AuthenticatedStudentLiveSessionsIdRoute,
   AuthenticatedStudentProgramsSlugRoute: AuthenticatedStudentProgramsSlugRoute,
   AuthenticatedStudentProjectsIdRoute: AuthenticatedStudentProjectsIdRoute,
+  AuthenticatedStudentAssignmentsIndexRoute:
+    AuthenticatedStudentAssignmentsIndexRoute,
   AuthenticatedStudentLearnIndexRoute: AuthenticatedStudentLearnIndexRoute,
   AuthenticatedStudentLiveSessionsIndexRoute:
     AuthenticatedStudentLiveSessionsIndexRoute,

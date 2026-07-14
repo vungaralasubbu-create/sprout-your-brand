@@ -181,7 +181,7 @@ function Page() {
                   </div>
                 </div>
                 <div className="sm:shrink-0">
-                  <Button asChild variant={a.status === "locked" ? "outline" : "default"} disabled={a.status === "locked"}>
+                  <Button asChild variant={a.status === "locked" ? "outline" : "primary"} disabled={a.status === "locked"}>
                     <Link to="/student/assignments/$id" params={{ id: a.id }}>
                       {a.status === "locked" ? "Locked"
                         : a.status === "completed" ? "View"
