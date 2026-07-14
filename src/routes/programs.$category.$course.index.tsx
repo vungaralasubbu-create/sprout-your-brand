@@ -526,30 +526,76 @@ function CoursePage() {
         <SectionBlock
           eyebrow="Program Syllabus"
           title="What You'll Learn"
+          tone="soft"
         >
           <Curriculum modules={c.modules as any} skills={c.skills} />
         </SectionBlock>
       ) : null}
 
-      {/* ============ SKILLS ============ */}
-      {c.skills.length > 0 ? (
-        <SectionBlock eyebrow="Skills" title="Skills You Can Put To Work." tone="soft">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {c.skills.map((s) => (
-              <div
-                key={s}
-                className="group relative rounded-xl border border-border/60 bg-surface-1 p-4 hover:border-primary/50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Sparkles className="size-4" />
-                  </span>
-                  <span className="text-sm font-medium">{s}</span>
+      {/* ============ IMAGE STORY 2 ============ */}
+      <Section className="py-16 lg:py-24">
+        <Container>
+          <div className="grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center">
+            <Reveal>
+              <div>
+                <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                  Applied Learning
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
+                  Turn Knowledge Into Practical Skills.
+                </h2>
+                <p className="mt-5 text-body-lg text-muted-foreground">
+                  Every module ends with something you've built — code, an analysis,
+                  a design, a document — so what you learn shows up in your work,
+                  not just your notes.
+                </p>
+                <ul className="mt-6 space-y-2.5 text-sm">
+                  {[
+                    "Guided practice with mentor reviews",
+                    "Real briefs modelled on industry work",
+                    "Portfolio-ready deliverables",
+                  ].map((line) => (
+                    <li key={line} className="flex items-start gap-2.5">
+                      <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="group relative rounded-3xl overflow-hidden border border-border/60 shadow-xl">
+                <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]">
+                  <CourseHeroVisual
+                    courseName={c.name}
+                    categoryName={c.category.name}
+                    imageUrl={null}
+                    className="aspect-[5/4]"
+                  />
                 </div>
               </div>
-            ))}
+            </Reveal>
           </div>
-        </SectionBlock>
+        </Container>
+      </Section>
+
+      {/* ============ SKILLS MARQUEE ============ */}
+      {c.skills.length > 0 ? (
+        <Section className="py-14 lg:py-20 border-y bg-surface-1">
+          <Container>
+            <Reveal>
+              <div className="max-w-2xl mb-8">
+                <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                  Skills You'll Build
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
+                  Skills You Can Put To Work.
+                </h2>
+              </div>
+            </Reveal>
+          </Container>
+          <SkillsMarquee skills={c.skills} />
+        </Section>
       ) : null}
 
       {/* ============ TOOLS ============ */}
@@ -578,16 +624,33 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
-      {/* ============ PROJECTS SLIDER ============ */}
+      {/* ============ PROJECTS SLIDER (dark) ============ */}
       {c.projects.length > 0 ? (
-        <SectionBlock
-          eyebrow="Projects"
-          title="Build Projects That Show Your Skills."
-          tone="soft"
-        >
-          <ProjectSlider projects={c.projects as any} />
-        </SectionBlock>
+        <Section className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.28),transparent_55%)]"
+          />
+          <Container className="relative">
+            <Reveal>
+              <div className="max-w-2xl mb-10">
+                <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
+                  Projects
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-white text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05]">
+                  Build Work Worth Showing.
+                </h2>
+                <p className="mt-4 text-white/70 max-w-xl">
+                  Portfolio-ready projects that make your skills tangible to
+                  employers, teams and clients.
+                </p>
+              </div>
+            </Reveal>
+            <ProjectSlider projects={c.projects as any} dark />
+          </Container>
+        </Section>
       ) : null}
+
 
       {/* ============ REVIEWS (renders only when approved reviews are supplied) ============ */}
       <CourseReviewsSection courseId={c.id} />
