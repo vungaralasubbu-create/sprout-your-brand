@@ -1004,3 +1004,174 @@ export const recordProgramActivity = createServerFn({ method: "POST" })
     });
     return { ok: true };
   });
+
+/* ============================================================
+ * LESSON PLAYER v2 (video progress, notes, resume)
+ * ============================================================ */
+
+export const saveVideoProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: {
+    lessonId: string;
+    courseId: string;
+    enrollmentId: string;
+    positionSeconds: number;
+    progressPct: number;
+  }) => d)
+  .handler(async ({ data, context }) => {
+    const now = new Date().toISOString();
+    const clampedPct = Math.max(0, Math.min(100, Math.round(data.progressPct)));
+    const posSec = Math.max(0, Number(data.positionSeconds ?? 0));
+
+    // Verify enrollment (RLS also enforces, but fail fast with a clean message)
+    const { data: enr } = await context.supabase
+      .from("enrollments")
+      .select("id")
+      .eq("id", data.enrollmentId)
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!enr) throw new Error("Not enrolled");
+
+    const { data: existing } = await context.supabase
+      .from("lesson_progress")
+      .select("id, status, video_progress_pct, last_position_seconds")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+
+    if (existing) {
+      // Never regress the highest watched pct; always update last position
+      const nextPct = Math.max(clampedPct, Number(existing.video_progress_pct ?? 0));
+      const patch: Record<string, any> = {
+        last_position_seconds: posSec,
+        video_progress_pct: nextPct,
+        last_accessed_at: now,
+      };
+      if (existing.status !== "completed" && nextPct > 0) patch.status = "in_progress";
+      await context.supabase.from("lesson_progress").update(patch).eq("id", existing.id);
+    } else {
+      await context.supabase.from("lesson_progress").insert({
+        student_user_id: context.userId,
+        enrollment_id: data.enrollmentId,
+        course_id: data.courseId,
+        lesson_id: data.lessonId,
+        status: clampedPct > 0 ? "in_progress" : "not_started",
+        started_at: now,
+        last_accessed_at: now,
+        video_progress_pct: clampedPct,
+        last_position_seconds: posSec,
+      });
+    }
+    return { ok: true, progressPct: clampedPct };
+  });
+
+export const getLessonProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { lessonId: string }) => d)
+  .handler(async ({ data, context }) => {
+    const { data: row } = await context.supabase
+      .from("lesson_progress")
+      .select("status, video_progress_pct, last_position_seconds, last_accessed_at")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+    return row ?? { status: "not_started", video_progress_pct: 0, last_position_seconds: 0, last_accessed_at: null };
+  });
+
+export const getLessonNotes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { lessonId: string }) => d)
+  .handler(async ({ data, context }) => {
+    const { data: row } = await context.supabase
+      .from("lesson_notes")
+      .select("id, notes, updated_at")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+    return row ?? { id: null, notes: "", updated_at: null };
+  });
+
+export const saveLessonNotes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { lessonId: string; courseId: string; notes: string }) => d)
+  .handler(async ({ data, context }) => {
+    const notes = String(data.notes ?? "").slice(0, 20000);
+
+    // Ensure enrollment before writing
+    const { data: enr } = await context.supabase
+      .from("enrollments")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!enr) throw new Error("Not enrolled");
+
+    const { data: existing } = await context.supabase
+      .from("lesson_notes")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("lesson_id", data.lessonId)
+      .maybeSingle();
+
+    if (existing) {
+      await context.supabase.from("lesson_notes").update({ notes }).eq("id", existing.id);
+    } else {
+      await context.supabase.from("lesson_notes").insert({
+        student_user_id: context.userId,
+        lesson_id: data.lessonId,
+        course_id: data.courseId,
+        notes,
+      });
+    }
+
+    // Log activity (deduped per 5 min via caller — we just insert once per save)
+    await context.supabase.from("student_activity").insert({
+      student_user_id: context.userId,
+      course_id: data.courseId,
+      activity_type: "notes_saved",
+      description: "Saved lesson notes",
+      entity_id: data.lessonId,
+    });
+    return { ok: true };
+  });
+
+export const logLessonEvent = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: {
+    courseId: string;
+    lessonId: string;
+    event: "lesson_opened" | "video_started" | "resource_opened";
+    description?: string;
+  }) => d)
+  .handler(async ({ data, context }) => {
+    // Verify enrollment
+    const { data: enr } = await context.supabase
+      .from("enrollments")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+    if (!enr) throw new Error("Not enrolled");
+
+    // Dedupe within 10 min for the same (event, lesson) so page refreshes don't flood
+    const tenMin = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { data: recent } = await context.supabase
+      .from("student_activity")
+      .select("id")
+      .eq("student_user_id", context.userId)
+      .eq("activity_type", data.event)
+      .eq("entity_id", data.lessonId)
+      .gte("created_at", tenMin)
+      .limit(1);
+    if (recent && recent.length) return { ok: true, deduped: true };
+
+    await context.supabase.from("student_activity").insert({
+      student_user_id: context.userId,
+      course_id: data.courseId,
+      activity_type: data.event,
+      description: data.description ?? data.event,
+      entity_id: data.lessonId,
+    });
+    return { ok: true };
+  });
