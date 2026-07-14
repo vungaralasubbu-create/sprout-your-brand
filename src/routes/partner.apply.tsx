@@ -249,6 +249,7 @@ function ApplyForm() {
       preferred_days: data.preferred_days.length ? data.preferred_days : null,
       preferred_categories: data.preferred_categories.length ? data.preferred_categories : null,
       preferred_model: data.preferred_model || null,
+      referred_by_code: referralCode || null,
       status: "submitted" as const,
       user_id: currentUserId,
     };
