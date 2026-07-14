@@ -768,7 +768,7 @@ function CoursePage() {
       ) : null}
 
       {/* ============ FINAL CTA ============ */}
-      <Section className="relative overflow-hidden py-16 lg:py-24">
+      <Section className="relative overflow-hidden py-10 lg:py-14">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.32_0.14_255),oklch(0.48_0.16_220),oklch(0.6_0.14_195))] bg-[length:200%_200%] animate-[gradient-shift_18s_ease-in-out_infinite]"
