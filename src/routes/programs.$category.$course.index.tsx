@@ -660,7 +660,7 @@ function CoursePage() {
 
       {/* ============ PLACEMENT / CAREER SUPPORT ============ */}
       {c.placement.length > 0 ? (
-        <SectionBlock eyebrow="Career Support" title="Build Skills. Prepare For Opportunities.">
+        <SectionBlock eyebrow="Career Support" title="Build Skills. Prepare For Opportunities." className="!pb-6 lg:!pb-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {c.placement.map((p, i) => (
               <div
@@ -732,7 +732,7 @@ function CoursePage() {
 
       {/* ============ RELATED ============ */}
       {related.length > 0 ? (
-        <SectionBlock eyebrow="Explore More" title="You May Also Explore">
+        <SectionBlock eyebrow="Explore More" title="You May Also Explore" className="!pb-8 lg:!pb-10">
           <div className="grid md:grid-cols-3 gap-6">
             {related.slice(0, 3).map((r: any) => (
               <Link
@@ -768,7 +768,7 @@ function CoursePage() {
       ) : null}
 
       {/* ============ FINAL CTA ============ */}
-      <Section className="relative overflow-hidden py-16 lg:py-24">
+      <Section className="relative overflow-hidden py-10 lg:py-14">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.32_0.14_255),oklch(0.48_0.16_220),oklch(0.6_0.14_195))] bg-[length:200%_200%] animate-[gradient-shift_18s_ease-in-out_infinite]"
@@ -1133,15 +1133,17 @@ function SectionBlock({
   eyebrow,
   children,
   tone,
+  className,
 }: {
   title: string;
   eyebrow?: string;
   children: React.ReactNode;
   tone?: "soft";
+  className?: string;
 }) {
   return (
     <Section
-      className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "")}
+      className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "", className)}
     >
       <Container>
         <div className="max-w-2xl mb-10">
