@@ -3254,6 +3254,239 @@ export type Database = {
           },
         ]
       }
+      interview_activity: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          meta: Json
+          session_id: string | null
+          student_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          meta?: Json
+          session_id?: string | null
+          student_user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          meta?: Json
+          session_id?: string | null
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_activity_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interview_answers: {
+        Row: {
+          answer_text: string | null
+          category_scores: Json
+          created_at: string
+          evaluated_at: string | null
+          evaluation_status: string
+          feedback: Json
+          id: string
+          is_skipped: boolean
+          practice_score: number | null
+          question_id: string
+          session_id: string
+          submitted_at: string
+          transcript: string | null
+          updated_at: string
+        }
+        Insert: {
+          answer_text?: string | null
+          category_scores?: Json
+          created_at?: string
+          evaluated_at?: string | null
+          evaluation_status?: string
+          feedback?: Json
+          id?: string
+          is_skipped?: boolean
+          practice_score?: number | null
+          question_id: string
+          session_id: string
+          submitted_at?: string
+          transcript?: string | null
+          updated_at?: string
+        }
+        Update: {
+          answer_text?: string | null
+          category_scores?: Json
+          created_at?: string
+          evaluated_at?: string | null
+          evaluation_status?: string
+          feedback?: Json
+          id?: string
+          is_skipped?: boolean
+          practice_score?: number | null
+          question_id?: string
+          session_id?: string
+          submitted_at?: string
+          transcript?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "interview_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interview_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interview_questions: {
+        Row: {
+          category: string | null
+          created_at: string
+          expected_topics: Json
+          id: string
+          position: number
+          question_text: string
+          session_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          expected_topics?: Json
+          id?: string
+          position: number
+          question_text: string
+          session_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          expected_topics?: Json
+          id?: string
+          position?: number
+          question_text?: string
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_questions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "interview_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interview_sessions: {
+        Row: {
+          ai_available: boolean
+          answered_count: number
+          avg_practice_score: number | null
+          completed_at: string | null
+          course_id: string | null
+          created_at: string
+          difficulty: Database["public"]["Enums"]["interview_difficulty"]
+          id: string
+          internship_id: string | null
+          interview_type: Database["public"]["Enums"]["interview_type"]
+          meta: Json
+          mode: Database["public"]["Enums"]["interview_mode"]
+          project_id: string | null
+          question_count: number
+          skipped_count: number
+          started_at: string
+          status: Database["public"]["Enums"]["interview_status"]
+          student_user_id: string
+          target_role: string | null
+          updated_at: string
+          use_resume: boolean
+        }
+        Insert: {
+          ai_available?: boolean
+          answered_count?: number
+          avg_practice_score?: number | null
+          completed_at?: string | null
+          course_id?: string | null
+          created_at?: string
+          difficulty?: Database["public"]["Enums"]["interview_difficulty"]
+          id?: string
+          internship_id?: string | null
+          interview_type: Database["public"]["Enums"]["interview_type"]
+          meta?: Json
+          mode?: Database["public"]["Enums"]["interview_mode"]
+          project_id?: string | null
+          question_count: number
+          skipped_count?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["interview_status"]
+          student_user_id: string
+          target_role?: string | null
+          updated_at?: string
+          use_resume?: boolean
+        }
+        Update: {
+          ai_available?: boolean
+          answered_count?: number
+          avg_practice_score?: number | null
+          completed_at?: string | null
+          course_id?: string | null
+          created_at?: string
+          difficulty?: Database["public"]["Enums"]["interview_difficulty"]
+          id?: string
+          internship_id?: string | null
+          interview_type?: Database["public"]["Enums"]["interview_type"]
+          meta?: Json
+          mode?: Database["public"]["Enums"]["interview_mode"]
+          project_id?: string | null
+          question_count?: number
+          skipped_count?: number
+          started_at?: string
+          status?: Database["public"]["Enums"]["interview_status"]
+          student_user_id?: string
+          target_role?: string | null
+          updated_at?: string
+          use_resume?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interview_sessions_internship_id_fkey"
+            columns: ["internship_id"]
+            isOneToOne: false
+            referencedRelation: "student_internships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interview_sessions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "student_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_assignment_history: {
         Row: {
           action: string
@@ -7800,6 +8033,16 @@ export type Database = {
         | "documentation"
         | "presentation"
         | "portfolio"
+      interview_difficulty: "beginner" | "intermediate" | "advanced"
+      interview_mode: "text" | "voice"
+      interview_status: "in_progress" | "completed" | "incomplete"
+      interview_type:
+        | "technical"
+        | "hr"
+        | "behavioural"
+        | "project"
+        | "internship"
+        | "mixed"
       lead_model: "own_leads" | "supported" | "not_sure"
       lead_ownership_review_status:
         | "pending_review"
@@ -8316,6 +8559,17 @@ export const Constants = {
         "documentation",
         "presentation",
         "portfolio",
+      ],
+      interview_difficulty: ["beginner", "intermediate", "advanced"],
+      interview_mode: ["text", "voice"],
+      interview_status: ["in_progress", "completed", "incomplete"],
+      interview_type: [
+        "technical",
+        "hr",
+        "behavioural",
+        "project",
+        "internship",
+        "mixed",
       ],
       lead_model: ["own_leads", "supported", "not_sure"],
       lead_ownership_review_status: [
