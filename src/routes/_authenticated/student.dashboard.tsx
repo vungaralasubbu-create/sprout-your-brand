@@ -61,6 +61,24 @@ function Page() {
         <Kpi icon={Award} label="Certificates" value={k.certificates} />
       </div>
 
+      {sessions.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+              <Radio className="size-4 text-primary" /> Upcoming Live Sessions
+            </h2>
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/student/live-sessions">View all <ArrowRight className="size-3.5 ml-1" /></Link>
+            </Button>
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            {sessions.map((s) => <LiveSessionCard key={s.id} session={s} compact />)}
+          </div>
+        </div>
+      )}
+
+
+
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2 p-6">
           <div className="flex items-center justify-between mb-4">
