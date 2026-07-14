@@ -40,10 +40,6 @@ import {
 } from "@/lib/partner/follow-ups.functions";
 import { cn } from "@/lib/utils";
 
-const searchSchema = z.object({
-  filter: fallback(z.string(), "today").default("today"),
-  index: fallback(z.number().int(), 0).default(0),
-});
 
 type SearchParams = { filter: FollowUpFilter; index: number };
 
@@ -86,7 +82,7 @@ function MyLeadsWorkspace() {
 
   useEffect(() => {
     if (search.index >= leads.length && leads.length > 0) {
-      navigate({ search: (p) => ({ ...p, index: 0 }) });
+      navigate({ search: (p: SearchParams) => ({ ...p, index: 0 }) });
     }
   }, [leads.length, search.index, navigate]);
 
@@ -102,7 +98,7 @@ function MyLeadsWorkspace() {
   }
   function go(delta: number) {
     const next = Math.min(Math.max(0, index + delta), leads.length - 1);
-    navigate({ search: (p) => ({ ...p, index: next }) });
+    navigate({ search: (p: SearchParams) => ({ ...p, index: next }) });
   }
 
   function invalidate() {
@@ -262,7 +258,7 @@ function LeadCard({
                   <Badge className="bg-primary/10 text-primary border-primary/30">Glintr Lead</Badge>
                 )}
                 {lead.program_interest && (
-                  <Badge variant="secondary">{lead.program_interest}</Badge>
+                  <Badge variant="muted">{lead.program_interest}</Badge>
                 )}
                 {detail?.callAttempts > 0 && (
                   <Badge variant="outline">
