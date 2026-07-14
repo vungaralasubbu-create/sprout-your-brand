@@ -243,7 +243,7 @@ function PlanCard({
         </ul>
 
         <div className="mt-7 flex flex-col gap-2.5">
-          <Button asChild size="lg" variant={featured ? "gradient" : advanced ? "default" : "outline"}>
+          <Button asChild size="lg" variant={featured ? "gradient" : advanced ? "primary" : "outline"}>
             <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
               {plan.cta}
               <ArrowRight className="size-4" />
