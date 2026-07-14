@@ -1,7 +1,7 @@
 import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -39,22 +39,40 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const NAV = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+};
+
+type NavGroup = {
+  label: string;
+  items: NavItem[];
+};
+
+const OVERVIEW: NavItem[] = [
   { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
+];
+
+const LEADS: NavItem[] = [
   { to: "/partner/my-leads", label: "My Leads", icon: Users },
   { to: "/partner/add-leads", label: "Add Leads", icon: UserPlus },
   { to: "/partner/ownership-reviews", label: "Ownership Reviews", icon: Scale },
+];
+
+const REVENUE: NavItem[] = [
   { to: "/partner/payment-links", label: "Payment Links", icon: Link2 },
   { to: "/partner/payment-verification", label: "Payment Verification", icon: ShieldCheck },
   { to: "/partner/coming-soon", label: "My Sales", icon: ShoppingBag },
   { to: "/partner/earnings", label: "Earnings", icon: Wallet },
-  { to: "/partner/programs", label: "Programs", icon: Package },
   { to: "/partner/referral-bonus", label: "Referral Bonus", icon: Gift },
+];
+
+const GROW: NavItem[] = [
+  { to: "/partner/programs", label: "Programs", icon: Package },
   { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
   { to: "/partner/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/partner/support", label: "Support", icon: LifeBuoy },
-  { to: "/partner/account", label: "Account", icon: UserCircle },
-] as const;
+];
 
 export function PartnerShell() {
   const fetchCtx = useServerFn(getPartnerContext);
@@ -64,20 +82,31 @@ export function PartnerShell() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
+  // Close mobile drawer on route change.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   const partner = data?.partner ?? null;
   const isFullTime = partner?.work_model === "full_time" && !!data?.employeeProfile;
 
-  const navItems = [
-    ...NAV.slice(0, 12), // through Analytics
-    ...(isFullTime
-      ? [{ to: "/partner/employment", label: "Employment", icon: Briefcase } as const]
-      : [{ to: "/partner/earnings-statement", label: "Monthly Statement", icon: Briefcase } as const]),
-    NAV[12]!, // Support
-    NAV[13]!, // Account
+  const employmentItem: NavItem = isFullTime
+    ? { to: "/partner/employment", label: "Employment", icon: Briefcase }
+    : { to: "/partner/earnings-statement", label: "Monthly Statement", icon: Briefcase };
+
+  const groups: NavGroup[] = [
+    { label: "", items: OVERVIEW },
+    { label: "Leads", items: LEADS },
+    { label: "Revenue", items: [...REVENUE, employmentItem] },
+    { label: "Grow", items: GROW },
+    {
+      label: "Workspace",
+      items: [
+        { to: "/partner/support", label: "Support", icon: LifeBuoy },
+        { to: "/partner/account", label: "Account", icon: UserCircle },
+      ],
+    },
   ];
-
-
-
 
   async function handleSignOut() {
     await queryClient.cancelQueries();
@@ -93,42 +122,66 @@ export function PartnerShell() {
   };
 
   return (
-    <div className="min-h-screen bg-[oklch(0.98_0.005_240)] text-foreground">
+    <div className="min-h-screen bg-[oklch(0.985_0.005_240)] text-foreground">
       {/* Mobile top bar */}
-      <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b bg-white">
+      <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b bg-white/95 backdrop-blur">
+        <button
+          className="inline-flex items-center gap-2 rounded-md p-2 -ml-2 hover:bg-muted"
+          onClick={() => setOpen(true)}
+          aria-label="Open menu"
+        >
+          <Menu className="size-5" />
+        </button>
         <Link to="/" className="font-display text-lg font-semibold tracking-tight">
           glintr
         </Link>
-        <button
-          className="p-2 rounded-md hover:bg-muted"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <SupportAlert compact />
+          <FollowUpAlerts compact />
+        </div>
       </div>
 
-      <div className="lg:grid lg:grid-cols-[260px_1fr]">
+      {/* Mobile drawer overlay */}
+      {open && (
+        <button
+          type="button"
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+          className="lg:hidden fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-150"
+        />
+      )}
+
+      <div className="lg:grid lg:grid-cols-[264px_1fr]">
         {/* Sidebar */}
         <aside
           className={cn(
-            "border-r bg-white lg:sticky lg:top-0 lg:h-screen lg:flex lg:flex-col",
-            open ? "block" : "hidden lg:flex",
+            "bg-white lg:sticky lg:top-0 lg:h-screen lg:flex lg:flex-col lg:border-r",
+            "fixed inset-y-0 left-0 z-50 w-72 border-r shadow-xl transition-transform duration-200 ease-out lg:shadow-none lg:translate-x-0",
+            open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           )}
         >
-          <div className="p-5 border-b hidden lg:block">
-            <Link to="/" className="font-display text-xl font-semibold tracking-tight">
-              glintr
-            </Link>
-            <div className="mt-0.5 text-caption font-mono uppercase tracking-widest text-primary">
-              Sales Workspace
+          <div className="flex items-center justify-between p-5 border-b">
+            <div>
+              <Link to="/" className="font-display text-xl font-semibold tracking-tight">
+                glintr
+              </Link>
+              <div className="mt-0.5 text-caption font-mono uppercase tracking-widest text-primary">
+                Sales Workspace
+              </div>
             </div>
+            <button
+              className="lg:hidden p-2 rounded-md hover:bg-muted"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+            >
+              <X className="size-4" />
+            </button>
           </div>
 
           <div className="px-3 py-4 flex-1 overflow-y-auto">
             {partner ? (
-              <div className="mb-4 p-3 rounded-xl bg-[oklch(0.97_0.02_240)] border border-border/50">
-                <div className="text-caption uppercase tracking-wider text-muted-foreground">
+              <div className="mb-4 p-3 rounded-xl bg-gradient-to-br from-primary/[0.06] via-white to-cyan-50/60 border border-border/60">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                   Partner Code
                 </div>
                 <div className="mt-0.5 font-mono text-sm font-semibold">
@@ -139,31 +192,52 @@ export function PartnerShell() {
                 </div>
               </div>
             ) : null}
-            <nav className="space-y-0.5">
-              {navItems.map((item, i) => {
-                const active = isActive(item.to, item.label);
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={`${item.label}-${i}`}
-                    to={item.to}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                      active
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "text-foreground/75 hover:bg-muted hover:text-foreground",
-                    )}
-                  >
-                    <Icon className="size-4" />
-                    <span className="flex-1">{item.label}</span>
-                  </Link>
-                );
-              })}
+
+            <nav className="space-y-4">
+              {groups.map((group, gi) => (
+                <div key={gi}>
+                  {group.label && (
+                    <div className="px-3 pb-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground/80">
+                      {group.label}
+                    </div>
+                  )}
+                  <div className="space-y-0.5">
+                    {group.items.map((item) => {
+                      const active = isActive(item.to, item.label);
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.to + item.label}
+                          to={item.to}
+                          className={cn(
+                            "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-150",
+                            active
+                              ? "bg-primary/10 text-primary font-medium shadow-[inset_0_0_0_1px_oklch(0.7_0.15_230/0.15)]"
+                              : "text-foreground/75 hover:bg-slate-50 hover:text-foreground",
+                          )}
+                        >
+                          {active && (
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-r bg-primary" />
+                          )}
+                          <Icon
+                            className={cn(
+                              "size-4 shrink-0 transition-colors",
+                              active
+                                ? "text-primary"
+                                : "text-muted-foreground group-hover:text-foreground",
+                            )}
+                          />
+                          <span className="flex-1 truncate">{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </nav>
           </div>
 
-          <div className="px-3 py-4 border-t">
+          <div className="px-3 py-4 border-t bg-white">
             <Button
               variant="outline"
               size="sm"
@@ -178,7 +252,7 @@ export function PartnerShell() {
 
         {/* Content */}
         <main className="min-h-screen">
-          <div className="hidden lg:flex sticky top-0 z-30 h-14 items-center justify-end gap-2 border-b bg-white/90 backdrop-blur px-6">
+          <div className="hidden lg:flex sticky top-0 z-30 h-14 items-center justify-end gap-2 border-b bg-white/85 backdrop-blur px-6">
             <SupportAlert />
             <FollowUpAlerts />
           </div>
@@ -189,7 +263,7 @@ export function PartnerShell() {
   );
 }
 
-function FollowUpAlerts() {
+function FollowUpAlerts({ compact = false }: { compact?: boolean }) {
   const fetchCounts = useServerFn(getFollowUpCounts);
   const { data } = useQuery({
     queryKey: ["follow-up-counts"],
@@ -210,20 +284,23 @@ function FollowUpAlerts() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="relative inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-1.5 text-sm hover:bg-muted/50"
+          className={cn(
+            "relative inline-flex items-center gap-2 rounded-lg border bg-white text-sm transition-colors hover:bg-slate-50",
+            compact ? "p-2" : "px-3 py-1.5",
+          )}
           aria-label="Lead reminders"
         >
           <Bell className="size-4" />
-          <span className="font-medium">{total} Leads Need Attention</span>
+          {!compact && <span className="font-medium">{total} Leads Need Attention</span>}
           {total > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold inline-flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-semibold inline-flex items-center justify-center ring-2 ring-white">
               {total > 99 ? "99+" : total}
             </span>
           )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72 p-2">
-        <div className="px-2 py-1.5 text-caption font-mono uppercase tracking-widest text-muted-foreground">
+        <div className="px-2 py-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
           Needs Your Attention
         </div>
         <div className="space-y-0.5">
@@ -232,7 +309,7 @@ function FollowUpAlerts() {
               key={it.key}
               to="/partner/my-leads"
               search={{ filter: it.key, index: 0 }}
-              className="flex items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-muted"
+              className="flex items-center justify-between rounded-md px-2 py-2 text-sm hover:bg-muted transition-colors"
             >
               <span className="flex items-center gap-2">
                 <it.icon className={cn("size-4", it.tone)} />
@@ -247,7 +324,7 @@ function FollowUpAlerts() {
   );
 }
 
-function SupportAlert() {
+function SupportAlert({ compact = false }: { compact?: boolean }) {
   const fetchTickets = useServerFn(listMySupportTickets);
   const { data } = useQuery({
     queryKey: ["partner-support-summary"],
@@ -257,19 +334,24 @@ function SupportAlert() {
   const s = data?.summary;
   const needsAttention = s?.needsAttention ?? 0;
   const openCount = s?.open ?? 0;
+  const showBadge = needsAttention > 0 || openCount > 0;
 
   return (
     <Link
       to="/partner/support"
-      className="relative inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-1.5 text-sm hover:bg-muted/50"
+      className={cn(
+        "relative inline-flex items-center gap-2 rounded-lg border bg-white text-sm transition-colors hover:bg-slate-50",
+        compact ? "p-2" : "px-3 py-1.5",
+      )}
       aria-label="Support tickets"
     >
       <LifeBuoy className="size-4" />
-      <span className="font-medium">Support</span>
-      {(needsAttention > 0 || openCount > 0) && (
+      {!compact && <span className="font-medium">Support</span>}
+      {showBadge && (
         <span
           className={cn(
-            "min-w-[18px] h-[18px] px-1 rounded-full text-white text-[10px] font-semibold inline-flex items-center justify-center",
+            "min-w-[18px] h-[18px] px-1 rounded-full text-white text-[10px] font-semibold inline-flex items-center justify-center ring-2 ring-white",
+            compact && "absolute -top-1 -right-1",
             needsAttention > 0 ? "bg-red-500" : "bg-slate-500",
           )}
         >
