@@ -70,7 +70,7 @@ export const getCampusAmbassadorContext = createServerFn({ method: "GET" })
       .order("submitted_at", { ascending: false })
       .limit(5);
     const applications = appRows ?? [];
-    const activeApp = applications.find((a) => ACTIVE_STATUSES.includes(a.status));
+    const activeApp = applications.find((a) => (ACTIVE_STATUSES as readonly string[]).includes(a.status));
     const latestApp = applications[0] ?? null;
 
     const { data: profile } = await supabase
