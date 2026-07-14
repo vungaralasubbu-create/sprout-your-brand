@@ -231,13 +231,17 @@ function CoursePage() {
   return (
     <PageShell>
       {/* ============ HERO ============ */}
-      <Section className="pt-8 pb-10 lg:pt-10 lg:pb-14 relative overflow-hidden">
+      <Section className="pt-10 pb-16 lg:pt-14 lg:pb-24 relative overflow-hidden">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.04] via-transparent to-transparent"
+          className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.05] via-transparent to-transparent"
+        />
+        <div
+          aria-hidden
+          className="absolute -top-32 -left-32 -z-10 size-[420px] rounded-full bg-primary/10 blur-[120px]"
         />
         <Container>
-          <nav className="text-caption mb-6 flex items-center gap-1.5 flex-wrap">
+          <nav className="text-caption mb-8 flex items-center gap-1.5 flex-wrap">
             <Link to="/" className="hover:text-foreground">Home</Link>
             <ChevronRight className="size-3.5" />
             <Link to="/programs" className="hover:text-foreground">Programs</Link>
@@ -249,25 +253,25 @@ function CoursePage() {
             <span className="text-foreground">{c.name}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
             <Reveal>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-5">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
                   {c.category.name}
                 </span>
                 {c.is_bestseller ? <Badge variant="bestseller">Best Seller</Badge> : null}
                 {c.is_featured ? <Badge variant="certified">Featured</Badge> : null}
               </div>
-              <h1 className="text-display-md lg:text-[3rem] leading-[1.05] font-display font-semibold tracking-tight text-balance">
-                {c.name}
+              <h1 className="font-display font-semibold tracking-[-0.03em] text-balance leading-[0.95] text-[clamp(2.6rem,6.4vw,5rem)]">
+                {formatHeroTitle(c.name)}
               </h1>
               {c.short_description ? (
-                <p className="mt-4 text-body-lg text-muted-foreground max-w-2xl">
+                <p className="mt-6 text-body-lg text-muted-foreground max-w-xl">
                   {c.short_description}
                 </p>
               ) : null}
 
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" variant="gradient">
                   <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                     Apply Now
@@ -288,20 +292,30 @@ function CoursePage() {
                 ) : null}
               </div>
 
-              <dl className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 max-w-xl">
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
                 {c.duration ? (
-                  <MetaStat icon={Clock} label="Duration" value={c.duration} />
+                  <span className="inline-flex items-center gap-2 text-foreground/85">
+                    <Clock className="size-4 text-primary/80" />
+                    {c.duration}
+                  </span>
                 ) : null}
                 {c.learning_mode ? (
-                  <MetaStat icon={Globe} label="Learning mode" value={c.learning_mode} />
+                  <span className="inline-flex items-center gap-2 text-foreground/85">
+                    <Globe className="size-4 text-primary/80" />
+                    {c.learning_mode}
+                  </span>
                 ) : null}
                 {c.level ? (
-                  <MetaStat icon={GraduationCap} label="Level" value={c.level} />
+                  <span className="inline-flex items-center gap-2 text-foreground/85">
+                    <GraduationCap className="size-4 text-primary/80" />
+                    {c.level}
+                  </span>
                 ) : null}
-                {c.language ? (
-                  <MetaStat icon={Sparkles} label="Language" value={c.language} />
-                ) : null}
-              </dl>
+                <span className="inline-flex items-center gap-2 text-foreground/85">
+                  <Award className="size-4 text-primary/80" />
+                  Certificate
+                </span>
+              </div>
             </Reveal>
 
             <Reveal delay={150}>
@@ -311,12 +325,38 @@ function CoursePage() {
                   categoryName={c.category.name}
                   imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
                 />
+                {/* floating Program Focus card */}
+                <div className="hidden sm:block absolute -bottom-8 -left-6 lg:-left-10 rounded-2xl border border-border/60 bg-surface-1/95 backdrop-blur p-5 shadow-2xl w-[260px] animate-[fade-in_0.6s_ease-out_0.4s_both]">
+                  <div className="text-caption font-mono uppercase tracking-widest text-primary">
+                    Program Focus
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <Hammer className="size-3.5" />
+                      </span>
+                      Practical Skills
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <Rocket className="size-3.5" />
+                      </span>
+                      Projects
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <Briefcase className="size-3.5" />
+                      </span>
+                      Career Preparation
+                    </li>
+                  </ul>
+                </div>
               </div>
             </Reveal>
           </div>
-
         </Container>
       </Section>
+
 
       {/* ============ QUICK STATS ============ */}
       <Section className="py-8 border-y bg-surface-2/40">
