@@ -82,10 +82,31 @@ export const addManualLead = createServerFn({ method: "POST" })
       .maybeSingle();
 
     if (existing) {
+      // Do NOT create a duplicate active lead. File an ownership review request.
+      // The submitting partner never sees any private details of the existing lead.
+      const { data: review, error: revErr } = await supabase
+        .from("lead_ownership_reviews")
+        .insert({
+          claiming_partner_id: partnerId,
+          submitted_full_name: data.full_name,
+          submitted_mobile: data.mobile,
+          submitted_mobile_normalized: mobileNorm,
+          submitted_email: data.email || null,
+          submitted_program_interest: data.program_interest || null,
+          submitted_course_id: data.course_id || null,
+          submitted_source: (data.source as any) ?? "other",
+          submitted_notes: data.notes || null,
+          existing_lead_id: existing.id,
+          status: "pending_review",
+        })
+        .select("id")
+        .single();
+      if (revErr) throw new Error(revErr.message);
       return {
-        status: "duplicate" as const,
+        status: "review_created" as const,
+        review_id: review.id as string,
         message:
-          "This mobile number already exists in the system and requires review.",
+          "This mobile number already exists in the system. Your lead submission has been sent for review.",
       };
     }
 
@@ -109,6 +130,15 @@ export const addManualLead = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
+    // Seed ownership history for the new own-lead.
+    await supabase.from("lead_ownership_history").insert({
+      lead_id: inserted.id,
+      ownership_type: "partner_own",
+      owner_partner_id: partnerId,
+      changed_by: userId,
+      reason: "Initial submission (unique mobile).",
+    }).then(() => {}, () => {});
+
     return { status: "created" as const, id: inserted.id as string };
   });
 
@@ -116,7 +146,7 @@ const bulkInput = z.object({
   leads: z.array(leadInput.partial({ source: true })).min(1).max(2000),
 });
 
-/** Bulk upload of parsed CSV/XLSX rows. Dedup by mobile_normalized. */
+/** Bulk upload of parsed CSV/XLSX rows. Duplicates create ownership reviews. */
 export const bulkUploadLeads = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => bulkInput.parse(data))
@@ -135,60 +165,96 @@ export const bulkUploadLeads = createServerFn({ method: "POST" })
     );
     const invalidCount = rows.length - validRows.length;
 
-    // Collect unique mobiles to check duplicates in a single query.
+    // Existing lead lookup keyed by normalized mobile.
     const uniqueMobiles = Array.from(new Set(validRows.map((r) => r._mobile_norm)));
-    let existingSet = new Set<string>();
+    const existingMap = new Map<string, string>();
     if (uniqueMobiles.length) {
       const { data: existing } = await supabase
         .from("partner_leads")
-        .select("mobile_normalized")
+        .select("id, mobile_normalized")
         .in("mobile_normalized", uniqueMobiles);
-      existingSet = new Set(
-        (existing ?? []).map((e: any) => e.mobile_normalized).filter(Boolean),
-      );
+      for (const e of existing ?? []) {
+        if ((e as any).mobile_normalized) existingMap.set((e as any).mobile_normalized, (e as any).id);
+      }
     }
 
-    // Also dedup within-file (first occurrence wins).
     const seenInFile = new Set<string>();
     const toInsert: any[] = [];
-    let duplicates = 0;
+    const toReview: any[] = [];
     for (const r of validRows) {
-      if (existingSet.has(r._mobile_norm) || seenInFile.has(r._mobile_norm)) {
-        duplicates++;
-        continue;
-      }
+      if (seenInFile.has(r._mobile_norm)) continue;
       seenInFile.add(r._mobile_norm);
-      toInsert.push({
-        owner_partner_id: partnerId,
-        lead_model: "own_leads",
-        full_name: r.full_name,
-        mobile: r.mobile,
-        email: r.email || null,
-        program_interest: r.program_interest || null,
-        source: (r.source as any) ?? "other",
-        notes: r.notes || null,
-        status: "new",
-      });
+      const existingId = existingMap.get(r._mobile_norm);
+      if (existingId) {
+        toReview.push({
+          claiming_partner_id: partnerId,
+          submitted_full_name: r.full_name,
+          submitted_mobile: r.mobile,
+          submitted_mobile_normalized: r._mobile_norm,
+          submitted_email: r.email || null,
+          submitted_program_interest: r.program_interest || null,
+          submitted_source: (r.source as any) ?? "other",
+          submitted_notes: r.notes || null,
+          existing_lead_id: existingId,
+          status: "pending_review",
+        });
+      } else {
+        toInsert.push({
+          owner_partner_id: partnerId,
+          lead_model: "own_leads",
+          full_name: r.full_name,
+          mobile: r.mobile,
+          email: r.email || null,
+          program_interest: r.program_interest || null,
+          source: (r.source as any) ?? "other",
+          notes: r.notes || null,
+          status: "new",
+        });
+      }
     }
 
     let added = 0;
-    if (toInsert.length) {
-      // Insert in chunks of 500 to stay under payload limits.
-      for (let i = 0; i < toInsert.length; i += 500) {
-        const chunk = toInsert.slice(i, i + 500);
-        const { error, count } = await supabase
-          .from("partner_leads")
-          .insert(chunk, { count: "exact" });
-        if (error) throw new Error(error.message);
-        added += count ?? chunk.length;
-      }
+    const insertedIds: string[] = [];
+    for (let i = 0; i < toInsert.length; i += 500) {
+      const chunk = toInsert.slice(i, i + 500);
+      const { data: ins, error } = await supabase
+        .from("partner_leads")
+        .insert(chunk)
+        .select("id");
+      if (error) throw new Error(error.message);
+      added += ins?.length ?? 0;
+      for (const row of ins ?? []) insertedIds.push((row as any).id);
+    }
+
+    // Seed ownership history for freshly created own-leads.
+    if (insertedIds.length) {
+      const historyRows = insertedIds.map((lead_id) => ({
+        lead_id,
+        ownership_type: "partner_own" as const,
+        owner_partner_id: partnerId,
+        changed_by: userId,
+        reason: "Bulk upload (unique mobile).",
+      }));
+      await supabase.from("lead_ownership_history").insert(historyRows).then(() => {}, () => {});
+    }
+
+    let reviews = 0;
+    for (let i = 0; i < toReview.length; i += 500) {
+      const chunk = toReview.slice(i, i + 500);
+      const { error, count } = await supabase
+        .from("lead_ownership_reviews")
+        .insert(chunk, { count: "exact" });
+      if (error) throw new Error(error.message);
+      reviews += count ?? chunk.length;
     }
 
     return {
       total: rows.length,
       valid: validRows.length,
-      duplicates,
+      duplicates: toReview.length,
+      reviews_created: reviews,
       invalid: invalidCount,
       added,
     };
   });
+
