@@ -493,8 +493,56 @@ export type Database = {
         }
         Relationships: []
       }
+      ambassador_commission_status_history: {
+        Row: {
+          ambassador_id: string
+          commission_id: string
+          created_at: string
+          event_type: string
+          from_status:
+            | Database["public"]["Enums"]["ambassador_commission_status"]
+            | null
+          id: string
+          public_note: string | null
+          to_status: Database["public"]["Enums"]["ambassador_commission_status"]
+        }
+        Insert: {
+          ambassador_id: string
+          commission_id: string
+          created_at?: string
+          event_type: string
+          from_status?:
+            | Database["public"]["Enums"]["ambassador_commission_status"]
+            | null
+          id?: string
+          public_note?: string | null
+          to_status: Database["public"]["Enums"]["ambassador_commission_status"]
+        }
+        Update: {
+          ambassador_id?: string
+          commission_id?: string
+          created_at?: string
+          event_type?: string
+          from_status?:
+            | Database["public"]["Enums"]["ambassador_commission_status"]
+            | null
+          id?: string
+          public_note?: string | null
+          to_status?: Database["public"]["Enums"]["ambassador_commission_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_commission_status_history_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_commissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_commissions: {
         Row: {
+          adjustment_public_note: string | null
           ambassador_id: string
           approved_at: string | null
           available_at: string | null
@@ -512,6 +560,8 @@ export type Database = {
           enrollment_id: string | null
           id: string
           paid_at: string | null
+          payout_processing_at: string | null
+          payout_reference: string | null
           pricing_plan: string | null
           program_id: string | null
           public_reason: string | null
@@ -521,9 +571,11 @@ export type Database = {
           status: Database["public"]["Enums"]["ambassador_commission_status"]
           student_user_id: string | null
           transaction_code: string | null
+          transaction_type: Database["public"]["Enums"]["ambassador_commission_txn_type"]
           updated_at: string
         }
         Insert: {
+          adjustment_public_note?: string | null
           ambassador_id: string
           approved_at?: string | null
           available_at?: string | null
@@ -541,6 +593,8 @@ export type Database = {
           enrollment_id?: string | null
           id?: string
           paid_at?: string | null
+          payout_processing_at?: string | null
+          payout_reference?: string | null
           pricing_plan?: string | null
           program_id?: string | null
           public_reason?: string | null
@@ -550,9 +604,11 @@ export type Database = {
           status?: Database["public"]["Enums"]["ambassador_commission_status"]
           student_user_id?: string | null
           transaction_code?: string | null
+          transaction_type?: Database["public"]["Enums"]["ambassador_commission_txn_type"]
           updated_at?: string
         }
         Update: {
+          adjustment_public_note?: string | null
           ambassador_id?: string
           approved_at?: string | null
           available_at?: string | null
@@ -570,6 +626,8 @@ export type Database = {
           enrollment_id?: string | null
           id?: string
           paid_at?: string | null
+          payout_processing_at?: string | null
+          payout_reference?: string | null
           pricing_plan?: string | null
           program_id?: string | null
           public_reason?: string | null
@@ -579,6 +637,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["ambassador_commission_status"]
           student_user_id?: string | null
           transaction_code?: string | null
+          transaction_type?: Database["public"]["Enums"]["ambassador_commission_txn_type"]
           updated_at?: string
         }
         Relationships: [
@@ -9106,6 +9165,13 @@ export type Database = {
         | "on_hold"
         | "reversed"
         | "ineligible"
+      ambassador_commission_txn_type:
+        | "enrollment_commission"
+        | "bonus_commission"
+        | "positive_adjustment"
+        | "negative_adjustment"
+        | "recovery"
+        | "correction"
       ambassador_profile_status:
         | "active"
         | "suspended"
@@ -9706,6 +9772,14 @@ export const Constants = {
         "on_hold",
         "reversed",
         "ineligible",
+      ],
+      ambassador_commission_txn_type: [
+        "enrollment_commission",
+        "bonus_commission",
+        "positive_adjustment",
+        "negative_adjustment",
+        "recovery",
+        "correction",
       ],
       ambassador_profile_status: [
         "active",
