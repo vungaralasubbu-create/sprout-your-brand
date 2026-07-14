@@ -206,8 +206,18 @@ export const getCareerOverview = createServerFn({ method: "GET" })
     const completedSections = Object.values(sectionChecks).filter(Boolean).length;
     const readinessPercent = Math.round((completedSections / totalSections) * 100);
 
-    // Interview practice sessions — feature not built yet
-    const interviewSessions = 0;
+    // Interview practice sessions (real data)
+    const { data: interviewRows } = await sb
+      .from("interview_sessions")
+      .select("id, status, avg_practice_score, completed_at")
+      .eq("student_user_id", uid);
+    const interviewCompleted = ((interviewRows ?? []) as any[]).filter(
+      (r) => r.status === "completed",
+    );
+    const interviewSessions = interviewCompleted.length;
+    const latestInterview = interviewCompleted
+      .filter((r) => r.completed_at)
+      .sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())[0];
 
     // Task list derivations
     const tasks = [
@@ -217,7 +227,7 @@ export const getCareerOverview = createServerFn({ method: "GET" })
       { key: "select_portfolio_projects", label: "Select Portfolio Projects", status: sectionChecks.projects ? "completed" : "not_started" },
       { key: "add_preferences", label: "Add Career Preferences", status: sectionChecks.career_preferences ? "completed" : "not_started" },
       { key: "prepare_resume", label: "Prepare Resume", status: "not_started" },
-      { key: "practice_interview", label: "Practice Interview", status: "not_started" },
+      { key: "practice_interview", label: "Practice Interview", status: interviewSessions > 0 ? "completed" : "not_started" },
     ];
     const tasksCompleted = tasks.filter((t) => t.status === "completed").length;
 
@@ -269,6 +279,8 @@ export const getCareerOverview = createServerFn({ method: "GET" })
         profileProgressPercent: readinessPercent,
         resumeStatus: "not_started" as const,
         interviewSessions,
+        latestInterviewScore: latestInterview?.avg_practice_score != null ? Number(latestInterview.avg_practice_score) : null,
+        latestInterviewDate: latestInterview?.completed_at ?? null,
         portfolioProjectsCount: portfolioProjects.length,
         careerTasksCompleted: tasksCompleted,
         careerTasksTotal: tasks.length,
