@@ -4558,37 +4558,52 @@ export type Database = {
       payment_links: {
         Row: {
           amount: number
+          code: string
           course_id: string
           created_at: string
           created_by: string | null
+          disabled_at: string | null
+          disabled_by: string | null
           id: string
           is_active: boolean
+          name: string
           notes: string | null
           plan: Database["public"]["Enums"]["payment_plan"]
+          status: string
           updated_at: string
           url: string
         }
         Insert: {
           amount: number
+          code: string
           course_id: string
           created_at?: string
           created_by?: string | null
+          disabled_at?: string | null
+          disabled_by?: string | null
           id?: string
           is_active?: boolean
+          name: string
           notes?: string | null
           plan: Database["public"]["Enums"]["payment_plan"]
+          status?: string
           updated_at?: string
           url: string
         }
         Update: {
           amount?: number
+          code?: string
           course_id?: string
           created_at?: string
           created_by?: string | null
+          disabled_at?: string | null
+          disabled_by?: string | null
           id?: string
           is_active?: boolean
+          name?: string
           notes?: string | null
           plan?: Database["public"]["Enums"]["payment_plan"]
+          status?: string
           updated_at?: string
           url?: string
         }
