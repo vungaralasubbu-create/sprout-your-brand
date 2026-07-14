@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/campus-ambassador")({
+export const Route = createFileRoute("/campus-ambassador/")({
   head: () => ({
     meta: [
       { title: "Glintr Campus Ambassador Program — Represent, Refer, Earn" },

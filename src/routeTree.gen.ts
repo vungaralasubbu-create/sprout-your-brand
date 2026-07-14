@@ -18,6 +18,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
+import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
@@ -172,6 +173,11 @@ const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
 const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
   id: '/launch-your-brand/',
   path: '/launch-your-brand/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
+  id: '/campus-ambassador/',
+  path: '/campus-ambassador/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
@@ -846,6 +852,7 @@ export interface FileRoutesByFullPath {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
+  '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
@@ -965,6 +972,7 @@ export interface FileRoutesByTo {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
+  '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
@@ -1087,6 +1095,7 @@ export interface FileRoutesById {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
+  '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/_authenticated/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
@@ -1210,6 +1219,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/verify-certificate/$code'
+    | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/programs/'
     | '/admin/access-restricted'
@@ -1329,6 +1339,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/verify-certificate/$code'
+    | '/campus-ambassador'
     | '/launch-your-brand'
     | '/programs'
     | '/admin/access-restricted'
@@ -1450,6 +1461,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/verify-certificate/$code'
+    | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/programs/'
     | '/_authenticated/admin/access-restricted'
@@ -1569,6 +1581,7 @@ export interface RootRouteChildren {
   PartnerApplyRoute: typeof PartnerApplyRoute
   PartnerSignupRoute: typeof PartnerSignupRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
+  CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
@@ -1639,6 +1652,13 @@ declare module '@tanstack/react-router' {
       path: '/launch-your-brand'
       fullPath: '/launch-your-brand/'
       preLoaderRoute: typeof LaunchYourBrandIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campus-ambassador/': {
+      id: '/campus-ambassador/'
+      path: '/campus-ambassador'
+      fullPath: '/campus-ambassador/'
+      preLoaderRoute: typeof CampusAmbassadorIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/verify-certificate/$code': {
@@ -2818,6 +2838,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnerApplyRoute: PartnerApplyRoute,
   PartnerSignupRoute: PartnerSignupRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
+  CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
