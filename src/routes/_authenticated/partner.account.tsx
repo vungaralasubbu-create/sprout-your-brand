@@ -358,7 +358,7 @@ function WorkModelSection({
           ]}
           cta={
             <Button
-              variant={isFullTime ? "outline" : "default"}
+              variant={isFullTime ? "outline" : "primary"}
               onClick={() => setDialog("flex")}
               disabled={!isFullTime && !isPending}
             >
@@ -381,7 +381,7 @@ function WorkModelSection({
             <Button
               onClick={() => setDialog("full_time")}
               disabled={isFullTime || isPending}
-              variant={isFullTime ? "outline" : "default"}
+              variant={isFullTime ? "outline" : "primary"}
             >
               {isFullTime
                 ? "Current Model"
