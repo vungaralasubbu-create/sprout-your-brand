@@ -8004,6 +8004,168 @@ export type Database = {
           },
         ]
       }
+      student_support_activity: {
+        Row: {
+          action: string
+          actor_role: string
+          created_at: string
+          detail: string | null
+          id: string
+          meta: Json
+          student_user_id: string
+          ticket_id: string
+        }
+        Insert: {
+          action: string
+          actor_role: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          meta?: Json
+          student_user_id: string
+          ticket_id: string
+        }
+        Update: {
+          action?: string
+          actor_role?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          meta?: Json
+          student_user_id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_support_activity_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "student_support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_support_messages: {
+        Row: {
+          attachments: Json
+          author_user_id: string
+          body: string
+          created_at: string
+          id: string
+          is_admin: boolean
+          is_internal: boolean
+          ticket_id: string
+        }
+        Insert: {
+          attachments?: Json
+          author_user_id: string
+          body: string
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          is_internal?: boolean
+          ticket_id: string
+        }
+        Update: {
+          attachments?: Json
+          author_user_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          is_admin?: boolean
+          is_internal?: boolean
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_support_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "student_support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_support_tickets: {
+        Row: {
+          assigned_admin_id: string | null
+          assigned_at: string | null
+          attachments: Json
+          category: Database["public"]["Enums"]["student_support_category"]
+          closed_at: string | null
+          context_record_id: string | null
+          context_type: Database["public"]["Enums"]["student_support_context_type"]
+          created_at: string
+          description: string
+          id: string
+          last_activity_at: string
+          priority: Database["public"]["Enums"]["student_support_priority"]
+          program_id: string | null
+          reopened_at: string | null
+          resolution_note: string | null
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["student_support_status"]
+          student_user_id: string
+          subject: string
+          ticket_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_admin_id?: string | null
+          assigned_at?: string | null
+          attachments?: Json
+          category: Database["public"]["Enums"]["student_support_category"]
+          closed_at?: string | null
+          context_record_id?: string | null
+          context_type?: Database["public"]["Enums"]["student_support_context_type"]
+          created_at?: string
+          description: string
+          id?: string
+          last_activity_at?: string
+          priority?: Database["public"]["Enums"]["student_support_priority"]
+          program_id?: string | null
+          reopened_at?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["student_support_status"]
+          student_user_id: string
+          subject: string
+          ticket_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_admin_id?: string | null
+          assigned_at?: string | null
+          attachments?: Json
+          category?: Database["public"]["Enums"]["student_support_category"]
+          closed_at?: string | null
+          context_record_id?: string | null
+          context_type?: Database["public"]["Enums"]["student_support_context_type"]
+          created_at?: string
+          description?: string
+          id?: string
+          last_activity_at?: string
+          priority?: Database["public"]["Enums"]["student_support_priority"]
+          program_id?: string | null
+          reopened_at?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["student_support_status"]
+          student_user_id?: string
+          subject?: string
+          ticket_code?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_support_tickets_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tools: {
         Row: {
           category: string | null
@@ -8480,6 +8642,44 @@ export type Database = {
         | "code"
         | "link"
         | "other"
+      student_support_category:
+        | "program_access"
+        | "lesson_or_video"
+        | "learning_progress"
+        | "live_session"
+        | "project"
+        | "assignment"
+        | "certificate"
+        | "internship"
+        | "career_center"
+        | "resume_builder"
+        | "interview_practice"
+        | "ai_mentor"
+        | "technical_issue"
+        | "account_issue"
+        | "other"
+      student_support_context_type:
+        | "none"
+        | "program"
+        | "lesson"
+        | "live_session"
+        | "project"
+        | "assignment"
+        | "certificate"
+        | "internship"
+        | "internship_task"
+        | "resume"
+        | "interview_session"
+        | "ai_mentor_conversation"
+      student_support_priority: "low" | "normal" | "high" | "urgent"
+      student_support_status:
+        | "open"
+        | "assigned"
+        | "in_progress"
+        | "waiting_student"
+        | "waiting_support"
+        | "resolved"
+        | "closed"
       support_ticket_category:
         | "lead_attribution"
         | "revenue_share"
@@ -9041,6 +9241,47 @@ export const Constants = {
         "code",
         "link",
         "other",
+      ],
+      student_support_category: [
+        "program_access",
+        "lesson_or_video",
+        "learning_progress",
+        "live_session",
+        "project",
+        "assignment",
+        "certificate",
+        "internship",
+        "career_center",
+        "resume_builder",
+        "interview_practice",
+        "ai_mentor",
+        "technical_issue",
+        "account_issue",
+        "other",
+      ],
+      student_support_context_type: [
+        "none",
+        "program",
+        "lesson",
+        "live_session",
+        "project",
+        "assignment",
+        "certificate",
+        "internship",
+        "internship_task",
+        "resume",
+        "interview_session",
+        "ai_mentor_conversation",
+      ],
+      student_support_priority: ["low", "normal", "high", "urgent"],
+      student_support_status: [
+        "open",
+        "assigned",
+        "in_progress",
+        "waiting_student",
+        "waiting_support",
+        "resolved",
+        "closed",
       ],
       support_ticket_category: [
         "lead_attribution",
