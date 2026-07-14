@@ -599,3 +599,9 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Animated gradient background used on course visual break + final CTA. */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}

@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronRight,
+  ChevronLeft,
   Download,
   Phone,
   Clock,
@@ -24,6 +25,8 @@ import {
   Hammer,
   LineChart,
   Lightbulb,
+  Quote,
+  Star,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
@@ -247,7 +250,7 @@ function CoursePage() {
           </nav>
 
           <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 lg:gap-12 items-center">
-            <div>
+            <Reveal>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
                   {c.category.name}
@@ -299,36 +302,72 @@ function CoursePage() {
                   <MetaStat icon={Sparkles} label="Language" value={c.language} />
                 ) : null}
               </dl>
-            </div>
+            </Reveal>
 
-            <div className="relative">
-              <CourseHeroVisual
-                courseName={c.name}
-                categoryName={c.category.name}
-                imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
-              />
-            </div>
+            <Reveal delay={150}>
+              <div className="relative">
+                <CourseHeroVisual
+                  courseName={c.name}
+                  categoryName={c.category.name}
+                  imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
+                />
+              </div>
+            </Reveal>
+          </div>
+
+        </Container>
+      </Section>
+
+      {/* ============ QUICK STATS ============ */}
+      <Section className="py-8 border-y bg-surface-2/40">
+        <Container>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+            {buildQuickStats(c).map((h, i) => (
+              <Reveal key={h.label} delay={i * 70}>
+                <div className="group flex items-center gap-3 rounded-2xl border border-border/60 bg-surface-1 p-4 hover:border-primary/50 hover:shadow-sm transition-all">
+                  <span className="inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-accent/15 text-primary shrink-0 transition-transform group-hover:scale-105">
+                    <h.icon className="size-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-caption">{h.label}</div>
+                    <div className="text-sm font-semibold truncate">{h.value}</div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </Container>
       </Section>
 
-      {/* ============ HIGHLIGHT STRIP ============ */}
-      {highlights.length > 0 ? (
-        <Section className="py-6 border-y bg-surface-2/40">
-          <Container>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {highlights.map((h) => (
-                <div key={h.label} className="flex items-center gap-3 py-2">
-                  <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
-                    <h.icon className="size-4" />
-                  </span>
-                  <span className="text-sm font-medium leading-tight">{h.label}</span>
-                </div>
-              ))}
+      {/* ============ LEARN BY BUILDING ============ */}
+      <Section className="py-14 lg:py-20">
+        <Container>
+          <Reveal>
+            <div className="max-w-2xl mb-10">
+              <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                Learning Experience
+              </span>
+              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+                Learn By Building.
+              </h2>
+              <p className="mt-4 text-body-lg text-muted-foreground">
+                Develop practical skills through structured learning, guided practice and real-world applications.
+              </p>
             </div>
-          </Container>
-        </Section>
-      ) : null}
+          </Reveal>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {(learningExperience.length > 0
+              ? learningExperience.slice(0, 4)
+              : DEFAULT_LEARN_CARDS
+            ).map((card, i) => (
+              <Reveal key={i} delay={i * 90}>
+                <ExperienceCard {...card} />
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
 
       {/* ============ WHY THIS PROGRAM ============ */}
       {c.full_description || whyContent ? (
@@ -366,26 +405,8 @@ function CoursePage() {
         </Section>
       ) : null}
 
-      {/* ============ LEARNING EXPERIENCE ============ */}
-      {learningExperience.length > 0 ? (
-        <Section className="py-14 lg:py-20 bg-surface-2/40 border-y">
-          <Container>
-            <div className="max-w-2xl mb-10">
-              <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                Learning Experience
-              </span>
-              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-                Learn By Understanding. Grow By Building.
-              </h2>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {learningExperience.slice(0, 4).map((card, i) => (
-                <ExperienceCard key={i} {...card} />
-              ))}
-            </div>
-          </Container>
-        </Section>
-      ) : null}
+      {/* (Learning Experience is rendered as "Learn By Building" above.) */}
+
 
       {/* ============ CURRICULUM ============ */}
       {c.modules.length > 0 ? (
@@ -444,21 +465,47 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
-      {/* ============ PROJECTS ============ */}
+      {/* ============ PROJECTS SLIDER ============ */}
       {c.projects.length > 0 ? (
-        <SectionBlock eyebrow="Projects" title="Build Work Worth Showing." tone="soft">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {c.projects.slice(0, 3).map((p) => (
-              <ProjectCard key={p.id} project={p} />
-            ))}
-          </div>
-          {c.projects.length > 3 ? (
-            <p className="mt-6 text-caption">
-              Additional project templates available inside the program.
-            </p>
-          ) : null}
+        <SectionBlock
+          eyebrow="Projects"
+          title="Build Projects That Show Your Skills."
+          tone="soft"
+        >
+          <ProjectSlider projects={c.projects as any} />
         </SectionBlock>
       ) : null}
+
+      {/* ============ REVIEWS (renders only when approved reviews are supplied) ============ */}
+      <CourseReviewsSection courseId={c.id} />
+
+      {/* ============ VISUAL BREAK ============ */}
+      <Section className="relative overflow-hidden py-20 lg:py-28 text-white">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.28_0.14_255),oklch(0.42_0.16_220),oklch(0.55_0.15_195))] bg-[length:200%_200%] animate-[gradient-shift_14s_ease-in-out_infinite]"
+        />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-black/10" />
+        <Container>
+          <Reveal>
+            <div className="max-w-3xl">
+              <span className="text-caption font-mono uppercase tracking-widest text-white/80">
+                {c.category.name}
+              </span>
+              <h2 className="mt-3 text-heading-xl lg:text-display-md font-display font-semibold tracking-tight text-balance text-white">
+                Build Skills.
+                <br className="hidden sm:block" /> Create Projects.
+                <br className="hidden sm:block" /> Show What You Can Do.
+              </h2>
+              <p className="mt-5 text-body-lg text-white/85 max-w-2xl">
+                {c.name} is designed to move you from learning to doing — through structured
+                practice, real projects and mentor support.
+              </p>
+            </div>
+          </Reveal>
+        </Container>
+      </Section>
+
 
       {/* ============ PROGRAM EXPERIENCE FEATURE ============ */}
       {programExperience.length > 0 ? (
@@ -739,28 +786,41 @@ function CoursePage() {
       ) : null}
 
       {/* ============ FINAL CTA ============ */}
-      <Section className="py-14 lg:py-20 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent">
+      <Section className="relative overflow-hidden py-16 lg:py-24">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.32_0.14_255),oklch(0.48_0.16_220),oklch(0.6_0.14_195))] bg-[length:200%_200%] animate-[gradient-shift_18s_ease-in-out_infinite]"
+        />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-black/10" />
         <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-              Ready To Build Skills That Move You Forward?
-            </h2>
-            <p className="mt-5 text-body-lg text-muted-foreground">
-              Take the next step in {c.name} with mentorship, projects, and career support built
-              into the program.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button asChild size="lg" variant="gradient">
-                <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
-                  Apply Now
-                  <ArrowRight className="size-4" />
-                </Link>
-              </Button>
-              <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
+          <Reveal>
+            <div className="max-w-3xl mx-auto text-center text-white">
+              <h2 className="text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+                Ready To Start Building Your Skills?
+              </h2>
+              <p className="mt-5 text-body-lg text-white/90">
+                Take the next step in {c.name} with mentorship, projects, and career support built
+                into the program.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">
+                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
+                    Apply Now
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <CounsellorForm
+                  size="lg"
+                  variant="outline"
+                  context={counsellorCtx}
+                  className="border-white/40 text-white hover:bg-white/10 hover:text-white"
+                />
+              </div>
             </div>
-          </div>
+          </Reveal>
         </Container>
       </Section>
+
 
       {/* ============ STICKY BARS ============ */}
       {/* Desktop */}
@@ -1259,3 +1319,305 @@ function buildIncludedFeatures(c: {
 
 // Suppress unused-import lint noise for icons referenced only via helpers.
 void Layers;
+void Quote;
+void Star;
+void Phone;
+void ShieldCheck;
+
+// -------------------- New: Reveal, Slider, Reviews, helpers --------------------
+
+function Reveal({
+  children,
+  delay = 0,
+  as: Tag = "div",
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  as?: keyof React.JSX.IntrinsicElements;
+  className?: string;
+}) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setShown(true);
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const Comp = Tag as any;
+  return (
+    <Comp
+      ref={ref as any}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={cn(
+        "transition-all duration-700 ease-out will-change-transform",
+        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
+        className,
+      )}
+    >
+      {children}
+    </Comp>
+  );
+}
+
+function ProjectSlider({
+  projects,
+}: {
+  projects: Array<{
+    id: string;
+    name: string;
+    short_description: string | null;
+    image_url: string | null;
+    project_type: string | null;
+    difficulty: string | null;
+    industry: string | null;
+  }>;
+}) {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const update = () => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 4);
+    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+  useEffect(() => {
+    update();
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [projects.length]);
+
+  const nudge = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-project-card]");
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.9;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
+
+  return (
+    <div className="relative">
+      <div className="flex items-center justify-end gap-2 mb-4">
+        <button
+          type="button"
+          aria-label="Previous projects"
+          disabled={!canPrev}
+          onClick={() => nudge(-1)}
+          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          <ChevronLeft className="size-5" />
+        </button>
+        <button
+          type="button"
+          aria-label="Next projects"
+          disabled={!canNext}
+          onClick={() => nudge(1)}
+          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          <ChevronRight className="size-5" />
+        </button>
+      </div>
+      <div
+        ref={scrollerRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {projects.map((p) => (
+          <div
+            key={p.id}
+            data-project-card
+            className="snap-start shrink-0 w-[85%] sm:w-[46%] lg:w-[calc((100%-3rem)/3)]"
+          >
+            <ProjectCard project={p} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Reviews section. Renders only when approved reviews exist in the
+ * `course_reviews` table. Silently hides when the table is missing or
+ * returns no approved rows — no fake reviews, ever.
+ */
+interface CourseReview {
+  id: string;
+  student_name: string;
+  student_role?: string | null;
+  avatar_url?: string | null;
+  rating?: number | null;
+  review_text: string;
+}
+function CourseReviewsSection({ courseId }: { courseId: string }) {
+  const { data } = useQuery<CourseReview[]>({
+    queryKey: ["course-reviews", courseId],
+    queryFn: async () => {
+      try {
+        const res = await (supabase as any)
+          .from("course_reviews")
+          .select("id,student_name,student_role,avatar_url,rating,review_text")
+          .eq("course_id", courseId)
+          .eq("is_approved", true)
+          .order("display_order", { ascending: true })
+          .limit(12);
+        if (res.error) return [];
+        return (res.data ?? []) as CourseReview[];
+      } catch {
+        return [];
+      }
+    },
+    staleTime: 60_000,
+  });
+
+  const reviews = data ?? [];
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const nudge = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.9, behavior: "smooth" });
+  };
+  if (reviews.length === 0) return null;
+
+  return (
+    <SectionBlock eyebrow="Student Reviews" title="What Learners Say.">
+      <div className="relative">
+        <div className="flex items-center justify-end gap-2 mb-4">
+          <button
+            type="button"
+            aria-label="Previous review"
+            onClick={() => nudge(-1)}
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors"
+          >
+            <ChevronLeft className="size-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next review"
+            onClick={() => nudge(1)}
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors"
+          >
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
+        <div
+          ref={scrollerRef}
+          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {reviews.map((r) => (
+            <article
+              key={r.id}
+              className="snap-start shrink-0 w-[85%] sm:w-[46%] lg:w-[calc((100%-3rem)/3)] rounded-2xl border border-border/60 bg-surface-1 p-6"
+            >
+              <Quote className="size-6 text-primary/60" />
+              {typeof r.rating === "number" ? (
+                <div className="mt-3 flex items-center gap-0.5" aria-label={`Rated ${r.rating} of 5`}>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={cn(
+                        "size-4",
+                        i < Math.round(r.rating ?? 0)
+                          ? "fill-warning text-warning"
+                          : "text-muted-foreground/30",
+                      )}
+                    />
+                  ))}
+                </div>
+              ) : null}
+              <p className="mt-3 text-sm text-foreground/90 leading-relaxed line-clamp-6">
+                {r.review_text}
+              </p>
+              <div className="mt-5 flex items-center gap-3">
+                {r.avatar_url ? (
+                  <img
+                    src={r.avatar_url}
+                    alt=""
+                    className="size-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="inline-flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
+                    {r.student_name.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">{r.student_name}</div>
+                  {r.student_role ? (
+                    <div className="text-caption truncate">{r.student_role}</div>
+                  ) : null}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </SectionBlock>
+  );
+}
+
+function buildQuickStats(c: {
+  duration: string | null;
+  level: string | null;
+  learning_mode: string | null;
+}): Array<{ icon: React.ComponentType<{ className?: string }>; label: string; value: string }> {
+  const items: Array<{ icon: React.ComponentType<{ className?: string }>; label: string; value: string }> = [];
+  items.push({ icon: Clock, label: "Duration", value: c.duration ?? "Self-paced" });
+  items.push({ icon: Globe, label: "Learning Mode", value: c.learning_mode ?? "Online" });
+  items.push({ icon: GraduationCap, label: "Skill Level", value: c.level ?? "All Levels" });
+  items.push({ icon: Award, label: "Certificate", value: "On Completion" });
+  return items;
+}
+
+const DEFAULT_LEARN_CARDS: Array<{
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}> = [
+  {
+    title: "Structured Learning",
+    description: "A guided curriculum that builds knowledge step by step from fundamentals to applied skills.",
+    icon: BookOpen,
+  },
+  {
+    title: "Practical Projects",
+    description: "Hands-on projects and assignments so you learn by building, not just watching.",
+    icon: Hammer,
+  },
+  {
+    title: "Mentor Support",
+    description: "Guidance from mentors who help you unblock, refine your work and stay on track.",
+    icon: Compass,
+  },
+  {
+    title: "Career Preparation",
+    description: "Skill development, showcase-ready projects and career support to help you move forward.",
+    icon: Briefcase,
+  },
+];
+
