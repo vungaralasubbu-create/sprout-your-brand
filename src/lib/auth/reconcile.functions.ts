@@ -53,7 +53,7 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
           mobile: app.mobile,
           city: app.city,
           state: app.state,
-          status: app.status === "approved" ? "active" : "pending",
+          status: app.status === "approved" ? "active" : "suspended",
         });
       }
       await supabaseAdmin
