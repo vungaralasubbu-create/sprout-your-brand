@@ -45,6 +45,13 @@ function Page() {
     retry: false,
   });
 
+  const sessionsFn = useServerFn(getProgramLiveSessionsSummary);
+  const { data: liveSessions } = useQuery({
+    queryKey: ["program-live-sessions", data?.program?.id],
+    queryFn: () => sessionsFn({ data: { courseId: data!.program.id } }),
+    enabled: !!data?.program?.id,
+  });
+
   const track = useMutation({ mutationFn: (v: Parameters<typeof trackFn>[0]["data"]) => trackFn({ data: v }) });
 
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
