@@ -370,7 +370,7 @@ function CoursePage() {
       {learningExperience.length > 0 ? (
         <Section className="py-14 lg:py-20 bg-surface-2/40 border-y">
           <Container>
-            <div className="max-w-2xl mb-12">
+            <div className="max-w-2xl mb-10">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
                 Learning Experience
               </span>
@@ -468,7 +468,7 @@ function CoursePage() {
             className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.6_0.18_220/0.25),transparent_60%)]"
           />
           <Container className="relative">
-            <div className="max-w-2xl mb-12">
+            <div className="max-w-2xl mb-10">
               <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_180)]">
                 Program Experience
               </span>
@@ -622,7 +622,7 @@ function CoursePage() {
       {price != null ? (
         <Section className="py-14 lg:py-20">
           <Container>
-            <div className="max-w-2xl mx-auto text-center mb-10">
+            <div className="max-w-2xl mx-auto text-center mb-8">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
                 Program Access
               </span>
@@ -1102,7 +1102,7 @@ function SectionBlock({
       className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "")}
     >
       <Container>
-        <div className="max-w-2xl mb-12">
+        <div className="max-w-2xl mb-10">
           {eyebrow ? (
             <span className="text-caption font-mono uppercase tracking-widest text-primary">
               {eyebrow}
