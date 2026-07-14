@@ -46,6 +46,7 @@ async function routeAfterAuth(
 
 function AuthPage() {
   const navigate = useNavigate();
+  const reconcile = useServerFn(reconcileRolesForCurrentUser);
   const [mode, setMode] = useState<"signin" | "signup" | "recovery">("signin");
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -61,11 +62,11 @@ function AuthPage() {
 
     if (!isRecovery) {
       supabase.auth.getSession().then(({ data }) => {
-        if (data.session?.user) routeAfterAuth(data.session.user.id, navigate);
+        if (data.session?.user) routeAfterAuth(data.session.user.id, navigate, reconcile);
       });
     }
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, reconcile]);
 
   async function handle(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
