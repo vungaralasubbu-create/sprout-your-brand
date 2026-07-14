@@ -72,7 +72,7 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
         .gte("assigned_at", dayISO),
       s.from("partner_leads").select("id", { count: "exact", head: true })
         .eq("status", "new")
-        .is("last_activity_at", null),
+        .is("updated_at", null),
       s.from("partner_follow_ups").select("id", { count: "exact", head: true })
         .eq("status", "scheduled")
         .lt("due_at", nowISO),
@@ -248,7 +248,7 @@ export const getCommandAnalytics = createServerFn({ method: "GET" })
     // Lead source split (own vs glintr_provided) — from leads created in range
     const { data: leadsInRange } = await s
       .from("partner_leads")
-      .select("id, lead_ownership_type, status, last_activity_at, assigned_partner_id, owner_partner_id, created_at")
+      .select("id, lead_ownership_type, status, updated_at, assigned_partner_id, owner_partner_id, created_at")
       .gte("created_at", from)
       .lte("created_at", to);
     const source = {
@@ -394,13 +394,13 @@ export const getCommandOperational = createServerFn({ method: "GET" })
     ] = await Promise.all([
       s.from("partners").select("id", { count: "exact", head: true })
         .eq("status", "active")
-        .gte("last_activity_at", new Date(now.getTime() - 15 * 60_000).toISOString()),
+        .gte("updated_at", new Date(now.getTime() - 15 * 60_000).toISOString()),
       s.from("partners").select("id", { count: "exact", head: true })
         .eq("status", "active")
-        .gte("last_activity_at", dayISO),
+        .gte("updated_at", dayISO),
       s.from("partners").select("id", { count: "exact", head: true })
         .eq("status", "active")
-        .or(`last_activity_at.is.null,last_activity_at.lt.${dayISO}`),
+        .or(`updated_at.is.null,updated_at.lt.${dayISO}`),
       s.from("partners").select("id", { count: "exact", head: true })
         .eq("status", "active").eq("work_model", "flexible"),
       s.from("partners").select("id", { count: "exact", head: true })
@@ -498,7 +498,7 @@ export const getSalesWorkMonitoring = createServerFn({ method: "GET" })
     const endOfDayISO = endOfDay.toISOString();
 
     const { data: partners } = await s.from("partners")
-      .select("id, partner_code, display_name, first_name, last_activity_at")
+      .select("id, partner_code, display_name, first_name, updated_at")
       .eq("status", "active")
       .limit(200);
 
@@ -512,8 +512,8 @@ export const getSalesWorkMonitoring = createServerFn({ method: "GET" })
       { data: overdueFollowUps },
       { data: noAnswerLeads },
     ] = await Promise.all([
-      s.from("partner_leads").select("assigned_partner_id, owner_partner_id, status, last_activity_at").in("assigned_partner_id", partnerIds),
-      s.from("partner_leads").select("assigned_partner_id, owner_partner_id").in("assigned_partner_id", partnerIds).eq("status", "new").is("last_activity_at", null),
+      s.from("partner_leads").select("assigned_partner_id, owner_partner_id, status, updated_at").in("assigned_partner_id", partnerIds),
+      s.from("partner_leads").select("assigned_partner_id, owner_partner_id").in("assigned_partner_id", partnerIds).eq("status", "new").is("updated_at", null),
       s.from("partner_follow_ups").select("partner_id").eq("status", "scheduled").gte("due_at", dayISO).lt("due_at", endOfDayISO).in("partner_id", partnerIds),
       s.from("partner_follow_ups").select("partner_id").eq("status", "scheduled").lt("due_at", nowISO).in("partner_id", partnerIds),
       s.from("partner_leads").select("assigned_partner_id, owner_partner_id").in("assigned_partner_id", partnerIds).eq("status", "no_answer"),
@@ -538,7 +538,7 @@ export const getSalesWorkMonitoring = createServerFn({ method: "GET" })
       partnerId: p.id,
       partnerCode: p.partner_code ?? "—",
       name: p.display_name ?? p.first_name ?? "Partner",
-      lastActivity: p.last_activity_at ?? null,
+      lastActivity: p.updated_at ?? null,
       assigned: assignedMap.get(p.id) ?? 0,
       notContacted: notContactedMap.get(p.id) ?? 0,
       todayFollowUps: todayFuMap.get(p.id) ?? 0,
