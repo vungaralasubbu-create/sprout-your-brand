@@ -226,17 +226,18 @@ export const getCareerOverview = createServerFn({ method: "GET" })
     if (enrolledCourseIds.length) {
       const { data: placement } = await sb
         .from("course_placement_support")
-        .select("course_id, title, resource_type, resource_url")
-        .in("course_id", enrolledCourseIds);
+        .select("course_id, support_type, description, is_enabled")
+        .in("course_id", enrolledCourseIds)
+        .eq("is_enabled", true);
       const { data: enrolledCourses } = await sb
         .from("courses")
         .select("id, title")
         .in("id", enrolledCourseIds);
       const titleById = new Map((enrolledCourses ?? []).map((c: any) => [c.id, c.title]));
       guidance = ((placement ?? []) as any[]).map((r) => ({
-        title: r.title ?? "Career guide",
-        type: r.resource_type ?? "guide",
-        url: r.resource_url ?? null,
+        title: r.description ?? r.support_type ?? "Career guide",
+        type: r.support_type ?? "guide",
+        url: null,
         course_title: (titleById.get(r.course_id) as string) ?? "Program",
       }));
     }
