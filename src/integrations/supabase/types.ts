@@ -1860,6 +1860,7 @@ export type Database = {
           id: string
           is_free_preview: boolean
           is_published: boolean
+          is_required: boolean
           lesson_type: Database["public"]["Enums"]["lesson_type"]
           name: string
           resource_url: string | null
@@ -1875,6 +1876,7 @@ export type Database = {
           id?: string
           is_free_preview?: boolean
           is_published?: boolean
+          is_required?: boolean
           lesson_type?: Database["public"]["Enums"]["lesson_type"]
           name: string
           resource_url?: string | null
@@ -1890,6 +1892,7 @@ export type Database = {
           id?: string
           is_free_preview?: boolean
           is_published?: boolean
+          is_required?: boolean
           lesson_type?: Database["public"]["Enums"]["lesson_type"]
           name?: string
           resource_url?: string | null
@@ -1915,6 +1918,7 @@ export type Database = {
           duration: string | null
           id: string
           is_published: boolean
+          is_required: boolean
           learning_outcomes: string[] | null
           name: string
           number: number | null
@@ -1928,6 +1932,7 @@ export type Database = {
           duration?: string | null
           id?: string
           is_published?: boolean
+          is_required?: boolean
           learning_outcomes?: string[] | null
           name: string
           number?: number | null
@@ -1941,6 +1946,7 @@ export type Database = {
           duration?: string | null
           id?: string
           is_published?: boolean
+          is_required?: boolean
           learning_outcomes?: string[] | null
           name?: string
           number?: number | null
@@ -2349,6 +2355,7 @@ export type Database = {
           target_audience: string | null
           tax_config: Json | null
           thumbnail_url: string | null
+          unlock_mode: string
           updated_at: string
           updated_by: string | null
           weekly_commitment: string | null
@@ -2399,6 +2406,7 @@ export type Database = {
           target_audience?: string | null
           tax_config?: Json | null
           thumbnail_url?: string | null
+          unlock_mode?: string
           updated_at?: string
           updated_by?: string | null
           weekly_commitment?: string | null
@@ -2449,6 +2457,7 @@ export type Database = {
           target_audience?: string | null
           tax_config?: Json | null
           thumbnail_url?: string | null
+          unlock_mode?: string
           updated_at?: string
           updated_by?: string | null
           weekly_commitment?: string | null
@@ -2652,8 +2661,11 @@ export type Database = {
       enrollments: {
         Row: {
           completed_at: string | null
+          content_completed_at: string | null
           course_id: string | null
           created_at: string
+          current_lesson_id: string | null
+          current_module_id: string | null
           eligible_revenue: number
           enrolled_at: string
           gross_revenue: number
@@ -2673,8 +2685,11 @@ export type Database = {
         }
         Insert: {
           completed_at?: string | null
+          content_completed_at?: string | null
           course_id?: string | null
           created_at?: string
+          current_lesson_id?: string | null
+          current_module_id?: string | null
           eligible_revenue: number
           enrolled_at?: string
           gross_revenue: number
@@ -2694,8 +2709,11 @@ export type Database = {
         }
         Update: {
           completed_at?: string | null
+          content_completed_at?: string | null
           course_id?: string | null
           created_at?: string
+          current_lesson_id?: string | null
+          current_module_id?: string | null
           eligible_revenue?: number
           enrolled_at?: string
           gross_revenue?: number
@@ -2719,6 +2737,20 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_current_lesson_id_fkey"
+            columns: ["current_lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_current_module_id_fkey"
+            columns: ["current_module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
             referencedColumns: ["id"]
           },
           {
@@ -3058,6 +3090,58 @@ export type Database = {
             columns: ["lesson_id"]
             isOneToOne: false
             referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      module_completions: {
+        Row: {
+          completed_at: string
+          course_id: string
+          created_at: string
+          enrollment_id: string
+          id: string
+          module_id: string
+          student_user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          course_id: string
+          created_at?: string
+          enrollment_id: string
+          id?: string
+          module_id: string
+          student_user_id: string
+        }
+        Update: {
+          completed_at?: string
+          course_id?: string
+          created_at?: string
+          enrollment_id?: string
+          id?: string
+          module_id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "module_completions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "module_completions_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "module_completions_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
             referencedColumns: ["id"]
           },
         ]
@@ -5391,6 +5475,48 @@ export type Database = {
           value?: string | null
         }
         Relationships: []
+      }
+      program_content_completions: {
+        Row: {
+          completed_at: string
+          course_id: string
+          created_at: string
+          enrollment_id: string
+          id: string
+          student_user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          course_id: string
+          created_at?: string
+          enrollment_id: string
+          id?: string
+          student_user_id: string
+        }
+        Update: {
+          completed_at?: string
+          course_id?: string
+          created_at?: string
+          enrollment_id?: string
+          id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "program_content_completions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "program_content_completions_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       referral_program_settings: {
         Row: {
