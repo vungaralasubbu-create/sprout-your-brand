@@ -19,15 +19,26 @@ import {
   LogOut,
   Menu,
   X,
+  Bell,
+  AlertTriangle,
+  CalendarClock,
+  PhoneOff,
+  CreditCard,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
+import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const NAV = [
   { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
-  { to: "/partner/coming-soon", label: "My Leads", icon: Users },
+  { to: "/partner/my-leads", label: "My Leads", icon: Users },
   { to: "/partner/add-leads", label: "Add Leads", icon: UserPlus },
   { to: "/partner/payment-links", label: "Payment Links", icon: Link2 },
   { to: "/partner/payment-verification", label: "Payment Verification", icon: ShieldCheck },
