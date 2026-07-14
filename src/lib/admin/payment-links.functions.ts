@@ -196,11 +196,11 @@ export const createPaymentLink = createServerFn({ method: "POST" })
         notes: data.notes ?? null,
         status: "active",
         created_by: userId,
-      })
+      } as any)
       .select("id, code")
       .single();
     if (error) throw new Error(error.message);
-    return { id: inserted.id as string, code: inserted.code as string };
+    return { id: (inserted as any).id as string, code: (inserted as any).code as string };
   });
 
 const editSchema = z.object({
