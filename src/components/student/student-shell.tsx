@@ -118,6 +118,11 @@ export function StudentShell() {
                   >
                     <Icon className="size-4" />
                     <span className="flex-1">{item.label}</span>
+                    {item.to === "/student/notifications" && unread > 0 && (
+                      <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-medium flex items-center justify-center">
+                        {unread > 9 ? "9+" : unread}
+                      </span>
+                    )}
                   </Link>
                 );
               })}
