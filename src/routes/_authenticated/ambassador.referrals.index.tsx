@@ -24,7 +24,7 @@ import {
   listReferralActivity,
 } from "@/lib/campus-ambassador/referrals.functions";
 
-export const Route = createFileRoute("/_authenticated/ambassador/referrals")({
+export const Route = createFileRoute("/_authenticated/ambassador/referrals/")({
   head: () => ({
     meta: [
       { title: "My Referrals — Glintr Campus Ambassador" },

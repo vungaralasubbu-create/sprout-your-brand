@@ -103,6 +103,7 @@ import { Route as AuthenticatedStudentInternshipIndexRouteImport } from './route
 import { Route as AuthenticatedStudentCareerIndexRouteImport } from './routes/_authenticated/student.career.index'
 import { Route as AuthenticatedStudentAssignmentsIndexRouteImport } from './routes/_authenticated/student.assignments.index'
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
+import { Route as AuthenticatedAmbassadorReferralsIndexRouteImport } from './routes/_authenticated/ambassador.referrals.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
@@ -676,6 +677,12 @@ const AuthenticatedPartnerEmploymentIndexRoute =
     path: '/employment/',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedAmbassadorReferralsIndexRoute =
+  AuthenticatedAmbassadorReferralsIndexRouteImport.update({
+    id: '/referrals/',
+    path: '/referrals/',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
 const AuthenticatedAdminTeamIndexRoute =
   AuthenticatedAdminTeamIndexRouteImport.update({
     id: '/team/',
@@ -980,6 +987,7 @@ export interface FileRoutesByFullPath {
   '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
+  '/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/student/career/': typeof AuthenticatedStudentCareerIndexRoute
@@ -1104,6 +1112,7 @@ export interface FileRoutesByTo {
   '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
+  '/ambassador/referrals': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/student/career': typeof AuthenticatedStudentCareerIndexRoute
@@ -1233,6 +1242,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
+  '/_authenticated/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/_authenticated/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/_authenticated/student/career/': typeof AuthenticatedStudentCareerIndexRoute
@@ -1362,6 +1372,7 @@ export interface FileRouteTypes {
     | '/admin/payment-links/'
     | '/admin/payouts/'
     | '/admin/team/'
+    | '/ambassador/referrals/'
     | '/partner/employment/'
     | '/student/assignments/'
     | '/student/career/'
@@ -1486,6 +1497,7 @@ export interface FileRouteTypes {
     | '/admin/payment-links'
     | '/admin/payouts'
     | '/admin/team'
+    | '/ambassador/referrals'
     | '/partner/employment'
     | '/student/assignments'
     | '/student/career'
@@ -1614,6 +1626,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/payment-links/'
     | '/_authenticated/admin/payouts/'
     | '/_authenticated/admin/team/'
+    | '/_authenticated/ambassador/referrals/'
     | '/_authenticated/partner/employment/'
     | '/_authenticated/student/assignments/'
     | '/_authenticated/student/career/'
@@ -2313,6 +2326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerEmploymentIndexRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/ambassador/referrals/': {
+      id: '/_authenticated/ambassador/referrals/'
+      path: '/referrals'
+      fullPath: '/ambassador/referrals/'
+      preLoaderRoute: typeof AuthenticatedAmbassadorReferralsIndexRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
     '/_authenticated/admin/team/': {
       id: '/_authenticated/admin/team/'
       path: '/team'
@@ -2676,12 +2696,15 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedAmbassadorRouteChildren {
   AuthenticatedAmbassadorDashboardRoute: typeof AuthenticatedAmbassadorDashboardRoute
+  AuthenticatedAmbassadorReferralsIndexRoute: typeof AuthenticatedAmbassadorReferralsIndexRoute
 }
 
 const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren =
   {
     AuthenticatedAmbassadorDashboardRoute:
       AuthenticatedAmbassadorDashboardRoute,
+    AuthenticatedAmbassadorReferralsIndexRoute:
+      AuthenticatedAmbassadorReferralsIndexRoute,
   }
 
 const AuthenticatedAmbassadorRouteWithChildren =
