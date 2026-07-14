@@ -338,16 +338,25 @@ export type Database = {
           created_at: string
           enrollment_id: string | null
           file_url: string | null
+          files: Json
           id: string
+          is_draft: boolean
+          is_late: boolean
+          repository_link: string | null
+          result: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           reviewer_feedback: string | null
+          revision_notes: string | null
+          score: number | null
           status: string
           student_user_id: string
+          submission_link: string | null
           submission_notes: string | null
           submission_text: string | null
           submitted_at: string
           updated_at: string
+          version: number
         }
         Insert: {
           assignment_id: string
@@ -355,16 +364,25 @@ export type Database = {
           created_at?: string
           enrollment_id?: string | null
           file_url?: string | null
+          files?: Json
           id?: string
+          is_draft?: boolean
+          is_late?: boolean
+          repository_link?: string | null
+          result?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           reviewer_feedback?: string | null
+          revision_notes?: string | null
+          score?: number | null
           status?: string
           student_user_id: string
+          submission_link?: string | null
           submission_notes?: string | null
           submission_text?: string | null
           submitted_at?: string
           updated_at?: string
+          version?: number
         }
         Update: {
           assignment_id?: string
@@ -372,16 +390,25 @@ export type Database = {
           created_at?: string
           enrollment_id?: string | null
           file_url?: string | null
+          files?: Json
           id?: string
+          is_draft?: boolean
+          is_late?: boolean
+          repository_link?: string | null
+          result?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           reviewer_feedback?: string | null
+          revision_notes?: string | null
+          score?: number | null
           status?: string
           student_user_id?: string
+          submission_link?: string | null
           submission_notes?: string | null
           submission_text?: string | null
           submitted_at?: string
           updated_at?: string
+          version?: number
         }
         Relationships: [
           {
@@ -1506,50 +1533,98 @@ export type Database = {
       course_assignments: {
         Row: {
           allow_file: boolean
+          allow_link: boolean
+          allow_multiple_files: boolean
+          allow_repo: boolean
           allow_text: boolean
+          assignment_type: string
+          block_late: boolean
           course_id: string
           created_at: string
           description: string | null
           display_order: number
+          due_at: string | null
           due_days: number | null
+          evaluation_criteria: string | null
+          expected_format: string | null
           id: string
           instructions: string | null
           is_published: boolean
           is_required: boolean
+          learning_objective: string | null
+          max_score: number | null
           module_id: string | null
           name: string
+          passing_score: number | null
+          requirements: string | null
+          unlock_assignment_id: string | null
+          unlock_lesson_id: string | null
+          unlock_module_id: string | null
+          unlock_rule: string
           updated_at: string
         }
         Insert: {
           allow_file?: boolean
+          allow_link?: boolean
+          allow_multiple_files?: boolean
+          allow_repo?: boolean
           allow_text?: boolean
+          assignment_type?: string
+          block_late?: boolean
           course_id: string
           created_at?: string
           description?: string | null
           display_order?: number
+          due_at?: string | null
           due_days?: number | null
+          evaluation_criteria?: string | null
+          expected_format?: string | null
           id?: string
           instructions?: string | null
           is_published?: boolean
           is_required?: boolean
+          learning_objective?: string | null
+          max_score?: number | null
           module_id?: string | null
           name: string
+          passing_score?: number | null
+          requirements?: string | null
+          unlock_assignment_id?: string | null
+          unlock_lesson_id?: string | null
+          unlock_module_id?: string | null
+          unlock_rule?: string
           updated_at?: string
         }
         Update: {
           allow_file?: boolean
+          allow_link?: boolean
+          allow_multiple_files?: boolean
+          allow_repo?: boolean
           allow_text?: boolean
+          assignment_type?: string
+          block_late?: boolean
           course_id?: string
           created_at?: string
           description?: string | null
           display_order?: number
+          due_at?: string | null
           due_days?: number | null
+          evaluation_criteria?: string | null
+          expected_format?: string | null
           id?: string
           instructions?: string | null
           is_published?: boolean
           is_required?: boolean
+          learning_objective?: string | null
+          max_score?: number | null
           module_id?: string | null
           name?: string
+          passing_score?: number | null
+          requirements?: string | null
+          unlock_assignment_id?: string | null
+          unlock_lesson_id?: string | null
+          unlock_module_id?: string | null
+          unlock_rule?: string
           updated_at?: string
         }
         Relationships: [
@@ -1563,6 +1638,27 @@ export type Database = {
           {
             foreignKeyName: "course_assignments_module_id_fkey"
             columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_assignments_unlock_assignment_id_fkey"
+            columns: ["unlock_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "course_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_assignments_unlock_lesson_id_fkey"
+            columns: ["unlock_lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_assignments_unlock_module_id_fkey"
+            columns: ["unlock_module_id"]
             isOneToOne: false
             referencedRelation: "course_modules"
             referencedColumns: ["id"]
@@ -6467,6 +6563,66 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "student_activity_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_assignments: {
+        Row: {
+          assignment_id: string
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          current_version: number
+          id: string
+          is_portfolio: boolean
+          last_submitted_at: string | null
+          started_at: string | null
+          status: string
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          assignment_id: string
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          current_version?: number
+          id?: string
+          is_portfolio?: boolean
+          last_submitted_at?: string | null
+          started_at?: string | null
+          status?: string
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          assignment_id?: string
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          current_version?: number
+          id?: string
+          is_portfolio?: boolean
+          last_submitted_at?: string | null
+          started_at?: string | null
+          status?: string
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_assignments_assignment_id_fkey"
+            columns: ["assignment_id"]
+            isOneToOne: false
+            referencedRelation: "course_assignments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_assignments_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
