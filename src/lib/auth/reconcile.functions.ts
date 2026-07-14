@@ -39,23 +39,30 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
           .update({ user_id: userId })
           .eq("id", app.id);
       }
-      const { data: existingPartner } = await supabaseAdmin
-        .from("partners")
-        .select("id")
-        .eq("user_id", userId)
-        .maybeSingle();
-      if (!existingPartner) {
-        await supabaseAdmin.from("partners").insert({
-          user_id: userId,
-          application_id: app.id,
-          display_name: app.full_name,
-          email,
-          mobile: app.mobile,
-          city: app.city,
-          state: app.state,
-          status: app.status === "approved" ? "active" : "suspended",
-        });
+      // Only auto-provision a partners row once the application is approved.
+      // Pending / under-review applicants still get the 'partner' role so they
+      // land on the Sales Workspace, but their partners record is created
+      // upon approval by the admin flow.
+      if (app.status === "approved") {
+        const { data: existingPartner } = await supabaseAdmin
+          .from("partners")
+          .select("id")
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (!existingPartner) {
+          await supabaseAdmin.from("partners").insert({
+            user_id: userId,
+            application_id: app.id,
+            display_name: app.full_name,
+            email,
+            mobile: app.mobile,
+            city: app.city,
+            state: app.state,
+            status: "active",
+          });
+        }
       }
+
       await supabaseAdmin
         .from("user_roles")
         .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
