@@ -162,6 +162,17 @@ function ReferralDetailsPage() {
         </Card>
       </div>
 
+      {enrollment && (
+        <div>
+          <Button asChild size="sm" variant="outline">
+            <Link to="/ambassador/enrollments/$id" params={{ id: enrollment.id }}>
+              <CircleDot className="h-3.5 w-3.5 mr-1" /> View Enrollment
+            </Link>
+          </Button>
+        </div>
+      )}
+
+
       {/* Timeline */}
       <Card className="p-5">
         <div className="text-xs uppercase tracking-widest text-primary font-mono">Referral Journey</div>
