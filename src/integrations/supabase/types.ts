@@ -7783,6 +7783,87 @@ export type Database = {
           },
         ]
       }
+      student_notification_preferences: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          in_app_enabled: boolean
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          in_app_enabled?: boolean
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          in_app_enabled?: boolean
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      student_notifications: {
+        Row: {
+          action_label: string | null
+          action_route: string | null
+          category: string
+          created_at: string
+          dedupe_key: string
+          id: string
+          is_mandatory: boolean
+          message: string
+          notif_type: string
+          read_at: string | null
+          related_entity_id: string | null
+          related_entity_type: string | null
+          student_user_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          action_label?: string | null
+          action_route?: string | null
+          category: string
+          created_at?: string
+          dedupe_key: string
+          id?: string
+          is_mandatory?: boolean
+          message: string
+          notif_type?: string
+          read_at?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          student_user_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          action_label?: string | null
+          action_route?: string | null
+          category?: string
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          is_mandatory?: boolean
+          message?: string
+          notif_type?: string
+          read_at?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          student_user_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       student_project_submissions: {
         Row: {
           attachments: Json
