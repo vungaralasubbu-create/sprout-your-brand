@@ -60,5 +60,25 @@ export const submitCounsellorLead = createServerFn({ method: "POST" })
       console.error("[counsellor lead] insert failed", error.message);
       return { ok: false as const, error: "We couldn't save your request. Please try again." };
     }
+
+    // Fire-and-forget SMS notifications (never block the response).
+    try {
+      const { sendSms, adminNumbers } = await import("@/lib/sms/pearlsms.server");
+      const admins = adminNumbers();
+      const courseLabel = data.course_name ? ` for ${data.course_name}` : "";
+      if (admins.length > 0) {
+        void sendSms({
+          to: admins,
+          message: `Glintr: New counsellor lead${courseLabel} - ${data.full_name}, ${data.mobile}${data.city ? ", " + data.city : ""}.`,
+        });
+      }
+      void sendSms({
+        to: data.mobile,
+        message: `Hi ${data.full_name.split(" ")[0]}, thanks for reaching out to Glintr. A counsellor will call you shortly regarding${courseLabel || " your program enquiry"}. - Glintr`,
+      });
+    } catch (e: any) {
+      console.error("[counsellor lead] sms dispatch skipped", e?.message);
+    }
+
     return { ok: true as const };
   });
