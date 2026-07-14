@@ -153,7 +153,7 @@ export const getCareerOverview = createServerFn({ method: "GET" })
           .maybeSingle();
         return {
           id: p.id,
-          title: latestSub?.title || tmpl?.title || "Portfolio project",
+          title: latestSub?.title || tmpl?.name || "Portfolio project",
           project_type: tmpl?.project_type ?? null,
           course_title: coursesById.get(p.course_id)?.title ?? "Program",
           completed_at: p.completed_at,
@@ -512,7 +512,7 @@ export const listEligiblePortfolioProjects = createServerFn({ method: "GET" })
         const t = tmplById.get(r.project_id) as any;
         return {
           id: r.id,
-          title: t?.title ?? "Project",
+          title: t?.name ?? "Project",
           project_type: t?.project_type ?? null,
           course_title: courseTitle.get(r.course_id) ?? "Program",
           completed_at: r.completed_at,
