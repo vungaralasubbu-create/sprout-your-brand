@@ -3,6 +3,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { getMyProgramDetails, recordProgramActivity } from "@/lib/student/lms.functions";
+import { getProgramLiveSessionsSummary } from "@/lib/student/live-sessions.functions";
+import { LiveSessionCard, type LiveSessionCardData } from "@/components/student/live-session-card";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
