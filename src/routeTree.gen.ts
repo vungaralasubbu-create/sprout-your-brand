@@ -57,6 +57,7 @@ import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './rou
 import { Route as AuthenticatedAdminRevenueRouteImport } from './routes/_authenticated/admin.revenue'
 import { Route as AuthenticatedAdminReferralManagementRouteImport } from './routes/_authenticated/admin.referral-management'
 import { Route as AuthenticatedAdminProgramSalesContentRouteImport } from './routes/_authenticated/admin.program-sales-content'
+import { Route as AuthenticatedAdminPayrollRouteImport } from './routes/_authenticated/admin.payroll'
 import { Route as AuthenticatedAdminPaymentVerificationRouteImport } from './routes/_authenticated/admin.payment-verification'
 import { Route as AuthenticatedAdminPartnerReviewsRouteImport } from './routes/_authenticated/admin.partner-reviews'
 import { Route as AuthenticatedAdminPartnerProgramsRouteImport } from './routes/_authenticated/admin.partner-programs'
@@ -65,6 +66,7 @@ import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
+import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
@@ -75,12 +77,14 @@ import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/progra
 import { Route as AuthenticatedStudentLearnIndexRouteImport } from './routes/_authenticated/student.learn.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
+import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as AuthenticatedStudentLearnSlugRouteImport } from './routes/_authenticated/student.learn.$slug'
 import { Route as AuthenticatedPartnerProgramsSlugRouteImport } from './routes/_authenticated/partner.programs.$slug'
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
+import { Route as AuthenticatedAdminEmployeesIdRouteImport } from './routes/_authenticated/admin.employees.$id'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
 
@@ -352,6 +356,12 @@ const AuthenticatedAdminProgramSalesContentRoute =
     path: '/program-sales-content',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPayrollRoute =
+  AuthenticatedAdminPayrollRouteImport.update({
+    id: '/payroll',
+    path: '/payroll',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPaymentVerificationRoute =
   AuthenticatedAdminPaymentVerificationRouteImport.update({
     id: '/payment-verification',
@@ -399,6 +409,12 @@ const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminEmploymentSettingsRoute =
+  AuthenticatedAdminEmploymentSettingsRouteImport.update({
+    id: '/employment-settings',
+    path: '/employment-settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminDashboardRoute =
   AuthenticatedAdminDashboardRouteImport.update({
     id: '/dashboard',
@@ -459,6 +475,12 @@ const AuthenticatedAdminPartnersIndexRoute =
     path: '/partners/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminEmployeesIndexRoute =
+  AuthenticatedAdminEmployeesIndexRouteImport.update({
+    id: '/employees/',
+    path: '/employees/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCoursesIndexRoute =
   AuthenticatedAdminCoursesIndexRouteImport.update({
     id: '/courses/',
@@ -493,6 +515,12 @@ const AuthenticatedAdminPartnersIdRoute =
   AuthenticatedAdminPartnersIdRouteImport.update({
     id: '/partners/$id',
     path: '/partners/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminEmployeesIdRoute =
+  AuthenticatedAdminEmployeesIdRouteImport.update({
+    id: '/employees/$id',
+    path: '/employees/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminCoursesIdRoute =
@@ -532,6 +560,7 @@ export interface FileRoutesByFullPath {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -540,6 +569,7 @@ export interface FileRoutesByFullPath {
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/partner-reviews': typeof AuthenticatedAdminPartnerReviewsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/admin/payroll': typeof AuthenticatedAdminPayrollRoute
   '/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
@@ -571,12 +601,14 @@ export interface FileRoutesByFullPath {
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
@@ -605,6 +637,7 @@ export interface FileRoutesByTo {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -613,6 +646,7 @@ export interface FileRoutesByTo {
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/partner-reviews': typeof AuthenticatedAdminPartnerReviewsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/admin/payroll': typeof AuthenticatedAdminPayrollRoute
   '/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
@@ -644,12 +678,14 @@ export interface FileRoutesByTo {
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
   '/student/learn': typeof AuthenticatedStudentLearnIndexRoute
@@ -682,6 +718,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -690,6 +727,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/_authenticated/admin/partner-reviews': typeof AuthenticatedAdminPartnerReviewsRoute
   '/_authenticated/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/_authenticated/admin/payroll': typeof AuthenticatedAdminPayrollRoute
   '/_authenticated/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/_authenticated/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/_authenticated/admin/revenue': typeof AuthenticatedAdminRevenueRoute
@@ -721,12 +759,14 @@ export interface FileRoutesById {
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/_authenticated/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/_authenticated/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/_authenticated/student/learn/$slug': typeof AuthenticatedStudentLearnSlugRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/_authenticated/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
@@ -759,6 +799,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/employment-settings'
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -767,6 +808,7 @@ export interface FileRouteTypes {
     | '/admin/partner-programs'
     | '/admin/partner-reviews'
     | '/admin/payment-verification'
+    | '/admin/payroll'
     | '/admin/program-sales-content'
     | '/admin/referral-management'
     | '/admin/revenue'
@@ -798,12 +840,14 @@ export interface FileRouteTypes {
     | '/student/'
     | '/programs/$category/'
     | '/admin/courses/$id'
+    | '/admin/employees/$id'
     | '/admin/partners/$id'
     | '/admin/payouts/$id'
     | '/partner/programs/$slug'
     | '/student/learn/$slug'
     | '/programs/$category/$course/apply'
     | '/admin/courses/'
+    | '/admin/employees/'
     | '/admin/partners/'
     | '/admin/payouts/'
     | '/student/learn/'
@@ -832,6 +876,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/employment-settings'
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -840,6 +885,7 @@ export interface FileRouteTypes {
     | '/admin/partner-programs'
     | '/admin/partner-reviews'
     | '/admin/payment-verification'
+    | '/admin/payroll'
     | '/admin/program-sales-content'
     | '/admin/referral-management'
     | '/admin/revenue'
@@ -871,12 +917,14 @@ export interface FileRouteTypes {
     | '/student'
     | '/programs/$category'
     | '/admin/courses/$id'
+    | '/admin/employees/$id'
     | '/admin/partners/$id'
     | '/admin/payouts/$id'
     | '/partner/programs/$slug'
     | '/student/learn/$slug'
     | '/programs/$category/$course/apply'
     | '/admin/courses'
+    | '/admin/employees'
     | '/admin/partners'
     | '/admin/payouts'
     | '/student/learn'
@@ -908,6 +956,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/attribution-reviews'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/dashboard'
+    | '/_authenticated/admin/employment-settings'
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
@@ -916,6 +965,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partner-programs'
     | '/_authenticated/admin/partner-reviews'
     | '/_authenticated/admin/payment-verification'
+    | '/_authenticated/admin/payroll'
     | '/_authenticated/admin/program-sales-content'
     | '/_authenticated/admin/referral-management'
     | '/_authenticated/admin/revenue'
@@ -947,12 +997,14 @@ export interface FileRouteTypes {
     | '/_authenticated/student/'
     | '/programs/$category/'
     | '/_authenticated/admin/courses/$id'
+    | '/_authenticated/admin/employees/$id'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payouts/$id'
     | '/_authenticated/partner/programs/$slug'
     | '/_authenticated/student/learn/$slug'
     | '/programs/$category/$course/apply'
     | '/_authenticated/admin/courses/'
+    | '/_authenticated/admin/employees/'
     | '/_authenticated/admin/partners/'
     | '/_authenticated/admin/payouts/'
     | '/_authenticated/student/learn/'
@@ -1318,6 +1370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminProgramSalesContentRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/payroll': {
+      id: '/_authenticated/admin/payroll'
+      path: '/payroll'
+      fullPath: '/admin/payroll'
+      preLoaderRoute: typeof AuthenticatedAdminPayrollRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/payment-verification': {
       id: '/_authenticated/admin/payment-verification'
       path: '/payment-verification'
@@ -1372,6 +1431,13 @@ declare module '@tanstack/react-router' {
       path: '/leads'
       fullPath: '/admin/leads'
       preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/employment-settings': {
+      id: '/_authenticated/admin/employment-settings'
+      path: '/employment-settings'
+      fullPath: '/admin/employment-settings'
+      preLoaderRoute: typeof AuthenticatedAdminEmploymentSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/dashboard': {
@@ -1444,6 +1510,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/employees/': {
+      id: '/_authenticated/admin/employees/'
+      path: '/employees'
+      fullPath: '/admin/employees/'
+      preLoaderRoute: typeof AuthenticatedAdminEmployeesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/courses/': {
       id: '/_authenticated/admin/courses/'
       path: '/courses'
@@ -1486,6 +1559,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/employees/$id': {
+      id: '/_authenticated/admin/employees/$id'
+      path: '/employees/$id'
+      fullPath: '/admin/employees/$id'
+      preLoaderRoute: typeof AuthenticatedAdminEmployeesIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/courses/$id': {
       id: '/_authenticated/admin/courses/$id'
       path: '/courses/$id'
@@ -1510,6 +1590,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
+  AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -1518,6 +1599,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnerProgramsRoute: typeof AuthenticatedAdminPartnerProgramsRoute
   AuthenticatedAdminPartnerReviewsRoute: typeof AuthenticatedAdminPartnerReviewsRoute
   AuthenticatedAdminPaymentVerificationRoute: typeof AuthenticatedAdminPaymentVerificationRoute
+  AuthenticatedAdminPayrollRoute: typeof AuthenticatedAdminPayrollRoute
   AuthenticatedAdminProgramSalesContentRoute: typeof AuthenticatedAdminProgramSalesContentRoute
   AuthenticatedAdminReferralManagementRoute: typeof AuthenticatedAdminReferralManagementRoute
   AuthenticatedAdminRevenueRoute: typeof AuthenticatedAdminRevenueRoute
@@ -1525,9 +1607,11 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
+  AuthenticatedAdminEmployeesIdRoute: typeof AuthenticatedAdminEmployeesIdRoute
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
   AuthenticatedAdminPayoutsIdRoute: typeof AuthenticatedAdminPayoutsIdRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
+  AuthenticatedAdminEmployeesIndexRoute: typeof AuthenticatedAdminEmployeesIndexRoute
   AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
   AuthenticatedAdminPayoutsIndexRoute: typeof AuthenticatedAdminPayoutsIndexRoute
 }
@@ -1540,6 +1624,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAttributionReviewsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
+  AuthenticatedAdminEmploymentSettingsRoute:
+    AuthenticatedAdminEmploymentSettingsRoute,
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
@@ -1551,6 +1637,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPartnerReviewsRoute: AuthenticatedAdminPartnerReviewsRoute,
   AuthenticatedAdminPaymentVerificationRoute:
     AuthenticatedAdminPaymentVerificationRoute,
+  AuthenticatedAdminPayrollRoute: AuthenticatedAdminPayrollRoute,
   AuthenticatedAdminProgramSalesContentRoute:
     AuthenticatedAdminProgramSalesContentRoute,
   AuthenticatedAdminReferralManagementRoute:
@@ -1561,9 +1648,11 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
+  AuthenticatedAdminEmployeesIdRoute: AuthenticatedAdminEmployeesIdRoute,
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
   AuthenticatedAdminPayoutsIdRoute: AuthenticatedAdminPayoutsIdRoute,
   AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
+  AuthenticatedAdminEmployeesIndexRoute: AuthenticatedAdminEmployeesIndexRoute,
   AuthenticatedAdminPartnersIndexRoute: AuthenticatedAdminPartnersIndexRoute,
   AuthenticatedAdminPayoutsIndexRoute: AuthenticatedAdminPayoutsIndexRoute,
 }

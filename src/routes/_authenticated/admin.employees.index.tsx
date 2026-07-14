@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { listEmployees, ensureEmployeeProfile } from "@/lib/admin/employment.functions";
 
-export const Route = createFileRoute("/_authenticated/admin/employees")({
+export const Route = createFileRoute("/_authenticated/admin/employees/")({
   component: EmployeesPage,
 });
 
