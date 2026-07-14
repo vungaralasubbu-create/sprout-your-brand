@@ -118,6 +118,96 @@ export type Database = {
           },
         ]
       }
+      admin_permission_overrides: {
+        Row: {
+          allowed: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          permission_key: string
+          user_id: string
+        }
+        Insert: {
+          allowed: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permission_key: string
+          user_id: string
+        }
+        Update: {
+          allowed?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permission_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      admin_role_permissions: {
+        Row: {
+          admin_role: Database["public"]["Enums"]["admin_role_type"]
+          created_at: string
+          id: string
+          permission_key: string
+        }
+        Insert: {
+          admin_role: Database["public"]["Enums"]["admin_role_type"]
+          created_at?: string
+          id?: string
+          permission_key: string
+        }
+        Update: {
+          admin_role?: Database["public"]["Enums"]["admin_role_type"]
+          created_at?: string
+          id?: string
+          permission_key?: string
+        }
+        Relationships: []
+      }
+      admin_users: {
+        Row: {
+          account_status: Database["public"]["Enums"]["admin_account_status"]
+          admin_code: string
+          admin_role: Database["public"]["Enums"]["admin_role_type"]
+          created_at: string
+          created_by: string | null
+          email: string
+          full_name: string
+          last_login_at: string | null
+          mobile: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_status?: Database["public"]["Enums"]["admin_account_status"]
+          admin_code: string
+          admin_role: Database["public"]["Enums"]["admin_role_type"]
+          created_at?: string
+          created_by?: string | null
+          email: string
+          full_name: string
+          last_login_at?: string | null
+          mobile?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_status?: Database["public"]["Enums"]["admin_account_status"]
+          admin_code?: string
+          admin_role?: Database["public"]["Enums"]["admin_role_type"]
+          created_at?: string
+          created_by?: string | null
+          email?: string
+          full_name?: string
+          last_login_at?: string | null
+          mobile?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       assessment_attempts: {
         Row: {
           answers: Json
@@ -5677,6 +5767,14 @@ export type Database = {
     }
     Functions: {
       generate_employee_code: { Args: never; Returns: string }
+      get_admin_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["admin_role_type"]
+      }
+      has_admin_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -5684,6 +5782,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_active_admin: { Args: { _user_id: string }; Returns: boolean }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       is_brand_owner: {
         Args: { _brand_id: string; _user_id: string }
@@ -5691,6 +5790,7 @@ export type Database = {
       }
       is_partner: { Args: { _user_id: string }; Returns: boolean }
       is_student: { Args: { _user_id: string }; Returns: boolean }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       normalize_email: { Args: { _email: string }; Returns: string }
       normalize_phone: { Args: { _phone: string }; Returns: string }
       partner_id_for: { Args: { _user_id: string }; Returns: string }
@@ -5712,6 +5812,18 @@ export type Database = {
       }
     }
     Enums: {
+      admin_account_status: "active" | "suspended" | "inactive"
+      admin_role_type:
+        | "super_admin"
+        | "sales_admin"
+        | "lead_manager"
+        | "payment_verifier"
+        | "payout_manager"
+        | "referral_manager"
+        | "brand_manager"
+        | "support_agent"
+        | "employment_admin"
+        | "payroll_admin"
       app_role:
         | "super_admin"
         | "admin"
@@ -6119,6 +6231,19 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_account_status: ["active", "suspended", "inactive"],
+      admin_role_type: [
+        "super_admin",
+        "sales_admin",
+        "lead_manager",
+        "payment_verifier",
+        "payout_manager",
+        "referral_manager",
+        "brand_manager",
+        "support_agent",
+        "employment_admin",
+        "payroll_admin",
+      ],
       app_role: [
         "super_admin",
         "admin",
