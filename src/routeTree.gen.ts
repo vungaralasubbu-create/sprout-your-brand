@@ -52,6 +52,7 @@ import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './routes/_authenticated/admin.revenue-verification'
 import { Route as AuthenticatedAdminRevenueRouteImport } from './routes/_authenticated/admin.revenue'
 import { Route as AuthenticatedAdminReferralManagementRouteImport } from './routes/_authenticated/admin.referral-management'
+import { Route as AuthenticatedAdminProgramSalesContentRouteImport } from './routes/_authenticated/admin.program-sales-content'
 import { Route as AuthenticatedAdminPaymentVerificationRouteImport } from './routes/_authenticated/admin.payment-verification'
 import { Route as AuthenticatedAdminPartnerProgramsRouteImport } from './routes/_authenticated/admin.partner-programs'
 import { Route as AuthenticatedAdminPartnerPayoutsRouteImport } from './routes/_authenticated/admin.partner-payouts'
@@ -315,6 +316,12 @@ const AuthenticatedAdminReferralManagementRoute =
     path: '/referral-management',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminProgramSalesContentRoute =
+  AuthenticatedAdminProgramSalesContentRouteImport.update({
+    id: '/program-sales-content',
+    path: '/program-sales-content',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPaymentVerificationRoute =
   AuthenticatedAdminPaymentVerificationRouteImport.update({
     id: '/payment-verification',
@@ -490,6 +497,7 @@ export interface FileRoutesByFullPath {
   '/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
@@ -556,6 +564,7 @@ export interface FileRoutesByTo {
   '/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
@@ -626,6 +635,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/_authenticated/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/_authenticated/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/_authenticated/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/_authenticated/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/_authenticated/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/_authenticated/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
@@ -696,6 +706,7 @@ export interface FileRouteTypes {
     | '/admin/partner-payouts'
     | '/admin/partner-programs'
     | '/admin/payment-verification'
+    | '/admin/program-sales-content'
     | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
@@ -762,6 +773,7 @@ export interface FileRouteTypes {
     | '/admin/partner-payouts'
     | '/admin/partner-programs'
     | '/admin/payment-verification'
+    | '/admin/program-sales-content'
     | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
@@ -831,6 +843,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partner-payouts'
     | '/_authenticated/admin/partner-programs'
     | '/_authenticated/admin/payment-verification'
+    | '/_authenticated/admin/program-sales-content'
     | '/_authenticated/admin/referral-management'
     | '/_authenticated/admin/revenue'
     | '/_authenticated/admin/revenue-verification'
@@ -1192,6 +1205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReferralManagementRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/program-sales-content': {
+      id: '/_authenticated/admin/program-sales-content'
+      path: '/program-sales-content'
+      fullPath: '/admin/program-sales-content'
+      preLoaderRoute: typeof AuthenticatedAdminProgramSalesContentRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/payment-verification': {
       id: '/_authenticated/admin/payment-verification'
       path: '/payment-verification'
@@ -1377,6 +1397,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnerPayoutsRoute: typeof AuthenticatedAdminPartnerPayoutsRoute
   AuthenticatedAdminPartnerProgramsRoute: typeof AuthenticatedAdminPartnerProgramsRoute
   AuthenticatedAdminPaymentVerificationRoute: typeof AuthenticatedAdminPaymentVerificationRoute
+  AuthenticatedAdminProgramSalesContentRoute: typeof AuthenticatedAdminProgramSalesContentRoute
   AuthenticatedAdminReferralManagementRoute: typeof AuthenticatedAdminReferralManagementRoute
   AuthenticatedAdminRevenueRoute: typeof AuthenticatedAdminRevenueRoute
   AuthenticatedAdminRevenueVerificationRoute: typeof AuthenticatedAdminRevenueVerificationRoute
@@ -1408,6 +1429,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminPartnerProgramsRoute,
   AuthenticatedAdminPaymentVerificationRoute:
     AuthenticatedAdminPaymentVerificationRoute,
+  AuthenticatedAdminProgramSalesContentRoute:
+    AuthenticatedAdminProgramSalesContentRoute,
   AuthenticatedAdminReferralManagementRoute:
     AuthenticatedAdminReferralManagementRoute,
   AuthenticatedAdminRevenueRoute: AuthenticatedAdminRevenueRoute,
