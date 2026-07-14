@@ -2930,6 +2930,246 @@ export type Database = {
           },
         ]
       }
+      internship_projects: {
+        Row: {
+          course_project_template_id: string | null
+          created_at: string
+          description: string | null
+          expected_outcome: string | null
+          id: string
+          internship_id: string
+          is_final: boolean
+          is_required: boolean
+          order_index: number
+          project_type: Database["public"]["Enums"]["internship_project_type"]
+          publish_status: string
+          requirements: string | null
+          submission_instructions: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          course_project_template_id?: string | null
+          created_at?: string
+          description?: string | null
+          expected_outcome?: string | null
+          id?: string
+          internship_id: string
+          is_final?: boolean
+          is_required?: boolean
+          order_index?: number
+          project_type?: Database["public"]["Enums"]["internship_project_type"]
+          publish_status?: string
+          requirements?: string | null
+          submission_instructions?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          course_project_template_id?: string | null
+          created_at?: string
+          description?: string | null
+          expected_outcome?: string | null
+          id?: string
+          internship_id?: string
+          is_final?: boolean
+          is_required?: boolean
+          order_index?: number
+          project_type?: Database["public"]["Enums"]["internship_project_type"]
+          publish_status?: string
+          requirements?: string | null
+          submission_instructions?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internship_projects_course_project_template_id_fkey"
+            columns: ["course_project_template_id"]
+            isOneToOne: false
+            referencedRelation: "course_project_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "internship_projects_internship_id_fkey"
+            columns: ["internship_id"]
+            isOneToOne: false
+            referencedRelation: "internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      internship_stages: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          internship_id: string
+          is_required: boolean
+          name: string
+          order_index: number
+          publish_status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          internship_id: string
+          is_required?: boolean
+          name: string
+          order_index?: number
+          publish_status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          internship_id?: string
+          is_required?: boolean
+          name?: string
+          order_index?: number
+          publish_status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internship_stages_internship_id_fkey"
+            columns: ["internship_id"]
+            isOneToOne: false
+            referencedRelation: "internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      internship_tasks: {
+        Row: {
+          allow_multiple_files: boolean
+          created_at: string
+          description: string | null
+          due_offset_days: number | null
+          estimated_hours: number | null
+          evaluation_criteria: string | null
+          expected_outcome: string | null
+          id: string
+          instructions: string | null
+          is_required: boolean
+          objective: string | null
+          order_index: number
+          publish_status: string
+          requirements: string | null
+          stage_id: string
+          submission_instructions: string | null
+          submission_types: string[]
+          task_type: Database["public"]["Enums"]["internship_task_type"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          allow_multiple_files?: boolean
+          created_at?: string
+          description?: string | null
+          due_offset_days?: number | null
+          estimated_hours?: number | null
+          evaluation_criteria?: string | null
+          expected_outcome?: string | null
+          id?: string
+          instructions?: string | null
+          is_required?: boolean
+          objective?: string | null
+          order_index?: number
+          publish_status?: string
+          requirements?: string | null
+          stage_id: string
+          submission_instructions?: string | null
+          submission_types?: string[]
+          task_type?: Database["public"]["Enums"]["internship_task_type"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          allow_multiple_files?: boolean
+          created_at?: string
+          description?: string | null
+          due_offset_days?: number | null
+          estimated_hours?: number | null
+          evaluation_criteria?: string | null
+          expected_outcome?: string | null
+          id?: string
+          instructions?: string | null
+          is_required?: boolean
+          objective?: string | null
+          order_index?: number
+          publish_status?: string
+          requirements?: string | null
+          stage_id?: string
+          submission_instructions?: string | null
+          submission_types?: string[]
+          task_type?: Database["public"]["Enums"]["internship_task_type"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internship_tasks_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "internship_stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      internships: {
+        Row: {
+          completion_requirements: Json
+          course_id: string
+          created_at: string
+          description: string | null
+          duration_weeks: number | null
+          eligibility: Json
+          id: string
+          publish_status: string
+          sequential: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          completion_requirements?: Json
+          course_id: string
+          created_at?: string
+          description?: string | null
+          duration_weeks?: number | null
+          eligibility?: Json
+          id?: string
+          publish_status?: string
+          sequential?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          completion_requirements?: Json
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          duration_weeks?: number | null
+          eligibility?: Json
+          id?: string
+          publish_status?: string
+          sequential?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "internships_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_assignment_history: {
         Row: {
           action: string
@@ -6630,6 +6870,281 @@ export type Database = {
           },
         ]
       }
+      student_internship_activity: {
+        Row: {
+          event: string
+          id: string
+          metadata: Json
+          occurred_at: string
+          student_internship_id: string | null
+          student_user_id: string
+        }
+        Insert: {
+          event: string
+          id?: string
+          metadata?: Json
+          occurred_at?: string
+          student_internship_id?: string | null
+          student_user_id: string
+        }
+        Update: {
+          event?: string
+          id?: string
+          metadata?: Json
+          occurred_at?: string
+          student_internship_id?: string | null
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_internship_activity_student_internship_id_fkey"
+            columns: ["student_internship_id"]
+            isOneToOne: false
+            referencedRelation: "student_internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_internship_stage_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          stage_id: string
+          status: Database["public"]["Enums"]["internship_stage_status"]
+          student_internship_id: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          stage_id: string
+          status?: Database["public"]["Enums"]["internship_stage_status"]
+          student_internship_id: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          stage_id?: string
+          status?: Database["public"]["Enums"]["internship_stage_status"]
+          student_internship_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_internship_stage_progress_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "internship_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_internship_stage_progress_student_internship_id_fkey"
+            columns: ["student_internship_id"]
+            isOneToOne: false
+            referencedRelation: "student_internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_internship_task_submissions: {
+        Row: {
+          created_at: string
+          files: Json
+          id: string
+          is_late: boolean
+          live_project_link: string | null
+          max_score: number | null
+          repository_link: string | null
+          result: string | null
+          review_notes: string | null
+          review_status: Database["public"]["Enums"]["internship_submission_review"]
+          reviewed_at: string | null
+          reviewer_user_id: string | null
+          score: number | null
+          student_internship_task_id: string
+          submission_link: string | null
+          submission_notes: string | null
+          submitted_at: string
+          text_response: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          files?: Json
+          id?: string
+          is_late?: boolean
+          live_project_link?: string | null
+          max_score?: number | null
+          repository_link?: string | null
+          result?: string | null
+          review_notes?: string | null
+          review_status?: Database["public"]["Enums"]["internship_submission_review"]
+          reviewed_at?: string | null
+          reviewer_user_id?: string | null
+          score?: number | null
+          student_internship_task_id: string
+          submission_link?: string | null
+          submission_notes?: string | null
+          submitted_at?: string
+          text_response?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          created_at?: string
+          files?: Json
+          id?: string
+          is_late?: boolean
+          live_project_link?: string | null
+          max_score?: number | null
+          repository_link?: string | null
+          result?: string | null
+          review_notes?: string | null
+          review_status?: Database["public"]["Enums"]["internship_submission_review"]
+          reviewed_at?: string | null
+          reviewer_user_id?: string | null
+          score?: number | null
+          student_internship_task_id?: string
+          submission_link?: string | null
+          submission_notes?: string | null
+          submitted_at?: string
+          text_response?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_internship_task_submiss_student_internship_task_id_fkey"
+            columns: ["student_internship_task_id"]
+            isOneToOne: false
+            referencedRelation: "student_internship_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_internship_tasks: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_version: number
+          id: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["internship_task_status"]
+          student_internship_id: string
+          task_id: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_version?: number
+          id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["internship_task_status"]
+          student_internship_id: string
+          task_id: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_version?: number
+          id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["internship_task_status"]
+          student_internship_id?: string
+          task_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_internship_tasks_student_internship_id_fkey"
+            columns: ["student_internship_id"]
+            isOneToOne: false
+            referencedRelation: "student_internships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_internship_tasks_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "internship_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_internships: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          current_stage_id: string | null
+          id: string
+          internship_id: string
+          progress_percent: number
+          review_started_at: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["internship_status"]
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          current_stage_id?: string | null
+          id?: string
+          internship_id: string
+          progress_percent?: number
+          review_started_at?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["internship_status"]
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          current_stage_id?: string | null
+          id?: string
+          internship_id?: string
+          progress_percent?: number
+          review_started_at?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["internship_status"]
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_internships_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_internships_current_stage_id_fkey"
+            columns: ["current_stage_id"]
+            isOneToOne: false
+            referencedRelation: "internship_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_internships_internship_id_fkey"
+            columns: ["internship_id"]
+            isOneToOne: false
+            referencedRelation: "internships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_project_submissions: {
         Row: {
           attachments: Json
@@ -7018,6 +7533,48 @@ export type Database = {
         | "rescheduled"
         | "cancelled"
       follow_up_type: "call" | "whatsapp" | "email" | "meeting" | "other"
+      internship_project_type:
+        | "practice"
+        | "industry_inspired"
+        | "capstone"
+        | "final"
+      internship_stage_status:
+        | "locked"
+        | "available"
+        | "in_progress"
+        | "completed"
+      internship_status:
+        | "locked"
+        | "eligible"
+        | "active"
+        | "in_progress"
+        | "completion_review"
+        | "completed"
+        | "suspended"
+        | "cancelled"
+      internship_submission_review:
+        | "pending"
+        | "under_review"
+        | "needs_revision"
+        | "approved"
+      internship_task_status:
+        | "locked"
+        | "available"
+        | "in_progress"
+        | "submitted"
+        | "under_review"
+        | "needs_revision"
+        | "completed"
+      internship_task_type:
+        | "learning"
+        | "research"
+        | "practical"
+        | "technical"
+        | "case_study"
+        | "industry"
+        | "documentation"
+        | "presentation"
+        | "portfolio"
       lead_model: "own_leads" | "supported" | "not_sure"
       lead_ownership_review_status:
         | "pending_review"
@@ -7487,6 +8044,54 @@ export const Constants = {
         "cancelled",
       ],
       follow_up_type: ["call", "whatsapp", "email", "meeting", "other"],
+      internship_project_type: [
+        "practice",
+        "industry_inspired",
+        "capstone",
+        "final",
+      ],
+      internship_stage_status: [
+        "locked",
+        "available",
+        "in_progress",
+        "completed",
+      ],
+      internship_status: [
+        "locked",
+        "eligible",
+        "active",
+        "in_progress",
+        "completion_review",
+        "completed",
+        "suspended",
+        "cancelled",
+      ],
+      internship_submission_review: [
+        "pending",
+        "under_review",
+        "needs_revision",
+        "approved",
+      ],
+      internship_task_status: [
+        "locked",
+        "available",
+        "in_progress",
+        "submitted",
+        "under_review",
+        "needs_revision",
+        "completed",
+      ],
+      internship_task_type: [
+        "learning",
+        "research",
+        "practical",
+        "technical",
+        "case_study",
+        "industry",
+        "documentation",
+        "presentation",
+        "portfolio",
+      ],
       lead_model: ["own_leads", "supported", "not_sure"],
       lead_ownership_review_status: [
         "pending_review",
