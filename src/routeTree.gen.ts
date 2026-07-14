@@ -38,6 +38,7 @@ import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_
 import { Route as AuthenticatedStudentAssignmentsRouteImport } from './routes/_authenticated/student.assignments'
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
 import { Route as AuthenticatedPartnerReferralBonusRouteImport } from './routes/_authenticated/partner.referral-bonus'
+import { Route as AuthenticatedPartnerQuickStartRouteImport } from './routes/_authenticated/partner.quick-start'
 import { Route as AuthenticatedPartnerProgramsRouteImport } from './routes/_authenticated/partner.programs'
 import { Route as AuthenticatedPartnerPaymentVerificationRouteImport } from './routes/_authenticated/partner.payment-verification'
 import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_authenticated/partner.payment-links'
@@ -244,6 +245,12 @@ const AuthenticatedPartnerReferralBonusRoute =
   AuthenticatedPartnerReferralBonusRouteImport.update({
     id: '/referral-bonus',
     path: '/referral-bonus',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerQuickStartRoute =
+  AuthenticatedPartnerQuickStartRouteImport.update({
+    id: '/quick-start',
+    path: '/quick-start',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerProgramsRoute =
@@ -620,6 +627,7 @@ export interface FileRoutesByFullPath {
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
+  '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
@@ -701,6 +709,7 @@ export interface FileRoutesByTo {
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
+  '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
@@ -786,6 +795,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/_authenticated/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/_authenticated/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
+  '/_authenticated/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/_authenticated/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/_authenticated/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
@@ -871,6 +881,7 @@ export interface FileRouteTypes {
     | '/partner/payment-links'
     | '/partner/payment-verification'
     | '/partner/programs'
+    | '/partner/quick-start'
     | '/partner/referral-bonus'
     | '/student/assessments'
     | '/student/assignments'
@@ -952,6 +963,7 @@ export interface FileRouteTypes {
     | '/partner/payment-links'
     | '/partner/payment-verification'
     | '/partner/programs'
+    | '/partner/quick-start'
     | '/partner/referral-bonus'
     | '/student/assessments'
     | '/student/assignments'
@@ -1036,6 +1048,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/payment-links'
     | '/_authenticated/partner/payment-verification'
     | '/_authenticated/partner/programs'
+    | '/_authenticated/partner/quick-start'
     | '/_authenticated/partner/referral-bonus'
     | '/_authenticated/student/assessments'
     | '/_authenticated/student/assignments'
@@ -1287,6 +1300,13 @@ declare module '@tanstack/react-router' {
       path: '/referral-bonus'
       fullPath: '/partner/referral-bonus'
       preLoaderRoute: typeof AuthenticatedPartnerReferralBonusRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/quick-start': {
+      id: '/_authenticated/partner/quick-start'
+      path: '/quick-start'
+      fullPath: '/partner/quick-start'
+      preLoaderRoute: typeof AuthenticatedPartnerQuickStartRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/programs': {
@@ -1786,6 +1806,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerPaymentLinksRoute: typeof AuthenticatedPartnerPaymentLinksRoute
   AuthenticatedPartnerPaymentVerificationRoute: typeof AuthenticatedPartnerPaymentVerificationRoute
   AuthenticatedPartnerProgramsRoute: typeof AuthenticatedPartnerProgramsRouteWithChildren
+  AuthenticatedPartnerQuickStartRoute: typeof AuthenticatedPartnerQuickStartRoute
   AuthenticatedPartnerReferralBonusRoute: typeof AuthenticatedPartnerReferralBonusRoute
   AuthenticatedPartnerEmploymentIndexRoute: typeof AuthenticatedPartnerEmploymentIndexRoute
   AuthenticatedPartnerEmploymentSalarySlipsIdRoute: typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
@@ -1808,6 +1829,7 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
     AuthenticatedPartnerPaymentVerificationRoute,
   AuthenticatedPartnerProgramsRoute:
     AuthenticatedPartnerProgramsRouteWithChildren,
+  AuthenticatedPartnerQuickStartRoute: AuthenticatedPartnerQuickStartRoute,
   AuthenticatedPartnerReferralBonusRoute:
     AuthenticatedPartnerReferralBonusRoute,
   AuthenticatedPartnerEmploymentIndexRoute:
