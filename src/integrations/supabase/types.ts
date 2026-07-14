@@ -3956,6 +3956,7 @@ export type Database = {
           payment_method: Database["public"]["Enums"]["payment_method"]
           plan: Database["public"]["Enums"]["payment_plan"]
           proof_bucket: string
+          proof_hash: string | null
           proof_mime: string | null
           proof_path: string
           proof_size_bytes: number | null
@@ -3984,6 +3985,7 @@ export type Database = {
           payment_method: Database["public"]["Enums"]["payment_method"]
           plan: Database["public"]["Enums"]["payment_plan"]
           proof_bucket?: string
+          proof_hash?: string | null
           proof_mime?: string | null
           proof_path: string
           proof_size_bytes?: number | null
@@ -4012,6 +4014,7 @@ export type Database = {
           payment_method?: Database["public"]["Enums"]["payment_method"]
           plan?: Database["public"]["Enums"]["payment_plan"]
           proof_bucket?: string
+          proof_hash?: string | null
           proof_mime?: string | null
           proof_path?: string
           proof_size_bytes?: number | null
@@ -5523,6 +5526,226 @@ export type Database = {
           },
         ]
       }
+      risk_flag_activity: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          detail: Json
+          flag_id: string
+          from_status: Database["public"]["Enums"]["risk_flag_status"] | null
+          id: string
+          to_status: Database["public"]["Enums"]["risk_flag_status"] | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: Json
+          flag_id: string
+          from_status?: Database["public"]["Enums"]["risk_flag_status"] | null
+          id?: string
+          to_status?: Database["public"]["Enums"]["risk_flag_status"] | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: Json
+          flag_id?: string
+          from_status?: Database["public"]["Enums"]["risk_flag_status"] | null
+          id?: string
+          to_status?: Database["public"]["Enums"]["risk_flag_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_flag_activity_flag_id_fkey"
+            columns: ["flag_id"]
+            isOneToOne: false
+            referencedRelation: "risk_flags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      risk_flag_notes: {
+        Row: {
+          author_user_id: string | null
+          created_at: string
+          flag_id: string
+          id: string
+          note: string
+        }
+        Insert: {
+          author_user_id?: string | null
+          created_at?: string
+          flag_id: string
+          id?: string
+          note: string
+        }
+        Update: {
+          author_user_id?: string | null
+          created_at?: string
+          flag_id?: string
+          id?: string
+          note?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_flag_notes_flag_id_fkey"
+            columns: ["flag_id"]
+            isOneToOne: false
+            referencedRelation: "risk_flags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      risk_flags: {
+        Row: {
+          amount_delta: number | null
+          amount_expected: number | null
+          amount_submitted: number | null
+          connected_records: Json
+          created_at: string
+          dedupe_key: string | null
+          detected_at: string
+          flag_type: Database["public"]["Enums"]["risk_flag_type"]
+          id: string
+          lead_id: string | null
+          metadata: Json
+          partner_id: string | null
+          payment_link_id: string | null
+          reason: string
+          referral_id: string | null
+          resolution_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          severity: Database["public"]["Enums"]["risk_flag_severity"]
+          status: Database["public"]["Enums"]["risk_flag_status"]
+          submission_id: string | null
+          updated_at: string
+          utr_normalized: string | null
+        }
+        Insert: {
+          amount_delta?: number | null
+          amount_expected?: number | null
+          amount_submitted?: number | null
+          connected_records?: Json
+          created_at?: string
+          dedupe_key?: string | null
+          detected_at?: string
+          flag_type: Database["public"]["Enums"]["risk_flag_type"]
+          id?: string
+          lead_id?: string | null
+          metadata?: Json
+          partner_id?: string | null
+          payment_link_id?: string | null
+          reason: string
+          referral_id?: string | null
+          resolution_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: Database["public"]["Enums"]["risk_flag_severity"]
+          status?: Database["public"]["Enums"]["risk_flag_status"]
+          submission_id?: string | null
+          updated_at?: string
+          utr_normalized?: string | null
+        }
+        Update: {
+          amount_delta?: number | null
+          amount_expected?: number | null
+          amount_submitted?: number | null
+          connected_records?: Json
+          created_at?: string
+          dedupe_key?: string | null
+          detected_at?: string
+          flag_type?: Database["public"]["Enums"]["risk_flag_type"]
+          id?: string
+          lead_id?: string | null
+          metadata?: Json
+          partner_id?: string | null
+          payment_link_id?: string | null
+          reason?: string
+          referral_id?: string | null
+          resolution_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: Database["public"]["Enums"]["risk_flag_severity"]
+          status?: Database["public"]["Enums"]["risk_flag_status"]
+          submission_id?: string | null
+          updated_at?: string
+          utr_normalized?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_flags_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_flags_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_flags_payment_link_id_fkey"
+            columns: ["payment_link_id"]
+            isOneToOne: false
+            referencedRelation: "payment_links"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_flags_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "partner_referrals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_flags_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "partner_payment_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      risk_review_settings: {
+        Row: {
+          amount_delta_min: number
+          duplicate_lead_upload_threshold: number
+          duplicate_utr_threshold: number
+          id: boolean
+          submissions_per_hour_threshold: number
+          updated_at: string
+          updated_by: string | null
+          verified_sales_per_day_threshold: number
+        }
+        Insert: {
+          amount_delta_min?: number
+          duplicate_lead_upload_threshold?: number
+          duplicate_utr_threshold?: number
+          id?: boolean
+          submissions_per_hour_threshold?: number
+          updated_at?: string
+          updated_by?: string | null
+          verified_sales_per_day_threshold?: number
+        }
+        Update: {
+          amount_delta_min?: number
+          duplicate_lead_upload_threshold?: number
+          duplicate_utr_threshold?: number
+          id?: boolean
+          submissions_per_hour_threshold?: number
+          updated_at?: string
+          updated_by?: string | null
+          verified_sales_per_day_threshold?: number
+        }
+        Relationships: []
+      }
       round_robin_settings: {
         Row: {
           eligible_work_models: string[]
@@ -5794,6 +6017,7 @@ export type Database = {
       normalize_email: { Args: { _email: string }; Returns: string }
       normalize_phone: { Args: { _phone: string }; Returns: string }
       partner_id_for: { Args: { _user_id: string }; Returns: string }
+      scan_referral_patterns: { Args: never; Returns: number }
       student_enrolled_in_course: {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
@@ -6072,6 +6296,24 @@ export type Database = {
         | "duplicate_enrollment"
         | "fraud_review"
         | "manual_adjustment"
+      risk_flag_severity: "low" | "medium" | "high"
+      risk_flag_status:
+        | "open"
+        | "under_review"
+        | "needs_information"
+        | "resolved"
+        | "dismissed"
+      risk_flag_type:
+        | "duplicate_utr"
+        | "possible_duplicate_proof"
+        | "unexpected_payment_amount"
+        | "lead_multi_partner"
+        | "lead_ownership_conflict"
+        | "repeated_payment_submission"
+        | "unusual_sales_activity"
+        | "suspicious_referral_pattern"
+        | "repeated_duplicate_lead_uploads"
+        | "other"
       support_ticket_category:
         | "lead_attribution"
         | "revenue_share"
@@ -6516,6 +6758,26 @@ export const Constants = {
         "duplicate_enrollment",
         "fraud_review",
         "manual_adjustment",
+      ],
+      risk_flag_severity: ["low", "medium", "high"],
+      risk_flag_status: [
+        "open",
+        "under_review",
+        "needs_information",
+        "resolved",
+        "dismissed",
+      ],
+      risk_flag_type: [
+        "duplicate_utr",
+        "possible_duplicate_proof",
+        "unexpected_payment_amount",
+        "lead_multi_partner",
+        "lead_ownership_conflict",
+        "repeated_payment_submission",
+        "unusual_sales_activity",
+        "suspicious_referral_pattern",
+        "repeated_duplicate_lead_uploads",
+        "other",
       ],
       support_ticket_category: [
         "lead_attribution",
