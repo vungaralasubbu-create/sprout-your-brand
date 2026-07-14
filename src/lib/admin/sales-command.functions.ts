@@ -54,6 +54,7 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
       leadsNotContacted,
       overdueFollowUps,
       approvedPayouts,
+      pendingOwnershipReviews,
     ] = await Promise.all([
       s.from("partner_payment_submissions")
         .select("amount", { count: "exact" })
