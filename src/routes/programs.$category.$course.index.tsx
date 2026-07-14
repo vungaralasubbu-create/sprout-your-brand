@@ -228,7 +228,7 @@ function CoursePage() {
   return (
     <PageShell>
       {/* ============ HERO ============ */}
-      <Section className="pt-10 pb-16 lg:pt-14 lg:pb-24 relative overflow-hidden">
+      <Section className="pt-8 pb-10 lg:pt-10 lg:pb-14 relative overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.04] via-transparent to-transparent"
@@ -246,7 +246,7 @@ function CoursePage() {
             <span className="text-foreground">{c.name}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-14 items-center">
+          <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 lg:gap-12 items-center">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -255,16 +255,16 @@ function CoursePage() {
                 {c.is_bestseller ? <Badge variant="bestseller">Best Seller</Badge> : null}
                 {c.is_featured ? <Badge variant="certified">Featured</Badge> : null}
               </div>
-              <h1 className="text-display-lg lg:text-[3.5rem] leading-[1.05] font-display font-semibold tracking-tight text-balance">
+              <h1 className="text-display-md lg:text-[3rem] leading-[1.05] font-display font-semibold tracking-tight text-balance">
                 {c.name}
               </h1>
               {c.short_description ? (
-                <p className="mt-5 text-body-lg text-muted-foreground max-w-2xl">
+                <p className="mt-4 text-body-lg text-muted-foreground max-w-2xl">
                   {c.short_description}
                 </p>
               ) : null}
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" variant="gradient">
                   <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                     Apply Now
@@ -285,7 +285,7 @@ function CoursePage() {
                 ) : null}
               </div>
 
-              <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 max-w-xl">
+              <dl className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 max-w-xl">
                 {c.duration ? (
                   <MetaStat icon={Clock} label="Duration" value={c.duration} />
                 ) : null}
@@ -332,7 +332,7 @@ function CoursePage() {
 
       {/* ============ WHY THIS PROGRAM ============ */}
       {c.full_description || whyContent ? (
-        <Section className="py-20 lg:py-28">
+        <Section className="py-14 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-16">
               <div>
@@ -368,9 +368,9 @@ function CoursePage() {
 
       {/* ============ LEARNING EXPERIENCE ============ */}
       {learningExperience.length > 0 ? (
-        <Section className="py-20 bg-surface-2/40 border-y">
+        <Section className="py-14 lg:py-20 bg-surface-2/40 border-y">
           <Container>
-            <div className="max-w-2xl mb-12">
+            <div className="max-w-2xl mb-10">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
                 Learning Experience
               </span>
@@ -462,13 +462,13 @@ function CoursePage() {
 
       {/* ============ PROGRAM EXPERIENCE FEATURE ============ */}
       {programExperience.length > 0 ? (
-        <Section className="py-20 lg:py-24 bg-[oklch(0.18_0.04_255)] text-white relative overflow-hidden">
+        <Section className="py-14 lg:py-20 bg-[oklch(0.18_0.04_255)] text-white relative overflow-hidden">
           <div
             aria-hidden
             className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.6_0.18_220/0.25),transparent_60%)]"
           />
           <Container className="relative">
-            <div className="max-w-2xl mb-12">
+            <div className="max-w-2xl mb-10">
               <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_180)]">
                 Program Experience
               </span>
@@ -496,7 +496,7 @@ function CoursePage() {
 
       {/* ============ CERTIFICATION ============ */}
       {c.certifications.length > 0 ? (
-        <Section className="py-20 lg:py-24">
+        <Section className="py-14 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div>
@@ -620,9 +620,9 @@ function CoursePage() {
 
       {/* ============ PRICING ============ */}
       {price != null ? (
-        <Section className="py-20 lg:py-24">
+        <Section className="py-14 lg:py-20">
           <Container>
-            <div className="max-w-2xl mx-auto text-center mb-10">
+            <div className="max-w-2xl mx-auto text-center mb-8">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
                 Program Access
               </span>
@@ -739,7 +739,7 @@ function CoursePage() {
       ) : null}
 
       {/* ============ FINAL CTA ============ */}
-      <Section className="py-20 lg:py-28 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent">
+      <Section className="py-14 lg:py-20 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
@@ -1099,10 +1099,10 @@ function SectionBlock({
 }) {
   return (
     <Section
-      className={cn("py-20 lg:py-24", tone === "soft" ? "bg-surface-2/40 border-y" : "")}
+      className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "")}
     >
       <Container>
-        <div className="max-w-2xl mb-12">
+        <div className="max-w-2xl mb-10">
           {eyebrow ? (
             <span className="text-caption font-mono uppercase tracking-widest text-primary">
               {eyebrow}
