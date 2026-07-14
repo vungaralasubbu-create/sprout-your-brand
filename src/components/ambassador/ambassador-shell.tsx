@@ -75,7 +75,7 @@ export function AmbassadorShell({ children }: { children?: React.ReactNode }) {
               >
                 <item.icon className="h-4 w-4 shrink-0" />
                 <span className="flex-1">{item.label}</span>
-                {("soon" in item && item.soon) && (
+                {Boolean((item as { soon?: boolean }).soon) && (
                   <span className="text-[9px] uppercase tracking-widest text-slate-400">Soon</span>
                 )}
               </Link>
