@@ -29,7 +29,7 @@ import {
 } from "recharts";
 import { getOverviewStats, getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
-import { AlertTriangle, CalendarClock, PhoneOff, CreditCard } from "lucide-react";
+import { AlertTriangle, CalendarClock, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/programs";
