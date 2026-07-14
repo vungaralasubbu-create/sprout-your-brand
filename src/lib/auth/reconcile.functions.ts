@@ -20,12 +20,14 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
 
     const granted: string[] = [];
 
-    // Find an approved partner application for this email (linked or not)
+    // Find the most recent partner application for this email (any status
+    // except rejected). Sales partners should land on the sales dashboard
+    // whether their application is approved, pending, or under review.
     const { data: app } = await supabaseAdmin
       .from("partner_applications")
       .select("id, full_name, mobile, city, state, user_id, status")
       .ilike("email", email)
-      .eq("status", "approved")
+      .neq("status", "rejected")
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -51,7 +53,7 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
           mobile: app.mobile,
           city: app.city,
           state: app.state,
-          status: "active",
+          status: app.status === "approved" ? "active" : "pending",
         });
       }
       await supabaseAdmin
@@ -72,6 +74,7 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
         .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
       if (!granted.includes("partner")) granted.push("partner");
     }
+
 
     // Default fallback: every signed-in user gets at least the student role
     // so they always land on a workspace dashboard instead of the homepage.

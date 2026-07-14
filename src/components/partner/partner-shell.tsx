@@ -1,55 +1,67 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import {
   LayoutDashboard,
-  Package,
   Users,
-  UserCheck,
-  CalendarClock,
+  UserPlus,
   Link2,
+  ShieldCheck,
+  ShoppingBag,
   Wallet,
-  Receipt,
+  Package,
+  Gift,
+  Building2,
   BarChart3,
-  FileText,
-  Bell,
-  LifeBuoy,
   UserCircle,
-  Rocket,
+  LogOut,
   Menu,
   X,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 const NAV = [
-  { to: "/partner/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/partner/onboarding", label: "Onboarding", icon: UserCheck },
-  { to: "/partner/programs", label: "Programs", icon: Package },
-  { to: "/partner/leads", label: "My Leads", icon: Users },
-  { to: "/partner/assigned-leads", label: "Assigned Leads", icon: UserCheck },
-  { to: "/partner/follow-ups", label: "Follow-Ups", icon: CalendarClock },
-  { to: "/partner/links", label: "My Links", icon: Link2 },
-  { to: "/partner/earnings", label: "Earnings", icon: Wallet },
-  { to: "/partner/payouts", label: "Payouts", icon: Receipt },
-  { to: "/partner/performance", label: "Performance", icon: BarChart3 },
-  { to: "/partner/statements", label: "Statements", icon: FileText },
-  { to: "/partner/notifications", label: "Notifications", icon: Bell },
-  { to: "/partner/support", label: "Support", icon: LifeBuoy },
-  { to: "/partner/profile", label: "Profile", icon: UserCircle },
+  { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
+  { to: "/partner/coming-soon", label: "My Leads", icon: Users },
+  { to: "/partner/coming-soon", label: "Add Leads", icon: UserPlus },
+  { to: "/partner/coming-soon", label: "Payment Links", icon: Link2 },
+  { to: "/partner/coming-soon", label: "Payment Verification", icon: ShieldCheck },
+  { to: "/partner/coming-soon", label: "My Sales", icon: ShoppingBag },
+  { to: "/partner/coming-soon", label: "Earnings", icon: Wallet },
+  { to: "/partner/coming-soon", label: "Programs", icon: Package },
+  { to: "/partner/coming-soon", label: "Referral Bonus", icon: Gift },
+  { to: "/partner/coming-soon", label: "Brand Profile", icon: Building2 },
+  { to: "/partner/coming-soon", label: "Analytics", icon: BarChart3 },
+  { to: "/partner/coming-soon", label: "Account", icon: UserCircle },
 ] as const;
 
 export function PartnerShell() {
   const fetchCtx = useServerFn(getPartnerContext);
   const { data } = useQuery({ queryKey: ["partner-context"], queryFn: () => fetchCtx() });
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const partner = data?.partner ?? null;
-  const unread = data?.unreadNotifications ?? 0;
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  const isActive = (to: string, label: string) => {
+    if (label === "Overview") return pathname === "/partner/dashboard";
+    // Every other nav item currently routes to /partner/coming-soon; match by
+    // location hash (or fallback) so only the clicked item highlights.
+    return false;
+  };
 
   return (
     <div className="min-h-screen bg-[oklch(0.98_0.005_240)] text-foreground">
@@ -71,8 +83,8 @@ export function PartnerShell() {
         {/* Sidebar */}
         <aside
           className={cn(
-            "border-r bg-white lg:sticky lg:top-0 lg:h-screen lg:block",
-            open ? "block" : "hidden",
+            "border-r bg-white lg:sticky lg:top-0 lg:h-screen lg:flex lg:flex-col",
+            open ? "block" : "hidden lg:flex",
           )}
         >
           <div className="p-5 border-b hidden lg:block">
@@ -80,11 +92,11 @@ export function PartnerShell() {
               glintr
             </Link>
             <div className="mt-0.5 text-caption font-mono uppercase tracking-widest text-primary">
-              Partner Workspace
+              Sales Workspace
             </div>
           </div>
 
-          <div className="px-3 py-4">
+          <div className="px-3 py-4 flex-1 overflow-y-auto">
             {partner ? (
               <div className="mb-4 p-3 rounded-xl bg-[oklch(0.97_0.02_240)] border border-border/50">
                 <div className="text-caption uppercase tracking-wider text-muted-foreground">
@@ -99,12 +111,12 @@ export function PartnerShell() {
               </div>
             ) : null}
             <nav className="space-y-0.5">
-              {NAV.map((item) => {
-                const active = pathname.startsWith(item.to);
+              {NAV.map((item, i) => {
+                const active = isActive(item.to, item.label);
                 const Icon = item.icon;
                 return (
                   <Link
-                    key={item.to}
+                    key={`${item.label}-${i}`}
                     to={item.to}
                     onClick={() => setOpen(false)}
                     className={cn(
@@ -116,24 +128,22 @@ export function PartnerShell() {
                   >
                     <Icon className="size-4" />
                     <span className="flex-1">{item.label}</span>
-                    {item.to === "/partner/notifications" && unread > 0 ? (
-                      <Badge variant="primary" className="h-5 px-1.5 text-[10px]">
-                        {unread}
-                      </Badge>
-                    ) : null}
                   </Link>
                 );
               })}
             </nav>
+          </div>
 
-            <div className="mt-6 pt-6 border-t">
-              <Button asChild variant="outline" size="sm" className="w-full justify-start">
-                <Link to="/launch-your-brand" onClick={() => setOpen(false)}>
-                  <Rocket className="size-4" />
-                  Launch My Brand
-                </Link>
-              </Button>
-            </div>
+          <div className="px-3 py-4 border-t">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start"
+              onClick={handleSignOut}
+            >
+              <LogOut className="size-4" />
+              Logout
+            </Button>
           </div>
         </aside>
 
