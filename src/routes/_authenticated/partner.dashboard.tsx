@@ -389,7 +389,7 @@ function KpiCard({
 function PaymentBadge({ status }: { status: "pending" | "verified" | "rejected" }) {
   if (status === "verified")
     return <Badge variant="success">Verified</Badge>;
-  if (status === "rejected") return <Badge variant="destructive">Rejected</Badge>;
+  if (status === "rejected") return <Badge variant="danger">Rejected</Badge>;
   return <Badge variant="warning">Pending Verification</Badge>;
 }
 
