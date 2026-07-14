@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/accordion";
 import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs";
 import { getCourseSeo } from "@/lib/seo";
-import { CourseHeroVisual } from "@/components/course/hero-visual";
+
 import { ProjectVisual } from "@/components/course/project-visual";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
@@ -253,7 +253,10 @@ function CoursePage() {
             <span className="text-foreground">{c.name}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
+          {(() => {
+            const heroImage = c.hero_image_url ?? c.thumbnail_url ?? null;
+            return (
+          <div className={cn("grid gap-10 lg:gap-16 items-center", heroImage ? "lg:grid-cols-[1.2fr_1fr]" : "max-w-4xl") }>
             <Reveal>
               <div className="flex items-center gap-2 mb-5">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -262,7 +265,7 @@ function CoursePage() {
                 {c.is_bestseller ? <Badge variant="bestseller">Best Seller</Badge> : null}
                 {c.is_featured ? <Badge variant="certified">Featured</Badge> : null}
               </div>
-              <h1 className="font-display font-semibold tracking-[-0.03em] text-balance leading-[0.95] text-[clamp(2.6rem,6.4vw,5rem)]">
+              <h1 className="font-display font-semibold tracking-[-0.03em] text-balance leading-[0.95] text-[clamp(2.4rem,5.6vw,4.4rem)]">
                 {formatHeroTitle(c.name)}
               </h1>
               {c.short_description ? (
@@ -271,28 +274,7 @@ function CoursePage() {
                 </p>
               ) : null}
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg" variant="gradient">
-                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
-                    Apply Now
-                    <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-                <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
-                {c.brochure ? (
-                  <a
-                    href={c.brochure.file_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline underline-offset-4"
-                  >
-                    <Download className="size-4" />
-                    Download Brochure
-                  </a>
-                ) : null}
-              </div>
-
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+              <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
                 {c.duration ? (
                   <span className="inline-flex items-center gap-2 text-foreground/85">
                     <Clock className="size-4 text-primary/80" />
@@ -316,44 +298,47 @@ function CoursePage() {
                   Certificate
                 </span>
               </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <Button asChild size="lg" variant="gradient">
+                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
+                    Apply Now
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
+                {c.brochure ? (
+                  <a
+                    href={c.brochure.file_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline underline-offset-4"
+                  >
+                    <Download className="size-4" />
+                    Download Brochure
+                  </a>
+                ) : null}
+              </div>
+              <p className="mt-4 text-caption text-muted-foreground">
+                Mentor-led · Project-based · Career support included
+              </p>
             </Reveal>
 
-            <Reveal delay={150}>
-              <div className="relative">
-                <CourseHeroVisual
-                  courseName={c.name}
-                  categoryName={c.category.name}
-                  imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
-                />
-                {/* floating Program Focus card */}
-                <div className="hidden sm:block absolute -bottom-8 -left-6 lg:-left-10 rounded-2xl border border-border/60 bg-surface-1/95 backdrop-blur p-5 shadow-2xl w-[260px] animate-[fade-in_0.6s_ease-out_0.4s_both]">
-                  <div className="text-caption font-mono uppercase tracking-widest text-primary">
-                    Program Focus
-                  </div>
-                  <ul className="mt-3 space-y-2 text-sm">
-                    <li className="flex items-center gap-2">
-                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Hammer className="size-3.5" />
-                      </span>
-                      Practical Skills
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Rocket className="size-3.5" />
-                      </span>
-                      Projects
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Briefcase className="size-3.5" />
-                      </span>
-                      Career Preparation
-                    </li>
-                  </ul>
+            {heroImage ? (
+              <Reveal delay={150}>
+                <div className="relative overflow-hidden rounded-3xl border border-border/60 shadow-xl aspect-[4/3]">
+                  <img
+                    src={heroImage}
+                    alt={c.name}
+                    className="h-full w-full object-cover"
+                    loading="eager"
+                  />
                 </div>
-              </div>
-            </Reveal>
+              </Reveal>
+            ) : null}
           </div>
+            );
+          })()}
         </Container>
       </Section>
 
@@ -365,19 +350,8 @@ function CoursePage() {
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,oklch(0.7_0.15_180/0.22),transparent_60%)]"
         />
         <Container className="relative">
-          <div className="grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-center">
+          <div className="grid lg:grid-cols-[1fr_1fr] gap-10 lg:gap-16 items-start">
             <Reveal>
-              <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                <CourseHeroVisual
-                  courseName={c.name}
-                  categoryName={c.category.name}
-                  imageUrl={null}
-                  className="aspect-[4/3]"
-                />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-tr from-[oklch(0.16_0.04_255)]/60 via-transparent to-transparent" />
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
               <div>
                 <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
                   {c.category.name}
@@ -388,28 +362,33 @@ function CoursePage() {
                     Build With It.
                   </span>
                 </h2>
-                <div className="mt-10 space-y-8">
-                  {buildIntroSteps(c).map((step, i) => (
-                    <Reveal key={i} delay={i * 120}>
-                      <div className="flex gap-5">
-                        <span className="font-mono text-[oklch(0.85_0.15_200)] text-2xl font-semibold shrink-0 pt-1">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <div className="min-w-0">
-                          <h3 className="font-display font-semibold text-xl text-white">
-                            {step.title}
-                          </h3>
-                          <p className="mt-1.5 text-white/70 leading-relaxed">
-                            {step.description}
-                          </p>
-                        </div>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
+                <p className="mt-5 text-white/70 max-w-md leading-relaxed">
+                  {c.short_description ??
+                    `${c.name} is designed to turn learning into a portfolio — through structured practice, real projects and mentor support.`}
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="space-y-7">
+                {buildIntroSteps(c).map((step, i) => (
+                  <div key={i} className="flex gap-5">
+                    <span className="font-mono text-[oklch(0.85_0.15_200)] text-2xl font-semibold shrink-0 pt-1">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="font-display font-semibold text-xl text-white">
+                        {step.title}
+                      </h3>
+                      <p className="mt-1.5 text-white/70 leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </Reveal>
           </div>
+
         </Container>
       </Section>
 
@@ -433,51 +412,8 @@ function CoursePage() {
         </Container>
       </Section>
 
-      {/* ============ IMAGE STORY 1 ============ */}
-      <Section className="py-16 lg:py-24">
-        <Container>
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
-            <Reveal>
-              <div className="group relative rounded-3xl overflow-hidden border border-border/60 shadow-xl">
-                <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]">
-                  <CourseHeroVisual
-                    courseName={c.name}
-                    categoryName={c.category.name}
-                    imageUrl={null}
-                    className="aspect-[5/4]"
-                  />
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={100}>
-              <div>
-                <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                  Learn The Craft
-                </span>
-                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
-                  Understand The Technology.
-                </h2>
-                <p className="mt-5 text-body-lg text-muted-foreground">
-                  {c.short_description ??
-                    `${c.name} moves you from concepts to confident practice — grounded in real problems, industry tools and mentor-led guidance.`}
-                </p>
-                {c.skills.length > 0 ? (
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    {c.skills.slice(0, 6).map((s) => (
-                      <span
-                        key={s}
-                        className="inline-flex items-center rounded-full border border-border/60 bg-surface-1 px-3 py-1 text-xs font-medium"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </Reveal>
-          </div>
-        </Container>
-      </Section>
+      {/* Image Story removed — no real course imagery yet. Content flows directly into Why / Syllabus. */}
+
 
 
 
@@ -532,52 +468,8 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
-      {/* ============ IMAGE STORY 2 ============ */}
-      <Section className="py-16 lg:py-24">
-        <Container>
-          <div className="grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center">
-            <Reveal>
-              <div>
-                <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                  Applied Learning
-                </span>
-                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
-                  Turn Knowledge Into Practical Skills.
-                </h2>
-                <p className="mt-5 text-body-lg text-muted-foreground">
-                  Every module ends with something you've built — code, an analysis,
-                  a design, a document — so what you learn shows up in your work,
-                  not just your notes.
-                </p>
-                <ul className="mt-6 space-y-2.5 text-sm">
-                  {[
-                    "Guided practice with mentor reviews",
-                    "Real briefs modelled on industry work",
-                    "Portfolio-ready deliverables",
-                  ].map((line) => (
-                    <li key={line} className="flex items-start gap-2.5">
-                      <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
-                      <span>{line}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="group relative rounded-3xl overflow-hidden border border-border/60 shadow-xl">
-                <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]">
-                  <CourseHeroVisual
-                    courseName={c.name}
-                    categoryName={c.category.name}
-                    imageUrl={null}
-                    className="aspect-[5/4]"
-                  />
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </Container>
-      </Section>
+      {/* Image Story 2 removed — no real course imagery yet. */}
+
 
       {/* ============ SKILLS MARQUEE ============ */}
       {c.skills.length > 0 ? (
