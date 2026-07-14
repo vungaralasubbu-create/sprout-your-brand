@@ -30,10 +30,16 @@ export const Route = createFileRoute("/_authenticated/partner")({
       .eq("user_id", user.id)
       .maybeSingle();
 
-    const status = partner?.account_status ?? null;
-    const onboarding = partner?.onboarding_status ?? null;
+    if (!partner) {
+      // Legacy /partner/apply flow: application exists but partners row not
+      // provisioned until admin approval. Show application status instead.
+      throw redirect({ to: "/partner/application-status" as any });
+    }
 
-    if (!partner || onboarding !== "completed") {
+    const status = partner.account_status;
+    const onboarding = partner.onboarding_status;
+
+    if (onboarding !== "completed") {
       throw redirect({ to: "/partner/quick-start" as any });
     }
     if (
@@ -44,6 +50,7 @@ export const Route = createFileRoute("/_authenticated/partner")({
     ) {
       throw redirect({ to: "/partner/application-status" as any });
     }
+
   },
   component: PartnerShell,
 });
