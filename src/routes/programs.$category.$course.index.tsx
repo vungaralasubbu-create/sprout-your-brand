@@ -660,7 +660,7 @@ function CoursePage() {
 
       {/* ============ PLACEMENT / CAREER SUPPORT ============ */}
       {c.placement.length > 0 ? (
-        <SectionBlock eyebrow="Career Support" title="Build Skills. Prepare For Opportunities.">
+        <SectionBlock eyebrow="Career Support" title="Build Skills. Prepare For Opportunities." className="!pb-6 lg:!pb-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {c.placement.map((p, i) => (
               <div
