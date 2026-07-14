@@ -253,7 +253,10 @@ function CoursePage() {
             <span className="text-foreground">{c.name}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
+          {(() => {
+            const heroImage = c.hero_image_url ?? c.thumbnail_url ?? null;
+            return (
+          <div className={cn("grid gap-10 lg:gap-16 items-center", heroImage ? "lg:grid-cols-[1.2fr_1fr]" : "max-w-4xl") }>
             <Reveal>
               <div className="flex items-center gap-2 mb-5">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -262,7 +265,7 @@ function CoursePage() {
                 {c.is_bestseller ? <Badge variant="bestseller">Best Seller</Badge> : null}
                 {c.is_featured ? <Badge variant="certified">Featured</Badge> : null}
               </div>
-              <h1 className="font-display font-semibold tracking-[-0.03em] text-balance leading-[0.95] text-[clamp(2.6rem,6.4vw,5rem)]">
+              <h1 className="font-display font-semibold tracking-[-0.03em] text-balance leading-[0.95] text-[clamp(2.4rem,5.6vw,4.4rem)]">
                 {formatHeroTitle(c.name)}
               </h1>
               {c.short_description ? (
@@ -271,28 +274,7 @@ function CoursePage() {
                 </p>
               ) : null}
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg" variant="gradient">
-                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
-                    Apply Now
-                    <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-                <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
-                {c.brochure ? (
-                  <a
-                    href={c.brochure.file_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline underline-offset-4"
-                  >
-                    <Download className="size-4" />
-                    Download Brochure
-                  </a>
-                ) : null}
-              </div>
-
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+              <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
                 {c.duration ? (
                   <span className="inline-flex items-center gap-2 text-foreground/85">
                     <Clock className="size-4 text-primary/80" />
@@ -316,44 +298,47 @@ function CoursePage() {
                   Certificate
                 </span>
               </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <Button asChild size="lg" variant="gradient">
+                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
+                    Apply Now
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
+                {c.brochure ? (
+                  <a
+                    href={c.brochure.file_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline underline-offset-4"
+                  >
+                    <Download className="size-4" />
+                    Download Brochure
+                  </a>
+                ) : null}
+              </div>
+              <p className="mt-4 text-caption text-muted-foreground">
+                Mentor-led · Project-based · Career support included
+              </p>
             </Reveal>
 
-            <Reveal delay={150}>
-              <div className="relative">
-                <CourseHeroVisual
-                  courseName={c.name}
-                  categoryName={c.category.name}
-                  imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
-                />
-                {/* floating Program Focus card */}
-                <div className="hidden sm:block absolute -bottom-8 -left-6 lg:-left-10 rounded-2xl border border-border/60 bg-surface-1/95 backdrop-blur p-5 shadow-2xl w-[260px] animate-[fade-in_0.6s_ease-out_0.4s_both]">
-                  <div className="text-caption font-mono uppercase tracking-widest text-primary">
-                    Program Focus
-                  </div>
-                  <ul className="mt-3 space-y-2 text-sm">
-                    <li className="flex items-center gap-2">
-                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Hammer className="size-3.5" />
-                      </span>
-                      Practical Skills
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Rocket className="size-3.5" />
-                      </span>
-                      Projects
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <Briefcase className="size-3.5" />
-                      </span>
-                      Career Preparation
-                    </li>
-                  </ul>
+            {heroImage ? (
+              <Reveal delay={150}>
+                <div className="relative overflow-hidden rounded-3xl border border-border/60 shadow-xl aspect-[4/3]">
+                  <img
+                    src={heroImage}
+                    alt={c.name}
+                    className="h-full w-full object-cover"
+                    loading="eager"
+                  />
                 </div>
-              </div>
-            </Reveal>
+              </Reveal>
+            ) : null}
           </div>
+            );
+          })()}
         </Container>
       </Section>
 
