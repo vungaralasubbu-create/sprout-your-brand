@@ -352,7 +352,7 @@ function AnalyticsPage() {
             >
               <div className="flex items-center justify-between">
                 <div className="font-medium">{row.label}</div>
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="muted" className="text-xs">
                   {row.source === "own_leads" ? "70% share" : "50% share"}
                 </Badge>
               </div>

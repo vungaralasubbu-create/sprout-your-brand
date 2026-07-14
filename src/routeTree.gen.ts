@@ -46,6 +46,7 @@ import { Route as AuthenticatedPartnerEarningsRouteImport } from './routes/_auth
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedPartnerComingSoonRouteImport } from './routes/_authenticated/partner.coming-soon'
 import { Route as AuthenticatedPartnerBrandProfileRouteImport } from './routes/_authenticated/partner.brand-profile'
+import { Route as AuthenticatedPartnerAnalyticsRouteImport } from './routes/_authenticated/partner.analytics'
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
@@ -280,6 +281,12 @@ const AuthenticatedPartnerBrandProfileRoute =
     path: '/brand-profile',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerAnalyticsRoute =
+  AuthenticatedPartnerAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerAddLeadsRoute =
   AuthenticatedPartnerAddLeadsRouteImport.update({
     id: '/add-leads',
@@ -504,6 +511,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
+  '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
@@ -571,6 +579,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
+  '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
@@ -642,6 +651,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
+  '/_authenticated/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/_authenticated/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/_authenticated/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
@@ -713,6 +723,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/brand/dashboard'
     | '/partner/add-leads'
+    | '/partner/analytics'
     | '/partner/brand-profile'
     | '/partner/coming-soon'
     | '/partner/dashboard'
@@ -780,6 +791,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/brand/dashboard'
     | '/partner/add-leads'
+    | '/partner/analytics'
     | '/partner/brand-profile'
     | '/partner/coming-soon'
     | '/partner/dashboard'
@@ -850,6 +862,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/settings'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/partner/add-leads'
+    | '/_authenticated/partner/analytics'
     | '/_authenticated/partner/brand-profile'
     | '/_authenticated/partner/coming-soon'
     | '/_authenticated/partner/dashboard'
@@ -1161,6 +1174,13 @@ declare module '@tanstack/react-router' {
       path: '/brand-profile'
       fullPath: '/partner/brand-profile'
       preLoaderRoute: typeof AuthenticatedPartnerBrandProfileRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/analytics': {
+      id: '/_authenticated/partner/analytics'
+      path: '/analytics'
+      fullPath: '/partner/analytics'
+      preLoaderRoute: typeof AuthenticatedPartnerAnalyticsRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/add-leads': {
@@ -1477,6 +1497,7 @@ const AuthenticatedPartnerProgramsRouteWithChildren =
 
 interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerAddLeadsRoute: typeof AuthenticatedPartnerAddLeadsRoute
+  AuthenticatedPartnerAnalyticsRoute: typeof AuthenticatedPartnerAnalyticsRoute
   AuthenticatedPartnerBrandProfileRoute: typeof AuthenticatedPartnerBrandProfileRoute
   AuthenticatedPartnerComingSoonRoute: typeof AuthenticatedPartnerComingSoonRoute
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
@@ -1490,6 +1511,7 @@ interface AuthenticatedPartnerRouteChildren {
 
 const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerAddLeadsRoute: AuthenticatedPartnerAddLeadsRoute,
+  AuthenticatedPartnerAnalyticsRoute: AuthenticatedPartnerAnalyticsRoute,
   AuthenticatedPartnerBrandProfileRoute: AuthenticatedPartnerBrandProfileRoute,
   AuthenticatedPartnerComingSoonRoute: AuthenticatedPartnerComingSoonRoute,
   AuthenticatedPartnerDashboardRoute: AuthenticatedPartnerDashboardRoute,
