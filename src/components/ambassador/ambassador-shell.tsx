@@ -13,7 +13,7 @@ const NAV = [
   { to: "/ambassador/earnings", label: "Earnings", icon: Wallet },
   { to: "/ambassador/payouts", label: "Payouts", icon: Banknote },
   { to: "/ambassador/commission-structure", label: "Commission Structure", icon: ScrollText },
-  { to: "/ambassador/dashboard", label: "Marketing Resources", icon: Sparkles, soon: true },
+  { to: "/ambassador/marketing-resources", label: "Marketing Resources", icon: Sparkles },
   { to: "/campus-ambassador/status", label: "My Profile", icon: UserCircle },
   { to: "/ambassador/dashboard", label: "Support", icon: LifeBuoy, soon: true },
 ] as const;

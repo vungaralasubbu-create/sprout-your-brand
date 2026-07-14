@@ -106,6 +106,7 @@ import { Route as AuthenticatedStudentCareerIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedStudentAssignmentsIndexRouteImport } from './routes/_authenticated/student.assignments.index'
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
 import { Route as AuthenticatedAmbassadorReferralsIndexRouteImport } from './routes/_authenticated/ambassador.referrals.index'
+import { Route as AuthenticatedAmbassadorMarketingResourcesIndexRouteImport } from './routes/_authenticated/ambassador.marketing-resources.index'
 import { Route as AuthenticatedAmbassadorEnrollmentsIndexRouteImport } from './routes/_authenticated/ambassador.enrollments.index'
 import { Route as AuthenticatedAmbassadorEarningsIndexRouteImport } from './routes/_authenticated/ambassador.earnings.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
@@ -142,6 +143,7 @@ import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authe
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
+import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport } from './routes/_authenticated/ambassador.marketing-resources.programs.$slug'
 import { Route as AuthenticatedStudentInternshipIdTasksTaskIdRouteImport } from './routes/_authenticated/student.internship.$id.tasks.$taskId'
 import { Route as AuthenticatedStudentCareerInterviewIdReportRouteImport } from './routes/_authenticated/student.career.interview.$id.report'
 
@@ -703,6 +705,12 @@ const AuthenticatedAmbassadorReferralsIndexRoute =
     path: '/referrals/',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAmbassadorMarketingResourcesIndexRoute =
+  AuthenticatedAmbassadorMarketingResourcesIndexRouteImport.update({
+    id: '/marketing-resources/',
+    path: '/marketing-resources/',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
 const AuthenticatedAmbassadorEnrollmentsIndexRoute =
   AuthenticatedAmbassadorEnrollmentsIndexRouteImport.update({
     id: '/enrollments/',
@@ -919,6 +927,12 @@ const AuthenticatedPartnerEmploymentSalarySlipsIdRoute =
     path: '/employment/salary-slips/$id',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute =
+  AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport.update({
+    id: '/marketing-resources/programs/$slug',
+    path: '/marketing-resources/programs/$slug',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
 const AuthenticatedStudentInternshipIdTasksTaskIdRoute =
   AuthenticatedStudentInternshipIdTasksTaskIdRouteImport.update({
     id: '/tasks/$taskId',
@@ -1051,6 +1065,7 @@ export interface FileRoutesByFullPath {
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  '/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
@@ -1062,6 +1077,7 @@ export interface FileRoutesByFullPath {
   '/student/projects/': typeof AuthenticatedStudentProjectsIndexRoute
   '/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
+  '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
@@ -1184,6 +1200,7 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
   '/ambassador/earnings': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  '/ambassador/marketing-resources': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/ambassador/referrals': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsIndexRoute
@@ -1195,6 +1212,7 @@ export interface FileRoutesByTo {
   '/student/projects': typeof AuthenticatedStudentProjectsIndexRoute
   '/student/support': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
+  '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
@@ -1322,6 +1340,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/_authenticated/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/_authenticated/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  '/_authenticated/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/_authenticated/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/_authenticated/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
@@ -1333,6 +1352,7 @@ export interface FileRoutesById {
   '/_authenticated/student/projects/': typeof AuthenticatedStudentProjectsIndexRoute
   '/_authenticated/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
+  '/_authenticated/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/_authenticated/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
@@ -1460,6 +1480,7 @@ export interface FileRouteTypes {
     | '/admin/team/'
     | '/ambassador/earnings/'
     | '/ambassador/enrollments/'
+    | '/ambassador/marketing-resources/'
     | '/ambassador/referrals/'
     | '/partner/employment/'
     | '/student/assignments/'
@@ -1471,6 +1492,7 @@ export interface FileRouteTypes {
     | '/student/projects/'
     | '/student/support/'
     | '/programs/$category/$course/'
+    | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
@@ -1593,6 +1615,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/ambassador/earnings'
     | '/ambassador/enrollments'
+    | '/ambassador/marketing-resources'
     | '/ambassador/referrals'
     | '/partner/employment'
     | '/student/assignments'
@@ -1604,6 +1627,7 @@ export interface FileRouteTypes {
     | '/student/projects'
     | '/student/support'
     | '/programs/$category/$course'
+    | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
@@ -1730,6 +1754,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/team/'
     | '/_authenticated/ambassador/earnings/'
     | '/_authenticated/ambassador/enrollments/'
+    | '/_authenticated/ambassador/marketing-resources/'
     | '/_authenticated/ambassador/referrals/'
     | '/_authenticated/partner/employment/'
     | '/_authenticated/student/assignments/'
@@ -1741,6 +1766,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/projects/'
     | '/_authenticated/student/support/'
     | '/programs/$category/$course/'
+    | '/_authenticated/ambassador/marketing-resources/programs/$slug'
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
     | '/_authenticated/student/career/interview/setup'
@@ -2451,6 +2477,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorReferralsIndexRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/ambassador/marketing-resources/': {
+      id: '/_authenticated/ambassador/marketing-resources/'
+      path: '/marketing-resources'
+      fullPath: '/ambassador/marketing-resources/'
+      preLoaderRoute: typeof AuthenticatedAmbassadorMarketingResourcesIndexRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
     '/_authenticated/ambassador/enrollments/': {
       id: '/_authenticated/ambassador/enrollments/'
       path: '/enrollments'
@@ -2703,6 +2736,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/ambassador/marketing-resources/programs/$slug': {
+      id: '/_authenticated/ambassador/marketing-resources/programs/$slug'
+      path: '/marketing-resources/programs/$slug'
+      fullPath: '/ambassador/marketing-resources/programs/$slug'
+      preLoaderRoute: typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
     '/_authenticated/student/internship/$id/tasks/$taskId': {
       id: '/_authenticated/student/internship/$id/tasks/$taskId'
       path: '/tasks/$taskId'
@@ -2878,7 +2918,9 @@ interface AuthenticatedAmbassadorRouteChildren {
   AuthenticatedAmbassadorReferralsIdRoute: typeof AuthenticatedAmbassadorReferralsIdRoute
   AuthenticatedAmbassadorEarningsIndexRoute: typeof AuthenticatedAmbassadorEarningsIndexRoute
   AuthenticatedAmbassadorEnrollmentsIndexRoute: typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  AuthenticatedAmbassadorMarketingResourcesIndexRoute: typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   AuthenticatedAmbassadorReferralsIndexRoute: typeof AuthenticatedAmbassadorReferralsIndexRoute
+  AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute: typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
 }
 
 const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren =
@@ -2899,8 +2941,12 @@ const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren
       AuthenticatedAmbassadorEarningsIndexRoute,
     AuthenticatedAmbassadorEnrollmentsIndexRoute:
       AuthenticatedAmbassadorEnrollmentsIndexRoute,
+    AuthenticatedAmbassadorMarketingResourcesIndexRoute:
+      AuthenticatedAmbassadorMarketingResourcesIndexRoute,
     AuthenticatedAmbassadorReferralsIndexRoute:
       AuthenticatedAmbassadorReferralsIndexRoute,
+    AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute:
+      AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute,
   }
 
 const AuthenticatedAmbassadorRouteWithChildren =
