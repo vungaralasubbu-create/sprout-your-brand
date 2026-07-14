@@ -593,44 +593,142 @@ export type Database = {
           },
         ]
       }
+      ambassador_referral_events: {
+        Row: {
+          ambassador_id: string
+          commission_id: string | null
+          created_at: string
+          enrollment_id: string | null
+          event_label: string
+          event_source: string
+          event_type: string
+          id: string
+          metadata: Json
+          referral_lead_id: string | null
+          related_entity_id: string | null
+          related_entity_type: string | null
+        }
+        Insert: {
+          ambassador_id: string
+          commission_id?: string | null
+          created_at?: string
+          enrollment_id?: string | null
+          event_label: string
+          event_source?: string
+          event_type: string
+          id?: string
+          metadata?: Json
+          referral_lead_id?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+        }
+        Update: {
+          ambassador_id?: string
+          commission_id?: string | null
+          created_at?: string
+          enrollment_id?: string | null
+          event_label?: string
+          event_source?: string
+          event_type?: string
+          id?: string
+          metadata?: Json
+          referral_lead_id?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_referral_events_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_referral_events_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_commissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_referral_events_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_referral_events_referral_lead_id_fkey"
+            columns: ["referral_lead_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_referral_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_referral_leads: {
         Row: {
           ambassador_id: string
+          attribution_model: string
+          attribution_public_reason: string | null
+          attribution_status: Database["public"]["Enums"]["ambassador_attribution_status"]
+          campaign_id: string | null
           created_at: string
           display_name: string | null
           enrollment_id: string | null
           id: string
           lead_code: string | null
+          lead_reference: string | null
+          lead_source: string | null
+          pricing_plan: string | null
           program_id: string | null
           referral_code: string
           session_id: string | null
           status: string
+          student_user_id: string | null
           updated_at: string
         }
         Insert: {
           ambassador_id: string
+          attribution_model?: string
+          attribution_public_reason?: string | null
+          attribution_status?: Database["public"]["Enums"]["ambassador_attribution_status"]
+          campaign_id?: string | null
           created_at?: string
           display_name?: string | null
           enrollment_id?: string | null
           id?: string
           lead_code?: string | null
+          lead_reference?: string | null
+          lead_source?: string | null
+          pricing_plan?: string | null
           program_id?: string | null
           referral_code: string
           session_id?: string | null
           status?: string
+          student_user_id?: string | null
           updated_at?: string
         }
         Update: {
           ambassador_id?: string
+          attribution_model?: string
+          attribution_public_reason?: string | null
+          attribution_status?: Database["public"]["Enums"]["ambassador_attribution_status"]
+          campaign_id?: string | null
           created_at?: string
           display_name?: string | null
           enrollment_id?: string | null
           id?: string
           lead_code?: string | null
+          lead_reference?: string | null
+          lead_source?: string | null
+          pricing_plan?: string | null
           program_id?: string | null
           referral_code?: string
           session_id?: string | null
           status?: string
+          student_user_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -8976,6 +9074,13 @@ export type Database = {
       ai_mentor_feedback_type: "helpful" | "not_helpful"
       ai_mentor_message_role: "student" | "mentor" | "system"
       ai_mentor_message_status: "sent" | "generating" | "completed" | "failed"
+      ambassador_attribution_status:
+        | "valid"
+        | "pending_review"
+        | "conflict_review"
+        | "confirmed"
+        | "invalid"
+        | "expired"
       ambassador_commission_status:
         | "pending_verification"
         | "eligible"
@@ -9568,6 +9673,14 @@ export const Constants = {
       ai_mentor_feedback_type: ["helpful", "not_helpful"],
       ai_mentor_message_role: ["student", "mentor", "system"],
       ai_mentor_message_status: ["sent", "generating", "completed", "failed"],
+      ambassador_attribution_status: [
+        "valid",
+        "pending_review",
+        "conflict_review",
+        "confirmed",
+        "invalid",
+        "expired",
+      ],
       ambassador_commission_status: [
         "pending_verification",
         "eligible",
