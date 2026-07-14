@@ -1066,12 +1066,12 @@ export const saveVideoProgress = createServerFn({ method: "POST" })
     if (existing) {
       // Never regress the highest watched pct; always update last position
       const nextPct = Math.max(clampedPct, Number(existing.video_progress_pct ?? 0));
-      const patch: Record<string, any> = {
+      const patch = {
         last_position_seconds: posSec,
         video_progress_pct: nextPct,
         last_accessed_at: now,
+        ...(existing.status !== "completed" && nextPct > 0 ? { status: "in_progress" } : {}),
       };
-      if (existing.status !== "completed" && nextPct > 0) patch.status = "in_progress";
       await context.supabase.from("lesson_progress").update(patch).eq("id", existing.id);
     } else {
       await context.supabase.from("lesson_progress").insert({
