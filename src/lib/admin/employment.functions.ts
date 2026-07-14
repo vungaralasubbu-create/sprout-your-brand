@@ -535,7 +535,7 @@ export const transitionPayroll = createServerFn({ method: "POST" })
     const { data: run } = await supabaseAdmin.from("payroll_runs").select("status").eq("id", data.id).maybeSingle();
     if (!run) throw new Error("Payroll not found");
 
-    let patch: Record<string, unknown> = { admin_notes: data.admin_notes ?? null };
+    let patch: any = { admin_notes: data.admin_notes ?? null };
     if (data.action === "approve") {
       if (run.status !== "prepared") throw new Error("Payroll must be prepared before approval");
       patch = { ...patch, status: "approved", approved_at: now, approved_by: context.userId };
