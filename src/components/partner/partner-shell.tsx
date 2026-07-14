@@ -40,6 +40,7 @@ const NAV = [
   { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
   { to: "/partner/my-leads", label: "My Leads", icon: Users },
   { to: "/partner/add-leads", label: "Add Leads", icon: UserPlus },
+  { to: "/partner/ownership-reviews", label: "Ownership Reviews", icon: Scale },
   { to: "/partner/payment-links", label: "Payment Links", icon: Link2 },
   { to: "/partner/payment-verification", label: "Payment Verification", icon: ShieldCheck },
   { to: "/partner/coming-soon", label: "My Sales", icon: ShoppingBag },
