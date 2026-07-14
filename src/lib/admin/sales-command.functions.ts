@@ -54,6 +54,7 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
       leadsNotContacted,
       overdueFollowUps,
       approvedPayouts,
+      pendingOwnershipReviews,
     ] = await Promise.all([
       s.from("partner_payment_submissions")
         .select("amount", { count: "exact" })
@@ -78,6 +79,8 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
         .lt("due_at", nowISO),
       s.from("payouts").select("approved_amount, amount")
         .in("status", ["approved", "queued"]),
+      (s as any).from("lead_ownership_reviews").select("id", { count: "exact", head: true })
+        .in("status", ["pending_review", "possible_duplicate", "under_review", "disputed"]),
     ]);
 
     const todayVerifiedRevenue = (todaySales.data ?? []).reduce((a: number, r: any) => a + Number(r.amount ?? 0), 0);
@@ -98,6 +101,7 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
       overdueFollowUps: overdueFollowUps.count ?? 0,
       approvedPayoutsDue,
       approvedPayoutsCount: (approvedPayouts.data ?? []).length,
+      pendingOwnershipReviews: pendingOwnershipReviews.count ?? 0,
     };
   });
 

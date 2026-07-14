@@ -16,6 +16,7 @@ import {
   BarChart3,
   UserCircle,
   Briefcase,
+  Scale,
   LogOut,
   Menu,
   X,
@@ -40,6 +41,7 @@ const NAV = [
   { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
   { to: "/partner/my-leads", label: "My Leads", icon: Users },
   { to: "/partner/add-leads", label: "Add Leads", icon: UserPlus },
+  { to: "/partner/ownership-reviews", label: "Ownership Reviews", icon: Scale },
   { to: "/partner/payment-links", label: "Payment Links", icon: Link2 },
   { to: "/partner/payment-verification", label: "Payment Verification", icon: ShieldCheck },
   { to: "/partner/coming-soon", label: "My Sales", icon: ShoppingBag },
@@ -63,11 +65,11 @@ export function PartnerShell() {
   const isFullTime = partner?.work_model === "full_time" && !!data?.employeeProfile;
 
   const navItems = [
-    ...NAV.slice(0, 11), // through Analytics
+    ...NAV.slice(0, 12), // through Analytics
     ...(isFullTime
       ? [{ to: "/partner/employment", label: "Employment", icon: Briefcase } as const]
       : [{ to: "/partner/earnings-statement", label: "Monthly Statement", icon: Briefcase } as const]),
-    NAV[11]!, // Account
+    NAV[12]!, // Account
   ];
 
 
