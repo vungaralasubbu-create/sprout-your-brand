@@ -44,6 +44,7 @@ import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs"
 import { getCourseSeo } from "@/lib/seo";
 
 import { ProjectVisual } from "@/components/course/project-visual";
+import { CoursePricingPlans } from "@/components/course/pricing-plans";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/client";
