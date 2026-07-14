@@ -732,7 +732,7 @@ function CoursePage() {
 
       {/* ============ RELATED ============ */}
       {related.length > 0 ? (
-        <SectionBlock eyebrow="Explore More" title="You May Also Explore">
+        <SectionBlock eyebrow="Explore More" title="You May Also Explore" className="!pb-8 lg:!pb-10">
           <div className="grid md:grid-cols-3 gap-6">
             {related.slice(0, 3).map((r: any) => (
               <Link
