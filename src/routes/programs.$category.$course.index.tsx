@@ -1316,3 +1316,305 @@ function buildIncludedFeatures(c: {
 
 // Suppress unused-import lint noise for icons referenced only via helpers.
 void Layers;
+void Quote;
+void Star;
+void Phone;
+void ShieldCheck;
+
+// -------------------- New: Reveal, Slider, Reviews, helpers --------------------
+
+function Reveal({
+  children,
+  delay = 0,
+  as: Tag = "div",
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  as?: keyof React.JSX.IntrinsicElements;
+  className?: string;
+}) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setShown(true);
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const Comp = Tag as any;
+  return (
+    <Comp
+      ref={ref as any}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={cn(
+        "transition-all duration-700 ease-out will-change-transform",
+        shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
+        className,
+      )}
+    >
+      {children}
+    </Comp>
+  );
+}
+
+function ProjectSlider({
+  projects,
+}: {
+  projects: Array<{
+    id: string;
+    name: string;
+    short_description: string | null;
+    image_url: string | null;
+    project_type: string | null;
+    difficulty: string | null;
+    industry: string | null;
+  }>;
+}) {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const update = () => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    setCanPrev(el.scrollLeft > 4);
+    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+  useEffect(() => {
+    update();
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [projects.length]);
+
+  const nudge = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-project-card]");
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.9;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
+
+  return (
+    <div className="relative">
+      <div className="flex items-center justify-end gap-2 mb-4">
+        <button
+          type="button"
+          aria-label="Previous projects"
+          disabled={!canPrev}
+          onClick={() => nudge(-1)}
+          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          <ChevronLeft className="size-5" />
+        </button>
+        <button
+          type="button"
+          aria-label="Next projects"
+          disabled={!canNext}
+          onClick={() => nudge(1)}
+          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          <ChevronRight className="size-5" />
+        </button>
+      </div>
+      <div
+        ref={scrollerRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {projects.map((p) => (
+          <div
+            key={p.id}
+            data-project-card
+            className="snap-start shrink-0 w-[85%] sm:w-[46%] lg:w-[calc((100%-3rem)/3)]"
+          >
+            <ProjectCard project={p} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Reviews section. Renders only when approved reviews exist in the
+ * `course_reviews` table. Silently hides when the table is missing or
+ * returns no approved rows — no fake reviews, ever.
+ */
+interface CourseReview {
+  id: string;
+  student_name: string;
+  student_role?: string | null;
+  avatar_url?: string | null;
+  rating?: number | null;
+  review_text: string;
+}
+function CourseReviewsSection({ courseId }: { courseId: string }) {
+  const { data } = useQuery<CourseReview[]>({
+    queryKey: ["course-reviews", courseId],
+    queryFn: async () => {
+      try {
+        const res = await (supabase as any)
+          .from("course_reviews")
+          .select("id,student_name,student_role,avatar_url,rating,review_text")
+          .eq("course_id", courseId)
+          .eq("is_approved", true)
+          .order("display_order", { ascending: true })
+          .limit(12);
+        if (res.error) return [];
+        return (res.data ?? []) as CourseReview[];
+      } catch {
+        return [];
+      }
+    },
+    staleTime: 60_000,
+  });
+
+  const reviews = data ?? [];
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const nudge = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * el.clientWidth * 0.9, behavior: "smooth" });
+  };
+  if (reviews.length === 0) return null;
+
+  return (
+    <SectionBlock eyebrow="Student Reviews" title="What Learners Say.">
+      <div className="relative">
+        <div className="flex items-center justify-end gap-2 mb-4">
+          <button
+            type="button"
+            aria-label="Previous review"
+            onClick={() => nudge(-1)}
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors"
+          >
+            <ChevronLeft className="size-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next review"
+            onClick={() => nudge(1)}
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors"
+          >
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
+        <div
+          ref={scrollerRef}
+          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {reviews.map((r) => (
+            <article
+              key={r.id}
+              className="snap-start shrink-0 w-[85%] sm:w-[46%] lg:w-[calc((100%-3rem)/3)] rounded-2xl border border-border/60 bg-surface-1 p-6"
+            >
+              <Quote className="size-6 text-primary/60" />
+              {typeof r.rating === "number" ? (
+                <div className="mt-3 flex items-center gap-0.5" aria-label={`Rated ${r.rating} of 5`}>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={cn(
+                        "size-4",
+                        i < Math.round(r.rating ?? 0)
+                          ? "fill-warning text-warning"
+                          : "text-muted-foreground/30",
+                      )}
+                    />
+                  ))}
+                </div>
+              ) : null}
+              <p className="mt-3 text-sm text-foreground/90 leading-relaxed line-clamp-6">
+                {r.review_text}
+              </p>
+              <div className="mt-5 flex items-center gap-3">
+                {r.avatar_url ? (
+                  <img
+                    src={r.avatar_url}
+                    alt=""
+                    className="size-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="inline-flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
+                    {r.student_name.slice(0, 1).toUpperCase()}
+                  </span>
+                )}
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">{r.student_name}</div>
+                  {r.student_role ? (
+                    <div className="text-caption truncate">{r.student_role}</div>
+                  ) : null}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </SectionBlock>
+  );
+}
+
+function buildQuickStats(c: {
+  duration: string | null;
+  level: string | null;
+  learning_mode: string | null;
+}): Array<{ icon: React.ComponentType<{ className?: string }>; label: string; value: string }> {
+  const items: Array<{ icon: React.ComponentType<{ className?: string }>; label: string; value: string }> = [];
+  items.push({ icon: Clock, label: "Duration", value: c.duration ?? "Self-paced" });
+  items.push({ icon: Globe, label: "Learning Mode", value: c.learning_mode ?? "Online" });
+  items.push({ icon: GraduationCap, label: "Skill Level", value: c.level ?? "All Levels" });
+  items.push({ icon: Award, label: "Certificate", value: "On Completion" });
+  return items;
+}
+
+const DEFAULT_LEARN_CARDS: Array<{
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}> = [
+  {
+    title: "Structured Learning",
+    description: "A guided curriculum that builds knowledge step by step from fundamentals to applied skills.",
+    icon: BookOpen,
+  },
+  {
+    title: "Practical Projects",
+    description: "Hands-on projects and assignments so you learn by building, not just watching.",
+    icon: Hammer,
+  },
+  {
+    title: "Mentor Support",
+    description: "Guidance from mentors who help you unblock, refine your work and stay on track.",
+    icon: Compass,
+  },
+  {
+    title: "Career Preparation",
+    description: "Skill development, showcase-ready projects and career support to help you move forward.",
+    icon: Briefcase,
+  },
+];
+
