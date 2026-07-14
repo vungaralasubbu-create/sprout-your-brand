@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/ambassador/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/ambassador/dashboard", label: "My Referrals", icon: Users, soon: true },
+  { to: "/ambassador/referrals", label: "My Referrals", icon: Users },
   { to: "/ambassador/dashboard", label: "Enrollments", icon: GraduationCap, soon: true },
   { to: "/ambassador/dashboard", label: "Earnings", icon: Wallet, soon: true },
   { to: "/ambassador/dashboard", label: "Commission Structure", icon: ScrollText, soon: true },
