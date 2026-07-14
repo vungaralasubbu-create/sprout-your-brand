@@ -25,9 +25,11 @@ import {
   CalendarClock,
   PhoneOff,
   CreditCard,
+  LifeBuoy,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
+import { listMySupportTickets } from "@/lib/partner/support.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -50,6 +52,7 @@ const NAV = [
   { to: "/partner/referral-bonus", label: "Referral Bonus", icon: Gift },
   { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
   { to: "/partner/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/partner/support", label: "Support", icon: LifeBuoy },
   { to: "/partner/account", label: "Account", icon: UserCircle },
 ] as const;
 
@@ -69,7 +72,8 @@ export function PartnerShell() {
     ...(isFullTime
       ? [{ to: "/partner/employment", label: "Employment", icon: Briefcase } as const]
       : [{ to: "/partner/earnings-statement", label: "Monthly Statement", icon: Briefcase } as const]),
-    NAV[12]!, // Account
+    NAV[12]!, // Support
+    NAV[13]!, // Account
   ];
 
 
@@ -175,6 +179,7 @@ export function PartnerShell() {
         {/* Content */}
         <main className="min-h-screen">
           <div className="hidden lg:flex sticky top-0 z-30 h-14 items-center justify-end gap-2 border-b bg-white/90 backdrop-blur px-6">
+            <SupportAlert />
             <FollowUpAlerts />
           </div>
           <Outlet />
@@ -239,5 +244,38 @@ function FollowUpAlerts() {
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function SupportAlert() {
+  const fetchTickets = useServerFn(listMySupportTickets);
+  const { data } = useQuery({
+    queryKey: ["partner-support-summary"],
+    queryFn: () => fetchTickets({ data: {} }),
+    refetchInterval: 90_000,
+  });
+  const s = data?.summary;
+  const needsAttention = s?.needsAttention ?? 0;
+  const openCount = s?.open ?? 0;
+
+  return (
+    <Link
+      to="/partner/support"
+      className="relative inline-flex items-center gap-2 rounded-lg border bg-white px-3 py-1.5 text-sm hover:bg-muted/50"
+      aria-label="Support tickets"
+    >
+      <LifeBuoy className="size-4" />
+      <span className="font-medium">Support</span>
+      {(needsAttention > 0 || openCount > 0) && (
+        <span
+          className={cn(
+            "min-w-[18px] h-[18px] px-1 rounded-full text-white text-[10px] font-semibold inline-flex items-center justify-center",
+            needsAttention > 0 ? "bg-red-500" : "bg-slate-500",
+          )}
+        >
+          {needsAttention > 0 ? needsAttention : openCount}
+        </span>
+      )}
+    </Link>
   );
 }

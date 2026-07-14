@@ -209,6 +209,8 @@ function SalesCommandCenter() {
         <StatCard label="Overdue Follow-Ups" value={fmtInt(t?.overdueFollowUps ?? 0)} icon={Flame} to="/admin/lead-monitoring" tone="text-rose-600" />
         <StatCard label="Approved Payouts Due" value={fmtInr(t?.approvedPayoutsDue ?? 0)} icon={Wallet} to="/admin/partner-payouts" tone="text-primary" />
         <StatCard label="Ownership Reviews Pending" value={fmtInt(t?.pendingOwnershipReviews ?? 0)} icon={Shield} to="/admin/lead-ownership" tone="text-amber-600" />
+        <StatCard label="Open Support Tickets" value={fmtInt(t?.openSupportTickets ?? 0)} icon={Shield} to="/admin/support" tone="text-blue-600" />
+        <StatCard label="Urgent Support Tickets" value={fmtInt(t?.urgentSupportTickets ?? 0)} icon={Flame} to="/admin/support" tone="text-rose-600" />
       </div>
 
       {/* 3. Company sales performance */}

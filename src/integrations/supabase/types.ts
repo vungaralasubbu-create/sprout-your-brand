@@ -4424,29 +4424,108 @@ export type Database = {
           },
         ]
       }
+      partner_support_activity: {
+        Row: {
+          action: string
+          actor_role: string | null
+          actor_user_id: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          ticket_id: string
+        }
+        Insert: {
+          action: string
+          actor_role?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          ticket_id: string
+        }
+        Update: {
+          action?: string
+          actor_role?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_support_activity_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "partner_support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_support_assignments: {
+        Row: {
+          assigned_admin_id: string
+          assigned_at: string
+          assigned_by: string
+          id: string
+          ticket_id: string
+          unassigned_at: string | null
+        }
+        Insert: {
+          assigned_admin_id: string
+          assigned_at?: string
+          assigned_by: string
+          id?: string
+          ticket_id: string
+          unassigned_at?: string | null
+        }
+        Update: {
+          assigned_admin_id?: string
+          assigned_at?: string
+          assigned_by?: string
+          id?: string
+          ticket_id?: string
+          unassigned_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_support_assignments_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "partner_support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_support_messages: {
         Row: {
+          attachment_url: string | null
           author_user_id: string | null
           body: string
           created_at: string
           id: string
           is_admin: boolean
+          is_internal: boolean
           ticket_id: string
         }
         Insert: {
+          attachment_url?: string | null
           author_user_id?: string | null
           body: string
           created_at?: string
           id?: string
           is_admin?: boolean
+          is_internal?: boolean
           ticket_id: string
         }
         Update: {
+          attachment_url?: string | null
           author_user_id?: string | null
           body?: string
           created_at?: string
           id?: string
           is_admin?: boolean
+          is_internal?: boolean
           ticket_id?: string
         }
         Relationships: [
@@ -4461,48 +4540,84 @@ export type Database = {
       }
       partner_support_tickets: {
         Row: {
+          assigned_admin_id: string | null
+          assigned_at: string | null
           attachment_url: string | null
           category: Database["public"]["Enums"]["support_ticket_category"]
+          closed_at: string | null
           created_at: string
           description: string
           id: string
+          last_activity_at: string
           partner_id: string
           priority: string | null
+          related_brand_profile_id: string | null
           related_commission_id: string | null
           related_lead_id: string | null
+          related_payment_link_id: string | null
+          related_payment_submission_id: string | null
           related_payout_id: string | null
+          related_program_id: string | null
+          related_referral_id: string | null
+          resolution_note: string | null
+          resolved_at: string | null
           status: Database["public"]["Enums"]["support_ticket_status"]
           subject: string
+          ticket_code: string | null
           updated_at: string
         }
         Insert: {
+          assigned_admin_id?: string | null
+          assigned_at?: string | null
           attachment_url?: string | null
           category: Database["public"]["Enums"]["support_ticket_category"]
+          closed_at?: string | null
           created_at?: string
           description: string
           id?: string
+          last_activity_at?: string
           partner_id: string
           priority?: string | null
+          related_brand_profile_id?: string | null
           related_commission_id?: string | null
           related_lead_id?: string | null
+          related_payment_link_id?: string | null
+          related_payment_submission_id?: string | null
           related_payout_id?: string | null
+          related_program_id?: string | null
+          related_referral_id?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
           status?: Database["public"]["Enums"]["support_ticket_status"]
           subject: string
+          ticket_code?: string | null
           updated_at?: string
         }
         Update: {
+          assigned_admin_id?: string | null
+          assigned_at?: string | null
           attachment_url?: string | null
           category?: Database["public"]["Enums"]["support_ticket_category"]
+          closed_at?: string | null
           created_at?: string
           description?: string
           id?: string
+          last_activity_at?: string
           partner_id?: string
           priority?: string | null
+          related_brand_profile_id?: string | null
           related_commission_id?: string | null
           related_lead_id?: string | null
+          related_payment_link_id?: string | null
+          related_payment_submission_id?: string | null
           related_payout_id?: string | null
+          related_program_id?: string | null
+          related_referral_id?: string | null
+          resolution_note?: string | null
+          resolved_at?: string | null
           status?: Database["public"]["Enums"]["support_ticket_status"]
           subject?: string
+          ticket_code?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -4511,6 +4626,13 @@ export type Database = {
             columns: ["partner_id"]
             isOneToOne: false
             referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_support_tickets_related_brand_profile_id_fkey"
+            columns: ["related_brand_profile_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -4528,10 +4650,38 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "partner_support_tickets_related_payment_link_id_fkey"
+            columns: ["related_payment_link_id"]
+            isOneToOne: false
+            referencedRelation: "payment_links"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_support_tickets_related_payment_submission_id_fkey"
+            columns: ["related_payment_submission_id"]
+            isOneToOne: false
+            referencedRelation: "partner_payment_submissions"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "partner_support_tickets_related_payout_id_fkey"
             columns: ["related_payout_id"]
             isOneToOne: false
             referencedRelation: "payouts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_support_tickets_related_program_id_fkey"
+            columns: ["related_program_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_support_tickets_related_referral_id_fkey"
+            columns: ["related_referral_id"]
+            isOneToOne: false
+            referencedRelation: "partner_referrals"
             referencedColumns: ["id"]
           },
         ]
@@ -5819,6 +5969,20 @@ export type Database = {
         | "application"
         | "account"
         | "other"
+        | "lead_issue"
+        | "lead_ownership"
+        | "payment_verification"
+        | "duplicate_utr"
+        | "payout_delay"
+        | "earnings_issue"
+        | "referral_bonus"
+        | "brand_approval"
+        | "account_problem"
+        | "full_time_application"
+        | "employment_payroll"
+        | "program_question"
+        | "payment_link_issue"
+        | "technical_issue"
       support_ticket_status:
         | "open"
         | "assigned"
@@ -5826,6 +5990,7 @@ export type Database = {
         | "under_review"
         | "resolved"
         | "closed"
+        | "admin_replied"
       working_pref: "part_time" | "full_time" | "freelance" | "launch_brand"
     }
     CompositeTypes: {
@@ -6236,6 +6401,20 @@ export const Constants = {
         "application",
         "account",
         "other",
+        "lead_issue",
+        "lead_ownership",
+        "payment_verification",
+        "duplicate_utr",
+        "payout_delay",
+        "earnings_issue",
+        "referral_bonus",
+        "brand_approval",
+        "account_problem",
+        "full_time_application",
+        "employment_payroll",
+        "program_question",
+        "payment_link_issue",
+        "technical_issue",
       ],
       support_ticket_status: [
         "open",
@@ -6244,6 +6423,7 @@ export const Constants = {
         "under_review",
         "resolved",
         "closed",
+        "admin_replied",
       ],
       working_pref: ["part_time", "full_time", "freelance", "launch_brand"],
     },
