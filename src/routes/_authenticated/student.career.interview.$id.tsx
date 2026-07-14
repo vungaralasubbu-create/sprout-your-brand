@@ -272,7 +272,7 @@ function InterviewPlayer() {
               <Button
                 type="button"
                 size="sm"
-                variant={recording ? "destructive" : "outline"}
+                variant={recording ? "danger" : "outline"}
                 onClick={recording ? stopRecording : startRecording}
               >
                 {recording ? (
