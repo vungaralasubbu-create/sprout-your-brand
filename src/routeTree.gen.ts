@@ -59,6 +59,7 @@ import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
+import { Route as AuthenticatedAdminRiskReviewRouteImport } from './routes/_authenticated/admin.risk-review'
 import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './routes/_authenticated/admin.revenue-verification'
 import { Route as AuthenticatedAdminRevenueRouteImport } from './routes/_authenticated/admin.revenue'
 import { Route as AuthenticatedAdminReferralManagementRouteImport } from './routes/_authenticated/admin.referral-management'
@@ -387,6 +388,12 @@ const AuthenticatedAdminSalesCommandRoute =
     path: '/sales-command',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminRiskReviewRoute =
+  AuthenticatedAdminRiskReviewRouteImport.update({
+    id: '/risk-review',
+    path: '/risk-review',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminRevenueVerificationRoute =
   AuthenticatedAdminRevenueVerificationRouteImport.update({
     id: '/revenue-verification',
@@ -713,6 +720,7 @@ export interface FileRoutesByFullPath {
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/admin/risk-review': typeof AuthenticatedAdminRiskReviewRoute
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
@@ -809,6 +817,7 @@ export interface FileRoutesByTo {
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/admin/risk-review': typeof AuthenticatedAdminRiskReviewRoute
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
@@ -909,6 +918,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/_authenticated/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/_authenticated/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/_authenticated/admin/risk-review': typeof AuthenticatedAdminRiskReviewRoute
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
@@ -1009,6 +1019,7 @@ export interface FileRouteTypes {
     | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
+    | '/admin/risk-review'
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
@@ -1105,6 +1116,7 @@ export interface FileRouteTypes {
     | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
+    | '/admin/risk-review'
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
@@ -1204,6 +1216,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/referral-management'
     | '/_authenticated/admin/revenue'
     | '/_authenticated/admin/revenue-verification'
+    | '/_authenticated/admin/risk-review'
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/support'
@@ -1631,6 +1644,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSalesCommandRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/risk-review': {
+      id: '/_authenticated/admin/risk-review'
+      path: '/risk-review'
+      fullPath: '/admin/risk-review'
+      preLoaderRoute: typeof AuthenticatedAdminRiskReviewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/revenue-verification': {
       id: '/_authenticated/admin/revenue-verification'
       path: '/revenue-verification'
@@ -2004,6 +2024,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminReferralManagementRoute: typeof AuthenticatedAdminReferralManagementRoute
   AuthenticatedAdminRevenueRoute: typeof AuthenticatedAdminRevenueRoute
   AuthenticatedAdminRevenueVerificationRoute: typeof AuthenticatedAdminRevenueVerificationRoute
+  AuthenticatedAdminRiskReviewRoute: typeof AuthenticatedAdminRiskReviewRoute
   AuthenticatedAdminSalesCommandRoute: typeof AuthenticatedAdminSalesCommandRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRouteWithChildren
@@ -2058,6 +2079,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminRevenueRoute: AuthenticatedAdminRevenueRoute,
   AuthenticatedAdminRevenueVerificationRoute:
     AuthenticatedAdminRevenueVerificationRoute,
+  AuthenticatedAdminRiskReviewRoute: AuthenticatedAdminRiskReviewRoute,
   AuthenticatedAdminSalesCommandRoute: AuthenticatedAdminSalesCommandRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRouteWithChildren,
