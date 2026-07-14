@@ -332,7 +332,7 @@ function CoursePage() {
 
       {/* ============ WHY THIS PROGRAM ============ */}
       {c.full_description || whyContent ? (
-        <Section className="py-20 lg:py-28">
+        <Section className="py-14 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-16">
               <div>
@@ -368,7 +368,7 @@ function CoursePage() {
 
       {/* ============ LEARNING EXPERIENCE ============ */}
       {learningExperience.length > 0 ? (
-        <Section className="py-20 bg-surface-2/40 border-y">
+        <Section className="py-14 lg:py-20 bg-surface-2/40 border-y">
           <Container>
             <div className="max-w-2xl mb-12">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -462,7 +462,7 @@ function CoursePage() {
 
       {/* ============ PROGRAM EXPERIENCE FEATURE ============ */}
       {programExperience.length > 0 ? (
-        <Section className="py-20 lg:py-24 bg-[oklch(0.18_0.04_255)] text-white relative overflow-hidden">
+        <Section className="py-14 lg:py-20 bg-[oklch(0.18_0.04_255)] text-white relative overflow-hidden">
           <div
             aria-hidden
             className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.6_0.18_220/0.25),transparent_60%)]"
@@ -496,7 +496,7 @@ function CoursePage() {
 
       {/* ============ CERTIFICATION ============ */}
       {c.certifications.length > 0 ? (
-        <Section className="py-20 lg:py-24">
+        <Section className="py-14 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div>
@@ -620,7 +620,7 @@ function CoursePage() {
 
       {/* ============ PRICING ============ */}
       {price != null ? (
-        <Section className="py-20 lg:py-24">
+        <Section className="py-14 lg:py-20">
           <Container>
             <div className="max-w-2xl mx-auto text-center mb-10">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -739,7 +739,7 @@ function CoursePage() {
       ) : null}
 
       {/* ============ FINAL CTA ============ */}
-      <Section className="py-20 lg:py-28 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent">
+      <Section className="py-14 lg:py-20 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
@@ -1099,7 +1099,7 @@ function SectionBlock({
 }) {
   return (
     <Section
-      className={cn("py-20 lg:py-24", tone === "soft" ? "bg-surface-2/40 border-y" : "")}
+      className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "")}
     >
       <Container>
         <div className="max-w-2xl mb-12">
