@@ -1537,6 +1537,7 @@ function Reveal({
 
 function ProjectSlider({
   projects,
+  dark = false,
 }: {
   projects: Array<{
     id: string;
@@ -1547,7 +1548,9 @@ function ProjectSlider({
     difficulty: string | null;
     industry: string | null;
   }>;
+  dark?: boolean;
 }) {
+
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
