@@ -57,7 +57,7 @@ const applicationInput = z.object({
 
 export type CampusAmbassadorApplicationInput = z.infer<typeof applicationInput>;
 
-const ACTIVE_STATUSES = ["submitted", "under_review", "more_info_required", "approved"];
+const ACTIVE_STATUSES = ["submitted", "under_review", "more_info_required", "approved"] as const;
 
 export const getCampusAmbassadorContext = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
