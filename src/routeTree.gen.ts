@@ -57,6 +57,7 @@ import { Route as AuthenticatedPartnerApplicationStatusRouteImport } from './rou
 import { Route as AuthenticatedPartnerAnalyticsRouteImport } from './routes/_authenticated/partner.analytics'
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
+import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
@@ -398,6 +399,12 @@ const AuthenticatedPartnerAccountRoute =
     id: '/account',
     path: '/account',
     getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedCampusAmbassadorStatusRoute =
+  AuthenticatedCampusAmbassadorStatusRouteImport.update({
+    id: '/campus-ambassador/status',
+    path: '/campus-ambassador/status',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCampusAmbassadorApplyRoute =
   AuthenticatedCampusAmbassadorApplyRouteImport.update({
@@ -894,6 +901,7 @@ export interface FileRoutesByFullPath {
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
+  '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
@@ -1015,6 +1023,7 @@ export interface FileRoutesByTo {
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
+  '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
@@ -1139,6 +1148,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
+  '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/_authenticated/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
@@ -1264,6 +1274,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
+    | '/campus-ambassador/status'
     | '/partner/account'
     | '/partner/add-leads'
     | '/partner/analytics'
@@ -1385,6 +1396,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
+    | '/campus-ambassador/status'
     | '/partner/account'
     | '/partner/add-leads'
     | '/partner/analytics'
@@ -1508,6 +1520,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/support'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/campus-ambassador/apply'
+    | '/_authenticated/campus-ambassador/status'
     | '/_authenticated/partner/account'
     | '/_authenticated/partner/add-leads'
     | '/_authenticated/partner/analytics'
@@ -1939,6 +1952,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner/account'
       preLoaderRoute: typeof AuthenticatedPartnerAccountRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/campus-ambassador/status': {
+      id: '/_authenticated/campus-ambassador/status'
+      path: '/campus-ambassador/status'
+      fullPath: '/campus-ambassador/status'
+      preLoaderRoute: typeof AuthenticatedCampusAmbassadorStatusRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/campus-ambassador/apply': {
       id: '/_authenticated/campus-ambassador/apply'
@@ -2834,6 +2854,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
+  AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -2843,6 +2864,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
   AuthenticatedCampusAmbassadorApplyRoute:
     AuthenticatedCampusAmbassadorApplyRoute,
+  AuthenticatedCampusAmbassadorStatusRoute:
+    AuthenticatedCampusAmbassadorStatusRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
