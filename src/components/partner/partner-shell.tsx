@@ -55,9 +55,10 @@ export function PartnerShell() {
     ...NAV.slice(0, 11), // through Analytics
     ...(isFullTime
       ? [{ to: "/partner/employment", label: "Employment", icon: Briefcase } as const]
-      : []),
+      : [{ to: "/partner/earnings-statement", label: "Monthly Statement", icon: Briefcase } as const]),
     NAV[11]!, // Account
   ];
+
 
 
 
