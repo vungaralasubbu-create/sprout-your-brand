@@ -18,8 +18,10 @@ import {
   Rocket,
   Compass,
   Sparkles,
+  Bell,
 } from "lucide-react";
 import { getStudentContext } from "@/lib/student/lms.functions";
+import { getNotificationBell } from "@/lib/student/notifications.functions";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -33,6 +35,7 @@ const NAV = [
   { to: "/student/certificates", label: "Certificates", icon: Award },
   { to: "/student/career", label: "Career Center", icon: Compass },
   { to: "/student/mentor", label: "AI Mentor", icon: Sparkles },
+  { to: "/student/notifications", label: "Notifications", icon: Bell },
   { to: "/student/support", label: "Support", icon: LifeBuoy },
   { to: "/student/profile", label: "Profile", icon: UserCircle },
 ] as const;
