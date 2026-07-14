@@ -1892,6 +1892,50 @@ export type Database = {
           },
         ]
       }
+      course_sales_content: {
+        Row: {
+          course_id: string
+          created_at: string
+          faqs: Json
+          id: string
+          ideal_learners: string[]
+          objections: Json
+          talking_points: string[]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          faqs?: Json
+          id?: string
+          ideal_learners?: string[]
+          objections?: Json
+          talking_points?: string[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          faqs?: Json
+          id?: string
+          ideal_learners?: string[]
+          objections?: Json
+          talking_points?: string[]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_sales_content_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_sections: {
         Row: {
           content: Json | null
