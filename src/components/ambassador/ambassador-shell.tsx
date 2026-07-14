@@ -14,8 +14,8 @@ const NAV = [
   { to: "/ambassador/payouts", label: "Payouts", icon: Banknote },
   { to: "/ambassador/commission-structure", label: "Commission Structure", icon: ScrollText },
   { to: "/ambassador/marketing-resources", label: "Marketing Resources", icon: Sparkles },
-  { to: "/campus-ambassador/status", label: "My Profile", icon: UserCircle },
-  { to: "/ambassador/dashboard", label: "Support", icon: LifeBuoy, soon: true },
+  { to: "/ambassador/profile", label: "My Profile", icon: UserCircle },
+  { to: "/ambassador/settings", label: "Settings", icon: LifeBuoy },
 ] as const;
 
 export function AmbassadorShell({ children }: { children?: React.ReactNode }) {
@@ -75,7 +75,7 @@ export function AmbassadorShell({ children }: { children?: React.ReactNode }) {
               >
                 <item.icon className="h-4 w-4 shrink-0" />
                 <span className="flex-1">{item.label}</span>
-                {("soon" in item && item.soon) && (
+                {Boolean((item as { soon?: boolean }).soon) && (
                   <span className="text-[9px] uppercase tracking-widest text-slate-400">Soon</span>
                 )}
               </Link>
