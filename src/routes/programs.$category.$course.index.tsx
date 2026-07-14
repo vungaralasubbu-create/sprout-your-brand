@@ -46,6 +46,7 @@ import { getCourseSeo } from "@/lib/seo";
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
 import { CourseTrustStats } from "@/components/course/trust-stats";
+import { CertificateShowcase } from "@/components/course/certificate-showcase";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/client";
@@ -591,62 +592,36 @@ function CoursePage() {
       </Section>
 
 
-      {/* ============ CERTIFICATION (light gradient) ============ */}
-      {c.certifications.length > 0 ? (
-        <Section className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
-          <div
-            aria-hidden
-            className="absolute -top-32 -right-32 size-[420px] rounded-full bg-primary/10 blur-[110px]"
-          />
-          <Container className="relative">
-            <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-16 items-center">
-              <Reveal>
-                <div>
-                  <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                    Certification
-                  </span>
-                  <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(2rem,4vw,3.2rem)] leading-[1.02]">
-                    Finish The Program.<br />
-                    Show Your Progress.
-                  </h2>
-                  <p className="mt-5 text-body-lg text-muted-foreground max-w-lg">
-                    Complete the applicable program requirements and receive a course completion
-                    certificate you can share with employers and on your professional profiles.
-                  </p>
-                  <ul className="mt-6 space-y-2.5">
-                    {c.certifications.map((cert, i) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" />
-                        <div>
-                          <div className="text-sm font-semibold">{cert.name}</div>
-                          {cert.issuer ? (
-                            <div className="text-caption">Issued by {cert.issuer}</div>
-                          ) : null}
-                          {cert.description ? (
-                            <div className="text-sm text-muted-foreground mt-0.5">
-                              {cert.description}
-                            </div>
-                          ) : null}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-              <Reveal delay={150}>
-                <div className="relative animate-[float-y_6s_ease-in-out_infinite]">
-                  <div className="lg:rotate-[-4deg] lg:scale-[1.05] transition-transform">
-                    <CertificatePreview
-                      imageUrl={c.certifications.find((x) => x.image_url)?.image_url ?? null}
-                      courseName={c.name}
-                    />
-                  </div>
-                </div>
-              </Reveal>
+      {/* ============ CERTIFICATION (dynamic, course-specific) ============ */}
+      <Section className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
+        <div
+          aria-hidden
+          className="absolute -top-32 -right-32 size-[420px] rounded-full bg-primary/10 blur-[110px]"
+        />
+        <Container className="relative">
+          <Reveal>
+            <div className="max-w-2xl">
+              <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                Certification
+              </span>
+              <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(2rem,4vw,3.2rem)] leading-[1.02]">
+                Finish The {c.name} Program.<br />
+                Earn Two Certificates.
+              </h2>
+              <p className="mt-5 text-body-lg text-muted-foreground">
+                Complete the {c.name} program to receive your Course Completion certificate,
+                and finish the applied internship track to earn a separate Internship Completion
+                certificate — both issued by Glintr and shareable on your professional profile.
+              </p>
             </div>
-          </Container>
-        </Section>
-      ) : null}
+          </Reveal>
+          <Reveal delay={120}>
+            <div className="mt-10 lg:mt-14">
+              <CertificateShowcase courseName={c.name} />
+            </div>
+          </Reveal>
+        </Container>
+      </Section>
 
 
       {/* ============ CAREER OPPORTUNITIES ============ */}
