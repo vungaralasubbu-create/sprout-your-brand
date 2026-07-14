@@ -125,6 +125,7 @@ import { Route as AuthenticatedStudentAssignmentsIdRouteImport } from './routes/
 import { Route as AuthenticatedPartnerSupportIdRouteImport } from './routes/_authenticated/partner.support.$id'
 import { Route as AuthenticatedPartnerProgramsSlugRouteImport } from './routes/_authenticated/partner.programs.$slug'
 import { Route as AuthenticatedAmbassadorReferralsIdRouteImport } from './routes/_authenticated/ambassador.referrals.$id'
+import { Route as AuthenticatedAmbassadorEnrollmentsIdRouteImport } from './routes/_authenticated/ambassador.enrollments.$id'
 import { Route as AuthenticatedAdminTeamIdRouteImport } from './routes/_authenticated/admin.team.$id'
 import { Route as AuthenticatedAdminSupportIdRouteImport } from './routes/_authenticated/admin.support.$id'
 import { Route as AuthenticatedAdminRiskReviewIdRouteImport } from './routes/_authenticated/admin.risk-review.$id'
@@ -811,6 +812,12 @@ const AuthenticatedAmbassadorReferralsIdRoute =
     path: '/referrals/$id',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAmbassadorEnrollmentsIdRoute =
+  AuthenticatedAmbassadorEnrollmentsIdRouteImport.update({
+    id: '/enrollments/$id',
+    path: '/enrollments/$id',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
 const AuthenticatedAdminTeamIdRoute =
   AuthenticatedAdminTeamIdRouteImport.update({
     id: '/team/$id',
@@ -982,6 +989,7 @@ export interface FileRoutesByFullPath {
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
+  '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
@@ -1109,6 +1117,7 @@ export interface FileRoutesByTo {
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
+  '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
@@ -1241,6 +1250,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/_authenticated/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/_authenticated/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
+  '/_authenticated/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/_authenticated/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
   '/_authenticated/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/_authenticated/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
@@ -1373,6 +1383,7 @@ export interface FileRouteTypes {
     | '/admin/risk-review/$id'
     | '/admin/support/$id'
     | '/admin/team/$id'
+    | '/ambassador/enrollments/$id'
     | '/ambassador/referrals/$id'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
@@ -1500,6 +1511,7 @@ export interface FileRouteTypes {
     | '/admin/risk-review/$id'
     | '/admin/support/$id'
     | '/admin/team/$id'
+    | '/ambassador/enrollments/$id'
     | '/ambassador/referrals/$id'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
@@ -1631,6 +1643,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/risk-review/$id'
     | '/_authenticated/admin/support/$id'
     | '/_authenticated/admin/team/$id'
+    | '/_authenticated/ambassador/enrollments/$id'
     | '/_authenticated/ambassador/referrals/$id'
     | '/_authenticated/partner/programs/$slug'
     | '/_authenticated/partner/support/$id'
@@ -2506,6 +2519,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorReferralsIdRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/ambassador/enrollments/$id': {
+      id: '/_authenticated/ambassador/enrollments/$id'
+      path: '/enrollments/$id'
+      fullPath: '/ambassador/enrollments/$id'
+      preLoaderRoute: typeof AuthenticatedAmbassadorEnrollmentsIdRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
     '/_authenticated/admin/team/$id': {
       id: '/_authenticated/admin/team/$id'
       path: '/team/$id'
@@ -2736,6 +2756,7 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedAmbassadorRouteChildren {
   AuthenticatedAmbassadorDashboardRoute: typeof AuthenticatedAmbassadorDashboardRoute
+  AuthenticatedAmbassadorEnrollmentsIdRoute: typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   AuthenticatedAmbassadorReferralsIdRoute: typeof AuthenticatedAmbassadorReferralsIdRoute
   AuthenticatedAmbassadorEnrollmentsIndexRoute: typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   AuthenticatedAmbassadorReferralsIndexRoute: typeof AuthenticatedAmbassadorReferralsIndexRoute
@@ -2745,6 +2766,8 @@ const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren
   {
     AuthenticatedAmbassadorDashboardRoute:
       AuthenticatedAmbassadorDashboardRoute,
+    AuthenticatedAmbassadorEnrollmentsIdRoute:
+      AuthenticatedAmbassadorEnrollmentsIdRoute,
     AuthenticatedAmbassadorReferralsIdRoute:
       AuthenticatedAmbassadorReferralsIdRoute,
     AuthenticatedAmbassadorEnrollmentsIndexRoute:
