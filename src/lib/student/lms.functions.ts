@@ -466,7 +466,7 @@ async function computeCourseProgress(
     const totalRequired = flat.filter((l) => l.isRequired).length;
     const completedRequired = flat.filter((l) => l.isRequired && l.status === "completed").length;
     const progressPct = totalRequired > 0 ? Math.round((completedRequired / totalRequired) * 100) : totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-    const persistedCompletion = moduleCompletionMap.get(m.id) ?? null;
+    const persistedCompletion = (moduleCompletionMap.get(m.id) as string | undefined) ?? null;
     const isRequired = m.is_required ?? true;
 
     return {
