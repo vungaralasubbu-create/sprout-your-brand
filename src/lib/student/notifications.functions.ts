@@ -555,63 +555,71 @@ export const listMyActivity = createServerFn({ method: "GET" })
         results.push({ id: r.id, category: cat, description: r.description, created_at: r.created_at });
       }
     }
+    const humanize = (s: string) =>
+      String(s || "activity").replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
+
     if (wants("internship")) {
       const { data: rows } = await sb
         .from("student_internship_activity")
-        .select("id, description, created_at")
+        .select("id, event, occurred_at")
         .eq("student_user_id", uid)
-        .order("created_at", { ascending: false })
+        .order("occurred_at", { ascending: false })
         .limit(data.limit);
       for (const r of (rows ?? []) as any[]) {
-        results.push({ id: r.id, category: "internship", description: r.description, created_at: r.created_at });
+        results.push({ id: r.id, category: "internship", description: humanize(r.event), created_at: r.occurred_at });
       }
     }
     if (wants("career")) {
       const { data: rows } = await sb
         .from("career_activity")
-        .select("id, description, created_at")
+        .select("id, event_type, created_at")
         .eq("student_user_id", uid)
         .order("created_at", { ascending: false })
         .limit(data.limit);
       for (const r of (rows ?? []) as any[]) {
-        results.push({ id: r.id, category: "career", description: r.description, created_at: r.created_at });
+        results.push({ id: r.id, category: "career", description: humanize(r.event_type), created_at: r.created_at });
       }
     }
     if (wants("ai_mentor")) {
       const { data: rows } = await sb
         .from("ai_mentor_activity")
-        .select("id, description, created_at")
+        .select("id, event_type, created_at")
         .eq("student_user_id", uid)
         .order("created_at", { ascending: false })
         .limit(data.limit);
       for (const r of (rows ?? []) as any[]) {
-        results.push({ id: r.id, category: "ai_mentor", description: r.description, created_at: r.created_at });
+        results.push({ id: r.id, category: "ai_mentor", description: humanize(r.event_type), created_at: r.created_at });
       }
     }
     if (wants("support")) {
       const { data: rows } = await sb
         .from("student_support_activity")
-        .select("id, detail, created_at, actor_role")
+        .select("id, detail, action, created_at, actor_role")
         .eq("student_user_id", uid)
         .eq("actor_role", "student")
         .order("created_at", { ascending: false })
         .limit(data.limit);
       for (const r of (rows ?? []) as any[]) {
-        results.push({ id: r.id, category: "support", description: r.detail, created_at: r.created_at });
+        results.push({
+          id: r.id,
+          category: "support",
+          description: r.detail || humanize(r.action),
+          created_at: r.created_at,
+        });
       }
     }
-    // Interview activity (if table has student_user_id)
     if (wants("career")) {
       const { data: rows } = await sb
         .from("interview_activity")
-        .select("id, description, created_at")
+        .select("id, event_type, created_at")
         .eq("student_user_id", uid)
         .order("created_at", { ascending: false })
         .limit(data.limit);
       for (const r of (rows ?? []) as any[]) {
-        results.push({ id: r.id, category: "career", description: r.description, created_at: r.created_at });
+        results.push({ id: r.id, category: "career", description: humanize(r.event_type), created_at: r.created_at });
       }
     }
+
 
     results.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     return results.slice(0, data.limit);
