@@ -569,7 +569,7 @@ function ReviewDialog({ id, onClose }: { id: string | null; onClose: () => void 
                         Cancel
                       </Button>
                       <Button
-                        variant={pendingAction === "reject" ? "destructive" : "default"}
+                        variant={pendingAction === "reject" ? "danger" : "primary"}
                         onClick={() => runWithMessage(pendingAction)}
                         disabled={mutation.isPending}
                       >
@@ -602,7 +602,7 @@ function ReviewDialog({ id, onClose }: { id: string | null; onClose: () => void 
                       <MessageSquare className="size-4 mr-1.5" /> Request More Info
                     </Button>
                     <Button
-                      variant="destructive"
+                      variant="danger"
                       onClick={() => setPendingAction("reject")}
                       disabled={mutation.isPending}
                     >
