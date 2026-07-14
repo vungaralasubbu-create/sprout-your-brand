@@ -179,6 +179,32 @@ function Page() {
         </div>
       </Card>
 
+      {/* Live Sessions */}
+      {liveSessions && (liveSessions.next || liveSessions.upcomingCount > 0 || liveSessions.completedCount > 0) && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+              <Radio className="size-4 text-primary" /> Live Sessions
+            </h2>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+                {liveSessions.upcomingCount} Upcoming · {liveSessions.completedCount} Completed
+              </span>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/student/live-sessions">View all</Link>
+              </Button>
+            </div>
+          </div>
+          {liveSessions.next ? (
+            <div className="grid gap-3 md:grid-cols-2">
+              <LiveSessionCard session={liveSessions.next as LiveSessionCardData} />
+            </div>
+          ) : (
+            <Card className="p-5 text-sm text-muted-foreground">No upcoming sessions scheduled right now.</Card>
+          )}
+        </div>
+      )}
+
       {/* Curriculum */}
       <div>
         <div className="flex items-center justify-between mb-3">
