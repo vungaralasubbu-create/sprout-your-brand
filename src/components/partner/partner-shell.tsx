@@ -35,7 +35,7 @@ const NAV = [
   { to: "/partner/programs", label: "Programs", icon: Package },
   { to: "/partner/referral-bonus", label: "Referral Bonus", icon: Gift },
   { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
-  { to: "/partner/coming-soon", label: "Analytics", icon: BarChart3 },
+  { to: "/partner/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/partner/coming-soon", label: "Account", icon: UserCircle },
 ] as const;
 
