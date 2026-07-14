@@ -96,6 +96,7 @@ const NAV: NavGroup[] = [
   {
     label: "Brand Management",
     items: [
+      { to: "/admin/partner-brands", label: "Partner Brands", icon: Building2 },
       { to: "/admin/brand-applications", label: "Brand Applications", icon: Building2 },
       { to: "/admin/brands", label: "Brands", icon: Rocket },
       { to: "/admin/brand-launch-tasks", label: "Brand Launch Tasks", icon: ClipboardList },

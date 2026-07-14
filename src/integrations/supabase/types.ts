@@ -2627,6 +2627,154 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_brand_profiles: {
+        Row: {
+          admin_message: string | null
+          authorized_contact_email: string | null
+          authorized_contact_name: string | null
+          brand_description: string | null
+          brand_name: string
+          brand_type: Database["public"]["Enums"]["partner_brand_type"]
+          business_email: string | null
+          business_phone: string | null
+          company_name: string | null
+          created_at: string
+          id: string
+          logo_bucket: string | null
+          logo_mime: string | null
+          logo_path: string | null
+          notes: string | null
+          partner_id: string
+          rejection_reason: string | null
+          relationship_to_brand: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          selling_model: Database["public"]["Enums"]["partner_selling_model"]
+          social_link: string | null
+          status: Database["public"]["Enums"]["partner_brand_status"]
+          submitted_at: string
+          updated_at: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          admin_message?: string | null
+          authorized_contact_email?: string | null
+          authorized_contact_name?: string | null
+          brand_description?: string | null
+          brand_name: string
+          brand_type: Database["public"]["Enums"]["partner_brand_type"]
+          business_email?: string | null
+          business_phone?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          logo_bucket?: string | null
+          logo_mime?: string | null
+          logo_path?: string | null
+          notes?: string | null
+          partner_id: string
+          rejection_reason?: string | null
+          relationship_to_brand?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selling_model: Database["public"]["Enums"]["partner_selling_model"]
+          social_link?: string | null
+          status?: Database["public"]["Enums"]["partner_brand_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          admin_message?: string | null
+          authorized_contact_email?: string | null
+          authorized_contact_name?: string | null
+          brand_description?: string | null
+          brand_name?: string
+          brand_type?: Database["public"]["Enums"]["partner_brand_type"]
+          business_email?: string | null
+          business_phone?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          logo_bucket?: string | null
+          logo_mime?: string | null
+          logo_path?: string | null
+          notes?: string | null
+          partner_id?: string
+          rejection_reason?: string | null
+          relationship_to_brand?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          selling_model?: Database["public"]["Enums"]["partner_selling_model"]
+          social_link?: string | null
+          status?: Database["public"]["Enums"]["partner_brand_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_brand_profiles_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_brand_review_actions: {
+        Row: {
+          action: string
+          actor_role: string
+          actor_user_id: string | null
+          created_at: string
+          from_status:
+            | Database["public"]["Enums"]["partner_brand_status"]
+            | null
+          id: string
+          message: string | null
+          profile_id: string
+          to_status: Database["public"]["Enums"]["partner_brand_status"] | null
+        }
+        Insert: {
+          action: string
+          actor_role: string
+          actor_user_id?: string | null
+          created_at?: string
+          from_status?:
+            | Database["public"]["Enums"]["partner_brand_status"]
+            | null
+          id?: string
+          message?: string | null
+          profile_id: string
+          to_status?: Database["public"]["Enums"]["partner_brand_status"] | null
+        }
+        Update: {
+          action?: string
+          actor_role?: string
+          actor_user_id?: string | null
+          created_at?: string
+          from_status?:
+            | Database["public"]["Enums"]["partner_brand_status"]
+            | null
+          id?: string
+          message?: string | null
+          profile_id?: string
+          to_status?: Database["public"]["Enums"]["partner_brand_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_brand_review_actions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_follow_ups: {
         Row: {
           completed_at: string | null
@@ -2814,6 +2962,7 @@ export type Database = {
           partner_id: string
           payment_link_id: string
           plan: Database["public"]["Enums"]["payment_plan"]
+          selling_brand_profile_id: string | null
           status: Database["public"]["Enums"]["payment_link_status"]
           updated_at: string
           url: string
@@ -2828,6 +2977,7 @@ export type Database = {
           partner_id: string
           payment_link_id: string
           plan: Database["public"]["Enums"]["payment_plan"]
+          selling_brand_profile_id?: string | null
           status?: Database["public"]["Enums"]["payment_link_status"]
           updated_at?: string
           url: string
@@ -2842,6 +2992,7 @@ export type Database = {
           partner_id?: string
           payment_link_id?: string
           plan?: Database["public"]["Enums"]["payment_plan"]
+          selling_brand_profile_id?: string | null
           status?: Database["public"]["Enums"]["payment_link_status"]
           updated_at?: string
           url?: string
@@ -2875,6 +3026,13 @@ export type Database = {
             referencedRelation: "payment_links"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "partner_lead_payment_links_selling_brand_profile_id_fkey"
+            columns: ["selling_brand_profile_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       partner_leads: {
@@ -2898,6 +3056,7 @@ export type Database = {
           preferred_contact_time: string | null
           priority: string | null
           program_interest: string | null
+          selling_brand_profile_id: string | null
           source: Database["public"]["Enums"]["partner_lead_source"]
           state: string | null
           status: Database["public"]["Enums"]["partner_lead_status"]
@@ -2923,6 +3082,7 @@ export type Database = {
           preferred_contact_time?: string | null
           priority?: string | null
           program_interest?: string | null
+          selling_brand_profile_id?: string | null
           source?: Database["public"]["Enums"]["partner_lead_source"]
           state?: string | null
           status?: Database["public"]["Enums"]["partner_lead_status"]
@@ -2948,6 +3108,7 @@ export type Database = {
           preferred_contact_time?: string | null
           priority?: string | null
           program_interest?: string | null
+          selling_brand_profile_id?: string | null
           source?: Database["public"]["Enums"]["partner_lead_source"]
           state?: string | null
           status?: Database["public"]["Enums"]["partner_lead_status"]
@@ -2973,6 +3134,13 @@ export type Database = {
             columns: ["owner_partner_id"]
             isOneToOne: false
             referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_leads_selling_brand_profile_id_fkey"
+            columns: ["selling_brand_profile_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -3137,6 +3305,7 @@ export type Database = {
           proof_size_bytes: number | null
           reviewed_at: string | null
           reviewed_by: string | null
+          selling_brand_profile_id: string | null
           status: Database["public"]["Enums"]["payment_submission_status"]
           submitted_at: string
           updated_at: string
@@ -3164,6 +3333,7 @@ export type Database = {
           proof_size_bytes?: number | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          selling_brand_profile_id?: string | null
           status?: Database["public"]["Enums"]["payment_submission_status"]
           submitted_at?: string
           updated_at?: string
@@ -3191,6 +3361,7 @@ export type Database = {
           proof_size_bytes?: number | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          selling_brand_profile_id?: string | null
           status?: Database["public"]["Enums"]["payment_submission_status"]
           submitted_at?: string
           updated_at?: string
@@ -3231,6 +3402,13 @@ export type Database = {
             columns: ["payment_link_id"]
             isOneToOne: false
             referencedRelation: "payment_links"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_payment_submissions_selling_brand_profile_id_fkey"
+            columns: ["selling_brand_profile_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -3781,6 +3959,9 @@ export type Database = {
           approved_sales_model: string | null
           bank_account_last4: string | null
           bank_name: string | null
+          brand_selling_model:
+            | Database["public"]["Enums"]["partner_selling_model"]
+            | null
           city: string | null
           country: string | null
           created_at: string
@@ -3829,6 +4010,9 @@ export type Database = {
           approved_sales_model?: string | null
           bank_account_last4?: string | null
           bank_name?: string | null
+          brand_selling_model?:
+            | Database["public"]["Enums"]["partner_selling_model"]
+            | null
           city?: string | null
           country?: string | null
           created_at?: string
@@ -3877,6 +4061,9 @@ export type Database = {
           approved_sales_model?: string | null
           bank_account_last4?: string | null
           bank_name?: string | null
+          brand_selling_model?:
+            | Database["public"]["Enums"]["partner_selling_model"]
+            | null
           city?: string | null
           country?: string | null
           created_at?: string
@@ -4602,6 +4789,14 @@ export type Database = {
         | "data_privacy"
         | "anti_spam"
         | "refund_reversal"
+      partner_brand_status:
+        | "draft"
+        | "pending_review"
+        | "verified"
+        | "needs_information"
+        | "rejected"
+        | "suspended"
+      partner_brand_type: "own" | "partnered"
       partner_lead_attribution_status:
         | "confirmed"
         | "duplicate_review"
@@ -4650,6 +4845,7 @@ export type Database = {
         | "program_update"
         | "agreement_update"
         | "support_reply"
+      partner_selling_model: "glintr" | "own" | "partnered" | "multiple"
       partner_status: "active" | "suspended" | "revoked"
       payment_link_status:
         | "assigned"
@@ -4986,6 +5182,15 @@ export const Constants = {
         "anti_spam",
         "refund_reversal",
       ],
+      partner_brand_status: [
+        "draft",
+        "pending_review",
+        "verified",
+        "needs_information",
+        "rejected",
+        "suspended",
+      ],
+      partner_brand_type: ["own", "partnered"],
       partner_lead_attribution_status: [
         "confirmed",
         "duplicate_review",
@@ -5038,6 +5243,7 @@ export const Constants = {
         "agreement_update",
         "support_reply",
       ],
+      partner_selling_model: ["glintr", "own", "partnered", "multiple"],
       partner_status: ["active", "suspended", "revoked"],
       payment_link_status: [
         "assigned",
