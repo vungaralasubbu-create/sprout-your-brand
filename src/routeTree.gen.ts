@@ -42,6 +42,7 @@ import { Route as AuthenticatedPartnerQuickStartRouteImport } from './routes/_au
 import { Route as AuthenticatedPartnerProgramsRouteImport } from './routes/_authenticated/partner.programs'
 import { Route as AuthenticatedPartnerPaymentVerificationRouteImport } from './routes/_authenticated/partner.payment-verification'
 import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_authenticated/partner.payment-links'
+import { Route as AuthenticatedPartnerOwnershipReviewsRouteImport } from './routes/_authenticated/partner.ownership-reviews'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerMyLeadsRouteImport } from './routes/_authenticated/partner.my-leads'
 import { Route as AuthenticatedPartnerEarningsStatementRouteImport } from './routes/_authenticated/partner.earnings-statement'
@@ -272,6 +273,12 @@ const AuthenticatedPartnerPaymentLinksRoute =
   AuthenticatedPartnerPaymentLinksRouteImport.update({
     id: '/payment-links',
     path: '/payment-links',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerOwnershipReviewsRoute =
+  AuthenticatedPartnerOwnershipReviewsRouteImport.update({
+    id: '/ownership-reviews',
+    path: '/ownership-reviews',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerOnboardingRoute =
@@ -646,6 +653,7 @@ export interface FileRoutesByFullPath {
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
   '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
+  '/partner/ownership-reviews': typeof AuthenticatedPartnerOwnershipReviewsRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
@@ -731,6 +739,7 @@ export interface FileRoutesByTo {
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
   '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
+  '/partner/ownership-reviews': typeof AuthenticatedPartnerOwnershipReviewsRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
@@ -820,6 +829,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
   '/_authenticated/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
+  '/_authenticated/partner/ownership-reviews': typeof AuthenticatedPartnerOwnershipReviewsRoute
   '/_authenticated/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/_authenticated/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/_authenticated/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
@@ -909,6 +919,7 @@ export interface FileRouteTypes {
     | '/partner/earnings-statement'
     | '/partner/my-leads'
     | '/partner/onboarding'
+    | '/partner/ownership-reviews'
     | '/partner/payment-links'
     | '/partner/payment-verification'
     | '/partner/programs'
@@ -994,6 +1005,7 @@ export interface FileRouteTypes {
     | '/partner/earnings-statement'
     | '/partner/my-leads'
     | '/partner/onboarding'
+    | '/partner/ownership-reviews'
     | '/partner/payment-links'
     | '/partner/payment-verification'
     | '/partner/programs'
@@ -1082,6 +1094,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/earnings-statement'
     | '/_authenticated/partner/my-leads'
     | '/_authenticated/partner/onboarding'
+    | '/_authenticated/partner/ownership-reviews'
     | '/_authenticated/partner/payment-links'
     | '/_authenticated/partner/payment-verification'
     | '/_authenticated/partner/programs'
@@ -1367,6 +1380,13 @@ declare module '@tanstack/react-router' {
       path: '/payment-links'
       fullPath: '/partner/payment-links'
       preLoaderRoute: typeof AuthenticatedPartnerPaymentLinksRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/ownership-reviews': {
+      id: '/_authenticated/partner/ownership-reviews'
+      path: '/ownership-reviews'
+      fullPath: '/partner/ownership-reviews'
+      preLoaderRoute: typeof AuthenticatedPartnerOwnershipReviewsRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/onboarding': {
@@ -1869,6 +1889,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerEarningsStatementRoute: typeof AuthenticatedPartnerEarningsStatementRoute
   AuthenticatedPartnerMyLeadsRoute: typeof AuthenticatedPartnerMyLeadsRoute
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
+  AuthenticatedPartnerOwnershipReviewsRoute: typeof AuthenticatedPartnerOwnershipReviewsRoute
   AuthenticatedPartnerPaymentLinksRoute: typeof AuthenticatedPartnerPaymentLinksRoute
   AuthenticatedPartnerPaymentVerificationRoute: typeof AuthenticatedPartnerPaymentVerificationRoute
   AuthenticatedPartnerProgramsRoute: typeof AuthenticatedPartnerProgramsRouteWithChildren
@@ -1892,6 +1913,8 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
     AuthenticatedPartnerEarningsStatementRoute,
   AuthenticatedPartnerMyLeadsRoute: AuthenticatedPartnerMyLeadsRoute,
   AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
+  AuthenticatedPartnerOwnershipReviewsRoute:
+    AuthenticatedPartnerOwnershipReviewsRoute,
   AuthenticatedPartnerPaymentLinksRoute: AuthenticatedPartnerPaymentLinksRoute,
   AuthenticatedPartnerPaymentVerificationRoute:
     AuthenticatedPartnerPaymentVerificationRoute,
