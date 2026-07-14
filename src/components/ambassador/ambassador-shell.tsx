@@ -14,8 +14,8 @@ const NAV = [
   { to: "/ambassador/payouts", label: "Payouts", icon: Banknote },
   { to: "/ambassador/commission-structure", label: "Commission Structure", icon: ScrollText },
   { to: "/ambassador/marketing-resources", label: "Marketing Resources", icon: Sparkles },
-  { to: "/campus-ambassador/status", label: "My Profile", icon: UserCircle },
-  { to: "/ambassador/dashboard", label: "Support", icon: LifeBuoy, soon: true },
+  { to: "/ambassador/profile", label: "My Profile", icon: UserCircle },
+  { to: "/ambassador/settings", label: "Settings", icon: LifeBuoy },
 ] as const;
 
 export function AmbassadorShell({ children }: { children?: React.ReactNode }) {
