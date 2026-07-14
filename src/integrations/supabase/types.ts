@@ -1852,7 +1852,9 @@ export type Database = {
       }
       course_lessons: {
         Row: {
+          content: string | null
           created_at: string
+          description: string | null
           display_order: number
           duration: string | null
           id: string
@@ -1865,7 +1867,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          content?: string | null
           created_at?: string
+          description?: string | null
           display_order?: number
           duration?: string | null
           id?: string
@@ -1878,7 +1882,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          content?: string | null
           created_at?: string
+          description?: string | null
           display_order?: number
           duration?: string | null
           id?: string
@@ -2941,6 +2947,51 @@ export type Database = {
           },
         ]
       }
+      lesson_notes: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          lesson_id: string
+          notes: string
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          lesson_id: string
+          notes?: string
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          notes?: string
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_notes_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_notes_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lesson_progress: {
         Row: {
           completed_at: string | null
@@ -2949,11 +3000,13 @@ export type Database = {
           enrollment_id: string | null
           id: string
           last_accessed_at: string
+          last_position_seconds: number
           lesson_id: string
           started_at: string
           status: string
           student_user_id: string
           updated_at: string
+          video_progress_pct: number
         }
         Insert: {
           completed_at?: string | null
@@ -2962,11 +3015,13 @@ export type Database = {
           enrollment_id?: string | null
           id?: string
           last_accessed_at?: string
+          last_position_seconds?: number
           lesson_id: string
           started_at?: string
           status?: string
           student_user_id: string
           updated_at?: string
+          video_progress_pct?: number
         }
         Update: {
           completed_at?: string | null
@@ -2975,11 +3030,13 @@ export type Database = {
           enrollment_id?: string | null
           id?: string
           last_accessed_at?: string
+          last_position_seconds?: number
           lesson_id?: string
           started_at?: string
           status?: string
           student_user_id?: string
           updated_at?: string
+          video_progress_pct?: number
         }
         Relationships: [
           {
