@@ -513,7 +513,7 @@ export const getSalesWorkMonitoring = createServerFn({ method: "GET" })
       { data: noAnswerLeads },
     ] = await Promise.all([
       s.from("partner_leads").select("assigned_partner_id, owner_partner_id, status, updated_at").in("assigned_partner_id", partnerIds),
-      s.from("partner_leads").select("assigned_partner_id, owner_partner_id").in("assigned_partner_id", partnerIds).eq("status", "new").is("updated_at", null),
+      s.from("partner_leads").select("assigned_partner_id, owner_partner_id").in("assigned_partner_id", partnerIds).eq("status", "new").is("last_activity_at", null),
       s.from("partner_follow_ups").select("partner_id").eq("status", "scheduled").gte("due_at", dayISO).lt("due_at", endOfDayISO).in("partner_id", partnerIds),
       s.from("partner_follow_ups").select("partner_id").eq("status", "scheduled").lt("due_at", nowISO).in("partner_id", partnerIds),
       s.from("partner_leads").select("assigned_partner_id, owner_partner_id").in("assigned_partner_id", partnerIds).eq("status", "no_answer"),
