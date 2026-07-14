@@ -15,6 +15,7 @@ import {
   Building2,
   BarChart3,
   UserCircle,
+  Briefcase,
   LogOut,
   Menu,
   X,
@@ -48,6 +49,18 @@ export function PartnerShell() {
   const [open, setOpen] = useState(false);
 
   const partner = data?.partner ?? null;
+  const isFullTime = partner?.work_model === "full_time" && !!data?.employeeProfile;
+
+  const navItems = [
+    ...NAV.slice(0, 11), // through Analytics
+    ...(isFullTime
+      ? [{ to: "/partner/employment", label: "Employment", icon: Briefcase } as const]
+      : [{ to: "/partner/earnings-statement", label: "Monthly Statement", icon: Briefcase } as const]),
+    NAV[11]!, // Account
+  ];
+
+
+
 
   async function handleSignOut() {
     await queryClient.cancelQueries();
@@ -110,7 +123,7 @@ export function PartnerShell() {
               </div>
             ) : null}
             <nav className="space-y-0.5">
-              {NAV.map((item, i) => {
+              {navItems.map((item, i) => {
                 const active = isActive(item.to, item.label);
                 const Icon = item.icon;
                 return (

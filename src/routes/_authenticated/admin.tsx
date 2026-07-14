@@ -105,6 +105,14 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "HR & Payroll",
+    items: [
+      { to: "/admin/employees", label: "Employees", icon: Users },
+      { to: "/admin/payroll", label: "Payroll", icon: Wallet },
+      { to: "/admin/employment-settings", label: "Attendance Settings", icon: Settings },
+    ],
+  },
+  {
     label: "Platform",
     items: [
       { to: "/admin/content", label: "Content", icon: FileText },
