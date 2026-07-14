@@ -406,7 +406,7 @@ function NotificationRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-sm text-slate-900">{n.title}</span>
-          <Badge variant="secondary" className={cn("text-[10px]", t.badge)}>{t.label}</Badge>
+          <Badge variant="muted" className={cn("text-[10px]", t.badge)}>{t.label}</Badge>
           <span className="text-[11px] text-slate-400">· {CATEGORY_LABEL[n.category] ?? n.category}</span>
         </div>
         <div className="text-xs text-slate-500 mt-0.5 line-clamp-2 font-normal">{n.message}</div>
