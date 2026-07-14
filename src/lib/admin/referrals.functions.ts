@@ -158,7 +158,7 @@ export const adminActOnReferral = createServerFn({ method: "POST" })
     if (!cur) throw new Error("Referral not found");
 
     const now = new Date().toISOString();
-    const updates: Record<string, any> = {};
+    const updates: any = {};
 
     if (data.action === "approve") {
       if (cur.status !== "bonus_pending_approval" && cur.status !== "qualified") {
