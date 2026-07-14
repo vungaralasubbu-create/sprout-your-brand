@@ -445,7 +445,15 @@ function PriorityWork({
       tone: "text-emerald-600 bg-emerald-50 ring-emerald-100",
       count: follow?.payment_follow_up ?? 0,
     },
-  ] as const;
+  ] as Array<{
+    key: string;
+    label: string;
+    sub: string;
+    icon: React.ComponentType<{ className?: string }>;
+    tone: string;
+    count: number;
+    urgent?: boolean;
+  }>;
 
   const total = items.reduce((a, b) => a + b.count, 0);
 
