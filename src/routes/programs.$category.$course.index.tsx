@@ -250,7 +250,7 @@ function CoursePage() {
           </nav>
 
           <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 lg:gap-12 items-center">
-            <div>
+            <Reveal>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
                   {c.category.name}
@@ -302,16 +302,19 @@ function CoursePage() {
                   <MetaStat icon={Sparkles} label="Language" value={c.language} />
                 ) : null}
               </dl>
-            </div>
+            </Reveal>
 
-            <div className="relative">
-              <CourseHeroVisual
-                courseName={c.name}
-                categoryName={c.category.name}
-                imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
-              />
-            </div>
+            <Reveal delay={150}>
+              <div className="relative">
+                <CourseHeroVisual
+                  courseName={c.name}
+                  categoryName={c.category.name}
+                  imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
+                />
+              </div>
+            </Reveal>
           </div>
+
         </Container>
       </Section>
 
