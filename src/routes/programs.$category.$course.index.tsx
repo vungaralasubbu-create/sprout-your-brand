@@ -264,7 +264,7 @@ function CoursePage() {
                 </p>
               ) : null}
 
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" variant="gradient">
                   <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                     Apply Now
