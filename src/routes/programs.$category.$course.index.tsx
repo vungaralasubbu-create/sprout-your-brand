@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ChevronRight,
+  ChevronLeft,
   Download,
   Phone,
   Clock,
@@ -24,6 +25,8 @@ import {
   Hammer,
   LineChart,
   Lightbulb,
+  Quote,
+  Star,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
