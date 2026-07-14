@@ -664,6 +664,400 @@ export type Database = {
           },
         ]
       }
+      ambassador_payout_activity: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          description: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          payout_id: string | null
+          profile_id: string | null
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          description?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          payout_id?: string | null
+          profile_id?: string | null
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          payout_id?: string | null
+          profile_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_payout_activity_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_payout_activity_payout_id_fkey"
+            columns: ["payout_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_payouts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_payout_activity_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_payout_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_payout_allocations: {
+        Row: {
+          allocated_amount: number
+          commission_id: string
+          created_at: string
+          id: string
+          payout_id: string
+        }
+        Insert: {
+          allocated_amount: number
+          commission_id: string
+          created_at?: string
+          id?: string
+          payout_id: string
+        }
+        Update: {
+          allocated_amount?: number
+          commission_id?: string
+          created_at?: string
+          id?: string
+          payout_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_payout_allocations_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_commissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_payout_allocations_payout_id_fkey"
+            columns: ["payout_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_payouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_payout_profile_versions: {
+        Row: {
+          account_holder_name: string | null
+          account_number_masked: string | null
+          account_type:
+            | Database["public"]["Enums"]["ambassador_bank_account_type"]
+            | null
+          ambassador_id: string
+          bank_name: string | null
+          beneficiary_name: string | null
+          created_at: string
+          id: string
+          ifsc_code: string | null
+          payout_method:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          profile_id: string
+          status: Database["public"]["Enums"]["ambassador_payout_profile_status"]
+          submitted_at: string | null
+          upi_id_masked: string | null
+          verified_at: string | null
+          version_number: number
+        }
+        Insert: {
+          account_holder_name?: string | null
+          account_number_masked?: string | null
+          account_type?:
+            | Database["public"]["Enums"]["ambassador_bank_account_type"]
+            | null
+          ambassador_id: string
+          bank_name?: string | null
+          beneficiary_name?: string | null
+          created_at?: string
+          id?: string
+          ifsc_code?: string | null
+          payout_method?:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          profile_id: string
+          status: Database["public"]["Enums"]["ambassador_payout_profile_status"]
+          submitted_at?: string | null
+          upi_id_masked?: string | null
+          verified_at?: string | null
+          version_number: number
+        }
+        Update: {
+          account_holder_name?: string | null
+          account_number_masked?: string | null
+          account_type?:
+            | Database["public"]["Enums"]["ambassador_bank_account_type"]
+            | null
+          ambassador_id?: string
+          bank_name?: string | null
+          beneficiary_name?: string | null
+          created_at?: string
+          id?: string
+          ifsc_code?: string | null
+          payout_method?:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          profile_id?: string
+          status?: Database["public"]["Enums"]["ambassador_payout_profile_status"]
+          submitted_at?: string | null
+          upi_id_masked?: string | null
+          verified_at?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_payout_profile_versions_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_payout_profile_versions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_payout_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_payout_profiles: {
+        Row: {
+          account_holder_name: string | null
+          account_number: string | null
+          account_number_masked: string | null
+          account_type:
+            | Database["public"]["Enums"]["ambassador_bank_account_type"]
+            | null
+          admin_public_message: string | null
+          ambassador_id: string
+          bank_name: string | null
+          beneficiary_name: string | null
+          created_at: string
+          id: string
+          ifsc_code: string | null
+          payout_method:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          profile_code: string | null
+          rejected_at: string | null
+          status: Database["public"]["Enums"]["ambassador_payout_profile_status"]
+          submitted_at: string | null
+          under_review_at: string | null
+          updated_at: string
+          upi_id: string | null
+          upi_id_masked: string | null
+          user_id: string
+          verification_reference: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          account_number_masked?: string | null
+          account_type?:
+            | Database["public"]["Enums"]["ambassador_bank_account_type"]
+            | null
+          admin_public_message?: string | null
+          ambassador_id: string
+          bank_name?: string | null
+          beneficiary_name?: string | null
+          created_at?: string
+          id?: string
+          ifsc_code?: string | null
+          payout_method?:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          profile_code?: string | null
+          rejected_at?: string | null
+          status?: Database["public"]["Enums"]["ambassador_payout_profile_status"]
+          submitted_at?: string | null
+          under_review_at?: string | null
+          updated_at?: string
+          upi_id?: string | null
+          upi_id_masked?: string | null
+          user_id: string
+          verification_reference?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          account_number_masked?: string | null
+          account_type?:
+            | Database["public"]["Enums"]["ambassador_bank_account_type"]
+            | null
+          admin_public_message?: string | null
+          ambassador_id?: string
+          bank_name?: string | null
+          beneficiary_name?: string | null
+          created_at?: string
+          id?: string
+          ifsc_code?: string | null
+          payout_method?:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          profile_code?: string | null
+          rejected_at?: string | null
+          status?: Database["public"]["Enums"]["ambassador_payout_profile_status"]
+          submitted_at?: string | null
+          under_review_at?: string | null
+          updated_at?: string
+          upi_id?: string | null
+          upi_id_masked?: string | null
+          user_id?: string
+          verification_reference?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_payout_profiles_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: true
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_payouts: {
+        Row: {
+          ambassador_id: string
+          amount: number
+          approved_at: string | null
+          cancelled_at: string | null
+          created_at: string
+          currency: string
+          failed_at: string | null
+          id: string
+          idempotency_key: string | null
+          masked_destination: string | null
+          mode: string
+          on_hold_at: string | null
+          paid_at: string | null
+          payout_code: string | null
+          payout_method:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          payout_profile_id: string | null
+          payout_profile_version_id: string | null
+          processing_at: string | null
+          provider_reference: string | null
+          public_failure_reason: string | null
+          public_hold_reason: string | null
+          public_reversal_reason: string | null
+          requested_at: string
+          reversed_at: string | null
+          status: Database["public"]["Enums"]["ambassador_payout_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ambassador_id: string
+          amount: number
+          approved_at?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          currency?: string
+          failed_at?: string | null
+          id?: string
+          idempotency_key?: string | null
+          masked_destination?: string | null
+          mode?: string
+          on_hold_at?: string | null
+          paid_at?: string | null
+          payout_code?: string | null
+          payout_method?:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          payout_profile_id?: string | null
+          payout_profile_version_id?: string | null
+          processing_at?: string | null
+          provider_reference?: string | null
+          public_failure_reason?: string | null
+          public_hold_reason?: string | null
+          public_reversal_reason?: string | null
+          requested_at?: string
+          reversed_at?: string | null
+          status?: Database["public"]["Enums"]["ambassador_payout_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ambassador_id?: string
+          amount?: number
+          approved_at?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          currency?: string
+          failed_at?: string | null
+          id?: string
+          idempotency_key?: string | null
+          masked_destination?: string | null
+          mode?: string
+          on_hold_at?: string | null
+          paid_at?: string | null
+          payout_code?: string | null
+          payout_method?:
+            | Database["public"]["Enums"]["ambassador_payout_method"]
+            | null
+          payout_profile_id?: string | null
+          payout_profile_version_id?: string | null
+          processing_at?: string | null
+          provider_reference?: string | null
+          public_failure_reason?: string | null
+          public_hold_reason?: string | null
+          public_reversal_reason?: string | null
+          requested_at?: string
+          reversed_at?: string | null
+          status?: Database["public"]["Enums"]["ambassador_payout_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_payouts_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_payouts_payout_profile_id_fkey"
+            columns: ["payout_profile_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_payout_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_payouts_payout_profile_version_id_fkey"
+            columns: ["payout_profile_version_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_payout_profile_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_referral_events: {
         Row: {
           ambassador_id: string
@@ -9101,6 +9495,8 @@ export type Database = {
       is_partner: { Args: { _user_id: string }; Returns: boolean }
       is_student: { Args: { _user_id: string }; Returns: boolean }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      mask_account_number: { Args: { _num: string }; Returns: string }
+      mask_upi_id: { Args: { _upi: string }; Returns: string }
       normalize_email: { Args: { _email: string }; Returns: string }
       normalize_phone: { Args: { _phone: string }; Returns: string }
       partner_id_for: { Args: { _user_id: string }; Returns: string }
@@ -9155,6 +9551,7 @@ export type Database = {
         | "confirmed"
         | "invalid"
         | "expired"
+      ambassador_bank_account_type: "savings" | "current"
       ambassador_commission_status:
         | "pending_verification"
         | "eligible"
@@ -9172,6 +9569,26 @@ export type Database = {
         | "negative_adjustment"
         | "recovery"
         | "correction"
+      ambassador_payout_method: "bank_account" | "upi"
+      ambassador_payout_profile_status:
+        | "not_added"
+        | "incomplete"
+        | "submitted"
+        | "under_review"
+        | "more_info_required"
+        | "verified"
+        | "update_required"
+        | "rejected"
+      ambassador_payout_status:
+        | "requested"
+        | "under_review"
+        | "approved"
+        | "processing"
+        | "paid"
+        | "failed"
+        | "on_hold"
+        | "cancelled"
+        | "reversed"
       ambassador_profile_status:
         | "active"
         | "suspended"
@@ -9762,6 +10179,7 @@ export const Constants = {
         "invalid",
         "expired",
       ],
+      ambassador_bank_account_type: ["savings", "current"],
       ambassador_commission_status: [
         "pending_verification",
         "eligible",
@@ -9780,6 +10198,28 @@ export const Constants = {
         "negative_adjustment",
         "recovery",
         "correction",
+      ],
+      ambassador_payout_method: ["bank_account", "upi"],
+      ambassador_payout_profile_status: [
+        "not_added",
+        "incomplete",
+        "submitted",
+        "under_review",
+        "more_info_required",
+        "verified",
+        "update_required",
+        "rejected",
+      ],
+      ambassador_payout_status: [
+        "requested",
+        "under_review",
+        "approved",
+        "processing",
+        "paid",
+        "failed",
+        "on_hold",
+        "cancelled",
+        "reversed",
       ],
       ambassador_profile_status: [
         "active",
