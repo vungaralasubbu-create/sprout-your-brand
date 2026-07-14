@@ -343,7 +343,7 @@ export const getPartnerMasterProfile = createServerFn({ method: "GET" })
     const followUpsMissedRecent = followUpRows.filter((f: any) => f.status === "missed").length;
 
     // Currently active brand
-    const activeBrand = (brandProfiles.data ?? []).find((b: any) => b.status === "approved") ?? (brandProfiles.data ?? [])[0] ?? null;
+    const activeBrand = (brandProfiles.data ?? []).find((b: any) => b.status === "verified") ?? (brandProfiles.data ?? [])[0] ?? null;
 
     return {
       partner: {
