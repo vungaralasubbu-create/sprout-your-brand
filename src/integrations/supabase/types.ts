@@ -285,6 +285,51 @@ export type Database = {
           },
         ]
       }
+      attendance_settings: {
+        Row: {
+          created_at: string
+          id: number
+          is_active: boolean
+          late_mark_time: string
+          min_hours_full_day: number
+          min_hours_half_day: number
+          timezone: string
+          updated_at: string
+          updated_by: string | null
+          weekly_off_days: number[]
+          work_start_time: string
+          working_days: number[]
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          late_mark_time?: string
+          min_hours_full_day?: number
+          min_hours_half_day?: number
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+          weekly_off_days?: number[]
+          work_start_time?: string
+          working_days?: number[]
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          late_mark_time?: string
+          min_hours_full_day?: number
+          min_hours_half_day?: number
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+          weekly_off_days?: number[]
+          work_start_time?: string
+          working_days?: number[]
+        }
+        Relationships: []
+      }
       auth_otp_codes: {
         Row: {
           attempts: number
@@ -318,6 +363,39 @@ export type Database = {
           id?: string
           mobile?: string
           purpose?: string
+        }
+        Relationships: []
+      }
+      benefit_types: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          label: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          label: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          label?: string
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -2248,6 +2326,184 @@ export type Database = {
             columns: ["default_revenue_rule_id"]
             isOneToOne: false
             referencedRelation: "revenue_share_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_attendance: {
+        Row: {
+          admin_override: boolean
+          attendance_date: string
+          created_at: string
+          employee_id: string
+          first_login_at: string | null
+          id: string
+          is_holiday: boolean
+          is_weekly_off: boolean
+          last_activity_at: string | null
+          logout_at: string | null
+          notes: string | null
+          status: string
+          updated_at: string
+          working_minutes: number | null
+        }
+        Insert: {
+          admin_override?: boolean
+          attendance_date: string
+          created_at?: string
+          employee_id: string
+          first_login_at?: string | null
+          id?: string
+          is_holiday?: boolean
+          is_weekly_off?: boolean
+          last_activity_at?: string | null
+          logout_at?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          working_minutes?: number | null
+        }
+        Update: {
+          admin_override?: boolean
+          attendance_date?: string
+          created_at?: string
+          employee_id?: string
+          first_login_at?: string | null
+          id?: string
+          is_holiday?: boolean
+          is_weekly_off?: boolean
+          last_activity_at?: string | null
+          logout_at?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string
+          working_minutes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_attendance_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employee_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_benefits: {
+        Row: {
+          activated_at: string | null
+          admin_notes: string | null
+          benefit_type_id: string
+          created_at: string
+          employee_id: string
+          id: string
+          requested_at: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          activated_at?: string | null
+          admin_notes?: string | null
+          benefit_type_id: string
+          created_at?: string
+          employee_id: string
+          id?: string
+          requested_at?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          activated_at?: string | null
+          admin_notes?: string | null
+          benefit_type_id?: string
+          created_at?: string
+          employee_id?: string
+          id?: string
+          requested_at?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_benefits_benefit_type_id_fkey"
+            columns: ["benefit_type_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employee_benefits_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employee_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_profiles: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          employee_code: string
+          employment_status: string
+          exited_at: string | null
+          id: string
+          joining_date: string
+          notes: string | null
+          partner_id: string
+          payroll_entity_name: string | null
+          salary_cycle: string
+          updated_at: string
+          user_id: string
+          work_model: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          employee_code: string
+          employment_status?: string
+          exited_at?: string | null
+          id?: string
+          joining_date?: string
+          notes?: string | null
+          partner_id: string
+          payroll_entity_name?: string | null
+          salary_cycle?: string
+          updated_at?: string
+          user_id: string
+          work_model?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          employee_code?: string
+          employment_status?: string
+          exited_at?: string | null
+          id?: string
+          joining_date?: string
+          notes?: string | null
+          partner_id?: string
+          payroll_entity_name?: string | null
+          salary_cycle?: string
+          updated_at?: string
+          user_id?: string
+          work_model?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_profiles_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: true
+            referencedRelation: "partners"
             referencedColumns: ["id"]
           },
         ]
@@ -4409,6 +4665,178 @@ export type Database = {
           },
         ]
       }
+      payroll_runs: {
+        Row: {
+          absent_days: number
+          admin_notes: string | null
+          approved_at: string | null
+          approved_by: string | null
+          basic: number
+          created_at: string
+          currency: string
+          employee_id: string
+          employee_pf: number
+          employer_pf: number
+          gross_earnings: number
+          half_days: number
+          holiday_days: number
+          hra: number
+          id: string
+          late_days: number
+          leave_days: number
+          net_pay: number
+          other_deductions: number
+          other_earnings: number
+          paid_at: string | null
+          payable_days: number
+          payment_date: string | null
+          payment_reference: string | null
+          payroll_month: number
+          payroll_year: number
+          performance_incentive: number
+          present_days: number
+          professional_tax: number
+          slip_generated_at: string | null
+          special_allowance: number
+          status: string
+          tds: number
+          total_deductions: number
+          updated_at: string
+          weekly_off_days: number
+        }
+        Insert: {
+          absent_days?: number
+          admin_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          basic?: number
+          created_at?: string
+          currency?: string
+          employee_id: string
+          employee_pf?: number
+          employer_pf?: number
+          gross_earnings?: number
+          half_days?: number
+          holiday_days?: number
+          hra?: number
+          id?: string
+          late_days?: number
+          leave_days?: number
+          net_pay?: number
+          other_deductions?: number
+          other_earnings?: number
+          paid_at?: string | null
+          payable_days?: number
+          payment_date?: string | null
+          payment_reference?: string | null
+          payroll_month: number
+          payroll_year: number
+          performance_incentive?: number
+          present_days?: number
+          professional_tax?: number
+          slip_generated_at?: string | null
+          special_allowance?: number
+          status?: string
+          tds?: number
+          total_deductions?: number
+          updated_at?: string
+          weekly_off_days?: number
+        }
+        Update: {
+          absent_days?: number
+          admin_notes?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          basic?: number
+          created_at?: string
+          currency?: string
+          employee_id?: string
+          employee_pf?: number
+          employer_pf?: number
+          gross_earnings?: number
+          half_days?: number
+          holiday_days?: number
+          hra?: number
+          id?: string
+          late_days?: number
+          leave_days?: number
+          net_pay?: number
+          other_deductions?: number
+          other_earnings?: number
+          paid_at?: string | null
+          payable_days?: number
+          payment_date?: string | null
+          payment_reference?: string | null
+          payroll_month?: number
+          payroll_year?: number
+          performance_incentive?: number
+          present_days?: number
+          professional_tax?: number
+          slip_generated_at?: string | null
+          special_allowance?: number
+          status?: string
+          tds?: number
+          total_deductions?: number
+          updated_at?: string
+          weekly_off_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payroll_runs_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employee_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pf_preferences: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          employee_id: string
+          id: string
+          preference: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          submitted_at: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          employee_id: string
+          id?: string
+          preference: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          employee_id?: string
+          id?: string
+          preference?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pf_preferences_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: true
+            referencedRelation: "employee_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_settings: {
         Row: {
           key: string
@@ -4621,6 +5049,83 @@ export type Database = {
           },
         ]
       }
+      salary_structures: {
+        Row: {
+          basic: number
+          created_at: string
+          currency: string
+          effective_from: string
+          employee_id: string
+          employee_pf_amount: number
+          employer_pf_amount: number
+          hra: number
+          id: string
+          monthly_gross: number
+          notes: string | null
+          other_deductions: number
+          other_earnings: number
+          performance_incentive: number
+          pf_applicable: boolean
+          professional_tax: number
+          special_allowance: number
+          tds: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          basic?: number
+          created_at?: string
+          currency?: string
+          effective_from?: string
+          employee_id: string
+          employee_pf_amount?: number
+          employer_pf_amount?: number
+          hra?: number
+          id?: string
+          monthly_gross?: number
+          notes?: string | null
+          other_deductions?: number
+          other_earnings?: number
+          performance_incentive?: number
+          pf_applicable?: boolean
+          professional_tax?: number
+          special_allowance?: number
+          tds?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          basic?: number
+          created_at?: string
+          currency?: string
+          effective_from?: string
+          employee_id?: string
+          employee_pf_amount?: number
+          employer_pf_amount?: number
+          hra?: number
+          id?: string
+          monthly_gross?: number
+          notes?: string | null
+          other_deductions?: number
+          other_earnings?: number
+          performance_incentive?: number
+          pf_applicable?: boolean
+          professional_tax?: number
+          special_allowance?: number
+          tds?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salary_structures_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: true
+            referencedRelation: "employee_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       skills: {
         Row: {
           created_at: string
@@ -4757,6 +5262,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_employee_code: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
