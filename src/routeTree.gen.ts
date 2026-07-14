@@ -28,6 +28,7 @@ import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
+import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
@@ -227,6 +228,11 @@ const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
 const AuthenticatedBrandRoute = AuthenticatedBrandRouteImport.update({
   id: '/brand',
   path: '/brand',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAmbassadorRoute = AuthenticatedAmbassadorRouteImport.update({
+  id: '/ambassador',
+  path: '/ambassador',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -864,6 +870,7 @@ export interface FileRoutesByFullPath {
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/ambassador': typeof AuthenticatedAmbassadorRoute
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
@@ -988,6 +995,7 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/ambassador': typeof AuthenticatedAmbassadorRoute
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
@@ -1113,6 +1121,7 @@ export interface FileRoutesById {
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRoute
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
@@ -1240,6 +1249,7 @@ export interface FileRouteTypes {
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/admin'
+    | '/ambassador'
     | '/brand'
     | '/partner'
     | '/student'
@@ -1364,6 +1374,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/ambassador'
     | '/brand'
     | '/partner'
     | '/launch-your-brand/consultation'
@@ -1488,6 +1499,7 @@ export interface FileRouteTypes {
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/_authenticated/ambassador'
     | '/_authenticated/brand'
     | '/_authenticated/partner'
     | '/_authenticated/student'
@@ -1761,6 +1773,13 @@ declare module '@tanstack/react-router' {
       path: '/brand'
       fullPath: '/brand'
       preLoaderRoute: typeof AuthenticatedBrandRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ambassador': {
+      id: '/_authenticated/ambassador'
+      path: '/ambassador'
+      fullPath: '/ambassador'
+      preLoaderRoute: typeof AuthenticatedAmbassadorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
@@ -2870,6 +2889,7 @@ const AuthenticatedStudentRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRoute
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
@@ -2879,6 +2899,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRoute,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
