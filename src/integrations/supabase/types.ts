@@ -208,6 +208,240 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_mentor_activity: {
+        Row: {
+          conversation_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          meta: Json
+          student_user_id: string
+        }
+        Insert: {
+          conversation_id?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          meta?: Json
+          student_user_id: string
+        }
+        Update: {
+          conversation_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          meta?: Json
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_mentor_activity_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_mentor_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_mentor_conversations: {
+        Row: {
+          archived_at: string | null
+          context_record_id: string | null
+          context_type: Database["public"]["Enums"]["ai_mentor_context_type"]
+          created_at: string
+          id: string
+          include_draft: boolean
+          include_notes: boolean
+          include_submission: boolean
+          last_activity_at: string
+          message_count: number
+          program_id: string | null
+          student_user_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          context_record_id?: string | null
+          context_type?: Database["public"]["Enums"]["ai_mentor_context_type"]
+          created_at?: string
+          id?: string
+          include_draft?: boolean
+          include_notes?: boolean
+          include_submission?: boolean
+          last_activity_at?: string
+          message_count?: number
+          program_id?: string | null
+          student_user_id: string
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          context_record_id?: string | null
+          context_type?: Database["public"]["Enums"]["ai_mentor_context_type"]
+          created_at?: string
+          id?: string
+          include_draft?: boolean
+          include_notes?: boolean
+          include_submission?: boolean
+          last_activity_at?: string
+          message_count?: number
+          program_id?: string | null
+          student_user_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_mentor_conversations_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_mentor_feedback: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          feedback_type: Database["public"]["Enums"]["ai_mentor_feedback_type"]
+          id: string
+          message_id: string
+          student_user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          feedback_type: Database["public"]["Enums"]["ai_mentor_feedback_type"]
+          id?: string
+          message_id: string
+          student_user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          feedback_type?: Database["public"]["Enums"]["ai_mentor_feedback_type"]
+          id?: string
+          message_id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_mentor_feedback_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_mentor_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_mentor_feedback_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "ai_mentor_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_mentor_messages: {
+        Row: {
+          content: string
+          context_snapshot: Json | null
+          conversation_id: string
+          created_at: string
+          error_reason: string | null
+          id: string
+          role: Database["public"]["Enums"]["ai_mentor_message_role"]
+          status: Database["public"]["Enums"]["ai_mentor_message_status"]
+          student_user_id: string
+        }
+        Insert: {
+          content?: string
+          context_snapshot?: Json | null
+          conversation_id: string
+          created_at?: string
+          error_reason?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["ai_mentor_message_role"]
+          status?: Database["public"]["Enums"]["ai_mentor_message_status"]
+          student_user_id: string
+        }
+        Update: {
+          content?: string
+          context_snapshot?: Json | null
+          conversation_id?: string
+          created_at?: string
+          error_reason?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["ai_mentor_message_role"]
+          status?: Database["public"]["Enums"]["ai_mentor_message_status"]
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_mentor_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_mentor_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_mentor_usage: {
+        Row: {
+          ai_service_status: string | null
+          conversation_id: string | null
+          duration_ms: number | null
+          id: string
+          message_id: string | null
+          model: string | null
+          requested_at: string
+          student_user_id: string
+          tokens_completion: number | null
+          tokens_prompt: number | null
+        }
+        Insert: {
+          ai_service_status?: string | null
+          conversation_id?: string | null
+          duration_ms?: number | null
+          id?: string
+          message_id?: string | null
+          model?: string | null
+          requested_at?: string
+          student_user_id: string
+          tokens_completion?: number | null
+          tokens_prompt?: number | null
+        }
+        Update: {
+          ai_service_status?: string | null
+          conversation_id?: string | null
+          duration_ms?: number | null
+          id?: string
+          message_id?: string | null
+          model?: string | null
+          requested_at?: string
+          student_user_id?: string
+          tokens_completion?: number | null
+          tokens_prompt?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_mentor_usage_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_mentor_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_mentor_usage_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "ai_mentor_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_attempts: {
         Row: {
           answers: Json
@@ -7894,6 +8128,19 @@ export type Database = {
         | "support_agent"
         | "employment_admin"
         | "payroll_admin"
+      ai_mentor_context_type:
+        | "general"
+        | "current_lesson"
+        | "current_module"
+        | "program"
+        | "project"
+        | "assignment"
+        | "live_session"
+        | "internship"
+        | "career"
+      ai_mentor_feedback_type: "helpful" | "not_helpful"
+      ai_mentor_message_role: "student" | "mentor" | "system"
+      ai_mentor_message_status: "sent" | "generating" | "completed" | "failed"
       app_role:
         | "super_admin"
         | "admin"
@@ -8405,6 +8652,20 @@ export const Constants = {
         "employment_admin",
         "payroll_admin",
       ],
+      ai_mentor_context_type: [
+        "general",
+        "current_lesson",
+        "current_module",
+        "program",
+        "project",
+        "assignment",
+        "live_session",
+        "internship",
+        "career",
+      ],
+      ai_mentor_feedback_type: ["helpful", "not_helpful"],
+      ai_mentor_message_role: ["student", "mentor", "system"],
+      ai_mentor_message_status: ["sent", "generating", "completed", "failed"],
       app_role: [
         "super_admin",
         "admin",
