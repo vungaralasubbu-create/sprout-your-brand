@@ -43,14 +43,15 @@ export const requestLoginOtp = createServerFn({ method: "POST" })
     const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
     const expires_at = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
-    const { error } = await supabaseAdmin.from("auth_otp_codes").insert({
-      email: data.email ?? null,
-      mobile,
-      code_hash: hashCode(code, mobile),
+    const insertRow: Record<string, unknown> = {
+      mobile: mobileStr,
+      code_hash: hashCode(code, mobileStr),
       purpose: data.purpose,
       expires_at,
       attempts: 0,
-    });
+    };
+    if (data.email) insertRow.email = data.email;
+    const { error } = await supabaseAdmin.from("auth_otp_codes").insert(insertRow as any);
     if (error) {
       console.error("[otp] insert failed", error.message);
       return { ok: false as const, error: "Could not generate OTP. Please try again." };
