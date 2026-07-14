@@ -2598,6 +2598,7 @@ export type Database = {
           id: string
           lead_id: string
           metadata: Json | null
+          method: string | null
           reason: string | null
           to_partner_id: string | null
         }
@@ -2609,6 +2610,7 @@ export type Database = {
           id?: string
           lead_id: string
           metadata?: Json | null
+          method?: string | null
           reason?: string | null
           to_partner_id?: string | null
         }
@@ -2620,6 +2622,7 @@ export type Database = {
           id?: string
           lead_id?: string
           metadata?: Json | null
+          method?: string | null
           reason?: string | null
           to_partner_id?: string | null
         }
@@ -3384,8 +3387,12 @@ export type Database = {
       }
       partner_leads: {
         Row: {
+          assigned_at: string | null
+          assigned_by_user_id: string | null
           assigned_partner_id: string | null
+          assignment_method: string | null
           attribution_status: Database["public"]["Enums"]["partner_lead_attribution_status"]
+          campaign_source: string | null
           city: string | null
           course_id: string | null
           created_at: string
@@ -3395,6 +3402,7 @@ export type Database = {
           id: string
           last_activity_at: string | null
           lead_model: Database["public"]["Enums"]["lead_model"]
+          lead_ownership_type: Database["public"]["Enums"]["lead_ownership_type"]
           mobile: string
           mobile_normalized: string | null
           next_follow_up_at: string | null
@@ -3410,8 +3418,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          assigned_at?: string | null
+          assigned_by_user_id?: string | null
           assigned_partner_id?: string | null
+          assignment_method?: string | null
           attribution_status?: Database["public"]["Enums"]["partner_lead_attribution_status"]
+          campaign_source?: string | null
           city?: string | null
           course_id?: string | null
           created_at?: string
@@ -3421,6 +3433,7 @@ export type Database = {
           id?: string
           last_activity_at?: string | null
           lead_model?: Database["public"]["Enums"]["lead_model"]
+          lead_ownership_type?: Database["public"]["Enums"]["lead_ownership_type"]
           mobile: string
           mobile_normalized?: string | null
           next_follow_up_at?: string | null
@@ -3436,8 +3449,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          assigned_at?: string | null
+          assigned_by_user_id?: string | null
           assigned_partner_id?: string | null
+          assignment_method?: string | null
           attribution_status?: Database["public"]["Enums"]["partner_lead_attribution_status"]
+          campaign_source?: string | null
           city?: string | null
           course_id?: string | null
           created_at?: string
@@ -3447,6 +3464,7 @@ export type Database = {
           id?: string
           last_activity_at?: string | null
           lead_model?: Database["public"]["Enums"]["lead_model"]
+          lead_ownership_type?: Database["public"]["Enums"]["lead_ownership_type"]
           mobile?: string
           mobile_normalized?: string | null
           next_follow_up_at?: string | null
@@ -5049,6 +5067,36 @@ export type Database = {
           },
         ]
       }
+      round_robin_settings: {
+        Row: {
+          eligible_work_models: string[]
+          id: number
+          is_active: boolean
+          last_partner_id: string | null
+          require_verified_brand: boolean
+          selected_partner_ids: string[]
+          updated_at: string
+        }
+        Insert: {
+          eligible_work_models?: string[]
+          id?: number
+          is_active?: boolean
+          last_partner_id?: string | null
+          require_verified_brand?: boolean
+          selected_partner_ids?: string[]
+          updated_at?: string
+        }
+        Update: {
+          eligible_work_models?: string[]
+          id?: number
+          is_active?: boolean
+          last_partner_id?: string | null
+          require_verified_brand?: boolean
+          selected_partner_ids?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       salary_structures: {
         Row: {
           basic: number
@@ -5396,6 +5444,7 @@ export type Database = {
         | "cancelled"
       follow_up_type: "call" | "whatsapp" | "email" | "meeting" | "other"
       lead_model: "own_leads" | "supported" | "not_sure"
+      lead_ownership_type: "partner_own" | "glintr_provided"
       lesson_type:
         | "video"
         | "text"
@@ -5469,6 +5518,7 @@ export type Database = {
         | "invalid"
         | "duplicate"
         | "refunded"
+        | "no_answer"
       partner_notification_type:
         | "new_lead_assigned"
         | "follow_up_due"
@@ -5786,6 +5836,7 @@ export const Constants = {
       ],
       follow_up_type: ["call", "whatsapp", "email", "meeting", "other"],
       lead_model: ["own_leads", "supported", "not_sure"],
+      lead_ownership_type: ["partner_own", "glintr_provided"],
       lesson_type: [
         "video",
         "text",
@@ -5865,6 +5916,7 @@ export const Constants = {
         "invalid",
         "duplicate",
         "refunded",
+        "no_answer",
       ],
       partner_notification_type: [
         "new_lead_assigned",
