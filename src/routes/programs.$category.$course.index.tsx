@@ -492,29 +492,40 @@ function CoursePage() {
 
       {/* ============ TOOLS ============ */}
       {c.tools.length > 0 ? (
-        <SectionBlock eyebrow="Toolkit" title="Tools You'll Work With">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {c.tools.map((t) => (
-              <div
-                key={t.name}
-                className="rounded-xl border border-border/60 bg-surface-1 p-5 flex items-center gap-4 hover:border-primary/50 transition-colors"
-              >
-                <span className="inline-flex size-11 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-accent/15 text-primary">
-                  {t.logo_url ? (
-                    <img src={t.logo_url} alt={t.name} className="size-8 object-contain" />
-                  ) : (
-                    <Wrench className="size-5" />
-                  )}
-                </span>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate">{t.name}</div>
-                  <div className="text-caption truncate">Industry tool</div>
+        <Section className="pt-14 pb-6 lg:pt-20 lg:pb-10">
+          <Container>
+            <div className="max-w-2xl mb-10">
+              <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                Toolkit
+              </span>
+              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+                Tools You'll Work With
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {c.tools.map((t) => (
+                <div
+                  key={t.name}
+                  className="rounded-xl border border-border/60 bg-surface-1 p-5 flex items-center gap-4 hover:border-primary/50 transition-colors"
+                >
+                  <span className="inline-flex size-11 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-accent/15 text-primary">
+                    {t.logo_url ? (
+                      <img src={t.logo_url} alt={t.name} className="size-8 object-contain" />
+                    ) : (
+                      <Wrench className="size-5" />
+                    )}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold truncate">{t.name}</div>
+                    <div className="text-caption truncate">Industry tool</div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </SectionBlock>
+              ))}
+            </div>
+          </Container>
+        </Section>
       ) : null}
+
 
       {/* ============ PROJECTS SLIDER (dark) ============ */}
       {c.projects.length > 0 ? (
