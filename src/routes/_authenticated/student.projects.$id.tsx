@@ -156,7 +156,7 @@ function ProjectDetail() {
               </Button>
             ) : sp.status === "completed" && t.portfolio_eligible ? (
               <Button
-                variant={sp.portfolio_added ? "outline" : "default"}
+                variant={sp.portfolio_added ? "outline" : "primary"}
                 onClick={() => portfolio.mutate(!sp.portfolio_added)}
                 disabled={portfolio.isPending}
               >
