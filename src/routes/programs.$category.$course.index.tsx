@@ -228,7 +228,7 @@ function CoursePage() {
   return (
     <PageShell>
       {/* ============ HERO ============ */}
-      <Section className="pt-10 pb-16 lg:pt-14 lg:pb-24 relative overflow-hidden">
+      <Section className="pt-8 pb-10 lg:pt-10 lg:pb-14 relative overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.04] via-transparent to-transparent"
