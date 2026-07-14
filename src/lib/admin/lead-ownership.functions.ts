@@ -79,7 +79,7 @@ export const listOwnershipReviews = createServerFn({ method: "GET" })
           s
             .from("lead_ownership_reviews")
             .select("id", { count: "exact", head: true })
-            .eq("status", st),
+            .eq("status", st as any),
         ),
       ),
     ]);
