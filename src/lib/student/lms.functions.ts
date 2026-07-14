@@ -847,10 +847,11 @@ export const getMyProgramDetails = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: course } = await context.supabase
       .from("courses")
-      .select("id, name, slug, description, short_description, thumbnail_url, level, duration, learning_mode, course_categories(name)")
+      .select("id, name, slug, short_description, thumbnail_url, level, duration, learning_mode, course_categories(name)")
       .eq("slug", data.slug)
       .maybeSingle();
     if (!course) throw new Error("Program not found");
+    const courseRow = course as any;
 
     const { data: enrollment } = await context.supabase
       .from("enrollments")
