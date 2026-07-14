@@ -275,7 +275,7 @@ function OverviewTab() {
           <p className="text-sm text-muted-foreground">The Sales Partner will lose access to this lead. Assignment history is preserved.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setUnassignPending(null)}>Cancel</Button>
-            <Button variant="destructive" disabled={unassignMutation.isPending} onClick={() => unassignMutation.mutate(unassignPending!)}>
+            <Button variant="danger" disabled={unassignMutation.isPending} onClick={() => unassignMutation.mutate(unassignPending!)}>
               {unassignMutation.isPending ? <Loader2 className="size-4 animate-spin"/> : null} Unassign
             </Button>
           </DialogFooter>
