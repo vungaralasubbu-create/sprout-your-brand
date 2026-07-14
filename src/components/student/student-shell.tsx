@@ -51,6 +51,14 @@ const MOBILE_NAV = [
 export function StudentShell() {
   const fetchCtx = useServerFn(getStudentContext);
   const { data: ctx } = useQuery({ queryKey: ["student-context"], queryFn: () => fetchCtx() });
+  const fetchBell = useServerFn(getNotificationBell);
+  const { data: bell } = useQuery({
+    queryKey: ["notif-bell"],
+    queryFn: () => fetchBell(),
+    refetchInterval: 60_000,
+    staleTime: 30_000,
+  });
+  const unread = bell?.unread ?? 0;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
 
@@ -58,9 +66,23 @@ export function StudentShell() {
     <div className="min-h-screen bg-[oklch(0.98_0.005_240)] text-foreground pb-16 lg:pb-0">
       <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b bg-white">
         <Link to="/" className="font-display text-lg font-semibold tracking-tight">glintr</Link>
-        <button className="p-2 rounded-md hover:bg-muted" onClick={() => setOpen((v) => !v)} aria-label="Toggle menu">
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <Link
+            to="/student/notifications"
+            className="relative p-2 rounded-md hover:bg-muted"
+            aria-label="Notifications"
+          >
+            <Bell className="size-5" />
+            {unread > 0 && (
+              <span className="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-medium flex items-center justify-center">
+                {unread > 9 ? "9+" : unread}
+              </span>
+            )}
+          </Link>
+          <button className="p-2 rounded-md hover:bg-muted" onClick={() => setOpen((v) => !v)} aria-label="Toggle menu">
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
 
       <div className="lg:grid lg:grid-cols-[240px_1fr]">
