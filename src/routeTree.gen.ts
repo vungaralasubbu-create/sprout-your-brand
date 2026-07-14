@@ -87,6 +87,7 @@ import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminAccountRouteImport } from './routes/_authenticated/admin.account'
 import { Route as AuthenticatedAdminAccessRestrictedRouteImport } from './routes/_authenticated/admin.access-restricted'
 import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/programs.$category.$course.index'
+import { Route as AuthenticatedStudentSupportIndexRouteImport } from './routes/_authenticated/student.support.index'
 import { Route as AuthenticatedStudentProjectsIndexRouteImport } from './routes/_authenticated/student.projects.index'
 import { Route as AuthenticatedStudentProgramsIndexRouteImport } from './routes/_authenticated/student.programs.index'
 import { Route as AuthenticatedStudentLiveSessionsIndexRouteImport } from './routes/_authenticated/student.live-sessions.index'
@@ -573,6 +574,12 @@ const ProgramsCategoryCourseIndexRoute =
     path: '/programs/$category/$course/',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedStudentSupportIndexRoute =
+  AuthenticatedStudentSupportIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedStudentSupportRoute,
+  } as any)
 const AuthenticatedStudentProjectsIndexRoute =
   AuthenticatedStudentProjectsIndexRouteImport.update({
     id: '/projects/',
@@ -875,7 +882,7 @@ export interface FileRoutesByFullPath {
   '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
-  '/student/support': typeof AuthenticatedStudentSupportRoute
+  '/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
@@ -912,6 +919,7 @@ export interface FileRoutesByFullPath {
   '/student/live-sessions/': typeof AuthenticatedStudentLiveSessionsIndexRoute
   '/student/programs/': typeof AuthenticatedStudentProgramsIndexRoute
   '/student/projects/': typeof AuthenticatedStudentProjectsIndexRoute
+  '/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -990,7 +998,6 @@ export interface FileRoutesByTo {
   '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
-  '/student/support': typeof AuthenticatedStudentSupportRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
@@ -1027,6 +1034,7 @@ export interface FileRoutesByTo {
   '/student/live-sessions': typeof AuthenticatedStudentLiveSessionsIndexRoute
   '/student/programs': typeof AuthenticatedStudentProgramsIndexRoute
   '/student/projects': typeof AuthenticatedStudentProjectsIndexRoute
+  '/student/support': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -1109,7 +1117,7 @@ export interface FileRoutesById {
   '/_authenticated/student/dashboard': typeof AuthenticatedStudentDashboardRoute
   '/_authenticated/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
-  '/_authenticated/student/support': typeof AuthenticatedStudentSupportRoute
+  '/_authenticated/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
@@ -1146,6 +1154,7 @@ export interface FileRoutesById {
   '/_authenticated/student/live-sessions/': typeof AuthenticatedStudentLiveSessionsIndexRoute
   '/_authenticated/student/programs/': typeof AuthenticatedStudentProgramsIndexRoute
   '/_authenticated/student/projects/': typeof AuthenticatedStudentProjectsIndexRoute
+  '/_authenticated/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -1265,6 +1274,7 @@ export interface FileRouteTypes {
     | '/student/live-sessions/'
     | '/student/programs/'
     | '/student/projects/'
+    | '/student/support/'
     | '/programs/$category/$course/'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -1343,7 +1353,6 @@ export interface FileRouteTypes {
     | '/student/dashboard'
     | '/student/mentor'
     | '/student/profile'
-    | '/student/support'
     | '/admin'
     | '/student'
     | '/programs/$category'
@@ -1380,6 +1389,7 @@ export interface FileRouteTypes {
     | '/student/live-sessions'
     | '/student/programs'
     | '/student/projects'
+    | '/student/support'
     | '/programs/$category/$course'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -1498,6 +1508,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/live-sessions/'
     | '/_authenticated/student/programs/'
     | '/_authenticated/student/projects/'
+    | '/_authenticated/student/support/'
     | '/programs/$category/$course/'
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
@@ -2074,6 +2085,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/student/support/': {
+      id: '/_authenticated/student/support/'
+      path: '/'
+      fullPath: '/student/support/'
+      preLoaderRoute: typeof AuthenticatedStudentSupportIndexRouteImport
+      parentRoute: typeof AuthenticatedStudentSupportRoute
+    }
     '/_authenticated/student/projects/': {
       id: '/_authenticated/student/projects/'
       path: '/projects'
@@ -2575,6 +2593,21 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
 const AuthenticatedPartnerRouteWithChildren =
   AuthenticatedPartnerRoute._addFileChildren(AuthenticatedPartnerRouteChildren)
 
+interface AuthenticatedStudentSupportRouteChildren {
+  AuthenticatedStudentSupportIndexRoute: typeof AuthenticatedStudentSupportIndexRoute
+}
+
+const AuthenticatedStudentSupportRouteChildren: AuthenticatedStudentSupportRouteChildren =
+  {
+    AuthenticatedStudentSupportIndexRoute:
+      AuthenticatedStudentSupportIndexRoute,
+  }
+
+const AuthenticatedStudentSupportRouteWithChildren =
+  AuthenticatedStudentSupportRoute._addFileChildren(
+    AuthenticatedStudentSupportRouteChildren,
+  )
+
 interface AuthenticatedStudentCareerInterviewIdRouteChildren {
   AuthenticatedStudentCareerInterviewIdReportRoute: typeof AuthenticatedStudentCareerInterviewIdReportRoute
 }
@@ -2630,7 +2663,7 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentDashboardRoute: typeof AuthenticatedStudentDashboardRoute
   AuthenticatedStudentMentorRoute: typeof AuthenticatedStudentMentorRoute
   AuthenticatedStudentProfileRoute: typeof AuthenticatedStudentProfileRoute
-  AuthenticatedStudentSupportRoute: typeof AuthenticatedStudentSupportRoute
+  AuthenticatedStudentSupportRoute: typeof AuthenticatedStudentSupportRouteWithChildren
   AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
   AuthenticatedStudentAssignmentsIdRoute: typeof AuthenticatedStudentAssignmentsIdRoute
   AuthenticatedStudentCareerInterviewRoute: typeof AuthenticatedStudentCareerInterviewRouteWithChildren
@@ -2656,7 +2689,8 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentDashboardRoute: AuthenticatedStudentDashboardRoute,
   AuthenticatedStudentMentorRoute: AuthenticatedStudentMentorRoute,
   AuthenticatedStudentProfileRoute: AuthenticatedStudentProfileRoute,
-  AuthenticatedStudentSupportRoute: AuthenticatedStudentSupportRoute,
+  AuthenticatedStudentSupportRoute:
+    AuthenticatedStudentSupportRouteWithChildren,
   AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
   AuthenticatedStudentAssignmentsIdRoute:
     AuthenticatedStudentAssignmentsIdRoute,

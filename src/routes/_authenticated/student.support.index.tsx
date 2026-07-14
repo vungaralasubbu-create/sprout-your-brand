@@ -23,7 +23,7 @@ import {
   listSupportTickets,
 } from "@/lib/student/support.functions";
 
-export const Route = createFileRoute("/_authenticated/student/support")({
+export const Route = createFileRoute("/_authenticated/student/support/")({
   component: SupportIndex,
 });
 
