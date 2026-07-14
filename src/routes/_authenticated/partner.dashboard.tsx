@@ -388,6 +388,7 @@ function NeedsAttention() {
   );
 }
 
+function KpiCard({
   icon: Icon,
   label,
   value,
