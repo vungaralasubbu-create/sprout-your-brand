@@ -36,7 +36,7 @@ export const getPartnerContext = createServerFn({ method: "GET" })
       unreadNotifications = count ?? 0;
     }
 
-    return { partner: partner ?? null, unreadNotifications };
+    return { partner: partner ?? null, unreadNotifications, employeeProfile };
   });
 
 /** KPI counts + today's follow-ups for /partner/dashboard. */
