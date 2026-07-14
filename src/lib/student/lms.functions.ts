@@ -999,7 +999,7 @@ export const recordProgramActivity = createServerFn({ method: "POST" })
       student_user_id: context.userId,
       course_id: data.courseId,
       activity_type: data.activity,
-      description: data.description ?? null,
+      description: data.description ?? data.activity,
       entity_id: data.entityId ?? null,
     });
     return { ok: true };
