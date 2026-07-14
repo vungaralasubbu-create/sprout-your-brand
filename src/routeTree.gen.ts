@@ -42,7 +42,6 @@ import { Route as AuthenticatedPartnerProgramsRouteImport } from './routes/_auth
 import { Route as AuthenticatedPartnerPaymentVerificationRouteImport } from './routes/_authenticated/partner.payment-verification'
 import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_authenticated/partner.payment-links'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
-import { Route as AuthenticatedPartnerEmploymentRouteImport } from './routes/_authenticated/partner.employment'
 import { Route as AuthenticatedPartnerEarningsStatementRouteImport } from './routes/_authenticated/partner.earnings-statement'
 import { Route as AuthenticatedPartnerEarningsRouteImport } from './routes/_authenticated/partner.earnings'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
@@ -75,6 +74,7 @@ import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
 import { Route as ProgramsCategoryCourseIndexRouteImport } from './routes/programs.$category.$course.index'
 import { Route as AuthenticatedStudentLearnIndexRouteImport } from './routes/_authenticated/student.learn.index'
+import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
 import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
@@ -264,12 +264,6 @@ const AuthenticatedPartnerOnboardingRoute =
   AuthenticatedPartnerOnboardingRouteImport.update({
     id: '/onboarding',
     path: '/onboarding',
-    getParentRoute: () => AuthenticatedPartnerRoute,
-  } as any)
-const AuthenticatedPartnerEmploymentRoute =
-  AuthenticatedPartnerEmploymentRouteImport.update({
-    id: '/employment',
-    path: '/employment',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerEarningsStatementRoute =
@@ -463,6 +457,12 @@ const AuthenticatedStudentLearnIndexRoute =
     path: '/learn/',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedPartnerEmploymentIndexRoute =
+  AuthenticatedPartnerEmploymentIndexRouteImport.update({
+    id: '/employment/',
+    path: '/employment/',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedAdminPayoutsIndexRoute =
   AuthenticatedAdminPayoutsIndexRouteImport.update({
     id: '/payouts/',
@@ -531,9 +531,9 @@ const AuthenticatedAdminCoursesIdRoute =
   } as any)
 const AuthenticatedPartnerEmploymentSalarySlipsIdRoute =
   AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport.update({
-    id: '/salary-slips/$id',
-    path: '/salary-slips/$id',
-    getParentRoute: () => AuthenticatedPartnerEmploymentRoute,
+    id: '/employment/salary-slips/$id',
+    path: '/employment/salary-slips/$id',
+    getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -584,7 +584,6 @@ export interface FileRoutesByFullPath {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
-  '/partner/employment': typeof AuthenticatedPartnerEmploymentRouteWithChildren
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
@@ -611,6 +610,7 @@ export interface FileRoutesByFullPath {
   '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
@@ -661,7 +661,6 @@ export interface FileRoutesByTo {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
-  '/partner/employment': typeof AuthenticatedPartnerEmploymentRouteWithChildren
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
@@ -688,6 +687,7 @@ export interface FileRoutesByTo {
   '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/learn': typeof AuthenticatedStudentLearnIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
@@ -742,7 +742,6 @@ export interface FileRoutesById {
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/_authenticated/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
-  '/_authenticated/partner/employment': typeof AuthenticatedPartnerEmploymentRouteWithChildren
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/_authenticated/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
@@ -769,6 +768,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/_authenticated/student/learn/': typeof AuthenticatedStudentLearnIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
@@ -823,7 +823,6 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
-    | '/partner/employment'
     | '/partner/onboarding'
     | '/partner/payment-links'
     | '/partner/payment-verification'
@@ -850,6 +849,7 @@ export interface FileRouteTypes {
     | '/admin/employees/'
     | '/admin/partners/'
     | '/admin/payouts/'
+    | '/partner/employment/'
     | '/student/learn/'
     | '/programs/$category/$course/'
     | '/partner/employment/salary-slips/$id'
@@ -900,7 +900,6 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
-    | '/partner/employment'
     | '/partner/onboarding'
     | '/partner/payment-links'
     | '/partner/payment-verification'
@@ -927,6 +926,7 @@ export interface FileRouteTypes {
     | '/admin/employees'
     | '/admin/partners'
     | '/admin/payouts'
+    | '/partner/employment'
     | '/student/learn'
     | '/programs/$category/$course'
     | '/partner/employment/salary-slips/$id'
@@ -980,7 +980,6 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/earnings'
     | '/_authenticated/partner/earnings-statement'
-    | '/_authenticated/partner/employment'
     | '/_authenticated/partner/onboarding'
     | '/_authenticated/partner/payment-links'
     | '/_authenticated/partner/payment-verification'
@@ -1007,6 +1006,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/employees/'
     | '/_authenticated/admin/partners/'
     | '/_authenticated/admin/payouts/'
+    | '/_authenticated/partner/employment/'
     | '/_authenticated/student/learn/'
     | '/programs/$category/$course/'
     | '/_authenticated/partner/employment/salary-slips/$id'
@@ -1265,13 +1265,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerOnboardingRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
-    '/_authenticated/partner/employment': {
-      id: '/_authenticated/partner/employment'
-      path: '/employment'
-      fullPath: '/partner/employment'
-      preLoaderRoute: typeof AuthenticatedPartnerEmploymentRouteImport
-      parentRoute: typeof AuthenticatedPartnerRoute
-    }
     '/_authenticated/partner/earnings-statement': {
       id: '/_authenticated/partner/earnings-statement'
       path: '/earnings-statement'
@@ -1496,6 +1489,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentLearnIndexRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/partner/employment/': {
+      id: '/_authenticated/partner/employment/'
+      path: '/employment'
+      fullPath: '/partner/employment/'
+      preLoaderRoute: typeof AuthenticatedPartnerEmploymentIndexRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/admin/payouts/': {
       id: '/_authenticated/admin/payouts/'
       path: '/payouts'
@@ -1575,10 +1575,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/partner/employment/salary-slips/$id': {
       id: '/_authenticated/partner/employment/salary-slips/$id'
-      path: '/salary-slips/$id'
+      path: '/employment/salary-slips/$id'
       fullPath: '/partner/employment/salary-slips/$id'
       preLoaderRoute: typeof AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport
-      parentRoute: typeof AuthenticatedPartnerEmploymentRoute
+      parentRoute: typeof AuthenticatedPartnerRoute
     }
   }
 }
@@ -1671,21 +1671,6 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
 const AuthenticatedBrandRouteWithChildren =
   AuthenticatedBrandRoute._addFileChildren(AuthenticatedBrandRouteChildren)
 
-interface AuthenticatedPartnerEmploymentRouteChildren {
-  AuthenticatedPartnerEmploymentSalarySlipsIdRoute: typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
-}
-
-const AuthenticatedPartnerEmploymentRouteChildren: AuthenticatedPartnerEmploymentRouteChildren =
-  {
-    AuthenticatedPartnerEmploymentSalarySlipsIdRoute:
-      AuthenticatedPartnerEmploymentSalarySlipsIdRoute,
-  }
-
-const AuthenticatedPartnerEmploymentRouteWithChildren =
-  AuthenticatedPartnerEmploymentRoute._addFileChildren(
-    AuthenticatedPartnerEmploymentRouteChildren,
-  )
-
 interface AuthenticatedPartnerProgramsRouteChildren {
   AuthenticatedPartnerProgramsSlugRoute: typeof AuthenticatedPartnerProgramsSlugRoute
 }
@@ -1710,12 +1695,13 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
   AuthenticatedPartnerEarningsRoute: typeof AuthenticatedPartnerEarningsRoute
   AuthenticatedPartnerEarningsStatementRoute: typeof AuthenticatedPartnerEarningsStatementRoute
-  AuthenticatedPartnerEmploymentRoute: typeof AuthenticatedPartnerEmploymentRouteWithChildren
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
   AuthenticatedPartnerPaymentLinksRoute: typeof AuthenticatedPartnerPaymentLinksRoute
   AuthenticatedPartnerPaymentVerificationRoute: typeof AuthenticatedPartnerPaymentVerificationRoute
   AuthenticatedPartnerProgramsRoute: typeof AuthenticatedPartnerProgramsRouteWithChildren
   AuthenticatedPartnerReferralBonusRoute: typeof AuthenticatedPartnerReferralBonusRoute
+  AuthenticatedPartnerEmploymentIndexRoute: typeof AuthenticatedPartnerEmploymentIndexRoute
+  AuthenticatedPartnerEmploymentSalarySlipsIdRoute: typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
 }
 
 const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
@@ -1728,8 +1714,6 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerEarningsRoute: AuthenticatedPartnerEarningsRoute,
   AuthenticatedPartnerEarningsStatementRoute:
     AuthenticatedPartnerEarningsStatementRoute,
-  AuthenticatedPartnerEmploymentRoute:
-    AuthenticatedPartnerEmploymentRouteWithChildren,
   AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
   AuthenticatedPartnerPaymentLinksRoute: AuthenticatedPartnerPaymentLinksRoute,
   AuthenticatedPartnerPaymentVerificationRoute:
@@ -1738,6 +1722,10 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
     AuthenticatedPartnerProgramsRouteWithChildren,
   AuthenticatedPartnerReferralBonusRoute:
     AuthenticatedPartnerReferralBonusRoute,
+  AuthenticatedPartnerEmploymentIndexRoute:
+    AuthenticatedPartnerEmploymentIndexRoute,
+  AuthenticatedPartnerEmploymentSalarySlipsIdRoute:
+    AuthenticatedPartnerEmploymentSalarySlipsIdRoute,
 }
 
 const AuthenticatedPartnerRouteWithChildren =

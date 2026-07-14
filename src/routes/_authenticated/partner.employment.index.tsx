@@ -36,7 +36,7 @@ import {
   submitPfPreference,
 } from "@/lib/partner/employment.functions";
 
-export const Route = createFileRoute("/_authenticated/partner/employment")({
+export const Route = createFileRoute("/_authenticated/partner/employment/")({
   loader: async ({ context }) => {
     // best-effort: if not FT employee, redirect to dashboard
     return null;
