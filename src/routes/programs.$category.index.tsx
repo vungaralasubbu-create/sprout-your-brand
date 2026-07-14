@@ -133,8 +133,9 @@ function CategoryPage() {
                   <div className="mt-auto pt-4 flex items-end justify-between border-t border-border">
                     <div>
                       <div className="text-caption">Starts from</div>
-                      <div className="text-mono font-semibold">{formatPrice(c.offer_price ?? c.base_price, c.currency)}</div>
+                      <div className="text-mono font-semibold">₹3,999</div>
                     </div>
+
                     <span className="text-caption inline-flex items-center gap-1 group-hover:text-primary">View <ArrowRight className="size-3.5" /></span>
                   </div>
                 </Link>
