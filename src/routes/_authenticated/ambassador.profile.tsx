@@ -477,10 +477,10 @@ function SocialsSection({ profile }: any) {
     <Card className="p-6">
       <h3 className="font-semibold mb-4">Social Links</h3>
       <div className="space-y-3">
-        <SocialInput icon={Linkedin} label="LinkedIn" placeholder="https://linkedin.com/in/…" value={f.linkedin_url} onChange={(v) => setF({ ...f, linkedin_url: v })} />
-        <SocialInput icon={Instagram} label="Instagram" placeholder="@username or full URL" value={f.instagram_url} onChange={(v) => setF({ ...f, instagram_url: v })} />
-        <SocialInput icon={Youtube} label="YouTube" placeholder="https://youtube.com/@…" value={f.youtube_url} onChange={(v) => setF({ ...f, youtube_url: v })} />
-        <SocialInput icon={Globe} label="Other" placeholder="https://" value={f.other_profile_url} onChange={(v) => setF({ ...f, other_profile_url: v })} />
+        <SocialInput icon={Linkedin} label="LinkedIn" placeholder="https://linkedin.com/in/…" value={f.linkedin_url} onChange={(v: string) => setF({ ...f, linkedin_url: v })} />
+        <SocialInput icon={Instagram} label="Instagram" placeholder="@username or full URL" value={f.instagram_url} onChange={(v: string) => setF({ ...f, instagram_url: v })} />
+        <SocialInput icon={Youtube} label="YouTube" placeholder="https://youtube.com/@…" value={f.youtube_url} onChange={(v: string) => setF({ ...f, youtube_url: v })} />
+        <SocialInput icon={Globe} label="Other" placeholder="https://" value={f.other_profile_url} onChange={(v: string) => setF({ ...f, other_profile_url: v })} />
       </div>
       <div className="mt-5">
         <Button onClick={() => m.mutate(f)} disabled={m.isPending}>
