@@ -58,9 +58,8 @@ export function PartnerShell() {
 
   const isActive = (to: string, label: string) => {
     if (label === "Overview") return pathname === "/partner/dashboard";
-    // Every other nav item currently routes to /partner/coming-soon; match by
-    // location hash (or fallback) so only the clicked item highlights.
-    return false;
+    if (to === "/partner/coming-soon") return false;
+    return pathname === to || pathname.startsWith(to + "/");
   };
 
   return (
