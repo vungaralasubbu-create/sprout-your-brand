@@ -59,7 +59,7 @@ export const requestLoginOtp = createServerFn({ method: "POST" })
 
     const { sendSms } = await import("@/lib/sms/pearlsms.server");
     const message = `Your OTP is ${code}. Use this to verify your mobile number on SPPLFW. Valid for 5 minutes.`;
-    const smsRes = await sendSms({ to: mobile, message, type: "TRANS" });
+    const smsRes = await sendSms({ to: mobileStr, message, type: "TRANS" });
     if (!smsRes.ok) {
       console.error("[otp] sms send failed", smsRes.error);
       return { ok: false as const, error: "Could not send SMS. Please try again." };
