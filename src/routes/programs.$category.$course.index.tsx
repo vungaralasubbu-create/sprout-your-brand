@@ -725,69 +725,12 @@ function CoursePage() {
       ) : null}
 
       {/* ============ PRICING ============ */}
-      {price != null ? (
-        <Section className="py-14 lg:py-20">
-          <Container>
-            <div className="max-w-2xl mx-auto text-center mb-8">
-              <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                Program Access
-              </span>
-              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-                Choose Your Learning Path.
-              </h2>
-            </div>
-            <div className="max-w-lg mx-auto rounded-3xl border border-border bg-surface-1 p-8 shadow-xl relative overflow-hidden">
-              <div
-                aria-hidden
-                className="absolute -top-24 -right-24 size-64 rounded-full bg-primary/10 blur-3xl"
-              />
-              <div className="relative">
-                <div className="flex items-center gap-2">
-                  <Badge variant="primary">Program Fee</Badge>
-                  {c.emi_available ? <Badge variant="outline">EMI available</Badge> : null}
-                </div>
-                <div className="mt-4 flex items-baseline gap-3">
-                  <span className="text-display-md font-display font-semibold">
-                    {formatPrice(price, c.currency ?? "INR")}
-                  </span>
-                  {c.offer_price && c.base_price && c.offer_price < c.base_price ? (
-                    <span className="text-lg text-muted-foreground line-through">
-                      {formatPrice(c.base_price, c.currency ?? "INR")}
-                    </span>
-                  ) : null}
-                </div>
-                {c.emi_available && c.emi_starting ? (
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    EMI starting {formatPrice(c.emi_starting, c.currency ?? "INR")}/mo
-                  </p>
-                ) : null}
-                {c.pricing_notes ? (
-                  <p className="mt-3 text-sm text-muted-foreground">{c.pricing_notes}</p>
-                ) : null}
+      <CoursePricingPlans
+        applyTo={applyTo}
+        onApplyClick={onApplyClick}
+        counsellorCtx={counsellorCtx}
+      />
 
-                <ul className="mt-6 space-y-2.5 border-t border-border/60 pt-6">
-                  {buildIncludedFeatures(c).map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm">
-                      <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-7 flex flex-col gap-2.5">
-                  <Button asChild size="lg" variant="gradient">
-                    <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
-                      Apply Now
-                      <ArrowRight className="size-4" />
-                    </Link>
-                  </Button>
-                  <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
-                </div>
-              </div>
-            </div>
-          </Container>
-        </Section>
-      ) : null}
 
       {/* ============ FAQ ============ */}
       {c.faqs.length > 0 ? (
