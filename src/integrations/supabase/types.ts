@@ -442,6 +442,170 @@ export type Database = {
           },
         ]
       }
+      ambassador_badge_achievements: {
+        Row: {
+          achieved_at: string
+          ambassador_id: string
+          badge_id: string
+          created_at: string
+          id: string
+          metadata: Json
+          related_entity_id: string | null
+          related_entity_type: string | null
+          status: string
+        }
+        Insert: {
+          achieved_at?: string
+          ambassador_id: string
+          badge_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string
+        }
+        Update: {
+          achieved_at?: string
+          ambassador_id?: string
+          badge_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_badge_achievements_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_badge_achievements_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_badges: {
+        Row: {
+          badge_key: string
+          category: string
+          created_at: string
+          description: string | null
+          display_order: number
+          gradient_from: string | null
+          gradient_to: string | null
+          icon: string | null
+          id: string
+          is_published: boolean
+          name: string
+          rule_threshold: number
+          rule_type: string
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          badge_key: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          gradient_from?: string | null
+          gradient_to?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean
+          name: string
+          rule_threshold?: number
+          rule_type: string
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          badge_key?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          gradient_from?: string | null
+          gradient_to?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean
+          name?: string
+          rule_threshold?: number
+          rule_type?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
+      ambassador_college_change_requests: {
+        Row: {
+          admin_note: string | null
+          ambassador_id: string
+          cancelled_at: string | null
+          change_reason: string | null
+          created_at: string
+          current_college_name: string
+          id: string
+          requested_city: string | null
+          requested_college_name: string
+          requested_state: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_note?: string | null
+          ambassador_id: string
+          cancelled_at?: string | null
+          change_reason?: string | null
+          created_at?: string
+          current_college_name: string
+          id?: string
+          requested_city?: string | null
+          requested_college_name: string
+          requested_state?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_note?: string | null
+          ambassador_id?: string
+          cancelled_at?: string | null
+          change_reason?: string | null
+          created_at?: string
+          current_college_name?: string
+          id?: string
+          requested_city?: string | null
+          requested_college_name?: string
+          requested_state?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_college_change_requests_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_commission_rules: {
         Row: {
           base_definition: string
@@ -660,6 +824,236 @@ export type Database = {
             columns: ["enrollment_id"]
             isOneToOne: false
             referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_institution_suggestions: {
+        Row: {
+          admin_note: string | null
+          ambassador_id: string
+          city: string | null
+          country: string | null
+          created_at: string
+          id: string
+          official_website: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          state: string | null
+          status: string
+          suggested_name: string
+          updated_at: string
+        }
+        Insert: {
+          admin_note?: string | null
+          ambassador_id: string
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          official_website?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string | null
+          status?: string
+          suggested_name: string
+          updated_at?: string
+        }
+        Update: {
+          admin_note?: string | null
+          ambassador_id?: string
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          official_website?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string | null
+          status?: string
+          suggested_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_institution_suggestions_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_level_assignments: {
+        Row: {
+          achieved_at: string
+          ambassador_id: string
+          created_at: string
+          evaluation_reference: string | null
+          id: string
+          level_id: string
+          previous_level_id: string | null
+          status: string
+        }
+        Insert: {
+          achieved_at?: string
+          ambassador_id: string
+          created_at?: string
+          evaluation_reference?: string | null
+          id?: string
+          level_id: string
+          previous_level_id?: string | null
+          status?: string
+        }
+        Update: {
+          achieved_at?: string
+          ambassador_id?: string
+          created_at?: string
+          evaluation_reference?: string | null
+          id?: string
+          level_id?: string
+          previous_level_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_level_assignments_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_level_assignments_level_id_fkey"
+            columns: ["level_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_level_assignments_previous_level_id_fkey"
+            columns: ["previous_level_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_levels: {
+        Row: {
+          created_at: string
+          description: string | null
+          gradient_from: string | null
+          gradient_to: string | null
+          icon: string | null
+          id: string
+          is_published: boolean
+          level_key: string
+          level_order: number
+          min_campaign_milestones: number
+          min_commission_earned: number
+          min_conversion_rate: number
+          min_profile_completion: number
+          min_referral_leads: number
+          min_verified_enrollments: number
+          name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          gradient_from?: string | null
+          gradient_to?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean
+          level_key: string
+          level_order: number
+          min_campaign_milestones?: number
+          min_commission_earned?: number
+          min_conversion_rate?: number
+          min_profile_completion?: number
+          min_referral_leads?: number
+          min_verified_enrollments?: number
+          name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          gradient_from?: string | null
+          gradient_to?: string | null
+          icon?: string | null
+          id?: string
+          is_published?: boolean
+          level_key?: string
+          level_order?: number
+          min_campaign_milestones?: number
+          min_commission_earned?: number
+          min_conversion_rate?: number
+          min_profile_completion?: number
+          min_referral_leads?: number
+          min_verified_enrollments?: number
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ambassador_notification_preferences: {
+        Row: {
+          ambassador_id: string
+          campaign_updates: boolean
+          channel_email: boolean
+          channel_in_app: boolean
+          commission_updates: boolean
+          created_at: string
+          enrollment_updates: boolean
+          id: string
+          level_badge_updates: boolean
+          marketing_updates: boolean
+          payout_updates: boolean
+          referral_updates: boolean
+          updated_at: string
+        }
+        Insert: {
+          ambassador_id: string
+          campaign_updates?: boolean
+          channel_email?: boolean
+          channel_in_app?: boolean
+          commission_updates?: boolean
+          created_at?: string
+          enrollment_updates?: boolean
+          id?: string
+          level_badge_updates?: boolean
+          marketing_updates?: boolean
+          payout_updates?: boolean
+          referral_updates?: boolean
+          updated_at?: string
+        }
+        Update: {
+          ambassador_id?: string
+          campaign_updates?: boolean
+          channel_email?: boolean
+          channel_in_app?: boolean
+          commission_updates?: boolean
+          created_at?: string
+          enrollment_updates?: boolean
+          id?: string
+          level_badge_updates?: boolean
+          marketing_updates?: boolean
+          payout_updates?: boolean
+          referral_updates?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_notification_preferences_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: true
+            referencedRelation: "campus_ambassador_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1054,6 +1448,41 @@ export type Database = {
             columns: ["payout_profile_version_id"]
             isOneToOne: false
             referencedRelation: "ambassador_payout_profile_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_profile_activity: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          description: string | null
+          event_type: string
+          id: string
+          metadata: Json
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          description?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_profile_activity_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -2419,19 +2848,35 @@ export type Database = {
           ambassador_code: string | null
           application_id: string | null
           approved_at: string
+          bio: string | null
           campus_city: string
+          city: string | null
           college_name: string
           commission_ack_at: string | null
           commission_ack_version: string | null
           commission_rule_id: string | null
+          country: string | null
           created_at: string
+          current_level_id: string | null
           current_year_of_study: string
           degree_course: string
+          display_name: string | null
           email: string
           expected_graduation_year: number | null
+          first_name: string | null
           full_name: string
           id: string
+          instagram_url: string | null
+          last_name: string | null
+          leaderboard_display_name: string | null
+          leaderboard_show_college: boolean
+          leaderboard_show_first_name: boolean
+          leaderboard_show_photo: boolean
+          linkedin_url: string | null
           mobile: string
+          other_profile_url: string | null
+          profile_completion_percentage: number
+          profile_photo_url: string | null
           referral_code: string | null
           referral_link: string | null
           specialisation: string | null
@@ -2439,24 +2884,41 @@ export type Database = {
           status: Database["public"]["Enums"]["ca_ambassador_status"]
           updated_at: string
           user_id: string
+          youtube_url: string | null
         }
         Insert: {
           ambassador_code?: string | null
           application_id?: string | null
           approved_at?: string
+          bio?: string | null
           campus_city: string
+          city?: string | null
           college_name: string
           commission_ack_at?: string | null
           commission_ack_version?: string | null
           commission_rule_id?: string | null
+          country?: string | null
           created_at?: string
+          current_level_id?: string | null
           current_year_of_study: string
           degree_course: string
+          display_name?: string | null
           email: string
           expected_graduation_year?: number | null
+          first_name?: string | null
           full_name: string
           id?: string
+          instagram_url?: string | null
+          last_name?: string | null
+          leaderboard_display_name?: string | null
+          leaderboard_show_college?: boolean
+          leaderboard_show_first_name?: boolean
+          leaderboard_show_photo?: boolean
+          linkedin_url?: string | null
           mobile: string
+          other_profile_url?: string | null
+          profile_completion_percentage?: number
+          profile_photo_url?: string | null
           referral_code?: string | null
           referral_link?: string | null
           specialisation?: string | null
@@ -2464,24 +2926,41 @@ export type Database = {
           status?: Database["public"]["Enums"]["ca_ambassador_status"]
           updated_at?: string
           user_id: string
+          youtube_url?: string | null
         }
         Update: {
           ambassador_code?: string | null
           application_id?: string | null
           approved_at?: string
+          bio?: string | null
           campus_city?: string
+          city?: string | null
           college_name?: string
           commission_ack_at?: string | null
           commission_ack_version?: string | null
           commission_rule_id?: string | null
+          country?: string | null
           created_at?: string
+          current_level_id?: string | null
           current_year_of_study?: string
           degree_course?: string
+          display_name?: string | null
           email?: string
           expected_graduation_year?: number | null
+          first_name?: string | null
           full_name?: string
           id?: string
+          instagram_url?: string | null
+          last_name?: string | null
+          leaderboard_display_name?: string | null
+          leaderboard_show_college?: boolean
+          leaderboard_show_first_name?: boolean
+          leaderboard_show_photo?: boolean
+          linkedin_url?: string | null
           mobile?: string
+          other_profile_url?: string | null
+          profile_completion_percentage?: number
+          profile_photo_url?: string | null
           referral_code?: string | null
           referral_link?: string | null
           specialisation?: string | null
@@ -2489,6 +2968,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["ca_ambassador_status"]
           updated_at?: string
           user_id?: string
+          youtube_url?: string | null
         }
         Relationships: [
           {
@@ -9726,6 +10206,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      evaluate_ambassador_badges: {
+        Args: { _ambassador_id: string }
+        Returns: number
+      }
+      evaluate_ambassador_level: {
+        Args: { _ambassador_id: string }
+        Returns: string
+      }
       generate_employee_code: { Args: never; Returns: string }
       get_admin_role: {
         Args: { _user_id: string }
