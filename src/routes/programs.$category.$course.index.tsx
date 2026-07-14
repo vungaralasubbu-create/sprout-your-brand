@@ -783,28 +783,41 @@ function CoursePage() {
       ) : null}
 
       {/* ============ FINAL CTA ============ */}
-      <Section className="py-14 lg:py-20 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent">
+      <Section className="relative overflow-hidden py-16 lg:py-24">
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.32_0.14_255),oklch(0.48_0.16_220),oklch(0.6_0.14_195))] bg-[length:200%_200%] animate-[gradient-shift_18s_ease-in-out_infinite]"
+        />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-black/10" />
         <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-              Ready To Build Skills That Move You Forward?
-            </h2>
-            <p className="mt-5 text-body-lg text-muted-foreground">
-              Take the next step in {c.name} with mentorship, projects, and career support built
-              into the program.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button asChild size="lg" variant="gradient">
-                <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
-                  Apply Now
-                  <ArrowRight className="size-4" />
-                </Link>
-              </Button>
-              <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
+          <Reveal>
+            <div className="max-w-3xl mx-auto text-center text-white">
+              <h2 className="text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+                Ready To Start Building Your Skills?
+              </h2>
+              <p className="mt-5 text-body-lg text-white/90">
+                Take the next step in {c.name} with mentorship, projects, and career support built
+                into the program.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">
+                  <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
+                    Apply Now
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <CounsellorForm
+                  size="lg"
+                  variant="outline"
+                  context={counsellorCtx}
+                  className="border-white/40 text-white hover:bg-white/10 hover:text-white"
+                />
+              </div>
             </div>
-          </div>
+          </Reveal>
         </Container>
       </Section>
+
 
       {/* ============ STICKY BARS ============ */}
       {/* Desktop */}
