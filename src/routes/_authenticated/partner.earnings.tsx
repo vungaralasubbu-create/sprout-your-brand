@@ -43,7 +43,7 @@ function EarningsPage() {
   });
 
   return (
-    <PartnerShell>
+    
       <div className="px-4 lg:px-8 py-6 lg:py-8 space-y-6">
         <header>
           <h1 className="font-display text-2xl font-semibold tracking-tight">
@@ -142,11 +142,11 @@ function EarningsPage() {
                       <Td>{formatINR(r.sale_amount)}</Td>
                       <Td>
                         {r.lead_type === "own" ? (
-                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
+                          <Badge variant="success" className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
                             Own Lead
                           </Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-sky-100 text-sky-800 hover:bg-sky-100">
+                          <Badge variant="info" className="bg-sky-100 text-sky-800 hover:bg-sky-100">
                             Glintr Provided
                           </Badge>
                         )}
@@ -235,7 +235,7 @@ function EarningsPage() {
           </Card>
         ) : null}
       </div>
-    </PartnerShell>
+    
   );
 }
 
