@@ -48,8 +48,9 @@ function Page() {
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
   useEffect(() => {
     if (data?.modules?.length) {
-      const currentIdx = data.modules.findIndex((m: any) => m.totalLessons > 0 && m.completedLessons < m.totalLessons);
+      const currentIdx = data.modules.findIndex((m: any) => m.status === "in_progress" || m.status === "available");
       const target = currentIdx >= 0 ? data.modules[currentIdx] : data.modules[0];
+
       if (target) setOpenIds(new Set([target.id]));
     }
   }, [data?.program?.id]);
