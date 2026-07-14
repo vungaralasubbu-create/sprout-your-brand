@@ -138,7 +138,7 @@ function PartnerMasterProfile() {
                 <Badge variant="outline" className="capitalize">{(p.work_model ?? "").replace(/_/g, " ")}</Badge>
                 <Badge variant="outline" className="capitalize">{(p.brand_selling_model ?? "no brand").replace(/_/g, " ")}</Badge>
                 {data.brands.active && (
-                  <Badge variant="outline" className={data.brands.active.status === "approved" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-800 border-amber-200"}>
+                  <Badge variant="outline" className={data.brands.active.status === "verified" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-800 border-amber-200"}>
                     Brand: {data.brands.active.status}
                   </Badge>
                 )}
