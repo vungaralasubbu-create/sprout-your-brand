@@ -78,7 +78,8 @@ const NAV: NavGroup[] = [
   {
     label: "Sales Operations",
     items: [
-      { to: "/admin/leads", label: "Leads", icon: Target },
+      { to: "/admin/lead-management", label: "Lead Management", icon: Target },
+      { to: "/admin/leads", label: "All Leads", icon: Target },
       { to: "/admin/assigned-leads", label: "Assigned Leads", icon: Handshake },
       { to: "/admin/attribution-reviews", label: "Attribution Reviews", icon: Scale },
     ],

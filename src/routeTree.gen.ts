@@ -65,6 +65,7 @@ import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
+import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
@@ -403,6 +404,12 @@ const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminLeadManagementRoute =
+  AuthenticatedAdminLeadManagementRouteImport.update({
+    id: '/lead-management',
+    path: '/lead-management',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminEmploymentSettingsRoute =
   AuthenticatedAdminEmploymentSettingsRouteImport.update({
     id: '/employment-settings',
@@ -561,6 +568,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -638,6 +646,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -719,6 +728,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -800,6 +810,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/lead-management'
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -877,6 +888,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/lead-management'
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -957,6 +969,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
+    | '/_authenticated/admin/lead-management'
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
@@ -1426,6 +1439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/lead-management': {
+      id: '/_authenticated/admin/lead-management'
+      path: '/lead-management'
+      fullPath: '/admin/lead-management'
+      preLoaderRoute: typeof AuthenticatedAdminLeadManagementRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/employment-settings': {
       id: '/_authenticated/admin/employment-settings'
       path: '/employment-settings'
@@ -1591,6 +1611,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
+  AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -1626,6 +1647,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
+  AuthenticatedAdminLeadManagementRoute: AuthenticatedAdminLeadManagementRoute,
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
