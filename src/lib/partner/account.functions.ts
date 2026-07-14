@@ -156,7 +156,7 @@ export const savePayoutDetails = createServerFn({ method: "POST" })
 
     const { error } = await supabase
       .from("partner_payout_details")
-      .upsert(patch, { onConflict: "partner_id" });
+      .upsert(patch as never, { onConflict: "partner_id" });
     if (error) throw new Error(error.message);
 
     // Mirror last4/bank name to partners for quick display + payout_profile_status flag.
