@@ -1,9 +1,9 @@
 import { createFileRoute, Outlet, Link, useLocation, useNavigate, redirect } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
 import {
-  LayoutDashboard, ShieldCheck, FolderTree, GraduationCap, BookOpen, FileText, Users, UserCheck,
-  Shield, Layers, Target, Handshake, Scale, Wallet, RefreshCw, Building2, Rocket, ClipboardList,
-  Activity, FileSignature, Bell, Settings, History, Menu, X, LogOut, Search, UserCog,
+  LayoutDashboard, Activity, Users, UserCheck, Target, Scale, ShieldCheck, FileSignature, Wallet,
+  Handshake, Building2, Bell, Shield, GraduationCap, FolderTree, BookOpen, ClipboardList,
+  History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,92 +23,78 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminShell,
 });
 
-type NavItem = {
-  to: string;
-  label: string;
-  icon: typeof LayoutDashboard;
-  perms?: string[]; // any-of permissions required to show
-};
-type NavGroup = { label: string | null; items: NavItem[] };
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; perms?: string[] };
+type NavGroup = { key: string; label: string | null; items: NavItem[]; collapsible?: boolean };
 
 const NAV: NavGroup[] = [
   {
-    label: null,
+    key: "overview",
+    label: "Overview",
     items: [
       { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { to: "/admin/sales-command", label: "Sales Command Center", icon: Activity, perms: ["sales_command.view"] },
     ],
   },
   {
-    label: "Program Management",
+    key: "sales",
+    label: "Sales",
+    collapsible: true,
     items: [
-      { to: "/admin/categories", label: "Categories", icon: FolderTree, perms: ["programs.view", "programs.manage"] },
-      { to: "/admin/courses", label: "Courses", icon: GraduationCap, perms: ["programs.view", "programs.manage"] },
-      { to: "/admin/curriculum", label: "Curriculum", icon: BookOpen, perms: ["programs.view", "programs.manage"] },
-      { to: "/admin/program-sales-content", label: "Program Sales Content", icon: Target, perms: ["programs.view", "programs.manage"] },
-      { to: "/admin/applications", label: "Applications", icon: FileText, perms: ["programs.view", "programs.manage"] },
-    ],
-  },
-  {
-    label: "Partner Management",
-    items: [
-      { to: "/admin/partners", label: "Partners", icon: Users, perms: ["sales_partners.view"] },
+      { to: "/admin/partners", label: "Sales Partners", icon: Users, perms: ["sales_partners.view"] },
       { to: "/admin/partner-applications", label: "Partner Applications", icon: UserCheck, perms: ["sales_partners.view"] },
-      { to: "/admin/model-approvals", label: "Model Approvals", icon: Shield, perms: ["sales_partners.manage"] },
-      { to: "/admin/partner-programs", label: "Partner Programs", icon: Layers, perms: ["sales_partners.view"] },
-      { to: "/admin/partner-reviews", label: "Partner Reviews", icon: UserCheck, perms: ["sales_partners.view"] },
+      { to: "/admin/lead-management", label: "Lead Management", icon: Target, perms: ["leads.view"] },
+      { to: "/admin/lead-ownership", label: "Lead Ownership Review", icon: Scale, perms: ["lead_ownership.view"] },
+      { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck, perms: ["payments.view"] },
+      { to: "/admin/payment-links", label: "Payment Links", icon: FileSignature, perms: ["payment_links.view", "payment_links.manage"] },
+      { to: "/admin/partner-payouts", label: "Partner Payouts", icon: Wallet, perms: ["payouts.view"] },
     ],
   },
   {
-    label: "Sales Operations",
+    key: "operations",
+    label: "Operations",
+    collapsible: true,
     items: [
-      { to: "/admin/lead-management", label: "Lead Management", icon: Target, perms: ["leads.view"] },
-      { to: "/admin/lead-monitoring", label: "Lead Work Monitoring", icon: Activity, perms: ["leads.view"] },
-      { to: "/admin/leads", label: "All Leads", icon: Target, perms: ["leads.view"] },
-      { to: "/admin/assigned-leads", label: "Assigned Leads", icon: Handshake, perms: ["leads.view"] },
-      { to: "/admin/attribution-reviews", label: "Attribution Reviews", icon: Scale, perms: ["lead_ownership.view"] },
-      { to: "/admin/lead-ownership", label: "Ownership Reviews", icon: Scale, perms: ["lead_ownership.view"] },
+      { to: "/admin/referral-management", label: "Referral Management", icon: Handshake, perms: ["referrals.view"] },
+      { to: "/admin/partner-brands", label: "Brand Management", icon: Building2, perms: ["brands.view"] },
+      { to: "/admin/support", label: "Support Tickets", icon: Bell, perms: ["support.view"] },
       { to: "/admin/risk-review", label: "Risk Review", icon: Shield, perms: ["risk_review.view"] },
     ],
   },
   {
-    label: "Finance",
+    key: "programs",
+    label: "Programs",
+    collapsible: true,
     items: [
-      { to: "/admin/revenue", label: "Revenue", icon: Wallet, perms: ["earnings.view"] },
-      { to: "/admin/revenue-verification", label: "Revenue Verification", icon: Shield, perms: ["earnings.view"] },
-      { to: "/admin/payment-links", label: "Payment Links", icon: FileSignature, perms: ["payment_links.view", "payment_links.manage"] },
-      { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck, perms: ["payments.view"] },
-      { to: "/admin/payouts", label: "Payouts", icon: FileText, perms: ["payouts.view"] },
-      { to: "/admin/partner-payouts", label: "Partner Payouts", icon: Wallet, perms: ["payouts.view"] },
-      { to: "/admin/referral-management", label: "Referral Management", icon: Handshake, perms: ["referrals.view"] },
-      { to: "/admin/adjustments", label: "Adjustments", icon: RefreshCw, perms: ["payouts.approve"] },
+      { to: "/admin/categories", label: "Categories", icon: FolderTree, perms: ["programs.view", "programs.manage"] },
+      { to: "/admin/courses", label: "Courses", icon: GraduationCap, perms: ["programs.view", "programs.manage"] },
+      { to: "/admin/program-sales-content", label: "Sales Content", icon: BookOpen, perms: ["programs.view", "programs.manage"] },
     ],
   },
   {
-    label: "Brand Management",
-    items: [
-      { to: "/admin/partner-brands", label: "Partner Brands", icon: Building2, perms: ["brands.view"] },
-      { to: "/admin/brand-applications", label: "Brand Applications", icon: Building2, perms: ["brands.view"] },
-      { to: "/admin/brands", label: "Brands", icon: Rocket, perms: ["brands.view"] },
-      { to: "/admin/brand-launch-tasks", label: "Brand Launch Tasks", icon: ClipboardList, perms: ["brands.view"] },
-    ],
-  },
-  {
-    label: "HR & Payroll",
+    key: "employment",
+    label: "Employment",
+    collapsible: true,
     items: [
       { to: "/admin/employees", label: "Employees", icon: Users, perms: ["employment.view"] },
+      { to: "/admin/employment-settings", label: "Attendance", icon: ClipboardList, perms: ["attendance.manage"] },
       { to: "/admin/payroll", label: "Payroll", icon: Wallet, perms: ["payroll.view"] },
-      { to: "/admin/employment-settings", label: "Attendance Settings", icon: Settings, perms: ["attendance.manage"] },
     ],
   },
   {
-    label: "Platform",
+    key: "administration",
+    label: "Administration",
+    collapsible: true,
     items: [
-      { to: "/admin/support", label: "Support Tickets", icon: Bell, perms: ["support.view"] },
       { to: "/admin/team", label: "Admin Team", icon: UserCog, perms: ["admin_team.view"] },
       { to: "/admin/activity", label: "Admin Activity", icon: History, perms: ["admin_team.view"] },
-      { to: "/admin/account", label: "My Account", icon: UserCheck },
-      { to: "/admin/settings", label: "Analytics & Settings", icon: Settings, perms: ["system_settings.view"] },
+      { to: "/admin/settings", label: "Settings", icon: Settings, perms: ["system_settings.view"] },
+    ],
+  },
+  {
+    key: "account",
+    label: "Account",
+    items: [
+      { to: "/admin/account", label: "Account", icon: UserCheck },
     ],
   },
 ];
@@ -137,23 +123,39 @@ function AdminShell() {
     })).filter((group) => group.items.length > 0);
   }, [session]);
 
+  // Collapsible group state — default open, keep active-group open
+  const activeGroupKey = useMemo(
+    () => filteredNav.find((g) => g.items.some((i) => isActive(i.to)))?.key,
+    [filteredNav, location.pathname],
+  );
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const isGroupOpen = (g: NavGroup) => (g.collapsible ? !(collapsed[g.key] ?? false) : true);
+  const toggleGroup = (key: string) =>
+    setCollapsed((s) => ({ ...s, [key]: !(s[key] ?? false) }));
+
   const flat = useMemo(() => filteredNav.flatMap((g) => g.items), [filteredNav]);
   const currentLabel = flat.find((i) => isActive(i.to))?.label ?? "Admin";
 
+  const roleLabel = session?.isSuperAdmin
+    ? "Super Admin"
+    : session?.adminUser?.admin_role
+    ? String(session.adminUser.admin_role).replace(/_/g, " ")
+    : "Admin";
+
   return (
-    <div className="min-h-screen bg-[oklch(0.98_0.004_240)] text-foreground flex">
+    <div className="min-h-screen bg-[oklch(0.98_0.006_240)] text-foreground flex">
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-72 border-r border-border/70 bg-white transition-transform lg:translate-x-0 lg:static lg:z-0 flex flex-col",
+          "fixed inset-y-0 left-0 z-40 w-[264px] border-r border-border/60 bg-white transition-transform lg:translate-x-0 lg:static lg:z-0 flex flex-col",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="h-16 flex items-center justify-between px-5 border-b border-border/70">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-border/60">
           <Link to="/" className="flex items-center gap-2.5">
             <GlintrLogo className="h-7 w-auto" />
             <div className="leading-none">
-              <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary">
-                {session?.isSuperAdmin ? "Super Admin" : session?.adminUser?.admin_role ? session.adminUser.admin_role.replace(/_/g, " ") : "Admin"}
+              <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary capitalize">
+                {roleLabel}
               </div>
             </div>
           </Link>
@@ -162,43 +164,71 @@ function AdminShell() {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5 scrollbar-thin">
-          {filteredNav.map((group, gi) => (
-            <div key={gi} className="space-y-1">
-              {group.label && (
-                <div className="px-2 pb-1 text-[10px] font-mono uppercase tracking-[0.16em] text-muted-foreground/70">
-                  {group.label}
+        <nav className="flex-1 overflow-y-auto px-2.5 py-3 space-y-3 scrollbar-thin">
+          {filteredNav.map((group) => {
+            const groupActive = group.key === activeGroupKey;
+            const opened = isGroupOpen(group) || groupActive;
+            return (
+              <div key={group.key} className="space-y-0.5">
+                {group.label && (
+                  group.collapsible ? (
+                    <button
+                      onClick={() => toggleGroup(group.key)}
+                      className={cn(
+                        "w-full flex items-center justify-between px-2 py-1 rounded-md text-[10px] font-mono uppercase tracking-[0.16em] transition-colors",
+                        groupActive ? "text-primary" : "text-muted-foreground/70 hover:text-foreground",
+                      )}
+                    >
+                      <span>{group.label}</span>
+                      <ChevronDown className={cn("size-3 transition-transform", opened ? "" : "-rotate-90")} />
+                    </button>
+                  ) : (
+                    <div className={cn(
+                      "px-2 py-1 text-[10px] font-mono uppercase tracking-[0.16em]",
+                      groupActive ? "text-primary" : "text-muted-foreground/70",
+                    )}>
+                      {group.label}
+                    </div>
+                  )
+                )}
+                <div
+                  className={cn(
+                    "space-y-0.5 overflow-hidden transition-[max-height,opacity] duration-200",
+                    opened ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0",
+                  )}
+                >
+                  {group.items.map((item) => {
+                    const active = isActive(item.to);
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.to}
+                        to={item.to as any}
+                        className={cn(
+                          "relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors",
+                          active
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground hover:bg-surface-2/60 hover:text-foreground",
+                        )}
+                      >
+                        {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r bg-primary" />}
+                        <Icon className="size-[15px]" />
+                        <span className="truncate">{item.label}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
-              )}
-              {group.items.map((item) => {
-                const active = isActive(item.to);
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to as any}
-                    className={cn(
-                      "flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors",
-                      active
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-surface-2/60 hover:text-foreground",
-                    )}
-                  >
-                    <Icon className="size-[15px]" />
-                    <span className="truncate">{item.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </nav>
 
-        <div className="border-t border-border/70 p-3 space-y-1">
+        <div className="border-t border-border/60 p-2.5">
           <button
             onClick={signOut}
-            className="w-full flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] text-muted-foreground hover:bg-surface-2/60 hover:text-foreground"
+            className="w-full flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] text-muted-foreground hover:bg-surface-2/60 hover:text-foreground transition-colors"
           >
-            <LogOut className="size-[15px]" /> Sign out
+            <LogOut className="size-[15px]" /> Logout
           </button>
         </div>
       </aside>
@@ -212,7 +242,7 @@ function AdminShell() {
       )}
 
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="sticky top-0 z-20 h-14 border-b border-border/70 bg-white/85 backdrop-blur px-4 lg:px-8 flex items-center justify-between gap-4">
+        <header className="sticky top-0 z-20 h-14 border-b border-border/60 bg-white/90 backdrop-blur px-4 lg:px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 min-w-0">
             <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen(true)}>
               <Menu className="size-5" />
@@ -229,13 +259,13 @@ function AdminShell() {
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search partners, courses, applications…"
+                placeholder="Search partner, lead, UTR, ticket…"
                 className="pl-9 h-9 bg-surface-1/70"
               />
             </div>
           </div>
         </header>
-        <main className="flex-1 p-4 lg:p-8">
+        <main className="flex-1 p-4 lg:p-6">
           <Outlet />
         </main>
       </div>
