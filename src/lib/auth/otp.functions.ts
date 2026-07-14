@@ -24,6 +24,7 @@ export const requestLoginOtp = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const mobile = normalizeMobile(data.mobile);
     if (!mobile) return { ok: false as const, error: "Enter a valid 10-digit mobile number." };
+    const mobileStr: string = mobile;
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
