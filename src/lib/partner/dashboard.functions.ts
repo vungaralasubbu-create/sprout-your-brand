@@ -107,3 +107,171 @@ export const getDashboardStats = createServerFn({ method: "GET" })
       }>,
     };
   });
+
+type PaymentStatus = "pending" | "verified" | "rejected";
+
+/** Sales Overview page — KPIs, chart series, and recent payments. */
+export const getOverviewStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data: partner } = await supabase
+      .from("partners")
+      .select("id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    const empty = {
+      totalSales: 0,
+      totalCollected: 0,
+      pendingVerification: 0,
+      verifiedPayments: 0,
+      leadsAssigned: 0,
+      leadsContacted: 0,
+      leadsNotAnswered: 0,
+      referralEarnings: 0,
+      daily: [] as { date: string; amount: number; sales: number }[],
+      monthly: [] as { month: string; amount: number; sales: number }[],
+      recentPayments: [] as {
+        id: string;
+        student_name: string;
+        program_title: string;
+        amount: number;
+        status: PaymentStatus;
+        enrolled_at: string;
+      }[],
+    };
+    if (!partner) return empty;
+
+    const partnerId = partner.id;
+
+    const [enrollmentsRes, leadsRes, referralRes, recentRes] = await Promise.all([
+      supabase
+        .from("enrollments")
+        .select("id, gross_revenue, status, verified_at, enrolled_at")
+        .eq("partner_id", partnerId),
+      supabase
+        .from("partner_leads")
+        .select("id, status")
+        .or(`owner_partner_id.eq.${partnerId},assigned_partner_id.eq.${partnerId}`),
+      supabase
+        .from("commissions")
+        .select("commission_amount, status")
+        .eq("partner_id", partnerId)
+        .eq("status", "paid"),
+      supabase
+        .from("enrollments")
+        .select("id, student_name, program_title, gross_revenue, status, verified_at, enrolled_at")
+        .eq("partner_id", partnerId)
+        .order("enrolled_at", { ascending: false })
+        .limit(5),
+    ]);
+
+    const enrollments = enrollmentsRes.data ?? [];
+    const leads = leadsRes.data ?? [];
+    const referrals = referralRes.data ?? [];
+    const recent = recentRes.data ?? [];
+
+    const statusOf = (row: { status: string; verified_at: string | null }): PaymentStatus => {
+      if (row.status === "verified" || row.verified_at) return "verified";
+      if (["cancelled", "refund_full", "refund_partial", "fraud_review", "duplicate"].includes(row.status)) return "rejected";
+      return "pending";
+    };
+
+    const totalSales = enrollments.length;
+    let totalCollected = 0;
+    let pendingVerification = 0;
+    let verifiedPayments = 0;
+    for (const e of enrollments) {
+      const s = statusOf(e as any);
+      const amt = Number(e.gross_revenue ?? 0);
+      if (s === "verified") {
+        verifiedPayments += 1;
+        totalCollected += amt;
+      } else if (s === "pending") {
+        pendingVerification += 1;
+      }
+    }
+
+    const contactedStatuses = new Set([
+      "contacted",
+      "interested",
+      "follow_up",
+      "application_started",
+      "application_submitted",
+      "payment_pending",
+      "enrolled",
+    ]);
+    const leadsAssigned = leads.length;
+    let leadsContacted = 0;
+    let leadsNotAnswered = 0;
+    for (const l of leads) {
+      if (contactedStatuses.has(l.status as string)) leadsContacted += 1;
+      else if (l.status === "new") leadsNotAnswered += 1;
+    }
+
+    const referralEarnings = referrals.reduce(
+      (a, r) => a + Number(r.commission_amount ?? 0),
+      0,
+    );
+
+    // Daily series (last 30 days)
+    const dailyMap = new Map<string, { amount: number; sales: number }>();
+    const today = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      dailyMap.set(key, { amount: 0, sales: 0 });
+    }
+    const monthlyMap = new Map<string, { amount: number; sales: number }>();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      monthlyMap.set(key, { amount: 0, sales: 0 });
+    }
+    for (const e of enrollments) {
+      if (!e.enrolled_at) continue;
+      const amt = Number(e.gross_revenue ?? 0);
+      const dayKey = new Date(e.enrolled_at).toISOString().slice(0, 10);
+      if (dailyMap.has(dayKey)) {
+        const v = dailyMap.get(dayKey)!;
+        v.amount += amt;
+        v.sales += 1;
+      }
+      const d = new Date(e.enrolled_at);
+      const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      if (monthlyMap.has(monthKey)) {
+        const v = monthlyMap.get(monthKey)!;
+        v.amount += amt;
+        v.sales += 1;
+      }
+    }
+
+    const daily = Array.from(dailyMap.entries()).map(([date, v]) => ({ date, ...v }));
+    const monthly = Array.from(monthlyMap.entries()).map(([month, v]) => ({ month, ...v }));
+
+    const recentPayments = recent.map((e) => ({
+      id: e.id,
+      student_name: e.student_name,
+      program_title: e.program_title,
+      amount: Number(e.gross_revenue ?? 0),
+      status: statusOf(e as any),
+      enrolled_at: e.enrolled_at,
+    }));
+
+    return {
+      totalSales,
+      totalCollected,
+      pendingVerification,
+      verifiedPayments,
+      leadsAssigned,
+      leadsContacted,
+      leadsNotAnswered,
+      referralEarnings,
+      daily,
+      monthly,
+      recentPayments,
+    };
+  });
+
