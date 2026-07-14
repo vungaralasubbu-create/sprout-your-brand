@@ -1028,19 +1028,28 @@ export type Database = {
           admin_notes: string | null
           approved_at: string | null
           commission_amount: number
+          course_id: string | null
           created_at: string
           eligible_revenue: number
-          enrollment_id: string
+          enrollment_id: string | null
           gross_revenue: number
+          hold_reason: string | null
           id: string
+          lead_id: string | null
           lead_source: string | null
+          lead_type: string | null
+          paid_by: string | null
           partner_id: string
           payout_at: string | null
+          payout_reference: string | null
+          payout_target_at: string | null
+          plan: string | null
           program_id: string
           refund_adjustment: number
           revenue_share_pct: number
           revenue_share_rule_id: string | null
           status: Database["public"]["Enums"]["commission_status"]
+          submission_id: string | null
           updated_at: string
           verified_at: string | null
         }
@@ -1048,19 +1057,28 @@ export type Database = {
           admin_notes?: string | null
           approved_at?: string | null
           commission_amount: number
+          course_id?: string | null
           created_at?: string
           eligible_revenue: number
-          enrollment_id: string
+          enrollment_id?: string | null
           gross_revenue: number
+          hold_reason?: string | null
           id?: string
+          lead_id?: string | null
           lead_source?: string | null
+          lead_type?: string | null
+          paid_by?: string | null
           partner_id: string
           payout_at?: string | null
+          payout_reference?: string | null
+          payout_target_at?: string | null
+          plan?: string | null
           program_id: string
           refund_adjustment?: number
           revenue_share_pct: number
           revenue_share_rule_id?: string | null
           status?: Database["public"]["Enums"]["commission_status"]
+          submission_id?: string | null
           updated_at?: string
           verified_at?: string | null
         }
@@ -1068,28 +1086,51 @@ export type Database = {
           admin_notes?: string | null
           approved_at?: string | null
           commission_amount?: number
+          course_id?: string | null
           created_at?: string
           eligible_revenue?: number
-          enrollment_id?: string
+          enrollment_id?: string | null
           gross_revenue?: number
+          hold_reason?: string | null
           id?: string
+          lead_id?: string | null
           lead_source?: string | null
+          lead_type?: string | null
+          paid_by?: string | null
           partner_id?: string
           payout_at?: string | null
+          payout_reference?: string | null
+          payout_target_at?: string | null
+          plan?: string | null
           program_id?: string
           refund_adjustment?: number
           revenue_share_pct?: number
           revenue_share_rule_id?: string | null
           status?: Database["public"]["Enums"]["commission_status"]
+          submission_id?: string | null
           updated_at?: string
           verified_at?: string | null
         }
         Relationships: [
           {
+            foreignKeyName: "commissions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "commissions_enrollment_id_fkey"
             columns: ["enrollment_id"]
             isOneToOne: false
             referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
             referencedColumns: ["id"]
           },
           {
@@ -1104,6 +1145,13 @@ export type Database = {
             columns: ["revenue_share_rule_id"]
             isOneToOne: false
             referencedRelation: "revenue_share_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "partner_payment_submissions"
             referencedColumns: ["id"]
           },
         ]
