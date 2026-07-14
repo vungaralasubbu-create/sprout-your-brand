@@ -27,7 +27,11 @@ const COMPLETION_FIELDS: Array<{ key: string; label: string; check: (p: any) => 
 ];
 
 function computeCompletion(p: any) {
-  const items = COMPLETION_FIELDS.map((f) => ({ ...f, done: !!f.check(p) }));
+  const items = COMPLETION_FIELDS.map((f) => ({
+    key: f.key,
+    label: f.label,
+    done: !!f.check(p),
+  }));
   const done = items.filter((i) => i.done).length;
   const pct = Math.round((done / items.length) * 100);
   return { pct, items, done, total: items.length };
