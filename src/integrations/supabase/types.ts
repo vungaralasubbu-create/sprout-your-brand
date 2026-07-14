@@ -3011,6 +3011,126 @@ export type Database = {
           },
         ]
       }
+      partner_payment_submissions: {
+        Row: {
+          admin_notes: string | null
+          amount: number
+          course_id: string
+          created_at: string
+          id: string
+          is_duplicate_flag: boolean
+          lead_id: string
+          lead_payment_link_id: string | null
+          partner_id: string
+          partner_notes: string | null
+          payment_date: string
+          payment_link_id: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          plan: Database["public"]["Enums"]["payment_plan"]
+          proof_bucket: string
+          proof_mime: string | null
+          proof_path: string
+          proof_size_bytes: number | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["payment_submission_status"]
+          submitted_at: string
+          updated_at: string
+          utr_normalized: string | null
+          utr_reference: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount: number
+          course_id: string
+          created_at?: string
+          id?: string
+          is_duplicate_flag?: boolean
+          lead_id: string
+          lead_payment_link_id?: string | null
+          partner_id: string
+          partner_notes?: string | null
+          payment_date: string
+          payment_link_id?: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"]
+          plan: Database["public"]["Enums"]["payment_plan"]
+          proof_bucket?: string
+          proof_mime?: string | null
+          proof_path: string
+          proof_size_bytes?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["payment_submission_status"]
+          submitted_at?: string
+          updated_at?: string
+          utr_normalized?: string | null
+          utr_reference: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount?: number
+          course_id?: string
+          created_at?: string
+          id?: string
+          is_duplicate_flag?: boolean
+          lead_id?: string
+          lead_payment_link_id?: string | null
+          partner_id?: string
+          partner_notes?: string | null
+          payment_date?: string
+          payment_link_id?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"]
+          plan?: Database["public"]["Enums"]["payment_plan"]
+          proof_bucket?: string
+          proof_mime?: string | null
+          proof_path?: string
+          proof_size_bytes?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["payment_submission_status"]
+          submitted_at?: string
+          updated_at?: string
+          utr_normalized?: string | null
+          utr_reference?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_payment_submissions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_payment_submissions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_payment_submissions_lead_payment_link_id_fkey"
+            columns: ["lead_payment_link_id"]
+            isOneToOne: false
+            referencedRelation: "partner_lead_payment_links"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_payment_submissions_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_payment_submissions_payment_link_id_fkey"
+            columns: ["payment_link_id"]
+            isOneToOne: false
+            referencedRelation: "payment_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_payout_details: {
         Row: {
           account_holder_name: string | null
@@ -4309,7 +4429,20 @@ export type Database = {
         | "verified"
         | "rejected"
         | "expired"
+      payment_method:
+        | "upi"
+        | "bank_transfer"
+        | "payment_gateway"
+        | "card"
+        | "other"
       payment_plan: "self_paced_edge" | "career_launch" | "career_pro"
+      payment_submission_status:
+        | "pending_verification"
+        | "under_review"
+        | "verified"
+        | "rejected"
+        | "needs_more_info"
+        | "duplicate_flagged"
       payout_status:
         | "queued"
         | "processing"
@@ -4685,7 +4818,22 @@ export const Constants = {
         "rejected",
         "expired",
       ],
+      payment_method: [
+        "upi",
+        "bank_transfer",
+        "payment_gateway",
+        "card",
+        "other",
+      ],
       payment_plan: ["self_paced_edge", "career_launch", "career_pro"],
+      payment_submission_status: [
+        "pending_verification",
+        "under_review",
+        "verified",
+        "rejected",
+        "needs_more_info",
+        "duplicate_flagged",
+      ],
       payout_status: [
         "queued",
         "processing",

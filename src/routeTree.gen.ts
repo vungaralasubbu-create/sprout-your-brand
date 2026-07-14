@@ -36,6 +36,7 @@ import { Route as AuthenticatedStudentCoursesRouteImport } from './routes/_authe
 import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_authenticated/student.certificates'
 import { Route as AuthenticatedStudentAssignmentsRouteImport } from './routes/_authenticated/student.assignments'
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
+import { Route as AuthenticatedPartnerPaymentVerificationRouteImport } from './routes/_authenticated/partner.payment-verification'
 import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_authenticated/partner.payment-links'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
@@ -208,6 +209,12 @@ const AuthenticatedStudentAssessmentsRoute =
     id: '/assessments',
     path: '/assessments',
     getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedPartnerPaymentVerificationRoute =
+  AuthenticatedPartnerPaymentVerificationRouteImport.update({
+    id: '/payment-verification',
+    path: '/payment-verification',
+    getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerPaymentLinksRoute =
   AuthenticatedPartnerPaymentLinksRouteImport.update({
@@ -419,6 +426,7 @@ export interface FileRoutesByFullPath {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
+  '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -474,6 +482,7 @@ export interface FileRoutesByTo {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
+  '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -533,6 +542,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
+  '/_authenticated/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/_authenticated/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/_authenticated/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -592,6 +602,7 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/onboarding'
     | '/partner/payment-links'
+    | '/partner/payment-verification'
     | '/student/assessments'
     | '/student/assignments'
     | '/student/certificates'
@@ -647,6 +658,7 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/onboarding'
     | '/partner/payment-links'
+    | '/partner/payment-verification'
     | '/student/assessments'
     | '/student/assignments'
     | '/student/certificates'
@@ -705,6 +717,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/onboarding'
     | '/_authenticated/partner/payment-links'
+    | '/_authenticated/partner/payment-verification'
     | '/_authenticated/student/assessments'
     | '/_authenticated/student/assignments'
     | '/_authenticated/student/certificates'
@@ -936,6 +949,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/assessments'
       preLoaderRoute: typeof AuthenticatedStudentAssessmentsRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/partner/payment-verification': {
+      id: '/_authenticated/partner/payment-verification'
+      path: '/payment-verification'
+      fullPath: '/partner/payment-verification'
+      preLoaderRoute: typeof AuthenticatedPartnerPaymentVerificationRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/payment-links': {
       id: '/_authenticated/partner/payment-links'
@@ -1213,6 +1233,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
   AuthenticatedPartnerPaymentLinksRoute: typeof AuthenticatedPartnerPaymentLinksRoute
+  AuthenticatedPartnerPaymentVerificationRoute: typeof AuthenticatedPartnerPaymentVerificationRoute
 }
 
 const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
@@ -1221,6 +1242,8 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerDashboardRoute: AuthenticatedPartnerDashboardRoute,
   AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
   AuthenticatedPartnerPaymentLinksRoute: AuthenticatedPartnerPaymentLinksRoute,
+  AuthenticatedPartnerPaymentVerificationRoute:
+    AuthenticatedPartnerPaymentVerificationRoute,
 }
 
 const AuthenticatedPartnerRouteWithChildren =
