@@ -1133,15 +1133,17 @@ function SectionBlock({
   eyebrow,
   children,
   tone,
+  className,
 }: {
   title: string;
   eyebrow?: string;
   children: React.ReactNode;
   tone?: "soft";
+  className?: string;
 }) {
   return (
     <Section
-      className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "")}
+      className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "", className)}
     >
       <Container>
         <div className="max-w-2xl mb-10">
