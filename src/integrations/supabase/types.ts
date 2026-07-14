@@ -504,6 +504,10 @@ export type Database = {
           commission_rule_id: string | null
           commission_rule_version: number | null
           created_at: string
+          eligibility_checked_at: string | null
+          eligibility_public_reason: string | null
+          eligibility_rule_version: number | null
+          eligibility_status: string
           eligible_base_amount: number
           enrollment_id: string | null
           id: string
@@ -529,6 +533,10 @@ export type Database = {
           commission_rule_id?: string | null
           commission_rule_version?: number | null
           created_at?: string
+          eligibility_checked_at?: string | null
+          eligibility_public_reason?: string | null
+          eligibility_rule_version?: number | null
+          eligibility_status?: string
           eligible_base_amount?: number
           enrollment_id?: string | null
           id?: string
@@ -554,6 +562,10 @@ export type Database = {
           commission_rule_id?: string | null
           commission_rule_version?: number | null
           created_at?: string
+          eligibility_checked_at?: string | null
+          eligibility_public_reason?: string | null
+          eligibility_rule_version?: number | null
+          eligibility_status?: string
           eligible_base_amount?: number
           enrollment_id?: string | null
           id?: string
@@ -3831,6 +3843,7 @@ export type Database = {
           current_module_id: string | null
           eligible_revenue: number
           enrolled_at: string
+          enrollment_code: string | null
           gross_revenue: number
           id: string
           last_accessed_at: string | null
@@ -3858,6 +3871,7 @@ export type Database = {
           current_module_id?: string | null
           eligible_revenue: number
           enrolled_at?: string
+          enrollment_code?: string | null
           gross_revenue: number
           id?: string
           last_accessed_at?: string | null
@@ -3885,6 +3899,7 @@ export type Database = {
           current_module_id?: string | null
           eligible_revenue?: number
           enrolled_at?: string
+          enrollment_code?: string | null
           gross_revenue?: number
           id?: string
           last_accessed_at?: string | null
