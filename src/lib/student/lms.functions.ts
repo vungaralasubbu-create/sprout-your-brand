@@ -199,133 +199,144 @@ export const getCoursePlayer = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { slug: string; lessonId?: string }) => data)
   .handler(async ({ data, context }) => {
-    // Course must exist & be published
     const { data: course } = await context.supabase
       .from("courses")
-      .select("id, name, slug, short_description, thumbnail_url")
+      .select("id, name, slug, short_description, thumbnail_url, unlock_mode")
       .eq("slug", data.slug)
       .eq("is_published", true)
       .maybeSingle();
     if (!course) throw new Error("Course not found");
 
-    // Enrollment check
     const { data: enrollment } = await context.supabase
       .from("enrollments")
-      .select("id, lms_status")
+      .select("id, lms_status, current_lesson_id")
       .eq("student_user_id", context.userId)
       .eq("course_id", course.id)
       .maybeSingle();
     if (!enrollment) throw new Error("Not enrolled");
 
-    const [{ data: modules }, { data: progress }, { data: reqs }] = await Promise.all([
-      context.supabase
-        .from("course_modules")
-        .select("id, name, display_order, course_topics(id, name, display_order, course_lessons(id, name, lesson_type, duration, is_free_preview, is_published, resource_url, description, content, display_order))")
-        .eq("course_id", course.id)
-        .eq("is_published", true)
-        .order("display_order"),
-      context.supabase
-        .from("lesson_progress")
-        .select("lesson_id, status, completed_at, last_accessed_at, video_progress_pct, last_position_seconds")
-        .eq("student_user_id", context.userId)
-        .eq("course_id", course.id),
+    const [{ data: reqs }, snap] = await Promise.all([
       context.supabase
         .from("course_completion_requirements")
         .select("min_lesson_completion_pct")
         .eq("course_id", course.id)
         .maybeSingle(),
+      computeCourseProgress(context, course.id, context.userId),
     ]);
 
-    const progressMap = new Map((progress ?? []).map((p) => [p.lesson_id, p]));
-    const flatLessons: {
-      id: string; moduleId: string; moduleName: string; topicId: string;
-      name: string; type: string; description: string | null; content: string | null;
-      resource_url: string | null; duration: string | null;
-      video_progress_pct: number; last_position_seconds: number;
-    }[] = [];
+    // Flat list of unlocked lessons (curriculum order) for prev/next
+    const flat = snap.modules.flatMap((m) => m.lessons);
 
-    const cleaned = ((modules ?? []) as any[]).map((m: any, mi: number) => {
-      const topics = (m.course_topics ?? [])
-        .sort((a: any, b: any) => a.display_order - b.display_order)
-        .map((t: any) => {
-          const lessons = (t.course_lessons ?? [])
-            .filter((l: any) => l.is_published)
-            .sort((a: any, b: any) => a.display_order - b.display_order)
-            .map((l: any) => {
-              const p = progressMap.get(l.id) as any;
-              flatLessons.push({
-                id: l.id, moduleId: m.id, moduleName: m.name,
-                topicId: t.id, name: l.name, type: l.lesson_type,
-                description: l.description ?? null, content: l.content ?? null,
-                resource_url: l.resource_url, duration: l.duration,
-                video_progress_pct: Number(p?.video_progress_pct ?? 0),
-                last_position_seconds: Number(p?.last_position_seconds ?? 0),
-              });
-              return {
-                id: l.id,
-                name: l.name,
-                type: l.lesson_type,
-                duration: l.duration,
-                resource_url: l.resource_url,
-                status: p?.status ?? "not_started",
-                completed_at: p?.completed_at ?? null,
-                video_progress_pct: Number(p?.video_progress_pct ?? 0),
-              };
-            });
-          return { id: t.id, name: t.name, lessons };
-        });
-      return { id: m.id, number: mi + 1, name: m.name, topics };
-    });
-
-    // Determine current lesson (by lessonId, else last accessed incomplete, else first)
-    let currentIndex = 0;
-    if (data.lessonId) {
-      const i = flatLessons.findIndex((l) => l.id === data.lessonId);
-      if (i >= 0) currentIndex = i;
-    } else {
-      const lastAccessed = (progress ?? [])
-        .filter((p) => p.status !== "completed" && p.last_accessed_at)
-        .sort((a: any, b: any) => new Date(b.last_accessed_at).getTime() - new Date(a.last_accessed_at).getTime())[0];
-      const target = lastAccessed?.lesson_id ?? flatLessons[0]?.id;
-      const i = flatLessons.findIndex((l) => l.id === target);
-      if (i >= 0) currentIndex = i;
+    // Determine current lesson:
+    // 1) explicit lessonId (only if unlocked)
+    // 2) enrollment.current_lesson_id (if unlocked)
+    // 3) nextLesson (first unlocked incomplete)
+    // 4) first unlocked lesson
+    function pick(id: string | null | undefined) {
+      if (!id) return null;
+      const l = flat.find((x) => x.id === id);
+      return l && l.unlocked ? l : null;
     }
+    const explicit = pick(data.lessonId);
+    if (data.lessonId && !explicit) {
+      // Requested a locked/unknown lesson → tell the client so it can redirect
+      const target = snap.nextLesson ?? flat.find((l) => l.unlocked) ?? null;
+      if (target && target.id !== data.lessonId) {
+        throw new Error("LESSON_LOCKED");
+      }
+    }
+    const current =
+      explicit ??
+      pick((enrollment as any).current_lesson_id) ??
+      snap.nextLesson ??
+      flat.find((l) => l.unlocked) ??
+      null;
 
-    const current = flatLessons[currentIndex] ?? null;
-    const prev = currentIndex > 0 ? flatLessons[currentIndex - 1] : null;
-    const next = currentIndex < flatLessons.length - 1 ? flatLessons[currentIndex + 1] : null;
-    const currentStatus = current ? (progressMap.get(current.id) as any)?.status ?? "not_started" : "not_started";
-    const currentPosition = current ? current.moduleId : null;
+    const currentIndex = current ? flat.findIndex((l) => l.id === current.id) : -1;
+    const prev = currentIndex > 0 ? flat[currentIndex - 1] : null;
+    const next = currentIndex >= 0 && currentIndex < flat.length - 1 ? flat[currentIndex + 1] : null;
+    const currentModule = current ? snap.modules.find((m) => m.id === current.moduleId) : null;
 
-    const total = flatLessons.length;
-    const completed = (progress ?? []).filter((p) => p.status === "completed").length;
-
-    // Position label (Lesson X of Y)
-    const currentModuleNumber = current
-      ? (cleaned.find((m) => m.id === current.moduleId)?.number ?? 1)
-      : 1;
+    // Curriculum with lesson unlock/status/isRequired baked in
+    const modules = snap.modules.map((m) => ({
+      id: m.id,
+      number: m.number,
+      name: m.name,
+      description: m.description,
+      isRequired: m.isRequired,
+      unlocked: m.unlocked,
+      status: m.status,
+      totalLessons: m.totalLessons,
+      completedLessons: m.completedLessons,
+      totalRequired: m.totalRequired,
+      completedRequired: m.completedRequired,
+      progressPct: m.progressPct,
+      completedAt: m.completedAt,
+      topics: m.topics.map((t) => ({
+        id: t.id,
+        name: t.name,
+        lessons: t.lessons.map((l) => ({
+          id: l.id,
+          name: l.name,
+          type: l.type,
+          duration: l.duration,
+          resource_url: l.resource_url,
+          isRequired: l.isRequired,
+          unlocked: l.unlocked,
+          status: l.status,
+          completed_at: l.completed_at,
+          video_progress_pct: l.video_progress_pct,
+        })),
+      })),
+    }));
 
     return {
-      course,
+      course: {
+        id: (course as any).id,
+        name: (course as any).name,
+        slug: (course as any).slug,
+        short_description: (course as any).short_description,
+        thumbnail_url: (course as any).thumbnail_url,
+      },
       enrollmentId: enrollment.id,
       lmsStatus: enrollment.lms_status,
+      unlockMode: snap.unlockMode,
       videoCompletionThresholdPct: Math.max(1, Math.min(100, Number(reqs?.min_lesson_completion_pct ?? 90))),
-      modules: cleaned,
+      modules,
       current: current
-        ? { ...current, status: currentStatus, moduleNumber: currentModuleNumber, position: currentIndex + 1 }
+        ? {
+            id: current.id,
+            moduleId: current.moduleId,
+            moduleName: currentModule?.name ?? "",
+            moduleNumber: currentModule?.number ?? 1,
+            topicId: current.topicId,
+            name: current.name,
+            type: current.type,
+            description: current.description,
+            content: current.content,
+            resource_url: current.resource_url,
+            duration: current.duration,
+            isRequired: current.isRequired,
+            unlocked: current.unlocked,
+            status: current.status,
+            video_progress_pct: current.video_progress_pct,
+            last_position_seconds: current.last_position_seconds,
+            position: currentIndex + 1,
+          }
         : null,
-      prev,
-      next,
-      totalLessons: total,
-      completedLessons: completed,
-      progressPct: total > 0 ? Math.round((completed / total) * 100) : 0,
+      prev: prev ? { id: prev.id, name: prev.name, unlocked: prev.unlocked } : null,
+      next: next ? { id: next.id, name: next.name, unlocked: next.unlocked } : null,
+      totalLessons: snap.totals.totalLessons,
+      completedLessons: snap.totals.completedLessons,
+      totalRequiredLessons: snap.totals.totalRequiredLessons,
+      completedRequiredLessons: snap.totals.completedRequiredLessons,
+      progressPct: snap.totals.progressPct,
+      isContentCompleted: snap.totals.isContentCompleted,
+      contentCompletedAt: snap.totals.contentCompletedAt,
     };
   });
 
 
-/* ============================================================
- * LESSON PROGRESS
- * ============================================================ */
 
 /* ============================================================
  * CANONICAL PROGRESS + UNLOCK ENGINE
