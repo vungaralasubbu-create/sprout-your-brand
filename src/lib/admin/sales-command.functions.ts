@@ -55,6 +55,8 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
       overdueFollowUps,
       approvedPayouts,
       pendingOwnershipReviews,
+      openSupportTickets,
+      urgentSupportTickets,
     ] = await Promise.all([
       s.from("partner_payment_submissions")
         .select("amount", { count: "exact" })
@@ -81,6 +83,11 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
         .in("status", ["approved", "queued"]),
       (s as any).from("lead_ownership_reviews").select("id", { count: "exact", head: true })
         .in("status", ["pending_review", "possible_duplicate", "under_review", "disputed"]),
+      s.from("partner_support_tickets").select("id", { count: "exact", head: true })
+        .in("status", ["open", "under_review", "admin_replied"]),
+      s.from("partner_support_tickets").select("id", { count: "exact", head: true })
+        .eq("priority", "urgent")
+        .not("status", "in", "(resolved,closed)"),
     ]);
 
     const todayVerifiedRevenue = (todaySales.data ?? []).reduce((a: number, r: any) => a + Number(r.amount ?? 0), 0);
@@ -102,6 +109,8 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
       approvedPayoutsDue,
       approvedPayoutsCount: (approvedPayouts.data ?? []).length,
       pendingOwnershipReviews: pendingOwnershipReviews.count ?? 0,
+      openSupportTickets: openSupportTickets.count ?? 0,
+      urgentSupportTickets: urgentSupportTickets.count ?? 0,
     };
   });
 
