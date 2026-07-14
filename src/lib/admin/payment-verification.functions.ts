@@ -296,23 +296,89 @@ export const adminActOnPaymentSubmission = createServerFn({ method: "POST" })
       message: data.message?.trim() || null,
     });
 
-    // On verify: mark lead as enrolled (closest to "converted" in partner_lead_status)
+    // On verify: mark lead as enrolled + create commission earning record
     if (data.action === "verify") {
       await supabase
         .from("partner_leads")
         .update({ status: "enrolled", last_activity_at: new Date().toISOString() })
         .eq("id", cur.lead_id as string);
 
+      // Determine lead ownership → revenue share %
+      const { data: leadRow } = await supabase
+        .from("partner_leads")
+        .select("id, owner_partner_id, assigned_partner_id, full_name, source")
+        .eq("id", cur.lead_id as string)
+        .maybeSingle();
+
+      const isOwnLead =
+        !!leadRow &&
+        leadRow.owner_partner_id === cur.partner_id &&
+        leadRow.source !== "assigned";
+      const leadType = isOwnLead ? "own" : "glintr_provided";
+      const sharePct = isOwnLead ? 70 : 50;
+      const gross = Number(cur.amount);
+      // banker-rounded to 2 decimals
+      const commissionAmount = Math.round(gross * sharePct) / 100;
+
+      // 2-day payout target
+      const verifiedAt = new Date();
+      const payoutTarget = new Date(verifiedAt.getTime() + 2 * 24 * 60 * 60 * 1000);
+
+      // Load submission course_id
+      const { data: subRow } = await supabase
+        .from("partner_payment_submissions")
+        .select("course_id")
+        .eq("id", cur.id as string)
+        .maybeSingle();
+
+      // Get program_id (courses.id) and title for existing commissions schema
+      let programId = "";
+      if (subRow?.course_id) {
+        const { data: courseRow } = await supabase
+          .from("courses")
+          .select("id, slug")
+          .eq("id", subRow.course_id)
+          .maybeSingle();
+        programId = (courseRow?.slug as string) || (subRow.course_id as string);
+      }
+
+      // Idempotent insert (unique index on submission_id when not null)
+      const { error: comErr } = await supabase.from("commissions").insert({
+        partner_id: cur.partner_id,
+        submission_id: cur.id,
+        lead_id: cur.lead_id,
+        course_id: subRow?.course_id ?? null,
+        plan: cur.plan,
+        program_id: programId,
+        gross_revenue: gross,
+        eligible_revenue: gross,
+        lead_source: leadType,
+        lead_type: leadType,
+        revenue_share_pct: sharePct,
+        commission_amount: commissionAmount,
+        status: "approved",
+        verified_at: verifiedAt.toISOString(),
+        approved_at: verifiedAt.toISOString(),
+        payout_target_at: payoutTarget.toISOString(),
+      });
+      // ignore unique-violation (already created for this submission)
+      if (comErr && !/duplicate|unique/i.test(comErr.message)) {
+        throw new Error(`Failed to create earning record: ${comErr.message}`);
+      }
+
       await supabase.from("partner_lead_activities").insert({
         lead_id: cur.lead_id,
         partner_id: cur.partner_id,
         activity_type: "payment_recorded",
-        content: "Payment verified by admin — sale confirmed",
+        content: `Payment verified by admin — ${sharePct}% revenue share (${leadType === "own" ? "own lead" : "Glintr-provided lead"})`,
         metadata: {
           kind: "payment_verified",
           submission_id: cur.id,
-          amount: Number(cur.amount),
+          amount: gross,
           plan: cur.plan,
+          lead_type: leadType,
+          revenue_share_pct: sharePct,
+          commission_amount: commissionAmount,
         },
       });
     } else if (data.action === "reject" || data.action === "request_info") {
