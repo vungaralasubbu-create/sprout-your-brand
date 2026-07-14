@@ -358,55 +358,128 @@ function CoursePage() {
       </Section>
 
 
-      {/* ============ QUICK STATS ============ */}
-      <Section className="py-8 border-y bg-surface-2/40">
-        <Container>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-            {buildQuickStats(c).map((h, i) => (
-              <Reveal key={h.label} delay={i * 70}>
-                <div className="group flex items-center gap-3 rounded-2xl border border-border/60 bg-surface-1 p-4 hover:border-primary/50 hover:shadow-sm transition-all">
-                  <span className="inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-accent/15 text-primary shrink-0 transition-transform group-hover:scale-105">
-                    <h.icon className="size-5" />
+      {/* ============ DARK COURSE INTRO ============ */}
+      <Section className="relative overflow-hidden py-20 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,oklch(0.7_0.15_180/0.22),transparent_60%)]"
+        />
+        <Container className="relative">
+          <div className="grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-center">
+            <Reveal>
+              <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                <CourseHeroVisual
+                  courseName={c.name}
+                  categoryName={c.category.name}
+                  imageUrl={null}
+                  className="aspect-[4/3]"
+                />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-tr from-[oklch(0.16_0.04_255)]/60 via-transparent to-transparent" />
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div>
+                <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
+                  {c.category.name}
+                </span>
+                <h2 className="mt-4 font-display font-semibold tracking-[-0.025em] text-balance text-white leading-[1.02] text-[clamp(2rem,4.4vw,3.5rem)]">
+                  Don't Just Learn It.<br />
+                  <span className="bg-gradient-to-r from-[oklch(0.82_0.16_200)] via-[oklch(0.78_0.16_220)] to-[oklch(0.7_0.16_240)] bg-clip-text text-transparent">
+                    Build With It.
                   </span>
-                  <div className="min-w-0">
-                    <div className="text-caption">{h.label}</div>
-                    <div className="text-sm font-semibold truncate">{h.value}</div>
-                  </div>
+                </h2>
+                <div className="mt-10 space-y-8">
+                  {buildIntroSteps(c).map((step, i) => (
+                    <Reveal key={i} delay={i * 120}>
+                      <div className="flex gap-5">
+                        <span className="font-mono text-[oklch(0.85_0.15_200)] text-2xl font-semibold shrink-0 pt-1">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="font-display font-semibold text-xl text-white">
+                            {step.title}
+                          </h3>
+                          <p className="mt-1.5 text-white/70 leading-relaxed">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    </Reveal>
+                  ))}
                 </div>
-              </Reveal>
-            ))}
+              </div>
+            </Reveal>
           </div>
         </Container>
       </Section>
 
-      {/* ============ LEARN BY BUILDING ============ */}
-      <Section className="py-14 lg:py-20">
+      {/* ============ LEARNING JOURNEY ============ */}
+      <Section className="py-16 lg:py-24 bg-surface-2/40 border-y">
         <Container>
           <Reveal>
-            <div className="max-w-2xl mb-10">
+            <div className="max-w-2xl mb-12">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                Learning Experience
+                The Path
               </span>
-              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-                Learn By Building.
+              <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05]">
+                Your Learning Journey
               </h2>
               <p className="mt-4 text-body-lg text-muted-foreground">
-                Develop practical skills through structured learning, guided practice and real-world applications.
+                A guided path — from foundations to a portfolio you can show.
               </p>
             </div>
           </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {(learningExperience.length > 0
-              ? learningExperience.slice(0, 4)
-              : DEFAULT_LEARN_CARDS
-            ).map((card, i) => (
-              <Reveal key={i} delay={i * 90}>
-                <ExperienceCard {...card} />
-              </Reveal>
-            ))}
+          <LearningJourney />
+        </Container>
+      </Section>
+
+      {/* ============ IMAGE STORY 1 ============ */}
+      <Section className="py-16 lg:py-24">
+        <Container>
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
+            <Reveal>
+              <div className="group relative rounded-3xl overflow-hidden border border-border/60 shadow-xl">
+                <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]">
+                  <CourseHeroVisual
+                    courseName={c.name}
+                    categoryName={c.category.name}
+                    imageUrl={null}
+                    className="aspect-[5/4]"
+                  />
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={100}>
+              <div>
+                <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                  Learn The Craft
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
+                  Understand The Technology.
+                </h2>
+                <p className="mt-5 text-body-lg text-muted-foreground">
+                  {c.short_description ??
+                    `${c.name} moves you from concepts to confident practice — grounded in real problems, industry tools and mentor-led guidance.`}
+                </p>
+                {c.skills.length > 0 ? (
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {c.skills.slice(0, 6).map((s) => (
+                      <span
+                        key={s}
+                        className="inline-flex items-center rounded-full border border-border/60 bg-surface-1 px-3 py-1 text-xs font-medium"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </Reveal>
           </div>
         </Container>
       </Section>
+
+
 
 
       {/* ============ WHY THIS PROGRAM ============ */}
