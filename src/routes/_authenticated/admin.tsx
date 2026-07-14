@@ -92,6 +92,7 @@ const NAV: NavGroup[] = [
     items: [
       { to: "/admin/revenue", label: "Revenue", icon: Wallet },
       { to: "/admin/revenue-verification", label: "Revenue Verification", icon: Shield },
+      { to: "/admin/payment-links", label: "Payment Links", icon: FileSignature },
       { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck },
       { to: "/admin/payouts", label: "Payouts", icon: FileText },
       { to: "/admin/partner-payouts", label: "Partner Payouts", icon: Wallet },
