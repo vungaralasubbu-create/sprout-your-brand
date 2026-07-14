@@ -101,6 +101,7 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
       overdueFollowUps: overdueFollowUps.count ?? 0,
       approvedPayoutsDue,
       approvedPayoutsCount: (approvedPayouts.data ?? []).length,
+      pendingOwnershipReviews: pendingOwnershipReviews.count ?? 0,
     };
   });
 
