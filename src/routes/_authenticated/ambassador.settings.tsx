@@ -97,8 +97,8 @@ function NotificationsPanel() {
         <h3 className="font-semibold mb-1">Delivery channels</h3>
         <p className="text-xs text-slate-500 mb-4">Choose how you receive updates.</p>
         <div className="grid sm:grid-cols-2 gap-3">
-          <ToggleRow label="In-app notifications" checked={f.channel_in_app} onChange={(v) => setF({ ...f, channel_in_app: v })} />
-          <ToggleRow label="Email notifications" checked={f.channel_email} onChange={(v) => setF({ ...f, channel_email: v })} />
+          <ToggleRow label="In-app notifications" checked={f.channel_in_app} onChange={(v: boolean) => setF({ ...f, channel_in_app: v })} />
+          <ToggleRow label="Email notifications" checked={f.channel_email} onChange={(v: boolean) => setF({ ...f, channel_email: v })} />
         </div>
       </div>
 
@@ -107,7 +107,7 @@ function NotificationsPanel() {
         <p className="text-xs text-slate-500 mb-4">Select which events you want to hear about.</p>
         <div className="space-y-2">
           {events.map(([k, label, desc]) => (
-            <ToggleRow key={k} label={label} description={desc} checked={f[k]} onChange={(v) => setF({ ...f, [k]: v })} />
+            <ToggleRow key={k} label={label} description={desc} checked={f[k]} onChange={(v: boolean) => setF({ ...f, [k]: v })} />
           ))}
         </div>
       </div>
@@ -219,7 +219,7 @@ function SecurityPanel() {
         <p className="text-xs text-slate-500 mb-4">
           Sign out of every device where your account is signed in. You'll need to sign in again with OTP.
         </p>
-        <Button variant="destructive" onClick={signOutEverywhere} disabled={signingOut}>
+        <Button variant="danger" onClick={signOutEverywhere} disabled={signingOut}>
           {signingOut ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <LogOut className="h-4 w-4 mr-2" />}
           Sign out of all devices
         </Button>
