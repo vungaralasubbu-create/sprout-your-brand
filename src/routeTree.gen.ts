@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
+import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
@@ -36,6 +37,7 @@ import { Route as AuthenticatedStudentCoursesRouteImport } from './routes/_authe
 import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_authenticated/student.certificates'
 import { Route as AuthenticatedStudentAssignmentsRouteImport } from './routes/_authenticated/student.assignments'
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
+import { Route as AuthenticatedPartnerReferralBonusRouteImport } from './routes/_authenticated/partner.referral-bonus'
 import { Route as AuthenticatedPartnerPaymentVerificationRouteImport } from './routes/_authenticated/partner.payment-verification'
 import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_authenticated/partner.payment-links'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
@@ -47,6 +49,7 @@ import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './routes/_authenticated/admin.revenue-verification'
 import { Route as AuthenticatedAdminRevenueRouteImport } from './routes/_authenticated/admin.revenue'
+import { Route as AuthenticatedAdminReferralManagementRouteImport } from './routes/_authenticated/admin.referral-management'
 import { Route as AuthenticatedAdminPaymentVerificationRouteImport } from './routes/_authenticated/admin.payment-verification'
 import { Route as AuthenticatedAdminPartnerProgramsRouteImport } from './routes/_authenticated/admin.partner-programs'
 import { Route as AuthenticatedAdminPartnerPayoutsRouteImport } from './routes/_authenticated/admin.partner-payouts'
@@ -117,6 +120,11 @@ const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
 const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   id: '/verify-certificate/$code',
   path: '/verify-certificate/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerSignupRoute = PartnerSignupRouteImport.update({
+  id: '/partner/signup',
+  path: '/partner/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerApplyRoute = PartnerApplyRouteImport.update({
@@ -213,6 +221,12 @@ const AuthenticatedStudentAssessmentsRoute =
     path: '/assessments',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedPartnerReferralBonusRoute =
+  AuthenticatedPartnerReferralBonusRouteImport.update({
+    id: '/referral-bonus',
+    path: '/referral-bonus',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerPaymentVerificationRoute =
   AuthenticatedPartnerPaymentVerificationRouteImport.update({
     id: '/payment-verification',
@@ -277,6 +291,12 @@ const AuthenticatedAdminRevenueRoute =
   AuthenticatedAdminRevenueRouteImport.update({
     id: '/revenue',
     path: '/revenue',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminReferralManagementRoute =
+  AuthenticatedAdminReferralManagementRouteImport.update({
+    id: '/referral-management',
+    path: '/referral-management',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminPaymentVerificationRoute =
@@ -425,6 +445,7 @@ export interface FileRoutesByFullPath {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
@@ -440,6 +461,7 @@ export interface FileRoutesByFullPath {
   '/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -451,6 +473,7 @@ export interface FileRoutesByFullPath {
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
+  '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -484,6 +507,7 @@ export interface FileRoutesByTo {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/programs': typeof ProgramsIndexRoute
@@ -499,6 +523,7 @@ export interface FileRoutesByTo {
   '/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -510,6 +535,7 @@ export interface FileRoutesByTo {
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
+  '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -547,6 +573,7 @@ export interface FileRoutesById {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
@@ -562,6 +589,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/_authenticated/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/_authenticated/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
+  '/_authenticated/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/_authenticated/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/_authenticated/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -573,6 +601,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/_authenticated/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
+  '/_authenticated/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/_authenticated/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/_authenticated/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -610,6 +639,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/partner/signup'
     | '/verify-certificate/$code'
     | '/launch-your-brand/'
     | '/programs/'
@@ -625,6 +655,7 @@ export interface FileRouteTypes {
     | '/admin/partner-payouts'
     | '/admin/partner-programs'
     | '/admin/payment-verification'
+    | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
     | '/admin/settings'
@@ -636,6 +667,7 @@ export interface FileRouteTypes {
     | '/partner/onboarding'
     | '/partner/payment-links'
     | '/partner/payment-verification'
+    | '/partner/referral-bonus'
     | '/student/assessments'
     | '/student/assignments'
     | '/student/certificates'
@@ -669,6 +701,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/partner/signup'
     | '/verify-certificate/$code'
     | '/launch-your-brand'
     | '/programs'
@@ -684,6 +717,7 @@ export interface FileRouteTypes {
     | '/admin/partner-payouts'
     | '/admin/partner-programs'
     | '/admin/payment-verification'
+    | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
     | '/admin/settings'
@@ -695,6 +729,7 @@ export interface FileRouteTypes {
     | '/partner/onboarding'
     | '/partner/payment-links'
     | '/partner/payment-verification'
+    | '/partner/referral-bonus'
     | '/student/assessments'
     | '/student/assignments'
     | '/student/certificates'
@@ -731,6 +766,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/partner/signup'
     | '/verify-certificate/$code'
     | '/launch-your-brand/'
     | '/programs/'
@@ -746,6 +782,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partner-payouts'
     | '/_authenticated/admin/partner-programs'
     | '/_authenticated/admin/payment-verification'
+    | '/_authenticated/admin/referral-management'
     | '/_authenticated/admin/revenue'
     | '/_authenticated/admin/revenue-verification'
     | '/_authenticated/admin/settings'
@@ -757,6 +794,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/onboarding'
     | '/_authenticated/partner/payment-links'
     | '/_authenticated/partner/payment-verification'
+    | '/_authenticated/partner/referral-bonus'
     | '/_authenticated/student/assessments'
     | '/_authenticated/student/assignments'
     | '/_authenticated/student/certificates'
@@ -790,6 +828,7 @@ export interface RootRouteChildren {
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
+  PartnerSignupRoute: typeof PartnerSignupRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
@@ -868,6 +907,13 @@ declare module '@tanstack/react-router' {
       path: '/verify-certificate/$code'
       fullPath: '/verify-certificate/$code'
       preLoaderRoute: typeof VerifyCertificateCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner/signup': {
+      id: '/partner/signup'
+      path: '/partner/signup'
+      fullPath: '/partner/signup'
+      preLoaderRoute: typeof PartnerSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner/apply': {
@@ -989,6 +1035,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentAssessmentsRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/partner/referral-bonus': {
+      id: '/_authenticated/partner/referral-bonus'
+      path: '/referral-bonus'
+      fullPath: '/partner/referral-bonus'
+      preLoaderRoute: typeof AuthenticatedPartnerReferralBonusRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/partner/payment-verification': {
       id: '/_authenticated/partner/payment-verification'
       path: '/payment-verification'
@@ -1064,6 +1117,13 @@ declare module '@tanstack/react-router' {
       path: '/revenue'
       fullPath: '/admin/revenue'
       preLoaderRoute: typeof AuthenticatedAdminRevenueRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/referral-management': {
+      id: '/_authenticated/admin/referral-management'
+      path: '/referral-management'
+      fullPath: '/admin/referral-management'
+      preLoaderRoute: typeof AuthenticatedAdminReferralManagementRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/payment-verification': {
@@ -1236,6 +1296,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnerPayoutsRoute: typeof AuthenticatedAdminPartnerPayoutsRoute
   AuthenticatedAdminPartnerProgramsRoute: typeof AuthenticatedAdminPartnerProgramsRoute
   AuthenticatedAdminPaymentVerificationRoute: typeof AuthenticatedAdminPaymentVerificationRoute
+  AuthenticatedAdminReferralManagementRoute: typeof AuthenticatedAdminReferralManagementRoute
   AuthenticatedAdminRevenueRoute: typeof AuthenticatedAdminRevenueRoute
   AuthenticatedAdminRevenueVerificationRoute: typeof AuthenticatedAdminRevenueVerificationRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
@@ -1265,6 +1326,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminPartnerProgramsRoute,
   AuthenticatedAdminPaymentVerificationRoute:
     AuthenticatedAdminPaymentVerificationRoute,
+  AuthenticatedAdminReferralManagementRoute:
+    AuthenticatedAdminReferralManagementRoute,
   AuthenticatedAdminRevenueRoute: AuthenticatedAdminRevenueRoute,
   AuthenticatedAdminRevenueVerificationRoute:
     AuthenticatedAdminRevenueVerificationRoute,
@@ -1300,6 +1363,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
   AuthenticatedPartnerPaymentLinksRoute: typeof AuthenticatedPartnerPaymentLinksRoute
   AuthenticatedPartnerPaymentVerificationRoute: typeof AuthenticatedPartnerPaymentVerificationRoute
+  AuthenticatedPartnerReferralBonusRoute: typeof AuthenticatedPartnerReferralBonusRoute
 }
 
 const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
@@ -1311,6 +1375,8 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerPaymentLinksRoute: AuthenticatedPartnerPaymentLinksRoute,
   AuthenticatedPartnerPaymentVerificationRoute:
     AuthenticatedPartnerPaymentVerificationRoute,
+  AuthenticatedPartnerReferralBonusRoute:
+    AuthenticatedPartnerReferralBonusRoute,
 }
 
 const AuthenticatedPartnerRouteWithChildren =
@@ -1373,6 +1439,7 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
+  PartnerSignupRoute: PartnerSignupRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,

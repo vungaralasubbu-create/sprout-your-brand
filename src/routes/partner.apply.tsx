@@ -153,12 +153,24 @@ function ApplyForm() {
   const [data, setData] = React.useState<FormState>(empty);
   const [submitting, setSubmitting] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
+  const [referralCode, setReferralCode] = React.useState<string | null>(null);
 
-  // Load draft
+  // Load draft + capture ?ref= referral code
   React.useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) setData({ ...empty, ...JSON.parse(raw) });
+    } catch {}
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("ref");
+      if (ref) {
+        setReferralCode(ref);
+        localStorage.setItem("glintr:referral_code", ref);
+      } else {
+        const stored = localStorage.getItem("glintr:referral_code");
+        if (stored) setReferralCode(stored);
+      }
     } catch {}
   }, []);
 
@@ -237,6 +249,7 @@ function ApplyForm() {
       preferred_days: data.preferred_days.length ? data.preferred_days : null,
       preferred_categories: data.preferred_categories.length ? data.preferred_categories : null,
       preferred_model: data.preferred_model || null,
+      referred_by_code: referralCode || null,
       status: "submitted" as const,
       user_id: currentUserId,
     };
