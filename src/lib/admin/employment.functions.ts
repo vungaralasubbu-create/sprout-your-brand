@@ -44,7 +44,7 @@ export const ensureEmployeeProfile = createServerFn({ method: "POST" })
       .from("employee_profiles")
       .insert({
         partner_id: partner.id,
-        user_id: partner.user_id,
+        user_id: partner.user_id!,
         employee_code: code as string,
         joining_date: data.joining_date ?? new Date().toISOString().slice(0, 10),
         payroll_entity_name: data.payroll_entity ?? null,
