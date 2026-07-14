@@ -246,7 +246,7 @@ function CoursePage() {
             <span className="text-foreground">{c.name}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-[1.15fr_1fr] gap-10 lg:gap-14 items-center">
+          <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 lg:gap-12 items-center">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
