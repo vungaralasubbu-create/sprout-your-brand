@@ -50,7 +50,7 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
           .eq("user_id", userId)
           .maybeSingle();
         if (!existingPartner) {
-          await supabaseAdmin.from("partners").insert({
+          const { data: inserted } = await supabaseAdmin.from("partners").insert({
             user_id: userId,
             application_id: app.id,
             display_name: app.full_name,
@@ -59,7 +59,39 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
             city: app.city,
             state: app.state,
             status: "active",
-          });
+          }).select("id").maybeSingle();
+
+          // Link partner referral if application had a referred_by_code
+          const { data: appFull } = await supabaseAdmin
+            .from("partner_applications")
+            .select("referred_by_code")
+            .eq("id", app.id)
+            .maybeSingle();
+          const refCode = (appFull as any)?.referred_by_code as string | null | undefined;
+          if (inserted?.id && refCode) {
+            const { data: referrer } = await supabaseAdmin
+              .from("partners")
+              .select("id")
+              .eq("referral_code", refCode)
+              .maybeSingle();
+            if (referrer?.id && referrer.id !== inserted.id) {
+              const { data: settings } = await supabaseAdmin
+                .from("referral_program_settings")
+                .select("qualification_period_days")
+                .eq("id", 1)
+                .maybeSingle();
+              const days = Number((settings as any)?.qualification_period_days ?? 30);
+              const deadline = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+              await supabaseAdmin.from("partner_referrals").insert({
+                referrer_partner_id: referrer.id,
+                referred_partner_id: inserted.id,
+                referred_application_id: app.id,
+                referral_code: refCode,
+                status: "active",
+                qualification_deadline: deadline,
+              });
+            }
+          }
         }
       }
 
