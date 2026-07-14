@@ -129,18 +129,7 @@ export function CourseHeroVisual({
     >
       {/* gradient wash */}
       <div className={cn("absolute inset-0 bg-gradient-to-br", kit.gradient)} />
-      {/* grid pattern */}
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-[0.35]"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, oklch(0.92 0.01 250 / 0.7) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.92 0.01 250 / 0.7) 1px, transparent 1px)",
-          backgroundSize: "44px 44px",
-          maskImage: "radial-gradient(ellipse at center, black 55%, transparent 100%)",
-        }}
-      />
-      {/* orbiting glow */}
+      {/* soft glows */}
       <div className="absolute -top-24 -right-16 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
       <div className="absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-accent/20 blur-3xl" />
 
@@ -156,27 +145,18 @@ export function CourseHeroVisual({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          {kit.icons.map((Icon, i) => (
-            <div
-              key={i}
-              className={cn(
-                "group relative aspect-square rounded-2xl border border-border/60 bg-background/70 backdrop-blur p-4 flex items-end transition-transform",
-                i === 0 && "translate-y-2",
-                i === 3 && "-translate-y-2",
-              )}
-            >
-              <Icon className={cn("size-8", kit.accent)} />
-              <span
-                aria-hidden
-                className={cn(
-                  "absolute top-3 right-3 font-mono text-[10px] text-muted-foreground/80",
-                )}
-              >
-                0{i + 1}
-              </span>
-            </div>
-          ))}
+        <div className="flex items-center justify-center">
+          <span
+            className={cn(
+              "inline-flex size-24 items-center justify-center rounded-2xl border border-border/60 bg-background/70 backdrop-blur shadow-sm",
+              kit.accent,
+            )}
+          >
+            {kit.icons[0] ? (() => {
+              const Icon = kit.icons[0];
+              return <Icon className="size-10" />;
+            })() : null}
+          </span>
         </div>
 
         <div className="flex items-center justify-between text-caption text-muted-foreground">
@@ -187,3 +167,4 @@ export function CourseHeroVisual({
     </div>
   );
 }
+
