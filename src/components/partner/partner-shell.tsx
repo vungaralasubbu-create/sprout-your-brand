@@ -122,7 +122,7 @@ export function PartnerShell() {
               </div>
             ) : null}
             <nav className="space-y-0.5">
-              {NAV.map((item, i) => {
+              {navItems.map((item, i) => {
                 const active = isActive(item.to, item.label);
                 const Icon = item.icon;
                 return (
