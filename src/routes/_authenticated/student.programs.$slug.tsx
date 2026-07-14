@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  BookOpen, CheckCircle2, Circle, Clock, PlayCircle, Award,
+  BookOpen, CheckCircle2, Circle, Clock, PlayCircle, Award, Lock,
   ChevronDown, ChevronRight, ArrowLeft, FileText, Layers, GraduationCap, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,11 +23,13 @@ const STATUS_META: Record<string, { label: string; className: string }> = {
   access_expired: { label: "Access Expired", className: "bg-rose-50 text-rose-700 border-rose-200" },
 };
 
-function LessonIcon({ status }: { status: string }) {
+function LessonIcon({ status, locked }: { status: string; locked?: boolean }) {
+  if (locked) return <Lock className="size-4 text-muted-foreground/60" />;
   if (status === "completed") return <CheckCircle2 className="size-4 text-emerald-600" />;
   if (status === "in_progress") return <PlayCircle className="size-4 text-primary" />;
   return <Circle className="size-4 text-muted-foreground/50" />;
 }
+
 
 function Page() {
   const { slug } = Route.useParams();
