@@ -231,13 +231,17 @@ function CoursePage() {
   return (
     <PageShell>
       {/* ============ HERO ============ */}
-      <Section className="pt-8 pb-10 lg:pt-10 lg:pb-14 relative overflow-hidden">
+      <Section className="pt-10 pb-16 lg:pt-14 lg:pb-24 relative overflow-hidden">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.04] via-transparent to-transparent"
+          className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.05] via-transparent to-transparent"
+        />
+        <div
+          aria-hidden
+          className="absolute -top-32 -left-32 -z-10 size-[420px] rounded-full bg-primary/10 blur-[120px]"
         />
         <Container>
-          <nav className="text-caption mb-6 flex items-center gap-1.5 flex-wrap">
+          <nav className="text-caption mb-8 flex items-center gap-1.5 flex-wrap">
             <Link to="/" className="hover:text-foreground">Home</Link>
             <ChevronRight className="size-3.5" />
             <Link to="/programs" className="hover:text-foreground">Programs</Link>
@@ -249,25 +253,25 @@ function CoursePage() {
             <span className="text-foreground">{c.name}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-[1.15fr_1fr] gap-8 lg:gap-12 items-center">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
             <Reveal>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-5">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
                   {c.category.name}
                 </span>
                 {c.is_bestseller ? <Badge variant="bestseller">Best Seller</Badge> : null}
                 {c.is_featured ? <Badge variant="certified">Featured</Badge> : null}
               </div>
-              <h1 className="text-display-md lg:text-[3rem] leading-[1.05] font-display font-semibold tracking-tight text-balance">
-                {c.name}
+              <h1 className="font-display font-semibold tracking-[-0.03em] text-balance leading-[0.95] text-[clamp(2.6rem,6.4vw,5rem)]">
+                {formatHeroTitle(c.name)}
               </h1>
               {c.short_description ? (
-                <p className="mt-4 text-body-lg text-muted-foreground max-w-2xl">
+                <p className="mt-6 text-body-lg text-muted-foreground max-w-xl">
                   {c.short_description}
                 </p>
               ) : null}
 
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild size="lg" variant="gradient">
                   <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
                     Apply Now
@@ -288,20 +292,30 @@ function CoursePage() {
                 ) : null}
               </div>
 
-              <dl className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 max-w-xl">
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
                 {c.duration ? (
-                  <MetaStat icon={Clock} label="Duration" value={c.duration} />
+                  <span className="inline-flex items-center gap-2 text-foreground/85">
+                    <Clock className="size-4 text-primary/80" />
+                    {c.duration}
+                  </span>
                 ) : null}
                 {c.learning_mode ? (
-                  <MetaStat icon={Globe} label="Learning mode" value={c.learning_mode} />
+                  <span className="inline-flex items-center gap-2 text-foreground/85">
+                    <Globe className="size-4 text-primary/80" />
+                    {c.learning_mode}
+                  </span>
                 ) : null}
                 {c.level ? (
-                  <MetaStat icon={GraduationCap} label="Level" value={c.level} />
+                  <span className="inline-flex items-center gap-2 text-foreground/85">
+                    <GraduationCap className="size-4 text-primary/80" />
+                    {c.level}
+                  </span>
                 ) : null}
-                {c.language ? (
-                  <MetaStat icon={Sparkles} label="Language" value={c.language} />
-                ) : null}
-              </dl>
+                <span className="inline-flex items-center gap-2 text-foreground/85">
+                  <Award className="size-4 text-primary/80" />
+                  Certificate
+                </span>
+              </div>
             </Reveal>
 
             <Reveal delay={150}>
@@ -311,62 +325,161 @@ function CoursePage() {
                   categoryName={c.category.name}
                   imageUrl={c.hero_image_url ?? c.thumbnail_url ?? null}
                 />
+                {/* floating Program Focus card */}
+                <div className="hidden sm:block absolute -bottom-8 -left-6 lg:-left-10 rounded-2xl border border-border/60 bg-surface-1/95 backdrop-blur p-5 shadow-2xl w-[260px] animate-[fade-in_0.6s_ease-out_0.4s_both]">
+                  <div className="text-caption font-mono uppercase tracking-widest text-primary">
+                    Program Focus
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm">
+                    <li className="flex items-center gap-2">
+                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <Hammer className="size-3.5" />
+                      </span>
+                      Practical Skills
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <Rocket className="size-3.5" />
+                      </span>
+                      Projects
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="inline-flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                        <Briefcase className="size-3.5" />
+                      </span>
+                      Career Preparation
+                    </li>
+                  </ul>
+                </div>
               </div>
             </Reveal>
           </div>
-
         </Container>
       </Section>
 
-      {/* ============ QUICK STATS ============ */}
-      <Section className="py-8 border-y bg-surface-2/40">
-        <Container>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-            {buildQuickStats(c).map((h, i) => (
-              <Reveal key={h.label} delay={i * 70}>
-                <div className="group flex items-center gap-3 rounded-2xl border border-border/60 bg-surface-1 p-4 hover:border-primary/50 hover:shadow-sm transition-all">
-                  <span className="inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-accent/15 text-primary shrink-0 transition-transform group-hover:scale-105">
-                    <h.icon className="size-5" />
+
+      {/* ============ DARK COURSE INTRO ============ */}
+      <Section className="relative overflow-hidden py-20 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,oklch(0.7_0.15_180/0.22),transparent_60%)]"
+        />
+        <Container className="relative">
+          <div className="grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-center">
+            <Reveal>
+              <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                <CourseHeroVisual
+                  courseName={c.name}
+                  categoryName={c.category.name}
+                  imageUrl={null}
+                  className="aspect-[4/3]"
+                />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-tr from-[oklch(0.16_0.04_255)]/60 via-transparent to-transparent" />
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div>
+                <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
+                  {c.category.name}
+                </span>
+                <h2 className="mt-4 font-display font-semibold tracking-[-0.025em] text-balance text-white leading-[1.02] text-[clamp(2rem,4.4vw,3.5rem)]">
+                  Don't Just Learn It.<br />
+                  <span className="bg-gradient-to-r from-[oklch(0.82_0.16_200)] via-[oklch(0.78_0.16_220)] to-[oklch(0.7_0.16_240)] bg-clip-text text-transparent">
+                    Build With It.
                   </span>
-                  <div className="min-w-0">
-                    <div className="text-caption">{h.label}</div>
-                    <div className="text-sm font-semibold truncate">{h.value}</div>
-                  </div>
+                </h2>
+                <div className="mt-10 space-y-8">
+                  {buildIntroSteps(c).map((step, i) => (
+                    <Reveal key={i} delay={i * 120}>
+                      <div className="flex gap-5">
+                        <span className="font-mono text-[oklch(0.85_0.15_200)] text-2xl font-semibold shrink-0 pt-1">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="font-display font-semibold text-xl text-white">
+                            {step.title}
+                          </h3>
+                          <p className="mt-1.5 text-white/70 leading-relaxed">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    </Reveal>
+                  ))}
                 </div>
-              </Reveal>
-            ))}
+              </div>
+            </Reveal>
           </div>
         </Container>
       </Section>
 
-      {/* ============ LEARN BY BUILDING ============ */}
-      <Section className="py-14 lg:py-20">
+      {/* ============ LEARNING JOURNEY ============ */}
+      <Section className="py-16 lg:py-24 bg-surface-2/40 border-y">
         <Container>
           <Reveal>
-            <div className="max-w-2xl mb-10">
+            <div className="max-w-2xl mb-12">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                Learning Experience
+                The Path
               </span>
-              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-                Learn By Building.
+              <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05]">
+                Your Learning Journey
               </h2>
               <p className="mt-4 text-body-lg text-muted-foreground">
-                Develop practical skills through structured learning, guided practice and real-world applications.
+                A guided path — from foundations to a portfolio you can show.
               </p>
             </div>
           </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {(learningExperience.length > 0
-              ? learningExperience.slice(0, 4)
-              : DEFAULT_LEARN_CARDS
-            ).map((card, i) => (
-              <Reveal key={i} delay={i * 90}>
-                <ExperienceCard {...card} />
-              </Reveal>
-            ))}
+          <LearningJourney />
+        </Container>
+      </Section>
+
+      {/* ============ IMAGE STORY 1 ============ */}
+      <Section className="py-16 lg:py-24">
+        <Container>
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-16 items-center">
+            <Reveal>
+              <div className="group relative rounded-3xl overflow-hidden border border-border/60 shadow-xl">
+                <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]">
+                  <CourseHeroVisual
+                    courseName={c.name}
+                    categoryName={c.category.name}
+                    imageUrl={null}
+                    className="aspect-[5/4]"
+                  />
+                </div>
+              </div>
+            </Reveal>
+            <Reveal delay={100}>
+              <div>
+                <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                  Learn The Craft
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
+                  Understand The Technology.
+                </h2>
+                <p className="mt-5 text-body-lg text-muted-foreground">
+                  {c.short_description ??
+                    `${c.name} moves you from concepts to confident practice — grounded in real problems, industry tools and mentor-led guidance.`}
+                </p>
+                {c.skills.length > 0 ? (
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {c.skills.slice(0, 6).map((s) => (
+                      <span
+                        key={s}
+                        className="inline-flex items-center rounded-full border border-border/60 bg-surface-1 px-3 py-1 text-xs font-medium"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </Reveal>
           </div>
         </Container>
       </Section>
+
+
 
 
       {/* ============ WHY THIS PROGRAM ============ */}
@@ -413,30 +526,76 @@ function CoursePage() {
         <SectionBlock
           eyebrow="Program Syllabus"
           title="What You'll Learn"
+          tone="soft"
         >
           <Curriculum modules={c.modules as any} skills={c.skills} />
         </SectionBlock>
       ) : null}
 
-      {/* ============ SKILLS ============ */}
-      {c.skills.length > 0 ? (
-        <SectionBlock eyebrow="Skills" title="Skills You Can Put To Work." tone="soft">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {c.skills.map((s) => (
-              <div
-                key={s}
-                className="group relative rounded-xl border border-border/60 bg-surface-1 p-4 hover:border-primary/50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Sparkles className="size-4" />
-                  </span>
-                  <span className="text-sm font-medium">{s}</span>
+      {/* ============ IMAGE STORY 2 ============ */}
+      <Section className="py-16 lg:py-24">
+        <Container>
+          <div className="grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center">
+            <Reveal>
+              <div>
+                <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                  Applied Learning
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
+                  Turn Knowledge Into Practical Skills.
+                </h2>
+                <p className="mt-5 text-body-lg text-muted-foreground">
+                  Every module ends with something you've built — code, an analysis,
+                  a design, a document — so what you learn shows up in your work,
+                  not just your notes.
+                </p>
+                <ul className="mt-6 space-y-2.5 text-sm">
+                  {[
+                    "Guided practice with mentor reviews",
+                    "Real briefs modelled on industry work",
+                    "Portfolio-ready deliverables",
+                  ].map((line) => (
+                    <li key={line} className="flex items-start gap-2.5">
+                      <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
+                      <span>{line}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="group relative rounded-3xl overflow-hidden border border-border/60 shadow-xl">
+                <div className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]">
+                  <CourseHeroVisual
+                    courseName={c.name}
+                    categoryName={c.category.name}
+                    imageUrl={null}
+                    className="aspect-[5/4]"
+                  />
                 </div>
               </div>
-            ))}
+            </Reveal>
           </div>
-        </SectionBlock>
+        </Container>
+      </Section>
+
+      {/* ============ SKILLS MARQUEE ============ */}
+      {c.skills.length > 0 ? (
+        <Section className="py-14 lg:py-20 border-y bg-surface-1">
+          <Container>
+            <Reveal>
+              <div className="max-w-2xl mb-8">
+                <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                  Skills You'll Build
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(1.8rem,3.4vw,2.75rem)] leading-[1.05]">
+                  Skills You Can Put To Work.
+                </h2>
+              </div>
+            </Reveal>
+          </Container>
+          <SkillsMarquee skills={c.skills} />
+        </Section>
       ) : null}
 
       {/* ============ TOOLS ============ */}
@@ -465,16 +624,33 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
-      {/* ============ PROJECTS SLIDER ============ */}
+      {/* ============ PROJECTS SLIDER (dark) ============ */}
       {c.projects.length > 0 ? (
-        <SectionBlock
-          eyebrow="Projects"
-          title="Build Projects That Show Your Skills."
-          tone="soft"
-        >
-          <ProjectSlider projects={c.projects as any} />
-        </SectionBlock>
+        <Section className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.28),transparent_55%)]"
+          />
+          <Container className="relative">
+            <Reveal>
+              <div className="max-w-2xl mb-10">
+                <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
+                  Projects
+                </span>
+                <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-white text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05]">
+                  Build Work Worth Showing.
+                </h2>
+                <p className="mt-4 text-white/70 max-w-xl">
+                  Portfolio-ready projects that make your skills tangible to
+                  employers, teams and clients.
+                </p>
+              </div>
+            </Reveal>
+            <ProjectSlider projects={c.projects as any} dark />
+          </Container>
+        </Section>
       ) : null}
+
 
       {/* ============ REVIEWS (renders only when approved reviews are supplied) ============ */}
       <CourseReviewsSection courseId={c.id} />
@@ -507,83 +683,63 @@ function CoursePage() {
       </Section>
 
 
-      {/* ============ PROGRAM EXPERIENCE FEATURE ============ */}
-      {programExperience.length > 0 ? (
-        <Section className="py-14 lg:py-20 bg-[oklch(0.18_0.04_255)] text-white relative overflow-hidden">
+      {/* ============ CERTIFICATION (light gradient) ============ */}
+      {c.certifications.length > 0 ? (
+        <Section className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
           <div
             aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.6_0.18_220/0.25),transparent_60%)]"
+            className="absolute -top-32 -right-32 size-[420px] rounded-full bg-primary/10 blur-[110px]"
           />
           <Container className="relative">
-            <div className="max-w-2xl mb-10">
-              <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_180)]">
-                Program Experience
-              </span>
-              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-white text-balance">
-                More Than Lessons. A Complete Learning Experience.
-              </h2>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {programExperience.slice(0, 8).map((card, i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur p-5"
-                >
-                  <span className="inline-flex size-10 items-center justify-center rounded-lg bg-white/10 text-[oklch(0.9_0.15_180)]">
-                    <card.icon className="size-5" />
+            <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-16 items-center">
+              <Reveal>
+                <div>
+                  <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                    Certification
                   </span>
-                  <h3 className="mt-4 font-display text-lg font-semibold">{card.title}</h3>
-                  <p className="mt-1.5 text-sm text-white/70 line-clamp-3">{card.description}</p>
+                  <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-[clamp(2rem,4vw,3.2rem)] leading-[1.02]">
+                    Finish The Program.<br />
+                    Show Your Progress.
+                  </h2>
+                  <p className="mt-5 text-body-lg text-muted-foreground max-w-lg">
+                    Complete the applicable program requirements and receive a course completion
+                    certificate you can share with employers and on your professional profiles.
+                  </p>
+                  <ul className="mt-6 space-y-2.5">
+                    {c.certifications.map((cert, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" />
+                        <div>
+                          <div className="text-sm font-semibold">{cert.name}</div>
+                          {cert.issuer ? (
+                            <div className="text-caption">Issued by {cert.issuer}</div>
+                          ) : null}
+                          {cert.description ? (
+                            <div className="text-sm text-muted-foreground mt-0.5">
+                              {cert.description}
+                            </div>
+                          ) : null}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ))}
+              </Reveal>
+              <Reveal delay={150}>
+                <div className="relative animate-[float-y_6s_ease-in-out_infinite]">
+                  <div className="lg:rotate-[-4deg] lg:scale-[1.05] transition-transform">
+                    <CertificatePreview
+                      imageUrl={c.certifications.find((x) => x.image_url)?.image_url ?? null}
+                      courseName={c.name}
+                    />
+                  </div>
+                </div>
+              </Reveal>
             </div>
           </Container>
         </Section>
       ) : null}
 
-      {/* ============ CERTIFICATION ============ */}
-      {c.certifications.length > 0 ? (
-        <Section className="py-14 lg:py-20">
-          <Container>
-            <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-              <div>
-                <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                  Certification
-                </span>
-                <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-                  Show What You've Learned.
-                </h2>
-                <p className="mt-5 text-body-lg text-muted-foreground">
-                  Complete the applicable program requirements and receive a course completion
-                  certificate you can share with employers and on your professional profiles.
-                </p>
-                <ul className="mt-6 space-y-2.5">
-                  {c.certifications.map((cert, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="size-5 text-primary shrink-0 mt-0.5" />
-                      <div>
-                        <div className="text-sm font-semibold">{cert.name}</div>
-                        {cert.issuer ? (
-                          <div className="text-caption">Issued by {cert.issuer}</div>
-                        ) : null}
-                        {cert.description ? (
-                          <div className="text-sm text-muted-foreground mt-0.5">
-                            {cert.description}
-                          </div>
-                        ) : null}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <CertificatePreview
-                imageUrl={c.certifications.find((x) => x.image_url)?.image_url ?? null}
-                courseName={c.name}
-              />
-            </div>
-          </Container>
-        </Section>
-      ) : null}
 
       {/* ============ CAREER OPPORTUNITIES ============ */}
       {c.career_roles.length > 0 ? (
@@ -1381,6 +1537,7 @@ function Reveal({
 
 function ProjectSlider({
   projects,
+  dark = false,
 }: {
   projects: Array<{
     id: string;
@@ -1391,7 +1548,9 @@ function ProjectSlider({
     difficulty: string | null;
     industry: string | null;
   }>;
+  dark?: boolean;
 }) {
+
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -1430,7 +1589,12 @@ function ProjectSlider({
           aria-label="Previous projects"
           disabled={!canPrev}
           onClick={() => nudge(-1)}
-          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className={cn(
+            "inline-flex size-10 items-center justify-center rounded-full border transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
+            dark
+              ? "border-white/20 bg-white/10 text-white hover:bg-white/20 hover:border-white/40"
+              : "border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50",
+          )}
         >
           <ChevronLeft className="size-5" />
         </button>
@@ -1439,7 +1603,12 @@ function ProjectSlider({
           aria-label="Next projects"
           disabled={!canNext}
           onClick={() => nudge(1)}
-          className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className={cn(
+            "inline-flex size-10 items-center justify-center rounded-full border transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
+            dark
+              ? "border-white/20 bg-white/10 text-white hover:bg-white/20 hover:border-white/40"
+              : "border-border bg-surface-1 text-foreground/80 hover:text-primary hover:border-primary/50",
+          )}
         >
           <ChevronRight className="size-5" />
         </button>
@@ -1448,6 +1617,7 @@ function ProjectSlider({
         ref={scrollerRef}
         className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
+
         {projects.map((p) => (
           <div
             key={p.id}
@@ -1621,3 +1791,185 @@ const DEFAULT_LEARN_CARDS: Array<{
   },
 ];
 
+
+// -------------------- Hero title formatting --------------------
+
+/**
+ * Split a course name into (roughly) two balanced lines so it renders as a
+ * bold editorial two-line headline. Short names render as-is.
+ */
+function formatHeroTitle(name: string): React.ReactNode {
+  const words = name.trim().split(/\s+/);
+  if (words.length <= 2) return name;
+  // Find split index closest to the middle character-wise.
+  const total = name.length;
+  let best = 1;
+  let bestDelta = Number.POSITIVE_INFINITY;
+  for (let i = 1; i < words.length; i++) {
+    const left = words.slice(0, i).join(" ").length;
+    const delta = Math.abs(left - (total - left));
+    if (delta < bestDelta) {
+      bestDelta = delta;
+      best = i;
+    }
+  }
+  const line1 = words.slice(0, best).join(" ");
+  const line2 = words.slice(best).join(" ");
+  return (
+    <>
+      {line1}
+      <br />
+      {line2}
+    </>
+  );
+}
+
+// -------------------- Dark intro steps --------------------
+
+function buildIntroSteps(c: {
+  name: string;
+  short_description: string | null;
+}): Array<{ title: string; description: string }> {
+  const name = c.name;
+  return [
+    {
+      title: "Learn The Core Skills",
+      description: `Master the fundamentals of ${name} through a structured, guided curriculum designed for real-world application.`,
+    },
+    {
+      title: "Build Practical Projects",
+      description: "Apply what you learn through hands-on projects reviewed by mentors and modelled on industry work.",
+    },
+    {
+      title: "Apply What You Learn",
+      description: "Graduate with a portfolio, career-ready skills and the confidence to take on new opportunities.",
+    },
+  ];
+}
+
+// -------------------- Learning Journey timeline --------------------
+
+const JOURNEY_STAGES: Array<{
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}> = [
+  {
+    title: "Foundation",
+    description: "Ground the fundamentals with structured learning and guided practice.",
+    icon: BookOpen,
+  },
+  {
+    title: "Practice",
+    description: "Sharpen skills through mentor-reviewed exercises and short builds.",
+    icon: Compass,
+  },
+  {
+    title: "Build",
+    description: "Deliver real projects that stitch every skill together into practical work.",
+    icon: Hammer,
+  },
+  {
+    title: "Showcase",
+    description: "Finish with a portfolio, certificate and clear next steps for your career.",
+    icon: Rocket,
+  },
+];
+
+function LearningJourney() {
+  return (
+    <div className="relative">
+      {/* Desktop: horizontal path */}
+      <div className="hidden md:block">
+        <div
+          aria-hidden
+          className="absolute left-0 right-0 top-[38px] h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+        />
+        <ol className="relative grid grid-cols-4 gap-6">
+          {JOURNEY_STAGES.map((s, i) => (
+            <Reveal key={s.title} delay={i * 120}>
+              <li className="flex flex-col items-center text-center px-2">
+                <div className="relative">
+                  <span className="inline-flex size-[76px] items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-white shadow-lg ring-8 ring-surface-2/40">
+                    <s.icon className="size-7" />
+                  </span>
+                  <span className="absolute -top-2 -right-2 inline-flex size-7 items-center justify-center rounded-full bg-background border border-border font-mono text-xs font-semibold text-primary">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="mt-5 font-display font-semibold text-lg tracking-tight">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground max-w-[220px]">
+                  {s.description}
+                </p>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
+
+      {/* Mobile: vertical timeline */}
+      <ol className="md:hidden relative pl-10">
+        <span
+          aria-hidden
+          className="absolute left-[22px] top-2 bottom-2 w-px bg-gradient-to-b from-primary/50 via-primary/30 to-transparent"
+        />
+        {JOURNEY_STAGES.map((s, i) => (
+          <Reveal key={s.title} delay={i * 100}>
+            <li className="relative pb-8 last:pb-0">
+              <span className="absolute -left-10 top-0 inline-flex size-11 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-white shadow-md">
+                <s.icon className="size-5" />
+              </span>
+              <div className="text-caption font-mono text-primary">
+                {String(i + 1).padStart(2, "0")}
+              </div>
+              <h3 className="mt-1 font-display font-semibold text-lg tracking-tight">
+                {s.title}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">{s.description}</p>
+            </li>
+          </Reveal>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+// -------------------- Skills marquee --------------------
+
+function SkillsMarquee({ skills }: { skills: string[] }) {
+  // Duplicate the list so translateX(-50%) creates a seamless loop.
+  const items = [...skills, ...skills];
+  return (
+    <div
+      className="relative w-full overflow-hidden"
+      aria-label="Skills you'll build"
+    >
+      {/* soft edge fades */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 left-0 w-16 z-10 bg-gradient-to-r from-surface-1 to-transparent"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 w-16 z-10 bg-gradient-to-l from-surface-1 to-transparent"
+      />
+      <div
+        className="flex w-max gap-3 py-2 will-change-transform motion-safe:animate-[glintr-marquee_28s_linear_infinite] hover:[animation-play-state:paused]"
+      >
+        {items.map((s, i) => (
+          <span
+            key={`${s}-${i}`}
+            className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-5 py-2.5 text-sm font-medium whitespace-nowrap shadow-sm"
+          >
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Sparkles className="size-3.5" />
+            </span>
+            {s}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
