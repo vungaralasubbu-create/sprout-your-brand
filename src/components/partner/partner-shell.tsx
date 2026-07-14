@@ -29,7 +29,7 @@ const NAV = [
   { to: "/partner/coming-soon", label: "My Leads", icon: Users },
   { to: "/partner/add-leads", label: "Add Leads", icon: UserPlus },
   { to: "/partner/payment-links", label: "Payment Links", icon: Link2 },
-  { to: "/partner/coming-soon", label: "Payment Verification", icon: ShieldCheck },
+  { to: "/partner/payment-verification", label: "Payment Verification", icon: ShieldCheck },
   { to: "/partner/coming-soon", label: "My Sales", icon: ShoppingBag },
   { to: "/partner/coming-soon", label: "Earnings", icon: Wallet },
   { to: "/partner/coming-soon", label: "Programs", icon: Package },
