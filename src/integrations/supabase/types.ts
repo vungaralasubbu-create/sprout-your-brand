@@ -2547,6 +2547,7 @@ export type Database = {
           preferred_days: string[] | null
           preferred_model: Database["public"]["Enums"]["lead_model"] | null
           previous_experience: string | null
+          referred_by_code: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           state: string | null
@@ -2578,6 +2579,7 @@ export type Database = {
           preferred_days?: string[] | null
           preferred_model?: Database["public"]["Enums"]["lead_model"] | null
           previous_experience?: string | null
+          referred_by_code?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           state?: string | null
@@ -2611,6 +2613,7 @@ export type Database = {
           preferred_days?: string[] | null
           preferred_model?: Database["public"]["Enums"]["lead_model"] | null
           previous_experience?: string | null
+          referred_by_code?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           state?: string | null
@@ -3459,6 +3462,94 @@ export type Database = {
           },
         ]
       }
+      partner_referrals: {
+        Row: {
+          admin_note: string | null
+          bonus_amount: number | null
+          bonus_approved_at: string | null
+          bonus_approved_by: string | null
+          bonus_paid_at: string | null
+          bonus_paid_by: string | null
+          created_at: string
+          id: string
+          payout_reference: string | null
+          qualification_deadline: string | null
+          qualified_at: string | null
+          referral_code: string
+          referred_application_id: string | null
+          referred_partner_id: string | null
+          referrer_partner_id: string
+          rejection_reason: string | null
+          signed_up_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_note?: string | null
+          bonus_amount?: number | null
+          bonus_approved_at?: string | null
+          bonus_approved_by?: string | null
+          bonus_paid_at?: string | null
+          bonus_paid_by?: string | null
+          created_at?: string
+          id?: string
+          payout_reference?: string | null
+          qualification_deadline?: string | null
+          qualified_at?: string | null
+          referral_code: string
+          referred_application_id?: string | null
+          referred_partner_id?: string | null
+          referrer_partner_id: string
+          rejection_reason?: string | null
+          signed_up_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_note?: string | null
+          bonus_amount?: number | null
+          bonus_approved_at?: string | null
+          bonus_approved_by?: string | null
+          bonus_paid_at?: string | null
+          bonus_paid_by?: string | null
+          created_at?: string
+          id?: string
+          payout_reference?: string | null
+          qualification_deadline?: string | null
+          qualified_at?: string | null
+          referral_code?: string
+          referred_application_id?: string | null
+          referred_partner_id?: string | null
+          referrer_partner_id?: string
+          rejection_reason?: string | null
+          signed_up_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_referrals_referred_application_id_fkey"
+            columns: ["referred_application_id"]
+            isOneToOne: false
+            referencedRelation: "partner_applications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_referrals_referred_partner_id_fkey"
+            columns: ["referred_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_referrals_referrer_partner_id_fkey"
+            columns: ["referrer_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_sales_enablement: {
         Row: {
           course_id: string
@@ -3716,6 +3807,7 @@ export type Database = {
           payout_details_verified: boolean
           payout_min_threshold: number
           payout_profile_status: string
+          referral_code: string | null
           role_title: string | null
           role_title_other: string | null
           sales_domains: string[]
@@ -3763,6 +3855,7 @@ export type Database = {
           payout_details_verified?: boolean
           payout_min_threshold?: number
           payout_profile_status?: string
+          referral_code?: string | null
           role_title?: string | null
           role_title_other?: string | null
           sales_domains?: string[]
@@ -3810,6 +3903,7 @@ export type Database = {
           payout_details_verified?: boolean
           payout_min_threshold?: number
           payout_profile_status?: string
+          referral_code?: string | null
           role_title?: string | null
           role_title_other?: string | null
           sales_domains?: string[]
@@ -4013,6 +4107,39 @@ export type Database = {
           updated_at?: string
           updated_by?: string | null
           value?: string | null
+        }
+        Relationships: []
+      }
+      referral_program_settings: {
+        Row: {
+          bonus_amount: number
+          id: number
+          is_active: boolean
+          min_revenue_generated: number
+          min_verified_sales: number
+          qualification_period_days: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          bonus_amount?: number
+          id?: number
+          is_active?: boolean
+          min_revenue_generated?: number
+          min_verified_sales?: number
+          qualification_period_days?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          bonus_amount?: number
+          id?: number
+          is_active?: boolean
+          min_revenue_generated?: number
+          min_verified_sales?: number
+          qualification_period_days?: number
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
