@@ -141,7 +141,7 @@ export const getCareerOverview = createServerFn({ method: "GET" })
       portfolio.map(async (p: any) => {
         const { data: tmpl } = await sb
           .from("course_project_templates")
-          .select("title, project_type, portfolio_eligible")
+          .select("name, project_type, portfolio_eligible")
           .eq("id", p.project_id)
           .maybeSingle();
         const { data: latestSub } = await sb
@@ -500,7 +500,7 @@ export const listEligiblePortfolioProjects = createServerFn({ method: "GET" })
     const templateIds = Array.from(new Set(rows.map((r: any) => r.project_id)));
     const { data: templates } = await sb
       .from("course_project_templates")
-      .select("id, title, project_type, portfolio_eligible")
+      .select("id, name, project_type, portfolio_eligible")
       .in("id", templateIds);
     const tmplById = new Map((templates ?? []).map((t: any) => [t.id, t]));
     const courseIds = Array.from(new Set(rows.map((r: any) => r.course_id)));
