@@ -56,6 +56,7 @@ export const listFullTimeApplications = createServerFn({ method: "GET" })
     }
     const saleStats = new Map<string, { verifiedSales: number; verifiedRevenue: number }>();
     for (const e of enrolls ?? []) {
+      if (!e.partner_id) continue;
       const cur = saleStats.get(e.partner_id) ?? { verifiedSales: 0, verifiedRevenue: 0 };
       if (e.status === "verified" || e.verified_at) {
         cur.verifiedSales += 1;
