@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
+import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
@@ -117,6 +118,11 @@ const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
 const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   id: '/verify-certificate/$code',
   path: '/verify-certificate/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerSignupRoute = PartnerSignupRouteImport.update({
+  id: '/partner/signup',
+  path: '/partner/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerApplyRoute = PartnerApplyRouteImport.update({
@@ -425,6 +431,7 @@ export interface FileRoutesByFullPath {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
@@ -484,6 +491,7 @@ export interface FileRoutesByTo {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/programs': typeof ProgramsIndexRoute
@@ -547,6 +555,7 @@ export interface FileRoutesById {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
+  '/partner/signup': typeof PartnerSignupRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
@@ -610,6 +619,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/partner/signup'
     | '/verify-certificate/$code'
     | '/launch-your-brand/'
     | '/programs/'
@@ -669,6 +679,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/partner/signup'
     | '/verify-certificate/$code'
     | '/launch-your-brand'
     | '/programs'
@@ -731,6 +742,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
+    | '/partner/signup'
     | '/verify-certificate/$code'
     | '/launch-your-brand/'
     | '/programs/'
@@ -790,6 +802,7 @@ export interface RootRouteChildren {
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
+  PartnerSignupRoute: typeof PartnerSignupRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
@@ -868,6 +881,13 @@ declare module '@tanstack/react-router' {
       path: '/verify-certificate/$code'
       fullPath: '/verify-certificate/$code'
       preLoaderRoute: typeof VerifyCertificateCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner/signup': {
+      id: '/partner/signup'
+      path: '/partner/signup'
+      fullPath: '/partner/signup'
+      preLoaderRoute: typeof PartnerSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner/apply': {
@@ -1373,6 +1393,7 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
+  PartnerSignupRoute: PartnerSignupRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
