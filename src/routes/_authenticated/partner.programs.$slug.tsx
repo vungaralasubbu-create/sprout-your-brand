@@ -170,7 +170,7 @@ function ProgramDetails() {
         ) : null}
 
         {/* Certificate */}
-        {certification && (certification.title || certification.description) ? (
+        {certification && (certification.name || certification.description) ? (
           <Card className="p-6 flex gap-4 items-start bg-[oklch(0.97_0.02_240)]">
             <Award className="size-6 text-primary shrink-0 mt-0.5" />
             <div>
