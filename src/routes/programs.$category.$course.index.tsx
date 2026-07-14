@@ -285,7 +285,7 @@ function CoursePage() {
                 ) : null}
               </div>
 
-              <dl className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 max-w-xl">
+              <dl className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 max-w-xl">
                 {c.duration ? (
                   <MetaStat icon={Clock} label="Duration" value={c.duration} />
                 ) : null}
