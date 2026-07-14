@@ -214,7 +214,7 @@ function ReferralManagementPage() {
         row={actionRow}
         action={actionType}
         onClose={() => { setActionRow(null); setActionType(null); }}
-        onSubmit={(payload) => mutate.mutate(payload)}
+        onSubmit={(payload: any) => mutate.mutate(payload)}
         pending={mutate.isPending}
       />
 
@@ -223,7 +223,7 @@ function ReferralManagementPage() {
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}
         current={settingsQ.data?.settings ?? null}
-        onSave={async (v) => {
+        onSave={async (v: any) => {
           await saveSettings({ data: v });
           toast.success("Settings saved");
           qc.invalidateQueries({ queryKey: ["admin-referral-settings"] });

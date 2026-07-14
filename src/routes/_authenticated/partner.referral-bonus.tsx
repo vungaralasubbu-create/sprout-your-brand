@@ -178,8 +178,8 @@ function ReferralBonusPage() {
                     <td className="px-4 py-3 font-mono text-xs">{r.referralCode}</td>
                     <td className="px-4 py-3">{fmtDate(r.signedUpAt)}</td>
                     <td className="px-4 py-3">
-                      <Badge variant={STATUS_VARIANT[r.status] as any}>
-                        {REFERRAL_STATUS_LABEL[r.status]}
+                      <Badge variant={STATUS_VARIANT[r.status as ReferralStatus] as any}>
+                        {REFERRAL_STATUS_LABEL[r.status as ReferralStatus]}
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-right tabular-nums">
