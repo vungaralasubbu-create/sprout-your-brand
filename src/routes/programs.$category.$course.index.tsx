@@ -402,26 +402,8 @@ function CoursePage() {
         </Section>
       ) : null}
 
-      {/* ============ LEARNING EXPERIENCE ============ */}
-      {learningExperience.length > 0 ? (
-        <Section className="py-14 lg:py-20 bg-surface-2/40 border-y">
-          <Container>
-            <div className="max-w-2xl mb-10">
-              <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                Learning Experience
-              </span>
-              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-                Learn By Understanding. Grow By Building.
-              </h2>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {learningExperience.slice(0, 4).map((card, i) => (
-                <ExperienceCard key={i} {...card} />
-              ))}
-            </div>
-          </Container>
-        </Section>
-      ) : null}
+      {/* (Learning Experience is rendered as "Learn By Building" above.) */}
+
 
       {/* ============ CURRICULUM ============ */}
       {c.modules.length > 0 ? (
