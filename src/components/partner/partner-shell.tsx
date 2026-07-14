@@ -239,7 +239,3 @@ function FollowUpAlerts() {
     </DropdownMenu>
   );
 }
-      </div>
-    </div>
-  );
-}
