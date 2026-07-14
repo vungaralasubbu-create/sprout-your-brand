@@ -38,6 +38,7 @@ import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_
 import { Route as AuthenticatedStudentAssignmentsRouteImport } from './routes/_authenticated/student.assignments'
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
 import { Route as AuthenticatedPartnerReferralBonusRouteImport } from './routes/_authenticated/partner.referral-bonus'
+import { Route as AuthenticatedPartnerQuickStartRouteImport } from './routes/_authenticated/partner.quick-start'
 import { Route as AuthenticatedPartnerProgramsRouteImport } from './routes/_authenticated/partner.programs'
 import { Route as AuthenticatedPartnerPaymentVerificationRouteImport } from './routes/_authenticated/partner.payment-verification'
 import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_authenticated/partner.payment-links'
@@ -48,6 +49,7 @@ import { Route as AuthenticatedPartnerEarningsRouteImport } from './routes/_auth
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedPartnerComingSoonRouteImport } from './routes/_authenticated/partner.coming-soon'
 import { Route as AuthenticatedPartnerBrandProfileRouteImport } from './routes/_authenticated/partner.brand-profile'
+import { Route as AuthenticatedPartnerApplicationStatusRouteImport } from './routes/_authenticated/partner.application-status'
 import { Route as AuthenticatedPartnerAnalyticsRouteImport } from './routes/_authenticated/partner.analytics'
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
@@ -246,6 +248,12 @@ const AuthenticatedPartnerReferralBonusRoute =
     path: '/referral-bonus',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerQuickStartRoute =
+  AuthenticatedPartnerQuickStartRouteImport.update({
+    id: '/quick-start',
+    path: '/quick-start',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerProgramsRoute =
   AuthenticatedPartnerProgramsRouteImport.update({
     id: '/programs',
@@ -304,6 +312,12 @@ const AuthenticatedPartnerBrandProfileRoute =
   AuthenticatedPartnerBrandProfileRouteImport.update({
     id: '/brand-profile',
     path: '/brand-profile',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerApplicationStatusRoute =
+  AuthenticatedPartnerApplicationStatusRouteImport.update({
+    id: '/application-status',
+    path: '/application-status',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerAnalyticsRoute =
@@ -610,6 +624,7 @@ export interface FileRoutesByFullPath {
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
+  '/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
@@ -620,6 +635,7 @@ export interface FileRoutesByFullPath {
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
+  '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
@@ -691,6 +707,7 @@ export interface FileRoutesByTo {
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
+  '/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
@@ -701,6 +718,7 @@ export interface FileRoutesByTo {
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
+  '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
@@ -776,6 +794,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/_authenticated/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
+  '/_authenticated/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
   '/_authenticated/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/_authenticated/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
@@ -786,6 +805,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/_authenticated/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
   '/_authenticated/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
+  '/_authenticated/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/_authenticated/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/_authenticated/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
@@ -861,6 +881,7 @@ export interface FileRouteTypes {
     | '/partner/account'
     | '/partner/add-leads'
     | '/partner/analytics'
+    | '/partner/application-status'
     | '/partner/brand-profile'
     | '/partner/coming-soon'
     | '/partner/dashboard'
@@ -871,6 +892,7 @@ export interface FileRouteTypes {
     | '/partner/payment-links'
     | '/partner/payment-verification'
     | '/partner/programs'
+    | '/partner/quick-start'
     | '/partner/referral-bonus'
     | '/student/assessments'
     | '/student/assignments'
@@ -942,6 +964,7 @@ export interface FileRouteTypes {
     | '/partner/account'
     | '/partner/add-leads'
     | '/partner/analytics'
+    | '/partner/application-status'
     | '/partner/brand-profile'
     | '/partner/coming-soon'
     | '/partner/dashboard'
@@ -952,6 +975,7 @@ export interface FileRouteTypes {
     | '/partner/payment-links'
     | '/partner/payment-verification'
     | '/partner/programs'
+    | '/partner/quick-start'
     | '/partner/referral-bonus'
     | '/student/assessments'
     | '/student/assignments'
@@ -1026,6 +1050,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/account'
     | '/_authenticated/partner/add-leads'
     | '/_authenticated/partner/analytics'
+    | '/_authenticated/partner/application-status'
     | '/_authenticated/partner/brand-profile'
     | '/_authenticated/partner/coming-soon'
     | '/_authenticated/partner/dashboard'
@@ -1036,6 +1061,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/payment-links'
     | '/_authenticated/partner/payment-verification'
     | '/_authenticated/partner/programs'
+    | '/_authenticated/partner/quick-start'
     | '/_authenticated/partner/referral-bonus'
     | '/_authenticated/student/assessments'
     | '/_authenticated/student/assignments'
@@ -1289,6 +1315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerReferralBonusRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/partner/quick-start': {
+      id: '/_authenticated/partner/quick-start'
+      path: '/quick-start'
+      fullPath: '/partner/quick-start'
+      preLoaderRoute: typeof AuthenticatedPartnerQuickStartRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/partner/programs': {
       id: '/_authenticated/partner/programs'
       path: '/programs'
@@ -1357,6 +1390,13 @@ declare module '@tanstack/react-router' {
       path: '/brand-profile'
       fullPath: '/partner/brand-profile'
       preLoaderRoute: typeof AuthenticatedPartnerBrandProfileRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/application-status': {
+      id: '/_authenticated/partner/application-status'
+      path: '/application-status'
+      fullPath: '/partner/application-status'
+      preLoaderRoute: typeof AuthenticatedPartnerApplicationStatusRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/analytics': {
@@ -1776,6 +1816,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerAccountRoute: typeof AuthenticatedPartnerAccountRoute
   AuthenticatedPartnerAddLeadsRoute: typeof AuthenticatedPartnerAddLeadsRoute
   AuthenticatedPartnerAnalyticsRoute: typeof AuthenticatedPartnerAnalyticsRoute
+  AuthenticatedPartnerApplicationStatusRoute: typeof AuthenticatedPartnerApplicationStatusRoute
   AuthenticatedPartnerBrandProfileRoute: typeof AuthenticatedPartnerBrandProfileRoute
   AuthenticatedPartnerComingSoonRoute: typeof AuthenticatedPartnerComingSoonRoute
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
@@ -1786,6 +1827,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerPaymentLinksRoute: typeof AuthenticatedPartnerPaymentLinksRoute
   AuthenticatedPartnerPaymentVerificationRoute: typeof AuthenticatedPartnerPaymentVerificationRoute
   AuthenticatedPartnerProgramsRoute: typeof AuthenticatedPartnerProgramsRouteWithChildren
+  AuthenticatedPartnerQuickStartRoute: typeof AuthenticatedPartnerQuickStartRoute
   AuthenticatedPartnerReferralBonusRoute: typeof AuthenticatedPartnerReferralBonusRoute
   AuthenticatedPartnerEmploymentIndexRoute: typeof AuthenticatedPartnerEmploymentIndexRoute
   AuthenticatedPartnerEmploymentSalarySlipsIdRoute: typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
@@ -1795,6 +1837,8 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerAccountRoute: AuthenticatedPartnerAccountRoute,
   AuthenticatedPartnerAddLeadsRoute: AuthenticatedPartnerAddLeadsRoute,
   AuthenticatedPartnerAnalyticsRoute: AuthenticatedPartnerAnalyticsRoute,
+  AuthenticatedPartnerApplicationStatusRoute:
+    AuthenticatedPartnerApplicationStatusRoute,
   AuthenticatedPartnerBrandProfileRoute: AuthenticatedPartnerBrandProfileRoute,
   AuthenticatedPartnerComingSoonRoute: AuthenticatedPartnerComingSoonRoute,
   AuthenticatedPartnerDashboardRoute: AuthenticatedPartnerDashboardRoute,
@@ -1808,6 +1852,7 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
     AuthenticatedPartnerPaymentVerificationRoute,
   AuthenticatedPartnerProgramsRoute:
     AuthenticatedPartnerProgramsRouteWithChildren,
+  AuthenticatedPartnerQuickStartRoute: AuthenticatedPartnerQuickStartRoute,
   AuthenticatedPartnerReferralBonusRoute:
     AuthenticatedPartnerReferralBonusRoute,
   AuthenticatedPartnerEmploymentIndexRoute:
