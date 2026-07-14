@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/student/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/student/courses", label: "My Courses", icon: BookOpen },
+  { to: "/student/programs", label: "My Programs", icon: BookOpen },
   { to: "/student/assignments", label: "Assignments", icon: ClipboardList },
   { to: "/student/assessments", label: "Assessments", icon: GraduationCap },
   { to: "/student/certificates", label: "Certificates", icon: Award },
@@ -29,7 +29,7 @@ const NAV = [
 
 const MOBILE_NAV = [
   { to: "/student/dashboard", label: "Home", icon: Home },
-  { to: "/student/courses", label: "Courses", icon: BookOpen },
+  { to: "/student/programs", label: "Programs", icon: BookOpen },
   { to: "/student/learn", label: "Learn", icon: GraduationCap },
   { to: "/student/certificates", label: "Certificates", icon: Award },
 ] as const;
