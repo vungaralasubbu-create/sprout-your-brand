@@ -172,7 +172,12 @@ function DashboardPage() {
         </Card>
       )}
 
-      <MetricGrid metrics={dashQ.data!.metrics!} earnings={dashQ.data!.earnings!} />
+      {(() => {
+        const metrics = dashQ.data!.metrics!;
+        const earnings = dashQ.data!.earnings!;
+        return (
+          <>
+      <MetricGrid metrics={metrics} earnings={earnings} />
 
       <div className="grid lg:grid-cols-[1.4fr_1fr] gap-4">
         <ReferralIdentityCard
@@ -181,7 +186,7 @@ function DashboardPage() {
           onActivity={(event) => activityFn({ data: { event } }).catch(() => {})}
         />
         <div className="space-y-4">
-          <EarningsCard earnings={dashQ.data!.earnings} error={dashQ.isError} onRetry={() => dashQ.refetch()} />
+          <EarningsCard earnings={earnings} error={dashQ.isError} onRetry={() => dashQ.refetch()} />
           <UpTo40Card onView={() => activityFn({ data: { event: "commission_structure_viewed" } }).catch(() => {})} />
         </div>
       </div>
@@ -202,11 +207,11 @@ function DashboardPage() {
           </Tabs>
         </div>
         <div className="mt-4 grid md:grid-cols-5 gap-3 text-sm">
-          <MiniStat label="Referral Visits" value={dashQ.data!.metrics.totalVisits.toLocaleString()} />
-          <MiniStat label="Referral Leads" value={dashQ.data!.metrics.totalReferrals.toLocaleString()} />
-          <MiniStat label="Enrollments" value={(dashQ.data!.metrics.pendingEnrollments + dashQ.data!.metrics.verifiedEnrollments).toLocaleString()} />
-          <MiniStat label="Verified Enrollments" value={dashQ.data!.metrics.verifiedEnrollments.toLocaleString()} />
-          <MiniStat label="Conversion Rate" value={`${dashQ.data!.metrics.conversionRate}%`} />
+          <MiniStat label="Referral Visits" value={metrics.totalVisits.toLocaleString()} />
+          <MiniStat label="Referral Leads" value={metrics.totalReferrals.toLocaleString()} />
+          <MiniStat label="Enrollments" value={(metrics.pendingEnrollments + metrics.verifiedEnrollments).toLocaleString()} />
+          <MiniStat label="Verified Enrollments" value={metrics.verifiedEnrollments.toLocaleString()} />
+          <MiniStat label="Conversion Rate" value={`${metrics.conversionRate}%`} />
         </div>
         <div className="mt-5 h-60">
           <TrendChart loading={trendQ.isLoading} points={trendQ.data?.points ?? []} />
