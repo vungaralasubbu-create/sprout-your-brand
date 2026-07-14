@@ -3011,6 +3011,59 @@ export type Database = {
           },
         ]
       }
+      partner_payment_actions: {
+        Row: {
+          action: string
+          actor_role: string
+          actor_user_id: string | null
+          created_at: string
+          from_status:
+            | Database["public"]["Enums"]["payment_submission_status"]
+            | null
+          id: string
+          message: string | null
+          metadata: Json
+          submission_id: string
+          to_status: Database["public"]["Enums"]["payment_submission_status"]
+        }
+        Insert: {
+          action: string
+          actor_role: string
+          actor_user_id?: string | null
+          created_at?: string
+          from_status?:
+            | Database["public"]["Enums"]["payment_submission_status"]
+            | null
+          id?: string
+          message?: string | null
+          metadata?: Json
+          submission_id: string
+          to_status: Database["public"]["Enums"]["payment_submission_status"]
+        }
+        Update: {
+          action?: string
+          actor_role?: string
+          actor_user_id?: string | null
+          created_at?: string
+          from_status?:
+            | Database["public"]["Enums"]["payment_submission_status"]
+            | null
+          id?: string
+          message?: string | null
+          metadata?: Json
+          submission_id?: string
+          to_status?: Database["public"]["Enums"]["payment_submission_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_payment_actions_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "partner_payment_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_payment_submissions: {
         Row: {
           admin_notes: string | null
