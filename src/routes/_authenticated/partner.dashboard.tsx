@@ -28,6 +28,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { getOverviewStats, getPartnerContext } from "@/lib/partner/dashboard.functions";
+import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
+import { AlertTriangle, CalendarClock, PhoneOff, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/programs";
@@ -101,19 +103,22 @@ function PartnerDashboard() {
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline" size="sm">
-            <Link to="/partner/coming-soon">
+            <Link to="/partner/my-leads" search={{ filter: "today", index: 0 }}>
               <ListChecks className="size-4" />
               View My Leads
             </Link>
           </Button>
           <Button asChild variant="gradient" size="sm">
-            <Link to="/partner/coming-soon">
+            <Link to="/partner/add-leads">
               <Plus className="size-4" />
               Add Lead
             </Link>
           </Button>
         </div>
       </header>
+
+      <NeedsAttention />
+
 
       {/* Row 1: sales & payments KPIs */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
