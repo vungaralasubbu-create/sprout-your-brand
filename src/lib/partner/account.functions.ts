@@ -70,7 +70,7 @@ export const updatePartnerProfile = createServerFn({ method: "POST" })
     const patch: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(data)) if (v !== undefined) patch[k] = v;
     if (Object.keys(patch).length === 0) return { ok: true };
-    const { error } = await supabase.from("partners").update(patch).eq("user_id", userId);
+    const { error } = await supabase.from("partners").update(patch as never).eq("user_id", userId);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
