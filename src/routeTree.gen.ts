@@ -35,7 +35,6 @@ import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authe
 import { Route as AuthenticatedStudentDashboardRouteImport } from './routes/_authenticated/student.dashboard'
 import { Route as AuthenticatedStudentCoursesRouteImport } from './routes/_authenticated/student.courses'
 import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_authenticated/student.certificates'
-import { Route as AuthenticatedStudentAssignmentsRouteImport } from './routes/_authenticated/student.assignments'
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
 import { Route as AuthenticatedPartnerSupportRouteImport } from './routes/_authenticated/partner.support'
 import { Route as AuthenticatedPartnerReferralBonusRouteImport } from './routes/_authenticated/partner.referral-bonus'
@@ -249,12 +248,6 @@ const AuthenticatedStudentCertificatesRoute =
   AuthenticatedStudentCertificatesRouteImport.update({
     id: '/certificates',
     path: '/certificates',
-    getParentRoute: () => AuthenticatedStudentRoute,
-  } as any)
-const AuthenticatedStudentAssignmentsRoute =
-  AuthenticatedStudentAssignmentsRouteImport.update({
-    id: '/assignments',
-    path: '/assignments',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
 const AuthenticatedStudentAssessmentsRoute =
@@ -793,7 +786,6 @@ export interface FileRoutesByFullPath {
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
-  '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
   '/student/courses': typeof AuthenticatedStudentCoursesRoute
   '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
@@ -897,7 +889,6 @@ export interface FileRoutesByTo {
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
-  '/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
   '/student/courses': typeof AuthenticatedStudentCoursesRoute
   '/student/dashboard': typeof AuthenticatedStudentDashboardRoute
@@ -1005,7 +996,6 @@ export interface FileRoutesById {
   '/_authenticated/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
   '/_authenticated/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
-  '/_authenticated/student/assignments': typeof AuthenticatedStudentAssignmentsRoute
   '/_authenticated/student/certificates': typeof AuthenticatedStudentCertificatesRoute
   '/_authenticated/student/courses': typeof AuthenticatedStudentCoursesRoute
   '/_authenticated/student/dashboard': typeof AuthenticatedStudentDashboardRoute
@@ -1113,7 +1103,6 @@ export interface FileRouteTypes {
     | '/partner/referral-bonus'
     | '/partner/support'
     | '/student/assessments'
-    | '/student/assignments'
     | '/student/certificates'
     | '/student/courses'
     | '/student/dashboard'
@@ -1217,7 +1206,6 @@ export interface FileRouteTypes {
     | '/partner/referral-bonus'
     | '/partner/support'
     | '/student/assessments'
-    | '/student/assignments'
     | '/student/certificates'
     | '/student/courses'
     | '/student/dashboard'
@@ -1324,7 +1312,6 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/referral-bonus'
     | '/_authenticated/partner/support'
     | '/_authenticated/student/assessments'
-    | '/_authenticated/student/assignments'
     | '/_authenticated/student/certificates'
     | '/_authenticated/student/courses'
     | '/_authenticated/student/dashboard'
@@ -1565,13 +1552,6 @@ declare module '@tanstack/react-router' {
       path: '/certificates'
       fullPath: '/student/certificates'
       preLoaderRoute: typeof AuthenticatedStudentCertificatesRouteImport
-      parentRoute: typeof AuthenticatedStudentRoute
-    }
-    '/_authenticated/student/assignments': {
-      id: '/_authenticated/student/assignments'
-      path: '/assignments'
-      fullPath: '/student/assignments'
-      preLoaderRoute: typeof AuthenticatedStudentAssignmentsRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/student/assessments': {
@@ -2357,7 +2337,6 @@ const AuthenticatedPartnerRouteWithChildren =
 
 interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentAssessmentsRoute: typeof AuthenticatedStudentAssessmentsRoute
-  AuthenticatedStudentAssignmentsRoute: typeof AuthenticatedStudentAssignmentsRoute
   AuthenticatedStudentCertificatesRoute: typeof AuthenticatedStudentCertificatesRoute
   AuthenticatedStudentCoursesRoute: typeof AuthenticatedStudentCoursesRoute
   AuthenticatedStudentDashboardRoute: typeof AuthenticatedStudentDashboardRoute
@@ -2376,7 +2355,6 @@ interface AuthenticatedStudentRouteChildren {
 
 const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentAssessmentsRoute: AuthenticatedStudentAssessmentsRoute,
-  AuthenticatedStudentAssignmentsRoute: AuthenticatedStudentAssignmentsRoute,
   AuthenticatedStudentCertificatesRoute: AuthenticatedStudentCertificatesRoute,
   AuthenticatedStudentCoursesRoute: AuthenticatedStudentCoursesRoute,
   AuthenticatedStudentDashboardRoute: AuthenticatedStudentDashboardRoute,
