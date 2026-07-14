@@ -131,12 +131,24 @@ export const adminGetPaymentSubmission = createServerFn({ method: "GET" })
     const { data: row, error } = await supabase
       .from("partner_payment_submissions")
       .select(
-        "id, partner_id, lead_id, course_id, plan, amount, payment_date, payment_method, utr_reference, utr_normalized, payment_link_id, partner_notes, admin_notes, proof_bucket, proof_path, proof_mime, status, submitted_at, is_duplicate_flag, reviewed_by, reviewed_at, courses:course_id(name), partner_leads:lead_id(full_name, mobile, status), partners:partner_id(partner_code, user_id, profiles:user_id(full_name, email)), payment_links:payment_link_id(url)",
+        "id, partner_id, lead_id, course_id, plan, amount, payment_date, payment_method, utr_reference, utr_normalized, payment_link_id, partner_notes, admin_notes, proof_bucket, proof_path, proof_mime, status, submitted_at, is_duplicate_flag, reviewed_by, reviewed_at, courses:course_id(name), partner_leads:lead_id(full_name, mobile, status), partners:partner_id(partner_code, user_id), payment_links:payment_link_id(url)",
       )
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!row) throw new Error("Submission not found");
+
+    // Fetch partner profile separately (no FK between partners.user_id and profiles)
+    const partnerUserId = (row.partners as any)?.user_id as string | undefined;
+    let partnerProfile: { full_name?: string | null; email?: string | null } | null = null;
+    if (partnerUserId) {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", partnerUserId)
+        .maybeSingle();
+      partnerProfile = prof ?? null;
+    }
 
     // Duplicate UTR: any other submission with same normalized UTR
     const { data: dups } = await supabase
