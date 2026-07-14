@@ -184,7 +184,7 @@ function AdminLeadOwnership() {
                     {r.existing_created_at ? new Date(r.existing_created_at).toLocaleDateString() : "—"}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{STATUS_LABELS[r.status] ?? r.status}</Badge>
+                    <Badge variant="muted">{STATUS_LABELS[r.status] ?? r.status}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <Button size="sm" variant="outline" onClick={() => setOpenId(r.id)}>
