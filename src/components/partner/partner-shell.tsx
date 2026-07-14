@@ -15,6 +15,7 @@ import {
   Building2,
   BarChart3,
   UserCircle,
+  Briefcase,
   LogOut,
   Menu,
   X,
