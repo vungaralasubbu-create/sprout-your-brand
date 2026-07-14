@@ -112,7 +112,7 @@ function ProgramResourcesPage() {
         )}
 
         {GROUPS.map((g) => {
-          const items = resources.filter((r) => g.types.includes(r.resource_type as any));
+          const items = resources.filter((r) => (g.types as readonly string[]).includes(r.resource_type));
           if (items.length === 0) return null;
           return (
             <div key={g.key}>
