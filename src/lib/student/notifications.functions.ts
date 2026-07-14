@@ -261,7 +261,7 @@ export const syncStudentNotifications = createServerFn({ method: "POST" })
         }
 
         // Due soon reminder (within 3 days, only if not yet submitted/approved)
-        const due = a.course_assignments?.due_date;
+        const due = a.course_assignments?.due_at;
         if (due && ["not_started","in_progress"].includes(a.status)) {
           const dueMs = new Date(due).getTime();
           const diffDays = (dueMs - now) / (1000 * 60 * 60 * 24);
