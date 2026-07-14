@@ -2889,6 +2889,53 @@ export type Database = {
           },
         ]
       }
+      partner_full_time_applications: {
+        Row: {
+          admin_notes: string | null
+          applicant_notes: string | null
+          applied_at: string
+          created_at: string
+          id: string
+          partner_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          applicant_notes?: string | null
+          applied_at?: string
+          created_at?: string
+          id?: string
+          partner_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          applicant_notes?: string | null
+          applied_at?: string
+          created_at?: string
+          id?: string
+          partner_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_full_time_applications_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_lead_activities: {
         Row: {
           activity_type: Database["public"]["Enums"]["partner_activity_type"]
@@ -3460,11 +3507,17 @@ export type Database = {
       partner_payout_details: {
         Row: {
           account_holder_name: string | null
+          account_last4: string | null
+          account_type: string | null
           bank_account_number: string | null
+          bank_details_completed: boolean
           bank_name: string | null
+          gstin: string | null
           ifsc_code: string | null
           legal_name: string | null
           pan: string | null
+          pan_details_completed: boolean
+          pan_masked: string | null
           partner_id: string
           tax_status: string | null
           updated_at: string
@@ -3472,11 +3525,17 @@ export type Database = {
         }
         Insert: {
           account_holder_name?: string | null
+          account_last4?: string | null
+          account_type?: string | null
           bank_account_number?: string | null
+          bank_details_completed?: boolean
           bank_name?: string | null
+          gstin?: string | null
           ifsc_code?: string | null
           legal_name?: string | null
           pan?: string | null
+          pan_details_completed?: boolean
+          pan_masked?: string | null
           partner_id: string
           tax_status?: string | null
           updated_at?: string
@@ -3484,11 +3543,17 @@ export type Database = {
         }
         Update: {
           account_holder_name?: string | null
+          account_last4?: string | null
+          account_type?: string | null
           bank_account_number?: string | null
+          bank_details_completed?: boolean
           bank_name?: string | null
+          gstin?: string | null
           ifsc_code?: string | null
           legal_name?: string | null
           pan?: string | null
+          pan_details_completed?: boolean
+          pan_masked?: string | null
           partner_id?: string
           tax_status?: string | null
           updated_at?: string
@@ -3998,6 +4063,7 @@ export type Database = {
       }
       partners: {
         Row: {
+          account_status: string
           agreement_status: string
           application_id: string | null
           approved_sales_model: string | null
@@ -4009,6 +4075,7 @@ export type Database = {
           city: string | null
           country: string | null
           created_at: string
+          date_of_birth: string | null
           default_revenue_share: number
           display_name: string
           dual_model_enabled: boolean
@@ -4032,6 +4099,7 @@ export type Database = {
           payout_details_verified: boolean
           payout_min_threshold: number
           payout_profile_status: string
+          profile_photo_url: string | null
           referral_code: string | null
           role_title: string | null
           role_title_other: string | null
@@ -4047,8 +4115,14 @@ export type Database = {
           status: Database["public"]["Enums"]["partner_status"]
           updated_at: string
           user_id: string | null
+          work_model: string
+          work_model_approved_at: string | null
+          work_model_approved_by: string | null
+          work_model_selected_at: string | null
+          work_model_status: string
         }
         Insert: {
+          account_status?: string
           agreement_status?: string
           application_id?: string | null
           approved_sales_model?: string | null
@@ -4060,6 +4134,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+          date_of_birth?: string | null
           default_revenue_share?: number
           display_name: string
           dual_model_enabled?: boolean
@@ -4083,6 +4158,7 @@ export type Database = {
           payout_details_verified?: boolean
           payout_min_threshold?: number
           payout_profile_status?: string
+          profile_photo_url?: string | null
           referral_code?: string | null
           role_title?: string | null
           role_title_other?: string | null
@@ -4098,8 +4174,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["partner_status"]
           updated_at?: string
           user_id?: string | null
+          work_model?: string
+          work_model_approved_at?: string | null
+          work_model_approved_by?: string | null
+          work_model_selected_at?: string | null
+          work_model_status?: string
         }
         Update: {
+          account_status?: string
           agreement_status?: string
           application_id?: string | null
           approved_sales_model?: string | null
@@ -4111,6 +4193,7 @@ export type Database = {
           city?: string | null
           country?: string | null
           created_at?: string
+          date_of_birth?: string | null
           default_revenue_share?: number
           display_name?: string
           dual_model_enabled?: boolean
@@ -4134,6 +4217,7 @@ export type Database = {
           payout_details_verified?: boolean
           payout_min_threshold?: number
           payout_profile_status?: string
+          profile_photo_url?: string | null
           referral_code?: string | null
           role_title?: string | null
           role_title_other?: string | null
@@ -4149,6 +4233,11 @@ export type Database = {
           status?: Database["public"]["Enums"]["partner_status"]
           updated_at?: string
           user_id?: string | null
+          work_model?: string
+          work_model_approved_at?: string | null
+          work_model_approved_by?: string | null
+          work_model_selected_at?: string | null
+          work_model_status?: string
         }
         Relationships: [
           {

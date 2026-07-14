@@ -36,7 +36,7 @@ const NAV = [
   { to: "/partner/referral-bonus", label: "Referral Bonus", icon: Gift },
   { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
   { to: "/partner/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/partner/coming-soon", label: "Account", icon: UserCircle },
+  { to: "/partner/account", label: "Account", icon: UserCircle },
 ] as const;
 
 export function PartnerShell() {
