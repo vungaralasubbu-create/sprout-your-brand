@@ -2002,48 +2002,81 @@ export type Database = {
           created_at: string
           difficulty: string | null
           duration: string | null
+          estimated_duration_hours: number | null
+          evaluation_criteria: string | null
+          expected_outcome: string | null
           full_description: string | null
           id: string
           image_url: string | null
           industry: string | null
           is_active: boolean
+          is_published: boolean
           learning_outcomes: string[] | null
           name: string
+          objective: string | null
+          portfolio_eligible: boolean
           project_type: string | null
+          requirements: string | null
+          requires_attachment: boolean
+          requires_live_link: boolean
+          requires_repo_link: boolean
           short_description: string | null
           slug: string
+          submission_instructions: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           difficulty?: string | null
           duration?: string | null
+          estimated_duration_hours?: number | null
+          evaluation_criteria?: string | null
+          expected_outcome?: string | null
           full_description?: string | null
           id?: string
           image_url?: string | null
           industry?: string | null
           is_active?: boolean
+          is_published?: boolean
           learning_outcomes?: string[] | null
           name: string
+          objective?: string | null
+          portfolio_eligible?: boolean
           project_type?: string | null
+          requirements?: string | null
+          requires_attachment?: boolean
+          requires_live_link?: boolean
+          requires_repo_link?: boolean
           short_description?: string | null
           slug: string
+          submission_instructions?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           difficulty?: string | null
           duration?: string | null
+          estimated_duration_hours?: number | null
+          evaluation_criteria?: string | null
+          expected_outcome?: string | null
           full_description?: string | null
           id?: string
           image_url?: string | null
           industry?: string | null
           is_active?: boolean
+          is_published?: boolean
           learning_outcomes?: string[] | null
           name?: string
+          objective?: string | null
+          portfolio_eligible?: boolean
           project_type?: string | null
+          requirements?: string | null
+          requires_attachment?: boolean
+          requires_live_link?: boolean
+          requires_repo_link?: boolean
           short_description?: string | null
           slug?: string
+          submission_instructions?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -2052,17 +2085,35 @@ export type Database = {
         Row: {
           course_id: string
           display_order: number
+          due_days_from_start: number | null
+          is_published: boolean
+          module_id: string | null
           project_id: string
+          required_lesson_id: string | null
+          required_project_id: string | null
+          unlock_rule: string
         }
         Insert: {
           course_id: string
           display_order?: number
+          due_days_from_start?: number | null
+          is_published?: boolean
+          module_id?: string | null
           project_id: string
+          required_lesson_id?: string | null
+          required_project_id?: string | null
+          unlock_rule?: string
         }
         Update: {
           course_id?: string
           display_order?: number
+          due_days_from_start?: number | null
+          is_published?: boolean
+          module_id?: string | null
           project_id?: string
+          required_lesson_id?: string | null
+          required_project_id?: string | null
+          unlock_rule?: string
         }
         Relationships: [
           {
@@ -2073,8 +2124,29 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "course_projects_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "course_projects_project_id_fkey"
             columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "course_project_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_projects_required_lesson_id_fkey"
+            columns: ["required_lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_projects_required_project_id_fkey"
+            columns: ["required_project_id"]
             isOneToOne: false
             referencedRelation: "course_project_templates"
             referencedColumns: ["id"]
@@ -5606,6 +5678,47 @@ export type Database = {
           },
         ]
       }
+      project_tasks: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          is_required: boolean
+          project_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_required?: boolean
+          project_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_required?: boolean
+          project_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_tasks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "course_project_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       referral_program_settings: {
         Row: {
           bonus_amount: number
@@ -6357,6 +6470,173 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_project_submissions: {
+        Row: {
+          attachments: Json
+          course_id: string
+          created_at: string
+          id: string
+          live_url: string | null
+          project_id: string
+          reference_url: string | null
+          repository_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_feedback: string | null
+          reviewer_notes: string | null
+          status: string
+          student_project_id: string
+          student_user_id: string
+          submission_notes: string | null
+          submitted_at: string
+          summary: string | null
+          title: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          attachments?: Json
+          course_id: string
+          created_at?: string
+          id?: string
+          live_url?: string | null
+          project_id: string
+          reference_url?: string | null
+          repository_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_feedback?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          student_project_id: string
+          student_user_id: string
+          submission_notes?: string | null
+          submitted_at?: string
+          summary?: string | null
+          title?: string | null
+          updated_at?: string
+          version: number
+        }
+        Update: {
+          attachments?: Json
+          course_id?: string
+          created_at?: string
+          id?: string
+          live_url?: string | null
+          project_id?: string
+          reference_url?: string | null
+          repository_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_feedback?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          student_project_id?: string
+          student_user_id?: string
+          submission_notes?: string | null
+          submitted_at?: string
+          summary?: string | null
+          title?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_project_submissions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_project_submissions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "course_project_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_project_submissions_student_project_id_fkey"
+            columns: ["student_project_id"]
+            isOneToOne: false
+            referencedRelation: "student_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_projects: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          current_version: number
+          enrollment_id: string | null
+          id: string
+          last_submitted_at: string | null
+          portfolio_added: boolean
+          portfolio_selected_at: string | null
+          project_id: string
+          started_at: string
+          status: string
+          student_user_id: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          current_version?: number
+          enrollment_id?: string | null
+          id?: string
+          last_submitted_at?: string | null
+          portfolio_added?: boolean
+          portfolio_selected_at?: string | null
+          project_id: string
+          started_at?: string
+          status?: string
+          student_user_id: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          current_version?: number
+          enrollment_id?: string | null
+          id?: string
+          last_submitted_at?: string | null
+          portfolio_added?: boolean
+          portfolio_selected_at?: string | null
+          project_id?: string
+          started_at?: string
+          status?: string
+          student_user_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_projects_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_projects_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "student_projects_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "course_project_templates"
             referencedColumns: ["id"]
           },
         ]
