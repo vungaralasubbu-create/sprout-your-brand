@@ -3,12 +3,14 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { getMyProgramDetails, recordProgramActivity } from "@/lib/student/lms.functions";
+import { getProgramLiveSessionsSummary } from "@/lib/student/live-sessions.functions";
+import { LiveSessionCard, type LiveSessionCardData } from "@/components/student/live-session-card";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  BookOpen, CheckCircle2, Circle, Clock, PlayCircle, Award, Lock,
+  BookOpen, CheckCircle2, Circle, Clock, PlayCircle, Award, Lock, Radio,
   ChevronDown, ChevronRight, ArrowLeft, FileText, Layers, GraduationCap, AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -41,6 +43,13 @@ function Page() {
     queryKey: ["my-program", slug],
     queryFn: () => getFn({ data: { slug } }),
     retry: false,
+  });
+
+  const sessionsFn = useServerFn(getProgramLiveSessionsSummary);
+  const { data: liveSessions } = useQuery({
+    queryKey: ["program-live-sessions", data?.program?.id],
+    queryFn: () => sessionsFn({ data: { courseId: data!.program.id } }),
+    enabled: !!data?.program?.id,
   });
 
   const track = useMutation({ mutationFn: (v: Parameters<typeof trackFn>[0]["data"]) => trackFn({ data: v }) });
@@ -169,6 +178,32 @@ function Page() {
           </div>
         </div>
       </Card>
+
+      {/* Live Sessions */}
+      {liveSessions && (liveSessions.next || liveSessions.upcomingCount > 0 || liveSessions.completedCount > 0) && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+              <Radio className="size-4 text-primary" /> Live Sessions
+            </h2>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+                {liveSessions.upcomingCount} Upcoming · {liveSessions.completedCount} Completed
+              </span>
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/student/live-sessions">View all</Link>
+              </Button>
+            </div>
+          </div>
+          {liveSessions.next ? (
+            <div className="grid gap-3 md:grid-cols-2">
+              <LiveSessionCard session={liveSessions.next as LiveSessionCardData} />
+            </div>
+          ) : (
+            <Card className="p-5 text-sm text-muted-foreground">No upcoming sessions scheduled right now.</Card>
+          )}
+        </div>
+      )}
 
       {/* Curriculum */}
       <div>

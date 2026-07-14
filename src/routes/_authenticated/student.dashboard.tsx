@@ -2,11 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getStudentOverview } from "@/lib/student/lms.functions";
+import { listUpcomingSessionsForDashboard } from "@/lib/student/live-sessions.functions";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, GraduationCap, TrendingUp, Award, ArrowRight, CheckCircle2, FileText, ClipboardCheck } from "lucide-react";
+import { BookOpen, GraduationCap, TrendingUp, Award, ArrowRight, CheckCircle2, FileText, ClipboardCheck, Radio } from "lucide-react";
+import { LiveSessionCard, type LiveSessionCardData } from "@/components/student/live-session-card";
 
 export const Route = createFileRoute("/_authenticated/student/dashboard")({ component: Page });
 
@@ -16,14 +18,23 @@ const ACTIVITY_ICON: Record<string, any> = {
   assessment_completed: ClipboardCheck,
   course_completed: GraduationCap,
   certificate_issued: Award,
+  session_join_attempt: Radio,
+  session_recording_opened: Radio,
 };
 
 function Page() {
   const fn = useServerFn(getStudentOverview);
+  const sessionsFn = useServerFn(listUpcomingSessionsForDashboard);
   const { data, isLoading } = useQuery({ queryKey: ["student-overview"], queryFn: () => fn() });
+  const { data: upcomingSessions } = useQuery({
+    queryKey: ["student-upcoming-sessions"],
+    queryFn: () => sessionsFn(),
+  });
 
   if (isLoading) return <div className="p-10 text-muted-foreground">Loading…</div>;
   const k = data?.kpis ?? { active: 0, completed: 0, avgProgress: 0, certificates: 0 };
+  const sessions = (upcomingSessions ?? []) as LiveSessionCardData[];
+
 
   return (
     <div className="p-6 lg:p-10 space-y-8 max-w-[1400px]">
@@ -49,6 +60,24 @@ function Page() {
         <Kpi icon={TrendingUp} label="Learning Progress" value={`${k.avgProgress}%`} />
         <Kpi icon={Award} label="Certificates" value={k.certificates} />
       </div>
+
+      {sessions.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display text-lg font-semibold tracking-tight flex items-center gap-2">
+              <Radio className="size-4 text-primary" /> Upcoming Live Sessions
+            </h2>
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/student/live-sessions">View all <ArrowRight className="size-3.5 ml-1" /></Link>
+            </Button>
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            {sessions.map((s) => <LiveSessionCard key={s.id} session={s} compact />)}
+          </div>
+        </div>
+      )}
+
+
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2 p-6">
