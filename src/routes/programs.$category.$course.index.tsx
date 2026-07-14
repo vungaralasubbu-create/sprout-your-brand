@@ -350,19 +350,8 @@ function CoursePage() {
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,oklch(0.7_0.15_180/0.22),transparent_60%)]"
         />
         <Container className="relative">
-          <div className="grid lg:grid-cols-[1fr_1fr] gap-12 lg:gap-20 items-center">
+          <div className="grid lg:grid-cols-[1fr_1fr] gap-10 lg:gap-16 items-start">
             <Reveal>
-              <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-                <CourseHeroVisual
-                  courseName={c.name}
-                  categoryName={c.category.name}
-                  imageUrl={null}
-                  className="aspect-[4/3]"
-                />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-tr from-[oklch(0.16_0.04_255)]/60 via-transparent to-transparent" />
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
               <div>
                 <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
                   {c.category.name}
@@ -373,28 +362,33 @@ function CoursePage() {
                     Build With It.
                   </span>
                 </h2>
-                <div className="mt-10 space-y-8">
-                  {buildIntroSteps(c).map((step, i) => (
-                    <Reveal key={i} delay={i * 120}>
-                      <div className="flex gap-5">
-                        <span className="font-mono text-[oklch(0.85_0.15_200)] text-2xl font-semibold shrink-0 pt-1">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <div className="min-w-0">
-                          <h3 className="font-display font-semibold text-xl text-white">
-                            {step.title}
-                          </h3>
-                          <p className="mt-1.5 text-white/70 leading-relaxed">
-                            {step.description}
-                          </p>
-                        </div>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
+                <p className="mt-5 text-white/70 max-w-md leading-relaxed">
+                  {c.short_description ??
+                    `${c.name} is designed to turn learning into a portfolio — through structured practice, real projects and mentor support.`}
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="space-y-7">
+                {buildIntroSteps(c).map((step, i) => (
+                  <div key={i} className="flex gap-5">
+                    <span className="font-mono text-[oklch(0.85_0.15_200)] text-2xl font-semibold shrink-0 pt-1">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 className="font-display font-semibold text-xl text-white">
+                        {step.title}
+                      </h3>
+                      <p className="mt-1.5 text-white/70 leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </Reveal>
           </div>
+
         </Container>
       </Section>
 
