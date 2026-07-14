@@ -6,14 +6,14 @@ import { AnimatedCounter } from "@/components/shared/animated-counter";
 
 const STATS = [
   { icon: Users, value: 30, suffix: "K+", label: "Students Assisted" },
-  { icon: Briefcase, value: 8, suffix: "+", label: "Years of Experience" },
+  { icon: Briefcase, value: 40, suffix: "+", label: "Years of Combined Experience" },
   { icon: GraduationCap, value: 100, suffix: "+", label: "Industry Experts" },
   { icon: Building2, value: 50, suffix: "+", label: "Partnered Companies" },
 ];
 
 const MARQUEE_ITEMS = [
   "30K+ Students Assisted",
-  "8+ Years of Experience",
+  "40+ Years of Combined Experience",
   "100+ Industry Experts",
   "50+ Partnered Companies",
   "Career-Focused Learning",
