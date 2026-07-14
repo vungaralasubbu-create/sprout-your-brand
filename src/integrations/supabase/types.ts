@@ -2752,6 +2752,80 @@ export type Database = {
           },
         ]
       }
+      partner_lead_payment_links: {
+        Row: {
+          amount: number
+          assigned_at: string
+          course_id: string
+          created_at: string
+          id: string
+          lead_id: string
+          partner_id: string
+          payment_link_id: string
+          plan: Database["public"]["Enums"]["payment_plan"]
+          status: Database["public"]["Enums"]["payment_link_status"]
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          amount: number
+          assigned_at?: string
+          course_id: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          partner_id: string
+          payment_link_id: string
+          plan: Database["public"]["Enums"]["payment_plan"]
+          status?: Database["public"]["Enums"]["payment_link_status"]
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          amount?: number
+          assigned_at?: string
+          course_id?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          partner_id?: string
+          payment_link_id?: string
+          plan?: Database["public"]["Enums"]["payment_plan"]
+          status?: Database["public"]["Enums"]["payment_link_status"]
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_lead_payment_links_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_lead_payment_links_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_lead_payment_links_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_lead_payment_links_payment_link_id_fkey"
+            columns: ["payment_link_id"]
+            isOneToOne: false
+            referencedRelation: "payment_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       partner_leads: {
         Row: {
           assigned_partner_id: string | null
@@ -3540,6 +3614,53 @@ export type Database = {
           },
         ]
       }
+      payment_links: {
+        Row: {
+          amount: number
+          course_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          notes: string | null
+          plan: Database["public"]["Enums"]["payment_plan"]
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          amount: number
+          course_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          plan: Database["public"]["Enums"]["payment_plan"]
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          amount?: number
+          course_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          plan?: Database["public"]["Enums"]["payment_plan"]
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_links_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payout_items: {
         Row: {
           amount: number
@@ -4182,6 +4303,13 @@ export type Database = {
         | "agreement_update"
         | "support_reply"
       partner_status: "active" | "suspended" | "revoked"
+      payment_link_status:
+        | "assigned"
+        | "payment_pending"
+        | "verified"
+        | "rejected"
+        | "expired"
+      payment_plan: "self_paced_edge" | "career_launch" | "career_pro"
       payout_status:
         | "queued"
         | "processing"
@@ -4550,6 +4678,14 @@ export const Constants = {
         "support_reply",
       ],
       partner_status: ["active", "suspended", "revoked"],
+      payment_link_status: [
+        "assigned",
+        "payment_pending",
+        "verified",
+        "rejected",
+        "expired",
+      ],
+      payment_plan: ["self_paced_edge", "career_launch", "career_pro"],
       payout_status: [
         "queued",
         "processing",
