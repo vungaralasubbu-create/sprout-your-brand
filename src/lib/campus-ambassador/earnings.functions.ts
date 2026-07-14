@@ -127,7 +127,7 @@ export const getEarningsOverview = createServerFn({ method: "POST" })
     const trendPoints = Object.entries(trend).map(([date, amount]) => ({ date, amount }));
 
     // Programs
-    const programIds = Array.from(new Set(commissions.map((r) => r.program_id).filter(Boolean)));
+    const programIds = Array.from(new Set(commissions.map((r) => r.program_id).filter((x: any): x is string => !!x)));
     const programNameMap: Record<string, string> = {};
     if (programIds.length) {
       const { data: courses } = await supabase
@@ -219,7 +219,7 @@ export const listCommissions = createServerFn({ method: "POST" })
       .select("id, transaction_code, enrollment_id, program_id, pricing_plan, eligible_base_amount, commission_percentage, calculated_commission, status, transaction_type, created_at, updated_at, approved_at, available_at, paid_at, reversed_at", { count: "exact" })
       .eq("ambassador_id", profile.id);
 
-    if (data.status && data.status !== "all") q = q.eq("status", data.status);
+    if (data.status && data.status !== "all") q = q.eq("status", data.status as any);
     if (data.programId && data.programId !== "all") q = q.eq("program_id", data.programId);
 
     const { from: dfrom, to: dto } = rangeFrom(data.range, data.from, data.to);
@@ -241,8 +241,8 @@ export const listCommissions = createServerFn({ method: "POST" })
     q = q.range(offset, offset + data.pageSize - 1);
 
     const { data: rows, count } = await q;
-    const enrollmentIds = Array.from(new Set((rows ?? []).map((r) => r.enrollment_id).filter(Boolean)));
-    const programIds = Array.from(new Set((rows ?? []).map((r) => r.program_id).filter(Boolean)));
+    const enrollmentIds = Array.from(new Set((rows ?? []).map((r) => r.enrollment_id).filter((x: any): x is string => !!x)));
+    const programIds = Array.from(new Set((rows ?? []).map((r) => r.program_id).filter((x: any): x is string => !!x)));
 
     const [enrRes, courseRes] = await Promise.all([
       enrollmentIds.length
@@ -293,7 +293,7 @@ export const listCommissions = createServerFn({ method: "POST" })
       .from("ambassador_commissions")
       .select("program_id")
       .eq("ambassador_id", profile.id);
-    const filterProgramIds = Array.from(new Set((allProgramRows ?? []).map((r: any) => r.program_id).filter(Boolean)));
+    const filterProgramIds = Array.from(new Set((allProgramRows ?? []).map((r: any) => r.program_id).filter((x: any): x is string => !!x)));
     const filterCourses = filterProgramIds.length
       ? (await supabase.from("courses").select("id, name").in("id", filterProgramIds)).data ?? []
       : [];
@@ -402,7 +402,7 @@ export const exportCommissionsCsv = createServerFn({ method: "POST" })
       .from("ambassador_commissions")
       .select("id, transaction_code, enrollment_id, program_id, pricing_plan, eligible_base_amount, commission_percentage, calculated_commission, status, created_at, approved_at, available_at, paid_at")
       .eq("ambassador_id", profile.id);
-    if (data.status && data.status !== "all") q = q.eq("status", data.status);
+    if (data.status && data.status !== "all") q = q.eq("status", data.status as any);
     if (data.programId && data.programId !== "all") q = q.eq("program_id", data.programId);
     const { from: dfrom, to: dto } = rangeFrom(data.range, data.from, data.to);
     if (dfrom) q = q.gte("created_at", dfrom.toISOString());
@@ -410,8 +410,8 @@ export const exportCommissionsCsv = createServerFn({ method: "POST" })
     q = q.order("created_at", { ascending: false }).limit(5000);
     const { data: rows } = await q;
 
-    const enrIds = Array.from(new Set((rows ?? []).map((r) => r.enrollment_id).filter(Boolean)));
-    const progIds = Array.from(new Set((rows ?? []).map((r) => r.program_id).filter(Boolean)));
+    const enrIds = Array.from(new Set((rows ?? []).map((r) => r.enrollment_id).filter((x: any): x is string => !!x)));
+    const progIds = Array.from(new Set((rows ?? []).map((r) => r.program_id).filter((x: any): x is string => !!x)));
     const [enrRes, courseRes] = await Promise.all([
       enrIds.length ? supabase.from("enrollments").select("id, enrollment_code").in("id", enrIds) : Promise.resolve({ data: [] as any[] }),
       progIds.length ? supabase.from("courses").select("id, name").in("id", progIds) : Promise.resolve({ data: [] as any[] }),
