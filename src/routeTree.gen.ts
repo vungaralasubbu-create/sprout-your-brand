@@ -20,6 +20,7 @@ import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
+import { Route as RefCodeRouteImport } from './routes/ref.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
@@ -27,6 +28,7 @@ import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
+import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
@@ -60,6 +62,7 @@ import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authe
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
+import { Route as AuthenticatedAmbassadorDashboardRouteImport } from './routes/_authenticated/ambassador.dashboard'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
@@ -187,6 +190,11 @@ const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   path: '/verify-certificate/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RefCodeRoute = RefCodeRouteImport.update({
+  id: '/ref/$code',
+  path: '/ref/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnerSignupRoute = PartnerSignupRouteImport.update({
   id: '/partner/signup',
   path: '/partner/signup',
@@ -221,6 +229,11 @@ const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
 const AuthenticatedBrandRoute = AuthenticatedBrandRouteImport.update({
   id: '/brand',
   path: '/brand',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAmbassadorRoute = AuthenticatedAmbassadorRouteImport.update({
+  id: '/ambassador',
+  path: '/ambassador',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -417,6 +430,12 @@ const AuthenticatedBrandDashboardRoute =
     id: '/dashboard',
     path: '/dashboard',
     getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedAmbassadorDashboardRoute =
+  AuthenticatedAmbassadorDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
 const AuthenticatedAdminSupportRoute =
   AuthenticatedAdminSupportRouteImport.update({
@@ -858,6 +877,7 @@ export interface FileRoutesByFullPath {
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
@@ -865,6 +885,7 @@ export interface FileRoutesByFullPath {
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
+  '/ref/$code': typeof RefCodeRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -899,6 +920,7 @@ export interface FileRoutesByFullPath {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -981,12 +1003,14 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
+  '/ref/$code': typeof RefCodeRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
@@ -1021,6 +1045,7 @@ export interface FileRoutesByTo {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -1105,6 +1130,7 @@ export interface FileRoutesById {
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
@@ -1112,6 +1138,7 @@ export interface FileRoutesById {
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
+  '/ref/$code': typeof RefCodeRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -1146,6 +1173,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/_authenticated/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -1231,6 +1259,7 @@ export interface FileRouteTypes {
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/admin'
+    | '/ambassador'
     | '/brand'
     | '/partner'
     | '/student'
@@ -1238,6 +1267,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/start'
     | '/partner/apply'
     | '/partner/signup'
+    | '/ref/$code'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1272,6 +1302,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/ambassador/dashboard'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
@@ -1354,12 +1385,14 @@ export interface FileRouteTypes {
     | '/join'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/ambassador'
     | '/brand'
     | '/partner'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
     | '/partner/signup'
+    | '/ref/$code'
     | '/verify-certificate/$code'
     | '/campus-ambassador'
     | '/launch-your-brand'
@@ -1394,6 +1427,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/ambassador/dashboard'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
@@ -1477,6 +1511,7 @@ export interface FileRouteTypes {
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/_authenticated/ambassador'
     | '/_authenticated/brand'
     | '/_authenticated/partner'
     | '/_authenticated/student'
@@ -1484,6 +1519,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/start'
     | '/partner/apply'
     | '/partner/signup'
+    | '/ref/$code'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1518,6 +1554,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/support'
+    | '/_authenticated/ambassador/dashboard'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
@@ -1606,6 +1643,7 @@ export interface RootRouteChildren {
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
   PartnerSignupRoute: typeof PartnerSignupRoute
+  RefCodeRoute: typeof RefCodeRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
@@ -1694,6 +1732,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyCertificateCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ref/$code': {
+      id: '/ref/$code'
+      path: '/ref/$code'
+      fullPath: '/ref/$code'
+      preLoaderRoute: typeof RefCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partner/signup': {
       id: '/partner/signup'
       path: '/partner/signup'
@@ -1741,6 +1786,13 @@ declare module '@tanstack/react-router' {
       path: '/brand'
       fullPath: '/brand'
       preLoaderRoute: typeof AuthenticatedBrandRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/ambassador': {
+      id: '/_authenticated/ambassador'
+      path: '/ambassador'
+      fullPath: '/ambassador'
+      preLoaderRoute: typeof AuthenticatedAmbassadorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
@@ -1973,6 +2025,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/brand/dashboard'
       preLoaderRoute: typeof AuthenticatedBrandDashboardRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/ambassador/dashboard': {
+      id: '/_authenticated/ambassador/dashboard'
+      path: '/dashboard'
+      fullPath: '/ambassador/dashboard'
+      preLoaderRoute: typeof AuthenticatedAmbassadorDashboardRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
     }
     '/_authenticated/admin/support': {
       id: '/_authenticated/admin/support'
@@ -2615,6 +2674,21 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedAmbassadorRouteChildren {
+  AuthenticatedAmbassadorDashboardRoute: typeof AuthenticatedAmbassadorDashboardRoute
+}
+
+const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren =
+  {
+    AuthenticatedAmbassadorDashboardRoute:
+      AuthenticatedAmbassadorDashboardRoute,
+  }
+
+const AuthenticatedAmbassadorRouteWithChildren =
+  AuthenticatedAmbassadorRoute._addFileChildren(
+    AuthenticatedAmbassadorRouteChildren,
+  )
+
 interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandDashboardRoute: typeof AuthenticatedBrandDashboardRoute
 }
@@ -2850,6 +2924,7 @@ const AuthenticatedStudentRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
@@ -2859,6 +2934,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
@@ -2883,6 +2959,7 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
   PartnerSignupRoute: PartnerSignupRoute,
+  RefCodeRoute: RefCodeRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,

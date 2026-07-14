@@ -442,6 +442,322 @@ export type Database = {
           },
         ]
       }
+      ambassador_commission_rules: {
+        Row: {
+          base_definition: string
+          campaign_id: string | null
+          commission_percentage: number
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          is_active: boolean
+          name: string
+          pricing_plan: string | null
+          program_id: string | null
+          rule_code: string | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          base_definition?: string
+          campaign_id?: string | null
+          commission_percentage: number
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          pricing_plan?: string | null
+          program_id?: string | null
+          rule_code?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          base_definition?: string
+          campaign_id?: string | null
+          commission_percentage?: number
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          pricing_plan?: string | null
+          program_id?: string | null
+          rule_code?: string | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
+      ambassador_commissions: {
+        Row: {
+          ambassador_id: string
+          approved_at: string | null
+          available_at: string | null
+          calculated_commission: number
+          campaign_id: string | null
+          commission_percentage: number
+          commission_rule_id: string | null
+          commission_rule_version: number | null
+          created_at: string
+          eligible_base_amount: number
+          enrollment_id: string | null
+          id: string
+          paid_at: string | null
+          pricing_plan: string | null
+          program_id: string | null
+          public_reason: string | null
+          reversal_reason: string | null
+          reversal_reference: string | null
+          reversed_at: string | null
+          status: Database["public"]["Enums"]["ambassador_commission_status"]
+          student_user_id: string | null
+          transaction_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          ambassador_id: string
+          approved_at?: string | null
+          available_at?: string | null
+          calculated_commission?: number
+          campaign_id?: string | null
+          commission_percentage?: number
+          commission_rule_id?: string | null
+          commission_rule_version?: number | null
+          created_at?: string
+          eligible_base_amount?: number
+          enrollment_id?: string | null
+          id?: string
+          paid_at?: string | null
+          pricing_plan?: string | null
+          program_id?: string | null
+          public_reason?: string | null
+          reversal_reason?: string | null
+          reversal_reference?: string | null
+          reversed_at?: string | null
+          status?: Database["public"]["Enums"]["ambassador_commission_status"]
+          student_user_id?: string | null
+          transaction_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ambassador_id?: string
+          approved_at?: string | null
+          available_at?: string | null
+          calculated_commission?: number
+          campaign_id?: string | null
+          commission_percentage?: number
+          commission_rule_id?: string | null
+          commission_rule_version?: number | null
+          created_at?: string
+          eligible_base_amount?: number
+          enrollment_id?: string | null
+          id?: string
+          paid_at?: string | null
+          pricing_plan?: string | null
+          program_id?: string | null
+          public_reason?: string | null
+          reversal_reason?: string | null
+          reversal_reference?: string | null
+          reversed_at?: string | null
+          status?: Database["public"]["Enums"]["ambassador_commission_status"]
+          student_user_id?: string | null
+          transaction_code?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_commissions_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_commissions_commission_rule_id_fkey"
+            columns: ["commission_rule_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_commission_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_commissions_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_referral_leads: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          display_name: string | null
+          enrollment_id: string | null
+          id: string
+          lead_code: string | null
+          program_id: string | null
+          referral_code: string
+          session_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          display_name?: string | null
+          enrollment_id?: string | null
+          id?: string
+          lead_code?: string | null
+          program_id?: string | null
+          referral_code: string
+          session_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          display_name?: string | null
+          enrollment_id?: string | null
+          id?: string
+          lead_code?: string | null
+          program_id?: string | null
+          referral_code?: string
+          session_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_referral_leads_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_referral_leads_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_referral_leads_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_referral_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_referral_sessions: {
+        Row: {
+          ambassador_id: string
+          campaign_id: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          ip_hash: string | null
+          landing_page: string | null
+          program_id: string | null
+          referral_code: string
+          user_agent: string | null
+          visitor_hash: string | null
+        }
+        Insert: {
+          ambassador_id: string
+          campaign_id?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip_hash?: string | null
+          landing_page?: string | null
+          program_id?: string | null
+          referral_code: string
+          user_agent?: string | null
+          visitor_hash?: string | null
+        }
+        Update: {
+          ambassador_id?: string
+          campaign_id?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_hash?: string | null
+          landing_page?: string | null
+          program_id?: string | null
+          referral_code?: string
+          user_agent?: string | null
+          visitor_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_referral_sessions_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_referral_visits: {
+        Row: {
+          ambassador_id: string
+          campaign_id: string | null
+          created_at: string
+          id: string
+          landing_page: string | null
+          program_id: string | null
+          referral_code: string
+          session_id: string | null
+          visitor_hash: string | null
+        }
+        Insert: {
+          ambassador_id: string
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          landing_page?: string | null
+          program_id?: string | null
+          referral_code: string
+          session_id?: string | null
+          visitor_hash?: string | null
+        }
+        Update: {
+          ambassador_id?: string
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          landing_page?: string | null
+          program_id?: string | null
+          referral_code?: string
+          session_id?: string | null
+          visitor_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_referral_visits_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_referral_visits_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_referral_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_attempts: {
         Row: {
           answers: Json
@@ -3406,6 +3722,9 @@ export type Database = {
       }
       enrollments: {
         Row: {
+          ambassador_id: string | null
+          ambassador_referral_code: string | null
+          ambassador_session_id: string | null
           completed_at: string | null
           content_completed_at: string | null
           course_id: string | null
@@ -3430,6 +3749,9 @@ export type Database = {
           verified_at: string | null
         }
         Insert: {
+          ambassador_id?: string | null
+          ambassador_referral_code?: string | null
+          ambassador_session_id?: string | null
           completed_at?: string | null
           content_completed_at?: string | null
           course_id?: string | null
@@ -3454,6 +3776,9 @@ export type Database = {
           verified_at?: string | null
         }
         Update: {
+          ambassador_id?: string | null
+          ambassador_referral_code?: string | null
+          ambassador_session_id?: string | null
           completed_at?: string | null
           content_completed_at?: string | null
           course_id?: string | null
@@ -3478,6 +3803,13 @@ export type Database = {
           verified_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "enrollments_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "enrollments_course_id_fkey"
             columns: ["course_id"]
@@ -8644,6 +8976,21 @@ export type Database = {
       ai_mentor_feedback_type: "helpful" | "not_helpful"
       ai_mentor_message_role: "student" | "mentor" | "system"
       ai_mentor_message_status: "sent" | "generating" | "completed" | "failed"
+      ambassador_commission_status:
+        | "pending_verification"
+        | "eligible"
+        | "approved"
+        | "available"
+        | "payout_processing"
+        | "paid"
+        | "on_hold"
+        | "reversed"
+        | "ineligible"
+      ambassador_profile_status:
+        | "active"
+        | "suspended"
+        | "inactive"
+        | "terminated"
       app_role:
         | "super_admin"
         | "admin"
@@ -9221,6 +9568,23 @@ export const Constants = {
       ai_mentor_feedback_type: ["helpful", "not_helpful"],
       ai_mentor_message_role: ["student", "mentor", "system"],
       ai_mentor_message_status: ["sent", "generating", "completed", "failed"],
+      ambassador_commission_status: [
+        "pending_verification",
+        "eligible",
+        "approved",
+        "available",
+        "payout_processing",
+        "paid",
+        "on_hold",
+        "reversed",
+        "ineligible",
+      ],
+      ambassador_profile_status: [
+        "active",
+        "suspended",
+        "inactive",
+        "terminated",
+      ],
       app_role: [
         "super_admin",
         "admin",
