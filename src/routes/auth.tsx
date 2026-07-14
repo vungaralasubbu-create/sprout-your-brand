@@ -81,7 +81,7 @@ function AuthPage() {
       if (error) return toast.error(error.message);
       toast.success("Password updated.");
       const { data } = await supabase.auth.getUser();
-      if (data.user) await routeAfterAuth(data.user.id, navigate);
+      if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
       return;
     }
     const parsed = schema.safeParse(Object.fromEntries(fd));
