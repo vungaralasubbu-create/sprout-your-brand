@@ -1791,3 +1791,185 @@ const DEFAULT_LEARN_CARDS: Array<{
   },
 ];
 
+
+// -------------------- Hero title formatting --------------------
+
+/**
+ * Split a course name into (roughly) two balanced lines so it renders as a
+ * bold editorial two-line headline. Short names render as-is.
+ */
+function formatHeroTitle(name: string): React.ReactNode {
+  const words = name.trim().split(/\s+/);
+  if (words.length <= 2) return name;
+  // Find split index closest to the middle character-wise.
+  const total = name.length;
+  let best = 1;
+  let bestDelta = Number.POSITIVE_INFINITY;
+  for (let i = 1; i < words.length; i++) {
+    const left = words.slice(0, i).join(" ").length;
+    const delta = Math.abs(left - (total - left));
+    if (delta < bestDelta) {
+      bestDelta = delta;
+      best = i;
+    }
+  }
+  const line1 = words.slice(0, best).join(" ");
+  const line2 = words.slice(best).join(" ");
+  return (
+    <>
+      {line1}
+      <br />
+      {line2}
+    </>
+  );
+}
+
+// -------------------- Dark intro steps --------------------
+
+function buildIntroSteps(c: {
+  name: string;
+  short_description: string | null;
+}): Array<{ title: string; description: string }> {
+  const name = c.name;
+  return [
+    {
+      title: "Learn The Core Skills",
+      description: `Master the fundamentals of ${name} through a structured, guided curriculum designed for real-world application.`,
+    },
+    {
+      title: "Build Practical Projects",
+      description: "Apply what you learn through hands-on projects reviewed by mentors and modelled on industry work.",
+    },
+    {
+      title: "Apply What You Learn",
+      description: "Graduate with a portfolio, career-ready skills and the confidence to take on new opportunities.",
+    },
+  ];
+}
+
+// -------------------- Learning Journey timeline --------------------
+
+const JOURNEY_STAGES: Array<{
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}> = [
+  {
+    title: "Foundation",
+    description: "Ground the fundamentals with structured learning and guided practice.",
+    icon: BookOpen,
+  },
+  {
+    title: "Practice",
+    description: "Sharpen skills through mentor-reviewed exercises and short builds.",
+    icon: Compass,
+  },
+  {
+    title: "Build",
+    description: "Deliver real projects that stitch every skill together into practical work.",
+    icon: Hammer,
+  },
+  {
+    title: "Showcase",
+    description: "Finish with a portfolio, certificate and clear next steps for your career.",
+    icon: Rocket,
+  },
+];
+
+function LearningJourney() {
+  return (
+    <div className="relative">
+      {/* Desktop: horizontal path */}
+      <div className="hidden md:block">
+        <div
+          aria-hidden
+          className="absolute left-0 right-0 top-[38px] h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+        />
+        <ol className="relative grid grid-cols-4 gap-6">
+          {JOURNEY_STAGES.map((s, i) => (
+            <Reveal key={s.title} delay={i * 120}>
+              <li className="flex flex-col items-center text-center px-2">
+                <div className="relative">
+                  <span className="inline-flex size-[76px] items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-white shadow-lg ring-8 ring-surface-2/40">
+                    <s.icon className="size-7" />
+                  </span>
+                  <span className="absolute -top-2 -right-2 inline-flex size-7 items-center justify-center rounded-full bg-background border border-border font-mono text-xs font-semibold text-primary">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="mt-5 font-display font-semibold text-lg tracking-tight">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground max-w-[220px]">
+                  {s.description}
+                </p>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
+      </div>
+
+      {/* Mobile: vertical timeline */}
+      <ol className="md:hidden relative pl-10">
+        <span
+          aria-hidden
+          className="absolute left-[22px] top-2 bottom-2 w-px bg-gradient-to-b from-primary/50 via-primary/30 to-transparent"
+        />
+        {JOURNEY_STAGES.map((s, i) => (
+          <Reveal key={s.title} delay={i * 100}>
+            <li className="relative pb-8 last:pb-0">
+              <span className="absolute -left-10 top-0 inline-flex size-11 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-white shadow-md">
+                <s.icon className="size-5" />
+              </span>
+              <div className="text-caption font-mono text-primary">
+                {String(i + 1).padStart(2, "0")}
+              </div>
+              <h3 className="mt-1 font-display font-semibold text-lg tracking-tight">
+                {s.title}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">{s.description}</p>
+            </li>
+          </Reveal>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+// -------------------- Skills marquee --------------------
+
+function SkillsMarquee({ skills }: { skills: string[] }) {
+  // Duplicate the list so translateX(-50%) creates a seamless loop.
+  const items = [...skills, ...skills];
+  return (
+    <div
+      className="relative w-full overflow-hidden"
+      aria-label="Skills you'll build"
+    >
+      {/* soft edge fades */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 left-0 w-16 z-10 bg-gradient-to-r from-surface-1 to-transparent"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 w-16 z-10 bg-gradient-to-l from-surface-1 to-transparent"
+      />
+      <div
+        className="flex w-max gap-3 py-2 will-change-transform motion-safe:animate-[glintr-marquee_28s_linear_infinite] hover:[animation-play-state:paused]"
+      >
+        {items.map((s, i) => (
+          <span
+            key={`${s}-${i}`}
+            className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-5 py-2.5 text-sm font-medium whitespace-nowrap shadow-sm"
+          >
+            <span className="inline-flex size-6 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <Sparkles className="size-3.5" />
+            </span>
+            {s}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
