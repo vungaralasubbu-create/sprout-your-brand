@@ -224,6 +224,13 @@ function SalesCommandCenter() {
         <StatCard label="Ownership Reviews Pending" value={fmtInt(t?.pendingOwnershipReviews ?? 0)} icon={Shield} to="/admin/lead-ownership" tone="text-amber-600" />
         <StatCard label="Open Support Tickets" value={fmtInt(t?.openSupportTickets ?? 0)} icon={Shield} to="/admin/support" tone="text-blue-600" />
         <StatCard label="Urgent Support Tickets" value={fmtInt(t?.urgentSupportTickets ?? 0)} icon={Flame} to="/admin/support" tone="text-rose-600" />
+        {canSeeRisk && (
+          <>
+            <StatCard label="Open Risk Flags" value={fmtInt(r?.open ?? 0)} icon={Shield} to="/admin/risk-review" tone="text-amber-600" />
+            <StatCard label="Duplicate Payment Flags" value={fmtInt((r?.byType?.duplicate_utr ?? 0) + (r?.byType?.possible_duplicate_proof ?? 0))} icon={Shield} to="/admin/risk-review" tone="text-rose-600" />
+            <StatCard label="Lead Conflict Flags" value={fmtInt((r?.byType?.lead_multi_partner ?? 0) + (r?.byType?.lead_ownership_conflict ?? 0))} icon={Shield} to="/admin/risk-review" tone="text-amber-600" />
+          </>
+        )}
       </div>
 
       {/* 3. Company sales performance */}
