@@ -144,9 +144,20 @@ function SalesCommandCenter() {
     refetchInterval: 45_000,
   });
 
+  const { data: session } = useAdminSession();
+  const canSeeRisk = hasPermission(session, "risk_review.view");
+  const riskFn = useServerFn(getRiskSummary);
+  const risk = useQuery({
+    queryKey: ["command-risk"],
+    queryFn: () => riskFn() as any,
+    enabled: canSeeRisk,
+    refetchInterval: 90_000,
+  });
+
   const t = top.data;
   const a = analytics.data;
   const o = ops.data;
+  const r = risk.data as any;
   const funnelMax = Math.max(1, ...(a?.funnel ?? []).map((f: any) => f.count));
 
   return (
