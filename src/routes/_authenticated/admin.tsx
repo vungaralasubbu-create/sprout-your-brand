@@ -72,6 +72,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/partner-applications", label: "Partner Applications", icon: UserCheck },
       { to: "/admin/model-approvals", label: "Model Approvals", icon: Shield },
       { to: "/admin/partner-programs", label: "Partner Programs", icon: Layers },
+      { to: "/admin/partner-reviews", label: "Partner Reviews", icon: UserCheck },
     ],
   },
   {
