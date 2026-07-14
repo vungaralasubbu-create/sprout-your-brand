@@ -214,6 +214,8 @@ function ApplyForm() {
       return;
     }
     setSubmitting(true);
+    const { data: sessionData } = await supabase.auth.getSession();
+    const currentUserId = sessionData?.session?.user?.id ?? null;
     const payload = {
       full_name: data.full_name.trim(),
       email: data.email.trim(),
@@ -236,6 +238,7 @@ function ApplyForm() {
       preferred_categories: data.preferred_categories.length ? data.preferred_categories : null,
       preferred_model: data.preferred_model || null,
       status: "submitted" as const,
+      user_id: currentUserId,
     };
 
     const { error } = await supabase.from("partner_applications").insert(payload);

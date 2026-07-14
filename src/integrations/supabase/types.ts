@@ -285,6 +285,42 @@ export type Database = {
           },
         ]
       }
+      auth_otp_codes: {
+        Row: {
+          attempts: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          mobile: string
+          purpose: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          mobile: string
+          purpose?: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          mobile?: string
+          purpose?: string
+        }
+        Relationships: []
+      }
       brand_applications: {
         Row: {
           admin_notes: string | null

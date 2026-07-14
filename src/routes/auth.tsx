@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useServerFn } from "@tanstack/react-start";
 
 import { SiteHeader } from "@/components/shared/site-header";
 import { SiteFooter } from "@/components/shared/site-footer";
@@ -11,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
+import { reconcileRolesForCurrentUser } from "@/lib/auth/reconcile.functions";
 import { trackEvent } from "@/lib/analytics/client";
 
 export const Route = createFileRoute("/auth")({
@@ -23,7 +25,18 @@ const schema = z.object({
   password: z.string().min(6).max(72),
 });
 
-async function routeAfterAuth(userId: string, navigate: ReturnType<typeof useNavigate>) {
+async function routeAfterAuth(
+  userId: string,
+  navigate: ReturnType<typeof useNavigate>,
+  reconcile: () => Promise<{ granted: string[] }>,
+) {
+  // Best-effort role reconciliation (e.g. approved partner applicants
+  // whose auth account was created after admin approval).
+  try {
+    await reconcile();
+  } catch (e) {
+    console.warn("[auth] reconcile failed", e);
+  }
   const { path, role } = await resolveRedirectForUser(userId);
   if (!role) {
     toast.message("Your account workspace is not configured yet.");
@@ -33,6 +46,7 @@ async function routeAfterAuth(userId: string, navigate: ReturnType<typeof useNav
 
 function AuthPage() {
   const navigate = useNavigate();
+  const reconcile = useServerFn(reconcileRolesForCurrentUser);
   const [mode, setMode] = useState<"signin" | "signup" | "recovery">("signin");
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -48,11 +62,11 @@ function AuthPage() {
 
     if (!isRecovery) {
       supabase.auth.getSession().then(({ data }) => {
-        if (data.session?.user) routeAfterAuth(data.session.user.id, navigate);
+        if (data.session?.user) routeAfterAuth(data.session.user.id, navigate, reconcile);
       });
     }
     return () => sub.subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, reconcile]);
 
   async function handle(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -67,7 +81,7 @@ function AuthPage() {
       if (error) return toast.error(error.message);
       toast.success("Password updated.");
       const { data } = await supabase.auth.getUser();
-      if (data.user) await routeAfterAuth(data.user.id, navigate);
+      if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
       return;
     }
     const parsed = schema.safeParse(Object.fromEntries(fd));
@@ -78,7 +92,7 @@ function AuthPage() {
       setLoading(false);
       if (error) return toast.error(error.message);
       toast.success("Signed in");
-      if (data.user) await routeAfterAuth(data.user.id, navigate);
+      if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
     } else {
       const redirectTo = `${window.location.origin}/auth`;
       const { error } = await supabase.auth.signUp({
