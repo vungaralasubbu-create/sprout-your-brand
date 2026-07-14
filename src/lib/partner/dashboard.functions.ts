@@ -9,10 +9,21 @@ export const getPartnerContext = createServerFn({ method: "GET" })
     const { data: partner } = await supabase
       .from("partners")
       .select(
-        "id, display_name, first_name, email, mobile, partner_code, status, lead_model, sales_model_selection, default_revenue_share, onboarding_completed_at, payout_min_threshold, bank_account_last4, bank_name, payout_details_verified",
+        "id, display_name, first_name, email, mobile, partner_code, status, lead_model, sales_model_selection, default_revenue_share, onboarding_completed_at, payout_min_threshold, bank_account_last4, bank_name, payout_details_verified, work_model, work_model_status",
       )
       .eq("user_id", userId)
       .maybeSingle();
+
+    // Employment profile presence (for Full-Time employees)
+    let employeeProfile: { id: string; employee_code: string } | null = null;
+    if (partner && partner.work_model === "full_time") {
+      const { data: emp } = await supabase
+        .from("employee_profiles")
+        .select("id, employee_code")
+        .eq("partner_id", partner.id)
+        .maybeSingle();
+      employeeProfile = emp ?? null;
+    }
 
     // Notification unread count
     let unreadNotifications = 0;
