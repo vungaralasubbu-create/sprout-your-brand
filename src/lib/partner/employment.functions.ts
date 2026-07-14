@@ -214,31 +214,31 @@ export const getMyMonthlyEarningsStatement = createServerFn({ method: "GET" })
     const [{ data: commissions }, { data: referrals }] = await Promise.all([
       supabase
         .from("commissions")
-        .select("id, gross_revenue, partner_share_amount, status, verified_at, paid_at")
+        .select("id, gross_revenue, commission_amount, status, verified_at, payout_at")
         .eq("partner_id", partner.id)
         .gte("verified_at", startIso)
         .lte("verified_at", endIso),
       supabase
         .from("partner_referrals")
-        .select("bonus_amount, status, qualified_at, paid_at")
+        .select("bonus_amount, status, qualified_at, bonus_paid_at")
         .eq("referrer_partner_id", partner.id)
         .gte("qualified_at", startIso)
         .lte("qualified_at", endIso),
     ]);
 
-    const verifiedSales = (commissions ?? []).filter((c) =>
+    const verifiedSales = (commissions ?? []).filter((c: any) =>
       ["approved", "paid"].includes(c.status),
     ).length;
     const revenueShare = (commissions ?? [])
-      .filter((c) => ["approved", "paid"].includes(c.status))
-      .reduce((s, c) => s + Number(c.partner_share_amount ?? 0), 0);
+      .filter((c: any) => ["approved", "paid"].includes(c.status))
+      .reduce((s: number, c: any) => s + Number(c.commission_amount ?? 0), 0);
     const payoutsPaid = (commissions ?? [])
-      .filter((c) => c.status === "paid")
-      .reduce((s, c) => s + Number(c.partner_share_amount ?? 0), 0);
+      .filter((c: any) => c.status === "paid")
+      .reduce((s: number, c: any) => s + Number(c.commission_amount ?? 0), 0);
     const payoutsPending = revenueShare - payoutsPaid;
     const referralBonus = (referrals ?? [])
-      .filter((r) => ["paid", "bonus_pending_approval", "qualified"].includes(r.status))
-      .reduce((s, r) => s + Number(r.bonus_amount ?? 0), 0);
+      .filter((r: any) => ["paid", "bonus_pending_approval", "qualified"].includes(r.status))
+      .reduce((s: number, r: any) => s + Number(r.bonus_amount ?? 0), 0);
 
     return {
       partner,
