@@ -150,7 +150,7 @@ async function hydrateSessions(context: any, rows: SessionRow[]): Promise<Shaped
 
   const courseMap = new Map((courses ?? []).map((c: any) => [c.id, c]));
   const mentorMap = new Map((mentors ?? []).map((m: any) => [m.id, m]));
-  const moduleMap = new Map((modules ?? []).map((m: any) => [m.id, m.name as string]));
+  const moduleMap = new Map<string, string>((modules ?? []).map((m: any) => [m.id as string, m.name as string]));
   const attMap = new Map((attendance ?? []).map((a: any) => [a.session_id, a]));
   const resCount: Record<string, number> = {};
   for (const r of (resources ?? []) as any[]) resCount[r.session_id] = (resCount[r.session_id] ?? 0) + 1;
