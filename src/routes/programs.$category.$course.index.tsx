@@ -255,11 +255,11 @@ function CoursePage() {
                 {c.is_bestseller ? <Badge variant="bestseller">Best Seller</Badge> : null}
                 {c.is_featured ? <Badge variant="certified">Featured</Badge> : null}
               </div>
-              <h1 className="text-display-lg lg:text-[3.5rem] leading-[1.05] font-display font-semibold tracking-tight text-balance">
+              <h1 className="text-display-md lg:text-[3rem] leading-[1.05] font-display font-semibold tracking-tight text-balance">
                 {c.name}
               </h1>
               {c.short_description ? (
-                <p className="mt-5 text-body-lg text-muted-foreground max-w-2xl">
+                <p className="mt-4 text-body-lg text-muted-foreground max-w-2xl">
                   {c.short_description}
                 </p>
               ) : null}
