@@ -106,6 +106,7 @@ import { Route as AuthenticatedStudentCareerIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedStudentAssignmentsIndexRouteImport } from './routes/_authenticated/student.assignments.index'
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
 import { Route as AuthenticatedAmbassadorReferralsIndexRouteImport } from './routes/_authenticated/ambassador.referrals.index'
+import { Route as AuthenticatedAmbassadorMarketingResourcesIndexRouteImport } from './routes/_authenticated/ambassador.marketing-resources.index'
 import { Route as AuthenticatedAmbassadorEnrollmentsIndexRouteImport } from './routes/_authenticated/ambassador.enrollments.index'
 import { Route as AuthenticatedAmbassadorEarningsIndexRouteImport } from './routes/_authenticated/ambassador.earnings.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
@@ -703,6 +704,12 @@ const AuthenticatedAmbassadorReferralsIndexRoute =
     path: '/referrals/',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAmbassadorMarketingResourcesIndexRoute =
+  AuthenticatedAmbassadorMarketingResourcesIndexRouteImport.update({
+    id: '/marketing-resources/',
+    path: '/marketing-resources/',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
 const AuthenticatedAmbassadorEnrollmentsIndexRoute =
   AuthenticatedAmbassadorEnrollmentsIndexRouteImport.update({
     id: '/enrollments/',
@@ -1051,6 +1058,7 @@ export interface FileRoutesByFullPath {
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  '/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
@@ -1184,6 +1192,7 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
   '/ambassador/earnings': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  '/ambassador/marketing-resources': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/ambassador/referrals': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsIndexRoute
@@ -1322,6 +1331,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/_authenticated/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/_authenticated/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  '/_authenticated/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/_authenticated/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/_authenticated/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
@@ -1460,6 +1470,7 @@ export interface FileRouteTypes {
     | '/admin/team/'
     | '/ambassador/earnings/'
     | '/ambassador/enrollments/'
+    | '/ambassador/marketing-resources/'
     | '/ambassador/referrals/'
     | '/partner/employment/'
     | '/student/assignments/'
@@ -1593,6 +1604,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/ambassador/earnings'
     | '/ambassador/enrollments'
+    | '/ambassador/marketing-resources'
     | '/ambassador/referrals'
     | '/partner/employment'
     | '/student/assignments'
@@ -1730,6 +1742,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/team/'
     | '/_authenticated/ambassador/earnings/'
     | '/_authenticated/ambassador/enrollments/'
+    | '/_authenticated/ambassador/marketing-resources/'
     | '/_authenticated/ambassador/referrals/'
     | '/_authenticated/partner/employment/'
     | '/_authenticated/student/assignments/'
@@ -2451,6 +2464,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorReferralsIndexRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/ambassador/marketing-resources/': {
+      id: '/_authenticated/ambassador/marketing-resources/'
+      path: '/marketing-resources'
+      fullPath: '/ambassador/marketing-resources/'
+      preLoaderRoute: typeof AuthenticatedAmbassadorMarketingResourcesIndexRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
     '/_authenticated/ambassador/enrollments/': {
       id: '/_authenticated/ambassador/enrollments/'
       path: '/enrollments'
@@ -2878,6 +2898,7 @@ interface AuthenticatedAmbassadorRouteChildren {
   AuthenticatedAmbassadorReferralsIdRoute: typeof AuthenticatedAmbassadorReferralsIdRoute
   AuthenticatedAmbassadorEarningsIndexRoute: typeof AuthenticatedAmbassadorEarningsIndexRoute
   AuthenticatedAmbassadorEnrollmentsIndexRoute: typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
+  AuthenticatedAmbassadorMarketingResourcesIndexRoute: typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   AuthenticatedAmbassadorReferralsIndexRoute: typeof AuthenticatedAmbassadorReferralsIndexRoute
 }
 
@@ -2899,6 +2920,8 @@ const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren
       AuthenticatedAmbassadorEarningsIndexRoute,
     AuthenticatedAmbassadorEnrollmentsIndexRoute:
       AuthenticatedAmbassadorEnrollmentsIndexRoute,
+    AuthenticatedAmbassadorMarketingResourcesIndexRoute:
+      AuthenticatedAmbassadorMarketingResourcesIndexRoute,
     AuthenticatedAmbassadorReferralsIndexRoute:
       AuthenticatedAmbassadorReferralsIndexRoute,
   }

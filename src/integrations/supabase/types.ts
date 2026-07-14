@@ -5299,6 +5299,262 @@ export type Database = {
           },
         ]
       }
+      marketing_resource_interactions: {
+        Row: {
+          ambassador_id: string
+          campaign_id: string | null
+          created_at: string
+          id: string
+          interaction_type: Database["public"]["Enums"]["marketing_interaction_type"]
+          metadata: Json | null
+          program_id: string | null
+          resource_id: string | null
+        }
+        Insert: {
+          ambassador_id: string
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          interaction_type: Database["public"]["Enums"]["marketing_interaction_type"]
+          metadata?: Json | null
+          program_id?: string | null
+          resource_id?: string | null
+        }
+        Update: {
+          ambassador_id?: string
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          interaction_type?: Database["public"]["Enums"]["marketing_interaction_type"]
+          metadata?: Json | null
+          program_id?: string | null
+          resource_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_resource_interactions_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_resource_interactions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_resource_interactions_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_resource_issues: {
+        Row: {
+          admin_note: string | null
+          ambassador_id: string
+          created_at: string
+          description: string | null
+          id: string
+          issue_code: string
+          issue_type: Database["public"]["Enums"]["marketing_issue_type"]
+          program_id: string | null
+          resolved_at: string | null
+          resource_id: string | null
+          status: Database["public"]["Enums"]["marketing_issue_status"]
+          updated_at: string
+        }
+        Insert: {
+          admin_note?: string | null
+          ambassador_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          issue_code: string
+          issue_type: Database["public"]["Enums"]["marketing_issue_type"]
+          program_id?: string | null
+          resolved_at?: string | null
+          resource_id?: string | null
+          status?: Database["public"]["Enums"]["marketing_issue_status"]
+          updated_at?: string
+        }
+        Update: {
+          admin_note?: string | null
+          ambassador_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          issue_code?: string
+          issue_type?: Database["public"]["Enums"]["marketing_issue_type"]
+          program_id?: string | null
+          resolved_at?: string | null
+          resource_id?: string | null
+          status?: Database["public"]["Enums"]["marketing_issue_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_resource_issues_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_resource_issues_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_resource_issues_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_resource_saves: {
+        Row: {
+          ambassador_id: string
+          created_at: string
+          id: string
+          resource_id: string
+        }
+        Insert: {
+          ambassador_id: string
+          created_at?: string
+          id?: string
+          resource_id: string
+        }
+        Update: {
+          ambassador_id?: string
+          created_at?: string
+          id?: string
+          resource_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_resource_saves_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_resource_saves_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_resources: {
+        Row: {
+          aspect_ratio: string | null
+          campaign_id: string | null
+          caption_content: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          effective_from: string | null
+          effective_until: string | null
+          file_format: string | null
+          file_size_bytes: number | null
+          id: string
+          is_featured: boolean
+          media_url: string | null
+          personalisation_allowed: boolean
+          personalisation_fields: Json | null
+          program_id: string | null
+          published_at: string | null
+          resource_category: string | null
+          resource_code: string
+          resource_type: Database["public"]["Enums"]["marketing_resource_type"]
+          share_message: string | null
+          short_copy: string | null
+          status: Database["public"]["Enums"]["marketing_resource_status"]
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          aspect_ratio?: string | null
+          campaign_id?: string | null
+          caption_content?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          effective_from?: string | null
+          effective_until?: string | null
+          file_format?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          is_featured?: boolean
+          media_url?: string | null
+          personalisation_allowed?: boolean
+          personalisation_fields?: Json | null
+          program_id?: string | null
+          published_at?: string | null
+          resource_category?: string | null
+          resource_code: string
+          resource_type: Database["public"]["Enums"]["marketing_resource_type"]
+          share_message?: string | null
+          short_copy?: string | null
+          status?: Database["public"]["Enums"]["marketing_resource_status"]
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          aspect_ratio?: string | null
+          campaign_id?: string | null
+          caption_content?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          effective_from?: string | null
+          effective_until?: string | null
+          file_format?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          is_featured?: boolean
+          media_url?: string | null
+          personalisation_allowed?: boolean
+          personalisation_fields?: Json | null
+          program_id?: string | null
+          published_at?: string | null
+          resource_category?: string | null
+          resource_code?: string
+          resource_type?: Database["public"]["Enums"]["marketing_resource_type"]
+          share_message?: string | null
+          short_copy?: string | null
+          status?: Database["public"]["Enums"]["marketing_resource_status"]
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_resources_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       module_completions: {
         Row: {
           completed_at: string
@@ -9785,6 +10041,48 @@ export type Database = {
         | "completed"
         | "cancelled"
         | "rescheduled"
+      marketing_interaction_type:
+        | "viewed"
+        | "downloaded"
+        | "caption_copied"
+        | "share_message_copied"
+        | "referral_link_copied"
+        | "share_started"
+        | "qr_downloaded"
+        | "personalised_generated"
+      marketing_issue_status:
+        | "submitted"
+        | "in_review"
+        | "resolved"
+        | "wont_fix"
+      marketing_issue_type:
+        | "broken_download"
+        | "incorrect_program_info"
+        | "outdated_price"
+        | "incorrect_referral_link"
+        | "image_quality"
+        | "other"
+      marketing_resource_status:
+        | "draft"
+        | "scheduled"
+        | "published"
+        | "paused"
+        | "expired"
+        | "archived"
+      marketing_resource_type:
+        | "program_poster"
+        | "square_social"
+        | "portrait_social"
+        | "instagram_story"
+        | "whatsapp_creative"
+        | "linkedin_creative"
+        | "program_banner"
+        | "campaign_poster"
+        | "caption_instagram"
+        | "caption_linkedin"
+        | "short_copy"
+        | "whatsapp_message"
+        | "story_text"
       partner_activity_type:
         | "note"
         | "stage_change"
@@ -10439,6 +10737,53 @@ export const Constants = {
         "completed",
         "cancelled",
         "rescheduled",
+      ],
+      marketing_interaction_type: [
+        "viewed",
+        "downloaded",
+        "caption_copied",
+        "share_message_copied",
+        "referral_link_copied",
+        "share_started",
+        "qr_downloaded",
+        "personalised_generated",
+      ],
+      marketing_issue_status: [
+        "submitted",
+        "in_review",
+        "resolved",
+        "wont_fix",
+      ],
+      marketing_issue_type: [
+        "broken_download",
+        "incorrect_program_info",
+        "outdated_price",
+        "incorrect_referral_link",
+        "image_quality",
+        "other",
+      ],
+      marketing_resource_status: [
+        "draft",
+        "scheduled",
+        "published",
+        "paused",
+        "expired",
+        "archived",
+      ],
+      marketing_resource_type: [
+        "program_poster",
+        "square_social",
+        "portrait_social",
+        "instagram_story",
+        "whatsapp_creative",
+        "linkedin_creative",
+        "program_banner",
+        "campaign_poster",
+        "caption_instagram",
+        "caption_linkedin",
+        "short_copy",
+        "whatsapp_message",
+        "story_text",
       ],
       partner_activity_type: [
         "note",
