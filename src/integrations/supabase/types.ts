@@ -1361,6 +1361,266 @@ export type Database = {
           },
         ]
       }
+      campus_ambassador_activity: {
+        Row: {
+          actor_role: string | null
+          ambassador_profile_id: string | null
+          application_id: string | null
+          created_at: string
+          detail: string | null
+          event: string
+          id: string
+          meta: Json
+          user_id: string | null
+        }
+        Insert: {
+          actor_role?: string | null
+          ambassador_profile_id?: string | null
+          application_id?: string | null
+          created_at?: string
+          detail?: string | null
+          event: string
+          id?: string
+          meta?: Json
+          user_id?: string | null
+        }
+        Update: {
+          actor_role?: string | null
+          ambassador_profile_id?: string | null
+          application_id?: string | null
+          created_at?: string
+          detail?: string | null
+          event?: string
+          id?: string
+          meta?: Json
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campus_ambassador_activity_ambassador_profile_id_fkey"
+            columns: ["ambassador_profile_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campus_ambassador_activity_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campus_ambassador_applications: {
+        Row: {
+          acknowledged_commission_program: boolean
+          admin_message: string | null
+          applicant_reply: string | null
+          applicant_reply_at: string | null
+          application_code: string | null
+          approved_at: string | null
+          campus_city: string
+          campus_network_size: string | null
+          college_name: string
+          confirmed_information_accuracy: boolean
+          created_at: string
+          current_year_of_study: string
+          degree_course: string
+          email: string
+          email_normalized: string | null
+          expected_graduation_year: number | null
+          full_name: string
+          id: string
+          instagram_url: string | null
+          introduction_plan: string | null
+          linkedin_url: string | null
+          mobile: string
+          mobile_normalized: string | null
+          motivation: string
+          other_social_url: string | null
+          previous_ambassador: boolean
+          previous_brand: string | null
+          rejected_at: string | null
+          rejection_reason_public: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          specialisation: string | null
+          state: string
+          status: Database["public"]["Enums"]["ca_application_status"]
+          submitted_at: string
+          updated_at: string
+          user_id: string | null
+          withdrawn_at: string | null
+        }
+        Insert: {
+          acknowledged_commission_program?: boolean
+          admin_message?: string | null
+          applicant_reply?: string | null
+          applicant_reply_at?: string | null
+          application_code?: string | null
+          approved_at?: string | null
+          campus_city: string
+          campus_network_size?: string | null
+          college_name: string
+          confirmed_information_accuracy?: boolean
+          created_at?: string
+          current_year_of_study: string
+          degree_course: string
+          email: string
+          email_normalized?: string | null
+          expected_graduation_year?: number | null
+          full_name: string
+          id?: string
+          instagram_url?: string | null
+          introduction_plan?: string | null
+          linkedin_url?: string | null
+          mobile: string
+          mobile_normalized?: string | null
+          motivation: string
+          other_social_url?: string | null
+          previous_ambassador?: boolean
+          previous_brand?: string | null
+          rejected_at?: string | null
+          rejection_reason_public?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          specialisation?: string | null
+          state: string
+          status?: Database["public"]["Enums"]["ca_application_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id?: string | null
+          withdrawn_at?: string | null
+        }
+        Update: {
+          acknowledged_commission_program?: boolean
+          admin_message?: string | null
+          applicant_reply?: string | null
+          applicant_reply_at?: string | null
+          application_code?: string | null
+          approved_at?: string | null
+          campus_city?: string
+          campus_network_size?: string | null
+          college_name?: string
+          confirmed_information_accuracy?: boolean
+          created_at?: string
+          current_year_of_study?: string
+          degree_course?: string
+          email?: string
+          email_normalized?: string | null
+          expected_graduation_year?: number | null
+          full_name?: string
+          id?: string
+          instagram_url?: string | null
+          introduction_plan?: string | null
+          linkedin_url?: string | null
+          mobile?: string
+          mobile_normalized?: string | null
+          motivation?: string
+          other_social_url?: string | null
+          previous_ambassador?: boolean
+          previous_brand?: string | null
+          rejected_at?: string | null
+          rejection_reason_public?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          specialisation?: string | null
+          state?: string
+          status?: Database["public"]["Enums"]["ca_application_status"]
+          submitted_at?: string
+          updated_at?: string
+          user_id?: string | null
+          withdrawn_at?: string | null
+        }
+        Relationships: []
+      }
+      campus_ambassador_profiles: {
+        Row: {
+          ambassador_code: string | null
+          application_id: string | null
+          approved_at: string
+          campus_city: string
+          college_name: string
+          commission_ack_at: string | null
+          commission_ack_version: string | null
+          commission_rule_id: string | null
+          created_at: string
+          current_year_of_study: string
+          degree_course: string
+          email: string
+          expected_graduation_year: number | null
+          full_name: string
+          id: string
+          mobile: string
+          referral_code: string | null
+          referral_link: string | null
+          specialisation: string | null
+          state: string
+          status: Database["public"]["Enums"]["ca_ambassador_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ambassador_code?: string | null
+          application_id?: string | null
+          approved_at?: string
+          campus_city: string
+          college_name: string
+          commission_ack_at?: string | null
+          commission_ack_version?: string | null
+          commission_rule_id?: string | null
+          created_at?: string
+          current_year_of_study: string
+          degree_course: string
+          email: string
+          expected_graduation_year?: number | null
+          full_name: string
+          id?: string
+          mobile: string
+          referral_code?: string | null
+          referral_link?: string | null
+          specialisation?: string | null
+          state: string
+          status?: Database["public"]["Enums"]["ca_ambassador_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ambassador_code?: string | null
+          application_id?: string | null
+          approved_at?: string
+          campus_city?: string
+          college_name?: string
+          commission_ack_at?: string | null
+          commission_ack_version?: string | null
+          commission_rule_id?: string | null
+          created_at?: string
+          current_year_of_study?: string
+          degree_course?: string
+          email?: string
+          expected_graduation_year?: number | null
+          full_name?: string
+          id?: string
+          mobile?: string
+          referral_code?: string | null
+          referral_link?: string | null
+          specialisation?: string | null
+          state?: string
+          status?: Database["public"]["Enums"]["ca_ambassador_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campus_ambassador_profiles_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       career_activity: {
         Row: {
           created_at: string
@@ -8391,6 +8651,7 @@ export type Database = {
         | "partner"
         | "wl_owner"
         | "student"
+        | "campus_ambassador"
       application_status:
         | "draft"
         | "submitted"
@@ -8442,6 +8703,19 @@ export type Database = {
         | "review_required"
         | "completed"
         | "blocked"
+      ca_ambassador_status:
+        | "active"
+        | "temporarily_suspended"
+        | "inactive"
+        | "terminated"
+      ca_application_status:
+        | "draft"
+        | "submitted"
+        | "under_review"
+        | "more_info_required"
+        | "approved"
+        | "rejected"
+        | "withdrawn"
       commission_status:
         | "calculated"
         | "under_verification"
@@ -8954,6 +9228,7 @@ export const Constants = {
         "partner",
         "wl_owner",
         "student",
+        "campus_ambassador",
       ],
       application_status: [
         "draft",
@@ -9010,6 +9285,21 @@ export const Constants = {
         "review_required",
         "completed",
         "blocked",
+      ],
+      ca_ambassador_status: [
+        "active",
+        "temporarily_suspended",
+        "inactive",
+        "terminated",
+      ],
+      ca_application_status: [
+        "draft",
+        "submitted",
+        "under_review",
+        "more_info_required",
+        "approved",
+        "rejected",
+        "withdrawn",
       ],
       commission_status: [
         "calculated",
