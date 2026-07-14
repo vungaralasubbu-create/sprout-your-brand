@@ -215,7 +215,7 @@ export const syncStudentNotifications = createServerFn({ method: "POST" })
     if (enabled("assignment")) {
       const { data: assigns } = await sb
         .from("student_assignments")
-        .select("id, status, updated_at, course_assignments(name, due_date)")
+        .select("id, status, updated_at, course_assignments(name, due_at)")
         .eq("student_user_id", uid)
         .in("status", ["revision_requested","approved","completed","under_review","not_started","in_progress"]);
       const now = Date.now();
