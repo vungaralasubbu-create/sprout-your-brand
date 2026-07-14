@@ -34,9 +34,10 @@ const recordVisit = createServerFn({ method: "GET" })
       .eq("referral_code", data.code)
       .maybeSingle();
 
-    if (!profile || (profile.status && profile.status !== "active")) {
+    if (!profile || !profile.referral_code || (profile.status && profile.status !== "active")) {
       return { valid: false, redirectTo: "/" };
     }
+    const refCode: string = profile.referral_code;
 
     // Attribution duration from platform_settings
     const { data: setting } = await admin
@@ -51,7 +52,7 @@ const recordVisit = createServerFn({ method: "GET" })
       .from("ambassador_referral_sessions")
       .insert({
         ambassador_id: profile.id,
-        referral_code: profile.referral_code,
+        referral_code: refCode,
         landing_page: data.landingPath ?? null,
         program_id: data.programSlug ?? null,
         user_agent: data.userAgent ?? null,
@@ -63,7 +64,7 @@ const recordVisit = createServerFn({ method: "GET" })
     if (session) {
       await admin.from("ambassador_referral_visits").insert({
         ambassador_id: profile.id,
-        referral_code: profile.referral_code,
+        referral_code: refCode,
         session_id: session.id,
         landing_page: data.landingPath ?? null,
         program_id: data.programSlug ?? null,
@@ -74,7 +75,7 @@ const recordVisit = createServerFn({ method: "GET" })
       valid: true,
       sessionId: session?.id ?? null,
       expiresAt: session?.expires_at ?? expiresAt.toISOString(),
-      redirectTo: data.programSlug ? `/programs?ref=${encodeURIComponent(profile.referral_code)}` : `/?ref=${encodeURIComponent(profile.referral_code)}`,
+      redirectTo: data.programSlug ? `/programs?ref=${encodeURIComponent(refCode)}` : `/?ref=${encodeURIComponent(refCode)}`,
     };
   });
 

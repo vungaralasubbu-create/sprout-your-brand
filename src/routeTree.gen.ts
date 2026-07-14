@@ -20,6 +20,7 @@ import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
+import { Route as RefCodeRouteImport } from './routes/ref.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
@@ -185,6 +186,11 @@ const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
 const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   id: '/verify-certificate/$code',
   path: '/verify-certificate/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefCodeRoute = RefCodeRouteImport.update({
+  id: '/ref/$code',
+  path: '/ref/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerSignupRoute = PartnerSignupRouteImport.update({
@@ -865,6 +871,7 @@ export interface FileRoutesByFullPath {
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
+  '/ref/$code': typeof RefCodeRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -987,6 +994,7 @@ export interface FileRoutesByTo {
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
+  '/ref/$code': typeof RefCodeRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
@@ -1112,6 +1120,7 @@ export interface FileRoutesById {
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
+  '/ref/$code': typeof RefCodeRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -1238,6 +1247,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/start'
     | '/partner/apply'
     | '/partner/signup'
+    | '/ref/$code'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1360,6 +1370,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/start'
     | '/partner/apply'
     | '/partner/signup'
+    | '/ref/$code'
     | '/verify-certificate/$code'
     | '/campus-ambassador'
     | '/launch-your-brand'
@@ -1484,6 +1495,7 @@ export interface FileRouteTypes {
     | '/launch-your-brand/start'
     | '/partner/apply'
     | '/partner/signup'
+    | '/ref/$code'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1606,6 +1618,7 @@ export interface RootRouteChildren {
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
   PartnerSignupRoute: typeof PartnerSignupRoute
+  RefCodeRoute: typeof RefCodeRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
@@ -1692,6 +1705,13 @@ declare module '@tanstack/react-router' {
       path: '/verify-certificate/$code'
       fullPath: '/verify-certificate/$code'
       preLoaderRoute: typeof VerifyCertificateCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ref/$code': {
+      id: '/ref/$code'
+      path: '/ref/$code'
+      fullPath: '/ref/$code'
+      preLoaderRoute: typeof RefCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner/signup': {
@@ -2883,6 +2903,7 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
   PartnerSignupRoute: PartnerSignupRoute,
+  RefCodeRoute: RefCodeRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
