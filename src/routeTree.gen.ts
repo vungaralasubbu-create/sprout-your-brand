@@ -54,6 +54,7 @@ import { Route as AuthenticatedAdminReferralManagementRouteImport } from './rout
 import { Route as AuthenticatedAdminPaymentVerificationRouteImport } from './routes/_authenticated/admin.payment-verification'
 import { Route as AuthenticatedAdminPartnerProgramsRouteImport } from './routes/_authenticated/admin.partner-programs'
 import { Route as AuthenticatedAdminPartnerPayoutsRouteImport } from './routes/_authenticated/admin.partner-payouts'
+import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_authenticated/admin.partner-brands'
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
@@ -324,6 +325,12 @@ const AuthenticatedAdminPartnerPayoutsRoute =
     path: '/partner-payouts',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPartnerBrandsRoute =
+  AuthenticatedAdminPartnerBrandsRouteImport.update({
+    id: '/partner-brands',
+    path: '/partner-brands',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPartnerApplicationsRoute =
   AuthenticatedAdminPartnerApplicationsRouteImport.update({
     id: '/partner-applications',
@@ -465,6 +472,7 @@ export interface FileRoutesByFullPath {
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
+  '/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
   '/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
@@ -528,6 +536,7 @@ export interface FileRoutesByTo {
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
+  '/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
   '/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
@@ -595,6 +604,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
+  '/_authenticated/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
   '/_authenticated/admin/partner-payouts': typeof AuthenticatedAdminPartnerPayoutsRoute
   '/_authenticated/admin/partner-programs': typeof AuthenticatedAdminPartnerProgramsRoute
   '/_authenticated/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
@@ -662,6 +672,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
+    | '/admin/partner-brands'
     | '/admin/partner-payouts'
     | '/admin/partner-programs'
     | '/admin/payment-verification'
@@ -725,6 +736,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
+    | '/admin/partner-brands'
     | '/admin/partner-payouts'
     | '/admin/partner-programs'
     | '/admin/payment-verification'
@@ -791,6 +803,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
+    | '/_authenticated/admin/partner-brands'
     | '/_authenticated/admin/partner-payouts'
     | '/_authenticated/admin/partner-programs'
     | '/_authenticated/admin/payment-verification'
@@ -1167,6 +1180,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnerPayoutsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/partner-brands': {
+      id: '/_authenticated/admin/partner-brands'
+      path: '/partner-brands'
+      fullPath: '/admin/partner-brands'
+      preLoaderRoute: typeof AuthenticatedAdminPartnerBrandsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/partner-applications': {
       id: '/_authenticated/admin/partner-applications'
       path: '/partner-applications'
@@ -1313,6 +1333,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
+  AuthenticatedAdminPartnerBrandsRoute: typeof AuthenticatedAdminPartnerBrandsRoute
   AuthenticatedAdminPartnerPayoutsRoute: typeof AuthenticatedAdminPartnerPayoutsRoute
   AuthenticatedAdminPartnerProgramsRoute: typeof AuthenticatedAdminPartnerProgramsRoute
   AuthenticatedAdminPaymentVerificationRoute: typeof AuthenticatedAdminPaymentVerificationRoute
@@ -1341,6 +1362,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
     AuthenticatedAdminPartnerApplicationsRoute,
+  AuthenticatedAdminPartnerBrandsRoute: AuthenticatedAdminPartnerBrandsRoute,
   AuthenticatedAdminPartnerPayoutsRoute: AuthenticatedAdminPartnerPayoutsRoute,
   AuthenticatedAdminPartnerProgramsRoute:
     AuthenticatedAdminPartnerProgramsRoute,
