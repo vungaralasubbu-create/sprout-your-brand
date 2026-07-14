@@ -42,6 +42,7 @@ import { Route as AuthenticatedPartnerProgramsRouteImport } from './routes/_auth
 import { Route as AuthenticatedPartnerPaymentVerificationRouteImport } from './routes/_authenticated/partner.payment-verification'
 import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_authenticated/partner.payment-links'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
+import { Route as AuthenticatedPartnerMyLeadsRouteImport } from './routes/_authenticated/partner.my-leads'
 import { Route as AuthenticatedPartnerEarningsStatementRouteImport } from './routes/_authenticated/partner.earnings-statement'
 import { Route as AuthenticatedPartnerEarningsRouteImport } from './routes/_authenticated/partner.earnings'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
@@ -65,6 +66,7 @@ import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
+import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_authenticated/admin.lead-monitoring'
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
@@ -267,6 +269,12 @@ const AuthenticatedPartnerOnboardingRoute =
     path: '/onboarding',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerMyLeadsRoute =
+  AuthenticatedPartnerMyLeadsRouteImport.update({
+    id: '/my-leads',
+    path: '/my-leads',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerEarningsStatementRoute =
   AuthenticatedPartnerEarningsStatementRouteImport.update({
     id: '/earnings-statement',
@@ -404,6 +412,12 @@ const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
   path: '/leads',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminLeadMonitoringRoute =
+  AuthenticatedAdminLeadMonitoringRouteImport.update({
+    id: '/lead-monitoring',
+    path: '/lead-monitoring',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminLeadManagementRoute =
   AuthenticatedAdminLeadManagementRouteImport.update({
     id: '/lead-management',
@@ -569,6 +583,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
+  '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -592,6 +607,7 @@ export interface FileRoutesByFullPath {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
@@ -647,6 +663,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
+  '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -670,6 +687,7 @@ export interface FileRoutesByTo {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
@@ -729,6 +747,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
+  '/_authenticated/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -752,6 +771,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/_authenticated/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/_authenticated/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/partner/payment-links': typeof AuthenticatedPartnerPaymentLinksRoute
   '/_authenticated/partner/payment-verification': typeof AuthenticatedPartnerPaymentVerificationRoute
@@ -811,6 +831,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/employment-settings'
     | '/admin/lead-management'
+    | '/admin/lead-monitoring'
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -834,6 +855,7 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
+    | '/partner/my-leads'
     | '/partner/onboarding'
     | '/partner/payment-links'
     | '/partner/payment-verification'
@@ -889,6 +911,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/employment-settings'
     | '/admin/lead-management'
+    | '/admin/lead-monitoring'
     | '/admin/leads'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -912,6 +935,7 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
+    | '/partner/my-leads'
     | '/partner/onboarding'
     | '/partner/payment-links'
     | '/partner/payment-verification'
@@ -970,6 +994,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
     | '/_authenticated/admin/lead-management'
+    | '/_authenticated/admin/lead-monitoring'
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
@@ -993,6 +1018,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/earnings'
     | '/_authenticated/partner/earnings-statement'
+    | '/_authenticated/partner/my-leads'
     | '/_authenticated/partner/onboarding'
     | '/_authenticated/partner/payment-links'
     | '/_authenticated/partner/payment-verification'
@@ -1278,6 +1304,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerOnboardingRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/partner/my-leads': {
+      id: '/_authenticated/partner/my-leads'
+      path: '/my-leads'
+      fullPath: '/partner/my-leads'
+      preLoaderRoute: typeof AuthenticatedPartnerMyLeadsRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/partner/earnings-statement': {
       id: '/_authenticated/partner/earnings-statement'
       path: '/earnings-statement'
@@ -1437,6 +1470,13 @@ declare module '@tanstack/react-router' {
       path: '/leads'
       fullPath: '/admin/leads'
       preLoaderRoute: typeof AuthenticatedAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/lead-monitoring': {
+      id: '/_authenticated/admin/lead-monitoring'
+      path: '/lead-monitoring'
+      fullPath: '/admin/lead-monitoring'
+      preLoaderRoute: typeof AuthenticatedAdminLeadMonitoringRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/lead-management': {
@@ -1612,6 +1652,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
+  AuthenticatedAdminLeadMonitoringRoute: typeof AuthenticatedAdminLeadMonitoringRoute
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -1648,6 +1689,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
   AuthenticatedAdminLeadManagementRoute: AuthenticatedAdminLeadManagementRoute,
+  AuthenticatedAdminLeadMonitoringRoute: AuthenticatedAdminLeadMonitoringRoute,
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
@@ -1717,6 +1759,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
   AuthenticatedPartnerEarningsRoute: typeof AuthenticatedPartnerEarningsRoute
   AuthenticatedPartnerEarningsStatementRoute: typeof AuthenticatedPartnerEarningsStatementRoute
+  AuthenticatedPartnerMyLeadsRoute: typeof AuthenticatedPartnerMyLeadsRoute
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
   AuthenticatedPartnerPaymentLinksRoute: typeof AuthenticatedPartnerPaymentLinksRoute
   AuthenticatedPartnerPaymentVerificationRoute: typeof AuthenticatedPartnerPaymentVerificationRoute
@@ -1736,6 +1779,7 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerEarningsRoute: AuthenticatedPartnerEarningsRoute,
   AuthenticatedPartnerEarningsStatementRoute:
     AuthenticatedPartnerEarningsStatementRoute,
+  AuthenticatedPartnerMyLeadsRoute: AuthenticatedPartnerMyLeadsRoute,
   AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
   AuthenticatedPartnerPaymentLinksRoute: AuthenticatedPartnerPaymentLinksRoute,
   AuthenticatedPartnerPaymentVerificationRoute:

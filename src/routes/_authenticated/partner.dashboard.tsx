@@ -28,6 +28,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import { getOverviewStats, getPartnerContext } from "@/lib/partner/dashboard.functions";
+import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
+import { AlertTriangle, CalendarClock, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/programs";
@@ -101,19 +103,22 @@ function PartnerDashboard() {
         </div>
         <div className="flex gap-2">
           <Button asChild variant="outline" size="sm">
-            <Link to="/partner/coming-soon">
+            <Link to="/partner/my-leads" search={{ filter: "today", index: 0 }}>
               <ListChecks className="size-4" />
               View My Leads
             </Link>
           </Button>
           <Button asChild variant="gradient" size="sm">
-            <Link to="/partner/coming-soon">
+            <Link to="/partner/add-leads">
               <Plus className="size-4" />
               Add Lead
             </Link>
           </Button>
         </div>
       </header>
+
+      <NeedsAttention />
+
 
       {/* Row 1: sales & payments KPIs */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
@@ -340,6 +345,46 @@ function PartnerDashboard() {
         program rules. Refunds and reversals may adjust earnings.
       </p>
     </div>
+  );
+}
+
+function NeedsAttention() {
+  const fetchCounts = useServerFn(getFollowUpCounts);
+  const { data } = useQuery({
+    queryKey: ["follow-up-counts"],
+    queryFn: () => fetchCounts(),
+    refetchInterval: 60_000,
+  });
+  const items = [
+    { key: "today", label: "Today's Follow-Ups", icon: CalendarClock, tone: "text-blue-600 bg-blue-50", count: data?.today ?? 0 },
+    { key: "overdue", label: "Overdue Follow-Ups", icon: AlertTriangle, tone: "text-red-600 bg-red-50", count: data?.overdue ?? 0 },
+    { key: "not_contacted", label: "Not Contacted", icon: Users, tone: "text-slate-600 bg-slate-100", count: data?.not_contacted ?? 0 },
+    { key: "no_answer_retry", label: "No Answer — Retry", icon: PhoneOff, tone: "text-amber-600 bg-amber-50", count: data?.no_answer_retry ?? 0 },
+    { key: "payment_follow_up", label: "Payment Follow-Ups", icon: CreditCard, tone: "text-emerald-600 bg-emerald-50", count: data?.payment_follow_up ?? 0 },
+  ] as const;
+  return (
+    <section>
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-heading-sm font-display font-semibold">Needs Your Attention</h2>
+        <span className="text-xs text-muted-foreground">Real-time reminders</span>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        {items.map((it) => (
+          <Link
+            key={it.key}
+            to="/partner/my-leads"
+            search={{ filter: it.key, index: 0 }}
+            className="rounded-2xl border bg-white p-4 hover:border-primary/50 hover:shadow-sm transition-all"
+          >
+            <span className={`inline-flex size-9 items-center justify-center rounded-lg ${it.tone}`}>
+              <it.icon className="size-4" />
+            </span>
+            <div className="mt-3 text-caption text-muted-foreground leading-tight">{it.label}</div>
+            <div className="mt-1 text-2xl font-display font-semibold tabular-nums">{it.count}</div>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
