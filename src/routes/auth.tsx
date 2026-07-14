@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
 import { reconcileRolesForCurrentUser } from "@/lib/auth/reconcile.functions";
+import { requestLoginOtp, verifyLoginOtp } from "@/lib/auth/otp.functions";
 import { trackEvent } from "@/lib/analytics/client";
 
 export const Route = createFileRoute("/auth")({
@@ -20,36 +21,44 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const schema = z.object({
+const credsSchema = z.object({
   email: z.string().trim().email().max(255),
   password: z.string().min(6).max(72),
+  mobile: z.string().trim().regex(/^\d{10}$|^\+?\d{10,15}$/, "Enter a valid mobile number."),
 });
+
+type Mode = "signin" | "signup" | "recovery";
+type Stage = "creds" | "otp";
 
 async function routeAfterAuth(
   userId: string,
   navigate: ReturnType<typeof useNavigate>,
   reconcile: () => Promise<{ granted: string[] }>,
 ) {
-  // Best-effort role reconciliation (e.g. approved partner applicants
-  // whose auth account was created after admin approval).
   try {
     await reconcile();
   } catch (e) {
     console.warn("[auth] reconcile failed", e);
   }
   const { path, role } = await resolveRedirectForUser(userId);
-  if (!role) {
-    toast.message("Your account workspace is not configured yet.");
-  }
+  if (!role) toast.message("Your account workspace is not configured yet.");
   navigate({ to: path as any });
 }
 
 function AuthPage() {
   const navigate = useNavigate();
   const reconcile = useServerFn(reconcileRolesForCurrentUser);
-  const [mode, setMode] = useState<"signin" | "signup" | "recovery">("signin");
+  const sendOtp = useServerFn(requestLoginOtp);
+  const verifyOtp = useServerFn(verifyLoginOtp);
+
+  const [mode, setMode] = useState<Mode>("signin");
+  const [stage, setStage] = useState<Stage>("creds");
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     const isRecovery =
@@ -68,15 +77,43 @@ function AuthPage() {
     return () => sub.subscription.unsubscribe();
   }, [navigate, reconcile]);
 
-  async function handle(e: React.FormEvent<HTMLFormElement>) {
+  async function completePasswordAuth() {
+    if (mode === "signup") {
+      const redirectTo = `${window.location.origin}/auth`;
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: redirectTo, data: { mobile } },
+      });
+      if (error) return toast.error(error.message);
+      trackEvent("student_signup", { dedupe_key: email });
+      // With auto-confirm on, signUp signs the user in immediately.
+      const { data: sess } = await supabase.auth.getSession();
+      if (sess.session?.user) {
+        toast.success("Account created");
+        await routeAfterAuth(sess.session.user.id, navigate, reconcile);
+      } else {
+        // Fallback: try signing in with the just-created credentials.
+        const { data, error: siErr } = await supabase.auth.signInWithPassword({ email, password });
+        if (siErr) return toast.error(siErr.message);
+        if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
+      }
+    } else {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return toast.error(error.message);
+      toast.success("Signed in");
+      if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
+    }
+  }
+
+  async function handleCredsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (loading) return;
-    const fd = new FormData(e.currentTarget);
+
     if (mode === "recovery") {
-      const pw = String(fd.get("password") ?? "");
-      if (pw.length < 6) return toast.error("Password must be at least 6 characters.");
+      if (password.length < 6) return toast.error("Password must be at least 6 characters.");
       setLoading(true);
-      const { error } = await supabase.auth.updateUser({ password: pw });
+      const { error } = await supabase.auth.updateUser({ password });
       setLoading(false);
       if (error) return toast.error(error.message);
       toast.success("Password updated.");
@@ -84,31 +121,46 @@ function AuthPage() {
       if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
       return;
     }
-    const parsed = schema.safeParse(Object.fromEntries(fd));
+
+    const parsed = credsSchema.safeParse({ email, password, mobile });
     if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
+
     setLoading(true);
-    if (mode === "signin") {
-      const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
+    const res = await sendOtp({
+      data: { mobile, email, purpose: mode === "signup" ? "signup" : "login" },
+    });
+    setLoading(false);
+    if (!res.ok) return toast.error(res.error);
+    toast.success("OTP sent to your mobile.");
+    setStage("otp");
+  }
+
+  async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (loading) return;
+    if (!/^\d{6}$/.test(code)) return toast.error("Enter the 6-digit OTP.");
+    setLoading(true);
+    const v = await verifyOtp({ data: { mobile, code } });
+    if (!v.ok) {
       setLoading(false);
-      if (error) return toast.error(error.message);
-      toast.success("Signed in");
-      if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
-    } else {
-      const redirectTo = `${window.location.origin}/auth`;
-      const { error } = await supabase.auth.signUp({
-        ...parsed.data,
-        options: { emailRedirectTo: redirectTo },
-      });
-      setLoading(false);
-      if (error) return toast.error(error.message);
-      trackEvent("student_signup", { dedupe_key: parsed.data.email });
-      toast.success("Account created. You can sign in now.");
-      setMode("signin");
+      return toast.error(v.error);
     }
+    await completePasswordAuth();
+    setLoading(false);
+  }
+
+  async function resendOtp() {
+    if (loading) return;
+    setLoading(true);
+    const res = await sendOtp({
+      data: { mobile, email, purpose: mode === "signup" ? "signup" : "login" },
+    });
+    setLoading(false);
+    if (!res.ok) return toast.error(res.error);
+    toast.success("New OTP sent.");
   }
 
   async function handleForgot() {
-    const email = (document.getElementById("email") as HTMLInputElement | null)?.value?.trim();
     if (!email) return toast.error("Enter your email above, then click Forgot Password.");
     setResetting(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -119,6 +171,26 @@ function AuthPage() {
     toast.success("Password reset email sent.");
   }
 
+  const titleText =
+    mode === "recovery"
+      ? "Set a new password"
+      : mode === "signin"
+      ? stage === "otp"
+        ? "Verify your mobile"
+        : "Welcome Back To Glintr"
+      : stage === "otp"
+      ? "Verify your mobile"
+      : "Create your Glintr account";
+
+  const subtitleText =
+    mode === "recovery"
+      ? "Choose a new password for your Glintr account."
+      : stage === "otp"
+      ? `We sent a 6-digit code to ${mobile}. It's valid for 5 minutes.`
+      : mode === "signin"
+      ? "Access your workspace and continue where you left off."
+      : "Get started with Glintr in seconds.";
+
   return (
     <>
       <SiteHeader />
@@ -126,62 +198,149 @@ function AuthPage() {
         <Section className="py-20">
           <Container className="max-w-md">
             <div className="card-elevated p-8">
-              <h1 className="text-heading-xl font-display font-semibold">
-                {mode === "recovery"
-                  ? "Set a new password"
-                  : mode === "signin"
-                  ? "Welcome Back To Glintr"
-                  : "Create your Glintr account"}
-              </h1>
-              <p className="text-caption mt-2">
-                {mode === "recovery"
-                  ? "Choose a new password for your Glintr account."
-                  : mode === "signin"
-                  ? "Access your workspace and continue where you left off."
-                  : "Get started with Glintr in seconds."}
-              </p>
-              <form onSubmit={handle} className="mt-6 space-y-4">
-                {mode !== "recovery" && (
+              <h1 className="text-heading-xl font-display font-semibold">{titleText}</h1>
+              <p className="text-caption mt-2">{subtitleText}</p>
+
+              {stage === "creds" ? (
+                <form onSubmit={handleCredsSubmit} className="mt-6 space-y-4">
+                  {mode !== "recovery" && (
+                    <>
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="mt-2 h-11"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="mobile">Mobile number</Label>
+                        <Input
+                          id="mobile"
+                          name="mobile"
+                          type="tel"
+                          inputMode="numeric"
+                          placeholder="10-digit mobile"
+                          required
+                          value={mobile}
+                          onChange={(e) => setMobile(e.target.value)}
+                          className="mt-2 h-11"
+                        />
+                        <p className="text-caption mt-1 text-muted-foreground">
+                          We'll text you a one-time code to verify.
+                        </p>
+                      </div>
+                    </>
+                  )}
                   <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" required className="mt-2 h-11" />
+                    <Label htmlFor="password">
+                      {mode === "recovery" ? "New password" : "Password"}
+                    </Label>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="mt-2 h-11"
+                    />
                   </div>
-                )}
-                <div>
-                  <Label htmlFor="password">{mode === "recovery" ? "New password" : "Password"}</Label>
-                  <Input id="password" name="password" type="password" required minLength={6} className="mt-2 h-11" />
-                </div>
-                <Button type="submit" size="lg" variant="gradient" className="w-full" disabled={loading}>
-                  {loading
-                    ? "…"
-                    : mode === "recovery"
-                    ? "Update password"
-                    : mode === "signin"
-                    ? "Sign In"
-                    : "Create account"}
-                </Button>
-                {mode === "signin" && (
                   <Button
-                    type="button"
-                    variant="ghost"
+                    type="submit"
+                    size="lg"
+                    variant="gradient"
                     className="w-full"
-                    onClick={handleForgot}
-                    disabled={resetting}
+                    disabled={loading}
                   >
-                    {resetting ? "Sending…" : "Forgot Password"}
+                    {loading
+                      ? "…"
+                      : mode === "recovery"
+                      ? "Update password"
+                      : mode === "signin"
+                      ? "Send OTP & Sign In"
+                      : "Send OTP & Create account"}
                   </Button>
-                )}
-              </form>
-              {mode !== "recovery" && (
+                  {mode === "signin" && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="w-full"
+                      onClick={handleForgot}
+                      disabled={resetting}
+                    >
+                      {resetting ? "Sending…" : "Forgot Password"}
+                    </Button>
+                  )}
+                </form>
+              ) : (
+                <form onSubmit={handleOtpSubmit} className="mt-6 space-y-4">
+                  <div>
+                    <Label htmlFor="code">6-digit OTP</Label>
+                    <Input
+                      id="code"
+                      name="code"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      required
+                      value={code}
+                      onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                      className="mt-2 h-11 tracking-[0.5em] text-center text-lg"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    variant="gradient"
+                    className="w-full"
+                    disabled={loading}
+                  >
+                    {loading ? "Verifying…" : mode === "signup" ? "Verify & Create account" : "Verify & Sign In"}
+                  </Button>
+                  <div className="flex items-center justify-between">
+                    <button
+                      type="button"
+                      className="text-caption text-primary hover:underline"
+                      onClick={resendOtp}
+                      disabled={loading}
+                    >
+                      Resend OTP
+                    </button>
+                    <button
+                      type="button"
+                      className="text-caption text-muted-foreground hover:text-foreground"
+                      onClick={() => {
+                        setStage("creds");
+                        setCode("");
+                      }}
+                    >
+                      ← Change details
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {stage === "creds" && mode !== "recovery" && (
                 <button
                   onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
                   className="mt-4 text-caption text-primary hover:underline"
                 >
-                  {mode === "signin" ? "New here? Create an account" : "Already have an account? Sign in"}
+                  {mode === "signin"
+                    ? "New here? Create an account"
+                    : "Already have an account? Sign in"}
                 </button>
               )}
               <p className="mt-6 text-caption">
-                <Link to="/" className="hover:text-foreground">← Back to home</Link>
+                <Link to="/" className="hover:text-foreground">
+                  ← Back to home
+                </Link>
               </p>
             </div>
           </Container>
