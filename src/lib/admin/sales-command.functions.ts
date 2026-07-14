@@ -79,6 +79,8 @@ export const getCommandTopMetrics = createServerFn({ method: "GET" })
         .lt("due_at", nowISO),
       s.from("payouts").select("approved_amount, amount")
         .in("status", ["approved", "queued"]),
+      (s as any).from("lead_ownership_reviews").select("id", { count: "exact", head: true })
+        .in("status", ["pending_review", "possible_duplicate", "under_review", "disputed"]),
     ]);
 
     const todayVerifiedRevenue = (todaySales.data ?? []).reduce((a: number, r: any) => a + Number(r.amount ?? 0), 0);
