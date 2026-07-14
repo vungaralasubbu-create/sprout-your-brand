@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getPartnerEarnings } from "@/lib/partner/earnings.functions";
-import { PartnerShell } from "@/components/partner/partner-shell";
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
