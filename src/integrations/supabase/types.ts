@@ -1148,6 +1148,8 @@ export type Database = {
           lead_id: string | null
           lead_source: string | null
           lead_type: string | null
+          ownership_pending: boolean
+          ownership_review_id: string | null
           paid_by: string | null
           partner_id: string
           payout_at: string | null
@@ -1177,6 +1179,8 @@ export type Database = {
           lead_id?: string | null
           lead_source?: string | null
           lead_type?: string | null
+          ownership_pending?: boolean
+          ownership_review_id?: string | null
           paid_by?: string | null
           partner_id: string
           payout_at?: string | null
@@ -1206,6 +1210,8 @@ export type Database = {
           lead_id?: string | null
           lead_source?: string | null
           lead_type?: string | null
+          ownership_pending?: boolean
+          ownership_review_id?: string | null
           paid_by?: string | null
           partner_id?: string
           payout_at?: string | null
@@ -1241,6 +1247,13 @@ export type Database = {
             columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_ownership_review_id_fkey"
+            columns: ["ownership_review_id"]
+            isOneToOne: false
+            referencedRelation: "lead_ownership_reviews"
             referencedColumns: ["id"]
           },
           {
@@ -2678,6 +2691,162 @@ export type Database = {
             columns: ["to_partner_id"]
             isOneToOne: false
             referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_ownership_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          ended_at: string | null
+          id: string
+          lead_id: string
+          owner_partner_id: string | null
+          ownership_type: Database["public"]["Enums"]["lead_ownership_type"]
+          reason: string | null
+          started_at: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          lead_id: string
+          owner_partner_id?: string | null
+          ownership_type: Database["public"]["Enums"]["lead_ownership_type"]
+          reason?: string | null
+          started_at?: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          lead_id?: string
+          owner_partner_id?: string | null
+          ownership_type?: Database["public"]["Enums"]["lead_ownership_type"]
+          reason?: string | null
+          started_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_ownership_history_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_ownership_history_owner_partner_id_fkey"
+            columns: ["owner_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_ownership_reviews: {
+        Row: {
+          admin_decision: string | null
+          admin_reason: string | null
+          approved_lead_id: string | null
+          claiming_partner_id: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          existing_lead_id: string | null
+          id: string
+          merged_into_lead_id: string | null
+          status: Database["public"]["Enums"]["lead_ownership_review_status"]
+          submitted_course_id: string | null
+          submitted_email: string | null
+          submitted_full_name: string
+          submitted_mobile: string
+          submitted_mobile_normalized: string
+          submitted_notes: string | null
+          submitted_program_interest: string | null
+          submitted_source: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_decision?: string | null
+          admin_reason?: string | null
+          approved_lead_id?: string | null
+          claiming_partner_id: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          existing_lead_id?: string | null
+          id?: string
+          merged_into_lead_id?: string | null
+          status?: Database["public"]["Enums"]["lead_ownership_review_status"]
+          submitted_course_id?: string | null
+          submitted_email?: string | null
+          submitted_full_name: string
+          submitted_mobile: string
+          submitted_mobile_normalized: string
+          submitted_notes?: string | null
+          submitted_program_interest?: string | null
+          submitted_source?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_decision?: string | null
+          admin_reason?: string | null
+          approved_lead_id?: string | null
+          claiming_partner_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          existing_lead_id?: string | null
+          id?: string
+          merged_into_lead_id?: string | null
+          status?: Database["public"]["Enums"]["lead_ownership_review_status"]
+          submitted_course_id?: string | null
+          submitted_email?: string | null
+          submitted_full_name?: string
+          submitted_mobile?: string
+          submitted_mobile_normalized?: string
+          submitted_notes?: string | null
+          submitted_program_interest?: string | null
+          submitted_source?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_ownership_reviews_approved_lead_id_fkey"
+            columns: ["approved_lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_ownership_reviews_claiming_partner_id_fkey"
+            columns: ["claiming_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_ownership_reviews_existing_lead_id_fkey"
+            columns: ["existing_lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_ownership_reviews_merged_into_lead_id_fkey"
+            columns: ["merged_into_lead_id"]
+            isOneToOne: false
+            referencedRelation: "partner_leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_ownership_reviews_submitted_course_id_fkey"
+            columns: ["submitted_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
         ]
@@ -5491,6 +5660,16 @@ export type Database = {
         | "cancelled"
       follow_up_type: "call" | "whatsapp" | "email" | "meeting" | "other"
       lead_model: "own_leads" | "supported" | "not_sure"
+      lead_ownership_review_status:
+        | "pending_review"
+        | "under_review"
+        | "possible_duplicate"
+        | "disputed"
+        | "resolved_keep_existing"
+        | "resolved_partner_own"
+        | "resolved_glintr_provided"
+        | "resolved_merged"
+        | "rejected"
       lead_ownership_type: "partner_own" | "glintr_provided"
       lesson_type:
         | "video"
@@ -5883,6 +6062,17 @@ export const Constants = {
       ],
       follow_up_type: ["call", "whatsapp", "email", "meeting", "other"],
       lead_model: ["own_leads", "supported", "not_sure"],
+      lead_ownership_review_status: [
+        "pending_review",
+        "under_review",
+        "possible_duplicate",
+        "disputed",
+        "resolved_keep_existing",
+        "resolved_partner_own",
+        "resolved_glintr_provided",
+        "resolved_merged",
+        "rejected",
+      ],
       lead_ownership_type: ["partner_own", "glintr_provided"],
       lesson_type: [
         "video",
