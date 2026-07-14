@@ -105,6 +105,7 @@ import { Route as AuthenticatedStudentAssignmentsIndexRouteImport } from './rout
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
 import { Route as AuthenticatedAmbassadorReferralsIndexRouteImport } from './routes/_authenticated/ambassador.referrals.index'
 import { Route as AuthenticatedAmbassadorEnrollmentsIndexRouteImport } from './routes/_authenticated/ambassador.enrollments.index'
+import { Route as AuthenticatedAmbassadorEarningsIndexRouteImport } from './routes/_authenticated/ambassador.earnings.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
@@ -692,6 +693,12 @@ const AuthenticatedAmbassadorEnrollmentsIndexRoute =
     path: '/enrollments/',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAmbassadorEarningsIndexRoute =
+  AuthenticatedAmbassadorEarningsIndexRouteImport.update({
+    id: '/earnings/',
+    path: '/earnings/',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
 const AuthenticatedAdminTeamIndexRoute =
   AuthenticatedAdminTeamIndexRouteImport.update({
     id: '/team/',
@@ -1010,6 +1017,7 @@ export interface FileRoutesByFullPath {
   '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
+  '/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
@@ -1138,6 +1146,7 @@ export interface FileRoutesByTo {
   '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
+  '/ambassador/earnings': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/ambassador/referrals': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
@@ -1271,6 +1280,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
+  '/_authenticated/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/_authenticated/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/_authenticated/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
@@ -1404,6 +1414,7 @@ export interface FileRouteTypes {
     | '/admin/payment-links/'
     | '/admin/payouts/'
     | '/admin/team/'
+    | '/ambassador/earnings/'
     | '/ambassador/enrollments/'
     | '/ambassador/referrals/'
     | '/partner/employment/'
@@ -1532,6 +1543,7 @@ export interface FileRouteTypes {
     | '/admin/payment-links'
     | '/admin/payouts'
     | '/admin/team'
+    | '/ambassador/earnings'
     | '/ambassador/enrollments'
     | '/ambassador/referrals'
     | '/partner/employment'
@@ -1664,6 +1676,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/payment-links/'
     | '/_authenticated/admin/payouts/'
     | '/_authenticated/admin/team/'
+    | '/_authenticated/ambassador/earnings/'
     | '/_authenticated/ambassador/enrollments/'
     | '/_authenticated/ambassador/referrals/'
     | '/_authenticated/partner/employment/'
@@ -2379,6 +2392,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorEnrollmentsIndexRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/ambassador/earnings/': {
+      id: '/_authenticated/ambassador/earnings/'
+      path: '/earnings'
+      fullPath: '/ambassador/earnings/'
+      preLoaderRoute: typeof AuthenticatedAmbassadorEarningsIndexRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
     '/_authenticated/admin/team/': {
       id: '/_authenticated/admin/team/'
       path: '/team'
@@ -2758,6 +2778,7 @@ interface AuthenticatedAmbassadorRouteChildren {
   AuthenticatedAmbassadorDashboardRoute: typeof AuthenticatedAmbassadorDashboardRoute
   AuthenticatedAmbassadorEnrollmentsIdRoute: typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   AuthenticatedAmbassadorReferralsIdRoute: typeof AuthenticatedAmbassadorReferralsIdRoute
+  AuthenticatedAmbassadorEarningsIndexRoute: typeof AuthenticatedAmbassadorEarningsIndexRoute
   AuthenticatedAmbassadorEnrollmentsIndexRoute: typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   AuthenticatedAmbassadorReferralsIndexRoute: typeof AuthenticatedAmbassadorReferralsIndexRoute
 }
@@ -2770,6 +2791,8 @@ const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren
       AuthenticatedAmbassadorEnrollmentsIdRoute,
     AuthenticatedAmbassadorReferralsIdRoute:
       AuthenticatedAmbassadorReferralsIdRoute,
+    AuthenticatedAmbassadorEarningsIndexRoute:
+      AuthenticatedAmbassadorEarningsIndexRoute,
     AuthenticatedAmbassadorEnrollmentsIndexRoute:
       AuthenticatedAmbassadorEnrollmentsIndexRoute,
     AuthenticatedAmbassadorReferralsIndexRoute:
