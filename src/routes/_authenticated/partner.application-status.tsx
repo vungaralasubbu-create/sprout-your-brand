@@ -36,7 +36,8 @@ function ApplicationStatus() {
   const status = data?.partner?.account_status ?? "onboarding";
   const notes = data?.application?.admin_notes as string | undefined;
 
-  const view = {
+  type View = { icon: React.ReactNode; color: string; title: string; body: string };
+  const views: Record<string, View> = {
     pending_review: {
       icon: <Clock className="h-6 w-6" />,
       color: "bg-sky-50 text-sky-700 border-sky-200",
@@ -73,12 +74,14 @@ function ApplicationStatus() {
       title: "Account Suspended",
       body: notes || "Your account is currently suspended. Please contact support.",
     },
-  }[status as keyof typeof view || "onboarding"] ?? {
+  };
+  const view: View = views[status] ?? {
     icon: <Clock className="h-6 w-6" />,
     color: "bg-muted text-foreground border-border",
     title: "Application status",
     body: "",
   };
+
 
   return (
     <Section padding="lg">
