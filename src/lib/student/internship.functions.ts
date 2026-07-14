@@ -99,10 +99,17 @@ async function computeEligibility(
   const courseId = internship.course_id;
 
   // Learning percent — derive from lesson_progress across course lessons.
-  const { data: lessonsRes } = await context.supabase
-    .from("course_lessons")
-    .select("id, module:course_modules!inner(course_id)")
-    .eq("course_modules.course_id", internship.course_id);
+  const { data: modulesForLessons } = await context.supabase
+    .from("course_modules")
+    .select("id")
+    .eq("course_id", internship.course_id);
+  const moduleIdList = ((modulesForLessons ?? []) as any[]).map((m) => m.id);
+  const { data: lessonsRes } = moduleIdList.length
+    ? await context.supabase
+        .from("course_lessons")
+        .select("id")
+        .in("module_id", moduleIdList)
+    : { data: [] as any[] };
   const totalLessons = (lessonsRes ?? []).length;
   const lessonIds = ((lessonsRes ?? []) as any[]).map((l) => l.id);
   const { data: completedLp } = lessonIds.length
