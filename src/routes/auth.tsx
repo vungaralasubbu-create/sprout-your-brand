@@ -92,7 +92,7 @@ function AuthPage() {
       setLoading(false);
       if (error) return toast.error(error.message);
       toast.success("Signed in");
-      if (data.user) await routeAfterAuth(data.user.id, navigate);
+      if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
     } else {
       const redirectTo = `${window.location.origin}/auth`;
       const { error } = await supabase.auth.signUp({
