@@ -223,7 +223,11 @@ export const scheduleFollowUp = createServerFn({ method: "POST" })
     if (error) throw error;
 
     // Update the lead's next_follow_up_at + optional status
-    const patch: Record<string, unknown> = {
+    const patch: {
+      next_follow_up_at: string;
+      last_activity_at: string;
+      status?: "follow_up" | "no_answer";
+    } = {
       next_follow_up_at: data.due_at,
       last_activity_at: new Date().toISOString(),
     };
