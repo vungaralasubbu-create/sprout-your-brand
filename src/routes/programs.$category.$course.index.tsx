@@ -315,23 +315,56 @@ function CoursePage() {
         </Container>
       </Section>
 
-      {/* ============ HIGHLIGHT STRIP ============ */}
-      {highlights.length > 0 ? (
-        <Section className="py-6 border-y bg-surface-2/40">
-          <Container>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {highlights.map((h) => (
-                <div key={h.label} className="flex items-center gap-3 py-2">
-                  <span className="inline-flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
-                    <h.icon className="size-4" />
+      {/* ============ QUICK STATS ============ */}
+      <Section className="py-8 border-y bg-surface-2/40">
+        <Container>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
+            {buildQuickStats(c).map((h, i) => (
+              <Reveal key={h.label} delay={i * 70}>
+                <div className="group flex items-center gap-3 rounded-2xl border border-border/60 bg-surface-1 p-4 hover:border-primary/50 hover:shadow-sm transition-all">
+                  <span className="inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-accent/15 text-primary shrink-0 transition-transform group-hover:scale-105">
+                    <h.icon className="size-5" />
                   </span>
-                  <span className="text-sm font-medium leading-tight">{h.label}</span>
+                  <div className="min-w-0">
+                    <div className="text-caption">{h.label}</div>
+                    <div className="text-sm font-semibold truncate">{h.value}</div>
+                  </div>
                 </div>
-              ))}
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* ============ LEARN BY BUILDING ============ */}
+      <Section className="py-14 lg:py-20">
+        <Container>
+          <Reveal>
+            <div className="max-w-2xl mb-10">
+              <span className="text-caption font-mono uppercase tracking-widest text-primary">
+                Learning Experience
+              </span>
+              <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+                Learn By Building.
+              </h2>
+              <p className="mt-4 text-body-lg text-muted-foreground">
+                Develop practical skills through structured learning, guided practice and real-world applications.
+              </p>
             </div>
-          </Container>
-        </Section>
-      ) : null}
+          </Reveal>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {(learningExperience.length > 0
+              ? learningExperience.slice(0, 4)
+              : DEFAULT_LEARN_CARDS
+            ).map((card, i) => (
+              <Reveal key={i} delay={i * 90}>
+                <ExperienceCard {...card} />
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
 
       {/* ============ WHY THIS PROGRAM ============ */}
       {c.full_description || whyContent ? (
