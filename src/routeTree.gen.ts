@@ -38,6 +38,7 @@ import { Route as AuthenticatedStudentAssignmentsRouteImport } from './routes/_a
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
+import { Route as AuthenticatedPartnerComingSoonRouteImport } from './routes/_authenticated/partner.coming-soon'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './routes/_authenticated/admin.revenue-verification'
@@ -218,6 +219,12 @@ const AuthenticatedPartnerDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerComingSoonRoute =
+  AuthenticatedPartnerComingSoonRouteImport.update({
+    id: '/coming-soon',
+    path: '/coming-soon',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedBrandDashboardRoute =
   AuthenticatedBrandDashboardRouteImport.update({
     id: '/dashboard',
@@ -393,6 +400,7 @@ export interface FileRoutesByFullPath {
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
+  '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
@@ -445,6 +453,7 @@ export interface FileRoutesByTo {
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
+  '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
@@ -501,6 +510,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
+  '/_authenticated/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
@@ -557,6 +567,7 @@ export interface FileRouteTypes {
     | '/admin/revenue-verification'
     | '/admin/settings'
     | '/brand/dashboard'
+    | '/partner/coming-soon'
     | '/partner/dashboard'
     | '/partner/onboarding'
     | '/student/assessments'
@@ -609,6 +620,7 @@ export interface FileRouteTypes {
     | '/admin/revenue-verification'
     | '/admin/settings'
     | '/brand/dashboard'
+    | '/partner/coming-soon'
     | '/partner/dashboard'
     | '/partner/onboarding'
     | '/student/assessments'
@@ -664,6 +676,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/revenue-verification'
     | '/_authenticated/admin/settings'
     | '/_authenticated/brand/dashboard'
+    | '/_authenticated/partner/coming-soon'
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/onboarding'
     | '/_authenticated/student/assessments'
@@ -912,6 +925,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerDashboardRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/partner/coming-soon': {
+      id: '/_authenticated/partner/coming-soon'
+      path: '/coming-soon'
+      fullPath: '/partner/coming-soon'
+      preLoaderRoute: typeof AuthenticatedPartnerComingSoonRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/brand/dashboard': {
       id: '/_authenticated/brand/dashboard'
       path: '/dashboard'
@@ -1148,11 +1168,13 @@ const AuthenticatedBrandRouteWithChildren =
   AuthenticatedBrandRoute._addFileChildren(AuthenticatedBrandRouteChildren)
 
 interface AuthenticatedPartnerRouteChildren {
+  AuthenticatedPartnerComingSoonRoute: typeof AuthenticatedPartnerComingSoonRoute
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
 }
 
 const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
+  AuthenticatedPartnerComingSoonRoute: AuthenticatedPartnerComingSoonRoute,
   AuthenticatedPartnerDashboardRoute: AuthenticatedPartnerDashboardRoute,
   AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
 }

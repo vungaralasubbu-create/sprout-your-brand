@@ -20,12 +20,14 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
 
     const granted: string[] = [];
 
-    // Find an approved partner application for this email (linked or not)
+    // Find the most recent partner application for this email (any status
+    // except rejected). Sales partners should land on the sales dashboard
+    // whether their application is approved, pending, or under review.
     const { data: app } = await supabaseAdmin
       .from("partner_applications")
       .select("id, full_name, mobile, city, state, user_id, status")
       .ilike("email", email)
-      .eq("status", "approved")
+      .neq("status", "rejected")
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
@@ -37,23 +39,30 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
           .update({ user_id: userId })
           .eq("id", app.id);
       }
-      const { data: existingPartner } = await supabaseAdmin
-        .from("partners")
-        .select("id")
-        .eq("user_id", userId)
-        .maybeSingle();
-      if (!existingPartner) {
-        await supabaseAdmin.from("partners").insert({
-          user_id: userId,
-          application_id: app.id,
-          display_name: app.full_name,
-          email,
-          mobile: app.mobile,
-          city: app.city,
-          state: app.state,
-          status: "active",
-        });
+      // Only auto-provision a partners row once the application is approved.
+      // Pending / under-review applicants still get the 'partner' role so they
+      // land on the Sales Workspace, but their partners record is created
+      // upon approval by the admin flow.
+      if (app.status === "approved") {
+        const { data: existingPartner } = await supabaseAdmin
+          .from("partners")
+          .select("id")
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (!existingPartner) {
+          await supabaseAdmin.from("partners").insert({
+            user_id: userId,
+            application_id: app.id,
+            display_name: app.full_name,
+            email,
+            mobile: app.mobile,
+            city: app.city,
+            state: app.state,
+            status: "active",
+          });
+        }
       }
+
       await supabaseAdmin
         .from("user_roles")
         .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
@@ -72,6 +81,7 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
         .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
       if (!granted.includes("partner")) granted.push("partner");
     }
+
 
     // Default fallback: every signed-in user gets at least the student role
     // so they always land on a workspace dashboard instead of the homepage.
