@@ -62,6 +62,7 @@ import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authe
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
+import { Route as AuthenticatedAmbassadorProfileRouteImport } from './routes/_authenticated/ambassador.profile'
 import { Route as AuthenticatedAmbassadorPayoutsRouteImport } from './routes/_authenticated/ambassador.payouts'
 import { Route as AuthenticatedAmbassadorDashboardRouteImport } from './routes/_authenticated/ambassador.dashboard'
 import { Route as AuthenticatedAmbassadorCommissionStructureRouteImport } from './routes/_authenticated/ambassador.commission-structure'
@@ -441,6 +442,12 @@ const AuthenticatedBrandDashboardRoute =
     id: '/dashboard',
     path: '/dashboard',
     getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedAmbassadorProfileRoute =
+  AuthenticatedAmbassadorProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
 const AuthenticatedAmbassadorPayoutsRoute =
   AuthenticatedAmbassadorPayoutsRouteImport.update({
@@ -1000,6 +1007,7 @@ export interface FileRoutesByFullPath {
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/ambassador/payouts': typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
+  '/ambassador/profile': typeof AuthenticatedAmbassadorProfileRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -1136,6 +1144,7 @@ export interface FileRoutesByTo {
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/ambassador/payouts': typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
+  '/ambassador/profile': typeof AuthenticatedAmbassadorProfileRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -1275,6 +1284,7 @@ export interface FileRoutesById {
   '/_authenticated/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/_authenticated/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/_authenticated/ambassador/payouts': typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
+  '/_authenticated/ambassador/profile': typeof AuthenticatedAmbassadorProfileRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
@@ -1415,6 +1425,7 @@ export interface FileRouteTypes {
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
     | '/ambassador/payouts'
+    | '/ambassador/profile'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
@@ -1551,6 +1562,7 @@ export interface FileRouteTypes {
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
     | '/ambassador/payouts'
+    | '/ambassador/profile'
     | '/brand/dashboard'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
@@ -1689,6 +1701,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador/commission-structure'
     | '/_authenticated/ambassador/dashboard'
     | '/_authenticated/ambassador/payouts'
+    | '/_authenticated/ambassador/profile'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
@@ -2168,6 +2181,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/brand/dashboard'
       preLoaderRoute: typeof AuthenticatedBrandDashboardRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/ambassador/profile': {
+      id: '/_authenticated/ambassador/profile'
+      path: '/profile'
+      fullPath: '/ambassador/profile'
+      preLoaderRoute: typeof AuthenticatedAmbassadorProfileRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
     }
     '/_authenticated/ambassador/payouts': {
       id: '/_authenticated/ambassador/payouts'
@@ -2913,6 +2933,7 @@ interface AuthenticatedAmbassadorRouteChildren {
   AuthenticatedAmbassadorCommissionStructureRoute: typeof AuthenticatedAmbassadorCommissionStructureRoute
   AuthenticatedAmbassadorDashboardRoute: typeof AuthenticatedAmbassadorDashboardRoute
   AuthenticatedAmbassadorPayoutsRoute: typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
+  AuthenticatedAmbassadorProfileRoute: typeof AuthenticatedAmbassadorProfileRoute
   AuthenticatedAmbassadorEarningsIdRoute: typeof AuthenticatedAmbassadorEarningsIdRoute
   AuthenticatedAmbassadorEnrollmentsIdRoute: typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   AuthenticatedAmbassadorReferralsIdRoute: typeof AuthenticatedAmbassadorReferralsIdRoute
@@ -2931,6 +2952,7 @@ const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren
       AuthenticatedAmbassadorDashboardRoute,
     AuthenticatedAmbassadorPayoutsRoute:
       AuthenticatedAmbassadorPayoutsRouteWithChildren,
+    AuthenticatedAmbassadorProfileRoute: AuthenticatedAmbassadorProfileRoute,
     AuthenticatedAmbassadorEarningsIdRoute:
       AuthenticatedAmbassadorEarningsIdRoute,
     AuthenticatedAmbassadorEnrollmentsIdRoute:

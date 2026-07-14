@@ -390,13 +390,13 @@ function CollegeSection({ profile }: any) {
         )}
       </Card>
 
-      <SuggestInstitutionDialog open={suggestOpen} onOpenChange={setSuggestOpen} onSubmit={async (v) => {
+      <SuggestInstitutionDialog open={suggestOpen} onOpenChange={setSuggestOpen} onSubmit={async (v: any) => {
         const r: any = await suggest({ data: v });
         if (r.gate === "ok") { toast.success("Suggestion submitted for review"); setSuggestOpen(false); }
         else toast.error(r.message || "Failed");
       }} />
 
-      <CollegeChangeDialog open={changeOpen} onOpenChange={setChangeOpen} onSubmit={async (v) => {
+      <CollegeChangeDialog open={changeOpen} onOpenChange={setChangeOpen} onSubmit={async (v: any) => {
         const r: any = await changeReq({ data: v });
         if (r.gate === "ok") { toast.success("College change request submitted"); setChangeOpen(false); }
         else toast.error(r.message || "Failed");
@@ -640,7 +640,7 @@ function LevelsSection() {
                 <ProgressRow label="Commission earned" value={progress.commissionEarned} target={nextLevel.min_commission_earned} format={inr} />
               )}
               {nextLevel.min_conversion_rate > 0 && (
-                <ProgressRow label="Conversion rate" value={progress.conversionRate} target={nextLevel.min_conversion_rate} format={(n) => `${n}%`} />
+                <ProgressRow label="Conversion rate" value={progress.conversionRate} target={nextLevel.min_conversion_rate} format={(n: any) => `${n}%`} />
               )}
             </div>
           </div>
