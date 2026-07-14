@@ -159,8 +159,9 @@ function ProgramsIndex() {
                   <div className="mt-auto pt-4 flex items-end justify-between border-t border-border">
                     <div>
                       <div className="text-caption">Starts from</div>
-                      <div className="text-mono font-semibold text-foreground">{formatPrice(c.offer_price ?? c.base_price, c.currency)}</div>
+                      <div className="text-mono font-semibold text-foreground">₹3,999</div>
                     </div>
+
                     <div className="text-right text-caption">
                       <div>{c.duration}</div>
                       <div>{c.level}</div>
