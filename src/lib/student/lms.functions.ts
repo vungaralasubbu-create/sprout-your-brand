@@ -1284,29 +1284,18 @@ export const listMyPrograms = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data: enrs } = await context.supabase
       .from("enrollments")
-      .select("id, course_id, program_title, lms_status, enrolled_at, last_accessed_at, completed_at")
+      .select("id, course_id, program_title, lms_status, enrolled_at, last_accessed_at, completed_at, content_completed_at, current_module_id")
       .eq("student_user_id", context.userId)
       .order("enrolled_at", { ascending: false });
 
     const ids = Array.from(new Set((enrs ?? []).map((e) => e.course_id).filter(Boolean))) as string[];
     if (!ids.length) return [] as any[];
 
-    const [{ data: courses }, { data: mods }, { data: done }, { data: certs }] = await Promise.all([
+    const [{ data: courses }, { data: certs }] = await Promise.all([
       context.supabase
         .from("courses")
         .select("id, name, slug, thumbnail_url, short_description, level, duration, learning_mode, course_categories(name, slug)")
         .in("id", ids),
-      context.supabase
-        .from("course_modules")
-        .select("id, course_id, name, display_order, course_topics(course_lessons(id, is_published))")
-        .in("course_id", ids)
-        .eq("is_published", true)
-        .order("display_order"),
-      context.supabase
-        .from("lesson_progress")
-        .select("course_id, lesson_id, status, last_accessed_at")
-        .eq("student_user_id", context.userId)
-        .in("course_id", ids),
       context.supabase
         .from("certificates")
         .select("id, course_id, issued_at, revoked_at")
@@ -1314,37 +1303,34 @@ export const listMyPrograms = createServerFn({ method: "GET" })
         .in("course_id", ids),
     ]);
 
-    // total lessons & module count per course, and current module (first module with incomplete lessons)
-    const totalMap: Record<string, number> = {};
-    const modulesByCourse: Record<string, Array<{ id: string; name: string; order: number; lessonIds: string[] }>> = {};
-    for (const m of mods ?? []) {
-      const cid = (m as any).course_id;
-      const lessonIds: string[] = [];
-      for (const t of ((m as any).course_topics ?? []) as any[])
-        for (const l of (t.course_lessons ?? []) as any[])
-          if (l.is_published) { totalMap[cid] = (totalMap[cid] ?? 0) + 1; lessonIds.push(l.id); }
-      (modulesByCourse[cid] ??= []).push({ id: (m as any).id, name: (m as any).name, order: (m as any).display_order ?? 0, lessonIds });
-    }
-    const doneMap: Record<string, Set<string>> = {};
-    for (const d of done ?? []) {
-      if (d.status !== "completed") continue;
-      (doneMap[d.course_id] ??= new Set()).add(d.lesson_id);
-    }
     const certMap = new Map(
-      (certs ?? []).filter((c: any) => !c.revoked_at).map((c: any) => [c.course_id, c])
+      (certs ?? []).filter((c: any) => !c.revoked_at).map((c: any) => [c.course_id, c]),
     );
     const courseMap = new Map((courses ?? []).map((c) => [c.id, c]));
 
-    return (enrs ?? []).map((e) => {
+    // Compute canonical progress for each enrolled course
+    const snaps = await Promise.all(
+      (enrs ?? []).map(async (e) =>
+        e.course_id
+          ? { enrollment: e, snap: await computeCourseProgress(context, e.course_id, context.userId) }
+          : { enrollment: e, snap: null },
+      ),
+    );
+
+    return snaps.map(({ enrollment: e, snap }) => {
       const c: any = e.course_id ? courseMap.get(e.course_id) : null;
-      const total = totalMap[e.course_id ?? ""] ?? 0;
-      const completedSet = doneMap[e.course_id ?? ""] ?? new Set<string>();
-      const completedLessons = completedSet.size;
-      const mods = modulesByCourse[e.course_id ?? ""] ?? [];
-      mods.sort((a, b) => a.order - b.order);
-      const currentModule =
-        mods.find((m) => m.lessonIds.some((id) => !completedSet.has(id))) ?? mods[mods.length - 1] ?? null;
-      const status = deriveProgramStatus(e.lms_status, completedLessons, total);
+      const totals = snap?.totals;
+      const currentModule = snap
+        ? snap.modules.find((m) => m.status === "in_progress") ??
+          snap.modules.find((m) => m.status === "available") ??
+          snap.modules[snap.modules.length - 1] ??
+          null
+        : null;
+      const status = deriveProgramStatus(
+        e.lms_status,
+        totals?.completedRequiredLessons ?? 0,
+        totals?.totalRequiredLessons ?? 0,
+      );
       const cert = e.course_id ? certMap.get(e.course_id) : null;
       return {
         enrollmentId: e.id,
@@ -1362,11 +1348,15 @@ export const listMyPrograms = createServerFn({ method: "GET" })
         enrolledAt: e.enrolled_at,
         lastAccessedAt: e.last_accessed_at,
         completedAt: e.completed_at,
-        progress: total > 0 ? Math.round((completedLessons / total) * 100) : 0,
-        totalLessons: total,
-        completedLessons,
-        totalModules: mods.length,
-        currentModule: currentModule ? { id: currentModule.id, name: currentModule.name } : null,
+        contentCompletedAt: e.content_completed_at ?? totals?.contentCompletedAt ?? null,
+        progress: totals?.progressPct ?? 0,
+        totalLessons: totals?.totalLessons ?? 0,
+        completedLessons: totals?.completedLessons ?? 0,
+        totalRequiredLessons: totals?.totalRequiredLessons ?? 0,
+        completedRequiredLessons: totals?.completedRequiredLessons ?? 0,
+        totalModules: totals?.totalModules ?? 0,
+        completedModules: totals?.completedModules ?? 0,
+        currentModule: currentModule ? { id: currentModule.id, name: currentModule.name, status: currentModule.status } : null,
         certificate: cert ? { id: cert.id, issuedAt: cert.issued_at } : null,
       };
     });
@@ -1378,7 +1368,7 @@ export const getMyProgramDetails = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: course } = await context.supabase
       .from("courses")
-      .select("id, name, slug, short_description, thumbnail_url, level, duration, learning_mode, course_categories(name)")
+      .select("id, name, slug, short_description, thumbnail_url, level, duration, learning_mode, unlock_mode, course_categories(name)")
       .eq("slug", data.slug)
       .maybeSingle();
     if (!course) throw new Error("Program not found");
@@ -1386,33 +1376,21 @@ export const getMyProgramDetails = createServerFn({ method: "POST" })
 
     const { data: enrollment } = await context.supabase
       .from("enrollments")
-      .select("id, lms_status, enrolled_at, completed_at, last_accessed_at")
+      .select("id, lms_status, enrolled_at, completed_at, last_accessed_at, content_completed_at, current_module_id, current_lesson_id")
       .eq("student_user_id", context.userId)
       .eq("course_id", course.id)
       .maybeSingle();
     if (!enrollment) throw new Error("You are not enrolled in this program");
 
-    const [{ data: modules }, { data: progress }, { data: assignSubs }, { data: projSubs }, { data: cert }] = await Promise.all([
-      context.supabase
-        .from("course_modules")
-        .select("id, name, description, display_order, course_topics(id, name, display_order, course_lessons(id, name, lesson_type, duration, is_published, display_order))")
-        .eq("course_id", course.id)
-        .eq("is_published", true)
-        .order("display_order"),
-      context.supabase
-        .from("lesson_progress")
-        .select("lesson_id, status, last_accessed_at")
-        .eq("student_user_id", context.userId)
-        .eq("course_id", course.id),
+    const [snap, { data: assignSubs }, { data: projSubs }, { data: cert }] = await Promise.all([
+      computeCourseProgress(context, courseRow.id, context.userId),
       context.supabase
         .from("assignment_submissions")
         .select("id, status, assignment_id")
         .eq("student_user_id", context.userId)
         .eq("course_id", course.id),
       context.supabase
-        .from("course_projects")
-        .select("id")
-        .eq("course_id", course.id),
+        .from("course_projects").select("id").eq("course_id", course.id),
       context.supabase
         .from("certificates")
         .select("id, issued_at, revoked_at")
@@ -1421,48 +1399,41 @@ export const getMyProgramDetails = createServerFn({ method: "POST" })
         .maybeSingle(),
     ]);
 
-    const progressMap = new Map((progress ?? []).map((p: any) => [p.lesson_id, p.status]));
-    let totalLessons = 0;
-    let completedLessons = 0;
-    const cleanedModules = ((modules ?? []) as any[]).map((m, mi) => {
-      const topics = (m.course_topics ?? [])
-        .sort((a: any, b: any) => (a.display_order ?? 0) - (b.display_order ?? 0));
-      const lessons: any[] = [];
-      for (const t of topics) {
-        const ls = (t.course_lessons ?? [])
-          .filter((l: any) => l.is_published)
-          .sort((a: any, b: any) => (a.display_order ?? 0) - (b.display_order ?? 0));
-        for (const l of ls) {
-          totalLessons++;
-          const st = progressMap.get(l.id) ?? "not_started";
-          if (st === "completed") completedLessons++;
-          lessons.push({
-            id: l.id,
-            name: l.name,
-            type: l.lesson_type,
-            duration: l.duration,
-            topic: t.name,
-            status: st, // not_started | in_progress | completed
-          });
-        }
-      }
-      const moduleCompleted = lessons.filter((l) => l.status === "completed").length;
-      return {
-        id: m.id,
-        number: mi + 1,
-        name: m.name,
-        description: m.description,
-        totalLessons: lessons.length,
-        completedLessons: moduleCompleted,
-        lessons,
-      };
-    });
+    const cleanedModules = snap.modules.map((m) => ({
+      id: m.id,
+      number: m.number,
+      name: m.name,
+      description: m.description,
+      isRequired: m.isRequired,
+      unlocked: m.unlocked,
+      status: m.status,
+      totalLessons: m.totalLessons,
+      completedLessons: m.completedLessons,
+      totalRequired: m.totalRequired,
+      completedRequired: m.completedRequired,
+      progressPct: m.progressPct,
+      completedAt: m.completedAt,
+      lessons: m.lessons.map((l) => ({
+        id: l.id,
+        name: l.name,
+        type: l.type,
+        duration: l.duration,
+        topic: l.topicName,
+        isRequired: l.isRequired,
+        unlocked: l.unlocked,
+        status: l.status,
+      })),
+    }));
 
-    const completedModules = cleanedModules.filter((m) => m.totalLessons > 0 && m.completedLessons === m.totalLessons).length;
-    const assignmentsCompleted = ((assignSubs ?? []) as any[]).filter((s) => ["submitted", "reviewed", "approved", "graded", "accepted"].includes((s.status ?? "").toLowerCase())).length;
-
-    const status = deriveProgramStatus(enrollment.lms_status, completedLessons, totalLessons);
+    const status = deriveProgramStatus(
+      enrollment.lms_status,
+      snap.totals.completedRequiredLessons,
+      snap.totals.totalRequiredLessons,
+    );
     const accessBlocked = status === "access_suspended" || status === "access_expired";
+    const assignmentsCompleted = ((assignSubs ?? []) as any[]).filter((s) =>
+      ["submitted", "reviewed", "approved", "graded", "accepted"].includes((s.status ?? "").toLowerCase()),
+    ).length;
 
     return {
       program: {
@@ -1474,27 +1445,39 @@ export const getMyProgramDetails = createServerFn({ method: "POST" })
         level: courseRow.level,
         duration: courseRow.duration,
         learningMode: courseRow.learning_mode,
+        unlockMode: snap.unlockMode,
         category: courseRow.course_categories?.name ?? null,
       },
       enrollment: {
         id: enrollment.id,
         enrolledAt: enrollment.enrolled_at,
         completedAt: enrollment.completed_at,
+        contentCompletedAt: enrollment.content_completed_at ?? snap.totals.contentCompletedAt ?? null,
         lastAccessedAt: enrollment.last_accessed_at,
+        currentModuleId: (enrollment as any).current_module_id ?? null,
+        currentLessonId: (enrollment as any).current_lesson_id ?? null,
       },
       status,
       accessBlocked,
-      progress: totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0,
-      totalLessons,
-      completedLessons,
-      totalModules: cleanedModules.length,
-      completedModules,
+      unlockMode: snap.unlockMode,
+      progress: snap.totals.progressPct,
+      totalLessons: snap.totals.totalLessons,
+      completedLessons: snap.totals.completedLessons,
+      totalRequiredLessons: snap.totals.totalRequiredLessons,
+      completedRequiredLessons: snap.totals.completedRequiredLessons,
+      totalModules: snap.totals.totalModules,
+      completedModules: snap.totals.completedModules,
+      isContentCompleted: snap.totals.isContentCompleted,
       assignmentsCompleted,
       projectsAvailable: (projSubs ?? []).length,
       modules: cleanedModules,
+      nextLesson: snap.nextLesson
+        ? { id: snap.nextLesson.id, name: snap.nextLesson.name, moduleId: snap.nextLesson.moduleId }
+        : null,
       certificate: cert && !cert.revoked_at ? { id: cert.id, issuedAt: cert.issued_at } : null,
     };
   });
+
 
 export const recordProgramActivity = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
