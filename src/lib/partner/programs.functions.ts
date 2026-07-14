@@ -73,7 +73,7 @@ export type PartnerProgramDetails = {
   };
   category: { id: string; name: string; slug: string } | null;
   certification: {
-    title: string | null;
+    name: string | null;
     description: string | null;
   } | null;
   sales: {
@@ -113,7 +113,7 @@ export const getPartnerProgramDetails = createServerFn({ method: "GET" })
         .maybeSingle(),
       supabase
         .from("course_certifications")
-        .select("title, description")
+        .select("name, description")
         .eq("course_id", course.id)
         .limit(1)
         .maybeSingle(),
@@ -136,7 +136,7 @@ export const getPartnerProgramDetails = createServerFn({ method: "GET" })
       },
       category: category ?? null,
       certification: certRow
-        ? { title: certRow.title ?? null, description: certRow.description ?? null }
+        ? { name: certRow.name ?? null, description: certRow.description ?? null }
         : null,
       sales: {
         talking_points: (sales?.talking_points as string[] | null) ?? [],

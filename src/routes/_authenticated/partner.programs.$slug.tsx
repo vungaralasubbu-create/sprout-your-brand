@@ -129,7 +129,7 @@ function ProgramDetails() {
         {/* Header */}
         <header className="space-y-3">
           {category ? (
-            <Badge variant="secondary">{category.name}</Badge>
+            <Badge variant="muted">{category.name}</Badge>
           ) : null}
           <h1 className="font-display text-3xl lg:text-4xl font-semibold tracking-tight">
             {course.name}
@@ -175,7 +175,7 @@ function ProgramDetails() {
             <Award className="size-6 text-primary shrink-0 mt-0.5" />
             <div>
               <h2 className="font-semibold text-base">
-                {certification.title ?? "Certification"}
+                {certification.name ?? "Certification"}
               </h2>
               {certification.description ? (
                 <p className="mt-1 text-sm text-muted-foreground">

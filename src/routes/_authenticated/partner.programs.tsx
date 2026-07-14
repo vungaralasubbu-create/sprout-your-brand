@@ -120,7 +120,7 @@ function ProgramsPage() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     {p.category ? (
-                      <Badge variant="secondary" className="mb-2">
+                      <Badge variant="muted" className="mb-2">
                         {p.category.name}
                       </Badge>
                     ) : null}
