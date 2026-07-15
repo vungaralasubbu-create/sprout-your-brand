@@ -1095,7 +1095,7 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       category: data.category,
       program_id: programId,
       context_type: programId && contextType === "program" ? "program" : "none",
-      subject: data.title,
+      subject: cleanTitle,
       description: compositeDescription,
       priority: "normal",
       status: "open",
