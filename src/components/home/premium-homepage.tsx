@@ -189,9 +189,10 @@ function HeroUniverse() {
             </div>
           </div>
 
-          <div className="relative w-full justify-self-end lg:pl-4">
+          <div className="relative w-full justify-self-end lg:pl-4 hidden md:block">
             <GlintrDimension />
           </div>
+
 
         </div>
       </Container>
