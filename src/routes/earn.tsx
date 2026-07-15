@@ -337,7 +337,7 @@ function EarningsEstimator() {
         />
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_1.1fr]">
-          <Card>
+          <Card className="lift-card">
             <CardContent className="p-6 space-y-6">
               <Tabs value={mode} onValueChange={(v) => setMode(v as "own" | "supported")}>
                 <TabsList className="grid w-full grid-cols-2">
@@ -377,7 +377,7 @@ function EarningsEstimator() {
             </CardContent>
           </Card>
 
-          <Card className="relative overflow-hidden">
+          <Card className="relative overflow-hidden lift-card">
             <div className="absolute inset-0 bg-gradient-brand opacity-[0.05] pointer-events-none" />
             <CardContent className="relative p-6 md:p-8 space-y-6">
               <div>

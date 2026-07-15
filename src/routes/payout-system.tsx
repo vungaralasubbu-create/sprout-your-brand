@@ -159,7 +159,7 @@ function PayoutSystemPage() {
                 const Icon = step.icon;
                 return (
                   <li key={step.title}>
-                    <Card className="h-full">
+                    <Card className="h-full lift-card">
                       <CardContent className="flex gap-4 p-6">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                           <Icon className="h-5 w-5" aria-hidden />
@@ -312,7 +312,7 @@ function SafetyCard({
   body: string;
 }) {
   return (
-    <Card>
+    <Card className="lift-card">
       <CardContent className="p-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <Icon className="h-5 w-5" aria-hidden />
