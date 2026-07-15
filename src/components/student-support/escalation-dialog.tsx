@@ -304,7 +304,7 @@ export function StudentSupportEscalationDialog({
                       </p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         <Button asChild size="sm" variant="outline">
-                          <Link to="/student/support">Open my existing request</Link>
+                          <Link to="/student-support/requests">Open my existing request</Link>
                         </Button>
                         <Button
                           size="sm"
@@ -485,7 +485,7 @@ function SuccessState({
           Close
         </Button>
         <Button asChild>
-          <Link to="/student/support">
+          <Link to="/student-support/requests">
             View My Support Requests <ArrowRight className="ml-1.5 size-4" />
           </Link>
         </Button>
