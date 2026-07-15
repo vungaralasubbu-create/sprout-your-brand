@@ -52,7 +52,7 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "Contact", href: "/contact" },
       { label: "FAQs", href: "/faqs" },
       { label: "Partner Support", href: "/partner-support" },
-      { label: "Student Support", href: "/support/students" },
+      { label: "Student Support", href: "/student-support" },
     ],
   },
   {
