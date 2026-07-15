@@ -122,7 +122,10 @@ const InputSchema = z.object({
 
 // ---- Student snapshot (authorised, student-safe) ----
 export type StudentEnrollmentBrief = {
+  enrollmentId: string;
+  courseId: string | null;
   courseName: string | null;
+  courseSlug: string | null;
   status: string | null;
   progressPct: number | null;
 };
@@ -153,7 +156,6 @@ async function loadStudentSnapshot(
     fullName: null,
   };
 
-  // Profile (best-effort — column set may vary; keep field list narrow)
   try {
     const { data: profile } = await supabase
       .from("profiles")
@@ -161,36 +163,71 @@ async function loadStudentSnapshot(
       .eq("user_id", userId)
       .maybeSingle();
     if (profile?.full_name) base.fullName = profile.full_name;
-  } catch {
-    // profiles table shape is not guaranteed — skip silently
-  }
+  } catch {}
 
-  // Enrollments (student-visible)
+  // Enrollments (student-visible) — uses actual `lms_status` column and derives
+  // progress via the canonical progress engine, not a phantom column.
   try {
     const { data: enrollments } = await supabase
       .from("enrollments")
-      .select("id, status, progress_pct, courses:course_id(name)")
+      .select("id, course_id, program_title, lms_status, courses:course_id(name, slug)")
       .eq("student_user_id", userId)
       .limit(20);
     const rows = (enrollments ?? []) as any[];
     base.enrollmentCount = rows.length;
-    base.enrollments = rows.slice(0, 10).map((r) => ({
-      courseName: r.courses?.name ?? null,
-      status: r.status ?? null,
-      progressPct: typeof r.progress_pct === "number" ? r.progress_pct : null,
-    }));
-    if (rows.length === 0) {
-      base.studentRelationship = "authenticated_no_enrollment";
-    } else if (rows.length === 1) {
-      base.studentRelationship = "enrolled_student";
-    } else {
-      base.studentRelationship = "multiple_enrollments";
+
+    // Compute Student-visible progress via the same engine used by the LMS:
+    // completed lessons / total published lessons, per course.
+    const courseIds = Array.from(
+      new Set(rows.map((r) => r.course_id).filter(Boolean)),
+    ) as string[];
+    const totalMap: Record<string, number> = {};
+    const doneMap: Record<string, number> = {};
+    if (courseIds.length) {
+      try {
+        const [{ data: mods }, { data: done }] = await Promise.all([
+          supabase
+            .from("course_modules")
+            .select("course_id, course_topics(course_lessons(id, is_published))")
+            .in("course_id", courseIds),
+          supabase
+            .from("lesson_progress")
+            .select("course_id, lesson_id, status")
+            .eq("student_user_id", userId)
+            .eq("status", "completed")
+            .in("course_id", courseIds),
+        ]);
+        for (const m of mods ?? []) {
+          const cid = (m as any).course_id;
+          for (const t of ((m as any).course_topics ?? []) as any[])
+            for (const l of ((t.course_lessons ?? []) as any[]))
+              if (l.is_published) totalMap[cid] = (totalMap[cid] ?? 0) + 1;
+        }
+        for (const d of done ?? [])
+          doneMap[d.course_id] = (doneMap[d.course_id] ?? 0) + 1;
+      } catch {}
     }
+
+    base.enrollments = rows.slice(0, 10).map((r) => {
+      const total = totalMap[r.course_id ?? ""] ?? 0;
+      const doneCt = doneMap[r.course_id ?? ""] ?? 0;
+      return {
+        enrollmentId: r.id,
+        courseId: r.course_id ?? null,
+        courseName: r.courses?.name ?? r.program_title ?? null,
+        courseSlug: r.courses?.slug ?? null,
+        status: r.lms_status ?? null,
+        progressPct: total > 0 ? Math.round((doneCt / total) * 100) : null,
+      } as StudentEnrollmentBrief;
+    });
+
+    if (rows.length === 0) base.studentRelationship = "authenticated_no_enrollment";
+    else if (rows.length === 1) base.studentRelationship = "enrolled_student";
+    else base.studentRelationship = "multiple_enrollments";
   } catch {
     base.studentRelationship = "authenticated_no_enrollment";
   }
 
-  // Certificates count (student-safe)
   try {
     const { count } = await supabase
       .from("certificates")
