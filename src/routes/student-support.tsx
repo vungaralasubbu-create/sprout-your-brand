@@ -432,7 +432,14 @@ function StudentSupportPage() {
               )}
             </div>
 
-            <div className="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-background">
+            <div
+              role="log"
+              aria-live="polite"
+              aria-relevant="additions"
+              aria-busy={isLoading}
+              aria-label="Glintr AI Student Support conversation"
+              className="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-background"
+            >
               {messages.map((m, i) => (
                 <div
                   key={i}
