@@ -105,7 +105,7 @@ function usePointerParallax(strength = 6) {
  * --------------------------------------------------------------------- */
 
 function HeroUniverse() {
-  const stageRef = usePointerParallax(8);
+  
   return (
     <Section
       tone="default"
