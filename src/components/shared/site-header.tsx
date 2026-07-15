@@ -222,10 +222,15 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2 ml-auto">
-          <Button variant="gradient" size="sm" className="hidden md:inline-flex" asChild>
-            <a href="/join">
+          <Button
+            variant="gradient"
+            size="sm"
+            className="cta-earn hidden md:inline-flex rounded-full px-4 shadow-[0_10px_30px_-10px_oklch(0.62_0.19_245/0.55)] hover:-translate-y-px"
+            asChild
+          >
+            <a href="/join" aria-label="Start Earning with Glintr">
               <Sparkles className="size-4" />
-              Start Earning
+              <span className="relative z-10">Start Earning</span>
             </a>
           </Button>
           <Button
