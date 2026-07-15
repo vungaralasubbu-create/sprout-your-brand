@@ -997,13 +997,18 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
     const s = context.supabase as any;
     const uid = context.userId;
 
-    // Idempotency: same student + same nonce within 24h → return existing
+    // Idempotency: same student + same nonce within 24h → return existing.
+    // Escape the nonce for LIKE-pattern usage.
+    const safeNonce = escapeLikePattern(data.nonce);
     const nonceMarker = `[nonce:${data.nonce}]`;
+    const nonceLike = `%[nonce:${safeNonce}]%`;
     const { data: existingByNonce } = await s
       .from("student_support_tickets")
       .select("ticket_code, status, created_at")
       .eq("student_user_id", uid)
-      .ilike("description", `%${nonceMarker}%`)
+      .ilike("description", nonceLike)
+      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .maybeSingle();
       .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
       .maybeSingle();
     if (existingByNonce) {
