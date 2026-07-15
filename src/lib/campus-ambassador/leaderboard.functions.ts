@@ -35,7 +35,7 @@ export const listOverallLeaderboard = createServerFn({ method: "GET" })
     const search = (data?.search ?? "").trim();
 
     const { data: rows, error } = await supabase.rpc("ambassador_leaderboard_overall", {
-      _search: search || null,
+      _search: search || undefined,
       _limit: pageSize,
       _offset: (page - 1) * pageSize,
     });
