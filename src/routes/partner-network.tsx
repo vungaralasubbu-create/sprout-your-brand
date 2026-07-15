@@ -510,7 +510,7 @@ function NetworkVisual() {
 /* ─────────────────────────── PARTNER TYPE EXPLORER ─────────────────────────── */
 
 function PartnerTypeExplorer() {
-  const [active, setActive] = React.useState(PARTNER_TYPES[0].id);
+  const [active, setActive] = React.useState<string>(PARTNER_TYPES[0].id);
   const current = PARTNER_TYPES.find((p) => p.id === active) ?? PARTNER_TYPES[0];
   const Icon = current.icon;
   return (
@@ -1099,9 +1099,9 @@ function ProgramOpportunities() {
                   <h3 className="mt-3 font-display font-semibold text-lg leading-snug">
                     {c.name}
                   </h3>
-                  {c.tagline ? (
+                  {c.short_description ? (
                     <p className="mt-2 text-sm text-muted-foreground line-clamp-3">
-                      {c.tagline}
+                      {c.short_description}
                     </p>
                   ) : null}
                   <div className="mt-5 inline-flex items-center gap-1 text-sm text-primary group-hover:gap-2 transition-all">
@@ -1129,7 +1129,7 @@ function ProgramOpportunities() {
 /* ─────────────────────────── TOOLS SHOWCASE ─────────────────────────── */
 
 function PartnerToolsShowcase() {
-  const [active, setActive] = React.useState(TOOLS[0].id);
+  const [active, setActive] = React.useState<string>(TOOLS[0].id);
   const current = TOOLS.find((t) => t.id === active) ?? TOOLS[0];
   return (
     <Section padding="lg">
