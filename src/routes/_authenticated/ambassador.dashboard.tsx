@@ -719,6 +719,126 @@ function DashboardSkeleton() {
   );
 }
 
+function LeaderboardRecognitionCard() {
+  const cur = (() => {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit",
+    }).formatToParts(new Date());
+    return {
+      year: Number(parts.find((p) => p.type === "year")!.value),
+      month: Number(parts.find((p) => p.type === "month")!.value),
+    };
+  })();
+
+  const overallFn = useServerFn(getMyLeaderboardRank);
+  const monthlyFn = useServerFn(getMyMonthlyRank);
+  const recogFn = useServerFn(listMyRecognitions);
+
+  const monthlyQ = useQuery({
+    queryKey: ["amb-dash-monthly-rank", cur.year, cur.month],
+    queryFn: () => monthlyFn({ data: { year: cur.year, month: cur.month } }),
+    staleTime: 60_000,
+  });
+  const overallQ = useQuery({
+    queryKey: ["amb-dash-overall-rank"],
+    queryFn: () => overallFn(),
+    staleTime: 60_000,
+  });
+  const recogQ = useQuery({
+    queryKey: ["amb-dash-recognitions"],
+    queryFn: () => recogFn(),
+    staleTime: 60_000,
+  });
+
+  const monthly = monthlyQ.data?.present ? monthlyQ.data : null;
+  const overall = overallQ.data?.present ? overallQ.data : null;
+  const prefer = monthly ?? overall;
+  const preferType: "monthly" | "overall" = monthly ? "monthly" : "overall";
+  const loading = monthlyQ.isLoading || overallQ.isLoading;
+  const recogs = (recogQ.data ?? []).slice(0, 3);
+
+  return (
+    <div className="grid lg:grid-cols-2 gap-4">
+      <Card className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-xs uppercase tracking-widest text-primary font-mono flex items-center gap-1.5">
+              <Trophy className="h-3.5 w-3.5" /> Leaderboard
+            </div>
+            <div className="mt-1 font-display text-xl font-semibold">
+              {preferType === "monthly" ? "My Monthly Rank" : "My Overall Rank"}
+            </div>
+          </div>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/ambassador/leaderboard">View Leaderboard</Link>
+          </Button>
+        </div>
+        {loading ? (
+          <Skeleton className="mt-4 h-16 w-full rounded-lg" />
+        ) : prefer ? (
+          <div className="mt-4 flex items-center gap-4">
+            <div className="text-4xl font-bold tabular-nums">#{prefer.rank_position}</div>
+            <div className="text-sm text-slate-600">
+              <div>
+                of{" "}
+                {(preferType === "monthly"
+                  ? (prefer as any).total_ranked
+                  : (prefer as any).total_active
+                ).toLocaleString("en-IN")}{" "}
+                ranked
+              </div>
+              <div className="mt-1">
+                <MyRankMovementChip leaderboardType={preferType} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-4 text-sm text-slate-600">
+            Your rank will appear once you have eligible referral leads or verified enrollments.
+          </div>
+        )}
+      </Card>
+
+      <Card className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-xs uppercase tracking-widest text-primary font-mono flex items-center gap-1.5">
+              <Award className="h-3.5 w-3.5" /> Recognition
+            </div>
+            <div className="mt-1 font-display text-xl font-semibold">Recent Recognition</div>
+          </div>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/ambassador/recognition">View All</Link>
+          </Button>
+        </div>
+        {recogQ.isLoading ? (
+          <Skeleton className="mt-4 h-20 w-full rounded-lg" />
+        ) : recogs.length === 0 ? (
+          <div className="mt-4 text-sm text-slate-600">
+            No recognition yet. Recognition is awarded on finalised leaderboards.
+          </div>
+        ) : (
+          <ul className="mt-4 space-y-2">
+            {recogs.map((r) => (
+              <li key={r.id} className="flex items-center gap-3 text-sm">
+                <div className="h-8 w-8 rounded-lg bg-amber-50 ring-1 ring-amber-100 grid place-items-center">
+                  <Trophy className="h-4 w-4 text-amber-600" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium truncate">{r.recognition_title}</div>
+                  <div className="text-xs text-slate-500 truncate">
+                    {r.leaderboard_type} · {r.ranking_period_key} · Rank #{r.final_rank}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+    </div>
+  );
+}
+
 function ErrorPanel({ title, onRetry }: { title: string; onRetry: () => void }) {
   return (
     <div className="p-8 max-w-lg mx-auto">
