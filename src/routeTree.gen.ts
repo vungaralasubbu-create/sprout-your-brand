@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
+import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -169,6 +170,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
   id: '/sales-opportunity',
   path: '/sales-opportunity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerNetworkRoute = PartnerNetworkRouteImport.update({
+  id: '/partner-network',
+  path: '/partner-network',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JoinRoute = JoinRouteImport.update({
@@ -1012,6 +1018,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
+  '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -1159,6 +1166,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
+  '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -1305,6 +1313,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
+  '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -1454,6 +1463,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/earn'
     | '/join'
+    | '/partner-network'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/success-stories'
@@ -1601,6 +1611,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/earn'
     | '/join'
+    | '/partner-network'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/success-stories'
@@ -1746,6 +1757,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/earn'
     | '/join'
+    | '/partner-network'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/success-stories'
@@ -1895,6 +1907,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   EarnRoute: typeof EarnRoute
   JoinRoute: typeof JoinRoute
+  PartnerNetworkRoute: typeof PartnerNetworkRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
@@ -1933,6 +1946,13 @@ declare module '@tanstack/react-router' {
       path: '/sales-opportunity'
       fullPath: '/sales-opportunity'
       preLoaderRoute: typeof SalesOpportunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner-network': {
+      id: '/partner-network'
+      path: '/partner-network'
+      fullPath: '/partner-network'
+      preLoaderRoute: typeof PartnerNetworkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/join': {
@@ -3426,6 +3446,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   EarnRoute: EarnRoute,
   JoinRoute: JoinRoute,
+  PartnerNetworkRoute: PartnerNetworkRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
