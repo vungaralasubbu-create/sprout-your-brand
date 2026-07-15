@@ -40,6 +40,13 @@ import {
   LearningIssuesSection,
   type LearningIssueLaunch,
 } from "@/components/student-support/learning-issues";
+import {
+  StudentSupportTopics,
+  LearningJourneySection,
+  SupportAtEveryStage,
+  StudentSupportSafetyStrip,
+  StudentSupportFinalCTA,
+} from "@/components/student-support/support-topics";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
@@ -550,7 +557,7 @@ function StudentSupportPage() {
           </Card>
 
           {/* ============= GUIDED LEARNING ISSUES ============= */}
-          <div className="mt-8">
+          <div id="student-support-guided" className="mt-8">
             <LearningIssuesSection
               signedIn={signedIn}
               snapshot={snapshot}
@@ -627,6 +634,74 @@ function StudentSupportPage() {
                 )}
               </div>
             )}
+
+          {/* ============= EXPLORE SUPPORT TOPICS ============= */}
+          <div id="student-support-topics" className="mt-10">
+            <StudentSupportTopics
+              onAsk={(intentKey, question, topic) => {
+                setIntent(intentKey);
+                navigate({
+                  search: (p: Record<string, unknown>) => ({ ...p, intent: intentKey }),
+                  replace: true,
+                });
+                const q = topic ? `${question}` : question;
+                const next: ChatMsg[] = [...messages, { role: "user", content: q }];
+                setMessages(next);
+                setErrorMsg(null);
+                send.mutate({ history: next, nextIntent: intentKey });
+                document
+                  .getElementById("student-support-ai")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
+          </div>
+
+          {/* ============= LEARNING JOURNEY ============= */}
+          <div className="mt-8">
+            <LearningJourneySection />
+          </div>
+
+          {/* ============= SUPPORT AT EVERY STAGE ============= */}
+          <div className="mt-8">
+            <SupportAtEveryStage
+              onAsk={(intentKey, question) => {
+                setIntent(intentKey);
+                navigate({
+                  search: (p: Record<string, unknown>) => ({ ...p, intent: intentKey }),
+                  replace: true,
+                });
+                const next: ChatMsg[] = [...messages, { role: "user", content: question }];
+                setMessages(next);
+                setErrorMsg(null);
+                send.mutate({ history: next, nextIntent: intentKey });
+                document
+                  .getElementById("student-support-ai")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
+          </div>
+
+          {/* ============= SAFETY STRIP ============= */}
+          <div className="mt-8">
+            <StudentSupportSafetyStrip />
+          </div>
+
+          {/* ============= FINAL CTA ============= */}
+          <div className="mt-10 mb-6">
+            <StudentSupportFinalCTA
+              signedIn={signedIn}
+              onAskAI={() =>
+                document
+                  .getElementById("student-support-ai")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }
+              onExplore={() =>
+                document
+                  .getElementById("student-support-topics")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }
+            />
+          </div>
         </Container>
       </Section>
     </div>
