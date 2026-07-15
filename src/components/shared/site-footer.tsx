@@ -20,7 +20,7 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
     title: "Earn With Us",
     links: [
       { label: "Become a Partner", href: "/earn/partner" },
-      { label: "70% Revenue Model", href: "/earn/partner#seventy" },
+      { label: "70% Revenue Model", href: "/70-revenue-model" },
       { label: "50% Supported Model", href: "/earn/company-leads" },
       { label: "Income Calculator", href: "/#income-calculator" },
       { label: "Payout System", href: "/earn/payouts" },
