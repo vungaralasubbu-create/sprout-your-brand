@@ -651,3 +651,31 @@
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-10px); }
 }
+
+/* ============ Program category visual motion ============ */
+@keyframes cat-path-draw {
+  0%   { stroke-dasharray: 0 400; opacity: 0.15; }
+  40%  { stroke-dasharray: 200 200; opacity: 0.9; }
+  100% { stroke-dasharray: 400 0; opacity: 0.35; }
+}
+@keyframes cat-node-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50%      { transform: scale(1.15); opacity: 1; }
+}
+@keyframes cat-dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50%      { transform: scale(1.8); opacity: 1; }
+}
+@keyframes cat-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.cat-path { stroke-dasharray: 400; animation: cat-path-draw 6s ease-in-out infinite alternate; }
+.cat-node { transform-box: fill-box; transform-origin: center; animation: cat-node-pulse 4.5s ease-in-out infinite; }
+.cat-pulse { transform-box: fill-box; transform-origin: center; animation: cat-dot-pulse 2.6s ease-in-out infinite; }
+.cat-rotate { transform-box: fill-box; transform-origin: center; animation: cat-rotate 60s linear infinite; }
+.cat-rotate-slow { transform-box: fill-box; transform-origin: center; animation: cat-rotate 120s linear infinite reverse; }
+@media (prefers-reduced-motion: reduce) {
+  .cat-path, .cat-node, .cat-pulse, .cat-rotate, .cat-rotate-slow { animation: none !important; }
+  .cat-path { stroke-dasharray: none; opacity: 0.5; }
+}
