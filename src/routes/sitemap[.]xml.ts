@@ -8,11 +8,33 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/", changefreq: "weekly", priority: "1.0" },
   { path: "/programs", changefreq: "weekly", priority: "0.9" },
   { path: "/earn", changefreq: "weekly", priority: "0.8" },
+  { path: "/70-revenue-model", changefreq: "monthly", priority: "0.8" },
+  { path: "/50-supported-model", changefreq: "monthly", priority: "0.8" },
+  { path: "/income-calculator", changefreq: "monthly", priority: "0.7" },
+  { path: "/payout-system", changefreq: "monthly", priority: "0.6" },
   { path: "/sales-opportunity", changefreq: "weekly", priority: "0.8" },
+  { path: "/partner-network", changefreq: "monthly", priority: "0.6" },
   { path: "/join", changefreq: "monthly", priority: "0.7" },
   { path: "/launch-your-brand", changefreq: "weekly", priority: "0.8" },
   { path: "/launch-your-brand/consultation", changefreq: "monthly", priority: "0.6" },
   { path: "/launch-your-brand/start", changefreq: "monthly", priority: "0.6" },
+  { path: "/white-label-edtech", changefreq: "monthly", priority: "0.8" },
+  { path: "/brand-setup", changefreq: "monthly", priority: "0.7" },
+  { path: "/lms", changefreq: "monthly", priority: "0.7" },
+  { path: "/marketing-support", changefreq: "monthly", priority: "0.7" },
+  { path: "/book-consultation", changefreq: "monthly", priority: "0.6" },
+  { path: "/about", changefreq: "monthly", priority: "0.6" },
+  { path: "/contact", changefreq: "monthly", priority: "0.6" },
+  { path: "/careers", changefreq: "weekly", priority: "0.5" },
+  { path: "/success-stories", changefreq: "weekly", priority: "0.6" },
+  { path: "/faqs", changefreq: "monthly", priority: "0.5" },
+  { path: "/blog", changefreq: "daily", priority: "0.9" },
+  { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
+  { path: "/terms-and-conditions", changefreq: "yearly", priority: "0.3" },
+  { path: "/revenue-share-terms", changefreq: "yearly", priority: "0.3" },
+  { path: "/payout-policy", changefreq: "yearly", priority: "0.3" },
+  { path: "/refund-policy", changefreq: "yearly", priority: "0.3" },
+  { path: "/cookie-policy", changefreq: "yearly", priority: "0.3" },
 ];
 
 function esc(s: string) {
@@ -32,11 +54,16 @@ export const Route = createFileRoute("/sitemap.xml")({
         if (url && key) {
           try {
             const sb = createClient(url, key, { auth: { persistSession: false } });
-            const [{ data: cats }, { data: courses }] = await Promise.all([
+            const [{ data: cats }, { data: courses }, { data: posts }] = await Promise.all([
               sb.from("course_categories").select("slug,updated_at").eq("status", "published").eq("is_active", true),
               sb
                 .from("courses")
                 .select("slug,updated_at,category:course_categories!inner(slug,status,is_active)")
+                .eq("is_published", true)
+                .eq("status", "published"),
+              sb
+                .from("blog_posts")
+                .select("slug,updated_at,editorial_updated_at,published_at")
                 .eq("is_published", true)
                 .eq("status", "published"),
             ]);
@@ -57,6 +84,14 @@ export const Route = createFileRoute("/sitemap.xml")({
                 lastmod: c.updated_at ?? undefined,
                 changefreq: "weekly",
                 priority: "0.7",
+              });
+            }
+            for (const p of (posts ?? []) as Array<{ slug: string; updated_at: string | null; editorial_updated_at: string | null; published_at: string | null }>) {
+              entries.push({
+                path: `/blog/${p.slug}`,
+                lastmod: p.editorial_updated_at ?? p.updated_at ?? p.published_at ?? undefined,
+                changefreq: "monthly",
+                priority: "0.6",
               });
             }
           } catch (e) {
