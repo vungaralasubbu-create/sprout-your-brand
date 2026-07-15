@@ -36,6 +36,18 @@ import {
   PartnerSupportEscalationDialog,
   type EscalationContext,
 } from "@/components/partner-support/escalation-dialog";
+import {
+  FeedbackControl,
+  type FeedbackValue,
+  HowSupportWorksSection,
+  SupportReviewJourney,
+  HumanReviewSection,
+  AccountSafetySection,
+  FinalSupportCTA,
+  SensitiveInputNotice,
+  detectSensitive,
+  redactSensitive,
+} from "@/components/partner-support/support-extras";
 import { LifeBuoy } from "lucide-react";
 
 const SearchSchema = z.object({
