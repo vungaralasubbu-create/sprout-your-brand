@@ -706,7 +706,7 @@ function CareersPage() {
             and skills may fit.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button size="lg" variant="muted" asChild>
+            <Button size="lg" variant="soft" asChild>
               <a href="#open-opportunities">View Open Roles</a>
             </Button>
             <Button
