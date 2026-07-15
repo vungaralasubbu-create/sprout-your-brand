@@ -2076,7 +2076,9 @@ export function PremiumHomepage() {
   return (
     <>
       <HeroUniverse />
+      <ThreeJourneys />
       <MotionStatement />
+      <EarnSpotlight />
       <TechnologyLandscape />
       <MotionDivider variant="line" />
       <ProgramUniverse />
