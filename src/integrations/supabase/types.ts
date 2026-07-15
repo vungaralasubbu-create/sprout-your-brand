@@ -4455,6 +4455,72 @@ export type Database = {
           },
         ]
       }
+      contact_enquiries: {
+        Row: {
+          created_at: string
+          email: string
+          email_normalised: string
+          id: string
+          idempotency_key: string | null
+          ip_hash: string | null
+          is_spam: boolean
+          name: string
+          organisation: string | null
+          reference: string | null
+          routing_destination: string | null
+          status: Database["public"]["Enums"]["contact_enquiry_status"]
+          submission_source: Database["public"]["Enums"]["contact_enquiry_source"]
+          summary: string
+          title: string
+          title_normalised: string
+          topic: Database["public"]["Enums"]["contact_enquiry_topic"]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          email_normalised: string
+          id?: string
+          idempotency_key?: string | null
+          ip_hash?: string | null
+          is_spam?: boolean
+          name: string
+          organisation?: string | null
+          reference?: string | null
+          routing_destination?: string | null
+          status?: Database["public"]["Enums"]["contact_enquiry_status"]
+          submission_source?: Database["public"]["Enums"]["contact_enquiry_source"]
+          summary: string
+          title: string
+          title_normalised: string
+          topic: Database["public"]["Enums"]["contact_enquiry_topic"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          email_normalised?: string
+          id?: string
+          idempotency_key?: string | null
+          ip_hash?: string | null
+          is_spam?: boolean
+          name?: string
+          organisation?: string | null
+          reference?: string | null
+          routing_destination?: string | null
+          status?: Database["public"]["Enums"]["contact_enquiry_status"]
+          submission_source?: Database["public"]["Enums"]["contact_enquiry_source"]
+          summary?: string
+          title?: string
+          title_normalised?: string
+          topic?: Database["public"]["Enums"]["contact_enquiry_topic"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       course_applications: {
         Row: {
           city: string | null
@@ -12018,6 +12084,7 @@ export type Database = {
         Args: { _ambassador_id: string }
         Returns: string
       }
+      generate_contact_reference: { Args: never; Returns: string }
       generate_employee_code: { Args: never; Returns: string }
       get_admin_role: {
         Args: { _user_id: string }
@@ -12288,6 +12355,20 @@ export type Database = {
         | "available_for_payout"
         | "reversed"
         | "rejected"
+      contact_enquiry_source:
+        | "contact_page"
+        | "ai_prepared"
+        | "router"
+        | "manual_topic"
+      contact_enquiry_status: "submitted" | "in_review" | "routed" | "closed"
+      contact_enquiry_topic:
+        | "general"
+        | "partnership"
+        | "institution"
+        | "business"
+        | "media"
+        | "careers"
+        | "other"
       content_status: "draft" | "published" | "archived"
       course_app_status:
         | "new"
@@ -13007,6 +13088,22 @@ export const Constants = {
         "available_for_payout",
         "reversed",
         "rejected",
+      ],
+      contact_enquiry_source: [
+        "contact_page",
+        "ai_prepared",
+        "router",
+        "manual_topic",
+      ],
+      contact_enquiry_status: ["submitted", "in_review", "routed", "closed"],
+      contact_enquiry_topic: [
+        "general",
+        "partnership",
+        "institution",
+        "business",
+        "media",
+        "careers",
+        "other",
       ],
       content_status: ["draft", "published", "archived"],
       course_app_status: [
