@@ -5,6 +5,34 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const BASE_URL = "https://ai.gateway.lovable.dev/v1";
 const DEFAULT_MODEL = "google/gemini-2.5-flash";
 
+// =========================================================================
+// Sensitive-data redaction — reused for AI Issue Summary + Student-submitted
+// summary/details/title before persistence. Never repeat credentials.
+// =========================================================================
+const SENSITIVE_PLACEHOLDER = "[Sensitive information removed]";
+const SENSITIVE_PATTERNS: RegExp[] = [
+  // labelled credentials: password / passcode / otp / pin / cvv / cvc / token / secret / api key / auth
+  /\b(?:password|pass[-_ ]?code|otp|one[-_ ]?time[-_ ]?password|pin|upi[-_ ]?pin|cvv|cvc|card[-_ ]?verification|api[-_ ]?key|auth(?:orization)?[-_ ]?token|access[-_ ]?token|bearer|secret)\s*(?:is|=|:|-|—)\s*['"“”]?[^\s'"“”\n]{3,}/gi,
+  // long digit runs that look like card numbers (13-19 digits, space/dash tolerant)
+  /\b(?:\d[ -]?){13,19}\b/g,
+  // isolated 4-8 digit sequences immediately after otp/pin/cvv keyword
+  /\b(?:otp|pin|cvv|cvc)\b[^\w\n]{0,6}\d{3,10}/gi,
+];
+
+export function redactSensitiveText(input: string): string {
+  if (!input) return input;
+  let out = String(input);
+  for (const re of SENSITIVE_PATTERNS) {
+    out = out.replace(re, SENSITIVE_PLACEHOLDER);
+  }
+  return out;
+}
+
+// Escape user-controlled input used in a PostgREST ilike LIKE-pattern.
+function escapeLikePattern(input: string): string {
+  return String(input).replace(/[\\%_]/g, (m) => `\\${m}`);
+}
+
 // ---- Student Support Intents ----
 export const STUDENT_SUPPORT_INTENTS = [
   "program_discovery",
