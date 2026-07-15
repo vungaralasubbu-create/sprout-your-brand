@@ -983,6 +983,12 @@ function PartnerSupportPage() {
           </p>
         </Container>
       </Section>
+      <PartnerSupportEscalationDialog
+        open={!!escalation}
+        onOpenChange={(v) => !v && setEscalation(null)}
+        ctx={escalation}
+        signedIn={signedIn === true}
+      />
     </div>
   );
 }
