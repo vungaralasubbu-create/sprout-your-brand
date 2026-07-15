@@ -262,7 +262,8 @@ function CoursePage() {
           {(() => {
             const heroImage = c.hero_image_url ?? c.thumbnail_url ?? null;
             return (
-          <div className={cn("grid gap-10 lg:gap-16 items-center", heroImage ? "lg:grid-cols-[1.2fr_1fr]" : "max-w-4xl") }>
+          <div className="grid gap-10 lg:gap-16 items-center lg:grid-cols-[1.2fr_1fr]">
+
             <Reveal>
               <div className="flex items-center gap-2 mb-5">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
