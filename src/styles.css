@@ -679,3 +679,64 @@
   .cat-path, .cat-node, .cat-pulse, .cat-rotate, .cat-rotate-slow { animation: none !important; }
   .cat-path { stroke-dasharray: none; opacity: 0.5; }
 }
+
+/* --------------------------------------------------------------------- *
+ * Dimensional (pseudo-3D) utilities used by the homepage upgrade.
+ * --------------------------------------------------------------------- */
+.persp-scene { perspective: 1400px; perspective-origin: 50% 40%; }
+.persp-scene-sm { perspective: 900px; perspective-origin: 50% 45%; }
+.preserve-3d { transform-style: preserve-3d; }
+
+/* Premium CTA "light sweep" — a slow diagonal highlight that traverses
+ * the button every ~5s. Kept subtle. Reduced-motion disables it. */
+@keyframes cta-sweep {
+  0%   { transform: translateX(-140%) skewX(-16deg); opacity: 0; }
+  35%  { opacity: 0.55; }
+  70%  { opacity: 0.55; }
+  100% { transform: translateX(240%) skewX(-16deg); opacity: 0; }
+}
+.cta-earn { position: relative; overflow: hidden; isolation: isolate; }
+.cta-earn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, oklch(1 0 0 / 0.55) 50%, transparent 70%);
+  width: 40%;
+  animation: cta-sweep 5.4s ease-in-out infinite;
+  animation-delay: 1.2s;
+  mix-blend-mode: overlay;
+}
+.cta-earn::before {
+  content: "";
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, oklch(0.82 0.22 140 / 0.9), oklch(0.78 0.16 175 / 0.9), oklch(0.62 0.19 245 / 0.9));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.9;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-earn::after { animation: none; opacity: 0; }
+}
+
+/* Orbit ring drift for the dimensional Skill Universe. */
+@keyframes orbit-drift {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.orbit-plane { transform-origin: 50% 50%; }
+.orbit-drift-slow { animation: orbit-drift 90s linear infinite; }
+.orbit-drift-med  { animation: orbit-drift 60s linear infinite reverse; }
+.orbit-drift-fast { animation: orbit-drift 45s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .orbit-drift-slow, .orbit-drift-med, .orbit-drift-fast { animation: none !important; }
+}
+
+/* Soft depth-lift on hover for dimensional cards. */
+.depth-lift { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; will-change: transform; }
+.depth-lift:hover { transform: translateZ(24px) translateY(-4px); }
+
