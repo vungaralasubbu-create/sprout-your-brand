@@ -67,9 +67,9 @@ export const getMyRankMovement = createServerFn({ method: "GET" })
     const { data: rows, error } = await context.supabase
       .rpc("ambassador_my_rank_movement", {
         _type: data.leaderboardType,
-        _period_key: data.periodKey ?? null,
-        _program_id: data.programId ?? null,
-        _campaign_id: data.campaignId ?? null,
+        _period_key: data.periodKey ?? undefined,
+        _program_id: data.programId ?? undefined,
+        _campaign_id: data.campaignId ?? undefined,
       });
     if (error) throw error;
     const row = Array.isArray(rows) ? rows[0] : rows;
