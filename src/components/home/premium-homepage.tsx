@@ -714,13 +714,12 @@ interface AIProgram {
   metaphor: string;
   bullets: string[];
   accent: string;
-  Graphic: React.ComponentType<{ accent: string }>;
+  variant: AIWorkspaceVariant;
 }
 
-// AI program graphics are now rendered by <AIWorkspaceVisual /> — a
+// AI program graphics are rendered by <AIWorkspaceVisual /> — a
 // dimensional Input → Processing Core → Output composition with an
 // autonomous ~10s animation sequence per variant.
-
 
 const AI_PROGRAMS: AIProgram[] = [
   {
@@ -732,8 +731,8 @@ const AI_PROGRAMS: AIProgram[] = [
       "Working with context and constraints",
       "Applied instruction patterns",
     ],
-    accent: "var(--brand-cyan)",
-    Graphic: ChatGPTGraphic,
+    accent: "oklch(0.78 0.16 175)",
+    variant: "chatgpt",
   },
   {
     slug: "claude-ai",
@@ -744,8 +743,8 @@ const AI_PROGRAMS: AIProgram[] = [
       "Working with documents and structure",
       "Applied analysis workflows",
     ],
-    accent: "var(--brand-azure)",
-    Graphic: ClaudeGraphic,
+    accent: "oklch(0.62 0.19 245)",
+    variant: "claude",
   },
   {
     slug: "gemini-ai",
@@ -756,10 +755,11 @@ const AI_PROGRAMS: AIProgram[] = [
       "Connecting information sources",
       "Applied synthesis practice",
     ],
-    accent: "var(--brand-violet)",
-    Graphic: GeminiGraphic,
+    accent: "oklch(0.66 0.21 300)",
+    variant: "gemini",
   },
 ];
+
 
 function GenerativeAISpotlight() {
   const [active, setActive] = React.useState(0);
