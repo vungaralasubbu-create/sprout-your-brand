@@ -501,6 +501,33 @@ function PartnerSupportPage() {
               <div ref={chatEndRef} />
             </div>
 
+            {/* Contextual escalation — offered for likely account-specific or unresolved questions */}
+            {(() => {
+              const userTurns = messages.filter((m) => m.role === "user").length;
+              const accountSpecific = isAccountSpecificPartnerIntent(intent);
+              const show = !isLoading && (accountSpecific || userTurns >= 2);
+              if (!show) return null;
+              return (
+                <div className="border-t border-border bg-muted/30 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-sm">
+                    <div className="font-medium">Need Partner Support To Review This?</div>
+                    <p className="text-muted-foreground text-xs mt-1 max-w-2xl">
+                      I can prepare the issue context from this Partner Support conversation so you
+                      don't need to explain everything again.
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="ghost" onClick={() => inputRef.current?.focus()}>
+                      Keep Asking AI
+                    </Button>
+                    <Button size="sm" onClick={() => openEscalation(false)}>
+                      <LifeBuoy className="mr-1.5 size-3.5" /> Create Partner Support Request
+                    </Button>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Quick starters (only before first user turn) */}
             {messages.filter((m) => m.role === "user").length === 0 && !isLoading && (
               <div className="border-t border-border bg-card px-5 py-4">
