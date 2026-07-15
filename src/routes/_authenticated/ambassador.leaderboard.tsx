@@ -630,9 +630,10 @@ function MyRankCard({
           </div>
           <div>
             <div className="text-xs uppercase tracking-wider text-cyan-300 font-medium">Overall rank</div>
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex items-baseline gap-1.5 flex-wrap">
               <span className="text-4xl font-bold tracking-tight">#{me.rank_position}</span>
               <span className="text-sm text-slate-300">of {me.total_active.toLocaleString("en-IN")}</span>
+              <MyRankMovementChip leaderboardType="overall" />
             </div>
             <div className="mt-1 text-sm font-medium text-white">
               {me.display_identity}
