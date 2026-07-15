@@ -309,7 +309,7 @@ function MonthlyTab({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-slate-500" />
-          <Select value={periodKey} onValueChange={(v) => { setPeriodKey(v); setPage(1); }}>
+          <Select value={periodKey} onValueChange={(v) => { const [y, m] = v.split("-").map(Number); setPeriod(y, m); setPage(1); }}>
             <SelectTrigger className="h-10 w-[240px] bg-white">
               <SelectValue />
             </SelectTrigger>
