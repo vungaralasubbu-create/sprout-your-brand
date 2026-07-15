@@ -3,8 +3,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
 import {
+  AlertTriangle,
   ArrowRight,
   Building2,
+  Check,
+  CheckCircle2,
+  Copy,
   Compass,
   GraduationCap,
   Handshake,
@@ -14,6 +18,7 @@ import {
   Newspaper,
   RotateCcw,
   School,
+  Send,
   ShieldCheck,
   Sparkles,
   Users,
