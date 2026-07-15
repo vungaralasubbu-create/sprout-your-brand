@@ -189,9 +189,10 @@ function HeroUniverse() {
             </div>
           </div>
 
-          <div className="relative w-full justify-self-end lg:pl-4">
+          <div className="relative w-full justify-self-end lg:pl-4 hidden md:block">
             <GlintrDimension />
           </div>
+
 
         </div>
       </Container>
@@ -1006,15 +1007,16 @@ function LearningJourney() {
                 >
                   <div
                     className={cn(
-                      "flex items-center gap-4",
+                      "hidden md:flex items-center gap-4",
                       "md:justify-end",
                       i % 2 === 1 && "md:justify-start",
                     )}
                   >
-                    <div className="hidden md:block text-6xl font-display font-bold text-foreground/10 tabular-nums">
+                    <div className="text-6xl font-display font-bold text-foreground/10 tabular-nums">
                       {String(i + 1).padStart(2, "0")}
                     </div>
                   </div>
+
                   <div
                     className={cn(
                       "relative rounded-2xl border border-border/60 bg-background p-5 md:p-6 shadow-sm ml-14 md:ml-0",
