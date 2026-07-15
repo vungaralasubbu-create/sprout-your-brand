@@ -586,13 +586,19 @@ function ContactPage() {
                     prepMut.mutate(v);
                   }}
                   disabled={prepMut.isPending || prepInput.trim().length < 3}
+                  aria-busy={prepMut.isPending}
                 >
                   {prepMut.isPending ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <>
+                      <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                      <span>Preparing your enquiry…</span>
+                    </>
                   ) : (
-                    <Sparkles className="size-4" />
+                    <>
+                      <Sparkles className="size-4" aria-hidden="true" />
+                      <span>Prepare My Enquiry</span>
+                    </>
                   )}
-                  Prepare My Enquiry
                 </Button>
               </div>
             </div>
