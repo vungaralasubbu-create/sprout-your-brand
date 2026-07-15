@@ -3,9 +3,10 @@ import { useState } from "react";
 import {
   LayoutDashboard, Users, GraduationCap, Wallet, ScrollText,
   Sparkles, UserCircle, LifeBuoy, Menu, X, Compass, Banknote, Trophy,
-  Award, History,
+  Award, History, Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AmbassadorNotificationBell } from "@/components/ambassador/notification-bell";
 
 const NAV = [
   { to: "/ambassador/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -18,6 +19,7 @@ const NAV = [
   { to: "/ambassador/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/ambassador/recognition", label: "Recognition", icon: Award },
   { to: "/ambassador/rank-history", label: "Rank History", icon: History },
+  { to: "/ambassador/notifications", label: "Notifications", icon: Bell },
   { to: "/ambassador/profile", label: "My Profile", icon: UserCircle },
   { to: "/ambassador/settings", label: "Settings", icon: LifeBuoy },
 ] as const;
