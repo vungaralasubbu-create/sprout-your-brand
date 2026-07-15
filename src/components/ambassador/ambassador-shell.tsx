@@ -2,7 +2,7 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   LayoutDashboard, Users, GraduationCap, Wallet, ScrollText,
-  Sparkles, UserCircle, LifeBuoy, Menu, X, Compass, Banknote,
+  Sparkles, UserCircle, LifeBuoy, Menu, X, Compass, Banknote, Trophy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +14,7 @@ const NAV = [
   { to: "/ambassador/payouts", label: "Payouts", icon: Banknote },
   { to: "/ambassador/commission-structure", label: "Commission Structure", icon: ScrollText },
   { to: "/ambassador/marketing-resources", label: "Marketing Resources", icon: Sparkles },
+  { to: "/ambassador/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/ambassador/profile", label: "My Profile", icon: UserCircle },
   { to: "/ambassador/settings", label: "Settings", icon: LifeBuoy },
 ] as const;
