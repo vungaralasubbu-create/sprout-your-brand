@@ -256,21 +256,13 @@ function MonthlyTab({
   year: urlYear, month: urlMonth, setPeriod,
 }: { year: number | null; month: number | null; setPeriod: (y: number, m: number) => void }) {
   const cur = currentBusinessMonth();
-  const initialYear = urlYear ?? cur.year;
-  const initialMonth = urlMonth ?? cur.month;
-  const [periodKey, setPeriodKey] = useState<string>(`${initialYear}-${initialMonth}`);
-  // Sync from URL when it changes externally
-  const urlKey = urlYear && urlMonth ? `${urlYear}-${urlMonth}` : null;
-  if (urlKey && urlKey !== periodKey) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    // guarded state sync
-    setPeriodKey(urlKey);
-  }
+  const year = urlYear ?? cur.year;
+  const month = urlMonth ?? cur.month;
+  const periodKey = `${year}-${month}`;
   const [search, setSearch] = useState("");
   const [pendingSearch, setPendingSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  const [year, month] = periodKey.split("-").map(Number);
   const active = isCurrentMonth(year, month);
 
   const listFn = useServerFn(listMonthlyLeaderboard);
