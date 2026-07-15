@@ -190,6 +190,7 @@ export function StudentSupportEscalationDialog({
           details: details.trim() || undefined,
           programId: programId === "none" ? null : programId,
           supportIntent: intent ?? null,
+          attachments: attachments.length ? attachments : undefined,
           confirmDistinct,
           nonce: nonceRef.current,
         },
