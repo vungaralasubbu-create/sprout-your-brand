@@ -110,9 +110,9 @@ const KEYFRAMES = `
   100% { opacity: 0; }
 }
 @keyframes aiw-stage-active {
-  0%, 4% { opacity: 0; transform: translateY(6px); }
-  8%, 22% { opacity: 1; transform: translateY(0); }
-  26%, 100% { opacity: 0; transform: translateY(-4px); }
+  0%, 2% { opacity: 0; transform: translateY(6px); }
+  6%, 20% { opacity: 1; transform: translateY(0); }
+  24%, 100% { opacity: 0; transform: translateY(-4px); }
 }
 @keyframes aiw-core-pulse {
   0%, 100% { transform: scale(1); opacity: 0.55; }
