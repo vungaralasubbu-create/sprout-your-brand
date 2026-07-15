@@ -911,14 +911,43 @@ function ChoosePathMenu({
   onChoose: (next: ContactIntent) => void;
 }) {
   const [open, setOpen] = React.useState(false);
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+  const btnRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onDocDown = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        btnRef.current?.focus();
+      }
+    };
+    document.addEventListener("mousedown", onDocDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <div className="relative">
-      <Button variant="outline" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+    <div className="relative" ref={wrapRef}>
+      <Button
+        ref={btnRef}
+        variant="outline"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+      >
         Choose A Different Contact Path
       </Button>
       {open && (
         <div
           role="menu"
+          aria-label="Choose a different contact path"
           className="absolute z-10 mt-2 w-64 rounded-lg border border-border bg-popover p-1 shadow-lg"
         >
           {CONTACT_INTENTS.filter((i) => i !== current).map((i) => (
@@ -929,8 +958,9 @@ function ChoosePathMenu({
               onClick={() => {
                 onChoose(i);
                 setOpen(false);
+                btnRef.current?.focus();
               }}
-              className="w-full text-left rounded-md px-3 py-2 text-sm hover:bg-muted"
+              className="w-full text-left rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:bg-muted"
             >
               {CONTACT_INTENT_LABELS[i]}
             </button>
