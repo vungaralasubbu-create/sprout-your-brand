@@ -317,6 +317,21 @@ function PartnerSupportPage() {
     if (!value) return;
     setInput("");
     setErrorMsg(null);
+    // Detect explicit human-support intent — offer escalation instead of only AI.
+    if (HUMAN_SUPPORT_PATTERNS.test(value)) {
+      setMessages((cur) => [
+        ...cur,
+        { role: "user", content: value },
+        {
+          role: "assistant",
+          content:
+            "I can prepare a Partner Support Request so Glintr Partner Support can review this without you re-explaining. Click 'Create Partner Support Request' below when you're ready.",
+        },
+      ]);
+      // open the escalation dialog with current conversation context
+      setTimeout(() => openEscalation(false), 100);
+      return;
+    }
     send.mutate(value);
   }
 
