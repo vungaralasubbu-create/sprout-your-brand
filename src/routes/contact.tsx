@@ -56,11 +56,11 @@ const SearchSchema = z.object({
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Glintr — Find The Right Support Or Enquiry Path" },
+      { title: "Contact Glintr | Enquiries, Partnerships And Support Routing" },
       {
         name: "description",
         content:
-          "Tell Glintr what you need — student support, partner support, partnerships, institutions, business, media or careers — and reach the right path.",
+          "Contact Glintr for general enquiries, partnerships, institution discussions, business and media enquiries, or find the right Student and Partner Support path.",
       },
       { property: "og:title", content: "Contact Glintr" },
       {
@@ -68,7 +68,9 @@ export const Route = createFileRoute("/contact")({
         content:
           "Start with what you need. Glintr guides you to the right support or contact path.",
       },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://glintr.com/contact" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://glintr.com/contact" }],
   }),
