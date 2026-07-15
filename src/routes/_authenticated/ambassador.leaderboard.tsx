@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import {
   Trophy, Search, ChevronLeft, ChevronRight, Crown, Medal, Award,
   GraduationCap, Users, TrendingUp, Sparkles, RefreshCw, ArrowDown,
-  Calendar, School, AlertCircle, Radio,
+  Calendar, School, AlertCircle, Radio, BookOpen, Rocket, Target, Flag,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,14 @@ import {
   getMyCollegeContext,
   listCollegeLeaderboard,
   getMyCollegeRank,
+  listLeaderboardPrograms,
+  listProgramLeaderboard,
+  getMyProgramRank,
+  listVisibleCampaigns,
+  listCampaignLeaderboard,
+  getMyCampaignRank,
   type LeaderboardRow,
+  type CampaignLeaderboardRow,
 } from "@/lib/campus-ambassador/leaderboard.functions";
 import { cn } from "@/lib/utils";
 
