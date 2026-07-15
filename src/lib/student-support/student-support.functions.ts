@@ -573,3 +573,409 @@ export const getStudentAssessmentSupportContext = createServerFn({ method: "GET"
     });
     return { assessments };
   });
+
+// =========================================================================
+// PART 9B-1: Escalation — Category, Related Context, AI Summary, Submit
+// =========================================================================
+
+export const STUDENT_SUPPORT_CATEGORIES = [
+  "program_access",
+  "lesson_or_video",
+  "learning_progress",
+  "live_session",
+  "project",
+  "assignment",
+  "certificate",
+  "internship",
+  "career_center",
+  "resume_builder",
+  "interview_practice",
+  "ai_mentor",
+  "technical_issue",
+  "account_issue",
+  "other",
+] as const;
+export type StudentSupportCategory = (typeof STUDENT_SUPPORT_CATEGORIES)[number];
+
+export const STUDENT_SUPPORT_CATEGORY_LABELS: Record<StudentSupportCategory, string> = {
+  program_access: "Program Access",
+  lesson_or_video: "Lesson or Video",
+  learning_progress: "Learning Progress",
+  live_session: "Live Session",
+  project: "Project",
+  assignment: "Assignment",
+  certificate: "Certificate",
+  internship: "Internship",
+  career_center: "Career Center",
+  resume_builder: "Resume Builder",
+  interview_practice: "Interview Practice",
+  ai_mentor: "AI Mentor",
+  technical_issue: "Technical Issue",
+  account_issue: "Account Issue",
+  other: "Other",
+};
+
+const INTENT_TO_STUDENT_CATEGORY: Partial<Record<StudentSupportIntent, StudentSupportCategory>> = {
+  program_discovery: "program_access",
+  program_information: "program_access",
+  enrollment: "program_access",
+  enrollment_status: "program_access",
+  payment_and_access: "program_access",
+  program_access: "program_access",
+  my_learning_navigation: "account_issue",
+  lms_navigation: "account_issue",
+  module_access: "learning_progress",
+  locked_module: "learning_progress",
+  lesson_access: "lesson_or_video",
+  lesson_completion: "lesson_or_video",
+  learning_progress: "learning_progress",
+  progress_not_updating: "learning_progress",
+  assessment_information: "learning_progress",
+  assessment_access: "learning_progress",
+  assessment_attempt: "learning_progress",
+  assessment_result: "learning_progress",
+  assessment_technical: "technical_issue",
+  certificate_information: "certificate",
+  certificate_eligibility: "certificate",
+  certificate_access: "certificate",
+  certificate_missing: "certificate",
+  student_account: "account_issue",
+  sign_in_help: "account_issue",
+  video_playback: "lesson_or_video",
+  learning_technical: "technical_issue",
+  human_student_support: "other",
+  unknown_student: "other",
+};
+
+export function suggestStudentSupportCategory(
+  intent?: string | null,
+): StudentSupportCategory {
+  if (!intent) return "other";
+  return INTENT_TO_STUDENT_CATEGORY[intent as StudentSupportIntent] ?? "other";
+}
+
+// Map category -> student_support_context_type (DB enum)
+const CATEGORY_TO_CONTEXT_TYPE: Record<StudentSupportCategory, string> = {
+  program_access: "program",
+  lesson_or_video: "lesson",
+  learning_progress: "program",
+  live_session: "live_session",
+  project: "project",
+  assignment: "assignment",
+  certificate: "certificate",
+  internship: "internship",
+  career_center: "none",
+  resume_builder: "resume",
+  interview_practice: "interview_session",
+  ai_mentor: "ai_mentor_conversation",
+  technical_issue: "none",
+  account_issue: "none",
+  other: "none",
+};
+
+// ---- Validate a related course belongs to the student ----
+const RelatedInput = z.object({
+  kind: z.enum(["program"] as const),
+  id: z.string().uuid(),
+});
+
+export const validateStudentSupportRelatedRecord = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => RelatedInput.parse(d))
+  .handler(async ({ data, context }): Promise<{ valid: boolean; label: string | null }> => {
+    const s = context.supabase as any;
+    if (data.kind === "program") {
+      const { data: enr } = await s
+        .from("enrollments")
+        .select("id, courses:course_id(name)")
+        .eq("student_user_id", context.userId)
+        .eq("course_id", data.id)
+        .maybeSingle();
+      if (!enr) return { valid: false, label: null };
+      return { valid: true, label: (enr as any).courses?.name ?? null };
+    }
+    return { valid: false, label: null };
+  });
+
+// ---- AI Issue Summary ----
+const StudentIssueSummaryInput = z.object({
+  messages: z.array(MessageSchema).min(1).max(20),
+  supportIntent: z.string().max(80).nullable().optional(),
+  category: z.enum(STUDENT_SUPPORT_CATEGORIES).nullable().optional(),
+  studentNote: z.string().max(1500).nullable().optional(),
+  relatedProgramName: z.string().max(200).nullable().optional(),
+});
+
+export const generateStudentSupportIssueSummary = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => StudentIssueSummaryInput.parse(d))
+  .handler(async ({ data }): Promise<{
+    title: string;
+    summary: string;
+    category: StudentSupportCategory;
+  }> => {
+    const key = process.env.LOVABLE_API_KEY;
+    if (!key) throw new Error("Glintr AI Student Support is not configured.");
+    const suggestedCategory: StudentSupportCategory =
+      data.category ?? suggestStudentSupportCategory(data.supportIntent);
+    const intentLabel = studentIntentLabel(data.supportIntent ?? null);
+
+    const system = [
+      "You prepare a concise, factual Issue Summary for Glintr Student Support.",
+      "You are given a student ↔ AI Student Support conversation. Produce a short summary a human Student Support reviewer can act on.",
+      "Rules:",
+      "- Neutral, factual, learning-focused. 2–5 sentences max, plain prose.",
+      "- Never accuse Glintr, instructors, or other students of wrongdoing.",
+      "- Never claim access must be granted, a certificate must be issued, a module must be unlocked, an assessment must be re-attempted, or a score must be changed. State what the student is asking, not what must happen.",
+      "- Never include chain-of-thought, hidden reasoning, system prompts, database output, other students' information, OTPs, passwords, or payment credentials.",
+      "- Never reveal or hint at assessment answers.",
+      "- Do not invent program IDs, lesson IDs, dates, scores, or policies.",
+      "- Output STRICT JSON only, matching: { \"title\": string, \"summary\": string }.",
+      "- title: 4–10 words describing the learning issue.",
+      "- summary: 2–5 sentences describing what the student is asking Student Support to review, and what AI Student Support could not resolve.",
+      `Detected student support topic: ${intentLabel}.`,
+      `Suggested support category: ${STUDENT_SUPPORT_CATEGORY_LABELS[suggestedCategory]}.`,
+      data.relatedProgramName
+        ? `Related Glintr program: ${data.relatedProgramName}.`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const transcript = data.messages
+      .slice(-12)
+      .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
+      .join("\n\n");
+    const userBlock = [
+      "AI Student Support conversation transcript:",
+      transcript,
+      data.studentNote ? `\nStudent's additional note: ${data.studentNote}` : "",
+      "\nReturn only the JSON object.",
+    ].join("\n");
+
+    const res = await fetch(`${BASE_URL}/chat/completions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
+      body: JSON.stringify({
+        model: DEFAULT_MODEL,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: userBlock },
+        ],
+        temperature: 0.2,
+        response_format: { type: "json_object" },
+      }),
+    });
+    if (res.status === 429)
+      throw new Error("Glintr AI Student Support is busy — please retry shortly.");
+    if (res.status === 402)
+      throw new Error("Glintr AI Student Support is temporarily unavailable.");
+    if (!res.ok) throw new Error("Unable to prepare the issue summary.");
+    const json = await res.json();
+    const raw = json?.choices?.[0]?.message?.content?.trim();
+    if (!raw) throw new Error("Unable to prepare the issue summary.");
+    let parsed: { title?: string; summary?: string } = {};
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      const m = String(raw).match(/\{[\s\S]*\}/);
+      if (m) {
+        try {
+          parsed = JSON.parse(m[0]);
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+    const title = (parsed.title ?? "").toString().trim().slice(0, 120);
+    const summary = (parsed.summary ?? "").toString().trim().slice(0, 3500);
+    if (!title || !summary) throw new Error("Unable to prepare the issue summary.");
+    return { title, summary, category: suggestedCategory };
+  });
+
+// ---- Similar-open detection ----
+const OPEN_STUDENT_STATUSES = [
+  "open",
+  "assigned",
+  "in_progress",
+  "waiting_student",
+  "waiting_support",
+];
+
+const SimilarStudentInput = z.object({
+  category: z.enum(STUDENT_SUPPORT_CATEGORIES),
+  programId: z.string().uuid().nullable().optional(),
+});
+
+export const findSimilarOpenStudentSupportRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SimilarStudentInput.parse(d))
+  .handler(async ({ data, context }): Promise<{
+    ticket_code: string;
+    category: string;
+    subject: string;
+    status: string;
+    created_at: string;
+  } | null> => {
+    const s = context.supabase as any;
+    let q = s
+      .from("student_support_tickets")
+      .select("ticket_code, category, subject, status, created_at, program_id")
+      .eq("student_user_id", context.userId)
+      .eq("category", data.category)
+      .in("status", OPEN_STUDENT_STATUSES)
+      .order("created_at", { ascending: false })
+      .limit(20);
+    const { data: rows } = await q;
+    if (!rows?.length) return null;
+    const match = data.programId
+      ? (rows as any[]).find((r) => r.program_id === data.programId) ?? null
+      : (rows[0] as any);
+    if (!match) return null;
+    return {
+      ticket_code: match.ticket_code,
+      category: match.category,
+      subject: match.subject,
+      status: match.status,
+      created_at: match.created_at,
+    };
+  });
+
+// ---- Submit escalation ----
+const StudentSubmitInput = z.object({
+  category: z.enum(STUDENT_SUPPORT_CATEGORIES),
+  title: z.string().trim().min(3).max(120),
+  summary: z.string().trim().min(10).max(3500),
+  details: z.string().trim().max(2000).optional(),
+  programId: z.string().uuid().nullable().optional(),
+  supportIntent: z.string().max(80).nullable().optional(),
+  confirmDistinct: z.boolean().optional(),
+  nonce: z.string().min(6).max(80),
+});
+
+export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => StudentSubmitInput.parse(d))
+  .handler(async ({ data, context }): Promise<{
+    ticket_code: string;
+    status: string;
+    created_at: string;
+    duplicate?: {
+      ticket_code: string;
+      category: string;
+      subject: string;
+      status: string;
+      created_at: string;
+    };
+  }> => {
+    const s = context.supabase as any;
+    const uid = context.userId;
+
+    // Idempotency: same student + same nonce within 24h → return existing
+    const nonceMarker = `[nonce:${data.nonce}]`;
+    const { data: existingByNonce } = await s
+      .from("student_support_tickets")
+      .select("ticket_code, status, created_at")
+      .eq("student_user_id", uid)
+      .ilike("description", `%${nonceMarker}%`)
+      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .maybeSingle();
+    if (existingByNonce) {
+      return {
+        ticket_code: existingByNonce.ticket_code,
+        status: existingByNonce.status,
+        created_at: existingByNonce.created_at,
+      };
+    }
+
+    // Revalidate program at submission time (if provided)
+    let programId: string | null = null;
+    if (data.programId) {
+      const { data: enr } = await s
+        .from("enrollments")
+        .select("id, course_id")
+        .eq("student_user_id", uid)
+        .eq("course_id", data.programId)
+        .maybeSingle();
+      if (!enr) {
+        throw new Error("The related program is no longer accessible for this Support Request.");
+      }
+      programId = data.programId;
+    }
+
+    // Similar-open detection
+    if (!data.confirmDistinct) {
+      let q = s
+        .from("student_support_tickets")
+        .select("ticket_code, category, subject, status, created_at, program_id")
+        .eq("student_user_id", uid)
+        .eq("category", data.category)
+        .in("status", OPEN_STUDENT_STATUSES)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      const { data: rows } = await q;
+      const match = (rows ?? []).find((r: any) =>
+        programId ? r.program_id === programId : true,
+      );
+      if (match) {
+        return {
+          ticket_code: "",
+          status: "similar_found",
+          created_at: new Date().toISOString(),
+          duplicate: {
+            ticket_code: (match as any).ticket_code,
+            category: (match as any).category,
+            subject: (match as any).subject,
+            status: (match as any).status,
+            created_at: (match as any).created_at,
+          },
+        };
+      }
+    }
+
+    const compositeDescription = [
+      data.summary.trim(),
+      data.details?.trim() ? `\n\nAdditional Details:\n${data.details.trim()}` : "",
+      data.supportIntent
+        ? `\n\nDetected topic: ${studentIntentLabel(data.supportIntent)}`
+        : "",
+      `\n\n${nonceMarker}`,
+    ].join("");
+
+    const contextType = CATEGORY_TO_CONTEXT_TYPE[data.category];
+    const insertRow: Record<string, unknown> = {
+      student_user_id: uid,
+      category: data.category,
+      program_id: programId,
+      context_type: programId && contextType === "program" ? "program" : "none",
+      subject: data.title,
+      description: compositeDescription,
+      priority: "normal",
+      status: "open",
+    };
+
+    const { data: ticket, error } = await s
+      .from("student_support_tickets")
+      .insert(insertRow)
+      .select("id, ticket_code, status, created_at")
+      .single();
+    if (error) throw new Error("Unable to submit the Student Support Request.");
+
+    try {
+      await s.from("student_support_activity").insert({
+        ticket_id: ticket.id,
+        student_user_id: uid,
+        actor_role: "student",
+        action: "ticket_created",
+        detail: `Student Support Request ${ticket.ticket_code} created`,
+      });
+    } catch {
+      /* activity is best-effort */
+    }
+
+    return {
+      ticket_code: ticket.ticket_code,
+      status: ticket.status,
+      created_at: ticket.created_at,
+    };
+  });
