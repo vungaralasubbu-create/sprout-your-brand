@@ -342,7 +342,12 @@ function CoursePage() {
                   />
                 </div>
               </Reveal>
-            ) : null}
+            ) : (
+              <Reveal delay={150}>
+                <ProgramHeroGraphic slug={c.slug} categorySlug={c.category.slug} />
+              </Reveal>
+            )}
+
           </div>
             );
           })()}
