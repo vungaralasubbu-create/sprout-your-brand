@@ -37,6 +37,8 @@ import mark from "@/assets/glintr-mark.png.asset.json";
 import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
 import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
 import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
+import { GlintrDimension } from "@/components/home/glintr-dimension";
+
 
 /* --------------------------------------------------------------------- *
  * Small utilities
@@ -103,7 +105,7 @@ function usePointerParallax(strength = 6) {
  * --------------------------------------------------------------------- */
 
 function HeroUniverse() {
-  const stageRef = usePointerParallax(8);
+  
   return (
     <Section
       tone="default"
@@ -148,7 +150,7 @@ function HeroUniverse() {
               management. Discover programs, build new skills and explore
               opportunities across the Glintr ecosystem.
             </p>
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 pt-1">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 pt-1">
               <Button variant="gradient" size="lg" asChild>
                 <Link to="/programs">
                   Explore Programs <ArrowRight className="size-4" />
@@ -157,11 +159,14 @@ function HeroUniverse() {
               <Button variant="outline" size="lg" asChild>
                 <a href="#learning-direction">Find My Learning Direction</a>
               </Button>
-              <Button variant="ghost" size="lg" asChild>
-                <Link to="/earn">
-                  Start Earning <ArrowUpRight className="size-4" />
-                </Link>
-              </Button>
+              <Link
+                to="/earn"
+                className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--brand-azure)]/25 bg-gradient-to-r from-white to-[oklch(0.98_0.02_220)] px-5 py-2.5 text-sm font-semibold text-foreground shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_8px_20px_-12px_rgba(15,60,120,0.35)] hover:-translate-y-0.5 hover:border-[color:var(--brand-azure)]/45 transition-all duration-200"
+              >
+                <span className="size-1.5 rounded-full bg-[var(--brand-cyan)] shadow-[0_0_8px_var(--brand-cyan)]" />
+                Start Earning
+                <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:translate-x-[3px] group-hover:-translate-y-[1px]" />
+              </Link>
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-2">
@@ -179,18 +184,10 @@ function HeroUniverse() {
             </div>
           </div>
 
-          <div
-            ref={stageRef}
-            className="relative aspect-square w-full max-w-[560px] justify-self-end"
-            style={
-              {
-                ["--px" as string]: "0px",
-                ["--py" as string]: "0px",
-              } as React.CSSProperties
-            }
-          >
-            <HeroLearningUniverse />
+          <div className="relative w-full justify-self-end lg:pl-4">
+            <GlintrDimension />
           </div>
+
         </div>
       </Container>
 
@@ -219,133 +216,8 @@ function HeroUniverse() {
   );
 }
 
-function HeroLearningUniverse() {
-  // Ring of learning nodes around the Glintr mark
-  const nodes = [
-    { label: "AI", angle: 270 },
-    { label: "ML", angle: 305 },
-    { label: "ChatGPT", angle: 340 },
-    { label: "Claude", angle: 15 },
-    { label: "Gemini", angle: 50 },
-    { label: "Web", angle: 85 },
-    { label: "App", angle: 120 },
-    { label: "VLSI", angle: 155 },
-    { label: "Embedded", angle: 190 },
-    { label: "IoT", angle: 220 },
-    { label: "Mechanical", angle: 240 },
-    { label: "Management", angle: 258 },
-  ];
-  const R = 42; // percent
-  const cx = 50;
-  const cy = 50;
-  return (
-    <div
-      className="absolute inset-0"
-      style={{
-        transform: "translate3d(var(--px, 0px), var(--py, 0px), 0)",
-        transition: "transform 0.45s cubic-bezier(0.2,0.8,0.2,1)",
-      }}
-    >
-      {/* SVG lattice */}
-      <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full">
-        <defs>
-          <radialGradient id="u-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="var(--brand-cyan)" stopOpacity="0.35" />
-            <stop offset="60%" stopColor="var(--brand-azure)" stopOpacity="0.10" />
-            <stop offset="100%" stopColor="var(--brand-azure)" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx={cx} cy={cy} r="46" fill="url(#u-glow)" />
-        {/* Concentric rings */}
-        {[18, 30, 42].map((r, i) => (
-          <circle
-            key={r}
-            cx={cx}
-            cy={cy}
-            r={r}
-            fill="none"
-            stroke="oklch(0.7 0.05 240 / 0.25)"
-            strokeWidth="0.15"
-            className={i === 1 ? "cat-rotate-slow" : undefined}
-            strokeDasharray={i === 2 ? "0.6 1.2" : undefined}
-          />
-        ))}
-        {/* Radial pathways */}
-        {nodes.map((n) => {
-          const rad = (n.angle * Math.PI) / 180;
-          const x = cx + Math.cos(rad) * R;
-          const y = cy + Math.sin(rad) * R;
-          return (
-            <line
-              key={`p-${n.label}`}
-              x1={cx}
-              y1={cy}
-              x2={x}
-              y2={y}
-              stroke="oklch(0.7 0.1 220 / 0.25)"
-              strokeWidth="0.12"
-              className="cat-path"
-            />
-          );
-        })}
-        {/* Node dots */}
-        {nodes.map((n, i) => {
-          const rad = (n.angle * Math.PI) / 180;
-          const x = cx + Math.cos(rad) * R;
-          const y = cy + Math.sin(rad) * R;
-          return (
-            <circle
-              key={`d-${n.label}`}
-              cx={x}
-              cy={y}
-              r="0.9"
-              fill="var(--brand-cyan)"
-              className={i % 3 === 0 ? "cat-pulse" : undefined}
-            />
-          );
-        })}
-      </svg>
 
-      {/* Center mark */}
-      <div
-        className="absolute inset-0 grid place-items-center"
-        style={{ transform: "translate3d(calc(var(--px)*-0.4), calc(var(--py)*-0.4), 0)" }}
-      >
-        <div className="relative">
-          <div
-            aria-hidden
-            className="absolute inset-0 -m-8 rounded-full blur-2xl"
-            style={{
-              background:
-                "radial-gradient(circle, oklch(0.78 0.16 175 / 0.5), transparent 70%)",
-            }}
-          />
-          <img
-            src={mark.url}
-            alt="Glintr"
-            className="relative h-24 w-24 md:h-32 md:w-32 object-contain drop-shadow-[0_10px_30px_rgba(0,180,220,0.25)]"
-          />
-        </div>
-      </div>
 
-      {/* Node labels */}
-      {nodes.map((n) => {
-        const rad = (n.angle * Math.PI) / 180;
-        const x = 50 + Math.cos(rad) * R;
-        const y = 50 + Math.sin(rad) * R;
-        return (
-          <div
-            key={`l-${n.label}`}
-            className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-border/60 bg-background/80 px-2.5 py-1 text-[10px] font-medium tracking-wide text-foreground/80 backdrop-blur-sm shadow-sm"
-            style={{ left: `${x}%`, top: `${y}%` }}
-          >
-            {n.label}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 /* --------------------------------------------------------------------- *
  * 2. Motion Statement
