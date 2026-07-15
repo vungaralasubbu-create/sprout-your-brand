@@ -684,6 +684,20 @@ function PartnerSupportPage() {
               </>
             )}
           </div>
+          {signedIn === true && (
+            <div className="mt-6 rounded-2xl border border-border bg-card p-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm">
+                <div className="font-medium">Need Human Partner Support?</div>
+                <p className="text-muted-foreground text-xs mt-1 max-w-2xl">
+                  Prepare a Partner Support Request. Choose the topic, review the suggested issue
+                  summary, and Glintr Partner Support will follow up.
+                </p>
+              </div>
+              <Button onClick={() => openEscalation(true)} variant="outline">
+                <LifeBuoy className="mr-1.5 size-4" /> Create Partner Support Request
+              </Button>
+            </div>
+          )}
         </Container>
       </Section>
 
