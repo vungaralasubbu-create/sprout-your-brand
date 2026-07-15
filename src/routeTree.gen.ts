@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
+import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
 import { Route as PartnerSupportRouteImport } from './routes/partner-support'
@@ -170,6 +171,11 @@ import { Route as AuthenticatedStudentCareerInterviewIdReportRouteImport } from 
 const SuccessStoriesRoute = SuccessStoriesRouteImport.update({
   id: '/success-stories',
   path: '/success-stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentSupportRoute = StudentSupportRouteImport.update({
+  id: '/student-support',
+  path: '/student-support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -1087,6 +1093,7 @@ export interface FileRoutesByFullPath {
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/student-support': typeof StudentSupportRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
@@ -1245,6 +1252,7 @@ export interface FileRoutesByTo {
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/student-support': typeof StudentSupportRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1402,6 +1410,7 @@ export interface FileRoutesById {
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/student-support': typeof StudentSupportRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
@@ -1562,6 +1571,7 @@ export interface FileRouteTypes {
     | '/partner-support'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/student-support'
     | '/success-stories'
     | '/admin'
     | '/ambassador'
@@ -1720,6 +1730,7 @@ export interface FileRouteTypes {
     | '/partner-support'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/student-support'
     | '/success-stories'
     | '/ambassador'
     | '/brand'
@@ -1876,6 +1887,7 @@ export interface FileRouteTypes {
     | '/partner-support'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/student-support'
     | '/success-stories'
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
@@ -2036,6 +2048,7 @@ export interface RootRouteChildren {
   PartnerSupportRoute: typeof PartnerSupportRouteWithChildren
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StudentSupportRoute: typeof StudentSupportRoute
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
@@ -2058,6 +2071,13 @@ declare module '@tanstack/react-router' {
       path: '/success-stories'
       fullPath: '/success-stories'
       preLoaderRoute: typeof SuccessStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/student-support': {
+      id: '/student-support'
+      path: '/student-support'
+      fullPath: '/student-support'
+      preLoaderRoute: typeof StudentSupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -3707,6 +3727,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnerSupportRoute: PartnerSupportRouteWithChildren,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StudentSupportRoute: StudentSupportRoute,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
