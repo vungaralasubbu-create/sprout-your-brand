@@ -361,13 +361,13 @@ function PartnerSupportPage() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button
-                size="lg"
+                padding="lg"
                 onClick={() => inputRef.current?.focus()}
               >
                 Ask Glintr AI Partner Support <MessageCircle className="ml-2 size-4" />
               </Button>
               <Button
-                size="lg"
+                padding="lg"
                 variant="outline"
                 onClick={() =>
                   document.getElementById("support-topics")?.scrollIntoView({ behavior: "smooth" })
@@ -544,7 +544,7 @@ function PartnerSupportPage() {
       </Section>
 
       {/* ============= TOPIC RAIL ============= */}
-      <Section id="support-topics" size="md">
+      <Section id="support-topics" padding="md">
         <Container>
           <div className="flex items-end justify-between gap-4 mb-6">
             <div>
