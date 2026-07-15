@@ -92,7 +92,7 @@ function BlogIndexPage() {
     const id = setTimeout(() => {
       const next = searchTerm.trim();
       if ((next || "") !== (search.q ?? "")) {
-        navigate({ search: (prev) => ({ ...prev, q: next || undefined }), replace: true });
+        navigate({ search: (prev: BlogSearch) => ({ ...prev, q: next || undefined }), replace: true });
       }
     }, 300);
     return () => clearTimeout(id);
@@ -166,7 +166,7 @@ function BlogIndexPage() {
 
   function updateFilter(next: { topic?: string; category?: string; q?: string }) {
     navigate({
-      search: (prev) => ({
+      search: (prev: BlogSearch) => ({
         ...prev,
         ...next,
       }),
