@@ -16,6 +16,7 @@ import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity
 import { Route as PayoutSystemRouteImport } from './routes/payout-system'
 import { Route as PartnerSupportRouteImport } from './routes/partner-support'
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
+import { Route as LmsRouteImport } from './routes/lms'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator'
 import { Route as FaqsRouteImport } from './routes/faqs'
@@ -207,6 +208,11 @@ const PartnerSupportRoute = PartnerSupportRouteImport.update({
 const PartnerNetworkRoute = PartnerNetworkRouteImport.update({
   id: '/partner-network',
   path: '/partner-network',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LmsRoute = LmsRouteImport.update({
+  id: '/lms',
+  path: '/lms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JoinRoute = JoinRouteImport.update({
@@ -1129,6 +1135,7 @@ export interface FileRoutesByFullPath {
   '/faqs': typeof FaqsRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
+  '/lms': typeof LmsRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/payout-system': typeof PayoutSystemRoute
@@ -1294,6 +1301,7 @@ export interface FileRoutesByTo {
   '/faqs': typeof FaqsRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
+  '/lms': typeof LmsRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/payout-system': typeof PayoutSystemRoute
@@ -1458,6 +1466,7 @@ export interface FileRoutesById {
   '/faqs': typeof FaqsRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
+  '/lms': typeof LmsRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/payout-system': typeof PayoutSystemRoute
@@ -1625,6 +1634,7 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/income-calculator'
     | '/join'
+    | '/lms'
     | '/partner-network'
     | '/partner-support'
     | '/payout-system'
@@ -1790,6 +1800,7 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/income-calculator'
     | '/join'
+    | '/lms'
     | '/partner-network'
     | '/partner-support'
     | '/payout-system'
@@ -1953,6 +1964,7 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/income-calculator'
     | '/join'
+    | '/lms'
     | '/partner-network'
     | '/partner-support'
     | '/payout-system'
@@ -2120,6 +2132,7 @@ export interface RootRouteChildren {
   FaqsRoute: typeof FaqsRouteWithChildren
   IncomeCalculatorRoute: typeof IncomeCalculatorRoute
   JoinRoute: typeof JoinRoute
+  LmsRoute: typeof LmsRoute
   PartnerNetworkRoute: typeof PartnerNetworkRoute
   PartnerSupportRoute: typeof PartnerSupportRouteWithChildren
   PayoutSystemRoute: typeof PayoutSystemRoute
@@ -2190,6 +2203,13 @@ declare module '@tanstack/react-router' {
       path: '/partner-network'
       fullPath: '/partner-network'
       preLoaderRoute: typeof PartnerNetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lms': {
+      id: '/lms'
+      path: '/lms'
+      fullPath: '/lms'
+      preLoaderRoute: typeof LmsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/join': {
@@ -3871,6 +3891,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqsRoute: FaqsRouteWithChildren,
   IncomeCalculatorRoute: IncomeCalculatorRoute,
   JoinRoute: JoinRoute,
+  LmsRoute: LmsRoute,
   PartnerNetworkRoute: PartnerNetworkRoute,
   PartnerSupportRoute: PartnerSupportRouteWithChildren,
   PayoutSystemRoute: PayoutSystemRoute,
