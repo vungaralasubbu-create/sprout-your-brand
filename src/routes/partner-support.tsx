@@ -1040,11 +1040,23 @@ function PartnerSupportPage() {
           </p>
         </Container>
       </Section>
-      <GuidedTroubleshootingSection
-        onEscalate={(prefill) => openEscalation(true, prefill)}
-      />
-      <PartnerSupportEscalationDialog
+      <div id="guided-support">
+        <GuidedTroubleshootingSection
+          onEscalate={(prefill) => openEscalation(true, prefill)}
+        />
+      </div>
 
+      <HumanReviewSection onAskAI={focusAIInput} onExplore={scrollToGuided} />
+      <HowSupportWorksSection />
+      <SupportReviewJourney onAskAI={focusAIInput} />
+      <AccountSafetySection />
+      <FinalSupportCTA
+        showMyRequests={signedIn === true}
+        onAskAI={focusAIInput}
+        onExplore={scrollToGuided}
+      />
+
+      <PartnerSupportEscalationDialog
         open={!!escalation}
         onOpenChange={(v) => !v && setEscalation(null)}
         ctx={escalation}
