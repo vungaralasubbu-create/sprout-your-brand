@@ -138,7 +138,7 @@ function FaqsPage() {
         />
         <Container>
           <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
-            <Badge variant="secondary" className="gap-1.5">
+            <Badge variant="muted" className="gap-1.5">
               <Sparkles className="size-3.5" />
               GLINTR HELP
             </Badge>
@@ -347,7 +347,7 @@ function FaqsPage() {
                       <Icon className="size-5" />
                     </div>
                     {c.count > 0 && (
-                      <Badge variant="secondary" className="text-[11px]">
+                      <Badge variant="muted" className="text-[11px]">
                         {c.count}
                       </Badge>
                     )}
@@ -502,7 +502,7 @@ function SmartAnswer({
   if (result.status === "account_specific") {
     return (
       <Card className="max-w-3xl mx-auto p-8">
-        <Badge variant="secondary" className="mb-3">Account-specific question</Badge>
+        <Badge variant="muted" className="mb-3">Account-specific question</Badge>
         <h2 className="font-display text-2xl md:text-3xl font-semibold">
           {result.headline}
         </h2>
