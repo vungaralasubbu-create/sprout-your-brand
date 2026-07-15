@@ -3035,6 +3035,183 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_categories: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          author_bio: string | null
+          author_display_name: string
+          author_display_role: string | null
+          category_id: string | null
+          content_markdown: string
+          created_at: string
+          display_order: number
+          editorial_updated_at: string | null
+          featured_image_url: string | null
+          id: string
+          intro: string | null
+          is_featured: boolean
+          is_published: boolean
+          is_trending: boolean
+          keywords: string[]
+          program_category_slug: string | null
+          published_at: string | null
+          reading_time_minutes: number | null
+          related_course_category_slug: string | null
+          related_course_slug: string | null
+          seo_description: string | null
+          seo_title: string | null
+          short_summary: string
+          slug: string
+          status: string
+          subtitle: string | null
+          thumbnail_url: string | null
+          title: string
+          topic_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          author_bio?: string | null
+          author_display_name?: string
+          author_display_role?: string | null
+          category_id?: string | null
+          content_markdown: string
+          created_at?: string
+          display_order?: number
+          editorial_updated_at?: string | null
+          featured_image_url?: string | null
+          id?: string
+          intro?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          is_trending?: boolean
+          keywords?: string[]
+          program_category_slug?: string | null
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          related_course_category_slug?: string | null
+          related_course_slug?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          short_summary: string
+          slug: string
+          status?: string
+          subtitle?: string | null
+          thumbnail_url?: string | null
+          title: string
+          topic_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          author_bio?: string | null
+          author_display_name?: string
+          author_display_role?: string | null
+          category_id?: string | null
+          content_markdown?: string
+          created_at?: string
+          display_order?: number
+          editorial_updated_at?: string | null
+          featured_image_url?: string | null
+          id?: string
+          intro?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          is_trending?: boolean
+          keywords?: string[]
+          program_category_slug?: string | null
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          related_course_category_slug?: string | null
+          related_course_slug?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          short_summary?: string
+          slug?: string
+          status?: string
+          subtitle?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          topic_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_posts_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "blog_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_topics: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          name: string
+          short_description: string | null
+          slug: string
+          updated_at: string
+          visual_style: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          short_description?: string | null
+          slug: string
+          updated_at?: string
+          visual_style?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          short_description?: string | null
+          slug?: string
+          updated_at?: string
+          visual_style?: string | null
+        }
+        Relationships: []
+      }
       brand_applications: {
         Row: {
           admin_notes: string | null
