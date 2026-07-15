@@ -1,24 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { Search, Filter } from "lucide-react";
+import * as React from "react";
+import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
 import { SiteFooter } from "@/components/shared/site-footer";
-import { Section } from "@/components/shared/section";
-import { Container } from "@/components/shared/section";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Section, Container } from "@/components/shared/section";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { listCategories, listCourses, formatPrice } from "@/lib/programs";
+import { Button } from "@/components/ui/button";
+import { listCategories, listCourses } from "@/lib/programs";
+import { CategoryVisual, slugToVariant, CATEGORY_THEME } from "@/components/programs/category-visuals";
+import { ProgramCard } from "@/components/programs/program-card";
+import { cn } from "@/lib/utils";
+
+const SITE_URL = "https://glintr.com";
 
 export const Route = createFileRoute("/programs/")({
   head: () => {
-    const canonical = "https://glintr.com/programs";
-    const title = "Career Programs | Glintr";
+    const canonical = `${SITE_URL}/programs`;
+    const title = "Program Universe | Glintr";
     const description =
-      "Explore Glintr's premium career programs across Computer Science, Electronics, Mechanical, and Management. Search, filter, and apply.";
+      "Explore Glintr's career-focused programs across Computer Science, Electronics & Electrical, Mechanical Engineering, and Management.";
     return {
       meta: [
         { title },
@@ -32,143 +34,219 @@ export const Route = createFileRoute("/programs/")({
         { name: "twitter:description", content: description },
       ],
       links: [{ rel: "canonical", href: canonical }],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              { "@type": "ListItem", position: 1, name: "Home", item: "https://glintr.com" },
-              { "@type": "ListItem", position: 2, name: "Programs", item: canonical },
-            ],
-          }),
-        },
-      ],
     };
   },
   component: ProgramsIndex,
 });
 
 function ProgramsIndex() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string>("all");
-  const [level, setLevel] = useState<string>("all");
+  const { data: categories = [], isLoading } = useQuery({ queryKey: ["categories"], queryFn: listCategories });
+  const { data: allCourses = [] } = useQuery({ queryKey: ["courses", "all"], queryFn: () => listCourses({}) });
 
-  const { data: categories = [], isLoading: categoriesLoading, error: categoriesError } = useQuery({ queryKey: ["categories"], queryFn: listCategories });
-  const { data: courses = [], isLoading: coursesLoading, error: coursesError } = useQuery({
-    queryKey: ["courses", { category, level, search }],
-    queryFn: () =>
-      listCourses({
-        category: category === "all" ? undefined : category,
-        level: level === "all" ? undefined : level,
-        search: search || undefined,
-      }),
-  });
+  const countByCat = React.useMemo(() => {
+    const map = new Map<string, number>();
+    allCourses.forEach((c: any) => {
+      map.set(c.category.slug, (map.get(c.category.slug) ?? 0) + 1);
+    });
+    return map;
+  }, [allCourses]);
 
-  const filtered = useMemo(() => courses, [courses]);
-  const isLoading = categoriesLoading || coursesLoading;
-  const loadError = categoriesError || coursesError;
+  const featuredByCat = React.useMemo(() => {
+    const map = new Map<string, any[]>();
+    allCourses.forEach((c: any) => {
+      const arr = map.get(c.category.slug) ?? [];
+      if (arr.length < 3) arr.push(c);
+      map.set(c.category.slug, arr);
+    });
+    return map;
+  }, [allCourses]);
+
+  const [hoveredIndex, setHoveredIndex] = React.useState<string | null>(null);
+
+  // Rhythm mapping: large / medium / medium / large
+  const rhythm = ["large", "medium", "medium", "large"] as const;
 
   return (
     <>
       <SiteHeader />
       <main>
-        <Section className="pt-16 pb-8 bg-gradient-to-b from-primary/5 to-transparent">
+        {/* Intro */}
+        <Section className="pt-16 pb-10 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 bg-gradient-brand-soft opacity-30" />
           <Container>
             <div className="max-w-3xl">
-              <Badge variant="outline" className="mb-4">Programs</Badge>
+              <p className="text-[11px] uppercase tracking-[0.22em] font-medium text-primary mb-4 inline-flex items-center gap-2">
+                <Sparkles className="size-3.5" /> Explore Glintr Programs
+              </p>
               <h1 className="text-display-md font-display font-semibold tracking-tight text-balance">
-                Career programs built to launch, sell, and grow.
+                Choose the field you want to build in.
               </h1>
-              <p className="mt-4 text-body-lg text-muted-foreground">
-                Explore future-ready programs across technology, engineering, and business. Learn practical skills, earn as a partner, or launch your own brand.
+              <p className="mt-5 text-body-lg text-muted-foreground max-w-2xl">
+                Explore focused learning paths across technology, engineering, and management —
+                each with its own graphic language, curriculum depth, and career direction.
               </p>
             </div>
           </Container>
         </Section>
 
-        <Section className="py-8 border-y border-border/50 bg-surface-2/30">
+        {/* Category Index Bar */}
+        <Section className="pt-2 pb-6">
           <Container>
-            <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                <Input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by program, skill, or role"
-                  className="pl-10 h-11"
-                />
-              </div>
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="md:w-56 h-11">
-                  <SelectValue placeholder="All categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All categories</SelectItem>
-                  {categories.map((c) => (
-                    <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={level} onValueChange={setLevel}>
-                <SelectTrigger className="md:w-44 h-11">
-                  <SelectValue placeholder="Any level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Any level</SelectItem>
-                  <SelectItem value="Beginner">Beginner</SelectItem>
-                  <SelectItem value="Intermediate">Intermediate</SelectItem>
-                  <SelectItem value="Advanced">Advanced</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              {categories.map((cat, i) => {
+                const active = hoveredIndex === cat.slug;
+                const theme = CATEGORY_THEME[slugToVariant(cat.slug)];
+                return (
+                  <a
+                    key={cat.slug}
+                    href={`#cat-${cat.slug}`}
+                    onMouseEnter={() => setHoveredIndex(cat.slug)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    onFocus={() => setHoveredIndex(cat.slug)}
+                    onBlur={() => setHoveredIndex(null)}
+                    className={cn(
+                      "group flex items-center gap-3 rounded-lg border border-border/70 px-3 py-2.5 transition-all duration-300",
+                      "hover:border-border-strong hover:-translate-y-[2px] hover:shadow-sm",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      active && "border-border-strong shadow-sm",
+                    )}
+                  >
+                    <span
+                      className="text-mono text-xs text-muted-foreground shrink-0"
+                      style={{ color: active ? theme.ring : undefined }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-sm font-medium truncate">{cat.name}</span>
+                    <ArrowUpRight className="ml-auto size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                );
+              })}
             </div>
           </Container>
         </Section>
 
-        <Section className="py-12">
+        {/* Asymmetric Category Panels */}
+        <Section className="pt-4 pb-20">
           <Container>
-            <div className="mb-6 flex items-center justify-between">
-              <p className="text-caption">
-                {isLoading ? "Loading programs…" : `${filtered.length} program${filtered.length === 1 ? "" : "s"}`}
-              </p>
-              <div className="flex items-center gap-2 text-caption">
-                <Filter className="size-3.5" /> Sorted by featured
-              </div>
-            </div>
-            {loadError ? (
-              <div className="mb-6 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-sm text-muted-foreground">
-                We couldn't load programs right now. Please refresh and try again.
-                {import.meta.env.DEV ? <pre className="mt-2 whitespace-pre-wrap text-xs">{String(loadError)}</pre> : null}
-              </div>
-            ) : null}
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((c: any) => (
-                <Link
-                  key={c.id}
-                  to="/programs/$category/$course"
-                  params={{ category: c.category.slug, course: c.slug }}
-                  className="card-elevated hover:card-elevated-hover group p-6 flex flex-col gap-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-[11px]">{c.category.name}</Badge>
-                    {c.is_featured ? <Badge variant="certified" className="text-[11px]">Featured</Badge> : null}
-                  </div>
-                  <h3 className="font-display text-lg font-semibold leading-snug">{c.name}</h3>
-                  <p className="text-body text-muted-foreground line-clamp-2">{c.short_description}</p>
-                  <div className="mt-auto pt-4 flex items-end justify-between border-t border-border">
-                    <div>
-                      <div className="text-caption">Starts from</div>
-                      <div className="text-mono font-semibold text-foreground">₹3,999</div>
-                    </div>
+            <div className="grid grid-cols-1 lg:grid-cols-6 gap-5 md:gap-6 auto-rows-fr">
+              {categories.map((cat, i) => {
+                const size = rhythm[i % rhythm.length];
+                const isFeatured = size === "large";
+                const featured = featuredByCat.get(cat.slug) ?? [];
+                const count = countByCat.get(cat.slug) ?? 0;
+                const theme = CATEGORY_THEME[slugToVariant(cat.slug)];
+                const active = hoveredIndex === cat.slug;
+                return (
+                  <Link
+                    to="/programs/$category"
+                    params={{ category: cat.slug }}
+                    key={cat.slug}
+                    id={`cat-${cat.slug}`}
+                    onMouseEnter={() => setHoveredIndex(cat.slug)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    onFocus={() => setHoveredIndex(cat.slug)}
+                    onBlur={() => setHoveredIndex(null)}
+                    className={cn(
+                      "group relative overflow-hidden rounded-2xl border border-border bg-card",
+                      "transition-[transform,box-shadow,border-color] duration-500 ease-out",
+                      "hover:-translate-y-[3px] hover:shadow-xl hover:border-border-strong",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                      "active:translate-y-0",
+                      isFeatured ? "lg:col-span-4" : "lg:col-span-2",
+                      isFeatured ? "min-h-[440px]" : "min-h-[380px]",
+                      active && "shadow-xl border-border-strong",
+                    )}
+                    style={{
+                      boxShadow: active ? `0 20px 60px -30px ${theme.ring}` : undefined,
+                    }}
+                  >
+                    {/* Visual layer */}
+                    <CategoryVisual
+                      slug={cat.slug}
+                      className={cn(
+                        "absolute inset-0 transition-opacity duration-500",
+                        "opacity-90 group-hover:opacity-100",
+                      )}
+                    />
+                    {/* Fade for legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/85 to-transparent" />
 
-                    <div className="text-right text-caption">
-                      <div>{c.duration}</div>
-                      <div>{c.level}</div>
+                    <div className="relative z-10 flex flex-col h-full p-6 md:p-8">
+                      <div className="flex items-center gap-2 mb-auto">
+                        <span
+                          className="text-mono text-xs"
+                          style={{ color: theme.ring }}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <Badge variant="outline" className="text-[10px] uppercase tracking-wider">
+                          {theme.label}
+                        </Badge>
+                        <span className="ml-auto text-caption">
+                          {count} {count === 1 ? "Program" : "Programs"}
+                        </span>
+                      </div>
+
+                      <div className="mt-8">
+                        <h2 className={cn(
+                          "font-display font-semibold tracking-tight",
+                          isFeatured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl",
+                        )}>
+                          {cat.name}
+                        </h2>
+                        <p className="mt-3 text-body text-muted-foreground max-w-lg line-clamp-3">
+                          {cat.short_description ?? cat.full_description}
+                        </p>
+
+                        {featured.length > 0 ? (
+                          <ul className="mt-5 flex flex-wrap gap-1.5">
+                            {featured.slice(0, isFeatured ? 3 : 2).map((c: any) => (
+                              <li
+                                key={c.id}
+                                className="rounded-full border border-border/70 bg-card/80 px-3 py-1 text-caption backdrop-blur-sm"
+                              >
+                                {c.name}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+
+                        <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium">
+                          <span>Explore {cat.name}</span>
+                          <ArrowRight
+                            className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
+                );
+              })}
+              {isLoading && categories.length === 0 ? (
+                <div className="lg:col-span-6 h-64 rounded-2xl border border-border animate-pulse bg-surface-2/40" />
+              ) : null}
+            </div>
+          </Container>
+        </Section>
+
+        {/* Discovery CTA */}
+        <Section className="py-16 bg-surface-2/40 border-y border-border/60">
+          <Container className="text-center max-w-2xl">
+            <h2 className="text-heading-xl font-display font-semibold">Not sure which field fits you?</h2>
+            <p className="mt-3 text-muted-foreground">
+              Open any category to explore the Skill Path Explorer, compare directions, and
+              discover programs matched to your interests — no login required.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Button asChild size="lg" variant="gradient">
+                <Link to="/programs/$category" params={{ category: categories[0]?.slug ?? "computer-science" }}>
+                  Start with a category
                 </Link>
-              ))}
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link to="/faqs">Read program FAQs</Link>
+              </Button>
             </div>
           </Container>
         </Section>
