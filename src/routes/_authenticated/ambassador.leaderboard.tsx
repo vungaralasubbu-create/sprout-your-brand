@@ -252,9 +252,20 @@ function OverallTab() {
 }
 
 // =================== MONTHLY ===================
-function MonthlyTab() {
+function MonthlyTab({
+  year: urlYear, month: urlMonth, setPeriod,
+}: { year: number | null; month: number | null; setPeriod: (y: number, m: number) => void }) {
   const cur = currentBusinessMonth();
-  const [periodKey, setPeriodKey] = useState<string>(`${cur.year}-${cur.month}`);
+  const initialYear = urlYear ?? cur.year;
+  const initialMonth = urlMonth ?? cur.month;
+  const [periodKey, setPeriodKey] = useState<string>(`${initialYear}-${initialMonth}`);
+  // Sync from URL when it changes externally
+  const urlKey = urlYear && urlMonth ? `${urlYear}-${urlMonth}` : null;
+  if (urlKey && urlKey !== periodKey) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // guarded state sync
+    setPeriodKey(urlKey);
+  }
   const [search, setSearch] = useState("");
   const [pendingSearch, setPendingSearch] = useState("");
   const [page, setPage] = useState(1);
