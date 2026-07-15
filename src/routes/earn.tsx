@@ -117,8 +117,8 @@ function ModelHighlightCards() {
             </div>
             <div className="mt-1 font-display text-xl font-semibold">Own Leads</div>
           </div>
-          <div className="text-right">
-            <div className="font-display text-4xl font-semibold text-primary">Up to 70%</div>
+          <div className="text-right shrink-0">
+            <div className="font-display text-2xl sm:text-4xl font-semibold text-primary whitespace-nowrap">Up to 70%</div>
             <div className="text-caption text-muted-foreground">Revenue Share</div>
           </div>
         </div>
@@ -134,8 +134,8 @@ function ModelHighlightCards() {
             </div>
             <div className="mt-1 font-display text-xl font-semibold">Supported Sales</div>
           </div>
-          <div className="text-right">
-            <div className="font-display text-4xl font-semibold">Up to 50%</div>
+          <div className="text-right shrink-0">
+            <div className="font-display text-2xl sm:text-4xl font-semibold whitespace-nowrap">Up to 50%</div>
             <div className="text-caption text-muted-foreground">Revenue Share</div>
           </div>
         </div>
@@ -226,12 +226,12 @@ function ModelCard({
         <div className="absolute inset-0 bg-gradient-brand opacity-[0.04] pointer-events-none" />
       )}
       <CardHeader className="relative">
-        <div className="flex items-center justify-between">
-          <Badge variant={isPrimary ? "certified" : "outline"}>{eyebrow}</Badge>
-          <div className="text-right">
+        <div className="flex items-center justify-between gap-3">
+          <Badge variant={isPrimary ? "certified" : "outline"} className="shrink">{eyebrow}</Badge>
+          <div className="text-right shrink-0">
             <div
               className={
-                "font-display text-4xl font-semibold " +
+                "font-display text-2xl sm:text-4xl font-semibold whitespace-nowrap " +
                 (isPrimary ? "bg-gradient-brand bg-clip-text text-transparent" : "")
               }
             >
