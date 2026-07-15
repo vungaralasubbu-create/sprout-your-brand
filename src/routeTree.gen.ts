@@ -30,6 +30,7 @@ import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-b
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
 import { Route as SuccessStoriesStorySlugRouteImport } from './routes/success-stories.$storySlug'
+import { Route as StudentSupportRequestsRouteImport } from './routes/student-support.requests'
 import { Route as RefCodeRouteImport } from './routes/ref.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
@@ -47,6 +48,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
 import { Route as AuthenticatedStudentSupportRouteImport } from './routes/_authenticated/student.support'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
@@ -272,6 +274,11 @@ const SuccessStoriesStorySlugRoute = SuccessStoriesStorySlugRouteImport.update({
   path: '/$storySlug',
   getParentRoute: () => SuccessStoriesRoute,
 } as any)
+const StudentSupportRequestsRoute = StudentSupportRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => StudentSupportRoute,
+} as any)
 const RefCodeRoute = RefCodeRouteImport.update({
   id: '/ref/$code',
   path: '/ref/$code',
@@ -359,6 +366,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const StudentSupportRequestsRefRoute =
+  StudentSupportRequestsRefRouteImport.update({
+    id: '/$ref',
+    path: '/$ref',
+    getParentRoute: () => StudentSupportRequestsRoute,
+  } as any)
 const PartnerSupportRequestsRefRoute =
   PartnerSupportRequestsRefRouteImport.update({
     id: '/$ref',
@@ -1093,7 +1106,7 @@ export interface FileRoutesByFullPath {
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/student-support': typeof StudentSupportRoute
+  '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
@@ -1109,6 +1122,7 @@ export interface FileRoutesByFullPath {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/student-support/requests': typeof StudentSupportRequestsRouteWithChildren
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
@@ -1183,6 +1197,7 @@ export interface FileRoutesByFullPath {
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
+  '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
@@ -1252,7 +1267,7 @@ export interface FileRoutesByTo {
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/student-support': typeof StudentSupportRoute
+  '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1266,6 +1281,7 @@ export interface FileRoutesByTo {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/student-support/requests': typeof StudentSupportRequestsRouteWithChildren
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
@@ -1339,6 +1355,7 @@ export interface FileRoutesByTo {
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
+  '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
@@ -1410,7 +1427,7 @@ export interface FileRoutesById {
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/student-support': typeof StudentSupportRoute
+  '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
@@ -1426,6 +1443,7 @@ export interface FileRoutesById {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/student-support/requests': typeof StudentSupportRequestsRouteWithChildren
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
@@ -1500,6 +1518,7 @@ export interface FileRoutesById {
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
   '/_authenticated/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
+  '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
@@ -1587,6 +1606,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/student-support/requests'
     | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
@@ -1661,6 +1681,7 @@ export interface FileRouteTypes {
     | '/student/profile'
     | '/student/support'
     | '/partner-support/requests/$ref'
+    | '/student-support/requests/$ref'
     | '/admin/'
     | '/student/'
     | '/programs/$category/'
@@ -1744,6 +1765,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/student-support/requests'
     | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador'
@@ -1817,6 +1839,7 @@ export interface FileRouteTypes {
     | '/student/notifications'
     | '/student/profile'
     | '/partner-support/requests/$ref'
+    | '/student-support/requests/$ref'
     | '/admin'
     | '/student'
     | '/programs/$category'
@@ -1903,6 +1926,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/student-support/requests'
     | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
@@ -1977,6 +2001,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/profile'
     | '/_authenticated/student/support'
     | '/partner-support/requests/$ref'
+    | '/student-support/requests/$ref'
     | '/_authenticated/admin/'
     | '/_authenticated/student/'
     | '/programs/$category/'
@@ -2048,7 +2073,7 @@ export interface RootRouteChildren {
   PartnerSupportRoute: typeof PartnerSupportRouteWithChildren
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  StudentSupportRoute: typeof StudentSupportRoute
+  StudentSupportRoute: typeof StudentSupportRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
@@ -2213,6 +2238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuccessStoriesStorySlugRouteImport
       parentRoute: typeof SuccessStoriesRoute
     }
+    '/student-support/requests': {
+      id: '/student-support/requests'
+      path: '/requests'
+      fullPath: '/student-support/requests'
+      preLoaderRoute: typeof StudentSupportRequestsRouteImport
+      parentRoute: typeof StudentSupportRoute
+    }
     '/ref/$code': {
       id: '/ref/$code'
       path: '/ref/$code'
@@ -2331,6 +2363,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/student-support/requests/$ref': {
+      id: '/student-support/requests/$ref'
+      path: '/$ref'
+      fullPath: '/student-support/requests/$ref'
+      preLoaderRoute: typeof StudentSupportRequestsRefRouteImport
+      parentRoute: typeof StudentSupportRequestsRoute
     }
     '/partner-support/requests/$ref': {
       id: '/partner-support/requests/$ref'
@@ -3700,6 +3739,32 @@ const PartnerSupportRouteWithChildren = PartnerSupportRoute._addFileChildren(
   PartnerSupportRouteChildren,
 )
 
+interface StudentSupportRequestsRouteChildren {
+  StudentSupportRequestsRefRoute: typeof StudentSupportRequestsRefRoute
+}
+
+const StudentSupportRequestsRouteChildren: StudentSupportRequestsRouteChildren =
+  {
+    StudentSupportRequestsRefRoute: StudentSupportRequestsRefRoute,
+  }
+
+const StudentSupportRequestsRouteWithChildren =
+  StudentSupportRequestsRoute._addFileChildren(
+    StudentSupportRequestsRouteChildren,
+  )
+
+interface StudentSupportRouteChildren {
+  StudentSupportRequestsRoute: typeof StudentSupportRequestsRouteWithChildren
+}
+
+const StudentSupportRouteChildren: StudentSupportRouteChildren = {
+  StudentSupportRequestsRoute: StudentSupportRequestsRouteWithChildren,
+}
+
+const StudentSupportRouteWithChildren = StudentSupportRoute._addFileChildren(
+  StudentSupportRouteChildren,
+)
+
 interface SuccessStoriesRouteChildren {
   SuccessStoriesStorySlugRoute: typeof SuccessStoriesStorySlugRoute
 }
@@ -3727,7 +3792,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnerSupportRoute: PartnerSupportRouteWithChildren,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  StudentSupportRoute: StudentSupportRoute,
+  StudentSupportRoute: StudentSupportRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,

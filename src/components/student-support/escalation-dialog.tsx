@@ -41,10 +41,12 @@ import {
   submitStudentSupportEscalation,
   suggestStudentSupportCategory,
   studentIntentLabel,
+  type StudentSupportAttachment,
   type StudentSupportCategory,
   type StudentSupportIntent,
   type StudentSnapshot,
 } from "@/lib/student-support/student-support.functions";
+import { StudentSupportAttachmentPicker } from "@/components/student-support/attachment-picker";
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
 
@@ -97,6 +99,7 @@ export function StudentSupportEscalationDialog({
   const [details, setDetails] = React.useState("");
   const [studentNote, setStudentNote] = React.useState("");
   const [confirmDistinct, setConfirmDistinct] = React.useState(false);
+  const [attachments, setAttachments] = React.useState<StudentSupportAttachment[]>([]);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [result, setResult] = React.useState<SubmitResult | null>(null);
   const nonceRef = React.useRef<string>(newNonce());
@@ -122,6 +125,7 @@ export function StudentSupportEscalationDialog({
     setDetails("");
     setStudentNote("");
     setConfirmDistinct(false);
+    setAttachments([]);
     setErrorMsg(null);
     setResult(null);
     nonceRef.current = newNonce();
@@ -186,6 +190,7 @@ export function StudentSupportEscalationDialog({
           details: details.trim() || undefined,
           programId: programId === "none" ? null : programId,
           supportIntent: intent ?? null,
+          attachments: attachments.length ? attachments : undefined,
           confirmDistinct,
           nonce: nonceRef.current,
         },
@@ -299,7 +304,7 @@ export function StudentSupportEscalationDialog({
                       </p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         <Button asChild size="sm" variant="outline">
-                          <Link to="/student/support">Open my existing request</Link>
+                          <Link to="/student-support/requests">Open my existing request</Link>
                         </Button>
                         <Button
                           size="sm"
@@ -386,6 +391,15 @@ export function StudentSupportEscalationDialog({
                       onChange={(e) => setStudentNote(e.target.value)}
                       maxLength={200}
                       placeholder="A short note the AI should include when regenerating the summary."
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label>Supporting Files (optional)</Label>
+                    <StudentSupportAttachmentPicker
+                      attachments={attachments}
+                      onChange={setAttachments}
+                      disabled={submit.isPending}
                     />
                   </div>
                 </>
@@ -480,7 +494,7 @@ function SuccessState({
           Close
         </Button>
         <Button asChild>
-          <Link to="/student/support">
+          <Link to="/student-support/requests">
             View My Support Requests <ArrowRight className="ml-1.5 size-4" />
           </Link>
         </Button>
