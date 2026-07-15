@@ -247,7 +247,7 @@ function MarketingSupportPage() {
               <div className="mt-1 font-display text-xl font-semibold">{goal}</div>
               <div className="mt-4 flex flex-wrap gap-2">
                 {GROWTH[goal].map((s) => (
-                  <Badge key={s} variant="secondary" className="text-sm">{s}</Badge>
+                  <Badge key={s} variant="muted" className="text-sm">{s}</Badge>
                 ))}
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
