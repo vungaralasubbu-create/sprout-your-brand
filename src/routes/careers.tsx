@@ -706,7 +706,7 @@ function CareersPage() {
             and skills may fit.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button size="lg" variant="secondary" asChild>
+            <Button size="lg" variant="muted" asChild>
               <a href="#open-opportunities">View Open Roles</a>
             </Button>
             <Button
@@ -789,7 +789,7 @@ function TeamDetail({
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {dept.focus_areas.map((f) => (
-              <Badge key={f} variant="secondary" className="font-normal">
+              <Badge key={f} variant="muted" className="font-normal">
                 {f}
               </Badge>
             ))}
@@ -856,7 +856,7 @@ function RoleRow({
       >
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mb-1">
-            {department ? <Badge variant="secondary" className="font-normal">{department.name}</Badge> : null}
+            {department ? <Badge variant="muted" className="font-normal">{department.name}</Badge> : null}
             <Badge variant="outline" className="font-normal">
               <Briefcase className="size-3 mr-1" />
               {formatWorkType(role.work_type)}

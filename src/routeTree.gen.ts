@@ -15,6 +15,7 @@ import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as EarnRouteImport } from './routes/earn'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -185,6 +186,11 @@ const JoinRoute = JoinRouteImport.update({
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
   path: '/earn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -1016,6 +1022,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
@@ -1164,6 +1171,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
@@ -1311,6 +1319,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
   '/earn': typeof EarnRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
@@ -1461,6 +1470,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/careers'
     | '/earn'
     | '/join'
     | '/partner-network'
@@ -1609,6 +1619,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/careers'
     | '/earn'
     | '/join'
     | '/partner-network'
@@ -1755,6 +1766,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/auth'
+    | '/careers'
     | '/earn'
     | '/join'
     | '/partner-network'
@@ -1905,6 +1917,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  CareersRoute: typeof CareersRoute
   EarnRoute: typeof EarnRoute
   JoinRoute: typeof JoinRoute
   PartnerNetworkRoute: typeof PartnerNetworkRoute
@@ -1967,6 +1980,13 @@ declare module '@tanstack/react-router' {
       path: '/earn'
       fullPath: '/earn'
       preLoaderRoute: typeof EarnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -3444,6 +3464,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  CareersRoute: CareersRoute,
   EarnRoute: EarnRoute,
   JoinRoute: JoinRoute,
   PartnerNetworkRoute: PartnerNetworkRoute,
