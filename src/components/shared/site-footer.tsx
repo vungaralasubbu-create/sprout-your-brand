@@ -29,11 +29,11 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Launch Your Brand",
     links: [
-      { label: "White Label EdTech", href: "/launch-your-brand" },
-      { label: "Brand Setup", href: "/launch-your-brand/start" },
+      { label: "White Label EdTech", href: "/white-label-edtech" },
+      { label: "Brand Setup", href: "/brand-setup" },
       { label: "LMS", href: "/lms" },
       { label: "Marketing Support", href: "/marketing-support" },
-      { label: "Book Consultation", href: "/launch-your-brand/consultation" },
+      { label: "Book Consultation", href: "/book-consultation" },
     ],
   },
   {

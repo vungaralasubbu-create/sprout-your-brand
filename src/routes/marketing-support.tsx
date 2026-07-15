@@ -165,7 +165,7 @@ function MarketingSupportPage() {
               <a href="#explorer">Build A Growth Direction</a>
             </Button>
             <Button variant="ghost" size="lg" asChild>
-              <Link to="/launch-your-brand/consultation">Book Consultation</Link>
+              <Link to="/book-consultation">Book Consultation</Link>
             </Button>
           </div>
         </Container>
@@ -354,13 +354,13 @@ function MarketingSupportPage() {
           </h2>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button variant="gradient" size="lg" asChild>
-              <Link to="/launch-your-brand/consultation">Book Consultation</Link>
+              <Link to="/book-consultation">Book Consultation</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <Link to="/launch-your-brand/start">Explore Brand Setup</Link>
+              <Link to="/brand-setup">Explore Brand Setup</Link>
             </Button>
             <Button variant="ghost" size="lg" asChild>
-              <Link to="/launch-your-brand">Explore White Label EdTech</Link>
+              <Link to="/white-label-edtech">Explore White Label EdTech</Link>
             </Button>
           </div>
         </Container>
