@@ -300,8 +300,11 @@ export function SiteHeader() {
               );
             })}
             <div className="grid gap-2 pt-3 border-t border-border mt-2">
-              <Button variant="gradient" size="sm" asChild>
-                <a href="/join">Start Earning</a>
+              <Button variant="gradient" size="sm" className="cta-earn rounded-full" asChild>
+                <a href="/join">
+                  <Sparkles className="size-4" />
+                  <span className="relative z-10">Start Earning</span>
+                </a>
               </Button>
             </div>
           </div>
