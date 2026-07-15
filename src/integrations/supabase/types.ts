@@ -5831,6 +5831,214 @@ export type Database = {
           },
         ]
       }
+      hiring_applications: {
+        Row: {
+          applicant_user_id: string | null
+          application_code: string | null
+          application_status: string
+          consent_status: boolean
+          cover_note: string | null
+          created_at: string
+          current_location: string | null
+          email: string
+          experience_summary: string | null
+          full_name: string
+          id: string
+          linkedin_url: string | null
+          mobile: string
+          portfolio_url: string | null
+          resume_path: string | null
+          role_id: string
+          source: string | null
+          submitted_at: string
+          updated_at: string
+        }
+        Insert: {
+          applicant_user_id?: string | null
+          application_code?: string | null
+          application_status?: string
+          consent_status?: boolean
+          cover_note?: string | null
+          created_at?: string
+          current_location?: string | null
+          email: string
+          experience_summary?: string | null
+          full_name: string
+          id?: string
+          linkedin_url?: string | null
+          mobile: string
+          portfolio_url?: string | null
+          resume_path?: string | null
+          role_id: string
+          source?: string | null
+          submitted_at?: string
+          updated_at?: string
+        }
+        Update: {
+          applicant_user_id?: string | null
+          application_code?: string | null
+          application_status?: string
+          consent_status?: boolean
+          cover_note?: string | null
+          created_at?: string
+          current_location?: string | null
+          email?: string
+          experience_summary?: string | null
+          full_name?: string
+          id?: string
+          linkedin_url?: string | null
+          mobile?: string
+          portfolio_url?: string | null
+          resume_path?: string | null
+          role_id?: string
+          source?: string | null
+          submitted_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hiring_applications_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "hiring_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hiring_departments: {
+        Row: {
+          created_at: string
+          display_order: number
+          focus_areas: string[]
+          headline: string | null
+          id: string
+          is_active: boolean
+          name: string
+          purpose: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          focus_areas?: string[]
+          headline?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          purpose?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          focus_areas?: string[]
+          headline?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          purpose?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      hiring_roles: {
+        Row: {
+          application_close_at: string | null
+          application_open_at: string | null
+          created_at: string
+          department_id: string | null
+          display_order: number
+          employment_type: string
+          experience_level: string | null
+          id: string
+          is_featured: boolean
+          is_published: boolean
+          location_display: string | null
+          location_type: string
+          overview: string | null
+          preferred_qualifications: string[]
+          requirements: string[]
+          responsibilities: string[]
+          role_code: string | null
+          seo_description: string | null
+          seo_title: string | null
+          short_summary: string | null
+          skills: string[]
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          work_type: string
+        }
+        Insert: {
+          application_close_at?: string | null
+          application_open_at?: string | null
+          created_at?: string
+          department_id?: string | null
+          display_order?: number
+          employment_type?: string
+          experience_level?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          location_display?: string | null
+          location_type?: string
+          overview?: string | null
+          preferred_qualifications?: string[]
+          requirements?: string[]
+          responsibilities?: string[]
+          role_code?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          short_summary?: string | null
+          skills?: string[]
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+          work_type?: string
+        }
+        Update: {
+          application_close_at?: string | null
+          application_open_at?: string | null
+          created_at?: string
+          department_id?: string | null
+          display_order?: number
+          employment_type?: string
+          experience_level?: string | null
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          location_display?: string | null
+          location_type?: string
+          overview?: string | null
+          preferred_qualifications?: string[]
+          requirements?: string[]
+          responsibilities?: string[]
+          role_code?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          short_summary?: string | null
+          skills?: string[]
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          work_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hiring_roles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "hiring_departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       internship_projects: {
         Row: {
           course_project_template_id: string | null
