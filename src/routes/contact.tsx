@@ -526,7 +526,7 @@ function ContactPage() {
       {/* AI-ASSISTED ENQUIRY PREPARATION ================================= */}
       <Section className="py-14 md:py-20">
         <Container size="md">
-          <div ref={prepRef} tabIndex={-1} className="outline-none">
+          <div ref={prepRef} data-contact-anchor="prep" tabIndex={-1} className="outline-none">
             <SectionHeading
               eyebrow="03 · Prepare"
               title="Prepare your enquiry"
