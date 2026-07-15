@@ -5,7 +5,7 @@ import { Container, Section } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { getFaqBySlug } from "@/lib/faqs/faqs.functions";
+import { getFaqBySlug, type FaqAnswer } from "@/lib/faqs/faqs.functions";
 
 export const Route = createFileRoute("/faqs/$slug")({
   loader: async ({ params }) => {
