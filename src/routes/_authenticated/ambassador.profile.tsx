@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useRef } from "react";
@@ -191,7 +191,20 @@ function ProfileHeader({ profile, currentLevel, completion }: any) {
                 )}
                 <Badge variant="outline">Ambassador</Badge>
               </div>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/ambassador/leaderboard">View Leaderboard</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/ambassador/rank-history">View Rank History</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/ambassador/recognition">View Recognition</Link>
+                </Button>
+              </div>
             </div>
+
+
 
             <div className="min-w-[180px]">
               <div className="text-xs text-slate-500 mb-1 flex justify-between">
