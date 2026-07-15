@@ -393,6 +393,15 @@ export function StudentSupportEscalationDialog({
                       placeholder="A short note the AI should include when regenerating the summary."
                     />
                   </div>
+
+                  <div className="grid gap-2">
+                    <Label>Supporting Files (optional)</Label>
+                    <StudentSupportAttachmentPicker
+                      attachments={attachments}
+                      onChange={setAttachments}
+                      disabled={submit.isPending}
+                    />
+                  </div>
                 </>
               )}
 
