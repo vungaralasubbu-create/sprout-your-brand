@@ -181,6 +181,21 @@ export function AIWorkspaceVisual({
     return () => io.disconnect();
   }, []);
 
+  // Track container width so signal dots can travel in px based on % coords.
+  React.useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        const w = e.contentRect.width;
+        el.style.setProperty("--aiw-unit", `${w / 100}px`);
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+
   // Pointer parallax (desktop, motion allowed)
   React.useEffect(() => {
     if (reduced) return;
