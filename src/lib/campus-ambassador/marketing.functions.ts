@@ -498,15 +498,16 @@ export const getResourceDownloadUrl = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!r || !r.media_url) return { gate: "not_found" as const };
 
-    // If url is a storage path (bucket/path), sign it. Otherwise return as-is.
+    // Full URL or root-relative CDN path: return as-is. Otherwise treat as storage bucket/path and sign.
     let url = r.media_url as string;
-    const isFullUrl = /^https?:\/\//i.test(url);
-    if (!isFullUrl) {
+    const isPassThrough = /^https?:\/\//i.test(url) || url.startsWith("/");
+    if (!isPassThrough) {
       const [bucket, ...rest] = url.split("/");
       const path = rest.join("/");
       const { data: signed } = await supabase.storage.from(bucket).createSignedUrl(path, 60 * 5);
       url = signed?.signedUrl || "";
     }
+
 
     // Log download
     await supabase.from("marketing_resource_interactions").insert({
