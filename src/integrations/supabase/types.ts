@@ -556,6 +556,7 @@ export type Database = {
           campus_scope: string | null
           created_at: string
           description: string | null
+          ending_reminder_days: number
           ends_at: string | null
           fixed_bonus_amount: number | null
           id: string
@@ -580,6 +581,7 @@ export type Database = {
           campus_scope?: string | null
           created_at?: string
           description?: string | null
+          ending_reminder_days?: number
           ends_at?: string | null
           fixed_bonus_amount?: number | null
           id?: string
@@ -604,6 +606,7 @@ export type Database = {
           campus_scope?: string | null
           created_at?: string
           description?: string | null
+          ending_reminder_days?: number
           ends_at?: string | null
           fixed_bonus_amount?: number | null
           id?: string
@@ -11091,6 +11094,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      amb_campaign_matches_scope: {
+        Args: { _campus_scope: string; _college_name: string }
+        Returns: boolean
+      }
       ambassador_active_ranking_rule: {
         Args: { _type: Database["public"]["Enums"]["amb_leaderboard_type"] }
         Returns: {
@@ -11472,11 +11479,23 @@ export type Database = {
       mask_upi_id: { Args: { _upi: string }; Returns: string }
       normalize_email: { Args: { _email: string }; Returns: string }
       normalize_phone: { Args: { _phone: string }; Returns: string }
+      notify_campaigns_ending_soon: { Args: never; Returns: number }
       partner_id_for: { Args: { _user_id: string }; Returns: string }
       scan_referral_patterns: { Args: never; Returns: number }
       student_enrolled_in_course: {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
+      }
+      tg_amb_notify_campaign_broadcast: {
+        Args: {
+          _campaign_id: string
+          _dedupe_prefix: string
+          _message: string
+          _notif_type: string
+          _participants_only: boolean
+          _title: string
+        }
+        Returns: undefined
       }
       tg_amb_notify_insert: {
         Args: {
