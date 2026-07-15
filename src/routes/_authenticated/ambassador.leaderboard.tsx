@@ -100,7 +100,12 @@ function isCurrentMonth(year: number, month: number) {
 }
 
 function LeaderboardPage() {
-  const [tab, setTab] = useState("overall");
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const tab = search.tab ?? "overall";
+  const setTab = (v: string) =>
+    navigate({ search: (prev) => ({ ...prev, tab: v as LbSearch["tab"] }) });
+
   const meFn = useServerFn(getMyLeaderboardRank);
   const myQ = useQuery({
     queryKey: ["ambassador-leaderboard", "me"],
@@ -132,12 +137,8 @@ function LeaderboardPage() {
             <TabsTrigger value="overall" className="rounded-lg">Overall</TabsTrigger>
             <TabsTrigger value="monthly" className="rounded-lg">Monthly</TabsTrigger>
             <TabsTrigger value="college" className="rounded-lg">My College</TabsTrigger>
-            <TabsTrigger value="programs" disabled className="rounded-lg opacity-60">
-              Programs
-            </TabsTrigger>
-            <TabsTrigger value="campaigns" disabled className="rounded-lg opacity-60">
-              Campaigns
-            </TabsTrigger>
+            <TabsTrigger value="programs" className="rounded-lg">Programs</TabsTrigger>
+            <TabsTrigger value="campaigns" className="rounded-lg">Campaigns</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overall" className="mt-5">
@@ -149,11 +150,21 @@ function LeaderboardPage() {
           <TabsContent value="college" className="mt-5">
             <CollegeTab />
           </TabsContent>
-          <TabsContent value="programs">
-            <ComingSoon label="Program leaderboards" />
+          <TabsContent value="programs" className="mt-5">
+            <ProgramsTab
+              programId={search.programId ?? null}
+              setProgramId={(id) =>
+                navigate({ search: (p) => ({ ...p, tab: "programs", programId: id ?? undefined }) })
+              }
+            />
           </TabsContent>
-          <TabsContent value="campaigns">
-            <ComingSoon label="Campaign leaderboards" />
+          <TabsContent value="campaigns" className="mt-5">
+            <CampaignsTab
+              campaignId={search.campaignId ?? null}
+              setCampaignId={(id) =>
+                navigate({ search: (p) => ({ ...p, tab: "campaigns", campaignId: id ?? undefined }) })
+              }
+            />
           </TabsContent>
         </Tabs>
       </div>
