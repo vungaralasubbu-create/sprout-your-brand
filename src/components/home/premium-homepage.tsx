@@ -1043,97 +1043,40 @@ function LearningDirection() {
  * --------------------------------------------------------------------- */
 
 function CampusCommunity() {
-  // Abstract nodes — do NOT name specific institutions.
-  const nodes = React.useMemo(
-    () =>
-      Array.from({ length: 42 }).map((_, i) => ({
-        id: i,
-        x: (Math.sin(i * 7.31) + 1) * 50,
-        y: (Math.cos(i * 4.19) + 1) * 50,
-        r: 0.6 + ((i * 13) % 5) * 0.25,
-      })),
-    [],
-  );
   return (
-    <Section tone="default" padding="lg" className="relative overflow-hidden">
+    <Section tone="default" padding="md" className="relative overflow-hidden">
       <Container>
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] items-center">
-          <Reveal>
-            <div>
-              <div className="text-label text-primary mb-3">
-                A LEARNING COMMUNITY
-              </div>
-              <h2 className="text-section text-balance">
-                Learners come from different campuses. They build their own
-                direction.
-              </h2>
-              <p className="text-subheading mt-4 max-w-lg">
-                Glintr programs are explored by students and independent
-                learners representing diverse institutions and backgrounds.
-                Every learning direction is personal.
-              </p>
-              <div className="mt-6 grid grid-cols-2 gap-3 max-w-md">
-                {["AI", "Engineering", "Electronics", "Management"].map((t) => (
-                  <div
-                    key={t}
-                    className="rounded-xl border border-border/60 bg-surface px-4 py-3 text-sm font-medium"
-                  >
-                    {t}
-                  </div>
-                ))}
-              </div>
+        <Reveal>
+          <div className="max-w-3xl">
+            <div className="text-label text-primary mb-3">
+              A LEARNING COMMUNITY
             </div>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <div className="relative aspect-[5/4] w-full overflow-hidden rounded-3xl border border-border/60 bg-surface">
-              <div
-                aria-hidden
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(45% 45% at 30% 40%, oklch(0.78 0.16 175 / 0.12), transparent 60%), radial-gradient(45% 45% at 70% 60%, oklch(0.55 0.24 265 / 0.12), transparent 60%)",
-                }}
-              />
-              <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full">
-                <g stroke="oklch(0.6 0.1 235 / 0.35)" strokeWidth="0.15" fill="none">
-                  {nodes.slice(0, 30).map((n, i) => {
-                    const target = nodes[(i * 3 + 5) % nodes.length];
-                    return (
-                      <line
-                        key={i}
-                        x1={n.x}
-                        y1={n.y}
-                        x2={target.x}
-                        y2={target.y}
-                        className={i % 5 === 0 ? "cat-path" : undefined}
-                        opacity={i % 5 === 0 ? undefined : 0.35}
-                      />
-                    );
-                  })}
-                </g>
-                {nodes.map((n, i) => (
-                  <circle
-                    key={n.id}
-                    cx={n.x}
-                    cy={n.y}
-                    r={n.r}
-                    fill="var(--brand-cyan)"
-                    className={i % 6 === 0 ? "cat-pulse" : undefined}
-                    opacity={0.55 + (i % 4) * 0.1}
-                  />
-                ))}
-              </svg>
-              <div className="absolute bottom-4 left-4 rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
-                Abstract network · representative
-              </div>
+            <h2 className="text-section text-balance">
+              Learners come from different campuses. They build their own
+              direction.
+            </h2>
+            <p className="text-subheading mt-4 max-w-2xl">
+              Glintr programs are explored by students and independent
+              learners representing diverse institutions and backgrounds.
+              Every learning direction is personal.
+            </p>
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+              {["AI", "Engineering", "Electronics", "Management"].map((t) => (
+                <div
+                  key={t}
+                  className="rounded-xl border border-border/60 bg-surface px-4 py-3 text-sm font-medium text-center"
+                >
+                  {t}
+                </div>
+              ))}
             </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
       </Container>
     </Section>
   );
 }
+
 
 /* --------------------------------------------------------------------- *
  * 8. Learning Journey
