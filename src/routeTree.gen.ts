@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WhiteLabelEdtechRouteImport } from './routes/white-label-edtech'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -24,6 +25,8 @@ import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
+import { Route as BrandSetupRouteImport } from './routes/brand-setup'
+import { Route as BookConsultationRouteImport } from './routes/book-consultation'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
@@ -176,6 +179,11 @@ import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImpo
 import { Route as AuthenticatedStudentInternshipIdTasksTaskIdRouteImport } from './routes/_authenticated/student.internship.$id.tasks.$taskId'
 import { Route as AuthenticatedStudentCareerInterviewIdReportRouteImport } from './routes/_authenticated/student.career.interview.$id.report'
 
+const WhiteLabelEdtechRoute = WhiteLabelEdtechRouteImport.update({
+  id: '/white-label-edtech',
+  path: '/white-label-edtech',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuccessStoriesRoute = SuccessStoriesRouteImport.update({
   id: '/success-stories',
   path: '/success-stories',
@@ -249,6 +257,16 @@ const ContactRoute = ContactRouteImport.update({
 const CareersRoute = CareersRouteImport.update({
   id: '/careers',
   path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandSetupRoute = BrandSetupRouteImport.update({
+  id: '/brand-setup',
+  path: '/brand-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookConsultationRoute = BookConsultationRouteImport.update({
+  id: '/book-consultation',
+  path: '/book-consultation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -1135,6 +1153,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
+  '/book-consultation': typeof BookConsultationRoute
+  '/brand-setup': typeof BrandSetupRoute
   '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
@@ -1150,6 +1170,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
+  '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1302,6 +1323,8 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
+  '/book-consultation': typeof BookConsultationRoute
+  '/brand-setup': typeof BrandSetupRoute
   '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
@@ -1317,6 +1340,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
+  '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -1468,6 +1492,8 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
+  '/book-consultation': typeof BookConsultationRoute
+  '/brand-setup': typeof BrandSetupRoute
   '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
@@ -1483,6 +1509,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
+  '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1637,6 +1664,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/blog'
+    | '/book-consultation'
+    | '/brand-setup'
     | '/careers'
     | '/contact'
     | '/earn'
@@ -1652,6 +1681,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
+    | '/white-label-edtech'
     | '/admin'
     | '/ambassador'
     | '/brand'
@@ -1804,6 +1834,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/blog'
+    | '/book-consultation'
+    | '/brand-setup'
     | '/careers'
     | '/contact'
     | '/earn'
@@ -1819,6 +1851,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
+    | '/white-label-edtech'
     | '/ambassador'
     | '/brand'
     | '/partner'
@@ -1969,6 +2002,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/blog'
+    | '/book-consultation'
+    | '/brand-setup'
     | '/careers'
     | '/contact'
     | '/earn'
@@ -1984,6 +2019,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
+    | '/white-label-edtech'
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
     | '/_authenticated/brand'
@@ -2138,6 +2174,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRouteWithChildren
+  BookConsultationRoute: typeof BookConsultationRoute
+  BrandSetupRoute: typeof BrandSetupRoute
   CareersRoute: typeof CareersRouteWithChildren
   ContactRoute: typeof ContactRoute
   EarnRoute: typeof EarnRoute
@@ -2153,6 +2191,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
+  WhiteLabelEdtechRoute: typeof WhiteLabelEdtechRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -2169,6 +2208,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/white-label-edtech': {
+      id: '/white-label-edtech'
+      path: '/white-label-edtech'
+      fullPath: '/white-label-edtech'
+      preLoaderRoute: typeof WhiteLabelEdtechRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/success-stories': {
       id: '/success-stories'
       path: '/success-stories'
@@ -2272,6 +2318,20 @@ declare module '@tanstack/react-router' {
       path: '/careers'
       fullPath: '/careers'
       preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-setup': {
+      id: '/brand-setup'
+      path: '/brand-setup'
+      fullPath: '/brand-setup'
+      preLoaderRoute: typeof BrandSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-consultation': {
+      id: '/book-consultation'
+      path: '/book-consultation'
+      fullPath: '/book-consultation'
+      preLoaderRoute: typeof BookConsultationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -3905,6 +3965,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   BlogRoute: BlogRouteWithChildren,
+  BookConsultationRoute: BookConsultationRoute,
+  BrandSetupRoute: BrandSetupRoute,
   CareersRoute: CareersRouteWithChildren,
   ContactRoute: ContactRoute,
   EarnRoute: EarnRoute,
@@ -3920,6 +3982,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudentSupportRoute: StudentSupportRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
+  WhiteLabelEdtechRoute: WhiteLabelEdtechRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
