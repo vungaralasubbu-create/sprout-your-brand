@@ -82,12 +82,12 @@ function ModelCard({ model }: { model: Model }) {
       <Button
         variant={model.featured ? "gradient" : "outline"}
         size="md"
-        className="mt-8 w-full"
+        className="mt-8 w-full max-w-full min-w-0 h-auto min-h-10 py-2 px-3 whitespace-normal text-center leading-tight"
         asChild
       >
-        <a href={model.href}>
-          {model.cta}
-          <ArrowRight className="size-4" />
+        <a href={model.href} className="inline-flex items-center justify-center gap-2 min-w-0">
+          <span className="min-w-0 break-words">{model.cta}</span>
+          <ArrowRight className="size-4 shrink-0" />
         </a>
       </Button>
     </article>
