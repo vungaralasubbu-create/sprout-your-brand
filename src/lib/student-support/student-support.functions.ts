@@ -1009,8 +1009,6 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       .ilike("description", nonceLike)
       .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
       .maybeSingle();
-      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-      .maybeSingle();
     if (existingByNonce) {
       return {
         ticket_code: existingByNonce.ticket_code,
