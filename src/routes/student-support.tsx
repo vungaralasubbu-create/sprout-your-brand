@@ -652,8 +652,23 @@ function getRelatedLinks(
 ): { label: string; href: string }[] {
   const links: { label: string; href: string }[] = [];
   if (signedIn) {
-    links.push({ label: "Open My Learning", href: "/student/my-learning" });
+    links.push({ label: "Open My Learning", href: "/student/programs" });
     links.push({ label: "Student Dashboard", href: "/student/dashboard" });
+    if (
+      intent === "certificate_information" ||
+      intent === "certificate_missing" ||
+      intent === "certificate_access" ||
+      intent === "certificate_eligibility"
+    ) {
+      links.push({ label: "My Certificates", href: "/student/certificates" });
+    }
+    if (
+      intent === "assessment_information" ||
+      intent === "assessment_access" ||
+      intent === "assessment_result"
+    ) {
+      links.push({ label: "My Assessments", href: "/student/assessments" });
+    }
   } else {
     links.push({ label: "Explore Programs", href: "/programs" });
     links.push({ label: "Sign In To Your Student Account", href: "/auth" });
@@ -661,3 +676,4 @@ function getRelatedLinks(
   links.push({ label: "Glintr FAQs", href: "/faqs" });
   return links;
 }
+
