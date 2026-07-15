@@ -62,7 +62,7 @@ export const listMyRankHistory = createServerFn({ method: "GET" })
   )
   .middleware([requireSupabaseAuth])
   .handler(async ({ data, context }): Promise<RankHistoryItem[]> => {
-    const t = data?.type && data.type !== "all" ? data.type : null;
+    const t = data?.type && data.type !== "all" ? data.type : undefined;
     const { data: rows, error } = await context.supabase.rpc("ambassador_my_rank_history", {
       _type: t,
     });
