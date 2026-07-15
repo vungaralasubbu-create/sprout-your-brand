@@ -1843,6 +1843,8 @@ export function PremiumHomepage() {
       <MotionDivider variant="line" />
       <ProgramUniverse />
       <GenerativeAISpotlight />
+      <CertificationEcosystem />
+      <LearnerInstitutions />
       <LearningDirection />
       <MotionDivider variant="nodes" />
       <CampusCommunity />
@@ -1853,7 +1855,7 @@ export function PremiumHomepage() {
       <EarnWithUs />
       <RevenueStory />
       <LaunchYourBrand />
-      <GlintrEcosystem />
+      <GlintrWorld />
       <GlintrNumbers />
       <FinalBrandStatement />
       <PreFooterPathways />
