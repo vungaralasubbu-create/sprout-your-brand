@@ -368,7 +368,7 @@ function ProgramCard({
           p.rule ? (
             <Badge
               key={p.plan}
-              variant="secondary"
+              variant="muted"
               className="text-[10px] font-medium"
             >
               {p.plan_label}: {p.rule.commission_type === "fixed" && p.rule.fixed_amount
