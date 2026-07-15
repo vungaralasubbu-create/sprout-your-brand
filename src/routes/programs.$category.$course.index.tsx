@@ -1179,12 +1179,14 @@ function NotFound() {
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <ProgramScrollProgress />
       <SiteHeader />
       <main className="pb-24 lg:pb-0">{children}</main>
       <SiteFooter />
     </>
   );
 }
+
 
 function useRelated(courseId?: string, categoryId?: string) {
   return useQuery({
