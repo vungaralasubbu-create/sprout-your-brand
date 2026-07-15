@@ -36,6 +36,10 @@ import {
   type StudentSupportIntent,
   type StudentSnapshot,
 } from "@/lib/student-support/student-support.functions";
+import {
+  LearningIssuesSection,
+  type LearningIssueLaunch,
+} from "@/components/student-support/learning-issues";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
