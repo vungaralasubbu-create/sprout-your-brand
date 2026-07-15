@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
+import { Route as PartnerSupportRouteImport } from './routes/partner-support'
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as FaqsRouteImport } from './routes/faqs'
@@ -177,6 +178,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
   id: '/sales-opportunity',
   path: '/sales-opportunity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerSupportRoute = PartnerSupportRouteImport.update({
+  id: '/partner-support',
+  path: '/partner-support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerNetworkRoute = PartnerNetworkRouteImport.update({
@@ -1065,6 +1071,7 @@ export interface FileRoutesByFullPath {
   '/faqs': typeof FaqsRouteWithChildren
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
+  '/partner-support': typeof PartnerSupportRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -1220,6 +1227,7 @@ export interface FileRoutesByTo {
   '/faqs': typeof FaqsRouteWithChildren
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
+  '/partner-support': typeof PartnerSupportRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -1374,6 +1382,7 @@ export interface FileRoutesById {
   '/faqs': typeof FaqsRouteWithChildren
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
+  '/partner-support': typeof PartnerSupportRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -1531,6 +1540,7 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/join'
     | '/partner-network'
+    | '/partner-support'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/success-stories'
@@ -1686,6 +1696,7 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/join'
     | '/partner-network'
+    | '/partner-support'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/success-stories'
@@ -1839,6 +1850,7 @@ export interface FileRouteTypes {
     | '/faqs'
     | '/join'
     | '/partner-network'
+    | '/partner-support'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/success-stories'
@@ -1996,6 +2008,7 @@ export interface RootRouteChildren {
   FaqsRoute: typeof FaqsRouteWithChildren
   JoinRoute: typeof JoinRoute
   PartnerNetworkRoute: typeof PartnerNetworkRoute
+  PartnerSupportRoute: typeof PartnerSupportRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
@@ -2034,6 +2047,13 @@ declare module '@tanstack/react-router' {
       path: '/sales-opportunity'
       fullPath: '/sales-opportunity'
       preLoaderRoute: typeof SalesOpportunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner-support': {
+      id: '/partner-support'
+      path: '/partner-support'
+      fullPath: '/partner-support'
+      preLoaderRoute: typeof PartnerSupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner-network': {
@@ -3619,6 +3639,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqsRoute: FaqsRouteWithChildren,
   JoinRoute: JoinRoute,
   PartnerNetworkRoute: PartnerNetworkRoute,
+  PartnerSupportRoute: PartnerSupportRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
