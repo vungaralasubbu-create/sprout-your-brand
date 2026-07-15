@@ -559,10 +559,13 @@ export type Database = {
           ends_at: string | null
           fixed_bonus_amount: number | null
           id: string
+          leaderboard_enabled: boolean
           max_commission_pct: number | null
           name: string
           pricing_plan: string | null
           program_id: string | null
+          ranking_finalised_at: string | null
+          ranking_metric: string
           starts_at: string
           status: string
           terms: string | null
@@ -580,10 +583,13 @@ export type Database = {
           ends_at?: string | null
           fixed_bonus_amount?: number | null
           id?: string
+          leaderboard_enabled?: boolean
           max_commission_pct?: number | null
           name: string
           pricing_plan?: string | null
           program_id?: string | null
+          ranking_finalised_at?: string | null
+          ranking_metric?: string
           starts_at?: string
           status?: string
           terms?: string | null
@@ -601,10 +607,13 @@ export type Database = {
           ends_at?: string | null
           fixed_bonus_amount?: number | null
           id?: string
+          leaderboard_enabled?: boolean
           max_commission_pct?: number | null
           name?: string
           pricing_plan?: string | null
           program_id?: string | null
+          ranking_finalised_at?: string | null
+          ranking_metric?: string
           starts_at?: string
           status?: string
           terms?: string | null
@@ -612,6 +621,51 @@ export type Database = {
           visibility?: string
         }
         Relationships: []
+      }
+      ambassador_campaign_leaderboard_snapshots: {
+        Row: {
+          ambassador_id: string
+          campaign_id: string
+          finalised_at: string
+          id: string
+          metric_value: number
+          progress_pct: number | null
+          rank_position: number
+        }
+        Insert: {
+          ambassador_id: string
+          campaign_id: string
+          finalised_at?: string
+          id?: string
+          metric_value?: number
+          progress_pct?: number | null
+          rank_position: number
+        }
+        Update: {
+          ambassador_id?: string
+          campaign_id?: string
+          finalised_at?: string
+          id?: string
+          metric_value?: number
+          progress_pct?: number | null
+          rank_position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_campaign_leaderboard_snapshots_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_campaign_leaderboard_snapshots_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_bonus_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ambassador_campaign_milestone_achievements: {
         Row: {
@@ -10411,6 +10465,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ambassador_leaderboard_campaign: {
+        Args: {
+          _campaign_id: string
+          _limit?: number
+          _offset?: number
+          _search?: string
+        }
+        Returns: {
+          ambassador_id: string
+          college_display: string
+          display_identity: string
+          is_final: boolean
+          level_icon: string
+          level_name: string
+          metric_value: number
+          photo_url: string
+          progress_pct: number
+          rank_position: number
+          ranking_metric: string
+          total_count: number
+        }[]
+      }
       ambassador_leaderboard_college: {
         Args: { _limit?: number; _offset?: number; _search?: string }
         Returns: {
@@ -10460,6 +10536,24 @@ export type Database = {
           verified_enrollments: number
         }[]
       }
+      ambassador_leaderboard_my_campaign_rank: {
+        Args: { _campaign_id: string }
+        Returns: {
+          ambassador_code: string
+          ambassador_id: string
+          college_display: string
+          display_identity: string
+          is_final: boolean
+          level_icon: string
+          level_name: string
+          metric_value: number
+          photo_url: string
+          progress_pct: number
+          rank_position: number
+          ranking_metric: string
+          total_ranked: number
+        }[]
+      }
       ambassador_leaderboard_my_college_rank: {
         Args: never
         Returns: {
@@ -10479,6 +10573,23 @@ export type Database = {
       }
       ambassador_leaderboard_my_monthly_rank: {
         Args: { _month: number; _year: number }
+        Returns: {
+          ambassador_code: string
+          ambassador_id: string
+          college_display: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_ranked: number
+          valid_referral_leads: number
+          verified_enrollments: number
+        }[]
+      }
+      ambassador_leaderboard_my_program_rank: {
+        Args: { _program_id: string }
         Returns: {
           ambassador_code: string
           ambassador_id: string
@@ -10527,6 +10638,27 @@ export type Database = {
           verified_enrollments: number
         }[]
       }
+      ambassador_leaderboard_program: {
+        Args: {
+          _limit?: number
+          _offset?: number
+          _program_id: string
+          _search?: string
+        }
+        Returns: {
+          ambassador_id: string
+          college_display: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_count: number
+          valid_referral_leads: number
+          verified_enrollments: number
+        }[]
+      }
       ambassador_my_college_context: {
         Args: never
         Returns: {
@@ -10534,6 +10666,25 @@ export type Database = {
           college_key: string
           college_name: string
           has_college: boolean
+        }[]
+      }
+      ambassador_visible_campaigns: {
+        Args: never
+        Returns: {
+          banner_text: string
+          campaign_code: string
+          campaign_type: string
+          campus_scope: string
+          description: string
+          ends_at: string
+          id: string
+          is_final: boolean
+          name: string
+          program_id: string
+          ranking_finalised_at: string
+          ranking_metric: string
+          starts_at: string
+          status: string
         }[]
       }
       evaluate_ambassador_badges: {
