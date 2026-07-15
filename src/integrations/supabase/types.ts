@@ -547,6 +547,190 @@ export type Database = {
         }
         Relationships: []
       }
+      ambassador_bonus_campaigns: {
+        Row: {
+          banner_text: string | null
+          bonus_percentage: number | null
+          campaign_code: string | null
+          campaign_type: string
+          campus_scope: string | null
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          fixed_bonus_amount: number | null
+          id: string
+          max_commission_pct: number | null
+          name: string
+          pricing_plan: string | null
+          program_id: string | null
+          starts_at: string
+          status: string
+          terms: string | null
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          banner_text?: string | null
+          bonus_percentage?: number | null
+          campaign_code?: string | null
+          campaign_type: string
+          campus_scope?: string | null
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          fixed_bonus_amount?: number | null
+          id?: string
+          max_commission_pct?: number | null
+          name: string
+          pricing_plan?: string | null
+          program_id?: string | null
+          starts_at?: string
+          status?: string
+          terms?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          banner_text?: string | null
+          bonus_percentage?: number | null
+          campaign_code?: string | null
+          campaign_type?: string
+          campus_scope?: string | null
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          fixed_bonus_amount?: number | null
+          id?: string
+          max_commission_pct?: number | null
+          name?: string
+          pricing_plan?: string | null
+          program_id?: string | null
+          starts_at?: string
+          status?: string
+          terms?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
+      ambassador_campaign_milestone_achievements: {
+        Row: {
+          achieved_at: string
+          ambassador_id: string
+          bonus_commission_id: string | null
+          campaign_id: string
+          created_at: string
+          eligibility_status: string
+          id: string
+          metadata: Json
+          milestone_id: string
+        }
+        Insert: {
+          achieved_at?: string
+          ambassador_id: string
+          bonus_commission_id?: string | null
+          campaign_id: string
+          created_at?: string
+          eligibility_status?: string
+          id?: string
+          metadata?: Json
+          milestone_id: string
+        }
+        Update: {
+          achieved_at?: string
+          ambassador_id?: string
+          bonus_commission_id?: string | null
+          campaign_id?: string
+          created_at?: string
+          eligibility_status?: string
+          id?: string
+          metadata?: Json
+          milestone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_campaign_milestone_achievem_bonus_commission_id_fkey"
+            columns: ["bonus_commission_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_commissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_campaign_milestone_achievements_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_campaign_milestone_achievements_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_bonus_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_campaign_milestone_achievements_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_campaign_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_campaign_milestones: {
+        Row: {
+          bonus_amount: number
+          campaign_id: string
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          milestone_code: string | null
+          name: string
+          threshold_type: string
+          threshold_value: number
+          updated_at: string
+        }
+        Insert: {
+          bonus_amount?: number
+          campaign_id: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          milestone_code?: string | null
+          name: string
+          threshold_type?: string
+          threshold_value: number
+          updated_at?: string
+        }
+        Update: {
+          bonus_amount?: number
+          campaign_id?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          milestone_code?: string | null
+          name?: string
+          threshold_type?: string
+          threshold_value?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_campaign_milestones_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_bonus_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_college_change_requests: {
         Row: {
           admin_note: string | null
@@ -611,49 +795,70 @@ export type Database = {
           base_definition: string
           campaign_id: string | null
           commission_percentage: number
+          commission_type: string
           created_at: string
+          description: string | null
           effective_from: string
           effective_to: string | null
+          eligibility_notes: string | null
+          fixed_amount: number | null
           id: string
           is_active: boolean
+          max_commission_pct: number | null
           name: string
           pricing_plan: string | null
           program_id: string | null
           rule_code: string | null
+          rule_priority: number
           updated_at: string
           version: number
+          visibility: string
         }
         Insert: {
           base_definition?: string
           campaign_id?: string | null
           commission_percentage: number
+          commission_type?: string
           created_at?: string
+          description?: string | null
           effective_from?: string
           effective_to?: string | null
+          eligibility_notes?: string | null
+          fixed_amount?: number | null
           id?: string
           is_active?: boolean
+          max_commission_pct?: number | null
           name: string
           pricing_plan?: string | null
           program_id?: string | null
           rule_code?: string | null
+          rule_priority?: number
           updated_at?: string
           version?: number
+          visibility?: string
         }
         Update: {
           base_definition?: string
           campaign_id?: string | null
           commission_percentage?: number
+          commission_type?: string
           created_at?: string
+          description?: string | null
           effective_from?: string
           effective_to?: string | null
+          eligibility_notes?: string | null
+          fixed_amount?: number | null
           id?: string
           is_active?: boolean
+          max_commission_pct?: number | null
           name?: string
           pricing_plan?: string | null
           program_id?: string | null
           rule_code?: string | null
+          rule_priority?: number
           updated_at?: string
           version?: number
+          visibility?: string
         }
         Relationships: []
       }
