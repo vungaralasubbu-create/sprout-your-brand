@@ -38,6 +38,11 @@ import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
 import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
 import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
 import { GlintrDimension } from "@/components/home/glintr-dimension";
+import {
+  GlintrWorld,
+  CertificationEcosystem,
+  LearnerInstitutions,
+} from "@/components/home/glintr-world-sections";
 
 
 /* --------------------------------------------------------------------- *
