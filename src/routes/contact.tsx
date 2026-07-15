@@ -56,11 +56,11 @@ const SearchSchema = z.object({
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Glintr — Find The Right Support Or Enquiry Path" },
+      { title: "Contact Glintr | Enquiries, Partnerships And Support Routing" },
       {
         name: "description",
         content:
-          "Tell Glintr what you need — student support, partner support, partnerships, institutions, business, media or careers — and reach the right path.",
+          "Contact Glintr for general enquiries, partnerships, institution discussions, business and media enquiries, or find the right Student and Partner Support path.",
       },
       { property: "og:title", content: "Contact Glintr" },
       {
@@ -68,7 +68,9 @@ export const Route = createFileRoute("/contact")({
         content:
           "Start with what you need. Glintr guides you to the right support or contact path.",
       },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://glintr.com/contact" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://glintr.com/contact" }],
   }),
@@ -281,7 +283,10 @@ function ContactPage() {
   const enquirySectionRef = React.useRef<HTMLDivElement>(null);
 
   const scrollToRef = (r: React.RefObject<HTMLElement | null>) => {
-    r.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    r.current?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
     r.current?.focus?.();
   };
 
@@ -490,13 +495,19 @@ function ContactPage() {
                   routerMut.mutate(v);
                 }}
                 disabled={routerMut.isPending || routerInput.trim().length < 3}
+                aria-busy={routerMut.isPending}
               >
                 {routerMut.isPending ? (
-                  <Loader2 className="size-4 animate-spin" />
+                  <>
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                    <span>Finding the right contact path…</span>
+                  </>
                 ) : (
-                  <Compass className="size-4" />
+                  <>
+                    <Compass className="size-4" aria-hidden="true" />
+                    <span>Find My Contact Path</span>
+                  </>
                 )}
-                Find My Contact Path
               </Button>
             </div>
 
@@ -575,13 +586,19 @@ function ContactPage() {
                     prepMut.mutate(v);
                   }}
                   disabled={prepMut.isPending || prepInput.trim().length < 3}
+                  aria-busy={prepMut.isPending}
                 >
                   {prepMut.isPending ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <>
+                      <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                      <span>Preparing your enquiry…</span>
+                    </>
                   ) : (
-                    <Sparkles className="size-4" />
+                    <>
+                      <Sparkles className="size-4" aria-hidden="true" />
+                      <span>Prepare My Enquiry</span>
+                    </>
                   )}
-                  Prepare My Enquiry
                 </Button>
               </div>
             </div>
@@ -894,14 +911,43 @@ function ChoosePathMenu({
   onChoose: (next: ContactIntent) => void;
 }) {
   const [open, setOpen] = React.useState(false);
+  const wrapRef = React.useRef<HTMLDivElement>(null);
+  const btnRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const onDocDown = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        btnRef.current?.focus();
+      }
+    };
+    document.addEventListener("mousedown", onDocDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <div className="relative">
-      <Button variant="outline" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+    <div className="relative" ref={wrapRef}>
+      <Button
+        ref={btnRef}
+        variant="outline"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+      >
         Choose A Different Contact Path
       </Button>
       {open && (
         <div
           role="menu"
+          aria-label="Choose a different contact path"
           className="absolute z-10 mt-2 w-64 rounded-lg border border-border bg-popover p-1 shadow-lg"
         >
           {CONTACT_INTENTS.filter((i) => i !== current).map((i) => (
@@ -912,8 +958,9 @@ function ChoosePathMenu({
               onClick={() => {
                 onChoose(i);
                 setOpen(false);
+                btnRef.current?.focus();
               }}
-              className="w-full text-left rounded-md px-3 py-2 text-sm hover:bg-muted"
+              className="w-full text-left rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:bg-muted"
             >
               {CONTACT_INTENT_LABELS[i]}
             </button>
