@@ -34,6 +34,7 @@ import {
   type LeaderboardRow,
   type CampaignLeaderboardRow,
 } from "@/lib/campus-ambassador/leaderboard.functions";
+import { HowRankingsWork, MyRankMovementChip } from "@/components/ambassador/ranking-rule-ui";
 import { cn } from "@/lib/utils";
 
 type LbSearch = {
