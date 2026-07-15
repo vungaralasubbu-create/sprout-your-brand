@@ -258,14 +258,16 @@ function PartnerSupportPage() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
 
-  function openEscalation(manual = false) {
+  function openEscalation(manual = false, prefill?: EscalationContext["prefill"]) {
     setEscalation({
       intent: intent ?? null,
       messages: manual ? [] : messages,
       related: null,
       manual,
+      prefill,
     });
   }
+
 
   const HUMAN_SUPPORT_PATTERNS =
     /\b(human support|talk to (partner )?support|speak to (partner )?support|create (a )?(support )?(ticket|request)|escalate|need someone to review|contact partner support)\b/i;
@@ -693,11 +695,17 @@ function PartnerSupportPage() {
                   summary, and Glintr Partner Support will follow up.
                 </p>
               </div>
-              <Button onClick={() => openEscalation(true)} variant="outline">
-                <LifeBuoy className="mr-1.5 size-4" /> Create Partner Support Request
-              </Button>
+              <div className="flex gap-2">
+                <Button variant="ghost" asChild>
+                  <Link to="/partner-support/requests">My Support Requests</Link>
+                </Button>
+                <Button onClick={() => openEscalation(true)} variant="outline">
+                  <LifeBuoy className="mr-1.5 size-4" /> Create Partner Support Request
+                </Button>
+              </div>
             </div>
           )}
+
         </Container>
       </Section>
 
@@ -983,7 +991,11 @@ function PartnerSupportPage() {
           </p>
         </Container>
       </Section>
+      <GuidedTroubleshootingSection
+        onEscalate={(prefill) => openEscalation(true, prefill)}
+      />
       <PartnerSupportEscalationDialog
+
         open={!!escalation}
         onOpenChange={(v) => !v && setEscalation(null)}
         ctx={escalation}
@@ -1176,3 +1188,357 @@ function QuickAction({
     </Link>
   );
 }
+
+// ============================================================================
+// Guided Troubleshooting — 7 self-check flows
+// ============================================================================
+
+type TroubleshootPrefill = NonNullable<EscalationContext["prefill"]>;
+
+type Flow = {
+  key: string;
+  title: string;
+  category: TroubleshootPrefill["category"];
+  symptoms: string;
+  steps: { label: string; hint: string }[];
+  escalatePrefill: {
+    title: string;
+    summary: string;
+  };
+};
+
+const FLOWS: Flow[] = [
+  {
+    key: "lead_visibility",
+    title: "A lead I referred is not showing in my dashboard",
+    category: "lead_ownership",
+    symptoms:
+      "You believe you referred a prospective learner, but the lead is not appearing under your Partner Leads.",
+    steps: [
+      {
+        label: "Confirm the referral used your authorised Glintr link, QR or referral code.",
+        hint: "Only referrals that come through your authorised partner identity are attributed to you.",
+      },
+      {
+        label: "Check My Leads for the last 7 days with any filters cleared.",
+        hint: "The lead may be present but hidden by a stage or date filter.",
+      },
+      {
+        label: "Confirm the prospect actually completed the referral action.",
+        hint: "A shared link that isn't opened or a form that isn't submitted will not create a lead.",
+      },
+      {
+        label: "If the lead still doesn't appear after ~30 minutes, submit a Support Request.",
+        hint: "Include the prospect's mobile number and the approximate referral time.",
+      },
+    ],
+    escalatePrefill: {
+      title: "Referred lead is not visible in my Partner Leads",
+      summary:
+        "I referred a prospective learner but the lead is not appearing under my Partner Leads. I've confirmed the referral used my authorised Glintr identity and that My Leads filters are cleared. I'd like Partner Support to review why this lead isn't attributed to me.",
+    },
+  },
+  {
+    key: "duplicate_lead",
+    title: "My lead was marked as a duplicate",
+    category: "duplicate_lead",
+    symptoms:
+      "A lead you added or referred is flagged as a duplicate of another partner's lead.",
+    steps: [
+      {
+        label: "Open the lead detail to view the duplicate reason.",
+        hint: "Duplicates are usually detected by matching mobile number or email.",
+      },
+      {
+        label: "Check when you first added or referred this prospect.",
+        hint: "The Glintr Duplicate Rule uses the earliest verified authorised touchpoint.",
+      },
+      {
+        label: "Confirm the prospect wasn't already engaged by another partner or Glintr team.",
+        hint: "Prior engagement can create an ownership record that predates yours.",
+      },
+      {
+        label: "If you still believe the duplicate flag is incorrect, submit a Support Request.",
+        hint: "Partner Support will review under the Duplicate Rule.",
+      },
+    ],
+    escalatePrefill: {
+      title: "Duplicate flag review requested",
+      summary:
+        "One of my leads has been marked as a duplicate and I'd like Partner Support to review the flag under the Glintr Duplicate Rule. I've reviewed the duplicate reason and my referral timeline before submitting this request.",
+    },
+  },
+  {
+    key: "verified_enrollment",
+    title: "My verified enrollment is missing or delayed",
+    category: "verified_enrollment",
+    symptoms:
+      "A learner you referred has paid or enrolled, but the enrollment is not marked as verified for your commission.",
+    steps: [
+      {
+        label: "Confirm the learner actually completed enrollment on Glintr.",
+        hint: "Only completed enrollments count towards verification.",
+      },
+      {
+        label: "Allow the standard verification window to complete.",
+        hint: "Verification happens per approved Glintr rules — it isn't instant.",
+      },
+      {
+        label: "Confirm the lead is attributed to you in My Leads.",
+        hint: "If the lead isn't attributed, the enrollment can't be verified for your commission.",
+      },
+      {
+        label: "If the verification window has passed, submit a Support Request.",
+        hint: "Include the learner's mobile number and the program.",
+      },
+    ],
+    escalatePrefill: {
+      title: "Verified Enrollment review requested",
+      summary:
+        "A learner I referred has enrolled but the enrollment is not yet marked as verified for my commission. I've confirmed the enrollment status and lead attribution, and the standard verification window has passed.",
+    },
+  },
+  {
+    key: "missing_commission",
+    title: "My commission is missing for a verified enrollment",
+    category: "missing_commission",
+    symptoms:
+      "You have a verified enrollment but the commission does not appear in your Eligible or Available Earnings.",
+    steps: [
+      {
+        label: "Confirm the enrollment status is Verified in your Partner Dashboard.",
+        hint: "Only verified enrollments trigger commission per the Revenue Share Terms.",
+      },
+      {
+        label: "Check your Earnings page for a matching entry.",
+        hint: "Commission may still be in Eligible Earnings and not yet Available.",
+      },
+      {
+        label: "Review whether any refund or adjustment applies.",
+        hint: "Refunds or adjustments follow the approved Revenue Share Terms.",
+      },
+      {
+        label: "If commission is still missing after 48 hours of verification, submit a Support Request.",
+        hint: "Include the verified enrollment reference.",
+      },
+    ],
+    escalatePrefill: {
+      title: "Missing commission for a verified enrollment",
+      summary:
+        "I have a verified enrollment but the commission is not appearing in my Eligible or Available Earnings. I've confirmed the enrollment is verified and checked for refunds or adjustments before submitting this request.",
+    },
+  },
+  {
+    key: "payout",
+    title: "My payout is delayed, on hold or shows an issue",
+    category: "payout",
+    symptoms:
+      "A payout you requested is not moving through the expected payout status.",
+    steps: [
+      {
+        label: "Check payout status in Payouts on the Partner Dashboard.",
+        hint: "The status field explains the current stage per the Payout Policy.",
+      },
+      {
+        label: "Confirm your Payout Profile is complete and verified.",
+        hint: "Incomplete or unverified payout details can hold a payout.",
+      },
+      {
+        label: "Review whether the payout is inside the standard payout window.",
+        hint: "Payout timelines follow the current Glintr Payout Policy.",
+      },
+      {
+        label: "If the payout is stuck beyond the standard window, submit a Support Request.",
+        hint: "Include the payout reference.",
+      },
+    ],
+    escalatePrefill: {
+      title: "Payout status review requested",
+      summary:
+        "One of my payouts is delayed or shows an unexpected status. I've confirmed my Payout Profile is complete and reviewed the payout status field before submitting this request.",
+    },
+  },
+  {
+    key: "partner_application",
+    title: "My partner application status hasn't updated",
+    category: "partner_application",
+    symptoms:
+      "You've submitted a partner application but haven't received a decision or an update.",
+    steps: [
+      {
+        label: "Check the application status in your Partner Application page.",
+        hint: "Statuses follow the standard partner review workflow.",
+      },
+      {
+        label: "Confirm you've completed all required steps for your chosen partner model.",
+        hint: "Missing steps can pause the review.",
+      },
+      {
+        label: "Allow the standard partner review window to complete.",
+        hint: "Reviews aren't instant — they follow authorised partner review rules.",
+      },
+      {
+        label: "If the review window has passed, submit a Support Request.",
+        hint: "Include your applied model (70% Revenue or 50% Supported).",
+      },
+    ],
+    escalatePrefill: {
+      title: "Partner application status review requested",
+      summary:
+        "I've submitted a Glintr partner application and would like Partner Support to review why the status hasn't progressed. I've confirmed my application steps and the review window has passed.",
+    },
+  },
+];
+
+function GuidedTroubleshootingSection({
+  onEscalate,
+}: {
+  onEscalate: (prefill: TroubleshootPrefill) => void;
+}) {
+  return (
+    <Section padding="lg" className="bg-muted/30">
+      <Container>
+        <div className="max-w-3xl mb-8">
+          <Badge variant="outline" className="uppercase tracking-widest text-[10px]">
+            Solve Common Partner Questions
+          </Badge>
+          <h2 className="mt-3 text-3xl md:text-4xl font-semibold tracking-tight">
+            Guided Partner Troubleshooting
+          </h2>
+          <p className="mt-3 text-muted-foreground text-pretty">
+            Step-by-step self-checks for the most common partner questions. If a self-check
+            doesn't resolve your issue, create a Partner Support Request — your progress carries
+            over as a suggested summary.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          {FLOWS.map((flow) => (
+            <TroubleshootCard key={flow.key} flow={flow} onEscalate={onEscalate} />
+          ))}
+        </div>
+      </Container>
+    </Section>
+  );
+}
+
+function TroubleshootCard({
+  flow,
+  onEscalate,
+}: {
+  flow: Flow;
+  onEscalate: (prefill: TroubleshootPrefill) => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [checked, setChecked] = React.useState<Record<number, boolean>>({});
+  const [resolved, setResolved] = React.useState(false);
+
+  const doneCount = Object.values(checked).filter(Boolean).length;
+  const total = flow.steps.length;
+
+  function reset() {
+    setChecked({});
+    setResolved(false);
+  }
+
+  return (
+    <Card className="p-5 flex flex-col">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="font-medium">{flow.title}</div>
+          <p className="text-sm text-muted-foreground mt-1.5">{flow.symptoms}</p>
+        </div>
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="rounded-full border border-border bg-card p-1.5 hover:border-primary/40 transition"
+          aria-label={open ? "Collapse steps" : "Expand steps"}
+        >
+          {open ? <ChevronLeft className="size-3.5" /> : <ChevronRight className="size-3.5" />}
+        </button>
+      </div>
+
+      {resolved ? (
+        <div className="mt-4 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3 text-sm text-emerald-800">
+          <div className="font-medium">Marked as resolved</div>
+          <p className="mt-1 text-xs">
+            You told Partner Support this issue is resolved. Reopen the checks any time.
+          </p>
+          <button
+            onClick={reset}
+            className="mt-2 text-xs font-medium text-emerald-800 inline-flex items-center gap-1 hover:underline"
+          >
+            <RefreshCw className="size-3" /> Reopen Self-Checks
+          </button>
+        </div>
+      ) : open ? (
+        <>
+          <ol className="mt-4 space-y-2">
+            {flow.steps.map((s, i) => {
+              const isChecked = !!checked[i];
+              return (
+                <li key={i} className="flex items-start gap-2">
+                  <button
+                    onClick={() => setChecked((c) => ({ ...c, [i]: !c[i] }))}
+                    className={cn(
+                      "mt-0.5 size-4 rounded border transition shrink-0",
+                      isChecked
+                        ? "bg-primary border-primary"
+                        : "border-border bg-card hover:border-primary/40",
+                    )}
+                    aria-label={isChecked ? "Mark as not done" : "Mark as done"}
+                  >
+                    {isChecked ? (
+                      <ShieldCheck className="size-3 text-primary-foreground m-auto" />
+                    ) : null}
+                  </button>
+                  <div className="flex-1 text-sm">
+                    <div className={isChecked ? "line-through text-muted-foreground" : ""}>
+                      {s.label}
+                    </div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">{s.hint}</div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="mt-4 flex flex-wrap items-center gap-2 justify-between border-t border-border pt-3">
+            <span className="text-[11px] text-muted-foreground">
+              {doneCount} of {total} checks complete
+            </span>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="ghost" onClick={reset}>
+                <RefreshCw className="mr-1.5 size-3.5" /> Reset
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setResolved(true)}
+                disabled={doneCount === 0}
+              >
+                This Solved It
+              </Button>
+              <Button
+                size="sm"
+                onClick={() =>
+                  onEscalate({
+                    category: flow.category,
+                    title: flow.escalatePrefill.title,
+                    summary: flow.escalatePrefill.summary,
+                  })
+                }
+              >
+                Still Need Help — Create Support Request
+              </Button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="mt-4">
+          <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
+            Start Self-Checks <ArrowRight className="ml-1.5 size-3.5" />
+          </Button>
+        </div>
+      )}
+    </Card>
+  );
+}
+

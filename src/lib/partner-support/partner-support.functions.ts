@@ -437,6 +437,106 @@ export const PARTNER_SUPPORT_RELATED_KINDS = [
 ] as const;
 export type PartnerSupportRelatedKind = (typeof PARTNER_SUPPORT_RELATED_KINDS)[number];
 
+async function validateRelatedRecordImpl(
+  supabase: any,
+  userId: string,
+  kind: PartnerSupportRelatedKind,
+  id: string,
+): Promise<{ valid: boolean; reference: string | null; kind: PartnerSupportRelatedKind }> {
+  const s = supabase;
+  const { data: p } = await s
+    .from("partners")
+    .select("id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  const partnerId = p?.id as string | undefined;
+
+  async function check(): Promise<string | null> {
+    switch (kind) {
+      case "lead": {
+        if (!partnerId) return null;
+        const { data: r } = await s
+          .from("partner_leads")
+          .select("id, full_name")
+          .eq("id", id)
+          .or(`owner_partner_id.eq.${partnerId},assigned_partner_id.eq.${partnerId}`)
+          .maybeSingle();
+        return r ? `Lead • ${r.full_name ?? "—"}` : null;
+      }
+      case "payment_submission": {
+        if (!partnerId) return null;
+        const { data: r } = await s
+          .from("partner_payment_submissions")
+          .select("id, utr, amount")
+          .eq("id", id)
+          .eq("partner_id", partnerId)
+          .maybeSingle();
+        return r ? `Payment Submission • ${r.utr ?? r.id.slice(0, 8)}` : null;
+      }
+      case "payout": {
+        if (!partnerId) return null;
+        const { data: r } = await s
+          .from("payouts")
+          .select("id, reference, status")
+          .eq("id", id)
+          .eq("partner_id", partnerId)
+          .maybeSingle();
+        return r ? `Payout • ${r.reference ?? r.id.slice(0, 8)}` : null;
+      }
+      case "referral": {
+        if (!partnerId) return null;
+        const { data: r } = await s
+          .from("partner_referrals")
+          .select("id, status")
+          .eq("id", id)
+          .or(`referrer_partner_id.eq.${partnerId},referred_partner_id.eq.${partnerId}`)
+          .maybeSingle();
+        return r ? `Referral • ${r.status ?? r.id.slice(0, 8)}` : null;
+      }
+      case "brand_profile": {
+        if (!partnerId) return null;
+        const { data: r } = await s
+          .from("partner_brand_profiles")
+          .select("id, brand_name")
+          .eq("id", id)
+          .eq("partner_id", partnerId)
+          .maybeSingle();
+        return r ? `Brand Profile • ${r.brand_name ?? "—"}` : null;
+      }
+      case "payment_link": {
+        if (!partnerId) return null;
+        const { data: r } = await s
+          .from("payment_links")
+          .select("id, name, code")
+          .eq("id", id)
+          .maybeSingle();
+        return r ? `Payment Link • ${r.name ?? r.code ?? "—"}` : null;
+      }
+      case "program": {
+        const { data: r } = await s
+          .from("courses")
+          .select("id, name")
+          .eq("id", id)
+          .maybeSingle();
+        return r ? `Program • ${r.name ?? "—"}` : null;
+      }
+      case "application": {
+        const { data: r } = await s
+          .from("partner_applications")
+          .select("id, status")
+          .eq("id", id)
+          .eq("user_id", userId)
+          .maybeSingle();
+        return r ? `Application • ${r.status ?? r.id.slice(0, 8)}` : null;
+      }
+    }
+    return null;
+  }
+
+  const reference = await check();
+  return { valid: !!reference, reference, kind };
+}
+
 // ---- Validate a Related Record belongs to the current partner ----
 const ValidateRelatedInput = z.object({
   kind: z.enum(PARTNER_SUPPORT_RELATED_KINDS),
@@ -446,105 +546,10 @@ const ValidateRelatedInput = z.object({
 export const validatePartnerSupportRelatedRecord = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => ValidateRelatedInput.parse(d))
-  .handler(async ({ data, context }): Promise<{
-    valid: boolean;
-    reference: string | null;
-    kind: PartnerSupportRelatedKind;
-  }> => {
-    const s = context.supabase as any;
-    // Resolve caller's partner_id (may be null for pending applicants)
-    const { data: p } = await s
-      .from("partners")
-      .select("id")
-      .eq("user_id", context.userId)
-      .maybeSingle();
-    const partnerId = p?.id as string | undefined;
+  .handler(async ({ data, context }) =>
+    validateRelatedRecordImpl(context.supabase, context.userId, data.kind, data.id),
+  );
 
-    async function check(): Promise<string | null> {
-      switch (data.kind) {
-        case "lead": {
-          if (!partnerId) return null;
-          const { data: r } = await s
-            .from("partner_leads")
-            .select("id, full_name")
-            .eq("id", data.id)
-            .or(`owner_partner_id.eq.${partnerId},assigned_partner_id.eq.${partnerId}`)
-            .maybeSingle();
-          return r ? `Lead • ${r.full_name ?? "—"}` : null;
-        }
-        case "payment_submission": {
-          if (!partnerId) return null;
-          const { data: r } = await s
-            .from("partner_payment_submissions")
-            .select("id, utr, amount")
-            .eq("id", data.id)
-            .eq("partner_id", partnerId)
-            .maybeSingle();
-          return r ? `Payment Submission • ${r.utr ?? r.id.slice(0, 8)}` : null;
-        }
-        case "payout": {
-          if (!partnerId) return null;
-          const { data: r } = await s
-            .from("payouts")
-            .select("id, reference, status")
-            .eq("id", data.id)
-            .eq("partner_id", partnerId)
-            .maybeSingle();
-          return r ? `Payout • ${r.reference ?? r.id.slice(0, 8)}` : null;
-        }
-        case "referral": {
-          if (!partnerId) return null;
-          const { data: r } = await s
-            .from("partner_referrals")
-            .select("id, status")
-            .eq("id", data.id)
-            .or(`referrer_partner_id.eq.${partnerId},referred_partner_id.eq.${partnerId}`)
-            .maybeSingle();
-          return r ? `Referral • ${r.status ?? r.id.slice(0, 8)}` : null;
-        }
-        case "brand_profile": {
-          if (!partnerId) return null;
-          const { data: r } = await s
-            .from("partner_brand_profiles")
-            .select("id, brand_name")
-            .eq("id", data.id)
-            .eq("partner_id", partnerId)
-            .maybeSingle();
-          return r ? `Brand Profile • ${r.brand_name ?? "—"}` : null;
-        }
-        case "payment_link": {
-          if (!partnerId) return null;
-          const { data: r } = await s
-            .from("payment_links")
-            .select("id, name, code")
-            .eq("id", data.id)
-            .maybeSingle();
-          return r ? `Payment Link • ${r.name ?? r.code ?? "—"}` : null;
-        }
-        case "program": {
-          const { data: r } = await s
-            .from("courses")
-            .select("id, name")
-            .eq("id", data.id)
-            .maybeSingle();
-          return r ? `Program • ${r.name ?? "—"}` : null;
-        }
-        case "application": {
-          const { data: r } = await s
-            .from("partner_applications")
-            .select("id, status")
-            .eq("id", data.id)
-            .eq("user_id", context.userId)
-            .maybeSingle();
-          return r ? `Application • ${r.status ?? r.id.slice(0, 8)}` : null;
-        }
-      }
-      return null;
-    }
-
-    const reference = await check();
-    return { valid: !!reference, reference, kind: data.kind };
-  });
 
 // ---- Generate an editable Issue Summary from an AI conversation ----
 const IssueSummaryInput = z.object({
@@ -643,3 +648,502 @@ export const generatePartnerSupportIssueSummary = createServerFn({ method: "POST
       throw new Error("Unable to prepare the issue summary.");
     return { title, summary, category: suggestedCategory };
   });
+
+// =========================================================================
+// PART 8B-2: Attachments, Submission, My Support Requests
+// =========================================================================
+
+const SUPPORT_BUCKET = "support-attachments";
+const ALLOWED_ATT_TYPES = ["image/png", "image/jpeg", "image/jpg", "application/pdf"];
+const MAX_ATT_BYTES = 8 * 1024 * 1024; // 8 MB
+const MAX_ATT_COUNT = 5;
+
+export type PartnerSupportAttachment = {
+  path: string;
+  name: string;
+  type: string;
+  size: number;
+};
+
+function safeFilename(input: string): string {
+  const s = input.replace(/[^\w.\-]+/g, "_").slice(-80);
+  return s || "file";
+}
+
+async function resolvePartnerId(ctx: any): Promise<string> {
+  const { data } = await ctx.supabase
+    .from("partners")
+    .select("id")
+    .eq("user_id", ctx.userId)
+    .maybeSingle();
+  if (!data?.id) throw new Error("Partner profile not found. Only Glintr partners can submit Partner Support Requests.");
+  return data.id as string;
+}
+
+// ---- Begin attachment upload (issues a signed upload URL) ----
+const BeginUploadInput = z.object({
+  filename: z.string().trim().min(1).max(200),
+  contentType: z.string().max(120),
+  size: z.number().int().nonnegative().max(MAX_ATT_BYTES),
+});
+
+export const beginPartnerSupportAttachmentUpload = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => BeginUploadInput.parse(d))
+  .handler(async ({ data, context }): Promise<{
+    path: string;
+    signedUrl: string;
+    token: string;
+    bucket: string;
+  }> => {
+    if (!ALLOWED_ATT_TYPES.includes(data.contentType.toLowerCase())) {
+      throw new Error("Only PNG, JPG or PDF files are supported.");
+    }
+    const partnerId = await resolvePartnerId(context);
+    const nonce = crypto.randomUUID();
+    const name = safeFilename(data.filename);
+    const path = `${partnerId}/drafts/${nonce}/${name}`;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: up, error } = await supabaseAdmin
+      .storage.from(SUPPORT_BUCKET).createSignedUploadUrl(path);
+    if (error || !up) throw new Error("Unable to prepare secure upload.");
+    return { path, signedUrl: up.signedUrl, token: up.token, bucket: SUPPORT_BUCKET };
+  });
+
+// ---- Signed view URL for an attachment (partner ownership enforced) ----
+const ViewInput = z.object({ path: z.string().min(1).max(500) });
+
+export const getPartnerSupportAttachmentViewUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ViewInput.parse(d))
+  .handler(async ({ data, context }): Promise<{ url: string | null }> => {
+    const partnerId = await resolvePartnerId(context);
+    if (!data.path.startsWith(`${partnerId}/`)) return { url: null };
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: signed } = await supabaseAdmin
+      .storage.from(SUPPORT_BUCKET).createSignedUrl(data.path, 300);
+    return { url: signed?.signedUrl ?? null };
+  });
+
+// ---- Remove a draft attachment (path must be under this partner's drafts) ----
+export const removePartnerSupportDraftAttachment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ViewInput.parse(d))
+  .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
+    const partnerId = await resolvePartnerId(context);
+    if (!data.path.startsWith(`${partnerId}/drafts/`)) {
+      throw new Error("Cannot remove attachments outside your draft workspace.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.storage.from(SUPPORT_BUCKET).remove([data.path]);
+    return { ok: true };
+  });
+
+// ---- Similar open request detection ----
+const OPEN_STATUSES = ["open", "assigned", "under_review", "waiting_partner", "admin_replied"];
+
+const SimilarInput = z.object({
+  category: z.enum(PARTNER_SUPPORT_CATEGORIES),
+  related: z
+    .object({
+      kind: z.enum(PARTNER_SUPPORT_RELATED_KINDS),
+      id: z.string().uuid(),
+    })
+    .optional()
+    .nullable(),
+});
+
+async function findSimilarOpenImpl(
+  supabase: any,
+  partnerId: string,
+  category: PartnerSupportCategory,
+  related: { kind: PartnerSupportRelatedKind; id: string } | null,
+): Promise<{
+  ticket_code: string;
+  category: string;
+  subject: string;
+  status: string;
+  created_at: string;
+} | null> {
+  const s = supabase;
+  const { data: rows } = await s
+    .from("partner_support_tickets")
+    .select(
+      "ticket_code, category, subject, status, created_at, related_lead_id, related_payout_id, related_payment_submission_id, related_referral_id, related_program_id, related_brand_profile_id, related_payment_link_id",
+    )
+    .eq("partner_id", partnerId)
+    .eq("category", CATEGORY_TO_TICKET_ENUM[category])
+    .in("status", OPEN_STATUSES)
+    .order("created_at", { ascending: false })
+    .limit(20);
+  if (!rows?.length) return null;
+  const first = (r: any) => ({
+    ticket_code: r.ticket_code,
+    category: r.category,
+    subject: r.subject,
+    status: r.status,
+    created_at: r.created_at,
+  });
+  if (!related || related.kind === "application") return first(rows[0]);
+  const col: Record<Exclude<PartnerSupportRelatedKind, "application">, string> = {
+    lead: "related_lead_id",
+    payment_submission: "related_payment_submission_id",
+    payout: "related_payout_id",
+    referral: "related_referral_id",
+    brand_profile: "related_brand_profile_id",
+    program: "related_program_id",
+    payment_link: "related_payment_link_id",
+  };
+  const match = (rows as any[]).find((r) => r[col[related.kind as keyof typeof col]] === related.id);
+  return match ? first(match) : null;
+}
+
+export const findSimilarOpenPartnerSupportRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SimilarInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const partnerId = await resolvePartnerId(context);
+    return findSimilarOpenImpl(context.supabase, partnerId, data.category, data.related ?? null);
+  });
+
+
+// ---- Submit a Partner Support Request ----
+const AttachmentSchema = z.object({
+  path: z.string().min(1).max(500),
+  name: z.string().max(200),
+  type: z.string().max(120),
+  size: z.number().int().nonnegative().max(MAX_ATT_BYTES),
+});
+
+const SubmitInput = z.object({
+  category: z.enum(PARTNER_SUPPORT_CATEGORIES),
+  title: z.string().trim().min(3).max(120),
+  summary: z.string().trim().min(10).max(3500),
+  details: z.string().trim().max(2000).optional(),
+  related: z
+    .object({ kind: z.enum(PARTNER_SUPPORT_RELATED_KINDS), id: z.string().uuid() })
+    .nullable()
+    .optional(),
+  attachments: z.array(AttachmentSchema).max(MAX_ATT_COUNT).optional(),
+  confirmDistinct: z.boolean().optional(),
+  nonce: z.string().min(6).max(80),
+});
+
+// Map partner-support category → partner_support_tickets category enum
+const CATEGORY_TO_TICKET_ENUM: Record<PartnerSupportCategory, string> = {
+  partner_application: "application",
+  partner_model: "revenue_share",
+  referral: "referral_bonus",
+  lead_creation: "lead_issue",
+  lead_visibility: "lead_issue",
+  lead_status: "lead_issue",
+  lead_ownership: "lead_ownership",
+  duplicate_lead: "duplicate_utr",
+  verified_enrollment: "payment_verification",
+  missing_commission: "earnings_issue",
+  earnings: "earnings_issue",
+  available_earnings: "earnings_issue",
+  payout_request: "payout",
+  payout_status: "payout_delay",
+  partner_account: "account_problem",
+  technical_issue: "technical_issue",
+  other: "other",
+};
+
+const RELATED_COL: Record<PartnerSupportRelatedKind, string | null> = {
+  lead: "related_lead_id",
+  payment_submission: "related_payment_submission_id",
+  payout: "related_payout_id",
+  referral: "related_referral_id",
+  brand_profile: "related_brand_profile_id",
+  program: "related_program_id",
+  payment_link: "related_payment_link_id",
+  application: null, // no dedicated column
+};
+
+export const submitPartnerSupportRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => SubmitInput.parse(d))
+  .handler(async ({ data, context }): Promise<{
+    ticket_code: string;
+    status: string;
+    created_at: string;
+    duplicate?: {
+      ticket_code: string;
+      category: string;
+      subject: string;
+      status: string;
+      created_at: string;
+    };
+  }> => {
+    const partnerId = await resolvePartnerId(context);
+    const s = context.supabase as any;
+
+    // Idempotency: same partner + same nonce within 24h → return existing
+    const nonceMarker = `[nonce:${data.nonce}]`;
+    const { data: existingByNonce } = await s
+      .from("partner_support_tickets")
+      .select("ticket_code, status, created_at")
+      .eq("partner_id", partnerId)
+      .ilike("description", `%${nonceMarker}%`)
+      .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
+      .maybeSingle();
+    if (existingByNonce) {
+      return {
+        ticket_code: existingByNonce.ticket_code,
+        status: existingByNonce.status,
+        created_at: existingByNonce.created_at,
+      };
+    }
+
+    // Revalidate related record at submission time
+    let relatedInsert: Record<string, string | null> = {};
+    if (data.related) {
+      const check = await validateRelatedRecordImpl(
+        context.supabase,
+        context.userId,
+        data.related.kind,
+        data.related.id,
+      );
+      if (!check.valid) {
+        throw new Error("The related record is no longer accessible for this Partner Support Request.");
+      }
+      const col = RELATED_COL[data.related.kind];
+      if (col) relatedInsert[col] = data.related.id;
+    }
+
+    // Similar-open detection (unless partner confirmed distinct)
+    if (!data.confirmDistinct) {
+      const similar = await findSimilarOpenImpl(
+        context.supabase,
+        partnerId,
+        data.category,
+        data.related ?? null,
+      );
+      if (similar) {
+        return {
+          ticket_code: "",
+          status: "similar_found",
+          created_at: new Date().toISOString(),
+          duplicate: similar,
+        };
+      }
+    }
+
+
+    // Validate attachments belong to this partner's draft workspace
+    const attachments = (data.attachments ?? []).filter((a) =>
+      a.path.startsWith(`${partnerId}/drafts/`),
+    );
+    if (attachments.length !== (data.attachments ?? []).length) {
+      throw new Error("One or more attachments are not authorised.");
+    }
+    for (const a of attachments) {
+      if (!ALLOWED_ATT_TYPES.includes(a.type.toLowerCase())) {
+        throw new Error("Only PNG, JPG or PDF files are supported.");
+      }
+      if (a.size > MAX_ATT_BYTES) throw new Error("Attachment too large.");
+    }
+
+    // Build the ticket row
+    const compositeDescription = [
+      data.summary.trim(),
+      data.details?.trim() ? `\n\nAdditional Details:\n${data.details.trim()}` : "",
+      `\n\n${nonceMarker}`,
+    ].join("");
+
+    const attachmentUrl = attachments.length
+      ? JSON.stringify(attachments)
+      : null;
+
+    const insertRow = {
+      partner_id: partnerId,
+      category: CATEGORY_TO_TICKET_ENUM[data.category] as any,
+      subject: data.title,
+      description: compositeDescription,
+      priority: "medium",
+      status: "open" as const,
+      attachment_url: attachmentUrl,
+      last_activity_at: new Date().toISOString(),
+      ...relatedInsert,
+    };
+
+    const { data: ticket, error } = await s
+      .from("partner_support_tickets")
+      .insert(insertRow)
+      .select("id, ticket_code, status, created_at")
+      .single();
+    if (error) throw new Error("Unable to submit the Partner Support Request.");
+
+    await s.from("partner_support_activity").insert({
+      ticket_id: ticket.id,
+      action: "ticket_created",
+      actor_user_id: context.userId,
+      actor_role: "partner",
+    });
+
+    return {
+      ticket_code: ticket.ticket_code,
+      status: ticket.status,
+      created_at: ticket.created_at,
+    };
+  });
+
+// ---- List my partner support requests ----
+const ListInput = z.object({
+  status: z.enum(["all", "open", "resolved"]).optional(),
+  page: z.number().int().min(1).max(50).optional(),
+  pageSize: z.number().int().min(1).max(50).optional(),
+});
+
+export type PartnerSupportRequestListItem = {
+  ticket_code: string;
+  category: string;
+  subject: string;
+  status: string;
+  created_at: string;
+  last_activity_at: string;
+};
+
+export const listMyPartnerSupportRequests = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ListInput.parse(d ?? {}))
+  .handler(async ({ data, context }): Promise<{
+    requests: PartnerSupportRequestListItem[];
+    page: number;
+    pageSize: number;
+    total: number;
+  }> => {
+    const partnerId = await resolvePartnerId(context);
+    const s = context.supabase as any;
+    const page = data.page ?? 1;
+    const pageSize = data.pageSize ?? 20;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    let q = s
+      .from("partner_support_tickets")
+      .select("ticket_code, category, subject, status, created_at, last_activity_at", {
+        count: "exact",
+      })
+      .eq("partner_id", partnerId)
+      .order("last_activity_at", { ascending: false })
+      .range(from, to);
+
+    if (data.status === "open") q = q.in("status", OPEN_STATUSES);
+    if (data.status === "resolved") q = q.in("status", ["resolved", "closed"]);
+
+    const { data: rows, count, error } = await q;
+    if (error) throw new Error("Unable to load Partner Support Requests.");
+
+    const requests = (rows ?? []).map((r: any) => ({
+      ticket_code: r.ticket_code as string,
+      category: r.category as string,
+      subject: r.subject as string,
+      status: r.status as string,
+      created_at: r.created_at as string,
+      last_activity_at: r.last_activity_at as string,
+    }));
+    return { requests, page, pageSize, total: count ?? requests.length };
+  });
+
+// ---- Get a single partner support request by public reference (ticket_code) ----
+const DetailInput = z.object({ ref: z.string().min(3).max(60) });
+
+export const getMyPartnerSupportRequest = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => DetailInput.parse(d))
+  .handler(async ({ data, context }): Promise<{
+    ticket_code: string;
+    category: string;
+    subject: string;
+    summary: string;
+    details: string | null;
+    status: string;
+    created_at: string;
+    last_activity_at: string;
+    attachments: PartnerSupportAttachment[];
+    related: { kind: PartnerSupportRelatedKind; reference: string } | null;
+    messages: Array<{ is_admin: boolean; body: string; created_at: string }>;
+  }> => {
+    const partnerId = await resolvePartnerId(context);
+    const s = context.supabase as any;
+    const { data: ticket } = await s
+      .from("partner_support_tickets")
+      .select("*")
+      .eq("partner_id", partnerId)
+      .eq("ticket_code", data.ref)
+      .maybeSingle();
+    if (!ticket) throw new Error("Partner Support Request not found.");
+
+    // Split summary + details + nonce marker
+    const desc: string = ticket.description ?? "";
+    const nonceStripped = desc.replace(/\n*\[nonce:[^\]]+\]\s*$/i, "").trim();
+    const parts = nonceStripped.split(/\n\nAdditional Details:\n/);
+    const summary = (parts[0] ?? "").trim();
+    const details = parts.length > 1 ? parts.slice(1).join("\n\nAdditional Details:\n").trim() : null;
+
+    // Attachments
+    let attachments: PartnerSupportAttachment[] = [];
+    if (ticket.attachment_url) {
+      try {
+        const parsed = JSON.parse(ticket.attachment_url);
+        if (Array.isArray(parsed)) {
+          attachments = parsed.filter(
+            (a: any) => typeof a?.path === "string" && a.path.startsWith(`${partnerId}/`),
+          );
+        }
+      } catch {
+        /* legacy single-string url — ignore */
+      }
+    }
+
+    // Related
+    let related: { kind: PartnerSupportRelatedKind; reference: string } | null = null;
+    const relCheck = async (kind: PartnerSupportRelatedKind, id: string) => {
+      const r = await validateRelatedRecordImpl(context.supabase, context.userId, kind, id);
+      if (r.valid && r.reference) related = { kind, reference: r.reference };
+    };
+    if (ticket.related_lead_id) await relCheck("lead", ticket.related_lead_id);
+    else if (ticket.related_payout_id) await relCheck("payout", ticket.related_payout_id);
+    else if (ticket.related_payment_submission_id) await relCheck("payment_submission", ticket.related_payment_submission_id);
+    else if (ticket.related_referral_id) await relCheck("referral", ticket.related_referral_id);
+    else if (ticket.related_brand_profile_id) await relCheck("brand_profile", ticket.related_brand_profile_id);
+    else if (ticket.related_payment_link_id) await relCheck("payment_link", ticket.related_payment_link_id);
+    else if (ticket.related_program_id) await relCheck("program", ticket.related_program_id);
+
+    const { data: msgs } = await s
+      .from("partner_support_messages")
+      .select("is_admin, body, created_at")
+      .eq("ticket_id", ticket.id)
+      .eq("is_internal", false)
+      .order("created_at", { ascending: true });
+
+    return {
+      ticket_code: ticket.ticket_code,
+      category: ticket.category as string,
+      subject: ticket.subject,
+      summary,
+      details,
+      status: ticket.status,
+      created_at: ticket.created_at,
+      last_activity_at: ticket.last_activity_at,
+      attachments,
+      related,
+      messages: msgs ?? [],
+    };
+  });
+
+export const PARTNER_SUPPORT_STATUS_LABELS: Record<string, string> = {
+  open: "Submitted",
+  assigned: "Under Review",
+  under_review: "Under Review",
+  waiting_partner: "Waiting For You",
+  admin_replied: "Partner Support Replied",
+  resolved: "Resolved",
+  closed: "Closed",
+};
+
+export function isOpenSupportStatus(status: string) {
+  return OPEN_STATUSES.includes(status);
+}
