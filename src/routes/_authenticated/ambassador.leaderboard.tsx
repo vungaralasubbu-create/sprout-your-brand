@@ -104,7 +104,7 @@ function LeaderboardPage() {
   const navigate = Route.useNavigate();
   const tab = search.tab ?? "overall";
   const setTab = (v: string) =>
-    navigate({ search: (prev) => ({ ...prev, tab: v as LbSearch["tab"] }) });
+    navigate({ search: (prev: LbSearch) => ({ ...prev, tab: v as LbSearch["tab"] }) });
 
   const meFn = useServerFn(getMyLeaderboardRank);
   const myQ = useQuery({
