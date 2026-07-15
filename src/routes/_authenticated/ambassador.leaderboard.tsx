@@ -36,6 +36,12 @@ import {
 } from "@/lib/campus-ambassador/leaderboard.functions";
 import { cn } from "@/lib/utils";
 
+type LbSearch = {
+  tab?: "overall" | "monthly" | "college" | "programs" | "campaigns";
+  programId?: string;
+  campaignId?: string;
+};
+
 export const Route = createFileRoute("/_authenticated/ambassador/leaderboard")({
   head: () => ({
     meta: [
@@ -43,6 +49,16 @@ export const Route = createFileRoute("/_authenticated/ambassador/leaderboard")({
       { name: "robots", content: "noindex" },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): LbSearch => {
+    const tab = s.tab;
+    const allowed = ["overall","monthly","college","programs","campaigns"] as const;
+    return {
+      tab: typeof tab === "string" && (allowed as readonly string[]).includes(tab)
+        ? (tab as LbSearch["tab"]) : undefined,
+      programId: typeof s.programId === "string" ? s.programId : undefined,
+      campaignId: typeof s.campaignId === "string" ? s.campaignId : undefined,
+    };
+  },
   component: LeaderboardPage,
 });
 
