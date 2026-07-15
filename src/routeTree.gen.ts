@@ -13,9 +13,11 @@ import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
+import { Route as PayoutSystemRouteImport } from './routes/payout-system'
 import { Route as PartnerSupportRouteImport } from './routes/partner-support'
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as JoinRouteImport } from './routes/join'
+import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -192,6 +194,11 @@ const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
   path: '/sales-opportunity',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PayoutSystemRoute = PayoutSystemRouteImport.update({
+  id: '/payout-system',
+  path: '/payout-system',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PartnerSupportRoute = PartnerSupportRouteImport.update({
   id: '/partner-support',
   path: '/partner-support',
@@ -205,6 +212,11 @@ const PartnerNetworkRoute = PartnerNetworkRouteImport.update({
 const JoinRoute = JoinRouteImport.update({
   id: '/join',
   path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IncomeCalculatorRoute = IncomeCalculatorRouteImport.update({
+  id: '/income-calculator',
+  path: '/income-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqsRoute = FaqsRouteImport.update({
@@ -1115,9 +1127,11 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
+  '/payout-system': typeof PayoutSystemRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -1278,9 +1292,11 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
+  '/payout-system': typeof PayoutSystemRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -1440,9 +1456,11 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
+  '/payout-system': typeof PayoutSystemRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -1605,9 +1623,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/earn'
     | '/faqs'
+    | '/income-calculator'
     | '/join'
     | '/partner-network'
     | '/partner-support'
+    | '/payout-system'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/student-support'
@@ -1768,9 +1788,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/earn'
     | '/faqs'
+    | '/income-calculator'
     | '/join'
     | '/partner-network'
     | '/partner-support'
+    | '/payout-system'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/student-support'
@@ -1929,9 +1951,11 @@ export interface FileRouteTypes {
     | '/contact'
     | '/earn'
     | '/faqs'
+    | '/income-calculator'
     | '/join'
     | '/partner-network'
     | '/partner-support'
+    | '/payout-system'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/student-support'
@@ -2094,9 +2118,11 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   EarnRoute: typeof EarnRoute
   FaqsRoute: typeof FaqsRouteWithChildren
+  IncomeCalculatorRoute: typeof IncomeCalculatorRoute
   JoinRoute: typeof JoinRoute
   PartnerNetworkRoute: typeof PartnerNetworkRoute
   PartnerSupportRoute: typeof PartnerSupportRouteWithChildren
+  PayoutSystemRoute: typeof PayoutSystemRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
@@ -2145,6 +2171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalesOpportunityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payout-system': {
+      id: '/payout-system'
+      path: '/payout-system'
+      fullPath: '/payout-system'
+      preLoaderRoute: typeof PayoutSystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/partner-support': {
       id: '/partner-support'
       path: '/partner-support'
@@ -2164,6 +2197,13 @@ declare module '@tanstack/react-router' {
       path: '/join'
       fullPath: '/join'
       preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/income-calculator': {
+      id: '/income-calculator'
+      path: '/income-calculator'
+      fullPath: '/income-calculator'
+      preLoaderRoute: typeof IncomeCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faqs': {
@@ -3829,9 +3869,11 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   EarnRoute: EarnRoute,
   FaqsRoute: FaqsRouteWithChildren,
+  IncomeCalculatorRoute: IncomeCalculatorRoute,
   JoinRoute: JoinRoute,
   PartnerNetworkRoute: PartnerNetworkRoute,
   PartnerSupportRoute: PartnerSupportRouteWithChildren,
+  PayoutSystemRoute: PayoutSystemRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudentSupportRoute: StudentSupportRouteWithChildren,

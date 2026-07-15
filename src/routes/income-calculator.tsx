@@ -49,7 +49,7 @@ function IncomeCalculatorPage() {
     <>
       <SiteHeader />
       <main>
-        <Section spacing="lg">
+        <Section >
           <Container>
             <SectionHeader
               eyebrow="Partner Income Calculator"

@@ -118,10 +118,10 @@ function PayoutSystemPage() {
       <SiteHeader />
       <main>
         {/* Hero */}
-        <Section spacing="lg">
+        <Section >
           <Container>
             <div className="mx-auto max-w-3xl text-center">
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="muted" className="mb-4">
                 Glintr Payout System
               </Badge>
               <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
@@ -146,7 +146,7 @@ function PayoutSystemPage() {
         </Section>
 
         {/* How Payouts Work / Journey */}
-        <Section spacing="lg">
+        <Section >
           <Container>
             <SectionHeader
               eyebrow="How Payouts Work"
@@ -181,7 +181,7 @@ function PayoutSystemPage() {
         </Section>
 
         {/* Payout Status Explanation */}
-        <Section spacing="lg" className="bg-muted/30">
+        <Section className="bg-muted/30">
           <Container>
             <SectionHeader
               eyebrow="Payout Status Explanation"
@@ -203,7 +203,7 @@ function PayoutSystemPage() {
         </Section>
 
         {/* Payout Safety */}
-        <Section spacing="lg">
+        <Section >
           <Container>
             <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
               <SafetyCard
@@ -226,7 +226,7 @@ function PayoutSystemPage() {
         </Section>
 
         {/* Partner Dashboard Connection */}
-        <Section spacing="lg" className="bg-muted/30">
+        <Section className="bg-muted/30">
           <Container>
             <div className="mx-auto max-w-3xl text-center">
               <SectionHeader
@@ -253,7 +253,7 @@ function PayoutSystemPage() {
         </Section>
 
         {/* FAQs */}
-        <Section spacing="lg">
+        <Section >
           <Container>
             <SectionHeader
               eyebrow="FAQs"
@@ -274,7 +274,7 @@ function PayoutSystemPage() {
         </Section>
 
         {/* Final CTA */}
-        <Section spacing="lg" className="bg-muted/30">
+        <Section className="bg-muted/30">
           <Container>
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-3xl font-semibold tracking-tight">
