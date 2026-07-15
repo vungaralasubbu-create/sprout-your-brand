@@ -133,6 +133,11 @@ function LeaderboardPage() {
         <MyRankCard loading={myQ.isLoading} error={myQ.isError} me={me}
           onRetry={() => myQ.refetch()} />
 
+        <HowRankingsWork
+          leaderboardType={(tab ?? "overall") as "overall" | "monthly" | "college" | "program" | "campaign"}
+        />
+
+
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="bg-slate-100 rounded-xl p-1 flex-wrap h-auto">
             <TabsTrigger value="overall" className="rounded-lg">Overall</TabsTrigger>
