@@ -841,7 +841,104 @@ export const findSimilarOpenStudentSupportRequest = createServerFn({ method: "PO
     };
   });
 
+// =========================================================================
+// PART 9B-2: Attachments (drafts), Submission w/ attachments, List, Detail
+// =========================================================================
+
+const SUPPORT_BUCKET = "support-attachments";
+const ALLOWED_ATT_TYPES = ["image/png", "image/jpeg", "image/jpg", "application/pdf"];
+const MAX_ATT_BYTES = 8 * 1024 * 1024;
+const MAX_ATT_COUNT = 5;
+
+export type StudentSupportAttachment = {
+  path: string;
+  name: string;
+  type: string;
+  size: number;
+};
+
+function safeFilename(input: string): string {
+  const s = input.replace(/[^\w.\-]+/g, "_").slice(-80);
+  return s || "file";
+}
+
+const BeginUploadInput = z.object({
+  filename: z.string().trim().min(1).max(200),
+  contentType: z.string().max(120),
+  size: z.number().int().nonnegative().max(MAX_ATT_BYTES),
+});
+
+export const beginStudentSupportAttachmentUpload = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => BeginUploadInput.parse(d))
+  .handler(async ({ data, context }): Promise<{
+    path: string;
+    signedUrl: string;
+    token: string;
+    bucket: string;
+  }> => {
+    if (!ALLOWED_ATT_TYPES.includes(data.contentType.toLowerCase())) {
+      throw new Error("Only PNG, JPG or PDF files are supported.");
+    }
+    const nonce = crypto.randomUUID();
+    const name = safeFilename(data.filename);
+    const path = `student/${context.userId}/drafts/${nonce}/${name}`;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: up, error } = await supabaseAdmin
+      .storage.from(SUPPORT_BUCKET).createSignedUploadUrl(path);
+    if (error || !up) throw new Error("Unable to prepare secure upload.");
+    return { path, signedUrl: up.signedUrl, token: up.token, bucket: SUPPORT_BUCKET };
+  });
+
+const PathInput = z.object({ path: z.string().min(1).max(500) });
+
+export const removeStudentSupportDraftAttachment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => PathInput.parse(d))
+  .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
+    if (!data.path.startsWith(`student/${context.userId}/drafts/`)) {
+      throw new Error("Cannot remove attachments outside your draft workspace.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.storage.from(SUPPORT_BUCKET).remove([data.path]);
+    return { ok: true };
+  });
+
+const ViewInput = z.object({
+  ticketRef: z.string().min(1).max(80),
+  path: z.string().min(1).max(500),
+});
+
+export const getStudentSupportAttachmentViewUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ViewInput.parse(d))
+  .handler(async ({ data, context }): Promise<{ url: string | null }> => {
+    const s = context.supabase as any;
+    const { data: t } = await s
+      .from("student_support_tickets")
+      .select("id, student_user_id, attachments")
+      .eq("ticket_code", data.ticketRef)
+      .eq("student_user_id", context.userId)
+      .maybeSingle();
+    if (!t) return { url: null };
+    const ok = (((t as any).attachments as any[]) ?? []).some(
+      (a: any) => a?.path === data.path,
+    );
+    if (!ok) return { url: null };
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: signed } = await supabaseAdmin
+      .storage.from(SUPPORT_BUCKET).createSignedUrl(data.path, 300);
+    return { url: signed?.signedUrl ?? null };
+  });
+
 // ---- Submit escalation ----
+const AttachmentSchema = z.object({
+  path: z.string().min(1).max(500),
+  name: z.string().max(200),
+  type: z.string().max(120),
+  size: z.number().int().nonnegative().max(MAX_ATT_BYTES),
+});
+
 const StudentSubmitInput = z.object({
   category: z.enum(STUDENT_SUPPORT_CATEGORIES),
   title: z.string().trim().min(3).max(120),
@@ -849,6 +946,7 @@ const StudentSubmitInput = z.object({
   details: z.string().trim().max(2000).optional(),
   programId: z.string().uuid().nullable().optional(),
   supportIntent: z.string().max(80).nullable().optional(),
+  attachments: z.array(AttachmentSchema).max(MAX_ATT_COUNT).optional(),
   confirmDistinct: z.boolean().optional(),
   nonce: z.string().min(6).max(80),
 });
