@@ -201,7 +201,10 @@ function ProfileHeader({ profile, currentLevel, completion }: any) {
                 <Button asChild size="sm" variant="outline">
                   <Link to="/ambassador/recognition">View Recognition</Link>
                 </Button>
+              </div>
             </div>
+
+
 
             <div className="min-w-[180px]">
               <div className="text-xs text-slate-500 mb-1 flex justify-between">
