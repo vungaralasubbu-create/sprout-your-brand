@@ -473,26 +473,44 @@ function PartnerSupportPage() {
             </div>
 
             <div className="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-background">
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    "flex gap-3",
-                    m.role === "user" ? "justify-end" : "justify-start",
-                  )}
-                >
+              {messages.map((m, i) => {
+                // Show feedback only after actual AI guidance replies:
+                // skip the initial greeting (index 0) and skip if a newer
+                // user turn hasn't been answered yet.
+                const showFeedback =
+                  m.role === "assistant" && i > 0 && !isLoading && !errorMsg;
+                return (
                   <div
+                    key={i}
                     className={cn(
-                      "max-w-[85%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed",
-                      m.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-br-sm"
-                        : "bg-muted text-foreground rounded-bl-sm",
+                      "flex gap-3",
+                      m.role === "user" ? "justify-end" : "justify-start",
                     )}
                   >
-                    {m.content}
+                    <div
+                      className={cn(
+                        "max-w-[85%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed",
+                        m.role === "user"
+                          ? "bg-primary text-primary-foreground rounded-br-sm"
+                          : "bg-muted text-foreground rounded-bl-sm",
+                      )}
+                    >
+                      {m.content}
+                      {showFeedback && (
+                        <FeedbackControl
+                          value={feedback[i] ?? null}
+                          onSelect={(v) =>
+                            setFeedback((cur) => (cur[i] ? cur : { ...cur, [i]: v }))
+                          }
+                          onFollowUp={() => inputRef.current?.focus()}
+                          onGuided={scrollToGuided}
+                          onEscalate={() => openEscalation(false)}
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {isLoading && (
                 <div className="flex gap-3 justify-start">
                   <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-3 text-sm text-muted-foreground flex items-center gap-2">
