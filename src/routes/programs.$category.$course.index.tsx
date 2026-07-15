@@ -51,6 +51,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/client";
 import { cn } from "@/lib/utils";
+import { ProgramScrollProgress } from "@/components/programs/program-scroll-progress";
+import { ProgramHeroGraphic } from "@/components/programs/program-hero-graphic";
+
 
 const SITE_URL = "https://glintr.com";
 
@@ -259,7 +262,8 @@ function CoursePage() {
           {(() => {
             const heroImage = c.hero_image_url ?? c.thumbnail_url ?? null;
             return (
-          <div className={cn("grid gap-10 lg:gap-16 items-center", heroImage ? "lg:grid-cols-[1.2fr_1fr]" : "max-w-4xl") }>
+          <div className="grid gap-10 lg:gap-16 items-center lg:grid-cols-[1.2fr_1fr]">
+
             <Reveal>
               <div className="flex items-center gap-2 mb-5">
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -338,7 +342,12 @@ function CoursePage() {
                   />
                 </div>
               </Reveal>
-            ) : null}
+            ) : (
+              <Reveal delay={150}>
+                <ProgramHeroGraphic slug={c.slug} categorySlug={c.category.slug} />
+              </Reveal>
+            )}
+
           </div>
             );
           })()}
@@ -1179,12 +1188,14 @@ function NotFound() {
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <ProgramScrollProgress />
       <SiteHeader />
       <main className="pb-24 lg:pb-0">{children}</main>
       <SiteFooter />
     </>
   );
 }
+
 
 function useRelated(courseId?: string, categoryId?: string) {
   return useQuery({
