@@ -1209,6 +1209,69 @@ export type Database = {
           },
         ]
       }
+      ambassador_leaderboard_snapshots: {
+        Row: {
+          ambassador_id: string
+          college_key: string | null
+          created_at: string
+          finalised_at: string
+          id: string
+          leaderboard_type: string
+          metric_value: number
+          period_key: string
+          primary_metric: string
+          program_id: string | null
+          rank_position: number
+          rule_id: string | null
+          rule_version: number | null
+        }
+        Insert: {
+          ambassador_id: string
+          college_key?: string | null
+          created_at?: string
+          finalised_at?: string
+          id?: string
+          leaderboard_type: string
+          metric_value?: number
+          period_key: string
+          primary_metric: string
+          program_id?: string | null
+          rank_position: number
+          rule_id?: string | null
+          rule_version?: number | null
+        }
+        Update: {
+          ambassador_id?: string
+          college_key?: string | null
+          created_at?: string
+          finalised_at?: string
+          id?: string
+          leaderboard_type?: string
+          metric_value?: number
+          period_key?: string
+          primary_metric?: string
+          program_id?: string | null
+          rank_position?: number
+          rule_id?: string | null
+          rule_version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_leaderboard_snapshots_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_leaderboard_snapshots_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_ranking_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_level_assignments: {
         Row: {
           achieved_at: string
@@ -2083,6 +2146,163 @@ export type Database = {
             columns: ["parent_rule_id"]
             isOneToOne: false
             referencedRelation: "ambassador_ranking_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_recognition_achievements: {
+        Row: {
+          achieved_at: string
+          ambassador_id: string
+          badge_id: string | null
+          campaign_id: string | null
+          campaign_snapshot_id: string | null
+          college_key: string | null
+          created_at: string
+          final_rank: number
+          id: string
+          leaderboard_snapshot_id: string | null
+          program_id: string | null
+          ranking_period_key: string
+          recognition_description: string | null
+          recognition_rule_id: string
+          recognition_rule_version: number
+          recognition_title: string
+          status: string
+        }
+        Insert: {
+          achieved_at?: string
+          ambassador_id: string
+          badge_id?: string | null
+          campaign_id?: string | null
+          campaign_snapshot_id?: string | null
+          college_key?: string | null
+          created_at?: string
+          final_rank: number
+          id?: string
+          leaderboard_snapshot_id?: string | null
+          program_id?: string | null
+          ranking_period_key: string
+          recognition_description?: string | null
+          recognition_rule_id: string
+          recognition_rule_version: number
+          recognition_title: string
+          status?: string
+        }
+        Update: {
+          achieved_at?: string
+          ambassador_id?: string
+          badge_id?: string | null
+          campaign_id?: string | null
+          campaign_snapshot_id?: string | null
+          college_key?: string | null
+          created_at?: string
+          final_rank?: number
+          id?: string
+          leaderboard_snapshot_id?: string | null
+          program_id?: string | null
+          ranking_period_key?: string
+          recognition_description?: string | null
+          recognition_rule_id?: string
+          recognition_rule_version?: number
+          recognition_title?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_recognition_achievements_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_recognition_achievements_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_badges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_recognition_achievements_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_bonus_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_recognition_achievements_recognition_rule_id_fkey"
+            columns: ["recognition_rule_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_recognition_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_recognition_rules: {
+        Row: {
+          badge_id: string | null
+          created_at: string
+          effective_from: string
+          effective_until: string | null
+          eligible_positions: number[]
+          id: string
+          is_published: boolean
+          leaderboard_type: string
+          ranking_period_type: string
+          recognition_description: string | null
+          recognition_name: string
+          recognition_title: string
+          recognition_type: string
+          rule_code: string
+          rule_version: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          badge_id?: string | null
+          created_at?: string
+          effective_from?: string
+          effective_until?: string | null
+          eligible_positions?: number[]
+          id?: string
+          is_published?: boolean
+          leaderboard_type: string
+          ranking_period_type: string
+          recognition_description?: string | null
+          recognition_name: string
+          recognition_title: string
+          recognition_type: string
+          rule_code: string
+          rule_version?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          badge_id?: string | null
+          created_at?: string
+          effective_from?: string
+          effective_until?: string | null
+          eligible_positions?: number[]
+          id?: string
+          is_published?: boolean
+          leaderboard_type?: string
+          ranking_period_type?: string
+          recognition_description?: string | null
+          recognition_name?: string
+          recognition_title?: string
+          recognition_type?: string
+          rule_code?: string
+          rule_version?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_recognition_rules_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_badges"
             referencedColumns: ["id"]
           },
         ]
@@ -10824,6 +11044,27 @@ export type Database = {
           tie_breaker_3: Database["public"]["Enums"]["amb_tie_breaker_type"]
         }[]
       }
+      ambassador_award_recognition_badge: {
+        Args: {
+          _achievement_id: string
+          _ambassador_id: string
+          _badge_id: string
+        }
+        Returns: undefined
+      }
+      ambassador_evaluate_campaign_recognition: {
+        Args: { _campaign_id: string }
+        Returns: number
+      }
+      ambassador_evaluate_period_recognition: {
+        Args: {
+          _college_key?: string
+          _leaderboard_type: string
+          _period_key: string
+          _program_id?: string
+        }
+        Returns: number
+      }
       ambassador_leaderboard_campaign: {
         Args: {
           _campaign_id: string
@@ -11027,6 +11268,23 @@ export type Database = {
           has_college: boolean
         }[]
       }
+      ambassador_my_rank_history: {
+        Args: { _type?: string }
+        Returns: {
+          campaign_id: string
+          campaign_name: string
+          college_key: string
+          final_rank: number
+          finalised_at: string
+          leaderboard_type: string
+          metric_value: number
+          period_key: string
+          primary_metric: string
+          program_id: string
+          program_name: string
+          recognition_title: string
+        }[]
+      }
       ambassador_my_rank_movement: {
         Args: {
           _campaign_id?: string
@@ -11040,6 +11298,41 @@ export type Database = {
           is_new: boolean
           previous_rank: number
           rank_difference: number
+        }[]
+      }
+      ambassador_my_recognitions: {
+        Args: never
+        Returns: {
+          achieved_at: string
+          badge_icon: string
+          badge_id: string
+          badge_name: string
+          campaign_id: string
+          campaign_name: string
+          college_key: string
+          final_rank: number
+          id: string
+          leaderboard_type: string
+          program_id: string
+          program_name: string
+          ranking_period_key: string
+          recognition_title: string
+          recognition_type: string
+        }[]
+      }
+      ambassador_previous_monthly_leaders: {
+        Args: { _limit?: number }
+        Returns: {
+          ambassador_id: string
+          college_display: string
+          display_identity: string
+          finalised_at: string
+          level_icon: string
+          level_name: string
+          metric_value: number
+          period_key: string
+          photo_url: string
+          primary_metric: string
         }[]
       }
       ambassador_ranking_explanation: {

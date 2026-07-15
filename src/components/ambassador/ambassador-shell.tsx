@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   LayoutDashboard, Users, GraduationCap, Wallet, ScrollText,
   Sparkles, UserCircle, LifeBuoy, Menu, X, Compass, Banknote, Trophy,
+  Award, History,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +16,8 @@ const NAV = [
   { to: "/ambassador/commission-structure", label: "Commission Structure", icon: ScrollText },
   { to: "/ambassador/marketing-resources", label: "Marketing Resources", icon: Sparkles },
   { to: "/ambassador/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/ambassador/recognition", label: "Recognition", icon: Award },
+  { to: "/ambassador/rank-history", label: "Rank History", icon: History },
   { to: "/ambassador/profile", label: "My Profile", icon: UserCircle },
   { to: "/ambassador/settings", label: "Settings", icon: LifeBuoy },
 ] as const;
