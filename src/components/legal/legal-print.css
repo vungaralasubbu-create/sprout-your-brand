@@ -1,0 +1,21 @@
+/* Legal page print styles */
+@media print {
+  .legal-doc nav[aria-label="On this page"],
+  .legal-doc aside,
+  header,
+  footer {
+    display: none !important;
+  }
+  .legal-doc {
+    background: white !important;
+    color: black !important;
+  }
+  .legal-doc h1,
+  .legal-doc h2,
+  .legal-doc h3 {
+    page-break-after: avoid;
+  }
+  .legal-doc section {
+    page-break-inside: avoid;
+  }
+}
