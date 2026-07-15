@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
 import { Route as JoinRouteImport } from './routes/join'
@@ -21,6 +22,7 @@ import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
+import { Route as SuccessStoriesStorySlugRouteImport } from './routes/success-stories.$storySlug'
 import { Route as RefCodeRouteImport } from './routes/ref.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
@@ -154,6 +156,11 @@ import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImpo
 import { Route as AuthenticatedStudentInternshipIdTasksTaskIdRouteImport } from './routes/_authenticated/student.internship.$id.tasks.$taskId'
 import { Route as AuthenticatedStudentCareerInterviewIdReportRouteImport } from './routes/_authenticated/student.career.interview.$id.report'
 
+const SuccessStoriesRoute = SuccessStoriesRouteImport.update({
+  id: '/success-stories',
+  path: '/success-stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -212,6 +219,11 @@ const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   id: '/verify-certificate/$code',
   path: '/verify-certificate/$code',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SuccessStoriesStorySlugRoute = SuccessStoriesStorySlugRouteImport.update({
+  id: '/$storySlug',
+  path: '/$storySlug',
+  getParentRoute: () => SuccessStoriesRoute,
 } as any)
 const RefCodeRoute = RefCodeRouteImport.update({
   id: '/ref/$code',
@@ -1002,6 +1014,7 @@ export interface FileRoutesByFullPath {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1012,6 +1025,7 @@ export interface FileRoutesByFullPath {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -1147,6 +1161,7 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -1155,6 +1170,7 @@ export interface FileRoutesByTo {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
@@ -1291,6 +1307,7 @@ export interface FileRoutesById {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1301,6 +1318,7 @@ export interface FileRoutesById {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -1438,6 +1456,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/success-stories'
     | '/admin'
     | '/ambassador'
     | '/brand'
@@ -1448,6 +1467,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1583,6 +1603,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/success-stories'
     | '/ambassador'
     | '/brand'
     | '/partner'
@@ -1591,6 +1612,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador'
     | '/launch-your-brand'
@@ -1726,6 +1748,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/sales-opportunity'
     | '/sitemap.xml'
+    | '/success-stories'
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
     | '/_authenticated/brand'
@@ -1736,6 +1759,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1873,6 +1897,7 @@ export interface RootRouteChildren {
   JoinRoute: typeof JoinRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -1889,6 +1914,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/success-stories': {
+      id: '/success-stories'
+      path: '/success-stories'
+      fullPath: '/success-stories'
+      preLoaderRoute: typeof SuccessStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -1972,6 +2004,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/verify-certificate/$code'
       preLoaderRoute: typeof VerifyCertificateCodeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/success-stories/$storySlug': {
+      id: '/success-stories/$storySlug'
+      path: '/$storySlug'
+      fullPath: '/success-stories/$storySlug'
+      preLoaderRoute: typeof SuccessStoriesStorySlugRouteImport
+      parentRoute: typeof SuccessStoriesRoute
     }
     '/ref/$code': {
       id: '/ref/$code'
@@ -3368,6 +3407,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface SuccessStoriesRouteChildren {
+  SuccessStoriesStorySlugRoute: typeof SuccessStoriesStorySlugRoute
+}
+
+const SuccessStoriesRouteChildren: SuccessStoriesRouteChildren = {
+  SuccessStoriesStorySlugRoute: SuccessStoriesStorySlugRoute,
+}
+
+const SuccessStoriesRouteWithChildren = SuccessStoriesRoute._addFileChildren(
+  SuccessStoriesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -3377,6 +3428,7 @@ const rootRouteChildren: RootRouteChildren = {
   JoinRoute: JoinRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
