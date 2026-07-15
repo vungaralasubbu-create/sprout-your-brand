@@ -25,11 +25,36 @@ export const Route = createFileRoute("/student-support/requests")({
   head: () => ({
     meta: [
       { title: "My Student Support Requests — Glintr" },
-      { name: "robots", content: "noindex" },
+      { name: "robots", content: "noindex, nofollow, noarchive" },
     ],
   }),
   component: MyRequestsPage,
+  errorComponent: SupportRequestsError,
+  notFoundComponent: () => (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Page not found</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Return to <Link to="/student-support" className="underline">Student Support</Link>.
+      </p>
+    </main>
+  ),
 });
+
+function SupportRequestsError() {
+  return (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Something went wrong</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Please try again in a moment.
+      </p>
+      <div className="mt-4">
+        <Link to="/student-support" className="text-sm font-medium underline">
+          Return to Student Support
+        </Link>
+      </div>
+    </main>
+  );
+}
 
 type Filter = "all" | "open" | "resolved";
 
