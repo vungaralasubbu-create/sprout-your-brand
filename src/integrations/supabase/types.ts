@@ -10411,6 +10411,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ambassador_leaderboard_college: {
+        Args: { _limit?: number; _offset?: number; _search?: string }
+        Returns: {
+          ambassador_id: string
+          college_display: string
+          college_name: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_count: number
+          valid_referral_leads: number
+          verified_enrollments: number
+        }[]
+      }
       ambassador_leaderboard_featured_badges: {
         Args: { _ids: string[] }
         Returns: {
@@ -10419,6 +10436,62 @@ export type Database = {
           badge_icon: string
           badge_id: string
           badge_name: string
+        }[]
+      }
+      ambassador_leaderboard_monthly: {
+        Args: {
+          _limit?: number
+          _month: number
+          _offset?: number
+          _search?: string
+          _year: number
+        }
+        Returns: {
+          ambassador_id: string
+          college_display: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_count: number
+          valid_referral_leads: number
+          verified_enrollments: number
+        }[]
+      }
+      ambassador_leaderboard_my_college_rank: {
+        Args: never
+        Returns: {
+          ambassador_code: string
+          ambassador_id: string
+          college_name: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_ranked: number
+          valid_referral_leads: number
+          verified_enrollments: number
+        }[]
+      }
+      ambassador_leaderboard_my_monthly_rank: {
+        Args: { _month: number; _year: number }
+        Returns: {
+          ambassador_code: string
+          ambassador_id: string
+          college_display: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_ranked: number
+          valid_referral_leads: number
+          verified_enrollments: number
         }[]
       }
       ambassador_leaderboard_my_rank: {
@@ -10452,6 +10525,15 @@ export type Database = {
           total_count: number
           valid_referral_leads: number
           verified_enrollments: number
+        }[]
+      }
+      ambassador_my_college_context: {
+        Args: never
+        Returns: {
+          ambassador_id: string
+          college_key: string
+          college_name: string
+          has_college: boolean
         }[]
       }
       evaluate_ambassador_badges: {
