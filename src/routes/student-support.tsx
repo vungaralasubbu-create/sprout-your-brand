@@ -36,6 +36,10 @@ import {
   type StudentSupportIntent,
   type StudentSnapshot,
 } from "@/lib/student-support/student-support.functions";
+import {
+  LearningIssuesSection,
+  type LearningIssueLaunch,
+} from "@/components/student-support/learning-issues";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
@@ -545,6 +549,41 @@ function StudentSupportPage() {
             </div>
           </Card>
 
+          {/* ============= GUIDED LEARNING ISSUES ============= */}
+          <div className="mt-8">
+            <LearningIssuesSection
+              signedIn={signedIn}
+              snapshot={snapshot}
+              onAskAI={(launch: LearningIssueLaunch) => {
+                setIntent(launch.intent as StudentSupportIntent);
+                navigate({
+                  search: (p: Record<string, unknown>) => ({
+                    ...p,
+                    intent: launch.intent,
+                  }),
+                  replace: true,
+                });
+                const q = launch.courseName
+                  ? `${launch.question} (Program: ${launch.courseName})`
+                  : launch.question;
+                const next: ChatMsg[] = [
+                  ...messages,
+                  { role: "user", content: q },
+                ];
+                setMessages(next);
+                setErrorMsg(null);
+                send.mutate({
+                  history: next,
+                  nextIntent: launch.intent as StudentSupportIntent,
+                });
+                document
+                  .getElementById("student-support-ai")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
+          </div>
+
+
           {/* Related Glintr information + related student questions */}
           {(relatedLinks.length > 0 || relatedQuestions.length > 0) &&
             messages.some((m) => m.role === "user") && (
@@ -652,8 +691,23 @@ function getRelatedLinks(
 ): { label: string; href: string }[] {
   const links: { label: string; href: string }[] = [];
   if (signedIn) {
-    links.push({ label: "Open My Learning", href: "/student/my-learning" });
+    links.push({ label: "Open My Learning", href: "/student/programs" });
     links.push({ label: "Student Dashboard", href: "/student/dashboard" });
+    if (
+      intent === "certificate_information" ||
+      intent === "certificate_missing" ||
+      intent === "certificate_access" ||
+      intent === "certificate_eligibility"
+    ) {
+      links.push({ label: "My Certificates", href: "/student/certificates" });
+    }
+    if (
+      intent === "assessment_information" ||
+      intent === "assessment_access" ||
+      intent === "assessment_result"
+    ) {
+      links.push({ label: "My Assessments", href: "/student/assessments" });
+    }
   } else {
     links.push({ label: "Explore Programs", href: "/programs" });
     links.push({ label: "Sign In To Your Student Account", href: "/auth" });
@@ -661,3 +715,4 @@ function getRelatedLinks(
   links.push({ label: "Glintr FAQs", href: "/faqs" });
   return links;
 }
+

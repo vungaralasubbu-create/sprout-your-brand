@@ -122,7 +122,10 @@ const InputSchema = z.object({
 
 // ---- Student snapshot (authorised, student-safe) ----
 export type StudentEnrollmentBrief = {
+  enrollmentId: string;
+  courseId: string | null;
   courseName: string | null;
+  courseSlug: string | null;
   status: string | null;
   progressPct: number | null;
 };
@@ -153,7 +156,6 @@ async function loadStudentSnapshot(
     fullName: null,
   };
 
-  // Profile (best-effort — column set may vary; keep field list narrow)
   try {
     const { data: profile } = await supabase
       .from("profiles")
@@ -161,36 +163,71 @@ async function loadStudentSnapshot(
       .eq("user_id", userId)
       .maybeSingle();
     if (profile?.full_name) base.fullName = profile.full_name;
-  } catch {
-    // profiles table shape is not guaranteed — skip silently
-  }
+  } catch {}
 
-  // Enrollments (student-visible)
+  // Enrollments (student-visible) — uses actual `lms_status` column and derives
+  // progress via the canonical progress engine, not a phantom column.
   try {
     const { data: enrollments } = await supabase
       .from("enrollments")
-      .select("id, status, progress_pct, courses:course_id(name)")
+      .select("id, course_id, program_title, lms_status, courses:course_id(name, slug)")
       .eq("student_user_id", userId)
       .limit(20);
     const rows = (enrollments ?? []) as any[];
     base.enrollmentCount = rows.length;
-    base.enrollments = rows.slice(0, 10).map((r) => ({
-      courseName: r.courses?.name ?? null,
-      status: r.status ?? null,
-      progressPct: typeof r.progress_pct === "number" ? r.progress_pct : null,
-    }));
-    if (rows.length === 0) {
-      base.studentRelationship = "authenticated_no_enrollment";
-    } else if (rows.length === 1) {
-      base.studentRelationship = "enrolled_student";
-    } else {
-      base.studentRelationship = "multiple_enrollments";
+
+    // Compute Student-visible progress via the same engine used by the LMS:
+    // completed lessons / total published lessons, per course.
+    const courseIds = Array.from(
+      new Set(rows.map((r) => r.course_id).filter(Boolean)),
+    ) as string[];
+    const totalMap: Record<string, number> = {};
+    const doneMap: Record<string, number> = {};
+    if (courseIds.length) {
+      try {
+        const [{ data: mods }, { data: done }] = await Promise.all([
+          supabase
+            .from("course_modules")
+            .select("course_id, course_topics(course_lessons(id, is_published))")
+            .in("course_id", courseIds),
+          supabase
+            .from("lesson_progress")
+            .select("course_id, lesson_id, status")
+            .eq("student_user_id", userId)
+            .eq("status", "completed")
+            .in("course_id", courseIds),
+        ]);
+        for (const m of mods ?? []) {
+          const cid = (m as any).course_id;
+          for (const t of ((m as any).course_topics ?? []) as any[])
+            for (const l of ((t.course_lessons ?? []) as any[]))
+              if (l.is_published) totalMap[cid] = (totalMap[cid] ?? 0) + 1;
+        }
+        for (const d of done ?? [])
+          doneMap[d.course_id] = (doneMap[d.course_id] ?? 0) + 1;
+      } catch {}
     }
+
+    base.enrollments = rows.slice(0, 10).map((r) => {
+      const total = totalMap[r.course_id ?? ""] ?? 0;
+      const doneCt = doneMap[r.course_id ?? ""] ?? 0;
+      return {
+        enrollmentId: r.id,
+        courseId: r.course_id ?? null,
+        courseName: r.courses?.name ?? r.program_title ?? null,
+        courseSlug: r.courses?.slug ?? null,
+        status: r.lms_status ?? null,
+        progressPct: total > 0 ? Math.round((doneCt / total) * 100) : null,
+      } as StudentEnrollmentBrief;
+    });
+
+    if (rows.length === 0) base.studentRelationship = "authenticated_no_enrollment";
+    else if (rows.length === 1) base.studentRelationship = "enrolled_student";
+    else base.studentRelationship = "multiple_enrollments";
   } catch {
     base.studentRelationship = "authenticated_no_enrollment";
   }
 
-  // Certificates count (student-safe)
   try {
     const { count } = await supabase
       .from("certificates")
@@ -222,6 +259,7 @@ function buildSystemLines(
     "- If approved Glintr information does not confirm an answer, say you couldn't confirm it and suggest the closest safe next step. Do not guess.",
     "- Keep replies short (2–5 sentences), plain and helpful. Use bullet points sparingly.",
     "- Never claim an issue is 'resolved' unless the user confirms.",
+    "- Canonical Glintr learning routes you may reference: /student/dashboard, /student/programs (My Learning list), /student/programs/<slug> (program overview), /student/learn/<slug> (learning player), /student/certificates, /student/assessments, /student/notifications, /auth (sign in). Do NOT invent other learning routes.",
     `Current detected student support topic: ${intentLabel}.`,
   ];
   if (handoff?.originalQuestion) {
@@ -305,4 +343,145 @@ export const getMyStudentSupportSnapshot = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<StudentSnapshot> => {
     return loadStudentSnapshot(context.supabase, context.userId);
+  });
+
+// ---- Program-specific student-visible context for guided learning issues ----
+export type StudentProgramSupportContext = {
+  authorised: boolean;
+  courseId: string;
+  courseName: string | null;
+  courseSlug: string | null;
+  enrollmentStatus: string | null;
+  moduleCount: number;
+  publishedLessonCount: number;
+  completedLessonCount: number;
+  progressPct: number | null;
+  hasLockedModule: boolean;
+  firstLockedModuleName: string | null;
+  currentLessonName: string | null;
+  currentLessonStatus: string | null;
+  hasCertificate: boolean;
+};
+
+const ProgramCtxInput = z.object({ courseId: z.string().uuid() });
+
+export const getStudentProgramSupportContext = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ProgramCtxInput.parse(d))
+  .handler(async ({ data, context }): Promise<StudentProgramSupportContext> => {
+    const supabase = context.supabase;
+
+    // Verify authorised enrollment for this course under RLS.
+    const { data: enrollment } = await supabase
+      .from("enrollments")
+      .select("id, lms_status, current_lesson_id, courses:course_id(name, slug)")
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+
+    if (!enrollment) {
+      return {
+        authorised: false,
+        courseId: data.courseId,
+        courseName: null,
+        courseSlug: null,
+        enrollmentStatus: null,
+        moduleCount: 0,
+        publishedLessonCount: 0,
+        completedLessonCount: 0,
+        progressPct: null,
+        hasLockedModule: false,
+        firstLockedModuleName: null,
+        currentLessonName: null,
+        currentLessonStatus: null,
+        hasCertificate: false,
+      };
+    }
+
+    const [{ data: modules }, { data: done }, { data: modCompletions }, { data: cert }] =
+      await Promise.all([
+        supabase
+          .from("course_modules")
+          .select(
+            "id, name, display_order, is_required, is_published, course_topics(course_lessons(id, name, is_published, display_order))",
+          )
+          .eq("course_id", data.courseId)
+          .eq("is_published", true)
+          .order("display_order"),
+        supabase
+          .from("lesson_progress")
+          .select("lesson_id, status")
+          .eq("student_user_id", context.userId)
+          .eq("course_id", data.courseId)
+          .eq("status", "completed"),
+        supabase
+          .from("module_completions")
+          .select("module_id")
+          .eq("student_user_id", context.userId)
+          .eq("course_id", data.courseId),
+        supabase
+          .from("certificates")
+          .select("id")
+          .eq("student_user_id", context.userId)
+          .eq("course_id", data.courseId)
+          .maybeSingle(),
+      ]);
+
+    const doneSet = new Set((done ?? []).map((d: any) => d.lesson_id));
+    const completedModuleIds = new Set((modCompletions ?? []).map((m: any) => m.module_id));
+
+    let publishedLessons = 0;
+    let completedLessons = 0;
+    let firstLocked: string | null = null;
+    let hasLocked = false;
+    let previousModuleComplete = true;
+    let currentLessonName: string | null = null;
+    let currentLessonStatus: string | null = null;
+
+    for (const m of (modules ?? []) as any[]) {
+      const lessons = ((m.course_topics ?? []) as any[])
+        .flatMap((t: any) => (t.course_lessons ?? []) as any[])
+        .filter((l: any) => l.is_published)
+        .sort((a: any, b: any) => (a.display_order ?? 0) - (b.display_order ?? 0));
+      const moduleUnlocked = previousModuleComplete;
+      if (!moduleUnlocked && !firstLocked) {
+        firstLocked = m.name;
+        hasLocked = true;
+      }
+      for (const l of lessons) {
+        publishedLessons += 1;
+        if (doneSet.has(l.id)) completedLessons += 1;
+        else if (!currentLessonName && moduleUnlocked) {
+          currentLessonName = l.name;
+          currentLessonStatus = "not_started";
+        }
+        if ((enrollment as any).current_lesson_id === l.id) {
+          currentLessonName = l.name;
+          currentLessonStatus = doneSet.has(l.id) ? "completed" : "in_progress";
+        }
+      }
+      previousModuleComplete = completedModuleIds.has(m.id);
+    }
+
+    const progressPct =
+      publishedLessons > 0
+        ? Math.round((completedLessons / publishedLessons) * 100)
+        : null;
+
+    return {
+      authorised: true,
+      courseId: data.courseId,
+      courseName: (enrollment as any).courses?.name ?? null,
+      courseSlug: (enrollment as any).courses?.slug ?? null,
+      enrollmentStatus: (enrollment as any).lms_status ?? null,
+      moduleCount: (modules ?? []).length,
+      publishedLessonCount: publishedLessons,
+      completedLessonCount: completedLessons,
+      progressPct,
+      hasLockedModule: hasLocked,
+      firstLockedModuleName: firstLocked,
+      currentLessonName,
+      currentLessonStatus,
+      hasCertificate: !!cert,
+    };
   });
