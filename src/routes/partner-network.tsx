@@ -1178,7 +1178,7 @@ function PartnerToolsShowcase() {
   );
 }
 
-function ConceptualToolPreview({ toolId }: { toolId: (typeof TOOLS)[number]["id"] }) {
+function ConceptualToolPreview({ toolId }: { toolId: string }) {
   // Neutral, non-fabricated placeholder UIs.
   const cell = "rounded-lg border border-border bg-background p-4";
   const label = "text-xs text-muted-foreground";
