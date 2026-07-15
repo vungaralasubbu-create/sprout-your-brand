@@ -1062,9 +1062,13 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       }
     }
 
+    // Redact sensitive credentials from anything we persist.
+    const cleanSummary = redactSensitiveText(data.summary.trim());
+    const cleanDetails = redactSensitiveText((data.details ?? "").trim());
+    const cleanTitle = redactSensitiveText(data.title.trim()).slice(0, 120);
     const compositeDescription = [
-      data.summary.trim(),
-      data.details?.trim() ? `\n\nAdditional Details:\n${data.details.trim()}` : "",
+      cleanSummary,
+      cleanDetails ? `\n\nAdditional Details:\n${cleanDetails}` : "",
       data.supportIntent
         ? `\n\nDetected topic: ${studentIntentLabel(data.supportIntent)}`
         : "",
