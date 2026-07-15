@@ -558,8 +558,6 @@ function StudentSupportPage() {
 
           {/* ============= GUIDED LEARNING ISSUES ============= */}
           <div id="student-support-guided" className="mt-8">
-            {/* anchor for topic "Try Guided Support" */}
-          <div className="mt-8">
             <LearningIssuesSection
               signedIn={signedIn}
               snapshot={snapshot}
