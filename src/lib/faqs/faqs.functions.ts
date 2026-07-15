@@ -116,6 +116,126 @@ export const listFaqCategories = createServerFn({ method: "GET" }).handler(async
   }));
 });
 
+// --- All published FAQs grouped by category ---
+
+export type FaqCategoryGroup = {
+  category: FaqCategory;
+  items: FaqAnswer[];
+};
+
+export const listAllPublishedFaqs = createServerFn({ method: "GET" }).handler(
+  async (): Promise<FaqCategoryGroup[]> => {
+    const supabase = await serverSupabase();
+    const { data: cats } = await supabase
+      .from("faq_categories")
+      .select("id, slug, name, description, icon, display_order")
+      .eq("is_active", true)
+      .order("display_order", { ascending: true });
+    const { data: rows } = await supabase
+      .from("faqs")
+      .select(
+        "id, slug, category_id, question, short_answer, full_answer, action_label, action_href, display_order",
+      )
+      .eq("is_published", true)
+      .eq("status", "published")
+      .order("display_order", { ascending: true });
+    const grouped: FaqCategoryGroup[] = [];
+    for (const c of cats ?? []) {
+      const items = (rows ?? [])
+        .filter((r: any) => r.category_id === c.id)
+        .map((r: any) => ({
+          id: r.id,
+          slug: r.slug,
+          question: r.question,
+          short_answer: r.short_answer,
+          full_answer: r.full_answer,
+          category_slug: c.slug,
+          category_name: c.name,
+          action_label: r.action_label,
+          action_href: r.action_href,
+        }));
+      if (items.length === 0) continue;
+      grouped.push({
+        category: {
+          id: c.id,
+          slug: c.slug,
+          name: c.name,
+          description: c.description,
+          icon: c.icon,
+          count: items.length,
+        },
+        items,
+      });
+    }
+    return grouped;
+  },
+);
+
+export const getFaqBySlug = createServerFn({ method: "GET" })
+  .inputValidator((d: { slug: string }) => d)
+  .handler(async ({ data }) => {
+    const supabase = await serverSupabase();
+    const { data: row } = await supabase
+      .from("faqs")
+      .select(
+        "id, slug, category_id, question, short_answer, full_answer, action_label, action_href",
+      )
+      .eq("slug", data.slug)
+      .eq("is_published", true)
+      .eq("status", "published")
+      .maybeSingle();
+    if (!row) return { faq: null, related: [] as FaqAnswer[], category: null };
+    let category: { id: string; slug: string; name: string } | null = null;
+    if (row.category_id) {
+      const { data: cat } = await supabase
+        .from("faq_categories")
+        .select("id, slug, name")
+        .eq("id", row.category_id)
+        .maybeSingle();
+      category = cat ?? null;
+    }
+    const { data: rel } = await supabase
+      .from("faqs")
+      .select("id, slug, question, short_answer, full_answer, action_label, action_href")
+      .eq("is_published", true)
+      .eq("status", "published")
+      .eq("category_id", row.category_id)
+      .neq("slug", row.slug)
+      .limit(5);
+    const related: FaqAnswer[] = (rel ?? []).map((r: any) => ({
+      id: r.id,
+      slug: r.slug,
+      question: r.question,
+      short_answer: r.short_answer,
+      full_answer: r.full_answer,
+      category_slug: category?.slug ?? null,
+      category_name: category?.name ?? null,
+      action_label: r.action_label,
+      action_href: r.action_href,
+    }));
+    return {
+      faq: {
+        id: row.id,
+        slug: row.slug,
+        question: row.question,
+        short_answer: row.short_answer,
+        full_answer: row.full_answer,
+        category_slug: category?.slug ?? null,
+        category_name: category?.name ?? null,
+        action_label: row.action_label,
+        action_href: row.action_href,
+      } satisfies FaqAnswer,
+      related,
+      category,
+    };
+  });
+
+// Lightweight feedback — non-persisting server acknowledgement (safe).
+// If a persistence table is added later, extend here without changing the contract.
+export const submitFaqFeedback = createServerFn({ method: "POST" })
+  .inputValidator((d: { faqSlug?: string; scope: "faq" | "smart_answer"; helpful: boolean }) => d)
+  .handler(async () => ({ ok: true }));
+
 // --- Popular / by-category listing ---
 
 export const listPopularFaqs = createServerFn({ method: "GET" }).handler(async () => {

@@ -16,6 +16,7 @@ import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -32,6 +33,7 @@ import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
+import { Route as FaqsSlugRouteImport } from './routes/faqs.$slug'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
@@ -197,6 +199,11 @@ const EarnRoute = EarnRouteImport.update({
   path: '/earn',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CareersRoute = CareersRouteImport.update({
   id: '/careers',
   path: '/careers',
@@ -277,6 +284,11 @@ const LaunchYourBrandConsultationRoute =
     path: '/launch-your-brand/consultation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const FaqsSlugRoute = FaqsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => FaqsRoute,
+} as any)
 const CareersRoleSlugRoute = CareersRoleSlugRouteImport.update({
   id: '/$roleSlug',
   path: '/$roleSlug',
@@ -1048,8 +1060,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
-  '/faqs': typeof FaqsRoute
+  '/faqs': typeof FaqsRouteWithChildren
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
@@ -1062,6 +1075,7 @@ export interface FileRoutesByFullPath {
   '/student': typeof AuthenticatedStudentRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
+  '/faqs/$slug': typeof FaqsSlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -1201,8 +1215,9 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
-  '/faqs': typeof FaqsRoute
+  '/faqs': typeof FaqsRouteWithChildren
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
@@ -1213,6 +1228,7 @@ export interface FileRoutesByTo {
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
+  '/faqs/$slug': typeof FaqsSlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -1353,8 +1369,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
-  '/faqs': typeof FaqsRoute
+  '/faqs': typeof FaqsRouteWithChildren
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
@@ -1367,6 +1384,7 @@ export interface FileRoutesById {
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
+  '/faqs/$slug': typeof FaqsSlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner/apply': typeof PartnerApplyRoute
@@ -1508,6 +1526,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/careers'
+    | '/contact'
     | '/earn'
     | '/faqs'
     | '/join'
@@ -1522,6 +1541,7 @@ export interface FileRouteTypes {
     | '/student'
     | '/blog/$slug'
     | '/careers/$roleSlug'
+    | '/faqs/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -1661,6 +1681,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/careers'
+    | '/contact'
     | '/earn'
     | '/faqs'
     | '/join'
@@ -1673,6 +1694,7 @@ export interface FileRouteTypes {
     | '/partner'
     | '/blog/$slug'
     | '/careers/$roleSlug'
+    | '/faqs/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -1812,6 +1834,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/careers'
+    | '/contact'
     | '/earn'
     | '/faqs'
     | '/join'
@@ -1826,6 +1849,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student'
     | '/blog/$slug'
     | '/careers/$roleSlug'
+    | '/faqs/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner/apply'
@@ -1967,8 +1991,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRouteWithChildren
   CareersRoute: typeof CareersRouteWithChildren
+  ContactRoute: typeof ContactRoute
   EarnRoute: typeof EarnRoute
-  FaqsRoute: typeof FaqsRoute
+  FaqsRoute: typeof FaqsRouteWithChildren
   JoinRoute: typeof JoinRoute
   PartnerNetworkRoute: typeof PartnerNetworkRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
@@ -2037,6 +2062,13 @@ declare module '@tanstack/react-router' {
       path: '/earn'
       fullPath: '/earn'
       preLoaderRoute: typeof EarnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/careers': {
@@ -2150,6 +2182,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/launch-your-brand/consultation'
       preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/faqs/$slug': {
+      id: '/faqs/$slug'
+      path: '/$slug'
+      fullPath: '/faqs/$slug'
+      preLoaderRoute: typeof FaqsSlugRouteImport
+      parentRoute: typeof FaqsRoute
     }
     '/careers/$roleSlug': {
       id: '/careers/$roleSlug'
@@ -3546,6 +3585,16 @@ const CareersRouteChildren: CareersRouteChildren = {
 const CareersRouteWithChildren =
   CareersRoute._addFileChildren(CareersRouteChildren)
 
+interface FaqsRouteChildren {
+  FaqsSlugRoute: typeof FaqsSlugRoute
+}
+
+const FaqsRouteChildren: FaqsRouteChildren = {
+  FaqsSlugRoute: FaqsSlugRoute,
+}
+
+const FaqsRouteWithChildren = FaqsRoute._addFileChildren(FaqsRouteChildren)
+
 interface SuccessStoriesRouteChildren {
   SuccessStoriesStorySlugRoute: typeof SuccessStoriesStorySlugRoute
 }
@@ -3565,8 +3614,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BlogRoute: BlogRouteWithChildren,
   CareersRoute: CareersRouteWithChildren,
+  ContactRoute: ContactRoute,
   EarnRoute: EarnRoute,
-  FaqsRoute: FaqsRoute,
+  FaqsRoute: FaqsRouteWithChildren,
   JoinRoute: JoinRoute,
   PartnerNetworkRoute: PartnerNetworkRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
