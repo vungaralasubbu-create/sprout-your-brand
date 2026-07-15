@@ -367,7 +367,7 @@ function PartnerSupportPage() {
                 Ask Glintr AI Partner Support <MessageCircle className="ml-2 size-4" />
               </Button>
               <Button
-                padding="lg"
+                size="lg"
                 variant="outline"
                 onClick={() =>
                   document.getElementById("support-topics")?.scrollIntoView({ behavior: "smooth" })
