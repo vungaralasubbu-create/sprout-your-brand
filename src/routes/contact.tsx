@@ -3,8 +3,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import * as React from "react";
 import {
+  AlertTriangle,
   ArrowRight,
   Building2,
+  Check,
+  CheckCircle2,
+  Copy,
   Compass,
   GraduationCap,
   Handshake,
@@ -14,6 +18,7 @@ import {
   Newspaper,
   RotateCcw,
   School,
+  Send,
   ShieldCheck,
   Sparkles,
   Users,
@@ -37,6 +42,8 @@ import {
   routeContactEnquiry,
   type ContactIntent,
 } from "@/lib/contact/contact.functions";
+import { submitContactEnquiry } from "@/lib/contact/contact-submit.functions";
+import { toast } from "sonner";
 
 // Legacy Smart-FAQ handoff params are preserved so existing links keep working.
 const SearchSchema = z.object({
@@ -519,7 +526,7 @@ function ContactPage() {
       {/* AI-ASSISTED ENQUIRY PREPARATION ================================= */}
       <Section className="py-14 md:py-20">
         <Container size="md">
-          <div ref={prepRef} tabIndex={-1} className="outline-none">
+          <div ref={prepRef} data-contact-anchor="prep" tabIndex={-1} className="outline-none">
             <SectionHeading
               eyebrow="03 · Prepare"
               title="Prepare your enquiry"
@@ -1080,6 +1087,44 @@ function PreparedEnquiry({
   );
 }
 
+type FieldErrors = Partial<Record<
+  "topic" | "name" | "email" | "organisation" | "title" | "summary",
+  string
+>>;
+
+type SubmitState =
+  | { kind: "idle" }
+  | {
+      kind: "success";
+      reference: string;
+      topic: ContactIntent;
+      title: string;
+      submittedAt: string;
+    }
+  | {
+      kind: "duplicate_recent";
+      reference: string;
+      topic: ContactIntent;
+      submittedAt: string;
+      message: string;
+    }
+  | { kind: "redirect_student_support"; message: string }
+  | { kind: "redirect_partner_support"; message: string }
+  | { kind: "rate_limited"; message: string }
+  | { kind: "validation"; fieldErrors: FieldErrors; message: string }
+  | { kind: "error"; message: string };
+
+function genIdempotencyKey(): string {
+  // 128-bit-ish random identifier bound to this browser tab's form open.
+  const arr = new Uint8Array(16);
+  if (typeof crypto !== "undefined" && "getRandomValues" in crypto) {
+    crypto.getRandomValues(arr);
+  } else {
+    for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256);
+  }
+  return Array.from(arr, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 function ContactFormFoundation({
   intent,
   initialTitle,
@@ -1098,6 +1143,13 @@ function ContactFormFoundation({
   const [org, setOrg] = React.useState("");
   const [title, setTitle] = React.useState(initialTitle);
   const [summary, setSummary] = React.useState(initialSummary);
+  const [website, setWebsite] = React.useState(""); // honeypot
+  const [submitState, setSubmitState] = React.useState<SubmitState>({ kind: "idle" });
+  const [copied, setCopied] = React.useState(false);
+
+  // Idempotency + timing are stable per form session; regenerate on Start Over.
+  const [idempotencyKey, setIdempotencyKey] = React.useState(() => genIdempotencyKey());
+  const [formOpenedAt] = React.useState(() => Date.now());
 
   React.useEffect(() => {
     if (initialTitle) setTitle(initialTitle);
@@ -1106,23 +1158,242 @@ function ContactFormFoundation({
     if (initialSummary) setSummary(initialSummary);
   }, [initialSummary]);
 
+  const nameRef = React.useRef<HTMLInputElement>(null);
+  const emailRef = React.useRef<HTMLInputElement>(null);
+  const orgRef = React.useRef<HTMLInputElement>(null);
+  const titleRef = React.useRef<HTMLInputElement>(null);
+  const summaryRef = React.useRef<HTMLTextAreaElement>(null);
+  const successRef = React.useRef<HTMLDivElement>(null);
+
+  const submitFn = useServerFn(submitContactEnquiry);
+  const submitMut = useMutation({
+    mutationFn: async () =>
+      submitFn({
+        data: {
+          topic: intent,
+          name,
+          email,
+          organisation: org,
+          title,
+          summary,
+          source: "contact_page",
+          idempotencyKey,
+          website,
+          formOpenedAt,
+        },
+      }),
+    onSuccess: (res) => {
+      if (res.ok) {
+        setSubmitState({
+          kind: "success",
+          reference: res.reference,
+          topic: normaliseContactIntent(res.topic),
+          title: res.title,
+          submittedAt: res.submittedAt,
+        });
+        setTimeout(() => {
+          successRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          successRef.current?.focus();
+        }, 50);
+        return;
+      }
+      switch (res.kind) {
+        case "validation": {
+          setSubmitState({
+            kind: "validation",
+            fieldErrors: res.fieldErrors as FieldErrors,
+            message: res.message,
+          });
+          const order: (keyof FieldErrors)[] = [
+            "topic",
+            "name",
+            "email",
+            "organisation",
+            "title",
+            "summary",
+          ];
+          const first = order.find((k) => (res.fieldErrors as FieldErrors)[k]);
+          if (first === "name") nameRef.current?.focus();
+          else if (first === "email") emailRef.current?.focus();
+          else if (first === "organisation") orgRef.current?.focus();
+          else if (first === "title") titleRef.current?.focus();
+          else if (first === "summary") summaryRef.current?.focus();
+          break;
+        }
+        case "redirect_student_support":
+          setSubmitState({ kind: "redirect_student_support", message: res.message });
+          break;
+        case "redirect_partner_support":
+          setSubmitState({ kind: "redirect_partner_support", message: res.message });
+          break;
+        case "rate_limited":
+          setSubmitState({ kind: "rate_limited", message: res.message });
+          break;
+        case "duplicate_recent":
+          setSubmitState({
+            kind: "duplicate_recent",
+            reference: res.reference,
+            topic: normaliseContactIntent(res.topic),
+            submittedAt: res.submittedAt,
+            message: res.message,
+          });
+          break;
+        default:
+          setSubmitState({ kind: "error", message: res.message });
+      }
+    },
+    onError: () =>
+      setSubmitState({
+        kind: "error",
+        message: "Your enquiry has not been confirmed as sent. Please try again.",
+      }),
+  });
+
+  const isSending = submitMut.isPending;
   const showsOrgOptional =
     intent === "partnership" ||
     intent === "institution" ||
     intent === "business" ||
     intent === "media";
+  const orgRequired = intent === "institution";
 
   const orgLabel =
     intent === "institution"
-      ? "College or institution (if relevant)"
+      ? "College or institution"
       : intent === "media"
         ? "Organisation or publication (if relevant)"
         : "Organisation (if relevant)";
 
-  const disabled = !enabled;
+  const disabled = !enabled || isSending;
+  const fieldErrors = submitState.kind === "validation" ? submitState.fieldErrors : {};
+
+  const handleStartOver = () => {
+    setName("");
+    setEmail("");
+    setOrg("");
+    setTitle("");
+    setSummary("");
+    setWebsite("");
+    setIdempotencyKey(genIdempotencyKey());
+    setSubmitState({ kind: "idle" });
+  };
+
+  const handleContinueAnyway = () => {
+    // Fresh idempotency key for an explicit "new" submission after duplicate warning.
+    setIdempotencyKey(genIdempotencyKey());
+    setSubmitState({ kind: "idle" });
+    submitMut.reset();
+  };
+
+  const handleCopyRef = async (reference: string) => {
+    try {
+      await navigator.clipboard.writeText(reference);
+      setCopied(true);
+      toast.success("Reference copied");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.message("Copy manually: " + reference);
+    }
+  };
+
+  // Success state — dedicated confirmation card
+  if (submitState.kind === "success") {
+    const s = submitState;
+    return (
+      <Card
+        ref={successRef}
+        tabIndex={-1}
+        className="mt-8 p-6 md:p-8 outline-none"
+        role="status"
+        aria-live="polite"
+      >
+        <div className="flex items-start gap-3">
+          <span
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
+            aria-hidden="true"
+          >
+            <CheckCircle2 className="size-5" />
+          </span>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-display text-xl md:text-2xl font-semibold tracking-tight">
+              Enquiry sent
+            </h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Your enquiry has been submitted to Glintr.
+            </p>
+          </div>
+        </div>
+
+        <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt className="text-xs uppercase tracking-widest text-muted-foreground">
+              Contact reference
+            </dt>
+            <dd className="mt-1 flex items-center gap-2">
+              <code className="rounded-md bg-muted px-2 py-1 text-sm font-medium tracking-wider">
+                {s.reference}
+              </code>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => handleCopyRef(s.reference)}
+                aria-label="Copy reference"
+              >
+                {copied ? (
+                  <>
+                    <Check className="size-4" /> Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="size-4" /> Copy reference
+                  </>
+                )}
+              </Button>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs uppercase tracking-widest text-muted-foreground">
+              Contact topic
+            </dt>
+            <dd className="mt-1 text-sm">{CONTACT_INTENT_LABELS[s.topic]}</dd>
+          </div>
+          <div className="sm:col-span-2">
+            <dt className="text-xs uppercase tracking-widest text-muted-foreground">
+              Enquiry title
+            </dt>
+            <dd className="mt-1 text-sm">{s.title}</dd>
+          </div>
+          <div>
+            <dt className="text-xs uppercase tracking-widest text-muted-foreground">
+              Submitted
+            </dt>
+            <dd className="mt-1 text-sm">
+              {new Date(s.submittedAt).toLocaleString(undefined, {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </dd>
+          </div>
+        </dl>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          <Button variant="outline" onClick={handleStartOver}>
+            Return To Contact
+          </Button>
+          <Button asChild variant="ghost">
+            <Link to="/">Explore Glintr</Link>
+          </Button>
+        </div>
+
+        <p className="mt-5 text-xs text-muted-foreground">
+          The Contact Reference is a display value only. Keep it for your records.
+        </p>
+      </Card>
+    );
+  }
 
   return (
-    <Card className={cn("mt-8 p-5 md:p-6", disabled && "opacity-70")}>
+    <Card className={cn("mt-8 p-5 md:p-6", !enabled && !isSending && "opacity-70")}>
       <div className="flex items-center gap-2 flex-wrap">
         <Badge variant="outline" className="text-[10px] uppercase">
           Contact topic
@@ -1158,8 +1429,68 @@ function ContactFormFoundation({
           <Link to="/careers" className="underline font-medium">
             Glintr Careers
           </Link>
-          . You can still send a general career enquiry below.
+          . You can still send a general career enquiry below — a Contact Enquiry is not a job
+          application.
         </div>
+      )}
+
+      {/* Redirect / rate-limit / general error states */}
+      {submitState.kind === "redirect_student_support" && (
+        <StatusBanner
+          tone="info"
+          title="This enquiry is better handled by Student Support"
+          message={submitState.message}
+          primary={{ label: "Open Student Support", to: "/student-support" }}
+          secondary={{ label: "Review Contact Topic", onClick: () => setSubmitState({ kind: "idle" }) }}
+        />
+      )}
+      {submitState.kind === "redirect_partner_support" && (
+        <StatusBanner
+          tone="info"
+          title="This enquiry is better handled by Partner Support"
+          message={submitState.message}
+          primary={{ label: "Open Partner Support", to: "/partner-support" }}
+          secondary={{ label: "Review Contact Topic", onClick: () => setSubmitState({ kind: "idle" }) }}
+        />
+      )}
+      {submitState.kind === "rate_limited" && (
+        <StatusBanner
+          tone="warn"
+          title="Unable to send another enquiry right now"
+          message={submitState.message}
+          secondary={{
+            label: "Return To Contact",
+            onClick: () => setSubmitState({ kind: "idle" }),
+          }}
+        />
+      )}
+      {submitState.kind === "duplicate_recent" && (
+        <StatusBanner
+          tone="warn"
+          title="A similar enquiry may already have been sent"
+          message={`${submitState.message} Reference ${submitState.reference} on ${new Date(
+            submitState.submittedAt,
+          ).toLocaleDateString(undefined, { dateStyle: "medium" })}.`}
+          primary={{
+            label: "Return To Contact",
+            onClick: () => setSubmitState({ kind: "idle" }),
+          }}
+          secondary={{ label: "Continue With New Enquiry", onClick: handleContinueAnyway }}
+        />
+      )}
+      {submitState.kind === "error" && (
+        <StatusBanner
+          tone="error"
+          title="Unable to send your enquiry"
+          message={submitState.message}
+          primary={{
+            label: "Try Again",
+            onClick: () => {
+              setSubmitState({ kind: "idle" });
+              submitMut.reset();
+            },
+          }}
+        />
       )}
 
       <fieldset
@@ -1173,11 +1504,20 @@ function ContactFormFoundation({
           </Label>
           <Input
             id="c-name"
+            ref={nameRef}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="mt-2"
             autoComplete="name"
+            maxLength={120}
+            aria-invalid={Boolean(fieldErrors.name)}
+            aria-describedby={fieldErrors.name ? "c-name-err" : undefined}
           />
+          {fieldErrors.name && (
+            <p id="c-name-err" className="mt-1 text-xs text-destructive">
+              {fieldErrors.name}
+            </p>
+          )}
         </div>
         <div className="md:col-span-1">
           <Label htmlFor="c-email" className="text-sm font-medium">
@@ -1185,25 +1525,44 @@ function ContactFormFoundation({
           </Label>
           <Input
             id="c-email"
+            ref={emailRef}
             type="email"
+            inputMode="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mt-2"
             autoComplete="email"
+            maxLength={254}
+            aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={fieldErrors.email ? "c-email-err" : undefined}
           />
+          {fieldErrors.email && (
+            <p id="c-email-err" className="mt-1 text-xs text-destructive">
+              {fieldErrors.email}
+            </p>
+          )}
         </div>
         {showsOrgOptional && (
           <div className="md:col-span-2">
             <Label htmlFor="c-org" className="text-sm font-medium">
-              {orgLabel}
+              {orgLabel} {orgRequired && <span className="text-destructive">*</span>}
             </Label>
             <Input
               id="c-org"
+              ref={orgRef}
               value={org}
               onChange={(e) => setOrg(e.target.value)}
               className="mt-2"
               autoComplete="organization"
+              maxLength={200}
+              aria-invalid={Boolean(fieldErrors.organisation)}
+              aria-describedby={fieldErrors.organisation ? "c-org-err" : undefined}
             />
+            {fieldErrors.organisation && (
+              <p id="c-org-err" className="mt-1 text-xs text-destructive">
+                {fieldErrors.organisation}
+              </p>
+            )}
           </div>
         )}
         <div className="md:col-span-2">
@@ -1212,11 +1571,19 @@ function ContactFormFoundation({
           </Label>
           <Input
             id="c-title"
+            ref={titleRef}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={120}
             className="mt-2"
+            aria-invalid={Boolean(fieldErrors.title)}
+            aria-describedby={fieldErrors.title ? "c-title-err" : undefined}
           />
+          {fieldErrors.title && (
+            <p id="c-title-err" className="mt-1 text-xs text-destructive">
+              {fieldErrors.title}
+            </p>
+          )}
         </div>
         <div className="md:col-span-2">
           <Label htmlFor="c-summary" className="text-sm font-medium">
@@ -1224,12 +1591,35 @@ function ContactFormFoundation({
           </Label>
           <Textarea
             id="c-summary"
+            ref={summaryRef}
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
             rows={6}
             maxLength={2400}
             className="mt-2"
+            aria-invalid={Boolean(fieldErrors.summary)}
+            aria-describedby={fieldErrors.summary ? "c-summary-err" : undefined}
           />
+          {fieldErrors.summary && (
+            <p id="c-summary-err" className="mt-1 text-xs text-destructive">
+              {fieldErrors.summary}
+            </p>
+          )}
+        </div>
+
+        {/* Honeypot — visually hidden, non-tabbable, aria-hidden */}
+        <div className="hidden" aria-hidden="true">
+          <label htmlFor="c-website">
+            Website
+            <input
+              id="c-website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </label>
         </div>
       </fieldset>
 
@@ -1239,18 +1629,136 @@ function ContactFormFoundation({
       >
         <ShieldCheck className="size-4 text-primary mt-0.5 shrink-0" aria-hidden="true" />
         <p>
-          Detailed submission, secure storage, spam prevention, rate limiting and success states
-          are added in the next release. This is the field foundation only — the enquiry has not
-          been submitted.
+          Please do not include passwords, OTPs, UPI PINs, card CVVs or payment credentials. A
+          Contact Enquiry is not a Support ticket and does not check any account state.
         </p>
       </div>
 
-      {!enabled && (
+      {!enabled && submitState.kind === "idle" && (
         <p className="mt-4 text-xs text-muted-foreground">
           Prepare and review your enquiry above to activate these fields.
         </p>
       )}
+
+      {/* Send action */}
+      <div className="mt-6 flex flex-wrap gap-2 items-center">
+        <Button
+          onClick={() => {
+            if (isSending) return;
+            if (!enabled) return;
+            if (intent === "student_support" || intent === "partner_support") {
+              // Guard: these paths are not submittable from Contact.
+              setSubmitState({
+                kind: intent === "student_support"
+                  ? "redirect_student_support"
+                  : "redirect_partner_support",
+                message:
+                  intent === "student_support"
+                    ? "Please use Student Support to file an account-specific student issue."
+                    : "Please use Partner Support to file an existing partner issue.",
+              });
+              return;
+            }
+            setSubmitState({ kind: "idle" });
+            submitMut.mutate();
+          }}
+          disabled={!enabled || isSending}
+        >
+          {isSending ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              Sending Your Enquiry…
+            </>
+          ) : (
+            <>
+              <Send className="size-4" />
+              Send Enquiry
+            </>
+          )}
+        </Button>
+        <Button
+          variant="outline"
+          disabled={isSending}
+          onClick={() => {
+            // Return to review — scroll upward to the AI-preparation section.
+            document
+              .querySelector<HTMLElement>("[data-contact-anchor='prep']")
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+        >
+          Back To Enquiry Review
+        </Button>
+        <Button variant="ghost" disabled={isSending} onClick={handleStartOver}>
+          <RotateCcw className="size-4" />
+          Start Over
+        </Button>
+      </div>
+
+      {submitState.kind === "validation" && (
+        <p className="mt-3 text-xs text-destructive" role="alert" aria-live="polite">
+          {submitState.message}
+        </p>
+      )}
     </Card>
+  );
+}
+
+function StatusBanner({
+  tone,
+  title,
+  message,
+  primary,
+  secondary,
+}: {
+  tone: "info" | "warn" | "error";
+  title: string;
+  message: string;
+  primary?: { label: string; onClick?: () => void; to?: string };
+  secondary?: { label: string; onClick?: () => void; to?: string };
+}) {
+  const toneClass =
+    tone === "error"
+      ? "border-destructive/40 bg-destructive/[0.05]"
+      : tone === "warn"
+        ? "border-amber-400/40 bg-amber-50 dark:bg-amber-950/20"
+        : "border-primary/30 bg-primary/[0.04]";
+  const Icon = tone === "error" ? AlertTriangle : tone === "warn" ? AlertTriangle : Sparkles;
+  return (
+    <div
+      className={cn("mt-5 rounded-xl border p-4", toneClass)}
+      role={tone === "error" ? "alert" : "status"}
+      aria-live="polite"
+    >
+      <div className="flex items-start gap-3">
+        <Icon className="size-4 mt-0.5 shrink-0" aria-hidden="true" />
+        <div className="flex-1 min-w-0">
+          <div className="font-semibold text-sm">{title}</div>
+          <p className="mt-1 text-xs text-muted-foreground">{message}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {primary &&
+              (primary.to ? (
+                <Button asChild size="sm">
+                  <Link to={primary.to as never}>{primary.label}</Link>
+                </Button>
+              ) : (
+                <Button size="sm" onClick={primary.onClick}>
+                  {primary.label}
+                </Button>
+              ))}
+            {secondary &&
+              (secondary.to ? (
+                <Button asChild size="sm" variant="outline">
+                  <Link to={secondary.to as never}>{secondary.label}</Link>
+                </Button>
+              ) : (
+                <Button size="sm" variant="outline" onClick={secondary.onClick}>
+                  {secondary.label}
+                </Button>
+              ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
