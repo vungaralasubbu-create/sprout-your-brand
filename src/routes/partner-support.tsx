@@ -361,7 +361,7 @@ function PartnerSupportPage() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button
-                padding="lg"
+                size="lg"
                 onClick={() => inputRef.current?.focus()}
               >
                 Ask Glintr AI Partner Support <MessageCircle className="ml-2 size-4" />
