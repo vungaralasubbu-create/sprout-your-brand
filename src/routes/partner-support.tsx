@@ -249,12 +249,25 @@ function PartnerSupportPage() {
   ]);
   const [input, setInput] = React.useState(search.q ?? "");
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const [escalation, setEscalation] = React.useState<EscalationContext | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
+
+  function openEscalation(manual = false) {
+    setEscalation({
+      intent: intent ?? null,
+      messages: manual ? [] : messages,
+      related: null,
+      manual,
+    });
+  }
+
+  const HUMAN_SUPPORT_PATTERNS =
+    /\b(human support|talk to (partner )?support|speak to (partner )?support|create (a )?(support )?(ticket|request)|escalate|need someone to review|contact partner support)\b/i;
 
   React.useEffect(() => {
     if (search.q && messages.length === 1) {
