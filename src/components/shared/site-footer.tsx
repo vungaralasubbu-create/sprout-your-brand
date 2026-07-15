@@ -19,11 +19,11 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Earn With Us",
     links: [
-      { label: "Become a Partner", href: "/earn/partner" },
+      { label: "Become a Partner", href: "/earn" },
       { label: "70% Revenue Model", href: "/70-revenue-model" },
       { label: "50% Supported Model", href: "/50-supported-model" },
-      { label: "Income Calculator", href: "/#income-calculator" },
-      { label: "Payout System", href: "/earn/payouts" },
+      { label: "Income Calculator", href: "/income-calculator" },
+      { label: "Payout System", href: "/payout-system" },
     ],
   },
   {
