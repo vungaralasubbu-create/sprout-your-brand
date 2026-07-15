@@ -641,13 +641,14 @@ function PartnerSupportPage() {
                   className="flex-1 resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                   disabled={isLoading}
                 />
-                <Button type="submit" disabled={isLoading || !input.trim()}>
+                <Button type="submit" disabled={isLoading || !input.trim()} aria-label="Send message">
                   {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                 </Button>
               </form>
+              <SensitiveInputNotice items={sensitiveHits} />
               <p className="mt-2 text-[11px] text-muted-foreground">
                 AI-assisted responses grounded in approved Glintr partner information. Cannot change
-                account records.
+                account records. Please do not share OTPs, UPI PINs, card CVVs or account passwords.
               </p>
             </div>
           </Card>
