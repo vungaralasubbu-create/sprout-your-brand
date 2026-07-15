@@ -153,16 +153,16 @@ function LeaderboardPage() {
           <TabsContent value="programs" className="mt-5">
             <ProgramsTab
               programId={search.programId ?? null}
-              setProgramId={(id) =>
-                navigate({ search: (p) => ({ ...p, tab: "programs", programId: id ?? undefined }) })
+              setProgramId={(id: string | null) =>
+                navigate({ search: (p: LbSearch) => ({ ...p, tab: "programs", programId: id ?? undefined }) })
               }
             />
           </TabsContent>
           <TabsContent value="campaigns" className="mt-5">
             <CampaignsTab
               campaignId={search.campaignId ?? null}
-              setCampaignId={(id) =>
-                navigate({ search: (p) => ({ ...p, tab: "campaigns", campaignId: id ?? undefined }) })
+              setCampaignId={(id: string | null) =>
+                navigate({ search: (p: LbSearch) => ({ ...p, tab: "campaigns", campaignId: id ?? undefined }) })
               }
             />
           </TabsContent>
