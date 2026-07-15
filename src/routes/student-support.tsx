@@ -76,6 +76,19 @@ export const Route = createFileRoute("/student-support")({
   }),
   validateSearch: (raw) => SearchSchema.parse(raw ?? {}),
   component: StudentSupportPage,
+  errorComponent: () => (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Student Support is momentarily unavailable</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Please try again in a moment.
+      </p>
+    </main>
+  ),
+  notFoundComponent: () => (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Page not found</h1>
+    </main>
+  ),
 });
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
