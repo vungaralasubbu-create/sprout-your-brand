@@ -394,7 +394,7 @@ function TopThree({ rows }: { rows: LeaderboardRow[] }) {
                   #{r.rank_position}
                 </span>
                 {r.is_me && (
-                  <Badge variant="secondary" className="text-[10px] h-4 px-1.5">
+                  <Badge variant="info" className="text-[10px] h-4 px-1.5">
                     You
                   </Badge>
                 )}
@@ -458,7 +458,7 @@ function LeaderboardRowItem({ row }: { row: LeaderboardRow }) {
             {row.display_identity}
           </span>
           {row.is_me && (
-            <Badge variant="secondary" className="text-[10px] h-4 px-1.5">You</Badge>
+            <Badge variant="info" className="text-[10px] h-4 px-1.5">You</Badge>
           )}
           {row.level_name && (
             <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-cyan-50 px-2 py-0.5 text-[10px] font-medium text-cyan-700 ring-1 ring-cyan-100">
