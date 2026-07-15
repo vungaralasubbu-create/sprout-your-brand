@@ -159,7 +159,13 @@ function LeaderboardPage() {
             <OverallTab />
           </TabsContent>
           <TabsContent value="monthly" className="mt-5">
-            <MonthlyTab />
+            <MonthlyTab
+              year={search.year ?? null}
+              month={search.month ?? null}
+              setPeriod={(y, m) =>
+                navigate({ search: (p: LbSearch) => ({ ...p, tab: "monthly", year: y, month: m }) })
+              }
+            />
           </TabsContent>
           <TabsContent value="college" className="mt-5">
             <CollegeTab />
