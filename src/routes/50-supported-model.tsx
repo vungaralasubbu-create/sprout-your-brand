@@ -1078,7 +1078,7 @@ function PerformanceJourney() {
 
 // ── 50 vs 70 Compare ─────────────────────────────────────────────────────
 function Compare5070() {
-  const cols = [
+  const cols: { title: string; href?: string; bullets: string[]; current?: boolean }[] = [
     {
       title: "70% Revenue Model",
       href: "/70-revenue-model",
@@ -1101,7 +1101,7 @@ function Compare5070() {
       ],
       current: true,
     },
-  ] as const;
+  ];
 
   return (
     <Section id="compare" className="py-16 md:py-24">
