@@ -65,6 +65,7 @@ import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authe
 import { Route as AuthenticatedAmbassadorSettingsRouteImport } from './routes/_authenticated/ambassador.settings'
 import { Route as AuthenticatedAmbassadorProfileRouteImport } from './routes/_authenticated/ambassador.profile'
 import { Route as AuthenticatedAmbassadorPayoutsRouteImport } from './routes/_authenticated/ambassador.payouts'
+import { Route as AuthenticatedAmbassadorLeaderboardRouteImport } from './routes/_authenticated/ambassador.leaderboard'
 import { Route as AuthenticatedAmbassadorDashboardRouteImport } from './routes/_authenticated/ambassador.dashboard'
 import { Route as AuthenticatedAmbassadorCommissionStructureRouteImport } from './routes/_authenticated/ambassador.commission-structure'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
@@ -460,6 +461,12 @@ const AuthenticatedAmbassadorPayoutsRoute =
   AuthenticatedAmbassadorPayoutsRouteImport.update({
     id: '/payouts',
     path: '/payouts',
+    getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
+const AuthenticatedAmbassadorLeaderboardRoute =
+  AuthenticatedAmbassadorLeaderboardRouteImport.update({
+    id: '/leaderboard',
+    path: '/leaderboard',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
 const AuthenticatedAmbassadorDashboardRoute =
@@ -1013,6 +1020,7 @@ export interface FileRoutesByFullPath {
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
+  '/ambassador/leaderboard': typeof AuthenticatedAmbassadorLeaderboardRoute
   '/ambassador/payouts': typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
   '/ambassador/profile': typeof AuthenticatedAmbassadorProfileRoute
   '/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
@@ -1151,6 +1159,7 @@ export interface FileRoutesByTo {
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
+  '/ambassador/leaderboard': typeof AuthenticatedAmbassadorLeaderboardRoute
   '/ambassador/payouts': typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
   '/ambassador/profile': typeof AuthenticatedAmbassadorProfileRoute
   '/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
@@ -1292,6 +1301,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/_authenticated/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/_authenticated/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
+  '/_authenticated/ambassador/leaderboard': typeof AuthenticatedAmbassadorLeaderboardRoute
   '/_authenticated/ambassador/payouts': typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
   '/_authenticated/ambassador/profile': typeof AuthenticatedAmbassadorProfileRoute
   '/_authenticated/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
@@ -1434,6 +1444,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
+    | '/ambassador/leaderboard'
     | '/ambassador/payouts'
     | '/ambassador/profile'
     | '/ambassador/settings'
@@ -1572,6 +1583,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
+    | '/ambassador/leaderboard'
     | '/ambassador/payouts'
     | '/ambassador/profile'
     | '/ambassador/settings'
@@ -1712,6 +1724,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/support'
     | '/_authenticated/ambassador/commission-structure'
     | '/_authenticated/ambassador/dashboard'
+    | '/_authenticated/ambassador/leaderboard'
     | '/_authenticated/ambassador/payouts'
     | '/_authenticated/ambassador/profile'
     | '/_authenticated/ambassador/settings'
@@ -2214,6 +2227,13 @@ declare module '@tanstack/react-router' {
       path: '/payouts'
       fullPath: '/ambassador/payouts'
       preLoaderRoute: typeof AuthenticatedAmbassadorPayoutsRouteImport
+      parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
+    '/_authenticated/ambassador/leaderboard': {
+      id: '/_authenticated/ambassador/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/ambassador/leaderboard'
+      preLoaderRoute: typeof AuthenticatedAmbassadorLeaderboardRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
     '/_authenticated/ambassador/dashboard': {
@@ -2952,6 +2972,7 @@ const AuthenticatedAmbassadorPayoutsRouteWithChildren =
 interface AuthenticatedAmbassadorRouteChildren {
   AuthenticatedAmbassadorCommissionStructureRoute: typeof AuthenticatedAmbassadorCommissionStructureRoute
   AuthenticatedAmbassadorDashboardRoute: typeof AuthenticatedAmbassadorDashboardRoute
+  AuthenticatedAmbassadorLeaderboardRoute: typeof AuthenticatedAmbassadorLeaderboardRoute
   AuthenticatedAmbassadorPayoutsRoute: typeof AuthenticatedAmbassadorPayoutsRouteWithChildren
   AuthenticatedAmbassadorProfileRoute: typeof AuthenticatedAmbassadorProfileRoute
   AuthenticatedAmbassadorSettingsRoute: typeof AuthenticatedAmbassadorSettingsRoute
@@ -2971,6 +2992,8 @@ const AuthenticatedAmbassadorRouteChildren: AuthenticatedAmbassadorRouteChildren
       AuthenticatedAmbassadorCommissionStructureRoute,
     AuthenticatedAmbassadorDashboardRoute:
       AuthenticatedAmbassadorDashboardRoute,
+    AuthenticatedAmbassadorLeaderboardRoute:
+      AuthenticatedAmbassadorLeaderboardRoute,
     AuthenticatedAmbassadorPayoutsRoute:
       AuthenticatedAmbassadorPayoutsRouteWithChildren,
     AuthenticatedAmbassadorProfileRoute: AuthenticatedAmbassadorProfileRoute,

@@ -10411,6 +10411,49 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ambassador_leaderboard_featured_badges: {
+        Args: { _ids: string[] }
+        Returns: {
+          achieved_at: string
+          ambassador_id: string
+          badge_icon: string
+          badge_id: string
+          badge_name: string
+        }[]
+      }
+      ambassador_leaderboard_my_rank: {
+        Args: never
+        Returns: {
+          ambassador_code: string
+          ambassador_id: string
+          college_display: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_active: number
+          valid_referral_leads: number
+          verified_enrollments: number
+        }[]
+      }
+      ambassador_leaderboard_overall: {
+        Args: { _limit?: number; _offset?: number; _search?: string }
+        Returns: {
+          ambassador_id: string
+          college_display: string
+          conversion_rate: number
+          display_identity: string
+          level_icon: string
+          level_name: string
+          photo_url: string
+          rank_position: number
+          total_count: number
+          valid_referral_leads: number
+          verified_enrollments: number
+        }[]
+      }
       evaluate_ambassador_badges: {
         Args: { _ambassador_id: string }
         Returns: number
