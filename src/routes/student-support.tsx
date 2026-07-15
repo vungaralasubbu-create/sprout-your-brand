@@ -47,6 +47,8 @@ import {
   StudentSupportSafetyStrip,
   StudentSupportFinalCTA,
 } from "@/components/student-support/support-topics";
+import { StudentSupportEscalationDialog } from "@/components/student-support/escalation-dialog";
+import { LifeBuoy } from "lucide-react";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
@@ -242,6 +244,7 @@ function StudentSupportPage() {
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+  const [escalationOpen, setEscalationOpen] = React.useState(false);
 
   React.useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -513,6 +516,28 @@ function StudentSupportPage() {
               </div>
             )}
 
+            {/* Escalation trigger — only for signed-in students after some AI dialogue */}
+            {signedIn === true &&
+              messages.filter((m) => m.role === "user").length >= 1 &&
+              !isLoading && (
+                <div className="border-t border-border bg-muted/30 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-sm">
+                    <div className="font-medium flex items-center gap-2">
+                      <LifeBuoy className="size-4 text-primary" />
+                      Still Need Help?
+                    </div>
+                    <p className="text-muted-foreground text-xs mt-1 max-w-2xl">
+                      If AI Student Support couldn't fully resolve this, escalate to Glintr
+                      Student Support. We'll prepare a factual Issue Summary from this
+                      conversation for you to review before submitting.
+                    </p>
+                  </div>
+                  <Button size="sm" onClick={() => setEscalationOpen(true)}>
+                    Submit A Support Request <ArrowRight className="ml-1.5 size-3.5" />
+                  </Button>
+                </div>
+              )}
+
             {/* Composer */}
             <div className="border-t border-border bg-card px-5 py-4">
               <form
@@ -704,6 +729,13 @@ function StudentSupportPage() {
           </div>
         </Container>
       </Section>
+      <StudentSupportEscalationDialog
+        open={escalationOpen}
+        onOpenChange={setEscalationOpen}
+        messages={messages}
+        intent={intent}
+        snapshot={snapshot}
+      />
     </div>
   );
 }
