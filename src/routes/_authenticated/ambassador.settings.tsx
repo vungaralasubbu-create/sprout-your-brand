@@ -19,6 +19,11 @@ import {
   updatePrivacyPreferences,
   listProfileActivity,
 } from "@/lib/campus-ambassador/profile.functions";
+import {
+  getNotificationCategoriesAndPrefs,
+  updateNotificationCategoryPreference,
+} from "@/lib/campus-ambassador/notifications.functions";
+import { Lock } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/ambassador/settings")({
   head: () => ({
