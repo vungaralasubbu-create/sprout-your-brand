@@ -800,7 +800,7 @@ function GenerativeAISpotlight() {
                   background: `radial-gradient(60% 60% at 50% 50%, color-mix(in oklab, ${activeProgram.accent} 14%, transparent), transparent 70%)`,
                 }}
               />
-              <activeProgram.Graphic accent={activeProgram.accent} />
+              <AIWorkspaceVisual variant={activeProgram.variant} accent={activeProgram.accent} />
             </div>
           </Reveal>
 
