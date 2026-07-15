@@ -11478,6 +11478,20 @@ export type Database = {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean
       }
+      tg_amb_notify_insert: {
+        Args: {
+          p_action_route: string
+          p_ambassador_id: string
+          p_category: string
+          p_dedupe_key: string
+          p_message: string
+          p_notif_type: string
+          p_related_entity_id: string
+          p_related_entity_type: string
+          p_title: string
+        }
+        Returns: undefined
+      }
       verify_certificate: {
         Args: { _code: string }
         Returns: {
