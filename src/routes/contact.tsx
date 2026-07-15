@@ -495,13 +495,19 @@ function ContactPage() {
                   routerMut.mutate(v);
                 }}
                 disabled={routerMut.isPending || routerInput.trim().length < 3}
+                aria-busy={routerMut.isPending}
               >
                 {routerMut.isPending ? (
-                  <Loader2 className="size-4 animate-spin" />
+                  <>
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                    <span>Finding the right contact path…</span>
+                  </>
                 ) : (
-                  <Compass className="size-4" />
+                  <>
+                    <Compass className="size-4" aria-hidden="true" />
+                    <span>Find My Contact Path</span>
+                  </>
                 )}
-                Find My Contact Path
               </Button>
             </div>
 
