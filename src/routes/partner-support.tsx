@@ -304,14 +304,14 @@ function PartnerSupportPage() {
 
   function handleStarter(next: { intent: PartnerSupportIntent; question: string }) {
     setIntent(next.intent);
-    navigate({ search: (p) => ({ ...p, intent: next.intent }), replace: true });
+    navigate({ search: (p: Record<string, unknown>) => ({ ...p, intent: next.intent }), replace: true });
     handleSubmit(next.question);
   }
 
   function handleTopicStarter(topicKey: TopicKey, next: PartnerSupportIntent, question: string) {
     setTopic(topicKey);
     setIntent(next);
-    navigate({ search: (p) => ({ ...p, topic: topicKey, intent: next }), replace: true });
+    navigate({ search: (p: Record<string, unknown>) => ({ ...p, topic: topicKey, intent: next }), replace: true });
     handleSubmit(question);
     // scroll into chat
     setTimeout(() => {
@@ -325,7 +325,7 @@ function PartnerSupportPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* ============= HERO ============= */}
-      <Section size="lg" className="pt-16 pb-8">
+      <Section padding="lg" className="pt-16 pb-8">
         <Container>
           <div className="max-w-4xl">
             <Badge variant="outline" className="mb-4 uppercase tracking-widest text-[10px]">
@@ -381,7 +381,7 @@ function PartnerSupportPage() {
       </Section>
 
       {/* ============= AI SUPPORT EXPERIENCE ============= */}
-      <Section size="md" className="pt-4">
+      <Section padding="md" className="pt-4">
         <Container>
           <Card
             id="partner-support-ai"
@@ -400,7 +400,7 @@ function PartnerSupportPage() {
                 </div>
               </div>
               {intent && (
-                <Badge variant="secondary" className="text-[10px] uppercase">
+                <Badge variant="muted" className="text-[10px] uppercase">
                   {partnerIntentLabel(intent)}
                 </Badge>
               )}
@@ -596,7 +596,7 @@ function PartnerSupportPage() {
       </Section>
 
       {/* ============= AUTH-AWARE QUICK ACTIONS ============= */}
-      <Section size="md">
+      <Section padding="md">
         <Container>
           <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
             Partner Quick Actions
@@ -627,7 +627,7 @@ function PartnerSupportPage() {
       </Section>
 
       {/* ============= PARTNER MODEL SECTION ============= */}
-      <Section size="lg" className="bg-muted/30">
+      <Section padding="lg" className="bg-muted/30">
         <Container>
           <div className="max-w-3xl mb-8">
             <Badge variant="outline" className="uppercase tracking-widest text-[10px]">
@@ -701,7 +701,7 @@ function PartnerSupportPage() {
       </Section>
 
       {/* ============= REFERRAL → EARNINGS FLOW ============= */}
-      <Section size="lg">
+      <Section padding="lg">
         <Container>
           <div className="max-w-3xl mb-8">
             <Badge variant="outline" className="uppercase tracking-widest text-[10px]">
@@ -766,7 +766,7 @@ function PartnerSupportPage() {
       </Section>
 
       {/* ============= LEAD OWNERSHIP SECTION ============= */}
-      <Section size="lg" className="bg-muted/30">
+      <Section padding="lg" className="bg-muted/30">
         <Container>
           <div className="grid lg:grid-cols-2 gap-10">
             <div>
@@ -815,7 +815,7 @@ function PartnerSupportPage() {
       </Section>
 
       {/* ============= EARNINGS & PAYOUT SECTION ============= */}
-      <Section size="lg">
+      <Section padding="lg">
         <Container>
           <div className="max-w-3xl mb-8">
             <Badge variant="outline" className="uppercase tracking-widest text-[10px]">
