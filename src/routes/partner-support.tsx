@@ -263,8 +263,22 @@ function PartnerSupportPage() {
   const [input, setInput] = React.useState(search.q ?? "");
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [escalation, setEscalation] = React.useState<EscalationContext | null>(null);
+  const [feedback, setFeedback] = React.useState<Record<number, FeedbackValue>>({});
+  const [sensitiveHits, setSensitiveHits] = React.useState<string[]>([]);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  function focusAIInput() {
+    document
+      .getElementById("partner-support-ai")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => inputRef.current?.focus(), 300);
+  }
+  function scrollToGuided() {
+    document
+      .getElementById("guided-support")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   React.useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
