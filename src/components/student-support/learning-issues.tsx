@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ClipboardList,
   CreditCard,
+  FileWarning,
   GraduationCap,
   Loader2,
   Lock,
@@ -17,6 +18,9 @@ import {
   RefreshCcw,
   Search,
   Target,
+  Trophy,
+  Video,
+  Zap,
 } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -25,9 +29,11 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
   getStudentProgramSupportContext,
+  getStudentAssessmentSupportContext,
   type StudentSnapshot,
   type StudentProgramSupportContext,
   type StudentEnrollmentBrief,
+  type StudentAssessmentSupportContext,
 } from "@/lib/student-support/student-support.functions";
 
 // ============================================================
@@ -43,7 +49,12 @@ type IssueKey =
   | "module_locked"
   | "cannot_open_lesson"
   | "lesson_not_complete"
-  | "progress_not_updating";
+  | "progress_not_updating"
+  | "cannot_start_assessment"
+  | "assessment_result_missing"
+  | "certificate_missing"
+  | "video_not_playing"
+  | "learning_page_not_opening";
 
 type Issue = {
   key: IssueKey;
@@ -127,6 +138,51 @@ const ISSUES: Issue[] = [
     description: "See your current program progress from the Glintr progress engine.",
     icon: Target,
     needsProgram: true,
+  },
+  {
+    key: "cannot_start_assessment",
+    title: "I Can't Start My Assessment",
+    intent: "assessment_access",
+    question: "I can't start my assessment.",
+    description: "Check authorised assessment access and attempt state.",
+    icon: Zap,
+    needsProgram: false,
+  },
+  {
+    key: "assessment_result_missing",
+    title: "My Assessment Result Is Missing",
+    intent: "assessment_result",
+    question: "My assessment result is missing.",
+    description: "See student-visible attempt and result state.",
+    icon: FileWarning,
+    needsProgram: false,
+  },
+  {
+    key: "certificate_missing",
+    title: "My Certificate Is Missing",
+    intent: "certificate_missing",
+    question: "My certificate is missing.",
+    description: "See authorised certificate eligibility and access state.",
+    icon: Trophy,
+    needsProgram: true,
+  },
+  {
+    key: "video_not_playing",
+    title: "My Video Is Not Playing",
+    intent: "video_playback",
+    question: "My lesson video is not playing.",
+    description: "Separate lesson access from a technical video playback issue.",
+    icon: Video,
+    needsProgram: true,
+  },
+  {
+    key: "learning_page_not_opening",
+    title: "A Learning Page Is Not Opening",
+    intent: "learning_technical",
+    question: "A learning page is not opening.",
+    description: "Safe troubleshooting for program, lesson or assessment pages.",
+    icon: AlertTriangle,
+    needsProgram: false,
   },
 ];
 
@@ -603,6 +659,120 @@ function ResolvedJourney({
           </>
         );
       }
+      case "certificate_missing": {
+        if (ctxMutation.isPending) {
+          return (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="size-4 animate-spin" /> Loading your certificate context...
+            </div>
+          );
+        }
+        if (ctxMutation.isError || !ctx || !ctx.authorised) {
+          return (
+            <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive flex items-start gap-2">
+              <AlertTriangle className="size-4 mt-0.5" />
+              I couldn't load an authorised certificate context. Try another program or ask Glintr AI Student Support.
+            </div>
+          );
+        }
+        return (
+          <>
+            <StatusLine label="Program" value={ctx.courseName ?? "Program"} />
+            <StatusLine
+              label="Enrollment Status"
+              value={formatEnrollmentStatus(ctx.enrollmentStatus)}
+            />
+            <StatusLine
+              label="Learning Progress"
+              value={
+                typeof ctx.progressPct === "number"
+                  ? `${ctx.progressPct}% (${ctx.completedLessonCount}/${ctx.publishedLessonCount} lessons)`
+                  : "Not available"
+              }
+            />
+            <StatusLine
+              label="Certificate On Record"
+              value={ctx.hasCertificate ? "Available" : "Not available"}
+            />
+            <p className="mt-2 text-xs text-muted-foreground">
+              Glintr's certificate system is authoritative. AI Student Support cannot issue, mark eligible, or release certificates. If your certificate should exist but is missing, ask a follow-up and human student support can review it.
+            </p>
+          </>
+        );
+      }
+      case "video_not_playing": {
+        if (ctxMutation.isPending) {
+          return (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="size-4 animate-spin" /> Checking your lesson access...
+            </div>
+          );
+        }
+        const lessonAvailable =
+          ctx && ctx.authorised && !!ctx.currentLessonName && ctx.currentLessonStatus !== null;
+        return (
+          <>
+            {ctx?.authorised && (
+              <>
+                <StatusLine label="Program" value={ctx.courseName ?? "Program"} />
+                <StatusLine
+                  label="Current Lesson"
+                  value={ctx.currentLessonName ?? "None available"}
+                />
+                <StatusLine
+                  label="Lesson Access"
+                  value={lessonAvailable ? "Available" : "Not available"}
+                />
+              </>
+            )}
+            {!lessonAvailable ? (
+              <p className="mt-2 text-xs text-muted-foreground">
+                The current lesson does not appear available on your account. This is a Lesson Access state, not a technical playback issue. Follow the program's access rules or complete the required previous lesson.
+              </p>
+            ) : (
+              <div className="mt-3 space-y-2 text-sm">
+                <div className="font-medium">Safe playback checks:</div>
+                <ol className="ml-4 list-decimal space-y-1 text-muted-foreground text-xs">
+                  <li>Confirm the correct lesson is open.</li>
+                  <li>Retry the video from the start.</li>
+                  <li>Check your network connection.</li>
+                  <li>Refresh the lesson page.</li>
+                  <li>Try a different supported browser tab.</li>
+                </ol>
+                <p className="text-xs text-muted-foreground">
+                  Do not share passwords, OTPs, or payment PINs. If the issue persists, ask a follow-up and preserve the program/lesson context for support review.
+                </p>
+              </div>
+            )}
+          </>
+        );
+      }
+      case "cannot_start_assessment":
+      case "assessment_result_missing":
+        return (
+          <AssessmentIssueBody
+            issue={issue}
+            onAskAI={onAskAI}
+          />
+        );
+      case "learning_page_not_opening":
+        return (
+          <div className="space-y-3 text-sm">
+            <p className="text-muted-foreground">
+              First, identify which page isn't opening: program, module, lesson, or assessment. Then try these safe steps:
+            </p>
+            <ol className="ml-4 list-decimal space-y-1 text-muted-foreground text-xs">
+              <li>Retry the current action.</li>
+              <li>Refresh the page.</li>
+              <li>Confirm you are signed in to your Glintr student account.</li>
+              <li>Return to My Learning and reopen the program.</li>
+              <li>Try the action again.</li>
+            </ol>
+            <p className="text-xs text-muted-foreground">
+              If the page still won't open, this may be an access/business state rather than a technical issue — the AI can help distinguish. Never share passwords, OTPs, UPI PINs, CVV, or authentication tokens.
+            </p>
+          </div>
+        );
     }
   })();
 
@@ -725,6 +895,156 @@ function formatLessonStatus(s: string | null | undefined) {
   };
   return map[s] ?? s;
 }
+
+// ============================================================
+// Assessment guided issue body (fetches authorised assessments)
+// ============================================================
+function AssessmentIssueBody({
+  issue,
+  onAskAI,
+}: {
+  issue: Issue;
+  onAskAI: (launch: LearningIssueLaunch) => void;
+}) {
+  const fetchAsx = useServerFn(getStudentAssessmentSupportContext);
+  const [selected, setSelected] = React.useState<string | null>(null);
+  const q = useMutation({
+    mutationFn: async () => fetchAsx() as Promise<StudentAssessmentSupportContext>,
+  });
+  React.useEffect(() => {
+    q.mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const data = q.data;
+  const list = data?.assessments ?? [];
+
+  React.useEffect(() => {
+    if (list.length === 1) setSelected(list[0].assessmentId);
+  }, [list]);
+
+  if (q.isPending) {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Loader2 className="size-4 animate-spin" /> Loading your authorised assessments...
+      </div>
+    );
+  }
+  if (q.isError) {
+    return (
+      <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive flex items-start gap-2">
+        <AlertTriangle className="size-4 mt-0.5" />
+        Unable to load assessment information. Please try again or ask Glintr AI Student Support.
+      </div>
+    );
+  }
+  if (list.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        No authorised assessments are currently visible on your account. Assessments appear once they are published in a program you're enrolled in.
+      </p>
+    );
+  }
+  if (!selected) {
+    return (
+      <div>
+        <div className="mb-2 text-sm font-medium">Which Assessment Do You Need Help With?</div>
+        <div className="grid gap-2">
+          {list.map((a) => (
+            <button
+              key={a.assessmentId}
+              onClick={() => setSelected(a.assessmentId)}
+              className="text-left rounded-lg border border-border hover:border-primary/40 hover:bg-primary-soft/30 transition px-4 py-3 flex items-center justify-between gap-3"
+            >
+              <div className="min-w-0">
+                <div className="font-medium text-sm truncate">{a.name}</div>
+                <div className="text-xs text-muted-foreground truncate">
+                  {a.courseName ?? "Program"}
+                  {a.bestAttemptPercentage != null
+                    ? ` · Best ${Math.round(a.bestAttemptPercentage)}%`
+                    : " · No submitted attempt"}
+                </div>
+              </div>
+              <ArrowRight className="size-4 text-muted-foreground shrink-0" />
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const a = list.find((x) => x.assessmentId === selected)!;
+  const isResult = issue.key === "assessment_result_missing";
+  return (
+    <>
+      <StatusLine label="Assessment" value={a.name} />
+      <StatusLine label="Program" value={a.courseName ?? "Program"} />
+      {isResult ? (
+        <>
+          <StatusLine
+            label="Attempts Submitted"
+            value={String(
+              a.totalAttempts > 0 && (a.bestAttemptStatus === "submitted" || a.lastAttemptSubmittedAt)
+                ? a.totalAttempts
+                : 0,
+            )}
+          />
+          <StatusLine
+            label="Best Result"
+            value={
+              a.bestAttemptPercentage != null
+                ? `${Math.round(a.bestAttemptPercentage)}%${a.bestAttemptPassed != null ? ` · ${a.bestAttemptPassed ? "Passed" : "Not Passed"}` : ""}`
+                : "No submitted attempt"
+            }
+          />
+          <p className="mt-2 text-xs text-muted-foreground">
+            Results come from Glintr's authoritative assessment engine. AI Student Support cannot calculate scores, mark passed/failed, or change results.
+          </p>
+        </>
+      ) : (
+        <>
+          <StatusLine label="Required" value={a.isRequired ? "Yes" : "No"} />
+          <StatusLine
+            label="Pass Percentage"
+            value={a.passPercentage != null ? `${Math.round(a.passPercentage)}%` : "Not configured"}
+          />
+          <StatusLine
+            label="Your Attempts So Far"
+            value={String(a.totalAttempts)}
+          />
+          <p className="mt-2 text-xs text-muted-foreground">
+            Assessment access follows Glintr's configured rules. AI Student Support cannot start an assessment, create an attempt, unlock, or bypass access — and cannot provide answers to active assessments.
+          </p>
+        </>
+      )}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button asChild size="sm">
+          <Link to="/student/assessments">Open Assessments</Link>
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() =>
+            onAskAI({
+              intent: issue.intent,
+              question: `${issue.question} (Assessment: ${a.name}${a.courseName ? `, Program: ${a.courseName}` : ""})`,
+              courseId: a.courseId ?? undefined,
+              courseName: a.courseName ?? undefined,
+            })
+          }
+        >
+          Ask A Follow-Up
+        </Button>
+        {list.length > 1 && (
+          <Button size="sm" variant="ghost" onClick={() => setSelected(null)}>
+            Choose Another Assessment
+          </Button>
+        )}
+      </div>
+    </>
+  );
+}
+
 
 // Re-export unused icon type for tree-shakers.
 export const _GraduationCap = GraduationCap;
