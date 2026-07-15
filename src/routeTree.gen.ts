@@ -10,11 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WhiteLabelEdtechRouteImport } from './routes/white-label-edtech'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
+import { Route as RevenueShareTermsRouteImport } from './routes/revenue-share-terms'
+import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as PayoutSystemRouteImport } from './routes/payout-system'
+import { Route as PayoutPolicyRouteImport } from './routes/payout-policy'
 import { Route as PartnerSupportRouteImport } from './routes/partner-support'
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as MarketingSupportRouteImport } from './routes/marketing-support'
@@ -23,6 +28,7 @@ import { Route as JoinRouteImport } from './routes/join'
 import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
+import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BrandSetupRouteImport } from './routes/brand-setup'
@@ -184,6 +190,11 @@ const WhiteLabelEdtechRoute = WhiteLabelEdtechRouteImport.update({
   path: '/white-label-edtech',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuccessStoriesRoute = SuccessStoriesRouteImport.update({
   id: '/success-stories',
   path: '/success-stories',
@@ -204,9 +215,29 @@ const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
   path: '/sales-opportunity',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RevenueShareTermsRoute = RevenueShareTermsRouteImport.update({
+  id: '/revenue-share-terms',
+  path: '/revenue-share-terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefundPolicyRoute = RefundPolicyRouteImport.update({
+  id: '/refund-policy',
+  path: '/refund-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PayoutSystemRoute = PayoutSystemRouteImport.update({
   id: '/payout-system',
   path: '/payout-system',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PayoutPolicyRoute = PayoutPolicyRouteImport.update({
+  id: '/payout-policy',
+  path: '/payout-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerSupportRoute = PartnerSupportRouteImport.update({
@@ -247,6 +278,11 @@ const FaqsRoute = FaqsRouteImport.update({
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
   path: '/earn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookiePolicyRoute = CookiePolicyRouteImport.update({
+  id: '/cookie-policy',
+  path: '/cookie-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -1157,6 +1193,7 @@ export interface FileRoutesByFullPath {
   '/brand-setup': typeof BrandSetupRoute
   '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
+  '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
@@ -1165,11 +1202,16 @@ export interface FileRoutesByFullPath {
   '/marketing-support': typeof MarketingSupportRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
+  '/payout-policy': typeof PayoutPolicyRoute
   '/payout-system': typeof PayoutSystemRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
+  '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
@@ -1327,6 +1369,7 @@ export interface FileRoutesByTo {
   '/brand-setup': typeof BrandSetupRoute
   '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
+  '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
@@ -1335,11 +1378,16 @@ export interface FileRoutesByTo {
   '/marketing-support': typeof MarketingSupportRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
+  '/payout-policy': typeof PayoutPolicyRoute
   '/payout-system': typeof PayoutSystemRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
+  '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1496,6 +1544,7 @@ export interface FileRoutesById {
   '/brand-setup': typeof BrandSetupRoute
   '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
+  '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
@@ -1504,11 +1553,16 @@ export interface FileRoutesById {
   '/marketing-support': typeof MarketingSupportRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
+  '/payout-policy': typeof PayoutPolicyRoute
   '/payout-system': typeof PayoutSystemRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/refund-policy': typeof RefundPolicyRoute
+  '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
@@ -1668,6 +1722,7 @@ export interface FileRouteTypes {
     | '/brand-setup'
     | '/careers'
     | '/contact'
+    | '/cookie-policy'
     | '/earn'
     | '/faqs'
     | '/income-calculator'
@@ -1676,11 +1731,16 @@ export interface FileRouteTypes {
     | '/marketing-support'
     | '/partner-network'
     | '/partner-support'
+    | '/payout-policy'
     | '/payout-system'
+    | '/privacy-policy'
+    | '/refund-policy'
+    | '/revenue-share-terms'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
+    | '/terms-and-conditions'
     | '/white-label-edtech'
     | '/admin'
     | '/ambassador'
@@ -1838,6 +1898,7 @@ export interface FileRouteTypes {
     | '/brand-setup'
     | '/careers'
     | '/contact'
+    | '/cookie-policy'
     | '/earn'
     | '/faqs'
     | '/income-calculator'
@@ -1846,11 +1907,16 @@ export interface FileRouteTypes {
     | '/marketing-support'
     | '/partner-network'
     | '/partner-support'
+    | '/payout-policy'
     | '/payout-system'
+    | '/privacy-policy'
+    | '/refund-policy'
+    | '/revenue-share-terms'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
+    | '/terms-and-conditions'
     | '/white-label-edtech'
     | '/ambassador'
     | '/brand'
@@ -2006,6 +2072,7 @@ export interface FileRouteTypes {
     | '/brand-setup'
     | '/careers'
     | '/contact'
+    | '/cookie-policy'
     | '/earn'
     | '/faqs'
     | '/income-calculator'
@@ -2014,11 +2081,16 @@ export interface FileRouteTypes {
     | '/marketing-support'
     | '/partner-network'
     | '/partner-support'
+    | '/payout-policy'
     | '/payout-system'
+    | '/privacy-policy'
+    | '/refund-policy'
+    | '/revenue-share-terms'
     | '/sales-opportunity'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
+    | '/terms-and-conditions'
     | '/white-label-edtech'
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
@@ -2178,6 +2250,7 @@ export interface RootRouteChildren {
   BrandSetupRoute: typeof BrandSetupRoute
   CareersRoute: typeof CareersRouteWithChildren
   ContactRoute: typeof ContactRoute
+  CookiePolicyRoute: typeof CookiePolicyRoute
   EarnRoute: typeof EarnRoute
   FaqsRoute: typeof FaqsRouteWithChildren
   IncomeCalculatorRoute: typeof IncomeCalculatorRoute
@@ -2186,11 +2259,16 @@ export interface RootRouteChildren {
   MarketingSupportRoute: typeof MarketingSupportRoute
   PartnerNetworkRoute: typeof PartnerNetworkRoute
   PartnerSupportRoute: typeof PartnerSupportRouteWithChildren
+  PayoutPolicyRoute: typeof PayoutPolicyRoute
   PayoutSystemRoute: typeof PayoutSystemRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  RefundPolicyRoute: typeof RefundPolicyRoute
+  RevenueShareTermsRoute: typeof RevenueShareTermsRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   WhiteLabelEdtechRoute: typeof WhiteLabelEdtechRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
@@ -2213,6 +2291,13 @@ declare module '@tanstack/react-router' {
       path: '/white-label-edtech'
       fullPath: '/white-label-edtech'
       preLoaderRoute: typeof WhiteLabelEdtechRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/success-stories': {
@@ -2243,11 +2328,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalesOpportunityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/revenue-share-terms': {
+      id: '/revenue-share-terms'
+      path: '/revenue-share-terms'
+      fullPath: '/revenue-share-terms'
+      preLoaderRoute: typeof RevenueShareTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/refund-policy': {
+      id: '/refund-policy'
+      path: '/refund-policy'
+      fullPath: '/refund-policy'
+      preLoaderRoute: typeof RefundPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payout-system': {
       id: '/payout-system'
       path: '/payout-system'
       fullPath: '/payout-system'
       preLoaderRoute: typeof PayoutSystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payout-policy': {
+      id: '/payout-policy'
+      path: '/payout-policy'
+      fullPath: '/payout-policy'
+      preLoaderRoute: typeof PayoutPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner-support': {
@@ -2304,6 +2417,13 @@ declare module '@tanstack/react-router' {
       path: '/earn'
       fullPath: '/earn'
       preLoaderRoute: typeof EarnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cookie-policy': {
+      id: '/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/cookie-policy'
+      preLoaderRoute: typeof CookiePolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -3969,6 +4089,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandSetupRoute: BrandSetupRoute,
   CareersRoute: CareersRouteWithChildren,
   ContactRoute: ContactRoute,
+  CookiePolicyRoute: CookiePolicyRoute,
   EarnRoute: EarnRoute,
   FaqsRoute: FaqsRouteWithChildren,
   IncomeCalculatorRoute: IncomeCalculatorRoute,
@@ -3977,11 +4098,16 @@ const rootRouteChildren: RootRouteChildren = {
   MarketingSupportRoute: MarketingSupportRoute,
   PartnerNetworkRoute: PartnerNetworkRoute,
   PartnerSupportRoute: PartnerSupportRouteWithChildren,
+  PayoutPolicyRoute: PayoutPolicyRoute,
   PayoutSystemRoute: PayoutSystemRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  RefundPolicyRoute: RefundPolicyRoute,
+  RevenueShareTermsRoute: RevenueShareTermsRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudentSupportRoute: StudentSupportRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
   WhiteLabelEdtechRoute: WhiteLabelEdtechRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
