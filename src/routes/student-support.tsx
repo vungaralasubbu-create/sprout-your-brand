@@ -495,12 +495,7 @@ function StudentSupportPage() {
                   </p>
                 </div>
                 <Button asChild size="sm">
-                  <Link
-                    to="/auth"
-                    search={{
-                      redirect: `/student-support${intent ? `?intent=${intent}` : ""}`,
-                    }}
-                  >
+                  <Link to="/auth">
                     <LogIn className="mr-1.5 size-3.5" /> Sign In
                   </Link>
                 </Button>
