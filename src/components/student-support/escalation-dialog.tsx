@@ -41,10 +41,12 @@ import {
   submitStudentSupportEscalation,
   suggestStudentSupportCategory,
   studentIntentLabel,
+  type StudentSupportAttachment,
   type StudentSupportCategory,
   type StudentSupportIntent,
   type StudentSnapshot,
 } from "@/lib/student-support/student-support.functions";
+import { StudentSupportAttachmentPicker } from "@/components/student-support/attachment-picker";
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
 
@@ -97,6 +99,7 @@ export function StudentSupportEscalationDialog({
   const [details, setDetails] = React.useState("");
   const [studentNote, setStudentNote] = React.useState("");
   const [confirmDistinct, setConfirmDistinct] = React.useState(false);
+  const [attachments, setAttachments] = React.useState<StudentSupportAttachment[]>([]);
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [result, setResult] = React.useState<SubmitResult | null>(null);
   const nonceRef = React.useRef<string>(newNonce());
@@ -122,6 +125,7 @@ export function StudentSupportEscalationDialog({
     setDetails("");
     setStudentNote("");
     setConfirmDistinct(false);
+    setAttachments([]);
     setErrorMsg(null);
     setResult(null);
     nonceRef.current = newNonce();
