@@ -500,7 +500,8 @@ function AboutPage() {
         <Section tone="default" padding="lg">
           <Container>
             <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-5 min-w-0">
+
                 <span className="text-label text-primary">
                   WORKING WITH CAMPUS COMMUNITIES
                 </span>
@@ -556,7 +557,7 @@ function AboutPage() {
                   "Guided by program eligibility and policies",
                 ]}
               />
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-5 min-w-0">
                 <span className="text-label text-primary">
                   WORKING WITH PARTNERS
                 </span>

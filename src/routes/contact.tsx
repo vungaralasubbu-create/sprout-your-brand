@@ -568,7 +568,7 @@ function ContactPage() {
               <p className="text-xs text-muted-foreground">
                 Prepared drafts are grounded only in what you write above.
               </p>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant="ghost"
                   onClick={handleStartOver}
