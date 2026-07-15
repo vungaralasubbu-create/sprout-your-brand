@@ -26,6 +26,10 @@ import {
   getAmbassadorCommissionStructure,
   recordAmbassadorActivity,
 } from "@/lib/campus-ambassador/dashboard.functions";
+import { getMyLeaderboardRank, getMyMonthlyRank } from "@/lib/campus-ambassador/leaderboard.functions";
+import { listMyRecognitions } from "@/lib/campus-ambassador/recognition.functions";
+import { MyRankMovementChip } from "@/components/ambassador/ranking-rule-ui";
+import { Trophy, Award } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/ambassador/dashboard")({
   head: () => ({
