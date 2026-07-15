@@ -1331,7 +1331,7 @@ const FLOWS: Flow[] = [
   {
     key: "payout",
     title: "My payout is delayed, on hold or shows an issue",
-    category: "payout",
+    category: "payout_status",
     symptoms:
       "A payout you requested is not moving through the expected payout status.",
     steps: [
