@@ -86,6 +86,14 @@ export const Route = createFileRoute("/sitemap.xml")({
                 priority: "0.7",
               });
             }
+            for (const p of (posts ?? []) as Array<{ slug: string; updated_at: string | null; editorial_updated_at: string | null; published_at: string | null }>) {
+              entries.push({
+                path: `/blog/${p.slug}`,
+                lastmod: p.editorial_updated_at ?? p.updated_at ?? p.published_at ?? undefined,
+                changefreq: "monthly",
+                priority: "0.6",
+              });
+            }
           } catch (e) {
             console.error("[sitemap] failed to load CMS entries", e);
           }
