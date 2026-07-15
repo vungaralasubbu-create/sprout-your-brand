@@ -22,6 +22,7 @@ import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
+import { Route as SuccessStoriesStorySlugRouteImport } from './routes/success-stories.$storySlug'
 import { Route as RefCodeRouteImport } from './routes/ref.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
@@ -218,6 +219,11 @@ const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   id: '/verify-certificate/$code',
   path: '/verify-certificate/$code',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SuccessStoriesStorySlugRoute = SuccessStoriesStorySlugRouteImport.update({
+  id: '/$storySlug',
+  path: '/$storySlug',
+  getParentRoute: () => SuccessStoriesRoute,
 } as any)
 const RefCodeRoute = RefCodeRouteImport.update({
   id: '/ref/$code',
@@ -1008,7 +1014,7 @@ export interface FileRoutesByFullPath {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/success-stories': typeof SuccessStoriesRoute
+  '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1019,6 +1025,7 @@ export interface FileRoutesByFullPath {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -1154,7 +1161,7 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/success-stories': typeof SuccessStoriesRoute
+  '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -1163,6 +1170,7 @@ export interface FileRoutesByTo {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
@@ -1299,7 +1307,7 @@ export interface FileRoutesById {
   '/join': typeof JoinRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/success-stories': typeof SuccessStoriesRoute
+  '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1310,6 +1318,7 @@ export interface FileRoutesById {
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
   '/ref/$code': typeof RefCodeRoute
+  '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -1458,6 +1467,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1602,6 +1612,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador'
     | '/launch-your-brand'
@@ -1748,6 +1759,7 @@ export interface FileRouteTypes {
     | '/partner/apply'
     | '/partner/signup'
     | '/ref/$code'
+    | '/success-stories/$storySlug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
@@ -1885,7 +1897,7 @@ export interface RootRouteChildren {
   JoinRoute: typeof JoinRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SuccessStoriesRoute: typeof SuccessStoriesRoute
+  SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -1992,6 +2004,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/verify-certificate/$code'
       preLoaderRoute: typeof VerifyCertificateCodeRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/success-stories/$storySlug': {
+      id: '/success-stories/$storySlug'
+      path: '/$storySlug'
+      fullPath: '/success-stories/$storySlug'
+      preLoaderRoute: typeof SuccessStoriesStorySlugRouteImport
+      parentRoute: typeof SuccessStoriesRoute
     }
     '/ref/$code': {
       id: '/ref/$code'
@@ -3388,6 +3407,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface SuccessStoriesRouteChildren {
+  SuccessStoriesStorySlugRoute: typeof SuccessStoriesStorySlugRoute
+}
+
+const SuccessStoriesRouteChildren: SuccessStoriesRouteChildren = {
+  SuccessStoriesStorySlugRoute: SuccessStoriesStorySlugRoute,
+}
+
+const SuccessStoriesRouteWithChildren = SuccessStoriesRoute._addFileChildren(
+  SuccessStoriesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -3397,7 +3428,7 @@ const rootRouteChildren: RootRouteChildren = {
   JoinRoute: JoinRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SuccessStoriesRoute: SuccessStoriesRoute,
+  SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
