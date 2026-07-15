@@ -41,6 +41,8 @@ type LbSearch = {
   tab?: "overall" | "monthly" | "college" | "programs" | "campaigns";
   programId?: string;
   campaignId?: string;
+  year?: number;
+  month?: number;
 };
 
 export const Route = createFileRoute("/_authenticated/ambassador/leaderboard")({
@@ -53,11 +55,17 @@ export const Route = createFileRoute("/_authenticated/ambassador/leaderboard")({
   validateSearch: (s: Record<string, unknown>): LbSearch => {
     const tab = s.tab;
     const allowed = ["overall","monthly","college","programs","campaigns"] as const;
+    const yearN = typeof s.year === "number" ? s.year : Number(s.year);
+    const monthN = typeof s.month === "number" ? s.month : Number(s.month);
+    const yearValid = Number.isFinite(yearN) && yearN >= 2024 && yearN <= 2100;
+    const monthValid = Number.isFinite(monthN) && monthN >= 1 && monthN <= 12;
     return {
       tab: typeof tab === "string" && (allowed as readonly string[]).includes(tab)
         ? (tab as LbSearch["tab"]) : undefined,
       programId: typeof s.programId === "string" ? s.programId : undefined,
       campaignId: typeof s.campaignId === "string" ? s.campaignId : undefined,
+      year: yearValid ? yearN : undefined,
+      month: monthValid ? monthN : undefined,
     };
   },
   component: LeaderboardPage,
