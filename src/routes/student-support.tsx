@@ -76,6 +76,19 @@ export const Route = createFileRoute("/student-support")({
   }),
   validateSearch: (raw) => SearchSchema.parse(raw ?? {}),
   component: StudentSupportPage,
+  errorComponent: () => (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Student Support is momentarily unavailable</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Please try again in a moment.
+      </p>
+    </main>
+  ),
+  notFoundComponent: () => (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Page not found</h1>
+    </main>
+  ),
 });
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
@@ -419,7 +432,14 @@ function StudentSupportPage() {
               )}
             </div>
 
-            <div className="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-background">
+            <div
+              role="log"
+              aria-live="polite"
+              aria-relevant="additions"
+              aria-busy={isLoading}
+              aria-label="Glintr AI Student Support conversation"
+              className="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-background"
+            >
               {messages.map((m, i) => (
                 <div
                   key={i}

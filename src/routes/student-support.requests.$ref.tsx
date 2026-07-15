@@ -28,10 +28,42 @@ export const Route = createFileRoute("/student-support/requests/$ref")({
   head: () => ({
     meta: [
       { title: "Student Support Request — Glintr" },
-      { name: "robots", content: "noindex" },
+      { name: "robots", content: "noindex, nofollow, noarchive" },
     ],
   }),
   component: RequestDetailPage,
+  errorComponent: () => (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Something went wrong</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Please try again in a moment.
+      </p>
+      <div className="mt-4">
+        <Link
+          to="/student-support/requests"
+          className="text-sm font-medium underline"
+        >
+          Back to My Support Requests
+        </Link>
+      </div>
+    </main>
+  ),
+  notFoundComponent: () => (
+    <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+      <h1 className="text-xl font-semibold">Support Request not available</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        This Student Support Request is not visible to your account.
+      </p>
+      <div className="mt-4">
+        <Link
+          to="/student-support/requests"
+          className="text-sm font-medium underline"
+        >
+          Back to My Support Requests
+        </Link>
+      </div>
+    </main>
+  ),
 });
 
 function statusTone(status: string): string {

@@ -5,6 +5,34 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const BASE_URL = "https://ai.gateway.lovable.dev/v1";
 const DEFAULT_MODEL = "google/gemini-2.5-flash";
 
+// =========================================================================
+// Sensitive-data redaction — reused for AI Issue Summary + Student-submitted
+// summary/details/title before persistence. Never repeat credentials.
+// =========================================================================
+const SENSITIVE_PLACEHOLDER = "[Sensitive information removed]";
+const SENSITIVE_PATTERNS: RegExp[] = [
+  // labelled credentials: password / passcode / otp / pin / cvv / cvc / token / secret / api key / auth
+  /\b(?:password|pass[-_ ]?code|otp|one[-_ ]?time[-_ ]?password|pin|upi[-_ ]?pin|cvv|cvc|card[-_ ]?verification|api[-_ ]?key|auth(?:orization)?[-_ ]?token|access[-_ ]?token|bearer|secret)\s*(?:is|=|:|-|—)\s*['"“”]?[^\s'"“”\n]{3,}/gi,
+  // long digit runs that look like card numbers (13-19 digits, space/dash tolerant)
+  /\b(?:\d[ -]?){13,19}\b/g,
+  // isolated 4-8 digit sequences immediately after otp/pin/cvv keyword
+  /\b(?:otp|pin|cvv|cvc)\b[^\w\n]{0,6}\d{3,10}/gi,
+];
+
+export function redactSensitiveText(input: string): string {
+  if (!input) return input;
+  let out = String(input);
+  for (const re of SENSITIVE_PATTERNS) {
+    out = out.replace(re, SENSITIVE_PLACEHOLDER);
+  }
+  return out;
+}
+
+// Escape user-controlled input used in a PostgREST ilike LIKE-pattern.
+function escapeLikePattern(input: string): string {
+  return String(input).replace(/[\\%_]/g, (m) => `\\${m}`);
+}
+
 // ---- Student Support Intents ----
 export const STUDENT_SUPPORT_INTENTS = [
   "program_discovery",
@@ -787,8 +815,8 @@ export const generateStudentSupportIssueSummary = createServerFn({ method: "POST
         }
       }
     }
-    const title = (parsed.title ?? "").toString().trim().slice(0, 120);
-    const summary = (parsed.summary ?? "").toString().trim().slice(0, 3500);
+    const title = redactSensitiveText((parsed.title ?? "").toString().trim()).slice(0, 120);
+    const summary = redactSensitiveText((parsed.summary ?? "").toString().trim()).slice(0, 3500);
     if (!title || !summary) throw new Error("Unable to prepare the issue summary.");
     return { title, summary, category: suggestedCategory };
   });
@@ -969,13 +997,16 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
     const s = context.supabase as any;
     const uid = context.userId;
 
-    // Idempotency: same student + same nonce within 24h → return existing
+    // Idempotency: same student + same nonce within 24h → return existing.
+    // Escape the nonce for LIKE-pattern usage.
+    const safeNonce = escapeLikePattern(data.nonce);
     const nonceMarker = `[nonce:${data.nonce}]`;
+    const nonceLike = `%[nonce:${safeNonce}]%`;
     const { data: existingByNonce } = await s
       .from("student_support_tickets")
       .select("ticket_code, status, created_at")
       .eq("student_user_id", uid)
-      .ilike("description", `%${nonceMarker}%`)
+      .ilike("description", nonceLike)
       .gte("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
       .maybeSingle();
     if (existingByNonce) {
@@ -1031,9 +1062,13 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       }
     }
 
+    // Redact sensitive credentials from anything we persist.
+    const cleanSummary = redactSensitiveText(data.summary.trim());
+    const cleanDetails = redactSensitiveText((data.details ?? "").trim());
+    const cleanTitle = redactSensitiveText(data.title.trim()).slice(0, 120);
     const compositeDescription = [
-      data.summary.trim(),
-      data.details?.trim() ? `\n\nAdditional Details:\n${data.details.trim()}` : "",
+      cleanSummary,
+      cleanDetails ? `\n\nAdditional Details:\n${cleanDetails}` : "",
       data.supportIntent
         ? `\n\nDetected topic: ${studentIntentLabel(data.supportIntent)}`
         : "",
@@ -1060,7 +1095,7 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       category: data.category,
       program_id: programId,
       context_type: programId && contextType === "program" ? "program" : "none",
-      subject: data.title,
+      subject: cleanTitle,
       description: compositeDescription,
       priority: "normal",
       status: "open",
