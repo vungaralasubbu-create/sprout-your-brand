@@ -606,7 +606,7 @@ function ProcessingCore({
               key={s}
               className="aiw-anim absolute inset-0 grid place-items-center font-display text-[11px] md:text-sm font-bold uppercase tracking-[0.18em] text-foreground"
               style={{
-                animation: `aiw-stage-active ${loop}s ease-in-out infinite`,
+                animation: `aiw-stage-active ${loop}s ease-in-out infinite both`,
                 animationDelay: `${2.5 + i * 0.75}s`,
                 animationPlayState: play,
                 textShadow: `0 0 12px color-mix(in oklab, ${accent} 60%, transparent)`,
