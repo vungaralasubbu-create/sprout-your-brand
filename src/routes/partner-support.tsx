@@ -28,6 +28,7 @@ import {
   sendPartnerSupportMessageAuthed,
   getMyPartnerSupportSnapshot,
   partnerIntentLabel,
+  isAccountSpecificPartnerIntent,
   type PartnerSupportIntent,
   type PartnerSnapshot,
 } from "@/lib/partner-support/partner-support.functions";
