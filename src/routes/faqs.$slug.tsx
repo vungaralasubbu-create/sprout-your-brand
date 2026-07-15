@@ -153,7 +153,7 @@ function FaqDetailPage() {
           <Container size="md">
             <p className="text-label mb-4">Related Questions</p>
             <div className="grid gap-3">
-              {related.map((r) => (
+              {related.map((r: FaqAnswer) => (
                 <Link
                   key={r.slug}
                   to="/faqs/$slug"
