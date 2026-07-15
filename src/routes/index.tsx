@@ -2,32 +2,24 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SiteHeader } from "@/components/shared/site-header";
 import { SiteFooter } from "@/components/shared/site-footer";
-import { HomeHero } from "@/components/home/hero";
-import { ThreeModelsSection } from "@/components/home/three-models";
-import { CategoriesSection } from "@/components/home/categories-section";
-import { IncomeCalculator } from "@/components/home/income-calculator";
-import { LaunchBrandSection } from "@/components/home/launch-brand";
-import { HowItWorksSection } from "@/components/home/how-it-works";
-import { SuccessStoriesSection } from "@/components/home/success-stories-section";
-import { FinalCtaSection } from "@/components/home/final-cta";
+import { PremiumHomepage } from "@/components/home/premium-homepage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title:
-          "Glintr — Turn Your Sales Skills Into Your Own Income & EdTech Brand",
+        title: "Glintr — Learn. Build. Grow. A Premium Learning Ecosystem.",
       },
       {
         name: "description",
         content:
-          "Earn up to 70% revenue share by selling career-focused programs — or launch your own EdTech brand. Built for sales professionals, freelancers and entrepreneurs.",
+          "Explore practical programs across AI, engineering, electronics and management. Discover the Glintr learning ecosystem — learn, earn as a partner, or launch your own EdTech brand.",
       },
-      { property: "og:title", content: "Glintr — Launch. Sell. Grow." },
+      { property: "og:title", content: "Glintr — Learn. Build. Grow." },
       {
         property: "og:description",
         content:
-          "A premium EdTech platform for sales professionals. Earn revenue share on career programs or launch your own white-label EdTech brand.",
+          "A premium learning ecosystem for modern skills. Programs, partner earnings and white-label EdTech — one platform.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -41,14 +33,7 @@ function HomePage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <main>
-        <HomeHero />
-        <ThreeModelsSection />
-        <CategoriesSection />
-        <IncomeCalculator />
-        <LaunchBrandSection />
-        <HowItWorksSection />
-        <SuccessStoriesSection />
-        <FinalCtaSection />
+        <PremiumHomepage />
       </main>
       <SiteFooter />
     </div>
