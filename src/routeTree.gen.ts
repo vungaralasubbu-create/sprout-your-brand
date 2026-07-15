@@ -24,6 +24,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as R70RevenueModelRouteImport } from './routes/70-revenue-model'
+import { Route as R50SupportedModelRouteImport } from './routes/50-supported-model'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
@@ -244,6 +245,11 @@ const AboutRoute = AboutRouteImport.update({
 const R70RevenueModelRoute = R70RevenueModelRouteImport.update({
   id: '/70-revenue-model',
   path: '/70-revenue-model',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R50SupportedModelRoute = R50SupportedModelRouteImport.update({
+  id: '/50-supported-model',
+  path: '/50-supported-model',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -1100,6 +1106,7 @@ const AuthenticatedStudentCareerInterviewIdReportRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -1262,6 +1269,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -1423,6 +1431,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -1587,6 +1596,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
     | '/auth'
@@ -1749,6 +1759,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
     | '/auth'
@@ -1909,6 +1920,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
     | '/auth'
@@ -2073,6 +2085,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  R50SupportedModelRoute: typeof R50SupportedModelRoute
   R70RevenueModelRoute: typeof R70RevenueModelRoute
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
@@ -2207,6 +2220,13 @@ declare module '@tanstack/react-router' {
       path: '/70-revenue-model'
       fullPath: '/70-revenue-model'
       preLoaderRoute: typeof R70RevenueModelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/50-supported-model': {
+      id: '/50-supported-model'
+      path: '/50-supported-model'
+      fullPath: '/50-supported-model'
+      preLoaderRoute: typeof R50SupportedModelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -3800,6 +3820,7 @@ const SuccessStoriesRouteWithChildren = SuccessStoriesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  R50SupportedModelRoute: R50SupportedModelRoute,
   R70RevenueModelRoute: R70RevenueModelRoute,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
