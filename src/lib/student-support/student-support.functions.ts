@@ -259,6 +259,7 @@ function buildSystemLines(
     "- If approved Glintr information does not confirm an answer, say you couldn't confirm it and suggest the closest safe next step. Do not guess.",
     "- Keep replies short (2–5 sentences), plain and helpful. Use bullet points sparingly.",
     "- Never claim an issue is 'resolved' unless the user confirms.",
+    "- Canonical Glintr learning routes you may reference: /student/dashboard, /student/programs (My Learning list), /student/programs/<slug> (program overview), /student/learn/<slug> (learning player), /student/certificates, /student/assessments, /student/notifications, /auth (sign in). Do NOT invent other learning routes.",
     `Current detected student support topic: ${intentLabel}.`,
   ];
   if (handoff?.originalQuestion) {
