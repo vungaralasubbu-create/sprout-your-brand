@@ -31,18 +31,79 @@ import {
   type Heading,
 } from "@/components/shared/article-markdown";
 
+const SITE_URL = "https://glintr.com";
+
 export const Route = createFileRoute("/blog/$slug")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${toTitleGuess(params.slug)} | Glintr Insights` },
-      { name: "description", content: "Explore Glintr Insights." },
-      { property: "og:title", content: `${toTitleGuess(params.slug)} | Glintr Insights` },
+  loader: async ({ params }) => ({ post: await getPostBySlug(params.slug) }),
+  head: ({ params, loaderData }) => {
+    const post = loaderData?.post ?? null;
+    const canonical = `${SITE_URL}/blog/${params.slug}`;
+    const title = post?.seo_title ?? (post ? `${post.title} | Glintr Insights` : `${toTitleGuess(params.slug)} | Glintr Insights`);
+    const description =
+      post?.seo_description ??
+      post?.short_summary ??
+      "Ideas, skills and perspectives from Glintr — technology, AI, engineering and modern learning.";
+    const image = post?.featured_image_url ?? post?.thumbnail_url ?? undefined;
+    const meta: Array<Record<string, string>> = [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
       { property: "og:type", content: "article" },
-      { property: "og:url", content: `https://glintr.com/blog/${params.slug}` },
+      { property: "og:url", content: canonical },
       { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [{ rel: "canonical", href: `https://glintr.com/blog/${params.slug}` }],
-  }),
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
+    ];
+    if (image) {
+      meta.push({ property: "og:image", content: image });
+      meta.push({ name: "twitter:image", content: image });
+    }
+    if (post?.published_at) meta.push({ property: "article:published_time", content: post.published_at });
+    if (post?.editorial_updated_at) meta.push({ property: "article:modified_time", content: post.editorial_updated_at });
+
+    const scripts: Array<{ type: string; children: string }> = [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+            { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+            { "@type": "ListItem", position: 3, name: post?.title ?? toTitleGuess(params.slug), item: canonical },
+          ],
+        }),
+      },
+    ];
+    if (post) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.short_summary,
+          ...(image ? { image } : {}),
+          datePublished: post.published_at ?? undefined,
+          dateModified: post.editorial_updated_at ?? post.published_at ?? undefined,
+          author: { "@type": "Person", name: post.author_display_name },
+          publisher: {
+            "@type": "Organization",
+            name: "Glintr",
+            logo: { "@type": "ImageObject", url: `${SITE_URL}/__l5e/assets-v1/d12f985f-d4a9-44a8-ae66-6ea6d0a3b725/glintr-mark.png` },
+          },
+          mainEntityOfPage: canonical,
+          url: canonical,
+        }),
+      });
+    }
+    return {
+      meta,
+      links: [{ rel: "canonical", href: canonical }],
+      scripts,
+    };
+  },
   component: BlogDetailPage,
   notFoundComponent: BlogNotFound,
   errorComponent: () => <BlogDetailError />,
