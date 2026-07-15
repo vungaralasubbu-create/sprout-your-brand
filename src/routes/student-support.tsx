@@ -40,6 +40,13 @@ import {
   LearningIssuesSection,
   type LearningIssueLaunch,
 } from "@/components/student-support/learning-issues";
+import {
+  StudentSupportTopics,
+  LearningJourneySection,
+  SupportAtEveryStage,
+  StudentSupportSafetyStrip,
+  StudentSupportFinalCTA,
+} from "@/components/student-support/support-topics";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
