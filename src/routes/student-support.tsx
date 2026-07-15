@@ -244,6 +244,7 @@ function StudentSupportPage() {
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+  const [escalationOpen, setEscalationOpen] = React.useState(false);
 
   React.useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
