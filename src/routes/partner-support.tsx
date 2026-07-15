@@ -31,6 +31,11 @@ import {
   type PartnerSupportIntent,
   type PartnerSnapshot,
 } from "@/lib/partner-support/partner-support.functions";
+import {
+  PartnerSupportEscalationDialog,
+  type EscalationContext,
+} from "@/components/partner-support/escalation-dialog";
+import { LifeBuoy } from "lucide-react";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
