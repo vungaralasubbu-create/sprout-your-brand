@@ -1393,49 +1393,103 @@ export type Database = {
         }
         Relationships: []
       }
+      ambassador_notification_categories: {
+        Row: {
+          category_key: string
+          created_at: string
+          description: string | null
+          display_order: number
+          in_app_default: boolean
+          is_optional: boolean
+          label: string
+          pref_column: string | null
+          updated_at: string
+        }
+        Insert: {
+          category_key: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          in_app_default?: boolean
+          is_optional?: boolean
+          label: string
+          pref_column?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category_key?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          in_app_default?: boolean
+          is_optional?: boolean
+          label?: string
+          pref_column?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ambassador_notification_preferences: {
         Row: {
           ambassador_id: string
+          badge_updates: boolean
           campaign_updates: boolean
           channel_email: boolean
           channel_in_app: boolean
           commission_updates: boolean
           created_at: string
+          earnings_updates: boolean
           enrollment_updates: boolean
           id: string
+          leaderboard_updates: boolean
           level_badge_updates: boolean
+          level_updates: boolean
           marketing_updates: boolean
+          milestone_updates: boolean
           payout_updates: boolean
+          recognition_updates: boolean
           referral_updates: boolean
           updated_at: string
         }
         Insert: {
           ambassador_id: string
+          badge_updates?: boolean
           campaign_updates?: boolean
           channel_email?: boolean
           channel_in_app?: boolean
           commission_updates?: boolean
           created_at?: string
+          earnings_updates?: boolean
           enrollment_updates?: boolean
           id?: string
+          leaderboard_updates?: boolean
           level_badge_updates?: boolean
+          level_updates?: boolean
           marketing_updates?: boolean
+          milestone_updates?: boolean
           payout_updates?: boolean
+          recognition_updates?: boolean
           referral_updates?: boolean
           updated_at?: string
         }
         Update: {
           ambassador_id?: string
+          badge_updates?: boolean
           campaign_updates?: boolean
           channel_email?: boolean
           channel_in_app?: boolean
           commission_updates?: boolean
           created_at?: string
+          earnings_updates?: boolean
           enrollment_updates?: boolean
           id?: string
+          leaderboard_updates?: boolean
           level_badge_updates?: boolean
+          level_updates?: boolean
           marketing_updates?: boolean
+          milestone_updates?: boolean
           payout_updates?: boolean
+          recognition_updates?: boolean
           referral_updates?: boolean
           updated_at?: string
         }
@@ -1454,6 +1508,7 @@ export type Database = {
           action_route: string | null
           action_type: string | null
           ambassador_id: string | null
+          archived_at: string | null
           category: string
           created_at: string
           dedupe_key: string
@@ -1472,6 +1527,7 @@ export type Database = {
           action_route?: string | null
           action_type?: string | null
           ambassador_id?: string | null
+          archived_at?: string | null
           category: string
           created_at?: string
           dedupe_key?: string
@@ -1490,6 +1546,7 @@ export type Database = {
           action_route?: string | null
           action_type?: string | null
           ambassador_id?: string | null
+          archived_at?: string | null
           category?: string
           created_at?: string
           dedupe_key?: string
@@ -11096,6 +11153,10 @@ export type Database = {
     Functions: {
       amb_campaign_matches_scope: {
         Args: { _campus_scope: string; _college_name: string }
+        Returns: boolean
+      }
+      amb_category_is_enabled: {
+        Args: { _ambassador_id: string; _category: string }
         Returns: boolean
       }
       ambassador_active_ranking_rule: {

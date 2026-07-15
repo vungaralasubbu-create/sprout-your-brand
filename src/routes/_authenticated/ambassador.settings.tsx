@@ -19,6 +19,11 @@ import {
   updatePrivacyPreferences,
   listProfileActivity,
 } from "@/lib/campus-ambassador/profile.functions";
+import {
+  getNotificationCategoriesAndPrefs,
+  updateNotificationCategoryPreference,
+} from "@/lib/campus-ambassador/notifications.functions";
+import { Lock } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/ambassador/settings")({
   head: () => ({
@@ -58,76 +63,117 @@ function SettingsPage() {
 }
 
 function NotificationsPanel() {
-  const get = useServerFn(getAmbassadorSettings);
-  const save = useServerFn(updateNotificationPreferences);
+  const getCats = useServerFn(getNotificationCategoriesAndPrefs);
+  const saveCat = useServerFn(updateNotificationCategoryPreference);
+  const getSettings = useServerFn(getAmbassadorSettings);
+  const saveChannels = useServerFn(updateNotificationPreferences);
   const qc = useQueryClient();
-  const { data, isLoading } = useQuery({
-    queryKey: ["amb-settings"],
-    queryFn: () => get({ data: undefined as never }),
+
+  const cats = useQuery({
+    queryKey: ["amb-notif-cats"],
+    queryFn: () => getCats({ data: undefined as never }),
   });
-  const [f, setF] = useState<any>(null);
+  const settings = useQuery({
+    queryKey: ["amb-settings"],
+    queryFn: () => getSettings({ data: undefined as never }),
+  });
+  const [channels, setChannels] = useState<{ channel_in_app: boolean; channel_email: boolean } | null>(null);
 
   useEffect(() => {
-    if (data?.gate === "ok") setF(data.notificationPrefs);
-  }, [data]);
+    if (settings.data?.gate === "ok") {
+      const p: any = settings.data.notificationPrefs ?? {};
+      setChannels({
+        channel_in_app: p.channel_in_app ?? true,
+        channel_email: p.channel_email ?? true,
+      });
+    }
+  }, [settings.data]);
 
-  const m = useMutation({
-    mutationFn: (d: any) => save({ data: d }),
+  const toggleCat = useMutation({
+    mutationFn: (v: { category_key: string; enabled: boolean }) => saveCat({ data: v }),
     onSuccess: (r: any) => {
-      if (r.gate === "ok") { toast.success("Preferences saved"); qc.invalidateQueries({ queryKey: ["amb-settings"] }); }
-      else toast.error(r.message || "Failed");
+      if (r?.gate === "ok") qc.invalidateQueries({ queryKey: ["amb-notif-cats"] });
+      else if (r?.gate === "mandatory") toast.error("This category is mandatory and can't be turned off");
+      else toast.error("Failed to save preference");
+    },
+    onError: () => toast.error("Failed to save preference"),
+  });
+
+  const saveCh = useMutation({
+    mutationFn: (d: any) => saveChannels({ data: d }),
+    onSuccess: (r: any) => {
+      if (r?.gate === "ok") { toast.success("Preferences saved"); qc.invalidateQueries({ queryKey: ["amb-settings"] }); }
+      else toast.error(r?.message || "Failed");
     },
   });
 
-  if (isLoading || !f) return <Skeleton className="h-80 w-full" />;
-
-  const events = [
-    ["referral_updates", "Referral updates", "New visits, sign-ups and status changes"],
-    ["enrollment_updates", "Enrollment updates", "When a referral enrolls or status changes"],
-    ["commission_updates", "Commission updates", "When commission becomes available, on-hold or reversed"],
-    ["payout_updates", "Payout updates", "Approvals, processing, paid and failed payouts"],
-    ["campaign_updates", "Campaign updates", "New campaigns and results"],
-    ["marketing_updates", "Marketing resources", "New marketing kits published for your programs"],
-    ["level_badge_updates", "Levels & badges", "When you unlock a new level or badge"],
-  ];
+  if (cats.isLoading || settings.isLoading || !channels) return <Skeleton className="h-80 w-full" />;
+  if (cats.data?.gate !== "ok") {
+    return <Card className="p-6 text-sm text-slate-600">Complete your ambassador profile to manage notification preferences.</Card>;
+  }
 
   return (
     <Card className="p-6 space-y-6">
       <div>
-        <h3 className="font-semibold mb-1">Delivery channels</h3>
-        <p className="text-xs text-slate-500 mb-4">Choose how you receive updates.</p>
+        <h3 className="font-semibold mb-1">Delivery Channels</h3>
+        <p className="text-xs text-slate-500 mb-4">Choose how you receive updates. Turning off in-app suppresses all optional in-app notifications.</p>
         <div className="grid sm:grid-cols-2 gap-3">
-          <ToggleRow label="In-app notifications" checked={f.channel_in_app} onChange={(v: boolean) => setF({ ...f, channel_in_app: v })} />
-          <ToggleRow label="Email notifications" checked={f.channel_email} onChange={(v: boolean) => setF({ ...f, channel_email: v })} />
+          <ToggleRow
+            label="In-App Notifications"
+            checked={channels.channel_in_app}
+            onChange={(v: boolean) => setChannels({ ...channels, channel_in_app: v })}
+          />
+          <ToggleRow
+            label="Email Notifications"
+            checked={channels.channel_email}
+            onChange={(v: boolean) => setChannels({ ...channels, channel_email: v })}
+          />
         </div>
+        <Button size="sm" className="mt-3" onClick={() => saveCh.mutate(channels)} disabled={saveCh.isPending}>
+          {saveCh.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+          Save Channels
+        </Button>
       </div>
 
       <div>
-        <h3 className="font-semibold mb-1">Event types</h3>
-        <p className="text-xs text-slate-500 mb-4">Select which events you want to hear about.</p>
+        <h3 className="font-semibold mb-1">Category Controls</h3>
+        <p className="text-xs text-slate-500 mb-4">
+          Toggle optional categories. Account security and critical payment notifications are always sent.
+        </p>
         <div className="space-y-2">
-          {events.map(([k, label, desc]) => (
-            <ToggleRow key={k} label={label} description={desc} checked={f[k]} onChange={(v: boolean) => setF({ ...f, [k]: v })} />
+          {cats.data.items.map((c: any) => (
+            <ToggleRow
+              key={c.category_key}
+              label={c.label}
+              description={c.description}
+              checked={c.enabled}
+              mandatory={c.mandatory}
+              onChange={(v: boolean) =>
+                toggleCat.mutate({ category_key: c.category_key, enabled: v })
+              }
+            />
           ))}
         </div>
       </div>
-
-      <Button onClick={() => m.mutate(f)} disabled={m.isPending}>
-        {m.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-        Save preferences
-      </Button>
     </Card>
   );
 }
 
-function ToggleRow({ label, description, checked, onChange }: any) {
+function ToggleRow({ label, description, checked, onChange, mandatory }: any) {
   return (
     <div className="flex items-center justify-between gap-4 p-3 border rounded-lg bg-white">
       <div className="min-w-0">
-        <div className="text-sm font-medium">{label}</div>
+        <div className="text-sm font-medium flex items-center gap-2">
+          {label}
+          {mandatory && (
+            <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-widest text-slate-500 border rounded px-1.5 py-0.5">
+              <Lock className="h-3 w-3" /> Required
+            </span>
+          )}
+        </div>
         {description && <div className="text-xs text-slate-500 mt-0.5">{description}</div>}
       </div>
-      <Switch checked={!!checked} onCheckedChange={onChange} />
+      <Switch checked={!!checked} disabled={!!mandatory} onCheckedChange={onChange} />
     </div>
   );
 }
