@@ -117,7 +117,7 @@ function validateFields(raw: {
     errors.topic = "Choose a Contact topic.";
   }
 
-  const name = (raw.name ?? "").trim();
+  const name = redactSensitiveText((raw.name ?? "").trim());
   if (name.length < 2) errors.name = "Enter your name.";
   else if (name.length > 120) errors.name = "Name is too long.";
 
@@ -126,7 +126,7 @@ function validateFields(raw: {
   else if (email.length > 254 || !EMAIL_RE.test(email))
     errors.email = "Enter a valid email address.";
 
-  const organisationRaw = (raw.organisation ?? "").trim();
+  const organisationRaw = redactSensitiveText((raw.organisation ?? "").trim());
   const organisation = organisationRaw.length ? organisationRaw : null;
   if (organisation && organisation.length > 200) {
     errors.organisation = "Organisation name is too long.";
