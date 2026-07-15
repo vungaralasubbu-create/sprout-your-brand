@@ -516,6 +516,28 @@ function StudentSupportPage() {
               </div>
             )}
 
+            {/* Escalation trigger — only for signed-in students after some AI dialogue */}
+            {signedIn === true &&
+              messages.filter((m) => m.role === "user").length >= 1 &&
+              !isLoading && (
+                <div className="border-t border-border bg-muted/30 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-sm">
+                    <div className="font-medium flex items-center gap-2">
+                      <LifeBuoy className="size-4 text-primary" />
+                      Still Need Help?
+                    </div>
+                    <p className="text-muted-foreground text-xs mt-1 max-w-2xl">
+                      If AI Student Support couldn't fully resolve this, escalate to Glintr
+                      Student Support. We'll prepare a factual Issue Summary from this
+                      conversation for you to review before submitting.
+                    </p>
+                  </div>
+                  <Button size="sm" onClick={() => setEscalationOpen(true)}>
+                    Submit A Support Request <ArrowRight className="ml-1.5 size-3.5" />
+                  </Button>
+                </div>
+              )}
+
             {/* Composer */}
             <div className="border-t border-border bg-card px-5 py-4">
               <form
