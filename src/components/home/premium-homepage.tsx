@@ -148,7 +148,7 @@ function HeroUniverse() {
               management. Discover programs, build new skills and explore
               opportunities across the Glintr ecosystem.
             </p>
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 pt-1">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 pt-1">
               <Button variant="gradient" size="lg" asChild>
                 <Link to="/programs">
                   Explore Programs <ArrowRight className="size-4" />
@@ -157,11 +157,14 @@ function HeroUniverse() {
               <Button variant="outline" size="lg" asChild>
                 <a href="#learning-direction">Find My Learning Direction</a>
               </Button>
-              <Button variant="ghost" size="lg" asChild>
-                <Link to="/earn">
-                  Start Earning <ArrowUpRight className="size-4" />
-                </Link>
-              </Button>
+              <Link
+                to="/earn"
+                className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--brand-azure)]/25 bg-gradient-to-r from-white to-[oklch(0.98_0.02_220)] px-5 py-2.5 text-sm font-semibold text-foreground shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_8px_20px_-12px_rgba(15,60,120,0.35)] hover:-translate-y-0.5 hover:border-[color:var(--brand-azure)]/45 transition-all duration-200"
+              >
+                <span className="size-1.5 rounded-full bg-[var(--brand-cyan)] shadow-[0_0_8px_var(--brand-cyan)]" />
+                Start Earning
+                <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:translate-x-[3px] group-hover:-translate-y-[1px]" />
+              </Link>
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-2">
@@ -179,18 +182,10 @@ function HeroUniverse() {
             </div>
           </div>
 
-          <div
-            ref={stageRef}
-            className="relative aspect-square w-full max-w-[560px] justify-self-end"
-            style={
-              {
-                ["--px" as string]: "0px",
-                ["--py" as string]: "0px",
-              } as React.CSSProperties
-            }
-          >
-            <HeroLearningUniverse />
+          <div className="relative w-full justify-self-end lg:pl-4">
+            <GlintrDimension />
           </div>
+
         </div>
       </Container>
 
