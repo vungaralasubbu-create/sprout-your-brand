@@ -1446,6 +1446,71 @@ export type Database = {
           },
         ]
       }
+      ambassador_notifications: {
+        Row: {
+          action_route: string | null
+          action_type: string | null
+          ambassador_id: string | null
+          category: string
+          created_at: string
+          dedupe_key: string
+          id: string
+          message: string
+          notif_type: string
+          read_at: string | null
+          related_entity_id: string | null
+          related_entity_type: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_route?: string | null
+          action_type?: string | null
+          ambassador_id?: string | null
+          category: string
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          message: string
+          notif_type?: string
+          read_at?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_route?: string | null
+          action_type?: string | null
+          ambassador_id?: string | null
+          category?: string
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          message?: string
+          notif_type?: string
+          read_at?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_notifications_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_payout_activity: {
         Row: {
           ambassador_id: string
