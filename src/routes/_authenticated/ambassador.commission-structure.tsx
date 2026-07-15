@@ -16,7 +16,6 @@ import {
   Gift,
   Trophy,
   ArrowRight,
-  Copy,
 } from "lucide-react";
 import { AmbassadorShell } from "@/components/ambassador/ambassador-shell";
 import { Card } from "@/components/ui/card";
