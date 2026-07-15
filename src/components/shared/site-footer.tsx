@@ -58,12 +58,12 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Legal",
     links: [
-      { label: "Privacy Policy", href: "/legal/privacy" },
-      { label: "Terms & Conditions", href: "/legal/terms" },
-      { label: "Revenue Share Terms", href: "/legal/revenue-share" },
-      { label: "Payout Policy", href: "/legal/payout" },
-      { label: "Refund Policy", href: "/legal/refund" },
-      { label: "Cookie Policy", href: "/legal/cookies" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      { label: "Terms & Conditions", href: "/terms-and-conditions" },
+      { label: "Revenue Share Terms", href: "/revenue-share-terms" },
+      { label: "Payout Policy", href: "/payout-policy" },
+      { label: "Refund Policy", href: "/refund-policy" },
+      { label: "Cookie Policy", href: "/cookie-policy" },
     ],
   },
 ];
