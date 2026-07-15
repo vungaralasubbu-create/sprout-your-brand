@@ -673,109 +673,109 @@ function SignalPaths({
   loop: number;
   play: string;
 }) {
-  // Approximate viewBox-normalised coordinates for chip origins and
-  // output targets. Kept in a viewBox so it scales with the container.
-  const chipY = [40, 55, 70, 85]; // vertical positions of the 4 signal sources (% of height, shifted for chip stack)
-  const outputY = [24, 42, 60, 78];
+  // Chip sources on left, output targets on right — percentage coordinates.
+  const chipY = [46, 58, 70, 82];
+  const outputY = [22, 40, 58, 76];
+  const CHIP_X = 34; // % from left where chip stack ends
+  const CORE_X = 50;
+  const OUT_X = 66;
+
   return (
-    <svg
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-0 h-full w-full"
-      style={{ transform: "translateZ(20px)" }}
-      aria-hidden
-    >
-      <defs>
-        <linearGradient id="aiw-line" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor={accent} stopOpacity="0" />
-          <stop offset="50%" stopColor={accent} stopOpacity="0.55" />
-          <stop offset="100%" stopColor={accent} stopOpacity="0" />
-        </linearGradient>
-      </defs>
+    <>
+      {/* Static faint routes — SVG */}
+      <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        aria-hidden
+      >
+        <defs>
+          <linearGradient id="aiw-line-in" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={accent} stopOpacity="0" />
+            <stop offset="50%" stopColor={accent} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={accent} stopOpacity="0.15" />
+          </linearGradient>
+          <linearGradient id="aiw-line-out" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.15" />
+            <stop offset="50%" stopColor={accent} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={accent} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {chipY.map((y, i) => (
+          <path
+            key={`in-route-${i}`}
+            d={`M ${CHIP_X} ${y} Q ${(CHIP_X + CORE_X) / 2} ${y} ${CORE_X} 50`}
+            fill="none"
+            stroke="url(#aiw-line-in)"
+            strokeWidth="0.4"
+            opacity="0.75"
+          />
+        ))}
+        {outputY.map((y, i) => (
+          <path
+            key={`out-route-${i}`}
+            d={`M ${CORE_X} 50 Q ${(CORE_X + OUT_X) / 2} ${y} ${OUT_X} ${y}`}
+            fill="none"
+            stroke="url(#aiw-line-out)"
+            strokeWidth="0.4"
+            opacity="0.7"
+          />
+        ))}
+      </svg>
 
-      {/* Static faint routes — provide readable structure */}
-      {chipY.map((y, i) => (
-        <path
-          key={`in-route-${i}`}
-          d={`M 34 ${y} Q 44 ${y} 50 50`}
-          fill="none"
-          stroke="url(#aiw-line)"
-          strokeWidth="0.35"
-          opacity="0.6"
-        />
-      ))}
-      {outputY.map((y, i) => (
-        <path
-          key={`out-route-${i}`}
-          d={`M 50 50 Q 60 ${y} 66 ${y}`}
-          fill="none"
-          stroke="url(#aiw-line)"
-          strokeWidth="0.35"
-          opacity="0.55"
-        />
-      ))}
-
-      {/* Input signal dots — move from chip to core */}
-      {chipY.map((y, i) => (
-        <circle
-          key={`in-dot-${i}`}
-          cx="34"
-          cy={y}
-          r="0.9"
-          fill={accent}
-          className="aiw-anim"
-          style={{
-            ["--sx" as string]: `${(50 - 34) * (100 / 100)}px`, // percentage container translation via px would be wrong for SVG; we use transform on parent group instead
-            filter: `drop-shadow(0 0 4px ${accent})`,
-            animation: `aiw-signal-flow ${loop}s ease-in-out infinite`,
-            animationDelay: `${0.5 + i * 0.5}s`,
-            animationPlayState: play,
-            transformBox: "fill-box",
-            transformOrigin: "center",
-            // Move relative to its own cx/cy: we want to travel ~16 svg-units right
-            // and (50-y) svg-units vertically. Use CSS transform on the SVG element
-            // (transform-box: fill-box).
-            // We keyframe translate3d with vars: set them here.
-            // Note: svg-unit translations behave as user-space distances.
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-          } as React.CSSProperties}
-          // Override --sx and --sy to actual travel distances for this dot
-          data-sx={16}
-          data-sy={50 - y}
-          ref={(node) => {
-            if (node) {
-              node.style.setProperty("--sx", `${16}px`);
-              node.style.setProperty("--sy", `${50 - y}px`);
+      {/* Moving signal dots — HTML overlay using percentage positions. */}
+      {chipY.map((y, i) => {
+        const dx = CORE_X - CHIP_X; // % travel horizontally
+        const dy = 50 - y; // % travel vertically
+        return (
+          <span
+            key={`in-dot-${i}`}
+            aria-hidden
+            className="aiw-anim pointer-events-none absolute block h-1.5 w-1.5 rounded-full"
+            style={
+              {
+                left: `${CHIP_X}%`,
+                top: `${y}%`,
+                marginLeft: "-3px",
+                marginTop: "-3px",
+                background: accent,
+                boxShadow: `0 0 10px 1px ${accent}`,
+                ["--sx" as string]: `calc(${dx} * var(--aiw-w, 1px))`,
+                ["--sy" as string]: `calc(${dy} * var(--aiw-w, 1px))`,
+                animation: `aiw-signal-flow ${loop}s ease-in-out infinite`,
+                animationDelay: `${0.5 + i * 0.5}s`,
+                animationPlayState: play,
+              } as React.CSSProperties
             }
-          }}
-        />
-      ))}
-
-      {/* Output signal dots — move from core to output block */}
-      {outputY.map((y, i) => (
-        <circle
-          key={`out-dot-${i}`}
-          cx="50"
-          cy="50"
-          r="0.9"
-          fill={accent}
-          className="aiw-anim"
-          style={{
-            filter: `drop-shadow(0 0 4px ${accent})`,
-            animation: `aiw-signal-flow ${loop}s ease-in-out infinite`,
-            animationDelay: `${4.0 + i * 0.5}s`,
-            animationPlayState: play,
-            transformBox: "fill-box",
-            transformOrigin: "center",
-          } as React.CSSProperties}
-          ref={(node) => {
-            if (node) {
-              node.style.setProperty("--sx", `${16}px`);
-              node.style.setProperty("--sy", `${y - 50}px`);
+          />
+        );
+      })}
+      {outputY.map((y, i) => {
+        const dx = OUT_X - CORE_X;
+        const dy = y - 50;
+        return (
+          <span
+            key={`out-dot-${i}`}
+            aria-hidden
+            className="aiw-anim pointer-events-none absolute block h-1.5 w-1.5 rounded-full"
+            style={
+              {
+                left: `${CORE_X}%`,
+                top: `50%`,
+                marginLeft: "-3px",
+                marginTop: "-3px",
+                background: accent,
+                boxShadow: `0 0 10px 1px ${accent}`,
+                ["--sx" as string]: `calc(${dx} * var(--aiw-w, 1px))`,
+                ["--sy" as string]: `calc(${dy} * var(--aiw-w, 1px))`,
+                animation: `aiw-signal-flow ${loop}s ease-in-out infinite`,
+                animationDelay: `${4.0 + i * 0.5}s`,
+                animationPlayState: play,
+              } as React.CSSProperties
             }
-          }}
-        />
-      ))}
-    </svg>
+          />
+        );
+      })}
+    </>
   );
 }
