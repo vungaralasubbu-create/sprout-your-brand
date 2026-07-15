@@ -50,7 +50,7 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
     title: "Support",
     links: [
       { label: "Contact", href: "/contact" },
-      { label: "FAQs", href: "/faq" },
+      { label: "FAQs", href: "/faqs" },
       { label: "Partner Support", href: "/support/partners" },
       { label: "Student Support", href: "/support/students" },
     ],

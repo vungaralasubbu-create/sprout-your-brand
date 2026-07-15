@@ -6008,6 +6008,128 @@ export type Database = {
           },
         ]
       }
+      faq_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      faqs: {
+        Row: {
+          action_href: string | null
+          action_label: string | null
+          alt_phrases: string[]
+          category_id: string | null
+          created_at: string
+          display_order: number
+          effective_date: string | null
+          full_answer: string
+          id: string
+          intent: string | null
+          is_featured: boolean
+          is_popular: boolean
+          is_published: boolean
+          policy_slug: string | null
+          question: string
+          related_program_slug: string | null
+          review_date: string | null
+          search_doc: unknown
+          search_keywords: string[]
+          short_answer: string
+          slug: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          action_href?: string | null
+          action_label?: string | null
+          alt_phrases?: string[]
+          category_id?: string | null
+          created_at?: string
+          display_order?: number
+          effective_date?: string | null
+          full_answer: string
+          id?: string
+          intent?: string | null
+          is_featured?: boolean
+          is_popular?: boolean
+          is_published?: boolean
+          policy_slug?: string | null
+          question: string
+          related_program_slug?: string | null
+          review_date?: string | null
+          search_doc?: unknown
+          search_keywords?: string[]
+          short_answer: string
+          slug: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          action_href?: string | null
+          action_label?: string | null
+          alt_phrases?: string[]
+          category_id?: string | null
+          created_at?: string
+          display_order?: number
+          effective_date?: string | null
+          full_answer?: string
+          id?: string
+          intent?: string | null
+          is_featured?: boolean
+          is_popular?: boolean
+          is_published?: boolean
+          policy_slug?: string | null
+          question?: string
+          related_program_slug?: string | null
+          review_date?: string | null
+          search_doc?: unknown
+          search_keywords?: string[]
+          short_answer?: string
+          slug?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faqs_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "faq_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hiring_applications: {
         Row: {
           applicant_user_id: string | null
@@ -11928,6 +12050,8 @@ export type Database = {
       notify_campaigns_ending_soon: { Args: never; Returns: number }
       partner_id_for: { Args: { _user_id: string }; Returns: string }
       scan_referral_patterns: { Args: never; Returns: number }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       student_enrolled_in_course: {
         Args: { _course_id: string; _user_id: string }
         Returns: boolean

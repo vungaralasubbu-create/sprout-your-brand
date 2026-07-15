@@ -1,0 +1,251 @@
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+CREATE TABLE public.faq_categories (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug text NOT NULL UNIQUE,
+  name text NOT NULL,
+  description text,
+  icon text,
+  display_order integer NOT NULL DEFAULT 0,
+  is_active boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+GRANT SELECT ON public.faq_categories TO anon, authenticated;
+GRANT ALL ON public.faq_categories TO service_role;
+ALTER TABLE public.faq_categories ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "faq_categories public read" ON public.faq_categories FOR SELECT USING (is_active = true);
+
+CREATE TABLE public.faqs (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug text NOT NULL UNIQUE,
+  category_id uuid REFERENCES public.faq_categories(id) ON DELETE SET NULL,
+  question text NOT NULL,
+  short_answer text NOT NULL,
+  full_answer text NOT NULL,
+  intent text,
+  alt_phrases text[] NOT NULL DEFAULT '{}',
+  search_keywords text[] NOT NULL DEFAULT '{}',
+  related_program_slug text,
+  policy_slug text,
+  action_label text,
+  action_href text,
+  is_featured boolean NOT NULL DEFAULT false,
+  is_popular boolean NOT NULL DEFAULT false,
+  display_order integer NOT NULL DEFAULT 0,
+  status text NOT NULL DEFAULT 'published',
+  is_published boolean NOT NULL DEFAULT true,
+  effective_date date,
+  review_date date,
+  search_doc tsvector,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION public.faqs_refresh_search_doc() RETURNS trigger AS $$
+BEGIN
+  NEW.search_doc :=
+    setweight(to_tsvector('english', coalesce(NEW.question,'')), 'A') ||
+    setweight(to_tsvector('english', coalesce(array_to_string(NEW.alt_phrases,' '),'')), 'A') ||
+    setweight(to_tsvector('english', coalesce(array_to_string(NEW.search_keywords,' '),'')), 'B') ||
+    setweight(to_tsvector('english', coalesce(NEW.short_answer,'')), 'C') ||
+    setweight(to_tsvector('english', coalesce(NEW.full_answer,'')), 'D');
+  NEW.updated_at := now();
+  RETURN NEW;
+END; $$ LANGUAGE plpgsql SET search_path = public;
+
+CREATE TRIGGER faqs_search_doc_trg BEFORE INSERT OR UPDATE ON public.faqs
+FOR EACH ROW EXECUTE FUNCTION public.faqs_refresh_search_doc();
+
+CREATE INDEX faqs_search_doc_idx ON public.faqs USING GIN (search_doc);
+CREATE INDEX faqs_question_trgm_idx ON public.faqs USING GIN (question gin_trgm_ops);
+CREATE INDEX faqs_category_idx ON public.faqs (category_id);
+
+GRANT SELECT ON public.faqs TO anon, authenticated;
+GRANT ALL ON public.faqs TO service_role;
+ALTER TABLE public.faqs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "faqs public read" ON public.faqs FOR SELECT USING (is_published = true AND status = 'published');
+
+CREATE OR REPLACE FUNCTION public.faq_categories_touch() RETURNS trigger AS $$
+BEGIN NEW.updated_at := now(); RETURN NEW; END; $$ LANGUAGE plpgsql SET search_path = public;
+CREATE TRIGGER faq_categories_updated BEFORE UPDATE ON public.faq_categories
+FOR EACH ROW EXECUTE FUNCTION public.faq_categories_touch();
+
+INSERT INTO public.faq_categories (slug, name, description, icon, display_order) VALUES
+  ('programs-learning', 'Programs & Learning', 'Explore Glintr programs, curriculum and learning experience', 'GraduationCap', 10),
+  ('enrollment', 'Enrollment', 'How enrollment, access and onboarding work', 'ClipboardList', 20),
+  ('payments', 'Payments', 'Payment flow, methods and post-payment access', 'CreditCard', 30),
+  ('refunds', 'Refunds', 'Refund policy and eligibility guidance', 'Undo2', 40),
+  ('student-support', 'Student Support', 'Help for enrolled learners', 'LifeBuoy', 50),
+  ('partner-network', 'Partner Network', 'Becoming a Glintr Sales Partner', 'Handshake', 60),
+  ('partner-models', 'Partner Models', '70% Revenue and 50% Supported models', 'Layers', 70),
+  ('earnings-payouts', 'Earnings & Payouts', 'How partner earnings and payouts work', 'Wallet', 80),
+  ('campus-ambassador', 'Campus Ambassador', 'Student ambassador program and commissions', 'Users', 90),
+  ('careers', 'Careers', 'Open roles and how hiring works at Glintr', 'Briefcase', 100),
+  ('account-platform', 'Account & Platform', 'Sign in, account access and platform basics', 'Settings', 110),
+  ('about-glintr', 'About Glintr', 'What Glintr is and who it is for', 'Info', 120);
+
+INSERT INTO public.faqs (slug, category_id, question, short_answer, full_answer, intent, alt_phrases, search_keywords, action_label, action_href, is_popular, is_featured, display_order) VALUES
+('how-explore-programs', (SELECT id FROM public.faq_categories WHERE slug='programs-learning'),
+ 'How do I explore Glintr programs?',
+ 'Browse the Programs page for all published Glintr programs organised by category.',
+ 'You can explore every currently published Glintr program from the Programs page. Programs are organised by category — such as Computer Science, Electronics & Electrical, Mechanical Engineering and Management — so you can filter to what fits your interest. Each program page lists the approved curriculum, learning mode, level and certification details.',
+ 'program_discovery', ARRAY['see courses','list of programs','what courses do you have','browse courses'],
+ ARRAY['programs','courses','explore','catalog','browse'], 'Explore Programs', '/programs', true, true, 10),
+('do-you-have-ai-course', (SELECT id FROM public.faq_categories WHERE slug='programs-learning'),
+ 'Do you have AI or Machine Learning courses?',
+ 'Yes — Glintr publishes AI and Machine Learning programs under the Computer Science category.',
+ 'Glintr offers AI, Machine Learning and Data Science programs. These live under the Computer Science category on the Programs page. Because our catalog is updated regularly, always check the Programs page for the current list of published programs and details.',
+ 'program_information', ARRAY['ai courses','artificial intelligence course','ml course','data science'],
+ ARRAY['ai','ml','machine learning','artificial intelligence','data science'], 'Explore AI Programs', '/programs/computer-science', true, false, 20),
+('do-you-have-vlsi', (SELECT id FROM public.faq_categories WHERE slug='programs-learning'),
+ 'Do you have VLSI programs?',
+ 'VLSI and semiconductor programs are offered under the Electronics & Electrical category when published.',
+ 'Glintr publishes VLSI, Embedded Systems and semiconductor design programs under the Electronics & Electrical category. Availability depends on which programs are currently published, so please review the category page for the up-to-date list.',
+ 'program_information', ARRAY['vlsi','chip design','semiconductor','embedded'],
+ ARRAY['vlsi','electronics','embedded','semiconductor'], 'View Electronics Programs', '/programs/electronics-electrical', false, false, 30),
+('which-course-good-for-me', (SELECT id FROM public.faq_categories WHERE slug='programs-learning'),
+ 'Which course is good for me?',
+ 'That depends on what you want to learn and where you want to go — start by exploring categories that interest you.',
+ 'The right program depends on your background, interests and outcomes you want. Start by browsing categories on the Programs page. Each program page describes what you learn, who it is for, the learning mode and the certification. If you need more guidance, our support team can help.',
+ 'program_discovery', ARRAY['what should i learn','best course','recommend a course','which program'],
+ ARRAY['recommend','suggest','best','which'], 'Browse Categories', '/programs', false, false, 40),
+('how-enrollment-works', (SELECT id FROM public.faq_categories WHERE slug='enrollment'),
+ 'How does program enrollment work?',
+ 'Choose a program, submit the application and complete payment — access opens after verified enrollment.',
+ 'Enrollment happens in three simple steps. You choose a program from the Programs page, submit the application form on the program page, and complete payment. Once your payment is verified, your enrollment is marked verified and access to the learning experience opens for you.',
+ 'enrollment', ARRAY['how to enroll','join a course','sign up for course','how do i register'],
+ ARRAY['enroll','enrollment','register','join','apply'], 'Explore Programs', '/programs', true, true, 10),
+('what-happens-after-payment', (SELECT id FROM public.faq_categories WHERE slug='payments'),
+ 'What happens after payment?',
+ 'After payment is verified your enrollment is confirmed and your course access opens on the platform.',
+ 'Once you complete payment, our system records your submission and moves it into verification. On successful verification your enrollment is confirmed and your program access is unlocked in your learner dashboard. If access has not appeared after verification, our support team can help.',
+ 'payment_question', ARRAY['after i pay what happens','post payment','access after payment','course after paying'],
+ ARRAY['payment','after','post','access','unlock'], null, null, true, true, 10),
+('payment-done-course-not-showing', (SELECT id FROM public.faq_categories WHERE slug='payments'),
+ 'My payment is done but the course is not showing.',
+ 'This is an account-specific issue — check your dashboard first, and reach support if access is missing after verification.',
+ 'Access opens after payment verification. Sometimes there is a short delay between payment and verification. If the program is not showing after a reasonable wait, this needs to be checked against your account. Smart FAQs only provide general information — for your specific enrollment status, please contact Glintr support.',
+ 'account_specific_payment', ARRAY['paid but no access','course missing after payment','payment done no course','where is my course'],
+ ARRAY['missing','not showing','no access','stuck'], null, null, false, false, 20),
+('refund-policy', (SELECT id FROM public.faq_categories WHERE slug='refunds'),
+ 'Can I get a refund?',
+ 'Refunds are governed by the applicable Glintr refund policy — eligibility depends on your specific situation.',
+ 'Refund eligibility is determined by the Glintr refund policy applicable to your enrollment and the details of your request. Smart FAQs cannot approve or reject refunds. Please review the refund policy and reach out to support with your enrollment details so the team can evaluate your case.',
+ 'refund_policy', ARRAY['refund','money back','cancel enrollment','get refund','refund eligibility'],
+ ARRAY['refund','cancel','money back','return'], null, null, true, false, 10),
+('become-glintr-partner', (SELECT id FROM public.faq_categories WHERE slug='partner-network'),
+ 'How do I become a Glintr partner?',
+ 'Apply through the Partner Network — the Glintr team reviews every application before approval.',
+ 'Anyone interested in the Partner Network can apply through the partner application. The Glintr team reviews applications based on approval criteria before onboarding a new partner. Once approved, partners get access to the partner dashboard, programs to promote and the earnings system.',
+ 'partner_application', ARRAY['how to be partner','join partner network','partner apply','become sales partner'],
+ ARRAY['partner','apply','become','join'], 'Explore Partner Network', '/partner-network', true, true, 10),
+('what-is-70-partner-model', (SELECT id FROM public.faq_categories WHERE slug='partner-models'),
+ 'What is the 70% partner model?',
+ 'The 70% model is for partners who bring their own leads and drive the full sales conversation.',
+ 'The 70% Revenue Model is for partners who own their lead pipeline and manage their own sales conversations. Because the partner drives lead generation end-to-end, this model offers a higher revenue share on verified enrollments, subject to the applicable Glintr revenue share terms.',
+ 'partner_model', ARRAY['70 percent','70 partner','own leads model','high commission model'],
+ ARRAY['70','seventy','revenue share','own leads'], 'Explore Partner Models', '/earn', true, true, 10),
+('what-is-50-supported-model', (SELECT id FROM public.faq_categories WHERE slug='partner-models'),
+ 'What is the 50% supported model?',
+ 'The 50% model is for partners who close Glintr-provided leads with support from the Glintr team.',
+ 'In the 50% Supported Model, Glintr provides qualified leads and marketing support to the partner. The partner focuses on conversations, closing and enrollment. Because Glintr provides the lead flow and support, the revenue share is 50% on verified enrollments, subject to the applicable revenue share terms.',
+ 'partner_model', ARRAY['50 percent','50 partner','company leads model','supported model'],
+ ARRAY['50','fifty','supported','company leads'], 'Explore Partner Models', '/earn', true, false, 20),
+('difference-70-vs-50', (SELECT id FROM public.faq_categories WHERE slug='partner-models'),
+ 'What is the difference between the 70% and 50% models?',
+ 'The 70% model is for partners bringing their own leads; the 50% model uses Glintr-provided leads with team support.',
+ 'The core difference is who owns the lead pipeline. In the 70% Revenue Model, the partner brings and manages their own leads and drives the sales conversation end-to-end, earning a higher share. In the 50% Supported Model, Glintr supplies qualified leads and marketing support and the partner focuses on closing. Both are subject to the applicable revenue share terms.',
+ 'partner_model', ARRAY['70 vs 50','compare partner models','difference between models','which model'],
+ ARRAY['difference','compare','vs','70 50'], 'Explore Partner Models', '/earn', true, true, 30),
+('how-partner-earnings-work', (SELECT id FROM public.faq_categories WHERE slug='earnings-payouts'),
+ 'How do partner earnings work?',
+ 'Earnings are created on verified enrollments, mature into eligible earnings, and become available for payout as per policy.',
+ 'A lead becomes a referral, then an enrollment, and once payment is verified it becomes a verified enrollment. Verified enrollments create commission at the applicable partner revenue share. Commission moves through stages — eligible earnings, then available earnings — after which it can be requested as a payout, subject to the applicable payout policy.',
+ 'partner_referral', ARRAY['how earning works','partner commission','how partner money','lead to money'],
+ ARRAY['earnings','commission','partner','revenue'], 'Explore Partner Network', '/partner-network', false, false, 10),
+('does-every-lead-earn', (SELECT id FROM public.faq_categories WHERE slug='earnings-payouts'),
+ 'Does every lead create earnings?',
+ 'No — earnings are created only on verified enrollments, not on raw leads.',
+ 'Not every lead becomes earnings. A lead has to convert into an enrollment and the enrollment payment must be verified before commission is generated. This ensures earnings reflect real, verified revenue.',
+ 'partner_referral', ARRAY['every lead earning','lead commission','all leads pay','do all leads earn'],
+ ARRAY['every','all','lead','earn'], null, null, false, false, 20),
+('when-can-i-withdraw', (SELECT id FROM public.faq_categories WHERE slug='earnings-payouts'),
+ 'When can I withdraw my earnings?',
+ 'You can request a payout once earnings become available and meet the applicable payout policy conditions.',
+ 'Withdrawals are governed by the Glintr payout policy. Earnings need to reach the available state and meet minimum payout thresholds and timing rules defined in the policy. Once eligible, you can raise a payout request from your dashboard.',
+ 'payout_policy', ARRAY['withdraw money','take my money','payout time','when payout comes','how to withdraw'],
+ ARRAY['withdraw','payout','money','when','take'], null, null, true, false, 30),
+('how-request-payout', (SELECT id FROM public.faq_categories WHERE slug='earnings-payouts'),
+ 'How do I request a payout?',
+ 'Complete your payout profile, then raise a payout request from your dashboard when earnings are available.',
+ 'To request a payout you first need a completed payout profile with verified account details. Once your earnings reach the available state and meet the payout policy thresholds, you can raise a payout request from your dashboard. Requests are reviewed by the finance team as per policy.',
+ 'payout_policy', ARRAY['request payout','raise payout','payout request','how payout'],
+ ARRAY['request','raise','payout','withdraw'], null, null, false, false, 40),
+('what-is-campus-ambassador', (SELECT id FROM public.faq_categories WHERE slug='campus-ambassador'),
+ 'What is the Campus Ambassador Program?',
+ 'A program for college students to promote Glintr on campus and earn commission on verified enrollments.',
+ 'The Glintr Campus Ambassador Program is for college students who want to represent Glintr on their campus. Ambassadors get marketing resources, a referral identity and a workspace with performance tracking. They earn commission on verified enrollments as per the current approved commission structure.',
+ 'campus_ambassador', ARRAY['ambassador program','student ambassador','college ambassador','ca program'],
+ ARRAY['campus','ambassador','college','student'], 'Explore Campus Ambassador', '/campus-ambassador', true, true, 10),
+('how-become-ambassador', (SELECT id FROM public.faq_categories WHERE slug='campus-ambassador'),
+ 'How do I become a Campus Ambassador?',
+ 'Apply through the Campus Ambassador page — applications are reviewed by the Glintr team.',
+ 'You can apply through the Campus Ambassador application form. The Glintr team reviews applications based on eligibility and campus fit before approval. Once approved you get access to the ambassador workspace, referral tools and marketing resources.',
+ 'campus_ambassador', ARRAY['become ambassador','apply ambassador','join campus program','ambassador apply'],
+ ARRAY['become','apply','join','ambassador'], 'Apply as Ambassador', '/campus-ambassador', true, false, 20),
+('ambassador-commission', (SELECT id FROM public.faq_categories WHERE slug='campus-ambassador'),
+ 'How do Campus Ambassadors earn commission?',
+ 'Ambassadors earn commission on verified enrollments they refer, as per the current approved commission structure.',
+ 'A Campus Ambassador shares Glintr programs using their unique referral identity. When a referred lead enrolls and payment is verified, commission is generated as per the current approved Campus Ambassador commission structure. Earnings become eligible, then available, and can be requested as a payout per the payout policy.',
+ 'ambassador_commission', ARRAY['ambassador earning','ca commission','how ambassador earn','ambassador money'],
+ ARRAY['ambassador','commission','earn','money'], 'Explore Campus Ambassador', '/campus-ambassador', true, false, 30),
+('ambassador-payout', (SELECT id FROM public.faq_categories WHERE slug='campus-ambassador'),
+ 'When do Campus Ambassadors get paid?',
+ 'Ambassador payouts follow the same eligible → available → payout flow as other Glintr earnings.',
+ 'Ambassador earnings move through stages: commission is created on verified enrollments, matures into eligible earnings, and reaches available earnings. Ambassadors can then request a payout from the workspace once the minimum threshold and payout policy conditions are met.',
+ 'payout_policy', ARRAY['ambassador payout','when ambassador paid','ca payment','ambassador money time'],
+ ARRAY['ambassador','payout','paid','when'], null, null, false, false, 40),
+('careers-open-roles', (SELECT id FROM public.faq_categories WHERE slug='careers'),
+ 'How do I apply for a job at Glintr?',
+ 'Browse open roles on the Careers page and apply directly to the role that fits you.',
+ 'All currently published Glintr openings are listed on the Careers page. Open a role to read the responsibilities and requirements, then use the application form to apply. The Careers team reviews applications for each open role.',
+ 'careers', ARRAY['jobs at glintr','how to apply job','careers open','openings'],
+ ARRAY['career','job','apply','role','opening','hiring'], 'View Open Roles', '/careers', true, true, 10),
+('careers-internships', (SELECT id FROM public.faq_categories WHERE slug='careers'),
+ 'Do you have internships?',
+ 'Internship openings, when available, are published on the Careers page along with other open roles.',
+ 'Internship availability changes over time. When Glintr is hiring interns, those roles are published on the Careers page. Check the Careers page for the current list of open opportunities.',
+ 'careers', ARRAY['internship','intern openings','summer internship','trainee role'],
+ ARRAY['internship','intern','trainee'], 'View Open Roles', '/careers', false, false, 20),
+('what-is-glintr', (SELECT id FROM public.faq_categories WHERE slug='about-glintr'),
+ 'What is Glintr?',
+ 'Glintr is an EdTech platform that helps professionals learn, sell career programs as partners, or launch their own EdTech brand.',
+ 'Glintr is a career-focused EdTech platform built around three ideas: career-focused programs for learners, a partner network for sales professionals who want to earn revenue share, and a white-label offering for people who want to launch their own EdTech brand on our stack.',
+ 'company_information', ARRAY['who is glintr','about glintr','what does glintr do','glintr company'],
+ ARRAY['glintr','about','what','who','company'], 'About Glintr', '/about', true, true, 10),
+('who-is-glintr-for', (SELECT id FROM public.faq_categories WHERE slug='about-glintr'),
+ 'Who is Glintr for?',
+ 'Learners exploring career programs, sales professionals wanting to earn revenue share, and entrepreneurs launching an EdTech brand.',
+ 'Glintr serves three audiences. Learners looking for career-focused programs. Sales professionals and freelancers who want to sell programs and earn revenue share as partners. And entrepreneurs who want to launch their own EdTech brand on the Glintr stack.',
+ 'company_information', ARRAY['who is it for','glintr audience','who uses glintr','glintr for whom'],
+ ARRAY['who','audience','for'], 'About Glintr', '/about', false, false, 20),
+('account-signin', (SELECT id FROM public.faq_categories WHERE slug='account-platform'),
+ 'How do I sign in to Glintr?',
+ 'Sign in from the Sign In button using your registered mobile number and OTP.',
+ 'Glintr sign-in uses mandatory mobile OTP verification. Enter your registered mobile number, receive the OTP by SMS, and enter it to sign in. This applies to learners, partners and ambassadors.',
+ 'account_help', ARRAY['login','sign in','how to login','account access','otp login'],
+ ARRAY['login','sign in','account','otp'], 'Sign In', '/auth', false, false, 10),
+('partner-referral-tracking', (SELECT id FROM public.faq_categories WHERE slug='partner-network'),
+ 'How are partner referrals tracked?',
+ 'Referrals are tracked through your unique partner referral link and by the lead ownership rules.',
+ 'Every partner has a unique referral link. Leads coming through your link are attributed to you, subject to the Glintr lead ownership rules. Attribution is enforced by the system so partners have a clear audit trail of the leads they own.',
+ 'partner_referral', ARRAY['how referral tracked','referral link','lead attribution','how lead assigned'],
+ ARRAY['referral','tracked','link','lead','attribution'], null, null, false, false, 30),
+('student-support-contact', (SELECT id FROM public.faq_categories WHERE slug='student-support'),
+ 'I need help with my program — how do I contact support?',
+ 'Reach the Glintr student support team by email at support@glintr.com.',
+ 'Enrolled learners can reach the Glintr student support team directly by email at support@glintr.com for questions about programs, curriculum, assessments and certificates.',
+ 'student_support', ARRAY['student help','contact support','support email','need help course'],
+ ARRAY['support','help','contact','email'], null, null, false, false, 10);

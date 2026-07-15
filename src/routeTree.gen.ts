@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as JoinRouteImport } from './routes/join'
+import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -184,6 +185,11 @@ const PartnerNetworkRoute = PartnerNetworkRouteImport.update({
 const JoinRoute = JoinRouteImport.update({
   id: '/join',
   path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqsRoute = FaqsRouteImport.update({
+  id: '/faqs',
+  path: '/faqs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EarnRoute = EarnRouteImport.update({
@@ -1043,6 +1049,7 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
   '/earn': typeof EarnRoute
+  '/faqs': typeof FaqsRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
@@ -1195,6 +1202,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
   '/earn': typeof EarnRoute
+  '/faqs': typeof FaqsRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
@@ -1346,6 +1354,7 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
   '/earn': typeof EarnRoute
+  '/faqs': typeof FaqsRoute
   '/join': typeof JoinRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
@@ -1500,6 +1509,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/careers'
     | '/earn'
+    | '/faqs'
     | '/join'
     | '/partner-network'
     | '/sales-opportunity'
@@ -1652,6 +1662,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/careers'
     | '/earn'
+    | '/faqs'
     | '/join'
     | '/partner-network'
     | '/sales-opportunity'
@@ -1802,6 +1813,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/careers'
     | '/earn'
+    | '/faqs'
     | '/join'
     | '/partner-network'
     | '/sales-opportunity'
@@ -1956,6 +1968,7 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   CareersRoute: typeof CareersRouteWithChildren
   EarnRoute: typeof EarnRoute
+  FaqsRoute: typeof FaqsRoute
   JoinRoute: typeof JoinRoute
   PartnerNetworkRoute: typeof PartnerNetworkRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
@@ -2010,6 +2023,13 @@ declare module '@tanstack/react-router' {
       path: '/join'
       fullPath: '/join'
       preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faqs': {
+      id: '/faqs'
+      path: '/faqs'
+      fullPath: '/faqs'
+      preLoaderRoute: typeof FaqsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/earn': {
@@ -3546,6 +3566,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   CareersRoute: CareersRouteWithChildren,
   EarnRoute: EarnRoute,
+  FaqsRoute: FaqsRoute,
   JoinRoute: JoinRoute,
   PartnerNetworkRoute: PartnerNetworkRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
