@@ -190,6 +190,8 @@ function DashboardPage() {
         </div>
       </div>
 
+      <LeaderboardRecognitionCard />
+
       <Card className="p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
