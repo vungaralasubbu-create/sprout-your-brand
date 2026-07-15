@@ -117,8 +117,8 @@ function ModelHighlightCards() {
             </div>
             <div className="mt-1 font-display text-xl font-semibold">Own Leads</div>
           </div>
-          <div className="text-right">
-            <div className="font-display text-4xl font-semibold text-primary">Up to 70%</div>
+          <div className="text-right shrink-0">
+            <div className="font-display text-2xl sm:text-4xl font-semibold text-primary whitespace-nowrap">Up to 70%</div>
             <div className="text-caption text-muted-foreground">Revenue Share</div>
           </div>
         </div>
