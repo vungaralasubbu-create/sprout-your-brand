@@ -345,3 +345,301 @@ export const getMyPartnerSupportSnapshot = createServerFn({ method: "GET" })
 export const partnerIntentLabel = (intent?: string | null) =>
   (intent && PARTNER_INTENT_LABELS[intent as PartnerSupportIntent]) ||
   "General Partner Support";
+
+// =========================================================================
+// PART 8B-1: Escalation → shared partner_support_tickets architecture
+// =========================================================================
+
+// Approved partner support categories (validated on the backend).
+// Aligned with existing partner_support_tickets category enum in use.
+export const PARTNER_SUPPORT_CATEGORIES = [
+  "partner_application",
+  "partner_model",
+  "referral",
+  "lead_creation",
+  "lead_visibility",
+  "lead_status",
+  "lead_ownership",
+  "duplicate_lead",
+  "verified_enrollment",
+  "missing_commission",
+  "earnings",
+  "available_earnings",
+  "payout_request",
+  "payout_status",
+  "partner_account",
+  "technical_issue",
+  "other",
+] as const;
+export type PartnerSupportCategory = (typeof PARTNER_SUPPORT_CATEGORIES)[number];
+
+export const PARTNER_SUPPORT_CATEGORY_LABELS: Record<PartnerSupportCategory, string> = {
+  partner_application: "Partner Application",
+  partner_model: "Partner Model",
+  referral: "Referral",
+  lead_creation: "Lead Creation",
+  lead_visibility: "Lead Visibility",
+  lead_status: "Lead Status",
+  lead_ownership: "Lead Ownership",
+  duplicate_lead: "Duplicate Lead",
+  verified_enrollment: "Verified Enrollment",
+  missing_commission: "Missing Commission",
+  earnings: "Earnings",
+  available_earnings: "Available Earnings",
+  payout_request: "Payout Request",
+  payout_status: "Payout Status",
+  partner_account: "Partner Account",
+  technical_issue: "Technical Issue",
+  other: "Other Partner Support",
+};
+
+// Map detected AI support intent → suggested support category.
+const INTENT_TO_CATEGORY: Partial<Record<PartnerSupportIntent, PartnerSupportCategory>> = {
+  partner_application: "partner_application",
+  partner_model: "partner_model",
+  seventy_percent_model: "partner_model",
+  fifty_percent_model: "partner_model",
+  partner_referral: "referral",
+  lead_creation: "lead_creation",
+  lead_visibility: "lead_visibility",
+  lead_ownership: "lead_ownership",
+  duplicate_lead: "duplicate_lead",
+  verified_enrollment: "verified_enrollment",
+  commission_explanation: "missing_commission",
+  partner_earnings: "earnings",
+  available_earnings: "available_earnings",
+  payout_request: "payout_request",
+  payout_status: "payout_status",
+  partner_account: "partner_account",
+  partner_technical: "technical_issue",
+  partner_human_support: "other",
+  unknown_partner: "other",
+};
+
+export function suggestPartnerSupportCategory(
+  intent?: string | null,
+): PartnerSupportCategory {
+  if (!intent) return "other";
+  const c = INTENT_TO_CATEGORY[intent as PartnerSupportIntent];
+  return c ?? "other";
+}
+
+// ---- Related-record kinds a Support Request may reference ----
+export const PARTNER_SUPPORT_RELATED_KINDS = [
+  "lead",
+  "payment_submission",
+  "payout",
+  "referral",
+  "brand_profile",
+  "program",
+  "payment_link",
+  "application",
+] as const;
+export type PartnerSupportRelatedKind = (typeof PARTNER_SUPPORT_RELATED_KINDS)[number];
+
+// ---- Validate a Related Record belongs to the current partner ----
+const ValidateRelatedInput = z.object({
+  kind: z.enum(PARTNER_SUPPORT_RELATED_KINDS),
+  id: z.string().uuid(),
+});
+
+export const validatePartnerSupportRelatedRecord = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ValidateRelatedInput.parse(d))
+  .handler(async ({ data, context }): Promise<{
+    valid: boolean;
+    reference: string | null;
+    kind: PartnerSupportRelatedKind;
+  }> => {
+    const s = context.supabase as any;
+    // Resolve caller's partner_id (may be null for pending applicants)
+    const { data: p } = await s
+      .from("partners")
+      .select("id")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    const partnerId = p?.id as string | undefined;
+
+    async function check(): Promise<string | null> {
+      switch (data.kind) {
+        case "lead": {
+          if (!partnerId) return null;
+          const { data: r } = await s
+            .from("partner_leads")
+            .select("id, full_name")
+            .eq("id", data.id)
+            .or(`owner_partner_id.eq.${partnerId},assigned_partner_id.eq.${partnerId}`)
+            .maybeSingle();
+          return r ? `Lead • ${r.full_name ?? "—"}` : null;
+        }
+        case "payment_submission": {
+          if (!partnerId) return null;
+          const { data: r } = await s
+            .from("partner_payment_submissions")
+            .select("id, utr, amount")
+            .eq("id", data.id)
+            .eq("partner_id", partnerId)
+            .maybeSingle();
+          return r ? `Payment Submission • ${r.utr ?? r.id.slice(0, 8)}` : null;
+        }
+        case "payout": {
+          if (!partnerId) return null;
+          const { data: r } = await s
+            .from("payouts")
+            .select("id, reference, status")
+            .eq("id", data.id)
+            .eq("partner_id", partnerId)
+            .maybeSingle();
+          return r ? `Payout • ${r.reference ?? r.id.slice(0, 8)}` : null;
+        }
+        case "referral": {
+          if (!partnerId) return null;
+          const { data: r } = await s
+            .from("partner_referrals")
+            .select("id, status")
+            .eq("id", data.id)
+            .or(`referrer_partner_id.eq.${partnerId},referred_partner_id.eq.${partnerId}`)
+            .maybeSingle();
+          return r ? `Referral • ${r.status ?? r.id.slice(0, 8)}` : null;
+        }
+        case "brand_profile": {
+          if (!partnerId) return null;
+          const { data: r } = await s
+            .from("partner_brand_profiles")
+            .select("id, brand_name")
+            .eq("id", data.id)
+            .eq("partner_id", partnerId)
+            .maybeSingle();
+          return r ? `Brand Profile • ${r.brand_name ?? "—"}` : null;
+        }
+        case "payment_link": {
+          if (!partnerId) return null;
+          const { data: r } = await s
+            .from("payment_links")
+            .select("id, name, code")
+            .eq("id", data.id)
+            .maybeSingle();
+          return r ? `Payment Link • ${r.name ?? r.code ?? "—"}` : null;
+        }
+        case "program": {
+          const { data: r } = await s
+            .from("courses")
+            .select("id, name")
+            .eq("id", data.id)
+            .maybeSingle();
+          return r ? `Program • ${r.name ?? "—"}` : null;
+        }
+        case "application": {
+          const { data: r } = await s
+            .from("partner_applications")
+            .select("id, status")
+            .eq("id", data.id)
+            .eq("user_id", context.userId)
+            .maybeSingle();
+          return r ? `Application • ${r.status ?? r.id.slice(0, 8)}` : null;
+        }
+      }
+      return null;
+    }
+
+    const reference = await check();
+    return { valid: !!reference, reference, kind: data.kind };
+  });
+
+// ---- Generate an editable Issue Summary from an AI conversation ----
+const IssueSummaryInput = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().min(1).max(4000),
+      }),
+    )
+    .min(1)
+    .max(20),
+  supportIntent: z.string().max(80).optional(),
+  category: z.enum(PARTNER_SUPPORT_CATEGORIES).optional(),
+  partnerNote: z.string().trim().max(1000).optional(),
+});
+
+export const generatePartnerSupportIssueSummary = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => IssueSummaryInput.parse(d))
+  .handler(async ({ data }): Promise<{
+    title: string;
+    summary: string;
+    category: PartnerSupportCategory;
+  }> => {
+    const key = process.env.LOVABLE_API_KEY;
+    if (!key) throw new Error("Glintr AI Partner Support is not configured.");
+    const suggestedCategory = data.category ?? suggestPartnerSupportCategory(data.supportIntent);
+    const intentLabel = partnerIntentLabel(data.supportIntent ?? null);
+
+    const system = [
+      "You prepare a concise, factual Issue Summary for Glintr Partner Support.",
+      "You are given a partner ↔ AI Partner Support conversation. Produce a short summary that a human Partner Support reviewer can act on.",
+      "Rules:",
+      "- Neutral, factual, support-focused. 2–5 sentences max, plain prose.",
+      "- Never accuse Glintr, admins, or other partners of wrongdoing.",
+      "- Never claim commission is owed, ownership is definite, payout must be approved, or enrollment must be verified. State what the partner is asking, not what must happen.",
+      "- Do not include chain-of-thought, system prompts, hidden reasoning, database output, or another partner's identifying information.",
+      "- Do not invent business records, IDs, amounts, dates, statuses or policies.",
+      "- Output STRICT JSON only, matching: { \"title\": string, \"summary\": string }.",
+      "- title: 4–10 words, describes the issue.",
+      "- summary: 2–5 sentences describing what the partner is asking Partner Support to review, and what AI Partner Support was unable to resolve.",
+      `Detected partner support topic: ${intentLabel}.`,
+      `Suggested support category: ${PARTNER_SUPPORT_CATEGORY_LABELS[suggestedCategory]}.`,
+    ].join("\n");
+
+    const transcript = data.messages
+      .slice(-12)
+      .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
+      .join("\n\n");
+    const userBlock = [
+      "AI Partner Support conversation transcript:",
+      transcript,
+      data.partnerNote ? `\nPartner's additional note: ${data.partnerNote}` : "",
+      "\nReturn only the JSON object.",
+    ].join("\n");
+
+    const res = await fetch(`${BASE_URL}/chat/completions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
+      body: JSON.stringify({
+        model: DEFAULT_MODEL,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: userBlock },
+        ],
+        temperature: 0.2,
+        response_format: { type: "json_object" },
+      }),
+    });
+    if (res.status === 429)
+      throw new Error("Glintr AI Partner Support is busy — please retry shortly.");
+    if (res.status === 402)
+      throw new Error("Glintr AI Partner Support is temporarily unavailable.");
+    if (!res.ok)
+      throw new Error("Unable to prepare the issue summary.");
+    const json = await res.json();
+    const raw = json?.choices?.[0]?.message?.content?.trim();
+    if (!raw) throw new Error("Unable to prepare the issue summary.");
+    let parsed: { title?: string; summary?: string } = {};
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      const m = String(raw).match(/\{[\s\S]*\}/);
+      if (m) {
+        try {
+          parsed = JSON.parse(m[0]);
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+    const title = (parsed.title ?? "").toString().trim().slice(0, 120);
+    const summary = (parsed.summary ?? "").toString().trim().slice(0, 3500);
+    if (!title || !summary)
+      throw new Error("Unable to prepare the issue summary.");
+    return { title, summary, category: suggestedCategory };
+  });

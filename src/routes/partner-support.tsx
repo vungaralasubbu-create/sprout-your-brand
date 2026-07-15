@@ -28,9 +28,15 @@ import {
   sendPartnerSupportMessageAuthed,
   getMyPartnerSupportSnapshot,
   partnerIntentLabel,
+  isAccountSpecificPartnerIntent,
   type PartnerSupportIntent,
   type PartnerSnapshot,
 } from "@/lib/partner-support/partner-support.functions";
+import {
+  PartnerSupportEscalationDialog,
+  type EscalationContext,
+} from "@/components/partner-support/escalation-dialog";
+import { LifeBuoy } from "lucide-react";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
@@ -244,12 +250,25 @@ function PartnerSupportPage() {
   ]);
   const [input, setInput] = React.useState(search.q ?? "");
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const [escalation, setEscalation] = React.useState<EscalationContext | null>(null);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
+
+  function openEscalation(manual = false) {
+    setEscalation({
+      intent: intent ?? null,
+      messages: manual ? [] : messages,
+      related: null,
+      manual,
+    });
+  }
+
+  const HUMAN_SUPPORT_PATTERNS =
+    /\b(human support|talk to (partner )?support|speak to (partner )?support|create (a )?(support )?(ticket|request)|escalate|need someone to review|contact partner support)\b/i;
 
   React.useEffect(() => {
     if (search.q && messages.length === 1) {
@@ -299,6 +318,21 @@ function PartnerSupportPage() {
     if (!value) return;
     setInput("");
     setErrorMsg(null);
+    // Detect explicit human-support intent — offer escalation instead of only AI.
+    if (HUMAN_SUPPORT_PATTERNS.test(value)) {
+      setMessages((cur) => [
+        ...cur,
+        { role: "user", content: value },
+        {
+          role: "assistant",
+          content:
+            "I can prepare a Partner Support Request so Glintr Partner Support can review this without you re-explaining. Click 'Create Partner Support Request' below when you're ready.",
+        },
+      ]);
+      // open the escalation dialog with current conversation context
+      setTimeout(() => openEscalation(false), 100);
+      return;
+    }
     send.mutate(value);
   }
 
@@ -468,6 +502,33 @@ function PartnerSupportPage() {
               <div ref={chatEndRef} />
             </div>
 
+            {/* Contextual escalation — offered for likely account-specific or unresolved questions */}
+            {(() => {
+              const userTurns = messages.filter((m) => m.role === "user").length;
+              const accountSpecific = isAccountSpecificPartnerIntent(intent);
+              const show = !isLoading && (accountSpecific || userTurns >= 2);
+              if (!show) return null;
+              return (
+                <div className="border-t border-border bg-muted/30 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-sm">
+                    <div className="font-medium">Need Partner Support To Review This?</div>
+                    <p className="text-muted-foreground text-xs mt-1 max-w-2xl">
+                      I can prepare the issue context from this Partner Support conversation so you
+                      don't need to explain everything again.
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="ghost" onClick={() => inputRef.current?.focus()}>
+                      Keep Asking AI
+                    </Button>
+                    <Button size="sm" onClick={() => openEscalation(false)}>
+                      <LifeBuoy className="mr-1.5 size-3.5" /> Create Partner Support Request
+                    </Button>
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Quick starters (only before first user turn) */}
             {messages.filter((m) => m.role === "user").length === 0 && !isLoading && (
               <div className="border-t border-border bg-card px-5 py-4">
@@ -623,6 +684,20 @@ function PartnerSupportPage() {
               </>
             )}
           </div>
+          {signedIn === true && (
+            <div className="mt-6 rounded-2xl border border-border bg-card p-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm">
+                <div className="font-medium">Need Human Partner Support?</div>
+                <p className="text-muted-foreground text-xs mt-1 max-w-2xl">
+                  Prepare a Partner Support Request. Choose the topic, review the suggested issue
+                  summary, and Glintr Partner Support will follow up.
+                </p>
+              </div>
+              <Button onClick={() => openEscalation(true)} variant="outline">
+                <LifeBuoy className="mr-1.5 size-4" /> Create Partner Support Request
+              </Button>
+            </div>
+          )}
         </Container>
       </Section>
 
@@ -908,6 +983,12 @@ function PartnerSupportPage() {
           </p>
         </Container>
       </Section>
+      <PartnerSupportEscalationDialog
+        open={!!escalation}
+        onOpenChange={(v) => !v && setEscalation(null)}
+        ctx={escalation}
+        signedIn={signedIn === true}
+      />
     </div>
   );
 }
