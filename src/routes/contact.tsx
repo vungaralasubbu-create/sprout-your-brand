@@ -283,7 +283,10 @@ function ContactPage() {
   const enquirySectionRef = React.useRef<HTMLDivElement>(null);
 
   const scrollToRef = (r: React.RefObject<HTMLElement | null>) => {
-    r.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    r.current?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
     r.current?.focus?.();
   };
 
