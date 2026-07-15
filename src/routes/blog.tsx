@@ -40,6 +40,7 @@ const searchSchema = z.object({
   category: z.string().optional(),
   q: z.string().optional(),
 });
+type BlogSearch = z.infer<typeof searchSchema>;
 
 export const Route = createFileRoute("/blog")({
   validateSearch: (s) => searchSchema.parse(s),
