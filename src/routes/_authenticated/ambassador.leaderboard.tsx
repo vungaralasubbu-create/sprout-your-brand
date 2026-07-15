@@ -34,6 +34,7 @@ import {
   type LeaderboardRow,
   type CampaignLeaderboardRow,
 } from "@/lib/campus-ambassador/leaderboard.functions";
+import { HowRankingsWork, MyRankMovementChip } from "@/components/ambassador/ranking-rule-ui";
 import { cn } from "@/lib/utils";
 
 type LbSearch = {
@@ -131,6 +132,11 @@ function LeaderboardPage() {
 
         <MyRankCard loading={myQ.isLoading} error={myQ.isError} me={me}
           onRetry={() => myQ.refetch()} />
+
+        <HowRankingsWork
+          leaderboardType={(tab ?? "overall") as "overall" | "monthly" | "college" | "program" | "campaign"}
+        />
+
 
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="bg-slate-100 rounded-xl p-1 flex-wrap h-auto">
@@ -624,9 +630,10 @@ function MyRankCard({
           </div>
           <div>
             <div className="text-xs uppercase tracking-wider text-cyan-300 font-medium">Overall rank</div>
-            <div className="flex items-baseline gap-1.5">
+            <div className="flex items-baseline gap-1.5 flex-wrap">
               <span className="text-4xl font-bold tracking-tight">#{me.rank_position}</span>
               <span className="text-sm text-slate-300">of {me.total_active.toLocaleString("en-IN")}</span>
+              <MyRankMovementChip leaderboardType="overall" />
             </div>
             <div className="mt-1 text-sm font-medium text-white">
               {me.display_identity}

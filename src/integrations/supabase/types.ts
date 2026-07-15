@@ -1143,6 +1143,72 @@ export type Database = {
           },
         ]
       }
+      ambassador_leaderboard_corrections: {
+        Row: {
+          admin_notes: string | null
+          affected_ambassador_id: string | null
+          applied_at: string | null
+          campaign_id: string | null
+          correction_code: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          leaderboard_type: Database["public"]["Enums"]["amb_leaderboard_type"]
+          period_key: string | null
+          program_id: string | null
+          reason: string
+          reason_type: string
+          status: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          affected_ambassador_id?: string | null
+          applied_at?: string | null
+          campaign_id?: string | null
+          correction_code?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          leaderboard_type: Database["public"]["Enums"]["amb_leaderboard_type"]
+          period_key?: string | null
+          program_id?: string | null
+          reason: string
+          reason_type: string
+          status?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          affected_ambassador_id?: string | null
+          applied_at?: string | null
+          campaign_id?: string | null
+          correction_code?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          leaderboard_type?: Database["public"]["Enums"]["amb_leaderboard_type"]
+          period_key?: string | null
+          program_id?: string | null
+          reason?: string
+          reason_type?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_leaderboard_corrections_affected_ambassador_id_fkey"
+            columns: ["affected_ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_leaderboard_corrections_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_bonus_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_level_assignments: {
         Row: {
           achieved_at: string
@@ -1711,6 +1777,82 @@ export type Database = {
           },
         ]
       }
+      ambassador_performance_scores: {
+        Row: {
+          ambassador_id: string
+          calculated_at: string
+          campaign_component: number
+          campaign_id: string | null
+          conversion_component: number
+          final_score: number
+          id: string
+          is_eligible: boolean
+          marketing_component: number
+          period_key: string | null
+          program_id: string | null
+          referral_lead_component: number
+          rule_id: string
+          rule_version: number
+          verified_enrollment_component: number
+        }
+        Insert: {
+          ambassador_id: string
+          calculated_at?: string
+          campaign_component?: number
+          campaign_id?: string | null
+          conversion_component?: number
+          final_score?: number
+          id?: string
+          is_eligible?: boolean
+          marketing_component?: number
+          period_key?: string | null
+          program_id?: string | null
+          referral_lead_component?: number
+          rule_id: string
+          rule_version: number
+          verified_enrollment_component?: number
+        }
+        Update: {
+          ambassador_id?: string
+          calculated_at?: string
+          campaign_component?: number
+          campaign_id?: string | null
+          conversion_component?: number
+          final_score?: number
+          id?: string
+          is_eligible?: boolean
+          marketing_component?: number
+          period_key?: string | null
+          program_id?: string | null
+          referral_lead_component?: number
+          rule_id?: string
+          rule_version?: number
+          verified_enrollment_component?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_performance_scores_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_performance_scores_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_bonus_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_performance_scores_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_ranking_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_profile_activity: {
         Row: {
           ambassador_id: string
@@ -1742,6 +1884,205 @@ export type Database = {
             columns: ["ambassador_id"]
             isOneToOne: false
             referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_rank_movements: {
+        Row: {
+          ambassador_id: string
+          calculated_at: string
+          campaign_id: string | null
+          current_rank: number
+          id: string
+          is_new: boolean
+          leaderboard_type: Database["public"]["Enums"]["amb_leaderboard_type"]
+          period_key: string | null
+          previous_rank: number | null
+          program_id: string | null
+          rank_difference: number | null
+        }
+        Insert: {
+          ambassador_id: string
+          calculated_at?: string
+          campaign_id?: string | null
+          current_rank: number
+          id?: string
+          is_new?: boolean
+          leaderboard_type: Database["public"]["Enums"]["amb_leaderboard_type"]
+          period_key?: string | null
+          previous_rank?: number | null
+          program_id?: string | null
+          rank_difference?: number | null
+        }
+        Update: {
+          ambassador_id?: string
+          calculated_at?: string
+          campaign_id?: string | null
+          current_rank?: number
+          id?: string
+          is_new?: boolean
+          leaderboard_type?: Database["public"]["Enums"]["amb_leaderboard_type"]
+          period_key?: string | null
+          previous_rank?: number | null
+          program_id?: string | null
+          rank_difference?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_rank_movements_ambassador_id_fkey"
+            columns: ["ambassador_id"]
+            isOneToOne: false
+            referencedRelation: "campus_ambassador_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambassador_rank_movements_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_bonus_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_ranking_rule_components: {
+        Row: {
+          component: Database["public"]["Enums"]["amb_weighted_component"]
+          created_at: string
+          id: string
+          is_active: boolean
+          rule_id: string
+          weight_percentage: number
+        }
+        Insert: {
+          component: Database["public"]["Enums"]["amb_weighted_component"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          rule_id: string
+          weight_percentage: number
+        }
+        Update: {
+          component?: Database["public"]["Enums"]["amb_weighted_component"]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          rule_id?: string
+          weight_percentage?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_ranking_rule_components_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_ranking_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ambassador_ranking_rules: {
+        Row: {
+          ambassador_explanation: string | null
+          created_at: string
+          created_by: string | null
+          effective_from: string
+          effective_until: string | null
+          final_tie_policy: Database["public"]["Enums"]["amb_final_tie_policy"]
+          id: string
+          is_published: boolean
+          leaderboard_type: Database["public"]["Enums"]["amb_leaderboard_type"]
+          minimum_activity_metric:
+            | Database["public"]["Enums"]["amb_ranking_metric"]
+            | null
+          minimum_activity_threshold: number
+          parent_rule_id: string | null
+          ranking_metric: Database["public"]["Enums"]["amb_ranking_metric"]
+          ranking_period_type: Database["public"]["Enums"]["amb_ranking_period_type"]
+          rule_code: string | null
+          rule_name: string
+          rule_version: number
+          status: string
+          tie_breaker_1:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          tie_breaker_2:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          tie_breaker_3:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          updated_at: string
+        }
+        Insert: {
+          ambassador_explanation?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          effective_until?: string | null
+          final_tie_policy?: Database["public"]["Enums"]["amb_final_tie_policy"]
+          id?: string
+          is_published?: boolean
+          leaderboard_type: Database["public"]["Enums"]["amb_leaderboard_type"]
+          minimum_activity_metric?:
+            | Database["public"]["Enums"]["amb_ranking_metric"]
+            | null
+          minimum_activity_threshold?: number
+          parent_rule_id?: string | null
+          ranking_metric: Database["public"]["Enums"]["amb_ranking_metric"]
+          ranking_period_type?: Database["public"]["Enums"]["amb_ranking_period_type"]
+          rule_code?: string | null
+          rule_name: string
+          rule_version?: number
+          status?: string
+          tie_breaker_1?:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          tie_breaker_2?:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          tie_breaker_3?:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          updated_at?: string
+        }
+        Update: {
+          ambassador_explanation?: string | null
+          created_at?: string
+          created_by?: string | null
+          effective_from?: string
+          effective_until?: string | null
+          final_tie_policy?: Database["public"]["Enums"]["amb_final_tie_policy"]
+          id?: string
+          is_published?: boolean
+          leaderboard_type?: Database["public"]["Enums"]["amb_leaderboard_type"]
+          minimum_activity_metric?:
+            | Database["public"]["Enums"]["amb_ranking_metric"]
+            | null
+          minimum_activity_threshold?: number
+          parent_rule_id?: string | null
+          ranking_metric?: Database["public"]["Enums"]["amb_ranking_metric"]
+          ranking_period_type?: Database["public"]["Enums"]["amb_ranking_period_type"]
+          rule_code?: string | null
+          rule_name?: string
+          rule_version?: number
+          status?: string
+          tie_breaker_1?:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          tie_breaker_2?:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          tie_breaker_3?:
+            | Database["public"]["Enums"]["amb_tie_breaker_type"]
+            | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambassador_ranking_rules_parent_rule_id_fkey"
+            columns: ["parent_rule_id"]
+            isOneToOne: false
+            referencedRelation: "ambassador_ranking_rules"
             referencedColumns: ["id"]
           },
         ]
@@ -10465,6 +10806,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      ambassador_active_ranking_rule: {
+        Args: { _type: Database["public"]["Enums"]["amb_leaderboard_type"] }
+        Returns: {
+          ambassador_explanation: string
+          final_tie_policy: Database["public"]["Enums"]["amb_final_tie_policy"]
+          is_valid: boolean
+          minimum_activity_metric: Database["public"]["Enums"]["amb_ranking_metric"]
+          minimum_activity_threshold: number
+          ranking_metric: Database["public"]["Enums"]["amb_ranking_metric"]
+          rule_code: string
+          rule_id: string
+          rule_name: string
+          rule_version: number
+          tie_breaker_1: Database["public"]["Enums"]["amb_tie_breaker_type"]
+          tie_breaker_2: Database["public"]["Enums"]["amb_tie_breaker_type"]
+          tie_breaker_3: Database["public"]["Enums"]["amb_tie_breaker_type"]
+        }[]
+      }
       ambassador_leaderboard_campaign: {
         Args: {
           _campaign_id: string
@@ -10668,6 +11027,37 @@ export type Database = {
           has_college: boolean
         }[]
       }
+      ambassador_my_rank_movement: {
+        Args: {
+          _campaign_id?: string
+          _period_key?: string
+          _program_id?: string
+          _type: Database["public"]["Enums"]["amb_leaderboard_type"]
+        }
+        Returns: {
+          calculated_at: string
+          current_rank: number
+          is_new: boolean
+          previous_rank: number
+          rank_difference: number
+        }[]
+      }
+      ambassador_ranking_explanation: {
+        Args: { _type: Database["public"]["Enums"]["amb_leaderboard_type"] }
+        Returns: {
+          ambassador_explanation: string
+          is_valid: boolean
+          minimum_activity_label: string
+          primary_metric_label: string
+          rule_name: string
+          tie_breakers: string[]
+          weighted_components: Json
+        }[]
+      }
+      ambassador_ranking_rule_is_valid: {
+        Args: { _rule_id: string }
+        Returns: boolean
+      }
       ambassador_visible_campaigns: {
         Args: never
         Returns: {
@@ -10769,6 +11159,37 @@ export type Database = {
       ai_mentor_feedback_type: "helpful" | "not_helpful"
       ai_mentor_message_role: "student" | "mentor" | "system"
       ai_mentor_message_status: "sent" | "generating" | "completed" | "failed"
+      amb_final_tie_policy: "shared_rank" | "stable_deterministic"
+      amb_leaderboard_type:
+        | "overall"
+        | "monthly"
+        | "college"
+        | "program"
+        | "campaign"
+      amb_ranking_metric:
+        | "verified_enrollments"
+        | "valid_referral_leads"
+        | "conversion_rate"
+        | "weighted_performance_score"
+        | "campaign_milestone_progress"
+        | "program_verified_enrollments"
+      amb_ranking_period_type:
+        | "lifetime"
+        | "monthly"
+        | "campaign_window"
+        | "program_lifetime"
+      amb_tie_breaker_type:
+        | "higher_verified_enrollments"
+        | "higher_conversion_rate"
+        | "higher_valid_referral_leads"
+        | "higher_campaign_milestones"
+        | "earlier_achievement_timestamp"
+      amb_weighted_component:
+        | "valid_referral_leads"
+        | "verified_enrollments"
+        | "conversion_rate"
+        | "campaign_milestones"
+        | "marketing_resource_usage"
       ambassador_attribution_status:
         | "valid"
         | "pending_review"
@@ -11438,6 +11859,42 @@ export const Constants = {
       ai_mentor_feedback_type: ["helpful", "not_helpful"],
       ai_mentor_message_role: ["student", "mentor", "system"],
       ai_mentor_message_status: ["sent", "generating", "completed", "failed"],
+      amb_final_tie_policy: ["shared_rank", "stable_deterministic"],
+      amb_leaderboard_type: [
+        "overall",
+        "monthly",
+        "college",
+        "program",
+        "campaign",
+      ],
+      amb_ranking_metric: [
+        "verified_enrollments",
+        "valid_referral_leads",
+        "conversion_rate",
+        "weighted_performance_score",
+        "campaign_milestone_progress",
+        "program_verified_enrollments",
+      ],
+      amb_ranking_period_type: [
+        "lifetime",
+        "monthly",
+        "campaign_window",
+        "program_lifetime",
+      ],
+      amb_tie_breaker_type: [
+        "higher_verified_enrollments",
+        "higher_conversion_rate",
+        "higher_valid_referral_leads",
+        "higher_campaign_milestones",
+        "earlier_achievement_timestamp",
+      ],
+      amb_weighted_component: [
+        "valid_referral_leads",
+        "verified_enrollments",
+        "conversion_rate",
+        "campaign_milestones",
+        "marketing_resource_usage",
+      ],
       ambassador_attribution_status: [
         "valid",
         "pending_review",
