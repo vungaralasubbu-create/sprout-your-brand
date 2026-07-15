@@ -226,12 +226,12 @@ function ModelCard({
         <div className="absolute inset-0 bg-gradient-brand opacity-[0.04] pointer-events-none" />
       )}
       <CardHeader className="relative">
-        <div className="flex items-center justify-between">
-          <Badge variant={isPrimary ? "certified" : "outline"}>{eyebrow}</Badge>
-          <div className="text-right">
+        <div className="flex items-center justify-between gap-3">
+          <Badge variant={isPrimary ? "certified" : "outline"} className="shrink">{eyebrow}</Badge>
+          <div className="text-right shrink-0">
             <div
               className={
-                "font-display text-4xl font-semibold " +
+                "font-display text-2xl sm:text-4xl font-semibold whitespace-nowrap " +
                 (isPrimary ? "bg-gradient-brand bg-clip-text text-transparent" : "")
               }
             >

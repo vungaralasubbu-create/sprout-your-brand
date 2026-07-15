@@ -222,7 +222,7 @@ function JourneyCard({
     <div
       onMouseEnter={() => !reduced && onActivate()}
       onFocus={() => onActivate()}
-      className="depth-lift group relative overflow-hidden rounded-3xl border border-border/60 bg-background p-6 md:p-7"
+      className="depth-lift group relative overflow-hidden rounded-3xl border border-border/60 bg-background p-5 sm:p-6 md:p-7"
       style={{
         transform: `translateZ(${shift}px)`,
         transition: "transform .55s cubic-bezier(.2,.7,.2,1), box-shadow .4s ease",
@@ -281,7 +281,7 @@ function JourneyCard({
       <div className="mt-5 text-xs font-bold tracking-wider text-muted-foreground">
         {journey.eyebrow}
       </div>
-      <h3 className="mt-2 font-display text-2xl font-bold leading-tight">
+      <h3 className="mt-2 font-display text-xl sm:text-2xl font-bold leading-tight text-balance">
         {journey.title}
       </h3>
       <p className="mt-3 text-muted-foreground">{journey.body}</p>
