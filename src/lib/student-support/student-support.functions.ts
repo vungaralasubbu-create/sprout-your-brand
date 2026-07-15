@@ -1040,6 +1040,20 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       `\n\n${nonceMarker}`,
     ].join("");
 
+    // Validate attachments belong to this student's draft workspace
+    const attachments = (data.attachments ?? []).filter((a) =>
+      a.path.startsWith(`student/${uid}/drafts/`),
+    );
+    if (attachments.length !== (data.attachments ?? []).length) {
+      throw new Error("One or more attachments are not authorised.");
+    }
+    for (const a of attachments) {
+      if (!ALLOWED_ATT_TYPES.includes(a.type.toLowerCase())) {
+        throw new Error("Only PNG, JPG or PDF files are supported.");
+      }
+      if (a.size > MAX_ATT_BYTES) throw new Error("Attachment too large.");
+    }
+
     const contextType = CATEGORY_TO_CONTEXT_TYPE[data.category];
     const insertRow: Record<string, unknown> = {
       student_user_id: uid,
@@ -1050,6 +1064,7 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       description: compositeDescription,
       priority: "normal",
       status: "open",
+      attachments,
     };
 
     const { data: ticket, error } = await s
@@ -1077,3 +1092,267 @@ export const submitStudentSupportEscalation = createServerFn({ method: "POST" })
       created_at: ticket.created_at,
     };
   });
+
+// =========================================================================
+// PART 9B-2: My Support Requests — list + detail
+// =========================================================================
+
+const OPEN_STATUS_SET = new Set([
+  "open",
+  "assigned",
+  "in_progress",
+  "waiting_student",
+  "waiting_support",
+]);
+const RESOLVED_STATUS_SET = new Set(["resolved", "closed"]);
+
+export const STUDENT_SUPPORT_STATUS_LABELS: Record<string, string> = {
+  open: "Submitted",
+  assigned: "In Review",
+  in_progress: "In Review",
+  waiting_support: "In Review",
+  waiting_student: "Waiting For Student",
+  resolved: "Resolved",
+  closed: "Closed",
+};
+
+export const STUDENT_SUPPORT_STATUS_EXPLAIN: Record<string, string> = {
+  open: "Your Student Support Request has been received.",
+  assigned: "Your issue is being reviewed through the Student Support process.",
+  in_progress: "Your issue is being reviewed through the Student Support process.",
+  waiting_support: "Your issue is being reviewed through the Student Support process.",
+  waiting_student: "Student Support needs additional information from you.",
+  resolved: "The Support Request has reached a resolved state.",
+  closed: "The Support Request is closed.",
+};
+
+const ListInput = z
+  .object({
+    status: z.enum(["all", "open", "resolved"]).default("all"),
+    page: z.number().int().min(1).max(200).default(1),
+    pageSize: z.number().int().min(1).max(50).default(20),
+  })
+  .default({ status: "all", page: 1, pageSize: 20 });
+
+export type StudentSupportRequestListItem = {
+  ticket_code: string;
+  subject: string;
+  category: string;
+  status: string;
+  created_at: string;
+  last_activity_at: string;
+  program_title: string | null;
+};
+
+export const listMyStudentSupportRequests = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ListInput.parse(d ?? {}))
+  .handler(async ({ data, context }): Promise<{
+    requests: StudentSupportRequestListItem[];
+    total: number;
+  }> => {
+    const s = context.supabase as any;
+    const from = (data.page - 1) * data.pageSize;
+    const to = from + data.pageSize - 1;
+    let q = s
+      .from("student_support_tickets")
+      .select(
+        "ticket_code, subject, category, status, created_at, last_activity_at, courses:program_id(name)",
+        { count: "exact" },
+      )
+      .eq("student_user_id", context.userId)
+      .order("last_activity_at", { ascending: false })
+      .range(from, to);
+    if (data.status === "open") {
+      q = q.in("status", Array.from(OPEN_STATUS_SET));
+    } else if (data.status === "resolved") {
+      q = q.in("status", Array.from(RESOLVED_STATUS_SET));
+    }
+    const { data: rows, count } = await q;
+    const requests = ((rows ?? []) as any[])
+      .filter((r) => !!r.ticket_code)
+      .map((r) => ({
+        ticket_code: r.ticket_code as string,
+        subject: r.subject as string,
+        category: r.category as string,
+        status: r.status as string,
+        created_at: r.created_at as string,
+        last_activity_at: r.last_activity_at as string,
+        program_title: r.courses?.name ?? null,
+      }));
+    return { requests, total: count ?? requests.length };
+  });
+
+// Student-visible activity actions (whitelist — never expose admin/internal events)
+const STUDENT_VISIBLE_ACTIVITY = new Set<string>([
+  "ticket_created",
+  "student_reply_sent",
+  "student_added_attachment",
+  "student_provided_info",
+  "ticket_reopened",
+  "status_changed",
+  "admin_reply",
+  "support_reply",
+  "resolved",
+  "closed",
+  "waiting_student",
+]);
+
+export type StudentSupportTimelineEvent = {
+  action: string;
+  label: string;
+  detail: string | null;
+  at: string;
+};
+
+export type StudentSupportRequestDetail = {
+  ticket_code: string;
+  subject: string;
+  category: string;
+  status: string;
+  status_label: string;
+  status_explanation: string;
+  created_at: string;
+  last_activity_at: string;
+  resolved_at: string | null;
+  closed_at: string | null;
+  summary: string;
+  related: { kind: "program"; label: string } | null;
+  attachments: StudentSupportAttachment[];
+  timeline: StudentSupportTimelineEvent[];
+  activity: StudentSupportTimelineEvent[];
+};
+
+// Strip [nonce:...] marker from stored description before returning to student
+function cleanDescription(raw: string): string {
+  return String(raw ?? "")
+    .replace(/\n*\[nonce:[^\]]+\]\s*$/i, "")
+    .trim();
+}
+
+function labelForAction(action: string): string {
+  switch (action) {
+    case "ticket_created":
+      return "Request Submitted";
+    case "student_reply_sent":
+      return "You Replied";
+    case "student_added_attachment":
+      return "You Added A File";
+    case "student_provided_info":
+      return "You Provided Information";
+    case "ticket_reopened":
+      return "Request Reopened";
+    case "status_changed":
+      return "Status Updated";
+    case "admin_reply":
+    case "support_reply":
+      return "Student Support Replied";
+    case "waiting_student":
+      return "Waiting For You";
+    case "resolved":
+      return "Request Resolved";
+    case "closed":
+      return "Request Closed";
+    default:
+      return "Support Update";
+  }
+}
+
+const RefInput = z.object({ ref: z.string().trim().min(1).max(80) });
+
+export const getMyStudentSupportRequest = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => RefInput.parse(d))
+  .handler(async ({ data, context }): Promise<StudentSupportRequestDetail | null> => {
+    const s = context.supabase as any;
+    const { data: t } = await s
+      .from("student_support_tickets")
+      .select(
+        "id, ticket_code, subject, category, status, program_id, description, attachments, created_at, last_activity_at, resolved_at, closed_at, courses:program_id(name)",
+      )
+      .eq("ticket_code", data.ref)
+      .eq("student_user_id", context.userId)
+      .maybeSingle();
+    if (!t) return null;
+
+    // Revalidate related program (enrollment) at read time
+    let related: { kind: "program"; label: string } | null = null;
+    if (t.program_id) {
+      const { data: enr } = await s
+        .from("enrollments")
+        .select("id")
+        .eq("student_user_id", context.userId)
+        .eq("course_id", t.program_id)
+        .maybeSingle();
+      if (enr) {
+        related = {
+          kind: "program",
+          label: (t as any).courses?.name ?? "Enrolled Program",
+        };
+      }
+    }
+
+    // Student-visible activity (whitelisted actions only)
+    const { data: acts } = await s
+      .from("student_support_activity")
+      .select("action, detail, created_at, actor_role")
+      .eq("ticket_id", t.id)
+      .order("created_at", { ascending: true })
+      .limit(200);
+
+    const filteredActs = ((acts ?? []) as any[]).filter(
+      (a) =>
+        STUDENT_VISIBLE_ACTIVITY.has(a.action) &&
+        (a.actor_role === "student" ||
+          a.actor_role === "support" ||
+          a.actor_role === "system"),
+    );
+
+    const timeline: StudentSupportTimelineEvent[] = filteredActs.map((a: any) => ({
+      action: a.action,
+      label: labelForAction(a.action),
+      detail: a.detail ?? null,
+      at: a.created_at,
+    }));
+
+    // Ensure "Request Submitted" is always present
+    if (!timeline.some((e) => e.action === "ticket_created")) {
+      timeline.unshift({
+        action: "ticket_created",
+        label: "Request Submitted",
+        detail: null,
+        at: t.created_at,
+      });
+    }
+
+    const attachments: StudentSupportAttachment[] = (((t as any).attachments as any[]) ?? [])
+      .filter((a: any) => a && typeof a.path === "string")
+      .map((a: any) => ({
+        path: a.path as string,
+        name: (a.name as string) ?? "file",
+        type: (a.type as string) ?? "application/octet-stream",
+        size: typeof a.size === "number" ? a.size : 0,
+      }));
+
+    const status = String(t.status);
+    return {
+      ticket_code: t.ticket_code!,
+      subject: t.subject,
+      category: t.category,
+      status,
+      status_label: STUDENT_SUPPORT_STATUS_LABELS[status] ?? status,
+      status_explanation: STUDENT_SUPPORT_STATUS_EXPLAIN[status] ?? "",
+      created_at: t.created_at,
+      last_activity_at: t.last_activity_at,
+      resolved_at: t.resolved_at ?? null,
+      closed_at: t.closed_at ?? null,
+      summary: cleanDescription(t.description),
+      related,
+      attachments,
+      timeline,
+      // Activity == same student-visible events; timeline is the primary view
+      activity: timeline,
+    };
+  });
+
+export const refreshMyStudentSupportRequest = getMyStudentSupportRequest;
