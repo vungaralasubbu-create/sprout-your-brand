@@ -13,5 +13,7 @@ Disallow: /brand/
 Disallow: /auth
 Disallow: /_authenticated
 Disallow: /_authenticated/
+Disallow: /partner-support/requests
+Disallow: /partner-support/requests/
 
 Sitemap: https://glintr.com/sitemap.xml

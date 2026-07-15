@@ -36,6 +36,18 @@ import {
   PartnerSupportEscalationDialog,
   type EscalationContext,
 } from "@/components/partner-support/escalation-dialog";
+import {
+  FeedbackControl,
+  type FeedbackValue,
+  HowSupportWorksSection,
+  SupportReviewJourney,
+  HumanReviewSection,
+  AccountSafetySection,
+  FinalSupportCTA,
+  SensitiveInputNotice,
+  detectSensitive,
+  redactSensitive,
+} from "@/components/partner-support/support-extras";
 import { LifeBuoy } from "lucide-react";
 
 const SearchSchema = z.object({
@@ -251,8 +263,22 @@ function PartnerSupportPage() {
   const [input, setInput] = React.useState(search.q ?? "");
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const [escalation, setEscalation] = React.useState<EscalationContext | null>(null);
+  const [feedback, setFeedback] = React.useState<Record<number, FeedbackValue>>({});
+  const [sensitiveHits, setSensitiveHits] = React.useState<string[]>([]);
   const chatEndRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
+  function focusAIInput() {
+    document
+      .getElementById("partner-support-ai")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => inputRef.current?.focus(), 300);
+  }
+  function scrollToGuided() {
+    document
+      .getElementById("guided-support")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   React.useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -316,8 +342,12 @@ function PartnerSupportPage() {
   });
 
   function handleSubmit(text: string) {
-    const value = text.trim();
-    if (!value) return;
+    const rawValue = text.trim();
+    if (!rawValue) return;
+    // Best-effort sensitive-info detection and redaction before sending.
+    const hits = detectSensitive(rawValue);
+    const value = hits.length > 0 ? redactSensitive(rawValue) : rawValue;
+    setSensitiveHits(hits);
     setInput("");
     setErrorMsg(null);
     // Detect explicit human-support intent — offer escalation instead of only AI.
@@ -443,26 +473,44 @@ function PartnerSupportPage() {
             </div>
 
             <div className="p-5 space-y-4 max-h-[520px] overflow-y-auto bg-background">
-              {messages.map((m, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    "flex gap-3",
-                    m.role === "user" ? "justify-end" : "justify-start",
-                  )}
-                >
+              {messages.map((m, i) => {
+                // Show feedback only after actual AI guidance replies:
+                // skip the initial greeting (index 0) and skip if a newer
+                // user turn hasn't been answered yet.
+                const showFeedback =
+                  m.role === "assistant" && i > 0 && !isLoading && !errorMsg;
+                return (
                   <div
+                    key={i}
                     className={cn(
-                      "max-w-[85%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed",
-                      m.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-br-sm"
-                        : "bg-muted text-foreground rounded-bl-sm",
+                      "flex gap-3",
+                      m.role === "user" ? "justify-end" : "justify-start",
                     )}
                   >
-                    {m.content}
+                    <div
+                      className={cn(
+                        "max-w-[85%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed",
+                        m.role === "user"
+                          ? "bg-primary text-primary-foreground rounded-br-sm"
+                          : "bg-muted text-foreground rounded-bl-sm",
+                      )}
+                    >
+                      {m.content}
+                      {showFeedback && (
+                        <FeedbackControl
+                          value={feedback[i] ?? null}
+                          onSelect={(v) =>
+                            setFeedback((cur) => (cur[i] ? cur : { ...cur, [i]: v }))
+                          }
+                          onFollowUp={() => inputRef.current?.focus()}
+                          onGuided={scrollToGuided}
+                          onEscalate={() => openEscalation(false)}
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {isLoading && (
                 <div className="flex gap-3 justify-start">
                   <div className="max-w-[85%] rounded-2xl rounded-bl-sm bg-muted px-4 py-3 text-sm text-muted-foreground flex items-center gap-2">
@@ -593,13 +641,14 @@ function PartnerSupportPage() {
                   className="flex-1 resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                   disabled={isLoading}
                 />
-                <Button type="submit" disabled={isLoading || !input.trim()}>
+                <Button type="submit" disabled={isLoading || !input.trim()} aria-label="Send message">
                   {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                 </Button>
               </form>
+              <SensitiveInputNotice items={sensitiveHits} />
               <p className="mt-2 text-[11px] text-muted-foreground">
                 AI-assisted responses grounded in approved Glintr partner information. Cannot change
-                account records.
+                account records. Please do not share OTPs, UPI PINs, card CVVs or account passwords.
               </p>
             </div>
           </Card>
@@ -991,11 +1040,23 @@ function PartnerSupportPage() {
           </p>
         </Container>
       </Section>
-      <GuidedTroubleshootingSection
-        onEscalate={(prefill) => openEscalation(true, prefill)}
-      />
-      <PartnerSupportEscalationDialog
+      <div id="guided-support">
+        <GuidedTroubleshootingSection
+          onEscalate={(prefill) => openEscalation(true, prefill)}
+        />
+      </div>
 
+      <HumanReviewSection onAskAI={focusAIInput} onExplore={scrollToGuided} />
+      <HowSupportWorksSection />
+      <SupportReviewJourney onAskAI={focusAIInput} />
+      <AccountSafetySection />
+      <FinalSupportCTA
+        showMyRequests={signedIn === true}
+        onAskAI={focusAIInput}
+        onExplore={scrollToGuided}
+      />
+
+      <PartnerSupportEscalationDialog
         open={!!escalation}
         onOpenChange={(v) => !v && setEscalation(null)}
         ctx={escalation}
