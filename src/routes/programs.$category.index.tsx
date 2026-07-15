@@ -47,9 +47,19 @@ export const Route = createFileRoute("/programs/$category/")({
       meta.push({ property: "og:image", content: image });
       meta.push({ name: "twitter:image", content: image });
     }
+    const breadcrumbs = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Programs", item: `${SITE_URL}/programs` },
+        { "@type": "ListItem", position: 3, name, item: canonical },
+      ],
+    };
     return {
       meta,
       links: [{ rel: "canonical", href: canonical }],
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(breadcrumbs) }],
     };
   },
   component: CategoryPage,
