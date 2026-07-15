@@ -3,9 +3,10 @@ import { useState } from "react";
 import {
   LayoutDashboard, Users, GraduationCap, Wallet, ScrollText,
   Sparkles, UserCircle, LifeBuoy, Menu, X, Compass, Banknote, Trophy,
-  Award, History,
+  Award, History, Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AmbassadorNotificationBell } from "@/components/ambassador/notification-bell";
 
 const NAV = [
   { to: "/ambassador/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -18,6 +19,7 @@ const NAV = [
   { to: "/ambassador/leaderboard", label: "Leaderboard", icon: Trophy },
   { to: "/ambassador/recognition", label: "Recognition", icon: Award },
   { to: "/ambassador/rank-history", label: "Rank History", icon: History },
+  { to: "/ambassador/notifications", label: "Notifications", icon: Bell },
   { to: "/ambassador/profile", label: "My Profile", icon: UserCircle },
   { to: "/ambassador/settings", label: "Settings", icon: LifeBuoy },
 ] as const;
@@ -36,9 +38,12 @@ export function AmbassadorShell({ children }: { children?: React.ReactNode }) {
           </div>
           <div className="font-display font-semibold">Ambassador</div>
         </Link>
-        <button className="p-2" onClick={() => setOpen(!open)} aria-label="menu">
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <AmbassadorNotificationBell />
+          <button className="p-2" onClick={() => setOpen(!open)} aria-label="menu">
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       <div className="lg:grid lg:grid-cols-[260px_1fr] min-h-dvh">
@@ -49,14 +54,17 @@ export function AmbassadorShell({ children }: { children?: React.ReactNode }) {
             open ? "block" : "hidden lg:block",
           )}
         >
-          <div className="hidden lg:flex items-center gap-2 mb-6 pt-1">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-500 to-emerald-400 grid place-items-center text-white">
-              <Compass className="h-5 w-5" />
+          <div className="hidden lg:flex items-center justify-between gap-2 mb-6 pt-1">
+            <div className="flex items-center gap-2">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-500 to-emerald-400 grid place-items-center text-white">
+                <Compass className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="font-display font-semibold leading-tight">Glintr</div>
+                <div className="text-[11px] text-slate-500 leading-tight">Campus Ambassador</div>
+              </div>
             </div>
-            <div>
-              <div className="font-display font-semibold leading-tight">Glintr</div>
-              <div className="text-[11px] text-slate-500 leading-tight">Campus Ambassador</div>
-            </div>
+            <AmbassadorNotificationBell />
           </div>
 
           <div className="text-[10px] uppercase tracking-widest text-slate-400 mt-2 mb-1 px-2">
