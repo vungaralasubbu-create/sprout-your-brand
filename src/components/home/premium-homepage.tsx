@@ -38,6 +38,11 @@ import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
 import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
 import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
 import { GlintrDimension } from "@/components/home/glintr-dimension";
+import {
+  GlintrWorld,
+  CertificationEcosystem,
+  LearnerInstitutions,
+} from "@/components/home/glintr-world-sections";
 
 
 /* --------------------------------------------------------------------- *
@@ -1838,6 +1843,8 @@ export function PremiumHomepage() {
       <MotionDivider variant="line" />
       <ProgramUniverse />
       <GenerativeAISpotlight />
+      <CertificationEcosystem />
+      <LearnerInstitutions />
       <LearningDirection />
       <MotionDivider variant="nodes" />
       <CampusCommunity />
@@ -1848,7 +1855,7 @@ export function PremiumHomepage() {
       <EarnWithUs />
       <RevenueStory />
       <LaunchYourBrand />
-      <GlintrEcosystem />
+      <GlintrWorld />
       <GlintrNumbers />
       <FinalBrandStatement />
       <PreFooterPathways />
