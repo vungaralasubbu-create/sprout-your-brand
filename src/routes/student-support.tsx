@@ -729,6 +729,13 @@ function StudentSupportPage() {
           </div>
         </Container>
       </Section>
+      <StudentSupportEscalationDialog
+        open={escalationOpen}
+        onOpenChange={setEscalationOpen}
+        messages={messages}
+        intent={intent}
+        snapshot={snapshot}
+      />
     </div>
   );
 }
