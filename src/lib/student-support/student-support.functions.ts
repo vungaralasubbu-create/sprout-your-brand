@@ -815,8 +815,8 @@ export const generateStudentSupportIssueSummary = createServerFn({ method: "POST
         }
       }
     }
-    const title = (parsed.title ?? "").toString().trim().slice(0, 120);
-    const summary = (parsed.summary ?? "").toString().trim().slice(0, 3500);
+    const title = redactSensitiveText((parsed.title ?? "").toString().trim()).slice(0, 120);
+    const summary = redactSensitiveText((parsed.summary ?? "").toString().trim()).slice(0, 3500);
     if (!title || !summary) throw new Error("Unable to prepare the issue summary.");
     return { title, summary, category: suggestedCategory };
   });
