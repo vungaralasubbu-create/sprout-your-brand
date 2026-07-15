@@ -47,6 +47,8 @@ import {
   StudentSupportSafetyStrip,
   StudentSupportFinalCTA,
 } from "@/components/student-support/support-topics";
+import { StudentSupportEscalationDialog } from "@/components/student-support/escalation-dialog";
+import { LifeBuoy } from "lucide-react";
 
 const SearchSchema = z.object({
   intent: z.string().optional(),
