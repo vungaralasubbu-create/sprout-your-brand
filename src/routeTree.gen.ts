@@ -16,6 +16,7 @@ import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -195,6 +196,11 @@ const FaqsRoute = FaqsRouteImport.update({
 const EarnRoute = EarnRouteImport.update({
   id: '/earn',
   path: '/earn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersRoute = CareersRouteImport.update({
@@ -1048,6 +1054,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRoute
   '/join': typeof JoinRoute
@@ -1201,6 +1208,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRoute
   '/join': typeof JoinRoute
@@ -1353,6 +1361,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/contact': typeof ContactRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRoute
   '/join': typeof JoinRoute
@@ -1508,6 +1517,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/careers'
+    | '/contact'
     | '/earn'
     | '/faqs'
     | '/join'
@@ -1661,6 +1671,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/careers'
+    | '/contact'
     | '/earn'
     | '/faqs'
     | '/join'
@@ -1812,6 +1823,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/blog'
     | '/careers'
+    | '/contact'
     | '/earn'
     | '/faqs'
     | '/join'
@@ -1967,6 +1979,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRouteWithChildren
   CareersRoute: typeof CareersRouteWithChildren
+  ContactRoute: typeof ContactRoute
   EarnRoute: typeof EarnRoute
   FaqsRoute: typeof FaqsRoute
   JoinRoute: typeof JoinRoute
@@ -2037,6 +2050,13 @@ declare module '@tanstack/react-router' {
       path: '/earn'
       fullPath: '/earn'
       preLoaderRoute: typeof EarnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/careers': {
@@ -3565,6 +3585,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BlogRoute: BlogRouteWithChildren,
   CareersRoute: CareersRouteWithChildren,
+  ContactRoute: ContactRoute,
   EarnRoute: EarnRoute,
   FaqsRoute: FaqsRoute,
   JoinRoute: JoinRoute,
