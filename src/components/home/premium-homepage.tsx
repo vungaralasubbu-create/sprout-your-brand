@@ -36,6 +36,7 @@ import { cn } from "@/lib/utils";
 import mark from "@/assets/glintr-mark.png.asset.json";
 import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
 import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
+import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
 
 /* --------------------------------------------------------------------- *
  * Small utilities
