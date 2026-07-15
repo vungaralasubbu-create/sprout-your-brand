@@ -549,6 +549,41 @@ function StudentSupportPage() {
             </div>
           </Card>
 
+          {/* ============= GUIDED LEARNING ISSUES ============= */}
+          <div className="mt-8">
+            <LearningIssuesSection
+              signedIn={signedIn}
+              snapshot={snapshot}
+              onAskAI={(launch: LearningIssueLaunch) => {
+                setIntent(launch.intent as StudentSupportIntent);
+                navigate({
+                  search: (p: Record<string, unknown>) => ({
+                    ...p,
+                    intent: launch.intent,
+                  }),
+                  replace: true,
+                });
+                const q = launch.courseName
+                  ? `${launch.question} (Program: ${launch.courseName})`
+                  : launch.question;
+                const next: ChatMsg[] = [
+                  ...messages,
+                  { role: "user", content: q },
+                ];
+                setMessages(next);
+                setErrorMsg(null);
+                send.mutate({
+                  history: next,
+                  nextIntent: launch.intent as StudentSupportIntent,
+                });
+                document
+                  .getElementById("student-support-ai")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            />
+          </div>
+
+
           {/* Related Glintr information + related student questions */}
           {(relatedLinks.length > 0 || relatedQuestions.length > 0) &&
             messages.some((m) => m.role === "user") && (
