@@ -929,3 +929,609 @@ function ComingSoon({ label }: { label: string }) {
     </Card>
   );
 }
+
+// =================== PROGRAMS ===================
+function ProgramsTab({
+  programId, setProgramId,
+}: { programId: string | null; setProgramId: (id: string | null) => void }) {
+  const listProgramsFn = useServerFn(listLeaderboardPrograms);
+  const programsQ = useQuery({
+    queryKey: ["ambassador-leaderboard", "program-list"],
+    queryFn: () => listProgramsFn(),
+    staleTime: 5 * 60_000,
+  });
+
+  const programs = programsQ.data ?? [];
+  const selected = programs.find((p) => p.id === programId) ?? null;
+
+  if (programsQ.isLoading) return <LeaderboardSkeleton />;
+  if (programsQ.isError)
+    return <ErrorState title="Unable to load programs" onRetry={() => programsQ.refetch()} />;
+
+  return (
+    <div className="space-y-5">
+      <Card className="p-5 border-0 bg-gradient-to-br from-cyan-50 via-white to-indigo-50">
+        <div className="flex items-start gap-3">
+          <div className="h-11 w-11 rounded-2xl bg-white ring-1 ring-slate-200 flex items-center justify-center flex-shrink-0">
+            <BookOpen className="h-5 w-5 text-indigo-600" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">
+              Program leaderboard
+            </div>
+            <div className="text-lg sm:text-xl font-semibold text-slate-900">
+              Compare Campus Ambassador performance
+            </div>
+            <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
+              Compare verified Campus Ambassador performance for individual Glintr programs.
+            </p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <label className="text-[11px] uppercase tracking-wider font-medium text-slate-500 block mb-1.5">
+            Select program
+          </label>
+          <Select
+            value={programId ?? ""}
+            onValueChange={(v) => setProgramId(v || null)}
+          >
+            <SelectTrigger className="h-11 bg-white w-full sm:max-w-md">
+              <SelectValue placeholder="Choose a Glintr program" />
+            </SelectTrigger>
+            <SelectContent>
+              {programs.map((p) => (
+                <SelectItem key={p.id} value={p.id}>
+                  <span className="font-medium">{p.name}</span>
+                  {p.category_name && (
+                    <span className="text-slate-500 text-xs ml-2">· {p.category_name}</span>
+                  )}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </Card>
+
+      {!programId ? (
+        <Card className="p-10 text-center bg-slate-50 border-dashed">
+          <BookOpen className="h-10 w-10 mx-auto text-slate-300 mb-2" />
+          <h3 className="text-base font-semibold text-slate-900">Select a program</h3>
+          <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
+            Choose a Glintr program to view Campus Ambassador rankings.
+          </p>
+        </Card>
+      ) : (
+        <ProgramLeaderboardBody key={programId} programId={programId} programName={selected?.name ?? "Program"} />
+      )}
+    </div>
+  );
+}
+
+function ProgramLeaderboardBody({
+  programId, programName,
+}: { programId: string; programName: string }) {
+  const [search, setSearch] = useState("");
+  const [pendingSearch, setPendingSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const listFn = useServerFn(listProgramLeaderboard);
+  const meFn = useServerFn(getMyProgramRank);
+  const listQ = useQuery({
+    queryKey: ["ambassador-leaderboard", "program", programId, search, page],
+    queryFn: () => listFn({ data: { programId, search, page, pageSize: PAGE_SIZE } }),
+    staleTime: 20_000,
+  });
+  const myQ = useQuery({
+    queryKey: ["ambassador-leaderboard", "program-me", programId],
+    queryFn: () => meFn({ data: { programId } }),
+    staleTime: 20_000,
+  });
+  const me = myQ.data?.present ? myQ.data : null;
+
+  const rows = (listQ.data?.rows ?? []) as LeaderboardRow[];
+  const total = listQ.data?.total ?? 0;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const top3 = page === 1 ? rows.slice(0, 3) : [];
+  const listRows = page === 1 ? rows.slice(3) : rows;
+
+  const jumpToMyRank = () => {
+    if (!me) return;
+    const target = Math.ceil(me.rank_position / PAGE_SIZE);
+    setSearch(""); setPendingSearch(""); setPage(target);
+    setTimeout(() => {
+      document.getElementById(`amb-row-${me.ambassador_id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+  };
+
+  return (
+    <div className="space-y-5">
+      <MyPeriodRankCard
+        title={`My rank · ${programName}`}
+        loading={myQ.isLoading}
+        error={myQ.isError}
+        me={me
+          ? {
+              ambassador_id: me.ambassador_id,
+              rank_position: me.rank_position,
+              display_identity: me.display_identity,
+              college_display: me.college_display,
+              photo_url: me.photo_url,
+              level_name: me.level_name,
+              verified_enrollments: me.verified_enrollments,
+              valid_referral_leads: me.valid_referral_leads,
+              conversion_rate: me.conversion_rate,
+              total_ranked: me.total_ranked,
+            }
+          : null}
+        contextLabel={`of ${(me?.total_ranked ?? 0).toLocaleString("en-IN")} ranked in this program`}
+        onRetry={() => myQ.refetch()}
+        onJump={me ? jumpToMyRank : undefined}
+        emptyText="You'll appear here once you have verified activity in this program."
+      />
+
+      <SearchAndJump
+        pendingSearch={pendingSearch} setPendingSearch={setPendingSearch}
+        onSearch={(v) => { setPage(1); setSearch(v); }}
+        onJump={me ? jumpToMyRank : undefined}
+        placeholder={`Search ambassadors for ${programName}`}
+        jumpLabel="Jump to my program rank"
+      />
+
+      {listQ.isLoading ? <LeaderboardSkeleton /> :
+        listQ.isError ? <ErrorState title="Unable to load Program Leaderboard" onRetry={() => listQ.refetch()} /> :
+        rows.length === 0 ? (
+          <Card className="p-10 text-center">
+            <BookOpen className="h-10 w-10 mx-auto text-slate-300 mb-2" />
+            <h3 className="text-base font-semibold text-slate-900">
+              {search ? "No ambassadors match your search" : "Program leaderboard not available yet"}
+            </h3>
+            <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
+              {search
+                ? "Try a different name."
+                : "Eligible rankings will appear when verified Program performance activity is available."}
+            </p>
+          </Card>
+        ) : (
+          <>
+            {top3.length > 0 && (
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-medium mb-2">
+                  Top program ambassadors
+                </div>
+                <TopThree rows={top3} />
+              </div>
+            )}
+            <Card className="divide-y divide-slate-100 overflow-hidden">
+              {listRows.map((r) => <LeaderboardRowItem key={r.ambassador_id} row={r} />)}
+            </Card>
+            <Pager page={page} pages={pages} total={total} setPage={setPage} />
+          </>
+        )}
+    </div>
+  );
+}
+
+// =================== CAMPAIGNS ===================
+const METRIC_LABEL: Record<string, string> = {
+  verified_enrollments: "Verified enrollments",
+  valid_referral_leads: "Valid referral leads",
+  campaign_milestones: "Campaign milestones",
+  program_enrollments: "Program enrollments",
+  campaign_progress_score: "Campaign progress",
+};
+const METRIC_SHORT: Record<string, string> = {
+  verified_enrollments: "Verified",
+  valid_referral_leads: "Leads",
+  campaign_milestones: "Milestones",
+  program_enrollments: "Enrollments",
+  campaign_progress_score: "Progress",
+};
+
+function formatMetric(metric: string, value: number) {
+  if (metric === "campaign_progress_score") return `${value.toFixed(1)}%`;
+  return value.toLocaleString("en-IN");
+}
+
+function CampaignsTab({
+  campaignId, setCampaignId,
+}: { campaignId: string | null; setCampaignId: (id: string | null) => void }) {
+  const listCampaignsFn = useServerFn(listVisibleCampaigns);
+  const campaignsQ = useQuery({
+    queryKey: ["ambassador-leaderboard", "campaign-list"],
+    queryFn: () => listCampaignsFn(),
+    staleTime: 60_000,
+  });
+
+  const campaigns = campaignsQ.data ?? [];
+  const selected = campaigns.find((c) => c.id === campaignId) ?? null;
+
+  if (campaignsQ.isLoading) return <LeaderboardSkeleton />;
+  if (campaignsQ.isError)
+    return <ErrorState title="Unable to load campaigns" onRetry={() => campaignsQ.refetch()} />;
+
+  if (campaigns.length === 0) {
+    return (
+      <Card className="p-10 text-center bg-slate-50 border-dashed">
+        <Rocket className="h-10 w-10 mx-auto text-slate-300 mb-2" />
+        <h3 className="text-base font-semibold text-slate-900">
+          No campaign leaderboards available yet
+        </h3>
+        <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
+          Campaign leaderboards will appear here when Glintr publishes campaigns with leaderboards enabled.
+        </p>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      <Card className="p-5 border-0 bg-gradient-to-br from-amber-50 via-white to-cyan-50">
+        <div className="flex items-start gap-3">
+          <div className="h-11 w-11 rounded-2xl bg-white ring-1 ring-slate-200 flex items-center justify-center flex-shrink-0">
+            <Rocket className="h-5 w-5 text-amber-600" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">
+              Campaign leaderboard
+            </div>
+            <div className="text-lg sm:text-xl font-semibold text-slate-900">
+              Compete on live Glintr campaigns
+            </div>
+            <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
+              See how eligible Campus Ambassadors rank inside active and completed campaigns.
+            </p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <label className="text-[11px] uppercase tracking-wider font-medium text-slate-500 block mb-1.5">
+            Select campaign
+          </label>
+          <Select
+            value={campaignId ?? ""}
+            onValueChange={(v) => setCampaignId(v || null)}
+          >
+            <SelectTrigger className="h-11 bg-white w-full sm:max-w-lg">
+              <SelectValue placeholder="Choose a campaign" />
+            </SelectTrigger>
+            <SelectContent>
+              {campaigns.map((c) => {
+                const period = new Date(c.starts_at).toLocaleDateString("en-IN", {
+                  day: "numeric", month: "short", year: "numeric",
+                });
+                const endPeriod = c.ends_at
+                  ? new Date(c.ends_at).toLocaleDateString("en-IN", {
+                      day: "numeric", month: "short", year: "numeric",
+                    })
+                  : "Ongoing";
+                return (
+                  <SelectItem key={c.id} value={c.id}>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{c.name}</span>
+                      <span className="text-[11px] text-slate-500">
+                        {c.status} · {period} → {endPeriod}
+                      </span>
+                    </div>
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </div>
+      </Card>
+
+      {!campaignId ? (
+        <Card className="p-10 text-center bg-slate-50 border-dashed">
+          <Flag className="h-10 w-10 mx-auto text-slate-300 mb-2" />
+          <h3 className="text-base font-semibold text-slate-900">Select a campaign</h3>
+          <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
+            Choose a Glintr campaign to view Campus Ambassador rankings.
+          </p>
+        </Card>
+      ) : (
+        <CampaignLeaderboardBody
+          key={campaignId}
+          campaign={selected!}
+        />
+      )}
+    </div>
+  );
+}
+
+function CampaignLeaderboardBody({
+  campaign,
+}: {
+  campaign: {
+    id: string; name: string; status: string; ranking_metric: string;
+    starts_at: string; ends_at: string | null; ranking_finalised_at: string | null;
+    banner_text: string | null; is_final: boolean;
+  };
+}) {
+  const [search, setSearch] = useState("");
+  const [pendingSearch, setPendingSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const listFn = useServerFn(listCampaignLeaderboard);
+  const meFn = useServerFn(getMyCampaignRank);
+  const listQ = useQuery({
+    queryKey: ["ambassador-leaderboard", "campaign", campaign.id, search, page],
+    queryFn: () => listFn({ data: { campaignId: campaign.id, search, page, pageSize: PAGE_SIZE } }),
+    staleTime: 15_000,
+  });
+  const myQ = useQuery({
+    queryKey: ["ambassador-leaderboard", "campaign-me", campaign.id],
+    queryFn: () => meFn({ data: { campaignId: campaign.id } }),
+    staleTime: 15_000,
+  });
+  const me = myQ.data?.present ? myQ.data : null;
+
+  const rows = (listQ.data?.rows ?? []) as CampaignLeaderboardRow[];
+  const total = listQ.data?.total ?? 0;
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const isFinal = listQ.data?.is_final ?? campaign.is_final;
+  const metric = listQ.data?.ranking_metric ?? campaign.ranking_metric;
+
+  const jumpToMyRank = () => {
+    if (!me) return;
+    const target = Math.ceil(me.rank_position / PAGE_SIZE);
+    setSearch(""); setPendingSearch(""); setPage(target);
+    setTimeout(() => {
+      document.getElementById(`amb-row-${me.ambassador_id}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300);
+  };
+
+  const top3 = page === 1 ? rows.slice(0, 3) : [];
+  const listRows = page === 1 ? rows.slice(3) : rows;
+
+  return (
+    <div className="space-y-5">
+      <Card className="p-5 border border-slate-200 bg-white">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-lg font-semibold text-slate-900 truncate">{campaign.name}</h3>
+              <Badge variant={isFinal ? "outline" : "info"} className="gap-1">
+                {isFinal ? "Final Campaign Rankings" : <><Radio className="h-3 w-3" /> Live Campaign Rankings</>}
+              </Badge>
+            </div>
+            <div className="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+              <Target className="h-3.5 w-3.5" /> Ranked by {METRIC_LABEL[metric] ?? metric}
+            </div>
+            {campaign.banner_text && (
+              <p className="text-xs text-slate-600 mt-2 max-w-2xl">{campaign.banner_text}</p>
+            )}
+          </div>
+        </div>
+        {!isFinal && (
+          <p className="text-[11px] text-slate-500 mt-3">
+            Rankings may update as eligible Campaign performance is verified.
+          </p>
+        )}
+      </Card>
+
+      <MyCampaignRankCard
+        campaignName={campaign.name}
+        loading={myQ.isLoading}
+        error={myQ.isError}
+        me={me}
+        metric={metric}
+        onRetry={() => myQ.refetch()}
+        onJump={me ? jumpToMyRank : undefined}
+      />
+
+      <SearchAndJump
+        pendingSearch={pendingSearch} setPendingSearch={setPendingSearch}
+        onSearch={(v) => { setPage(1); setSearch(v); }}
+        onJump={me ? jumpToMyRank : undefined}
+        placeholder="Search ambassadors in this campaign"
+        jumpLabel="Jump to my campaign rank"
+      />
+
+      {listQ.isLoading ? <LeaderboardSkeleton /> :
+        listQ.isError ? <ErrorState title="Unable to load Campaign Leaderboard" onRetry={() => listQ.refetch()} /> :
+        rows.length === 0 ? (
+          <Card className="p-10 text-center">
+            <Rocket className="h-10 w-10 mx-auto text-slate-300 mb-2" />
+            <h3 className="text-base font-semibold text-slate-900">
+              {search ? "No ambassadors match your search" : "Campaign leaderboard not available yet"}
+            </h3>
+            <p className="text-sm text-slate-600 mt-1 max-w-md mx-auto">
+              {search
+                ? "Try a different name."
+                : "Eligible rankings will appear when verified Campaign performance is available."}
+            </p>
+          </Card>
+        ) : (
+          <>
+            {top3.length > 0 && (
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-slate-500 font-medium mb-2">
+                  Top Campaign Ambassadors
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[top3[1], top3[0], top3[2]].filter(Boolean).map((r, i) => (
+                    <Card key={r.ambassador_id}
+                      className={cn("p-4 border-slate-200 bg-white hover:shadow-md transition-shadow",
+                        ["sm:pt-8","sm:pt-0","sm:pt-12"][i], r.is_me && "ring-2 ring-cyan-400")}>
+                      <div className="flex items-center gap-3">
+                        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center overflow-hidden ring-1 ring-slate-200">
+                          {r.photo_url ? (
+                            <img src={r.photo_url} alt="" className="h-full w-full object-cover" />
+                          ) : (
+                            <span className="text-sm font-bold text-slate-500">{initials(r.display_identity)}</span>
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-semibold text-slate-500">#{r.rank_position}</span>
+                            {r.is_me && <Badge variant="info" className="text-[10px] h-4 px-1.5">You</Badge>}
+                          </div>
+                          <div className="text-sm font-semibold text-slate-900 truncate">{r.display_identity}</div>
+                          {r.college_display && (
+                            <div className="text-xs text-slate-500 truncate">{r.college_display}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-3 text-xs font-medium text-slate-700">
+                        {formatMetric(metric, r.metric_value)} {METRIC_SHORT[metric] ?? "metric"}
+                      </div>
+                      {r.progress_pct != null && (
+                        <div className="mt-2 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                          <div className="h-full bg-cyan-500" style={{ width: `${Math.min(100, r.progress_pct)}%` }} />
+                        </div>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+            <Card className="divide-y divide-slate-100 overflow-hidden">
+              {listRows.map((r) => (
+                <CampaignRowItem key={r.ambassador_id} row={r} metric={metric} />
+              ))}
+            </Card>
+            <Pager page={page} pages={pages} total={total} setPage={setPage} />
+          </>
+        )}
+    </div>
+  );
+}
+
+function CampaignRowItem({
+  row, metric,
+}: { row: CampaignLeaderboardRow; metric: string }) {
+  return (
+    <div id={`amb-row-${row.ambassador_id}`}
+      className={cn("flex items-center gap-3 sm:gap-4 px-4 py-3.5 transition-colors",
+        row.is_me ? "bg-cyan-50/60" : "hover:bg-slate-50")}>
+      <div className={cn("w-10 text-sm font-semibold tabular-nums text-center",
+        row.rank_position <= 3 ? "text-amber-600" : "text-slate-500")}>
+        #{row.rank_position}
+      </div>
+      <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden ring-1 ring-slate-200 flex-shrink-0">
+        {row.photo_url ? (
+          <img src={row.photo_url} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <span className="text-xs font-semibold text-slate-500">{initials(row.display_identity)}</span>
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-sm font-semibold text-slate-900 truncate">{row.display_identity}</span>
+          {row.is_me && <Badge variant="info" className="text-[10px] h-4 px-1.5">You</Badge>}
+          {row.level_name && (
+            <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-cyan-50 px-2 py-0.5 text-[10px] font-medium text-cyan-700 ring-1 ring-cyan-100">
+              <Sparkles className="h-2.5 w-2.5" /> {row.level_name}
+            </span>
+          )}
+        </div>
+        {row.college_display && (
+          <div className="text-xs text-slate-500 truncate">{row.college_display}</div>
+        )}
+        {row.progress_pct != null && (
+          <div className="mt-1.5 h-1.5 max-w-[240px] rounded-full bg-slate-100 overflow-hidden">
+            <div className="h-full bg-cyan-500" style={{ width: `${Math.min(100, row.progress_pct)}%` }} />
+          </div>
+        )}
+      </div>
+      <div className="text-right flex-shrink-0">
+        <div className="text-sm font-semibold text-slate-900 tabular-nums">
+          {formatMetric(metric, row.metric_value)}
+        </div>
+        <div className="text-[10px] text-slate-500 uppercase tracking-wider">
+          {METRIC_SHORT[metric] ?? "metric"}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MyCampaignRankCard({
+  campaignName, loading, error, me, metric, onRetry, onJump,
+}: {
+  campaignName: string;
+  loading: boolean;
+  error: boolean;
+  me: {
+    ambassador_id: string; rank_position: number; display_identity: string;
+    college_display: string | null; photo_url: string | null;
+    level_name: string | null;
+    metric_value: number; progress_pct: number | null; total_ranked: number;
+  } | null;
+  metric: string;
+  onRetry: () => void;
+  onJump?: () => void;
+}) {
+  if (loading) return <Skeleton className="h-28 w-full rounded-2xl" />;
+  if (error) {
+    return (
+      <Card className="p-5 bg-slate-900 text-white border-0">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <div className="text-sm font-medium">Unable to load my campaign rank</div>
+            <div className="text-xs text-slate-400">We couldn't reach the leaderboard.</div>
+          </div>
+          <Button size="sm" variant="secondary" onClick={onRetry} className="gap-1.5">
+            <RefreshCw className="h-3.5 w-3.5" /> Retry
+          </Button>
+        </div>
+      </Card>
+    );
+  }
+  if (!me) {
+    return (
+      <Card className="p-5 bg-slate-50 border-slate-200">
+        <div className="text-xs uppercase tracking-wider text-slate-500 font-medium">
+          My campaign rank
+        </div>
+        <div className="text-sm text-slate-600 mt-1">
+          You'll appear here once you have eligible activity in this campaign.
+        </div>
+      </Card>
+    );
+  }
+  return (
+    <Card className="relative overflow-hidden border-0 p-5 bg-gradient-to-br from-slate-900 to-indigo-900 text-white">
+      <div aria-hidden className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-cyan-400/10 blur-3xl" />
+      <div className="relative flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 rounded-xl bg-white/10 ring-1 ring-white/20 flex items-center justify-center">
+            {me.photo_url ? (
+              <img src={me.photo_url} alt="" className="h-full w-full rounded-xl object-cover" />
+            ) : (
+              <span className="text-sm font-bold">{initials(me.display_identity)}</span>
+            )}
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10px] uppercase tracking-wider text-cyan-300 font-medium truncate max-w-[220px]">
+              My rank · {campaignName}
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold">#{me.rank_position}</span>
+              <span className="text-xs text-slate-300">
+                of {me.total_ranked.toLocaleString("en-IN")}
+              </span>
+            </div>
+            <div className="mt-0.5 text-sm">{me.display_identity}</div>
+          </div>
+        </div>
+        <div className="sm:ml-auto grid grid-cols-2 gap-3 sm:min-w-[240px]">
+          <MyStat label={METRIC_SHORT[metric] ?? "Metric"} value={formatMetric(metric, me.metric_value)} />
+          <MyStat
+            label="Progress"
+            value={me.progress_pct != null ? `${me.progress_pct.toFixed(1)}%` : "—"}
+          />
+        </div>
+      </div>
+      {onJump && (
+        <div className="relative mt-3">
+          <Button size="sm" variant="secondary"
+            className="bg-white text-slate-900 hover:bg-slate-100 gap-1.5" onClick={onJump}>
+            <ArrowDown className="h-3.5 w-3.5" /> Jump to my campaign rank
+          </Button>
+        </div>
+      )}
+    </Card>
+  );
+}
