@@ -191,6 +191,16 @@ function ProfileHeader({ profile, currentLevel, completion }: any) {
                 )}
                 <Badge variant="outline">Ambassador</Badge>
               </div>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/ambassador/leaderboard">View Leaderboard</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/ambassador/rank-history">View Rank History</Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/ambassador/recognition">View Recognition</Link>
+                </Button>
             </div>
 
             <div className="min-w-[180px]">
