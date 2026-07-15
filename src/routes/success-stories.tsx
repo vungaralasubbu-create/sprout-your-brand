@@ -613,7 +613,7 @@ function SuccessStoriesPage() {
       <SiteHeader />
 
       {/* HERO */}
-      <Section spacing="lg">
+      <Section padding="lg">
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] items-center">
             <div className="flex flex-col gap-6">
@@ -712,7 +712,7 @@ function SuccessStoriesPage() {
 
       {/* FEATURED STORIES */}
       <div ref={featuredSectionRef} />
-      <Section spacing="md" className="bg-surface/30">
+      <Section padding="md" className="bg-surface/30">
         <Container>
           <div className="flex items-end justify-between gap-4 mb-8">
             <SectionHeader
@@ -745,7 +745,7 @@ function SuccessStoriesPage() {
       </Section>
 
       {/* CATEGORY EXPLORER + SEARCH */}
-      <Section spacing="md">
+      <Section padding="md">
         <Container>
           <SectionHeader
             eyebrow="Explore By Journey"
@@ -819,7 +819,7 @@ function SuccessStoriesPage() {
       </Section>
 
       {/* STORY STREAM */}
-      <Section spacing="md">
+      <Section padding="md">
         <Container>
           <div className="mb-6 flex items-center justify-between">
             <p className="text-caption">
@@ -918,7 +918,7 @@ function SuccessStoriesPage() {
       </Section>
 
       {/* JOURNEY TIMELINE */}
-      <Section spacing="lg" className="bg-surface/30">
+      <Section padding="lg" className="bg-surface/30">
         <Container>
           <SectionHeader
             eyebrow="The Learning Arc"
@@ -967,7 +967,7 @@ function SuccessStoriesPage() {
       </Section>
 
       {/* DOMAIN STRIP */}
-      <Section spacing="md">
+      <Section padding="md">
         <Container>
           <SectionHeader
             eyebrow="Stories Across Learning Domains"
@@ -999,7 +999,7 @@ function SuccessStoriesPage() {
       </Section>
 
       {/* PROGRAM DISCOVERY BREAK */}
-      <Section spacing="md" className="bg-surface/30">
+      <Section padding="md" className="bg-surface/30">
         <Container>
           <SectionHeader
             eyebrow="Your Path Could Start Here"
@@ -1033,7 +1033,7 @@ function SuccessStoriesPage() {
       </Section>
 
       {/* CTA */}
-      <Section spacing="lg">
+      <Section padding="lg">
         <Container>
           <div className="rounded-3xl border border-border bg-gradient-to-br from-primary/10 via-background to-accent/10 p-10 md:p-16 text-center">
             <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">Start Exploring Your Direction</h2>
