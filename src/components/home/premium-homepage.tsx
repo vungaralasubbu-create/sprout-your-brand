@@ -36,6 +36,7 @@ import { cn } from "@/lib/utils";
 import mark from "@/assets/glintr-mark.png.asset.json";
 import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
 import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
+import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
 
 /* --------------------------------------------------------------------- *
  * Small utilities
@@ -714,74 +715,12 @@ interface AIProgram {
   metaphor: string;
   bullets: string[];
   accent: string;
-  Graphic: React.ComponentType<{ accent: string }>;
+  variant: AIWorkspaceVariant;
 }
 
-function ChatGPTGraphic({ accent }: { accent: string }) {
-  return (
-    <svg viewBox="0 0 200 200" className="h-full w-full">
-      <g stroke={accent} strokeWidth="0.7" fill="none">
-        <path d="M20 40 Q80 40 100 90 T180 100" className="cat-path" />
-        <path d="M20 100 Q60 130 100 120 T180 60" className="cat-path" />
-        <path d="M20 160 Q80 160 100 130 T180 150" className="cat-path" />
-        {[[40, 40], [100, 90], [160, 100], [60, 130], [140, 60], [80, 160], [120, 130]].map(
-          ([x, y], i) => (
-            <circle key={i} cx={x} cy={y} r="2.5" fill={accent} className="cat-node" />
-          ),
-        )}
-        <rect x="30" y="20" width="24" height="8" rx="2" opacity="0.5" />
-        <rect x="150" y="180" width="30" height="8" rx="2" opacity="0.5" />
-      </g>
-    </svg>
-  );
-}
-
-function ClaudeGraphic({ accent }: { accent: string }) {
-  return (
-    <svg viewBox="0 0 200 200" className="h-full w-full">
-      <g stroke={accent} strokeWidth="0.7" fill="none">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <rect
-            key={i}
-            x={30 + i * 6}
-            y={30 + i * 6}
-            width={110}
-            height={140}
-            rx="6"
-            opacity={0.7 - i * 0.12}
-            className={i === 0 ? "cat-path" : undefined}
-          />
-        ))}
-        <path d="M60 80 H130 M60 100 H120 M60 120 H130 M60 140 H110" opacity="0.6" />
-        <circle cx="170" cy="60" r="4" fill={accent} className="cat-pulse" />
-        <circle cx="180" cy="150" r="3" fill={accent} className="cat-pulse" />
-      </g>
-    </svg>
-  );
-}
-
-function GeminiGraphic({ accent }: { accent: string }) {
-  return (
-    <svg viewBox="0 0 200 200" className="h-full w-full">
-      <g stroke={accent} strokeWidth="0.7" fill="none">
-        <circle cx="100" cy="100" r="6" fill={accent} />
-        {[0, 60, 120, 180, 240, 300].map((deg, i) => {
-          const rad = (deg * Math.PI) / 180;
-          const x = 100 + Math.cos(rad) * 60;
-          const y = 100 + Math.sin(rad) * 60;
-          return (
-            <g key={i}>
-              <line x1="100" y1="100" x2={x} y2={y} className="cat-path" />
-              <circle cx={x} cy={y} r="4" fill={accent} className="cat-node" />
-              <circle cx={x} cy={y} r="12" opacity="0.35" />
-            </g>
-          );
-        })}
-        <circle cx="100" cy="100" r="80" strokeDasharray="1 3" className="cat-rotate-slow" />
-      </g>
-    </svg>
-  );
-}
+// AI program graphics are rendered by <AIWorkspaceVisual /> — a
+// dimensional Input → Processing Core → Output composition with an
+// autonomous ~10s animation sequence per variant.
 
 const AI_PROGRAMS: AIProgram[] = [
   {
@@ -793,8 +732,8 @@ const AI_PROGRAMS: AIProgram[] = [
       "Working with context and constraints",
       "Applied instruction patterns",
     ],
-    accent: "var(--brand-cyan)",
-    Graphic: ChatGPTGraphic,
+    accent: "oklch(0.78 0.16 175)",
+    variant: "chatgpt",
   },
   {
     slug: "claude-ai",
@@ -805,8 +744,8 @@ const AI_PROGRAMS: AIProgram[] = [
       "Working with documents and structure",
       "Applied analysis workflows",
     ],
-    accent: "var(--brand-azure)",
-    Graphic: ClaudeGraphic,
+    accent: "oklch(0.62 0.19 245)",
+    variant: "claude",
   },
   {
     slug: "gemini-ai",
@@ -817,10 +756,11 @@ const AI_PROGRAMS: AIProgram[] = [
       "Connecting information sources",
       "Applied synthesis practice",
     ],
-    accent: "var(--brand-violet)",
-    Graphic: GeminiGraphic,
+    accent: "oklch(0.66 0.21 300)",
+    variant: "gemini",
   },
 ];
+
 
 function GenerativeAISpotlight() {
   const [active, setActive] = React.useState(0);
@@ -860,7 +800,7 @@ function GenerativeAISpotlight() {
                   background: `radial-gradient(60% 60% at 50% 50%, color-mix(in oklab, ${activeProgram.accent} 14%, transparent), transparent 70%)`,
                 }}
               />
-              <activeProgram.Graphic accent={activeProgram.accent} />
+              <AIWorkspaceVisual variant={activeProgram.variant} accent={activeProgram.accent} />
             </div>
           </Reveal>
 
