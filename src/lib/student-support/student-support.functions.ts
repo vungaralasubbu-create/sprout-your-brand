@@ -343,3 +343,144 @@ export const getMyStudentSupportSnapshot = createServerFn({ method: "GET" })
   .handler(async ({ context }): Promise<StudentSnapshot> => {
     return loadStudentSnapshot(context.supabase, context.userId);
   });
+
+// ---- Program-specific student-visible context for guided learning issues ----
+export type StudentProgramSupportContext = {
+  authorised: boolean;
+  courseId: string;
+  courseName: string | null;
+  courseSlug: string | null;
+  enrollmentStatus: string | null;
+  moduleCount: number;
+  publishedLessonCount: number;
+  completedLessonCount: number;
+  progressPct: number | null;
+  hasLockedModule: boolean;
+  firstLockedModuleName: string | null;
+  currentLessonName: string | null;
+  currentLessonStatus: string | null;
+  hasCertificate: boolean;
+};
+
+const ProgramCtxInput = z.object({ courseId: z.string().uuid() });
+
+export const getStudentProgramSupportContext = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ProgramCtxInput.parse(d))
+  .handler(async ({ data, context }): Promise<StudentProgramSupportContext> => {
+    const supabase = context.supabase;
+
+    // Verify authorised enrollment for this course under RLS.
+    const { data: enrollment } = await supabase
+      .from("enrollments")
+      .select("id, lms_status, current_lesson_id, courses:course_id(name, slug)")
+      .eq("student_user_id", context.userId)
+      .eq("course_id", data.courseId)
+      .maybeSingle();
+
+    if (!enrollment) {
+      return {
+        authorised: false,
+        courseId: data.courseId,
+        courseName: null,
+        courseSlug: null,
+        enrollmentStatus: null,
+        moduleCount: 0,
+        publishedLessonCount: 0,
+        completedLessonCount: 0,
+        progressPct: null,
+        hasLockedModule: false,
+        firstLockedModuleName: null,
+        currentLessonName: null,
+        currentLessonStatus: null,
+        hasCertificate: false,
+      };
+    }
+
+    const [{ data: modules }, { data: done }, { data: modCompletions }, { data: cert }] =
+      await Promise.all([
+        supabase
+          .from("course_modules")
+          .select(
+            "id, name, display_order, is_required, is_published, course_topics(course_lessons(id, name, is_published, display_order))",
+          )
+          .eq("course_id", data.courseId)
+          .eq("is_published", true)
+          .order("display_order"),
+        supabase
+          .from("lesson_progress")
+          .select("lesson_id, status")
+          .eq("student_user_id", context.userId)
+          .eq("course_id", data.courseId)
+          .eq("status", "completed"),
+        supabase
+          .from("module_completions")
+          .select("module_id")
+          .eq("student_user_id", context.userId)
+          .eq("course_id", data.courseId),
+        supabase
+          .from("certificates")
+          .select("id")
+          .eq("student_user_id", context.userId)
+          .eq("course_id", data.courseId)
+          .maybeSingle(),
+      ]);
+
+    const doneSet = new Set((done ?? []).map((d: any) => d.lesson_id));
+    const completedModuleIds = new Set((modCompletions ?? []).map((m: any) => m.module_id));
+
+    let publishedLessons = 0;
+    let completedLessons = 0;
+    let firstLocked: string | null = null;
+    let hasLocked = false;
+    let previousModuleComplete = true;
+    let currentLessonName: string | null = null;
+    let currentLessonStatus: string | null = null;
+
+    for (const m of (modules ?? []) as any[]) {
+      const lessons = ((m.course_topics ?? []) as any[])
+        .flatMap((t: any) => (t.course_lessons ?? []) as any[])
+        .filter((l: any) => l.is_published)
+        .sort((a: any, b: any) => (a.display_order ?? 0) - (b.display_order ?? 0));
+      const moduleUnlocked = previousModuleComplete;
+      if (!moduleUnlocked && !firstLocked) {
+        firstLocked = m.name;
+        hasLocked = true;
+      }
+      for (const l of lessons) {
+        publishedLessons += 1;
+        if (doneSet.has(l.id)) completedLessons += 1;
+        else if (!currentLessonName && moduleUnlocked) {
+          currentLessonName = l.name;
+          currentLessonStatus = "not_started";
+        }
+        if ((enrollment as any).current_lesson_id === l.id) {
+          currentLessonName = l.name;
+          currentLessonStatus = doneSet.has(l.id) ? "completed" : "in_progress";
+        }
+      }
+      previousModuleComplete = completedModuleIds.has(m.id);
+    }
+
+    const progressPct =
+      publishedLessons > 0
+        ? Math.round((completedLessons / publishedLessons) * 100)
+        : null;
+
+    return {
+      authorised: true,
+      courseId: data.courseId,
+      courseName: (enrollment as any).courses?.name ?? null,
+      courseSlug: (enrollment as any).courses?.slug ?? null,
+      enrollmentStatus: (enrollment as any).lms_status ?? null,
+      moduleCount: (modules ?? []).length,
+      publishedLessonCount: publishedLessons,
+      completedLessonCount: completedLessons,
+      progressPct,
+      hasLockedModule: hasLocked,
+      firstLockedModuleName: firstLocked,
+      currentLessonName,
+      currentLessonStatus,
+      hasCertificate: !!cert,
+    };
+  });
