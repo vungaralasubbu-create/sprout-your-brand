@@ -277,11 +277,8 @@ async function retrieveFaqs(supabase: any, rawQuery: string): Promise<FaqRow[]> 
   if (!normalized) return [];
   const tsQuery = normalized.split(" ").filter(Boolean).map((t) => `${t}:*`).join(" | ");
 
-  // Full-text ranked search
-  const { data: ftsRows } = await supabase.rpc("noop_placeholder").select().limit(0).then(() => ({ data: null })).catch(() => ({ data: null }));
-  void ftsRows;
+  // Full-text search via PostgREST websearch.
 
-  // Do FTS via a direct query using text search operator through PostgREST websearch.
   const { data: ftsData } = await supabase
     .from("faqs")
     .select("id, slug, category_id, question, short_answer, full_answer, intent, alt_phrases, search_keywords, related_program_slug, policy_slug, action_label, action_href, is_featured, is_popular, display_order")
