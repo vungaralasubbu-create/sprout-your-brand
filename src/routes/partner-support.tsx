@@ -342,8 +342,12 @@ function PartnerSupportPage() {
   });
 
   function handleSubmit(text: string) {
-    const value = text.trim();
-    if (!value) return;
+    const rawValue = text.trim();
+    if (!rawValue) return;
+    // Best-effort sensitive-info detection and redaction before sending.
+    const hits = detectSensitive(rawValue);
+    const value = hits.length > 0 ? redactSensitive(rawValue) : rawValue;
+    setSensitiveHits(hits);
     setInput("");
     setErrorMsg(null);
     // Detect explicit human-support intent — offer escalation instead of only AI.
