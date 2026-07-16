@@ -445,7 +445,7 @@ export function AiMentor() {
                       }
                     }}
                     rows={1}
-                    aria-label="Ask the Glintr AI Mentor"
+                    aria-label="Ask GlintrAI"
                     placeholder="Ask about programs, careers, or concepts…"
                     className="flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground max-h-32"
                     maxLength={2000}
@@ -693,7 +693,7 @@ function SupportCard({ intro, onLink }: { intro: string; onLink: () => void }) {
 
 function TypingIndicator() {
   return (
-    <div className="flex justify-start" aria-label="Mentor is thinking">
+    <div className="flex justify-start" aria-label="GlintrAI is thinking">
       <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border bg-card px-3.5 py-2.5">
         <span className="size-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.2s]" />
         <span className="size-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.1s]" />
