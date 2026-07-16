@@ -70,7 +70,8 @@ const HIRING_PARTNERS: Array<{ name: string; letter?: string }> = [
   { name: "Meta" },
 ];
 
-export function HiringPartners() {
+export function HiringPartners({ partners }: { partners?: string[] } = {}) {
+  const list = partners && partners.length > 0 ? partners : HIRING_PARTNERS.map((p) => p.name);
   return (
     <Section className="py-14 lg:py-20 border-y bg-surface-1/40">
       <Container>
@@ -82,19 +83,18 @@ export function HiringPartners() {
             Companies our learners have joined.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From global technology leaders to India's largest IT services firms — our graduates go on to build careers
-            across a broad hiring ecosystem.
+            From global technology leaders to India's largest firms — our graduates go on to build careers across a broad hiring ecosystem.
           </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3">
-          {HIRING_PARTNERS.map((p) => (
+          {list.map((name) => (
             <div
-              key={p.name}
+              key={name}
               className="group flex items-center justify-center rounded-xl border border-border/60 bg-white px-3 py-4 shadow-sm hover:border-primary/40 hover:shadow-md transition-all"
             >
-              <span className="font-display font-semibold text-sm lg:text-[15px] tracking-tight text-foreground/85 group-hover:text-primary transition-colors">
-                {p.name}
+              <span className="font-display font-semibold text-sm lg:text-[15px] tracking-tight text-foreground/85 group-hover:text-primary transition-colors text-center">
+                {name}
               </span>
             </div>
           ))}
