@@ -124,9 +124,17 @@ function EmptyState({ onBrowse }: { onBrowse: () => void }) {
   );
 }
 
-function BrowseCard({ c, onView }: { c: any; onView: (course: any) => void }) {
-  const price = c.offer_price ?? c.base_price;
-  const hasDiscount = c.offer_price && c.base_price && c.offer_price < c.base_price;
+function BrowseCard({ c, onView, pricingSettings }: { c: any; onView: (course: any) => void; pricingSettings: any }) {
+  const pricing = resolvePricingDisplay(
+    {
+      base_price: c.base_price,
+      offer_price: c.offer_price,
+      currency: c.currency,
+      scholarship_available: c.scholarship_available ?? false,
+      pricing_notes: c.pricing_notes ?? null,
+    },
+    pricingSettings,
+  );
   return (
     <Card className="p-0 overflow-hidden group hover:shadow-md transition-shadow flex flex-col">
       <button
@@ -166,26 +174,23 @@ function BrowseCard({ c, onView }: { c: any; onView: (course: any) => void }) {
           )}
         </div>
         <div className="mt-auto pt-2 flex items-end justify-between gap-3">
-          <div>
-            {price != null ? (
-              <>
-                <div className="font-display text-lg font-semibold leading-none">{formatPrice(price, c.currency ?? "INR")}</div>
-                {hasDiscount && (
-                  <div className="text-[11px] text-muted-foreground line-through mt-0.5">{formatPrice(c.base_price, c.currency ?? "INR")}</div>
-                )}
-              </>
-            ) : (
-              <div className="text-[11px] text-muted-foreground">Contact for pricing</div>
-            )}
+          <ProgramPriceDisplay pricing={pricing} size="md" />
+          <div className="flex flex-col gap-1.5 shrink-0">
+            <Button size="sm" asChild>
+              <Link to="/student/programs/view/$slug" params={{ slug: c.slug }}>
+                View Details
+              </Link>
+            </Button>
+            <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={() => onView(c)}>
+              <Eye className="size-3 mr-1" /> Quick View
+            </Button>
           </div>
-          <Button size="sm" variant="outline" onClick={() => onView(c)}>
-            <Eye className="size-3.5 mr-1" /> View Brief
-          </Button>
         </div>
       </div>
     </Card>
   );
 }
+
 
 function toStringList(value: unknown): string[] {
   if (!value) return [];
