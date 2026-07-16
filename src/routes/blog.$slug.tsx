@@ -179,25 +179,6 @@ function MetaBlock({
   );
 }
 
-function BlogDetailPage() {
-  const { slug } = Route.useParams();
-  const [post, setPost] = React.useState<BlogPost | null>(null);
-  const [related, setRelated] = React.useState<BlogPost[]>([]);
-  const [relatedCourse, setRelatedCourse] = React.useState<{
-    slug: string;
-    category_slug: string;
-    name: string;
-    category_name: string;
-    short_description: string | null;
-  } | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [progress, setProgress] = React.useState(0);
-  const [copied, setCopied] = React.useState(false);
-  const [subscribed, setSubscribed] = React.useState(false);
-  const [copyFailed, setCopyFailed] = React.useState(false);
-  const [tocOpen, setTocOpen] = React.useState(false);
-  const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
-  const articleRef = React.useRef<HTMLDivElement | null>(null);
 
 function BlogDetailPage() {
   const { slug } = Route.useParams();
