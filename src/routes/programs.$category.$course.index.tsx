@@ -65,6 +65,7 @@ import {
   AIToolsUsage,
   ProgramPersonalization,
 } from "@/components/course/premium-sections";
+import { getCourseContentPack } from "@/lib/course-content-pack";
 import { CertificateShowcase } from "@/components/course/certificate-showcase";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
