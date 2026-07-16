@@ -294,8 +294,9 @@ function GlossaryIndex() {
               </Container>
             </Section>
 
-            <Section className="pb-24">
+            <Section className="pb-24" id="browse">
               <Container className="max-w-5xl space-y-14">
+
                 {byCategory.map(([cat, entries]) => (
                   <section key={cat} id={cat.replace(/\s+/g, "-").toLowerCase()}>
                     <div className="text-caption font-mono uppercase tracking-widest text-primary mb-4">
