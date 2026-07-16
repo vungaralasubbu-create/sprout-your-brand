@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { listCategories, listCourses } from "@/lib/programs";
 import { CategoryVisual, slugToVariant, CATEGORY_THEME } from "@/components/programs/category-visuals";
 import { ProgramCard } from "@/components/programs/program-card";
+import { getCategoryInsights } from "@/data/category-insights";
 import { cn } from "@/lib/utils";
 
 const SITE_URL = "https://glintr.com";
@@ -71,23 +72,24 @@ function ProgramsIndex() {
       <SiteHeader />
       <main>
         {/* Intro */}
-        <Section className="pt-16 pb-10 relative overflow-hidden">
+        <Section className="pt-10 pb-6 relative overflow-hidden">
           <div className="absolute inset-0 -z-10 bg-gradient-brand-soft opacity-30" />
           <Container>
             <div className="max-w-3xl">
-              <p className="text-[11px] uppercase tracking-[0.22em] font-medium text-primary mb-4 inline-flex items-center gap-2">
+              <p className="text-[11px] uppercase tracking-[0.22em] font-medium text-primary mb-3 inline-flex items-center gap-2">
                 <Sparkles className="size-3.5" /> Explore Glintr Programs
               </p>
               <h1 className="text-display-md font-display font-semibold tracking-tight text-balance">
                 Choose the field you want to build in.
               </h1>
-              <p className="mt-5 text-body-lg text-muted-foreground max-w-2xl">
+              <p className="mt-4 text-body-lg text-muted-foreground max-w-2xl">
                 Explore focused learning paths across technology, engineering, and management —
                 each with its own graphic language, curriculum depth, and career direction.
               </p>
             </div>
           </Container>
         </Section>
+
 
         {/* Category Index Bar */}
         <Section className="pt-2 pb-6">
@@ -127,7 +129,7 @@ function ProgramsIndex() {
         </Section>
 
         {/* Asymmetric Category Panels */}
-        <Section className="pt-4 pb-20">
+        <Section className="pt-2 pb-16">
           <Container>
             <div className="grid grid-cols-1 lg:grid-cols-6 gap-5 md:gap-6 auto-rows-fr">
               {categories.map((cat, i) => {
@@ -137,6 +139,7 @@ function ProgramsIndex() {
                 const count = countByCat.get(cat.slug) ?? 0;
                 const theme = CATEGORY_THEME[slugToVariant(cat.slug)];
                 const active = hoveredIndex === cat.slug;
+                const insights = getCategoryInsights(cat.slug);
                 return (
                   <Link
                     to="/programs/$category"
@@ -154,14 +157,13 @@ function ProgramsIndex() {
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       "active:translate-y-0",
                       isFeatured ? "lg:col-span-4" : "lg:col-span-2",
-                      isFeatured ? "min-h-[440px]" : "min-h-[380px]",
+                      isFeatured ? "min-h-[460px]" : "min-h-[400px]",
                       active && "shadow-xl border-border-strong",
                     )}
                     style={{
                       boxShadow: active ? `0 20px 60px -30px ${theme.ring}` : undefined,
                     }}
                   >
-                    {/* Visual layer */}
                     <CategoryVisual
                       slug={cat.slug}
                       className={cn(
@@ -169,11 +171,10 @@ function ProgramsIndex() {
                         "opacity-90 group-hover:opacity-100",
                       )}
                     />
-                    {/* Fade for legibility */}
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/85 to-transparent" />
 
                     <div className="relative z-10 flex flex-col h-full p-6 md:p-8">
-                      <div className="flex items-center gap-2 mb-auto">
+                      <div className="flex items-center gap-2 mb-auto flex-wrap">
                         <span
                           className="text-mono text-xs"
                           style={{ color: theme.ring }}
@@ -185,10 +186,16 @@ function ProgramsIndex() {
                         </Badge>
                         <span className="ml-auto text-caption">
                           {count} {count === 1 ? "Program" : "Programs"}
+                          {insights ? (
+                            <>
+                              <span className="mx-1.5 text-muted-foreground/40">·</span>
+                              {insights.learningPathsCount} Paths
+                            </>
+                          ) : null}
                         </span>
                       </div>
 
-                      <div className="mt-8">
+                      <div className="mt-6">
                         <h2 className={cn(
                           "font-display font-semibold tracking-tight",
                           isFeatured ? "text-3xl md:text-4xl" : "text-2xl md:text-3xl",
@@ -200,7 +207,7 @@ function ProgramsIndex() {
                         </p>
 
                         {featured.length > 0 ? (
-                          <ul className="mt-5 flex flex-wrap gap-1.5">
+                          <ul className="mt-4 flex flex-wrap gap-1.5">
                             {featured.slice(0, isFeatured ? 3 : 2).map((c: any) => (
                               <li
                                 key={c.id}
@@ -212,7 +219,30 @@ function ProgramsIndex() {
                           </ul>
                         ) : null}
 
-                        <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium">
+                        {insights ? (
+                          <div className="mt-5 border-t border-border/60 pt-4">
+                            <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-2">
+                              Top career outcomes
+                            </p>
+                            <ul className="flex flex-wrap gap-x-3 gap-y-1 text-caption text-foreground/85">
+                              {insights.topCareerOutcomes.slice(0, isFeatured ? 4 : 3).map((role) => (
+                                <li key={role} className="inline-flex items-center gap-1.5">
+                                  <span
+                                    className="size-1 rounded-full"
+                                    style={{ backgroundColor: theme.ring }}
+                                    aria-hidden
+                                  />
+                                  {role}
+                                </li>
+                              ))}
+                            </ul>
+                            <p className="mt-3 text-[11px] text-muted-foreground">
+                              Avg. salary <span className="text-foreground font-medium">{insights.averageSalary}</span>
+                            </p>
+                          </div>
+                        ) : null}
+
+                        <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium">
                           <span>Explore {cat.name}</span>
                           <ArrowRight
                             className="size-4 transition-transform duration-300 group-hover:translate-x-1"
@@ -229,6 +259,7 @@ function ProgramsIndex() {
             </div>
           </Container>
         </Section>
+
 
         {/* Discovery CTA */}
         <Section className="py-16 bg-surface-2/40 border-y border-border/60">

@@ -17,6 +17,7 @@ import { getCategorySeo } from "@/lib/seo";
 import { CategoryVisual, slugToVariant, CATEGORY_THEME } from "@/components/programs/category-visuals";
 import { ProgramCard, type ProgramCardData } from "@/components/programs/program-card";
 import { getCategoryEditorial, type CategoryEditorial } from "@/data/category-editorial";
+import { getCategoryInsights } from "@/data/category-insights";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -328,6 +329,57 @@ function CategoryPage() {
             <AllPrograms courses={list} isLoading={isLoading} />
           </Container>
         </Section>
+
+        {/* CATEGORY CAREER INSIGHTS */}
+        {(() => {
+          const insights = getCategoryInsights(slug);
+          if (!insights) return null;
+          return (
+            <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
+              <Container>
+                <SectionIntro
+                  eyebrow="Category Insights"
+                  title="What careers this category leads to"
+                  copy="Salary bands, hiring roles and companies commonly recruiting in this field."
+                />
+                <div className="mt-8 grid gap-5 md:grid-cols-3">
+                  <div className="rounded-2xl border border-border bg-card p-6">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Average Salary Range</p>
+                    <p className="mt-3 text-3xl font-display font-semibold" style={{ color: theme.ring }}>
+                      {insights.averageSalary}
+                    </p>
+                    <p className="mt-2 text-caption">Entry-to-senior band across common roles in India.</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card p-6">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Top Hiring Roles</p>
+                    <ul className="mt-3 flex flex-col gap-2">
+                      {insights.topRoles.map((r) => (
+                        <li key={r} className="inline-flex items-center gap-2 text-sm">
+                          <span className="size-1.5 rounded-full" style={{ backgroundColor: theme.ring }} aria-hidden />
+                          {r}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card p-6">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Hiring Companies</p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {insights.companies.map((c) => (
+                        <span
+                          key={c}
+                          className="rounded-full border border-border/70 bg-surface-2/60 px-2.5 py-1 text-caption"
+                        >
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Container>
+            </Section>
+          );
+        })()}
+
 
         {/* COMPARISON */}
         {list.length >= 2 ? (
@@ -730,31 +782,109 @@ function SkillPathExplorer({
   );
 }
 
-/* --- All Programs (filter + search + view) --- */
+/* --- All Programs (autocomplete + expanded filters + view) --- */
+type ProgramsFilter =
+  | "all"
+  | "Beginner"
+  | "Intermediate"
+  | "Advanced"
+  | "featured"
+  | "popular"
+  | "highest-rated"
+  | "newest"
+  | "internship"
+  | "certificate"
+  | "placement";
+
 function AllPrograms({ courses, isLoading }: { courses: ProgramCardData[]; isLoading: boolean }) {
   const [q, setQ] = React.useState("");
-  const [filter, setFilter] = React.useState<"all" | "Beginner" | "Intermediate" | "Advanced" | "featured">("all");
+  const [filter, setFilter] = React.useState<ProgramsFilter>("all");
   const [view, setView] = React.useState<"grid" | "compact">("grid");
+  const [focused, setFocused] = React.useState(false);
+
+  // Autocomplete: program names first, then unique level tokens
+  const suggestions = React.useMemo(() => {
+    const query = q.trim().toLowerCase();
+    if (!query) return [] as string[];
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const c of courses) {
+      if (c.name.toLowerCase().includes(query) && !seen.has(c.name)) {
+        seen.add(c.name);
+        out.push(c.name);
+      }
+      if (out.length >= 6) break;
+    }
+    for (const c of courses) {
+      const lvl = c.level;
+      if (lvl && lvl.toLowerCase().includes(query) && !seen.has(lvl)) {
+        seen.add(lvl);
+        out.push(lvl);
+      }
+      if (out.length >= 8) break;
+    }
+    return out;
+  }, [courses, q]);
 
   const filtered = React.useMemo(() => {
     const query = q.trim().toLowerCase();
-    return courses.filter((c) => {
-      if (filter === "featured" && !c.is_featured) return false;
-      if (filter !== "all" && filter !== "featured" && c.level !== filter) return false;
+    let list = courses.filter((c) => {
       if (query) {
-        const hay = `${c.name} ${c.short_description ?? ""}`.toLowerCase();
+        const hay = `${c.name} ${c.short_description ?? ""} ${c.level ?? ""}`.toLowerCase();
         if (!hay.includes(query)) return false;
       }
-      return true;
+      switch (filter) {
+        case "featured":
+          return !!c.is_featured;
+        case "popular":
+          return !!(c as any).is_popular || !!(c as any).is_bestseller || !!(c as any).is_trending;
+        case "highest-rated":
+          return typeof (c as any).rating_avg === "number";
+        case "newest":
+          return !!(c as any).published_at;
+        case "internship":
+          return !!(c as any).has_internship;
+        case "certificate":
+          return !!(c as any).has_certificate;
+        case "placement":
+          return !!(c as any).has_placement;
+        case "Beginner":
+        case "Intermediate":
+        case "Advanced":
+          return c.level === filter;
+        default:
+          return true;
+      }
     });
+    if (filter === "highest-rated") {
+      list = [...list].sort(
+        (a: any, b: any) => (b.rating_avg ?? 0) - (a.rating_avg ?? 0),
+      );
+    } else if (filter === "newest") {
+      list = [...list].sort(
+        (a: any, b: any) =>
+          new Date(b.published_at ?? 0).getTime() - new Date(a.published_at ?? 0).getTime(),
+      );
+    } else if (filter === "popular") {
+      list = [...list].sort(
+        (a: any, b: any) => (b.enrolled_count ?? 0) - (a.enrolled_count ?? 0),
+      );
+    }
+    return list;
   }, [courses, q, filter]);
 
-  const filters: Array<{ key: typeof filter; label: string }> = [
+  const filters: Array<{ key: ProgramsFilter; label: string }> = [
     { key: "all", label: "All" },
     { key: "Beginner", label: "Beginner" },
     { key: "Intermediate", label: "Intermediate" },
     { key: "Advanced", label: "Advanced" },
     { key: "featured", label: "Featured" },
+    { key: "popular", label: "Most Popular" },
+    { key: "highest-rated", label: "Highest Rated" },
+    { key: "newest", label: "Newest" },
+    { key: "internship", label: "Internship" },
+    { key: "certificate", label: "Certificate" },
+    { key: "placement", label: "Placement" },
   ];
 
   return (
@@ -792,34 +922,94 @@ function AllPrograms({ courses, isLoading }: { courses: ProgramCardData[]; isLoa
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col md:flex-row gap-3 md:items-center">
+      <div className="mt-6 flex flex-col md:flex-row gap-3 md:items-start">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-[22px] -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search programs in this category"
+            onFocus={() => setFocused(true)}
+            onBlur={() => setTimeout(() => setFocused(false), 120)}
+            placeholder="Search programs, levels, or skills"
             className="pl-10 h-11"
             aria-label="Search programs"
+            aria-autocomplete="list"
           />
+          {focused && suggestions.length > 0 ? (
+            <ul
+              role="listbox"
+              className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border bg-card shadow-lg"
+            >
+              {suggestions.map((s) => (
+                <li key={s}>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setQ(s);
+                      setFocused(false);
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-sm text-left hover:bg-accent"
+                  >
+                    <Search className="size-3.5 text-muted-foreground" />
+                    <span className="truncate">{s}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
         <div className="flex flex-wrap gap-2">
-          {filters.map((f) => (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => setFilter(f.key)}
-              aria-pressed={filter === f.key}
-              className={cn(
-                "rounded-full border px-3.5 py-1.5 text-sm transition-all duration-200",
-                filter === f.key
-                  ? "border-primary bg-primary text-primary-foreground -translate-y-[1px] shadow-sm"
-                  : "border-border text-muted-foreground hover:border-border-strong",
-              )}
-            >
-              {f.label}
-            </button>
-          ))}
+          {filters.map((f) => {
+            const count =
+              f.key === "all"
+                ? courses.length
+                : courses.filter((c) => {
+                    switch (f.key) {
+                      case "featured":
+                        return !!c.is_featured;
+                      case "popular":
+                        return !!(c as any).is_popular || !!(c as any).is_bestseller || !!(c as any).is_trending;
+                      case "highest-rated":
+                        return typeof (c as any).rating_avg === "number";
+                      case "newest":
+                        return !!(c as any).published_at;
+                      case "internship":
+                        return !!(c as any).has_internship;
+                      case "certificate":
+                        return !!(c as any).has_certificate;
+                      case "placement":
+                        return !!(c as any).has_placement;
+                      default:
+                        return c.level === f.key;
+                    }
+                  }).length;
+            if (count === 0 && f.key !== "all") return null;
+            return (
+              <button
+                key={f.key}
+                type="button"
+                onClick={() => setFilter(f.key)}
+                aria-pressed={filter === f.key}
+                className={cn(
+                  "rounded-full border px-3.5 py-1.5 text-sm transition-all duration-200 inline-flex items-center gap-1.5",
+                  filter === f.key
+                    ? "border-primary bg-primary text-primary-foreground -translate-y-[1px] shadow-sm"
+                    : "border-border text-muted-foreground hover:border-border-strong",
+                )}
+              >
+                <span>{f.label}</span>
+                <span
+                  className={cn(
+                    "text-[10px] tabular-nums",
+                    filter === f.key ? "text-primary-foreground/80" : "text-muted-foreground/70",
+                  )}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -844,6 +1034,7 @@ function AllPrograms({ courses, isLoading }: { courses: ProgramCardData[]; isLoa
     </>
   );
 }
+
 
 /* --- Comparison Explorer --- */
 function ComparisonExplorer({

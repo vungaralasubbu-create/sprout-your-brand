@@ -248,3 +248,50 @@ export function formatPrice(amount: number | null | undefined, currency = "INR")
   const symbol = currency === "INR" ? "₹" : currency;
   return `${symbol}${amount.toLocaleString("en-IN")}`;
 }
+
+/**
+ * Structured pricing for cards — supports 6 pricing modes and NEVER
+ * returns fake values. Callers hide the pricing block when `null`.
+ */
+export type PricingDisplay =
+  | { mode: "starting-from"; label: string; value: string; note?: string | null }
+  | { mode: "scholarship"; label: string; value: null; note?: string | null }
+  | { mode: "contact-advisor"; label: string; value: null; note?: string | null }
+  | { mode: "custom"; label: string; value: null; note?: string | null }
+  | { mode: "free-intro"; label: string; value: null; note?: string | null };
+
+export function resolvePricingDisplay(course: {
+  base_price: number | null;
+  offer_price: number | null;
+  currency: string | null;
+  scholarship_available: boolean;
+  pricing_notes: string | null;
+}): PricingDisplay | null {
+  const price = course.offer_price ?? course.base_price;
+  if (typeof price === "number" && price > 0) {
+    return {
+      mode: "starting-from",
+      label: "Starting from",
+      value: formatPrice(price, course.currency ?? "INR"),
+      note: course.pricing_notes,
+    };
+  }
+  if (course.scholarship_available) {
+    return { mode: "scholarship", label: "Scholarship Available", value: null, note: course.pricing_notes };
+  }
+  if (course.pricing_notes) {
+    const notes = course.pricing_notes.toLowerCase();
+    if (notes.includes("free")) {
+      return { mode: "free-intro", label: "Free Intro", value: null, note: course.pricing_notes };
+    }
+    if (notes.includes("custom")) {
+      return { mode: "custom", label: "Custom Pricing", value: null, note: course.pricing_notes };
+    }
+    if (notes.includes("contact") || notes.includes("advisor")) {
+      return { mode: "contact-advisor", label: "Contact Advisor", value: null, note: course.pricing_notes };
+    }
+  }
+  // Pricing not published — return null so cards hide the section.
+  return null;
+}
+

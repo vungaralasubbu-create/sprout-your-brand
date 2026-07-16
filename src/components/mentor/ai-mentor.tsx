@@ -196,18 +196,18 @@ export function AiMentor() {
         }}
         className={cn(
           "fixed z-40 bottom-5 right-5 md:bottom-6 md:right-6",
-          "group inline-flex items-center gap-2 rounded-full",
-          "bg-foreground text-background shadow-xl",
-          "pl-3 pr-4 py-2.5 md:pl-4 md:pr-5 md:py-3",
-          "transition-all duration-300 hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+          "group inline-flex items-center justify-center rounded-full",
+          "size-12 md:size-14 bg-foreground text-background shadow-xl",
+          "transition-all duration-300 hover:scale-[1.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         )}
+        title="Glintr AI Mentor"
       >
         <span
           className={cn(
-            "relative inline-flex size-7 items-center justify-center rounded-full bg-gradient-to-tr from-[#00E6FF] via-[#2E5CFF] to-[#7CFF6B]",
+            "relative inline-flex size-7 md:size-8 items-center justify-center rounded-full bg-gradient-to-tr from-[#00E6FF] via-[#2E5CFF] to-[#7CFF6B]",
           )}
         >
-          <Sparkles className="size-3.5 text-white" aria-hidden />
+          <Sparkles className="size-3.5 md:size-4 text-white" aria-hidden />
           {pulse && (
             <span
               className="absolute inset-0 rounded-full bg-primary/40 animate-ping"
@@ -215,11 +215,9 @@ export function AiMentor() {
             />
           )}
         </span>
-        <span className="text-[13px] font-semibold tracking-tight">
-          <span className="hidden sm:inline">Glintr AI Mentor</span>
-          <span className="sm:hidden">AI Mentor</span>
-        </span>
+        <span className="sr-only">Open Glintr AI Mentor</span>
       </button>
+
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
