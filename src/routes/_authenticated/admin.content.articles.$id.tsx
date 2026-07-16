@@ -259,7 +259,7 @@ function EditorPage() {
             <h3 className="font-medium text-sm">Workflow</h3>
             <div className="grid grid-cols-2 gap-2">
               {CONTENT_STATUSES.filter((s) => s !== "scheduled").map((s) => (
-                <Button key={s} size="sm" variant={it?.status === s ? "default" : "outline"} onClick={() => statusMut.mutate({ status: s })}>
+                <Button key={s} size="sm" variant={it?.status === s ? "primary" : "outline"} onClick={() => statusMut.mutate({ status: s })}>
                   {STATUS_LABEL[s]}
                 </Button>
               ))}
