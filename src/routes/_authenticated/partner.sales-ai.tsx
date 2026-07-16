@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PartnerShell } from "@/components/partner/partner-shell";
 import { SalesAiHub } from "@/components/sales-ai/hub";
 
 export const Route = createFileRoute("/_authenticated/partner/sales-ai")({
@@ -10,13 +9,5 @@ export const Route = createFileRoute("/_authenticated/partner/sales-ai")({
       { name: "robots", content: "noindex" },
     ],
   }),
-  component: SalesAiRoute,
+  component: SalesAiHub,
 });
-
-function SalesAiRoute() {
-  return (
-    <PartnerShell>
-      <SalesAiHub />
-    </PartnerShell>
-  );
-}
