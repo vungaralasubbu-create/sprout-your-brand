@@ -397,6 +397,7 @@ import { Route as AuthenticatedAdminAiAgentsNewRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminAiAgentsAnalyticsRouteImport } from './routes/_authenticated/admin.ai-agents.analytics'
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
 import { Route as ApiV1CertificatesVerifyCodeRouteImport } from './routes/api/v1/certificates.verify.$code'
+import { Route as AuthenticatedStudentProgramsViewSlugRouteImport } from './routes/_authenticated/student.programs.view.$slug'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
@@ -2603,6 +2604,12 @@ const ApiV1CertificatesVerifyCodeRoute =
     path: '/api/v1/certificates/verify/$code',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedStudentProgramsViewSlugRoute =
+  AuthenticatedStudentProgramsViewSlugRouteImport.update({
+    id: '/programs/view/$slug',
+    path: '/programs/view/$slug',
+    getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
 const AuthenticatedStudentCareerInterviewSetupRoute =
   AuthenticatedStudentCareerInterviewSetupRouteImport.update({
     id: '/setup',
@@ -3044,6 +3051,7 @@ export interface FileRoutesByFullPath {
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
@@ -3427,6 +3435,7 @@ export interface FileRoutesByTo {
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/content/articles': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
@@ -3826,6 +3835,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/_authenticated/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/_authenticated/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/_authenticated/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/_authenticated/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
@@ -4225,6 +4235,7 @@ export interface FileRouteTypes {
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
+    | '/student/programs/view/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/admin/content/articles/'
     | '/student/career/interview/$id/report'
@@ -4608,6 +4619,7 @@ export interface FileRouteTypes {
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
+    | '/student/programs/view/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/admin/content/articles'
     | '/student/career/interview/$id/report'
@@ -5006,6 +5018,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
     | '/_authenticated/student/career/interview/setup'
+    | '/_authenticated/student/programs/view/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/_authenticated/admin/content/articles/'
     | '/_authenticated/student/career/interview/$id/report'
@@ -7807,6 +7820,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1CertificatesVerifyCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/student/programs/view/$slug': {
+      id: '/_authenticated/student/programs/view/$slug'
+      path: '/programs/view/$slug'
+      fullPath: '/student/programs/view/$slug'
+      preLoaderRoute: typeof AuthenticatedStudentProgramsViewSlugRouteImport
+      parentRoute: typeof AuthenticatedStudentRoute
+    }
     '/_authenticated/student/career/interview/setup': {
       id: '/_authenticated/student/career/interview/setup'
       path: '/setup'
@@ -8751,6 +8771,7 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentLiveSessionsIndexRoute: typeof AuthenticatedStudentLiveSessionsIndexRoute
   AuthenticatedStudentProgramsIndexRoute: typeof AuthenticatedStudentProgramsIndexRoute
   AuthenticatedStudentProjectsIndexRoute: typeof AuthenticatedStudentProjectsIndexRoute
+  AuthenticatedStudentProgramsViewSlugRoute: typeof AuthenticatedStudentProgramsViewSlugRoute
 }
 
 const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
@@ -8790,6 +8811,8 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
     AuthenticatedStudentProgramsIndexRoute,
   AuthenticatedStudentProjectsIndexRoute:
     AuthenticatedStudentProjectsIndexRoute,
+  AuthenticatedStudentProgramsViewSlugRoute:
+    AuthenticatedStudentProgramsViewSlugRoute,
 }
 
 const AuthenticatedStudentRouteWithChildren =
