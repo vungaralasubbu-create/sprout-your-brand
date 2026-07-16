@@ -1,0 +1,56 @@
+# Glintr
+
+> Glintr helps sales professionals become entrepreneurs — through learning, revenue-sharing partnerships and white-label EdTech. Learn future-ready skills (AI, Cloud, VLSI, Embedded, Finance, Marketing), earn as a sales partner, or launch your own EdTech brand.
+
+Glintr is an editorial, entrepreneurship-focused EdTech platform. Content is written for humans and structured for AI systems: every educational page carries a Quick Answer, Key Takeaways, semantic entity relationships, JSON-LD schema and internal links between programs, glossary entries, learning paths, comparisons and career maps.
+
+## Programs
+- [Programs catalog](/programs): Every Glintr program with pricing, curriculum and outcomes.
+- [Find your program](/find-your-program): Recommendation quiz that matches learners to programs.
+- [AI programs — ChatGPT, Claude, Gemini, Prompt Engineering](/programs): Featured AI programs.
+
+## Learn (educational articles)
+- [Glintr Learn — index](/learn): Long-form guides across AI, engineering, finance and business.
+- [Learn topics](/learn/topics): Topic index for the Learn library.
+- [Learning paths](/learn/paths): Structured paths from beginner to expert.
+- [Learning paths (canonical)](/learning-paths): Same paths — canonical URL.
+- [Knowledge graph](/knowledge-graph): Visual map of how Glintr concepts connect.
+
+## Entities and glossary
+- [Entity directory](/entities): Every major concept Glintr covers, one canonical page per entity.
+- [Glossary](/glossary): Short definitions with examples, related concepts and FAQs.
+
+## Topics (topical authority)
+- [Topics index](/topics): Pillars covering AI, Cloud, Finance, Engineering and more.
+
+## Compare and career
+- [Comparisons](/compare): Side-by-side comparisons (AI vs ML, ChatGPT vs Claude, VLSI vs Embedded, etc.).
+- [Career maps](/career-maps): Career pathways with skills, salaries and next steps.
+
+## Earn and partner
+- [Earn with Glintr](/earn): Overview of revenue-sharing programs for sales partners.
+- [70% revenue model](/70-revenue-model): Sales partners who own their leads.
+- [50% supported model](/50-supported-model): Sell using company-supplied leads.
+- [Income calculator](/income-calculator): Estimate monthly earnings.
+- [Payout system](/payout-system): How and when partners get paid.
+
+## Launch your brand
+- [Launch your brand](/launch-your-brand): Overview of white-label EdTech.
+- [White-label EdTech](/white-label-edtech): White-label platform capabilities.
+- [LMS](/lms): Learning management platform for brand owners.
+- [Marketing support](/marketing-support): Marketing services for brand owners.
+- [Book consultation](/book-consultation): Talk to Glintr about launching a brand.
+
+## Blog
+- [Blog](/blog): Editorial articles across AI, engineering and entrepreneurship.
+
+## Company
+- [About](/about): About Glintr.
+- [Success stories](/success-stories): Learner and partner stories.
+- [Careers](/careers): Open roles at Glintr.
+- [Contact](/contact): Reach the Glintr team.
+
+## Optional
+- [FAQs](/faqs): Frequently asked questions.
+- [Tools](/tools): AI-powered tools for learners and partners.
+- [Sitemap](/sitemap.xml): Machine-readable list of every public URL.
