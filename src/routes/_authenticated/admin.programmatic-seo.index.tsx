@@ -168,7 +168,7 @@ function PseoIndexPage() {
                     <td className="px-3 py-2.5 text-xs tabular-nums">{p.analytics?.clicks.toLocaleString() ?? 0}</td>
                     <td className="px-4 py-2.5 text-right">
                       <div className="inline-flex items-center gap-1">
-                        <Link to={"/admin/programmatic-seo/$id" as any} params={{ id: p.id }} className="p-1.5 rounded hover:bg-muted" title="Edit">
+                        <Link to={`/admin/programmatic-seo/${p.id}` as any} className="p-1.5 rounded hover:bg-muted" title="Edit">
                           <Edit3 className="size-4" />
                         </Link>
                         <Button
