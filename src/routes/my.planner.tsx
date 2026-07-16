@@ -105,7 +105,7 @@ function PlannerPage() {
                       </button>
                     );
                   })}
-                </>
+                </Fragment>
               ))}
             </div>
           </div>
