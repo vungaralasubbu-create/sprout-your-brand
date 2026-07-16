@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import {
   LayoutDashboard, Activity, Users, UserCheck, Target, Scale, ShieldCheck, FileSignature, Wallet,
   Handshake, Building2, Bell, Shield, GraduationCap, FolderTree, BookOpen, ClipboardList,
-  History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown, Sparkles,
+  History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown, Sparkles, Server,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -97,6 +97,7 @@ const NAV: NavGroup[] = [
     items: [
       { to: "/admin/team", label: "Admin Team", icon: UserCog, perms: ["admin_team.view"] },
       { to: "/admin/activity", label: "Admin Activity", icon: History, perms: ["admin_team.view"] },
+      { to: "/admin/infrastructure", label: "Infrastructure", icon: Server, perms: ["system_settings.view"] },
       { to: "/admin/settings", label: "Settings", icon: Settings, perms: ["system_settings.view"] },
     ],
   },
