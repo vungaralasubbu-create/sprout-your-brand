@@ -467,7 +467,7 @@ const PublishIn = z.object({
   reviewerName: z.string().min(1).max(120),
   draftSummary: z.object({
     brandName: z.string().min(1),
-    domain: z.string().optional(),
+    managedUrl: z.string().optional(),
     programsCount: z.number().int().nonnegative(),
     coursesCount: z.number().int().nonnegative(),
     blogsCount: z.number().int().nonnegative(),
