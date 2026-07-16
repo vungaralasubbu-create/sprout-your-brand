@@ -9,8 +9,9 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Search, GraduationCap, Award, Clock, Layers, ExternalLink, Sparkles } from "lucide-react";
+import { BookOpen, Search, GraduationCap, Award, Clock, Layers, Sparkles, Eye, CheckCircle2, Signal, IndianRupee } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/_authenticated/student/programs/")({ component: Page });
 
