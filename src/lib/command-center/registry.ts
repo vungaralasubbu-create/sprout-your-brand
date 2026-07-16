@@ -120,6 +120,7 @@ export const COMMAND_ITEMS: CommandItem[] = [
   { id: "brand-studio", label: "Brand Launch Studio", to: "/partner/brand-studio", group: "action", roles: ["academy_partner"], icon: Sparkles },
   { id: "business-os", label: "Business OS", to: "/partner/business-os", group: "nav", roles: ["academy_partner"], icon: Package },
   { id: "ai-employees", label: "AI Employees", to: "/partner/ai-employees", group: "action", roles: ["academy_partner"], icon: BrainCircuit },
+  { id: "digital-employees", label: "Digital Employees Center", to: "/partner/digital-employees", group: "action", roles: ["academy_partner"], icon: Users, keywords: ["team", "org chart", "coo", "delegate", "workflow"] },
   { id: "academy-builder", label: "Academy Builder", to: "/partner/academy-builder", group: "action", roles: ["academy_partner"], icon: Rocket },
 
   // Admin

@@ -156,6 +156,7 @@ import { Route as AuthenticatedPartnerMarketingRouteImport } from './routes/_aut
 import { Route as AuthenticatedPartnerLaunchAcademyRouteImport } from './routes/_authenticated/partner.launch-academy'
 import { Route as AuthenticatedPartnerEarningsStatementRouteImport } from './routes/_authenticated/partner.earnings-statement'
 import { Route as AuthenticatedPartnerEarningsRouteImport } from './routes/_authenticated/partner.earnings'
+import { Route as AuthenticatedPartnerDigitalEmployeesRouteImport } from './routes/_authenticated/partner.digital-employees'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedPartnerComingSoonRouteImport } from './routes/_authenticated/partner.coming-soon'
 import { Route as AuthenticatedPartnerBusinessOsRouteImport } from './routes/_authenticated/partner.business-os'
@@ -1161,6 +1162,12 @@ const AuthenticatedPartnerEarningsRoute =
   AuthenticatedPartnerEarningsRouteImport.update({
     id: '/earnings',
     path: '/earnings',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerDigitalEmployeesRoute =
+  AuthenticatedPartnerDigitalEmployeesRouteImport.update({
+    id: '/digital-employees',
+    path: '/digital-employees',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerDashboardRoute =
@@ -2823,6 +2830,7 @@ export interface FileRoutesByFullPath {
   '/partner/business-os': typeof AuthenticatedPartnerBusinessOsRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
+  '/partner/digital-employees': typeof AuthenticatedPartnerDigitalEmployeesRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
   '/partner/launch-academy': typeof AuthenticatedPartnerLaunchAcademyRoute
@@ -3203,6 +3211,7 @@ export interface FileRoutesByTo {
   '/partner/business-os': typeof AuthenticatedPartnerBusinessOsRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
+  '/partner/digital-employees': typeof AuthenticatedPartnerDigitalEmployeesRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
   '/partner/launch-academy': typeof AuthenticatedPartnerLaunchAcademyRoute
@@ -3597,6 +3606,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/business-os': typeof AuthenticatedPartnerBusinessOsRoute
   '/_authenticated/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
+  '/_authenticated/partner/digital-employees': typeof AuthenticatedPartnerDigitalEmployeesRoute
   '/_authenticated/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/_authenticated/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
   '/_authenticated/partner/launch-academy': typeof AuthenticatedPartnerLaunchAcademyRoute
@@ -3992,6 +4002,7 @@ export interface FileRouteTypes {
     | '/partner/business-os'
     | '/partner/coming-soon'
     | '/partner/dashboard'
+    | '/partner/digital-employees'
     | '/partner/earnings'
     | '/partner/earnings-statement'
     | '/partner/launch-academy'
@@ -4372,6 +4383,7 @@ export interface FileRouteTypes {
     | '/partner/business-os'
     | '/partner/coming-soon'
     | '/partner/dashboard'
+    | '/partner/digital-employees'
     | '/partner/earnings'
     | '/partner/earnings-statement'
     | '/partner/launch-academy'
@@ -4765,6 +4777,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/business-os'
     | '/_authenticated/partner/coming-soon'
     | '/_authenticated/partner/dashboard'
+    | '/_authenticated/partner/digital-employees'
     | '/_authenticated/partner/earnings'
     | '/_authenticated/partner/earnings-statement'
     | '/_authenticated/partner/launch-academy'
@@ -6067,6 +6080,13 @@ declare module '@tanstack/react-router' {
       path: '/earnings'
       fullPath: '/partner/earnings'
       preLoaderRoute: typeof AuthenticatedPartnerEarningsRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/digital-employees': {
+      id: '/_authenticated/partner/digital-employees'
+      path: '/digital-employees'
+      fullPath: '/partner/digital-employees'
+      preLoaderRoute: typeof AuthenticatedPartnerDigitalEmployeesRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/dashboard': {
@@ -8495,6 +8515,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerBusinessOsRoute: typeof AuthenticatedPartnerBusinessOsRoute
   AuthenticatedPartnerComingSoonRoute: typeof AuthenticatedPartnerComingSoonRoute
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
+  AuthenticatedPartnerDigitalEmployeesRoute: typeof AuthenticatedPartnerDigitalEmployeesRoute
   AuthenticatedPartnerEarningsRoute: typeof AuthenticatedPartnerEarningsRoute
   AuthenticatedPartnerEarningsStatementRoute: typeof AuthenticatedPartnerEarningsStatementRoute
   AuthenticatedPartnerLaunchAcademyRoute: typeof AuthenticatedPartnerLaunchAcademyRoute
@@ -8537,6 +8558,8 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerBusinessOsRoute: AuthenticatedPartnerBusinessOsRoute,
   AuthenticatedPartnerComingSoonRoute: AuthenticatedPartnerComingSoonRoute,
   AuthenticatedPartnerDashboardRoute: AuthenticatedPartnerDashboardRoute,
+  AuthenticatedPartnerDigitalEmployeesRoute:
+    AuthenticatedPartnerDigitalEmployeesRoute,
   AuthenticatedPartnerEarningsRoute: AuthenticatedPartnerEarningsRoute,
   AuthenticatedPartnerEarningsStatementRoute:
     AuthenticatedPartnerEarningsStatementRoute,
