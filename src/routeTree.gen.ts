@@ -328,6 +328,7 @@ import { Route as AuthenticatedAdminContentIntelligenceCompetitorsRouteImport } 
 import { Route as AuthenticatedAdminContentIntelligenceComparisonsRouteImport } from './routes/_authenticated/admin.content-intelligence.comparisons'
 import { Route as AuthenticatedAdminContentIntelligenceAuthorityRouteImport } from './routes/_authenticated/admin.content-intelligence.authority'
 import { Route as AuthenticatedAdminContentIntelligenceAiCitationRouteImport } from './routes/_authenticated/admin.content-intelligence.ai-citation'
+import { Route as AuthenticatedAdminBlogsIdRouteImport } from './routes/_authenticated/admin.blogs.$id'
 import { Route as AuthenticatedAdminAutomationHistoryRouteImport } from './routes/_authenticated/admin.automation.history'
 import { Route as AuthenticatedAdminAutomationAuditRouteImport } from './routes/_authenticated/admin.automation.audit'
 import { Route as AuthenticatedAdminAiosSettingsRouteImport } from './routes/_authenticated/admin.aios.settings'
@@ -2154,6 +2155,12 @@ const AuthenticatedAdminContentIntelligenceAiCitationRoute =
     path: '/ai-citation',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
+const AuthenticatedAdminBlogsIdRoute =
+  AuthenticatedAdminBlogsIdRouteImport.update({
+    id: '/blogs/$id',
+    path: '/blogs/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAutomationHistoryRoute =
   AuthenticatedAdminAutomationHistoryRouteImport.update({
     id: '/automation/history',
@@ -2618,6 +2625,7 @@ export interface FileRoutesByFullPath {
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/admin/blogs/$id': typeof AuthenticatedAdminBlogsIdRoute
   '/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
   '/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
@@ -2960,6 +2968,7 @@ export interface FileRoutesByTo {
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/admin/blogs/$id': typeof AuthenticatedAdminBlogsIdRoute
   '/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
   '/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
@@ -3318,6 +3327,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/_authenticated/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/_authenticated/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/_authenticated/admin/blogs/$id': typeof AuthenticatedAdminBlogsIdRoute
   '/_authenticated/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
   '/_authenticated/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/_authenticated/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
@@ -3676,6 +3686,7 @@ export interface FileRouteTypes {
     | '/admin/aios/settings'
     | '/admin/automation/audit'
     | '/admin/automation/history'
+    | '/admin/blogs/$id'
     | '/admin/content-intelligence/ai-citation'
     | '/admin/content-intelligence/authority'
     | '/admin/content-intelligence/comparisons'
@@ -4018,6 +4029,7 @@ export interface FileRouteTypes {
     | '/admin/aios/settings'
     | '/admin/automation/audit'
     | '/admin/automation/history'
+    | '/admin/blogs/$id'
     | '/admin/content-intelligence/ai-citation'
     | '/admin/content-intelligence/authority'
     | '/admin/content-intelligence/comparisons'
@@ -4375,6 +4387,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/aios/settings'
     | '/_authenticated/admin/automation/audit'
     | '/_authenticated/admin/automation/history'
+    | '/_authenticated/admin/blogs/$id'
     | '/_authenticated/admin/content-intelligence/ai-citation'
     | '/_authenticated/admin/content-intelligence/authority'
     | '/_authenticated/admin/content-intelligence/comparisons'
@@ -6793,6 +6806,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceAiCitationRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
+    '/_authenticated/admin/blogs/$id': {
+      id: '/_authenticated/admin/blogs/$id'
+      path: '/blogs/$id'
+      fullPath: '/admin/blogs/$id'
+      preLoaderRoute: typeof AuthenticatedAdminBlogsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/automation/history': {
       id: '/_authenticated/admin/automation/history'
       path: '/automation/history'
@@ -7390,6 +7410,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminAutomationAuditRoute: typeof AuthenticatedAdminAutomationAuditRoute
   AuthenticatedAdminAutomationHistoryRoute: typeof AuthenticatedAdminAutomationHistoryRoute
+  AuthenticatedAdminBlogsIdRoute: typeof AuthenticatedAdminBlogsIdRoute
   AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
   AuthenticatedAdminEmployeesIdRoute: typeof AuthenticatedAdminEmployeesIdRoute
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
@@ -7471,6 +7492,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAutomationAuditRoute,
   AuthenticatedAdminAutomationHistoryRoute:
     AuthenticatedAdminAutomationHistoryRoute,
+  AuthenticatedAdminBlogsIdRoute: AuthenticatedAdminBlogsIdRoute,
   AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
   AuthenticatedAdminEmployeesIdRoute: AuthenticatedAdminEmployeesIdRoute,
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
