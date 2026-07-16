@@ -92,12 +92,7 @@ export function GlobalPalette() {
   };
 
   return (
-    <CommandDialog
-      open={open}
-      onOpenChange={setOpen}
-      title="Command Palette"
-      description="Search everything on Glintr"
-    >
+    <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput placeholder="Search programs, dashboards, actions…  ⌘K anywhere" />
       <CommandList>
         <CommandEmpty>No matches. Try another keyword.</CommandEmpty>
