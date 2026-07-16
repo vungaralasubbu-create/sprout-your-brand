@@ -3084,10 +3084,13 @@ export type Database = {
           program_category_slug: string | null
           published_at: string | null
           reading_time_minutes: number | null
+          related_blog_slugs: string[]
           related_course_category_slug: string | null
           related_course_slug: string | null
+          related_course_slugs: string[]
           reviewer_display_name: string | null
           reviewer_display_role: string | null
+          schema_jsonld: Json | null
           seo_description: string | null
           seo_title: string | null
           short_summary: string
@@ -3122,10 +3125,13 @@ export type Database = {
           program_category_slug?: string | null
           published_at?: string | null
           reading_time_minutes?: number | null
+          related_blog_slugs?: string[]
           related_course_category_slug?: string | null
           related_course_slug?: string | null
+          related_course_slugs?: string[]
           reviewer_display_name?: string | null
           reviewer_display_role?: string | null
+          schema_jsonld?: Json | null
           seo_description?: string | null
           seo_title?: string | null
           short_summary: string
@@ -3160,10 +3166,13 @@ export type Database = {
           program_category_slug?: string | null
           published_at?: string | null
           reading_time_minutes?: number | null
+          related_blog_slugs?: string[]
           related_course_category_slug?: string | null
           related_course_slug?: string | null
+          related_course_slugs?: string[]
           reviewer_display_name?: string | null
           reviewer_display_role?: string | null
+          schema_jsonld?: Json | null
           seo_description?: string | null
           seo_title?: string | null
           short_summary?: string

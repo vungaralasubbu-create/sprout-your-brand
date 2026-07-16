@@ -57,6 +57,9 @@ type FormState = {
   seo_title: string;
   seo_description: string;
   keywords: string;
+  related_blog_slugs: string;
+  related_course_slugs: string;
+  schema_jsonld: string;
 };
 
 const empty: FormState = {
@@ -87,6 +90,9 @@ const empty: FormState = {
   seo_title: "",
   seo_description: "",
   keywords: "",
+  related_blog_slugs: "",
+  related_course_slugs: "",
+  schema_jsonld: "",
 };
 
 function BlogEditor() {
@@ -140,6 +146,11 @@ function BlogEditor() {
       seo_title: post.seo_title ?? "",
       seo_description: post.seo_description ?? "",
       keywords: (post.keywords ?? []).join(", "),
+      related_blog_slugs: ((post as any).related_blog_slugs ?? []).join(", "),
+      related_course_slugs: ((post as any).related_course_slugs ?? []).join(", "),
+      schema_jsonld: (post as any).schema_jsonld
+        ? JSON.stringify((post as any).schema_jsonld, null, 2)
+        : "",
     });
   }, [post]);
 
@@ -180,6 +191,23 @@ function BlogEditor() {
             .split(",")
             .map((k) => k.trim())
             .filter(Boolean),
+          related_blog_slugs: form.related_blog_slugs
+            .split(",")
+            .map((k) => k.trim())
+            .filter(Boolean),
+          related_course_slugs: form.related_course_slugs
+            .split(",")
+            .map((k) => k.trim())
+            .filter(Boolean),
+          schema_jsonld: form.schema_jsonld.trim()
+            ? (() => {
+                try {
+                  return JSON.parse(form.schema_jsonld);
+                } catch {
+                  throw new Error("Custom schema is not valid JSON");
+                }
+              })()
+            : null,
         },
       }),
     onSuccess: () => {
@@ -256,6 +284,7 @@ function BlogEditor() {
           <TabsTrigger value="media">Media</TabsTrigger>
           <TabsTrigger value="meta">Author & Meta</TabsTrigger>
           <TabsTrigger value="faqs">FAQs</TabsTrigger>
+          <TabsTrigger value="related">Related & Schema</TabsTrigger>
           <TabsTrigger value="seo">SEO & Publish</TabsTrigger>
         </TabsList>
 
@@ -580,6 +609,81 @@ function BlogEditor() {
                   />
                 </div>
               </div>
+            </div>
+          </Card>
+        </TabsContent>
+
+        {/* RELATED & SCHEMA */}
+        <TabsContent value="related" className="space-y-4">
+          <Card className="p-5 space-y-4">
+            <div>
+              <div className="font-display text-lg font-semibold">Related content</div>
+              <div className="text-xs text-muted-foreground">
+                Comma-separated slugs. Renders as a "Continue reading" rail at the end of the
+                article.
+              </div>
+            </div>
+            <Field
+              label="Related blog slugs"
+              hint="e.g. 70-percent-revenue-model, become-a-partner"
+            >
+              <Input
+                value={form.related_blog_slugs}
+                onChange={(e) => update("related_blog_slugs", e.target.value)}
+              />
+            </Field>
+            <Field
+              label="Related course slugs"
+              hint="e.g. chatgpt-mastery, sales-accelerator"
+            >
+              <Input
+                value={form.related_course_slugs}
+                onChange={(e) => update("related_course_slugs", e.target.value)}
+              />
+            </Field>
+          </Card>
+
+          <Card className="p-5 space-y-3">
+            <div>
+              <div className="font-display text-lg font-semibold">Custom JSON-LD schema</div>
+              <div className="text-xs text-muted-foreground">
+                Optional. Overrides the default <code>Article</code> + <code>FAQPage</code>{" "}
+                schema. Must be a valid JSON object or array.
+              </div>
+            </div>
+            <Textarea
+              value={form.schema_jsonld}
+              onChange={(e) => update("schema_jsonld", e.target.value)}
+              rows={12}
+              className="font-mono text-xs"
+              placeholder={`{\n  "@context": "https://schema.org",\n  "@type": "HowTo",\n  ...\n}`}
+            />
+          </Card>
+
+          <Card className="p-5 space-y-1 text-xs text-muted-foreground">
+            <div className="font-display text-sm font-semibold text-foreground">
+              Auto-computed
+            </div>
+            <div>
+              Reading time:{" "}
+              <span className="text-foreground">
+                {post?.reading_time_minutes ?? "—"} min
+              </span>{" "}
+              (recomputed on save from body word count)
+            </div>
+            <div>
+              Last updated:{" "}
+              <span className="text-foreground">
+                {post?.editorial_updated_at
+                  ? new Date(post.editorial_updated_at).toLocaleString()
+                  : "—"}
+              </span>
+            </div>
+            <div>
+              Created:{" "}
+              <span className="text-foreground">
+                {post?.created_at ? new Date(post.created_at).toLocaleString() : "—"}
+              </span>
             </div>
           </Card>
         </TabsContent>

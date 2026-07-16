@@ -136,6 +136,9 @@ const UpsertInput = z.object({
   seo_title: z.string().optional().nullable(),
   seo_description: z.string().optional().nullable(),
   keywords: z.array(z.string()).default([]),
+  related_blog_slugs: z.array(z.string()).default([]),
+  related_course_slugs: z.array(z.string()).default([]),
+  schema_jsonld: z.any().optional().nullable(),
 });
 
 export const upsertBlogPost = createServerFn({ method: "POST" })
@@ -192,6 +195,9 @@ export const upsertBlogPost = createServerFn({ method: "POST" })
       seo_title: data.seo_title ?? null,
       seo_description: data.seo_description ?? null,
       keywords: data.keywords ?? [],
+      related_blog_slugs: data.related_blog_slugs ?? [],
+      related_course_slugs: data.related_course_slugs ?? [],
+      schema_jsonld: data.schema_jsonld ?? null,
       reading_time_minutes: rt,
       editorial_updated_at: now,
     };
