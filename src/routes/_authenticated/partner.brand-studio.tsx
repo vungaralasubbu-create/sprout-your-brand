@@ -1154,7 +1154,7 @@ function StepPublish({ draft, brandName }: { draft: Draft; brandName: string }) 
           reviewerName: reviewer.trim(),
           draftSummary: {
             brandName,
-            domain: draft.domain ? `${draft.domain.name}${draft.domain.ext}` : undefined,
+            managedUrl: draft.managedSlug ? `${draft.managedSlug}.glintr.com` : undefined,
             programsCount: draft.programs.length,
             coursesCount: draft.courses.length,
             blogsCount: draft.blogs?.articles?.length || 0,
