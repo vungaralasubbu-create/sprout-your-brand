@@ -278,89 +278,108 @@ function BlogDetailPage() {
         />
       </div>
 
-      {/* Article structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.title,
-            description: post.short_summary,
-            datePublished: post.published_at,
-            dateModified: post.editorial_updated_at ?? post.published_at,
-            author: { "@type": "Organization", name: post.author_display_name },
-            publisher: { "@type": "Organization", name: "Glintr" },
-            mainEntityOfPage: `https://glintr.com/blog/${post.slug}`,
-            image: post.featured_image_url ?? undefined,
-          }),
-        }}
-      />
-
       {/* HERO */}
       <Section tone="surface" padding="lg">
         <Container size="md">
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" className="mb-5">
+            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+              <li>
+                <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+              </li>
+              <li aria-hidden><ChevronRight className="size-3" /></li>
+              <li>
+                <Link to="/blog" className="hover:text-foreground transition-colors">Insights</Link>
+              </li>
+              {post.topic ? (
+                <>
+                  <li aria-hidden><ChevronRight className="size-3" /></li>
+                  <li>
+                    <Link
+                      to="/blog"
+                      search={{ topic: post.topic.slug }}
+                      className="hover:text-foreground transition-colors"
+                    >
+                      {post.topic.name}
+                    </Link>
+                  </li>
+                </>
+              ) : null}
+              <li aria-hidden><ChevronRight className="size-3" /></li>
+              <li className="text-foreground/80 line-clamp-1 max-w-[60ch]">
+                {post.title}
+              </li>
+            </ol>
+          </nav>
+
           <Button variant="ghost" size="sm" asChild className="mb-6 -ml-2">
             <Link to="/blog">
               <ArrowLeft className="size-4 mr-2" />
               Back To Insights
             </Link>
           </Button>
+
           <div className="flex flex-col gap-4">
-            {post.topic ? (
-              <Badge variant="primary" className="w-fit uppercase tracking-wider">
-                {post.topic.name}
-              </Badge>
-            ) : null}
+            <div className="flex flex-wrap items-center gap-2">
+              {post.topic ? (
+                <Badge variant="primary" className="uppercase tracking-wider">
+                  {post.topic.name}
+                </Badge>
+              ) : null}
+              {post.skill_level ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                  <GraduationCap className="size-3.5" /> {post.skill_level}
+                </span>
+              ) : null}
+            </div>
             <h1 className="text-hero text-balance">{post.title}</h1>
             {post.subtitle ? (
               <p className="text-subheading text-muted-foreground text-pretty">{post.subtitle}</p>
             ) : null}
             <p className="text-body text-muted-foreground">{post.short_summary}</p>
-            <div className="flex flex-wrap items-center gap-4 text-caption mt-2">
-              <span>{formatPublished(post.published_at)}</span>
+
+            {/* Meta strip */}
+            <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-caption">
+              <MetaBlock label="Written By" value={post.author_display_name} sub={post.author_display_role} />
+              {post.reviewer_display_name ? (
+                <MetaBlock
+                  label="Reviewed By"
+                  value={post.reviewer_display_name}
+                  sub={post.reviewer_display_role}
+                />
+              ) : null}
+              <MetaBlock
+                label="Published"
+                value={formatPublished(post.published_at) || "—"}
+                sub={
+                  post.editorial_updated_at &&
+                  post.published_at &&
+                  new Date(post.editorial_updated_at).getTime() >
+                    new Date(post.published_at).getTime() + 24 * 3600 * 1000
+                    ? `Updated ${formatPublished(post.editorial_updated_at)}`
+                    : null
+                }
+              />
               {post.reading_time_minutes ? (
-                <span className="inline-flex items-center gap-1">
-                  <Clock className="size-3.5" /> {post.reading_time_minutes} min read
-                </span>
+                <MetaBlock
+                  label="Reading Time"
+                  value={`${post.reading_time_minutes} min read`}
+                  sub={null}
+                />
               ) : null}
-              {post.editorial_updated_at &&
-              post.published_at &&
-              new Date(post.editorial_updated_at).getTime() >
-                new Date(post.published_at).getTime() + 24 * 3600 * 1000 ? (
-                <span>Updated {formatPublished(post.editorial_updated_at)}</span>
-              ) : null}
-              <span className="inline-flex items-center gap-2">
-                <span className="size-6 rounded-full bg-gradient-brand" aria-hidden />
-                <span>
-                  {post.author_display_name}
-                  {post.author_display_role ? ` · ${post.author_display_role}` : ""}
-                </span>
-              </span>
             </div>
           </div>
         </Container>
       </Section>
 
-      {/* FEATURED VISUAL */}
-      {post.featured_image_url ? (
-        <Section padding="none" className="py-6 md:py-10">
-          <Container size="md">
-            <div className="rounded-3xl overflow-hidden border bg-gradient-brand-soft">
-              <img
-                src={post.featured_image_url}
-                alt=""
-                width={1600}
-                height={900}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                className="w-full h-auto object-cover"
-              />
-            </div>
-          </Container>
-        </Section>
-      ) : null}
+      {/* FEATURED VISUAL — always render (image or generated cover) */}
+      <Section padding="none" className="py-6 md:py-10">
+        <Container size="md">
+          <div className="relative rounded-3xl overflow-hidden border aspect-[16/9]">
+            <BlogCover post={post} variant="hero" eager />
+          </div>
+        </Container>
+      </Section>
 
       {/* BODY */}
       <Section padding="lg">
