@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkspaceRouteImport } from './routes/workspace'
 import { Route as WhiteLabelEdtechRouteImport } from './routes/white-label-edtech'
 import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
@@ -48,12 +49,23 @@ import { Route as R70RevenueModelRouteImport } from './routes/70-revenue-model'
 import { Route as R50SupportedModelRouteImport } from './routes/50-supported-model'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkspaceIndexRouteImport } from './routes/workspace.index'
 import { Route as ToolsIndexRouteImport } from './routes/tools.index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as MyIndexRouteImport } from './routes/my.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
+import { Route as WorkspaceStudyRouteImport } from './routes/workspace.study'
+import { Route as WorkspaceSearchRouteImport } from './routes/workspace.search'
+import { Route as WorkspaceRevisionRouteImport } from './routes/workspace.revision'
+import { Route as WorkspaceMentorRouteImport } from './routes/workspace.mentor'
+import { Route as WorkspaceLibraryRouteImport } from './routes/workspace.library'
+import { Route as WorkspaceHighlightsRouteImport } from './routes/workspace.highlights'
+import { Route as WorkspaceFlashcardsRouteImport } from './routes/workspace.flashcards'
+import { Route as WorkspaceCalendarRouteImport } from './routes/workspace.calendar'
+import { Route as WorkspaceBookmarksRouteImport } from './routes/workspace.bookmarks'
+import { Route as WorkspaceActivityRouteImport } from './routes/workspace.activity'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as SuccessStoriesStorySlugRouteImport } from './routes/success-stories.$storySlug'
@@ -88,9 +100,11 @@ import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
 import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as WorkspaceNotebooksIndexRouteImport } from './routes/workspace.notebooks.index'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as WorkspaceNotebooksIdRouteImport } from './routes/workspace.notebooks.$id'
 import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
 import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collections.$slug'
@@ -280,6 +294,11 @@ import { Route as AuthenticatedAdminContentArticlesIdRouteImport } from './route
 import { Route as AuthenticatedStudentInternshipIdTasksTaskIdRouteImport } from './routes/_authenticated/student.internship.$id.tasks.$taskId'
 import { Route as AuthenticatedStudentCareerInterviewIdReportRouteImport } from './routes/_authenticated/student.career.interview.$id.report'
 
+const WorkspaceRoute = WorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WhiteLabelEdtechRoute = WhiteLabelEdtechRouteImport.update({
   id: '/white-label-edtech',
   path: '/white-label-edtech',
@@ -474,6 +493,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 const ToolsIndexRoute = ToolsIndexRouteImport.update({
   id: '/tools/',
   path: '/tools/',
@@ -503,6 +527,56 @@ const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
   id: '/campus-ambassador/',
   path: '/campus-ambassador/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const WorkspaceStudyRoute = WorkspaceStudyRouteImport.update({
+  id: '/study',
+  path: '/study',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceSearchRoute = WorkspaceSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceRevisionRoute = WorkspaceRevisionRouteImport.update({
+  id: '/revision',
+  path: '/revision',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceMentorRoute = WorkspaceMentorRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceLibraryRoute = WorkspaceLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceHighlightsRoute = WorkspaceHighlightsRouteImport.update({
+  id: '/highlights',
+  path: '/highlights',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceFlashcardsRoute = WorkspaceFlashcardsRouteImport.update({
+  id: '/flashcards',
+  path: '/flashcards',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceCalendarRoute = WorkspaceCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceBookmarksRoute = WorkspaceBookmarksRouteImport.update({
+  id: '/bookmarks',
+  path: '/bookmarks',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
+const WorkspaceActivityRoute = WorkspaceActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => WorkspaceRoute,
 } as any)
 const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   id: '/verify-certificate/$code',
@@ -675,6 +749,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const WorkspaceNotebooksIndexRoute = WorkspaceNotebooksIndexRouteImport.update({
+  id: '/notebooks/',
+  path: '/notebooks/',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 const ProgramsCategoryIndexRoute = ProgramsCategoryIndexRouteImport.update({
   id: '/programs/$category/',
   path: '/programs/$category/',
@@ -690,6 +769,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const WorkspaceNotebooksIdRoute = WorkspaceNotebooksIdRouteImport.update({
+  id: '/notebooks/$id',
+  path: '/notebooks/$id',
+  getParentRoute: () => WorkspaceRoute,
 } as any)
 const StudentSupportRequestsRefRoute =
   StudentSupportRequestsRefRouteImport.update({
@@ -1854,6 +1938,7 @@ export interface FileRoutesByFullPath {
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
+  '/workspace': typeof WorkspaceRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -1888,12 +1973,23 @@ export interface FileRoutesByFullPath {
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
+  '/workspace/activity': typeof WorkspaceActivityRoute
+  '/workspace/bookmarks': typeof WorkspaceBookmarksRoute
+  '/workspace/calendar': typeof WorkspaceCalendarRoute
+  '/workspace/flashcards': typeof WorkspaceFlashcardsRoute
+  '/workspace/highlights': typeof WorkspaceHighlightsRoute
+  '/workspace/library': typeof WorkspaceLibraryRoute
+  '/workspace/mentor': typeof WorkspaceMentorRoute
+  '/workspace/revision': typeof WorkspaceRevisionRoute
+  '/workspace/search': typeof WorkspaceSearchRoute
+  '/workspace/study': typeof WorkspaceStudyRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
+  '/workspace/': typeof WorkspaceIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
@@ -1989,9 +2085,11 @@ export interface FileRoutesByFullPath {
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
+  '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
@@ -2155,12 +2253,23 @@ export interface FileRoutesByTo {
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
+  '/workspace/activity': typeof WorkspaceActivityRoute
+  '/workspace/bookmarks': typeof WorkspaceBookmarksRoute
+  '/workspace/calendar': typeof WorkspaceCalendarRoute
+  '/workspace/flashcards': typeof WorkspaceFlashcardsRoute
+  '/workspace/highlights': typeof WorkspaceHighlightsRoute
+  '/workspace/library': typeof WorkspaceLibraryRoute
+  '/workspace/mentor': typeof WorkspaceMentorRoute
+  '/workspace/revision': typeof WorkspaceRevisionRoute
+  '/workspace/search': typeof WorkspaceSearchRoute
+  '/workspace/study': typeof WorkspaceStudyRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/learn': typeof LearnIndexRoute
   '/my': typeof MyIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/tools': typeof ToolsIndexRoute
+  '/workspace': typeof WorkspaceIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
@@ -2252,9 +2361,11 @@ export interface FileRoutesByTo {
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
+  '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
+  '/workspace/notebooks': typeof WorkspaceNotebooksIndexRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
@@ -2390,6 +2501,7 @@ export interface FileRoutesById {
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
+  '/workspace': typeof WorkspaceRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -2424,12 +2536,23 @@ export interface FileRoutesById {
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
+  '/workspace/activity': typeof WorkspaceActivityRoute
+  '/workspace/bookmarks': typeof WorkspaceBookmarksRoute
+  '/workspace/calendar': typeof WorkspaceCalendarRoute
+  '/workspace/flashcards': typeof WorkspaceFlashcardsRoute
+  '/workspace/highlights': typeof WorkspaceHighlightsRoute
+  '/workspace/library': typeof WorkspaceLibraryRoute
+  '/workspace/mentor': typeof WorkspaceMentorRoute
+  '/workspace/revision': typeof WorkspaceRevisionRoute
+  '/workspace/search': typeof WorkspaceSearchRoute
+  '/workspace/study': typeof WorkspaceStudyRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
+  '/workspace/': typeof WorkspaceIndexRoute
   '/_authenticated/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/_authenticated/admin/account': typeof AuthenticatedAdminAccountRoute
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
@@ -2525,9 +2648,11 @@ export interface FileRoutesById {
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
+  '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
   '/_authenticated/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/_authenticated/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/_authenticated/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
@@ -2663,6 +2788,7 @@ export interface FileRouteTypes {
     | '/success-stories'
     | '/terms-and-conditions'
     | '/white-label-edtech'
+    | '/workspace'
     | '/admin'
     | '/ambassador'
     | '/brand'
@@ -2697,12 +2823,23 @@ export interface FileRouteTypes {
     | '/success-stories/$storySlug'
     | '/tools/$slug'
     | '/verify-certificate/$code'
+    | '/workspace/activity'
+    | '/workspace/bookmarks'
+    | '/workspace/calendar'
+    | '/workspace/flashcards'
+    | '/workspace/highlights'
+    | '/workspace/library'
+    | '/workspace/mentor'
+    | '/workspace/revision'
+    | '/workspace/search'
+    | '/workspace/study'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/learn/'
     | '/my/'
     | '/programs/'
     | '/tools/'
+    | '/workspace/'
     | '/admin/access-restricted'
     | '/admin/account'
     | '/admin/activity'
@@ -2798,9 +2935,11 @@ export interface FileRouteTypes {
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
+    | '/workspace/notebooks/$id'
     | '/admin/'
     | '/student/'
     | '/programs/$category/'
+    | '/workspace/notebooks/'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/review'
@@ -2964,12 +3103,23 @@ export interface FileRouteTypes {
     | '/success-stories/$storySlug'
     | '/tools/$slug'
     | '/verify-certificate/$code'
+    | '/workspace/activity'
+    | '/workspace/bookmarks'
+    | '/workspace/calendar'
+    | '/workspace/flashcards'
+    | '/workspace/highlights'
+    | '/workspace/library'
+    | '/workspace/mentor'
+    | '/workspace/revision'
+    | '/workspace/search'
+    | '/workspace/study'
     | '/campus-ambassador'
     | '/launch-your-brand'
     | '/learn'
     | '/my'
     | '/programs'
     | '/tools'
+    | '/workspace'
     | '/admin/access-restricted'
     | '/admin/account'
     | '/admin/activity'
@@ -3061,9 +3211,11 @@ export interface FileRouteTypes {
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
+    | '/workspace/notebooks/$id'
     | '/admin'
     | '/student'
     | '/programs/$category'
+    | '/workspace/notebooks'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/review'
@@ -3198,6 +3350,7 @@ export interface FileRouteTypes {
     | '/success-stories'
     | '/terms-and-conditions'
     | '/white-label-edtech'
+    | '/workspace'
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
     | '/_authenticated/brand'
@@ -3232,12 +3385,23 @@ export interface FileRouteTypes {
     | '/success-stories/$storySlug'
     | '/tools/$slug'
     | '/verify-certificate/$code'
+    | '/workspace/activity'
+    | '/workspace/bookmarks'
+    | '/workspace/calendar'
+    | '/workspace/flashcards'
+    | '/workspace/highlights'
+    | '/workspace/library'
+    | '/workspace/mentor'
+    | '/workspace/revision'
+    | '/workspace/search'
+    | '/workspace/study'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/learn/'
     | '/my/'
     | '/programs/'
     | '/tools/'
+    | '/workspace/'
     | '/_authenticated/admin/access-restricted'
     | '/_authenticated/admin/account'
     | '/_authenticated/admin/activity'
@@ -3333,9 +3497,11 @@ export interface FileRouteTypes {
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
+    | '/workspace/notebooks/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/student/'
     | '/programs/$category/'
+    | '/workspace/notebooks/'
     | '/_authenticated/admin/ai-content/calendar'
     | '/_authenticated/admin/ai-content/clusters'
     | '/_authenticated/admin/ai-content/review'
@@ -3471,6 +3637,7 @@ export interface RootRouteChildren {
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   WhiteLabelEdtechRoute: typeof WhiteLabelEdtechRoute
+  WorkspaceRoute: typeof WorkspaceRouteWithChildren
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -3489,6 +3656,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/workspace': {
+      id: '/workspace'
+      path: '/workspace'
+      fullPath: '/workspace'
+      preLoaderRoute: typeof WorkspaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/white-label-edtech': {
       id: '/white-label-edtech'
       path: '/white-label-edtech'
@@ -3762,6 +3936,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workspace/': {
+      id: '/workspace/'
+      path: '/'
+      fullPath: '/workspace/'
+      preLoaderRoute: typeof WorkspaceIndexRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
     '/tools/': {
       id: '/tools/'
       path: '/tools'
@@ -3803,6 +3984,76 @@ declare module '@tanstack/react-router' {
       fullPath: '/campus-ambassador/'
       preLoaderRoute: typeof CampusAmbassadorIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/workspace/study': {
+      id: '/workspace/study'
+      path: '/study'
+      fullPath: '/workspace/study'
+      preLoaderRoute: typeof WorkspaceStudyRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/search': {
+      id: '/workspace/search'
+      path: '/search'
+      fullPath: '/workspace/search'
+      preLoaderRoute: typeof WorkspaceSearchRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/revision': {
+      id: '/workspace/revision'
+      path: '/revision'
+      fullPath: '/workspace/revision'
+      preLoaderRoute: typeof WorkspaceRevisionRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/mentor': {
+      id: '/workspace/mentor'
+      path: '/mentor'
+      fullPath: '/workspace/mentor'
+      preLoaderRoute: typeof WorkspaceMentorRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/library': {
+      id: '/workspace/library'
+      path: '/library'
+      fullPath: '/workspace/library'
+      preLoaderRoute: typeof WorkspaceLibraryRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/highlights': {
+      id: '/workspace/highlights'
+      path: '/highlights'
+      fullPath: '/workspace/highlights'
+      preLoaderRoute: typeof WorkspaceHighlightsRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/flashcards': {
+      id: '/workspace/flashcards'
+      path: '/flashcards'
+      fullPath: '/workspace/flashcards'
+      preLoaderRoute: typeof WorkspaceFlashcardsRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/calendar': {
+      id: '/workspace/calendar'
+      path: '/calendar'
+      fullPath: '/workspace/calendar'
+      preLoaderRoute: typeof WorkspaceCalendarRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/bookmarks': {
+      id: '/workspace/bookmarks'
+      path: '/bookmarks'
+      fullPath: '/workspace/bookmarks'
+      preLoaderRoute: typeof WorkspaceBookmarksRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
+    '/workspace/activity': {
+      id: '/workspace/activity'
+      path: '/activity'
+      fullPath: '/workspace/activity'
+      preLoaderRoute: typeof WorkspaceActivityRouteImport
+      parentRoute: typeof WorkspaceRoute
     }
     '/verify-certificate/$code': {
       id: '/verify-certificate/$code'
@@ -4042,6 +4293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/workspace/notebooks/': {
+      id: '/workspace/notebooks/'
+      path: '/notebooks'
+      fullPath: '/workspace/notebooks/'
+      preLoaderRoute: typeof WorkspaceNotebooksIndexRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
     '/programs/$category/': {
       id: '/programs/$category/'
       path: '/programs/$category'
@@ -4062,6 +4320,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/workspace/notebooks/$id': {
+      id: '/workspace/notebooks/$id'
+      path: '/notebooks/$id'
+      fullPath: '/workspace/notebooks/$id'
+      preLoaderRoute: typeof WorkspaceNotebooksIdRouteImport
+      parentRoute: typeof WorkspaceRoute
     }
     '/student-support/requests/$ref': {
       id: '/student-support/requests/$ref'
@@ -6243,6 +6508,42 @@ const SuccessStoriesRouteWithChildren = SuccessStoriesRoute._addFileChildren(
   SuccessStoriesRouteChildren,
 )
 
+interface WorkspaceRouteChildren {
+  WorkspaceActivityRoute: typeof WorkspaceActivityRoute
+  WorkspaceBookmarksRoute: typeof WorkspaceBookmarksRoute
+  WorkspaceCalendarRoute: typeof WorkspaceCalendarRoute
+  WorkspaceFlashcardsRoute: typeof WorkspaceFlashcardsRoute
+  WorkspaceHighlightsRoute: typeof WorkspaceHighlightsRoute
+  WorkspaceLibraryRoute: typeof WorkspaceLibraryRoute
+  WorkspaceMentorRoute: typeof WorkspaceMentorRoute
+  WorkspaceRevisionRoute: typeof WorkspaceRevisionRoute
+  WorkspaceSearchRoute: typeof WorkspaceSearchRoute
+  WorkspaceStudyRoute: typeof WorkspaceStudyRoute
+  WorkspaceIndexRoute: typeof WorkspaceIndexRoute
+  WorkspaceNotebooksIdRoute: typeof WorkspaceNotebooksIdRoute
+  WorkspaceNotebooksIndexRoute: typeof WorkspaceNotebooksIndexRoute
+}
+
+const WorkspaceRouteChildren: WorkspaceRouteChildren = {
+  WorkspaceActivityRoute: WorkspaceActivityRoute,
+  WorkspaceBookmarksRoute: WorkspaceBookmarksRoute,
+  WorkspaceCalendarRoute: WorkspaceCalendarRoute,
+  WorkspaceFlashcardsRoute: WorkspaceFlashcardsRoute,
+  WorkspaceHighlightsRoute: WorkspaceHighlightsRoute,
+  WorkspaceLibraryRoute: WorkspaceLibraryRoute,
+  WorkspaceMentorRoute: WorkspaceMentorRoute,
+  WorkspaceRevisionRoute: WorkspaceRevisionRoute,
+  WorkspaceSearchRoute: WorkspaceSearchRoute,
+  WorkspaceStudyRoute: WorkspaceStudyRoute,
+  WorkspaceIndexRoute: WorkspaceIndexRoute,
+  WorkspaceNotebooksIdRoute: WorkspaceNotebooksIdRoute,
+  WorkspaceNotebooksIndexRoute: WorkspaceNotebooksIndexRoute,
+}
+
+const WorkspaceRouteWithChildren = WorkspaceRoute._addFileChildren(
+  WorkspaceRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -6283,6 +6584,7 @@ const rootRouteChildren: RootRouteChildren = {
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
   WhiteLabelEdtechRoute: WhiteLabelEdtechRoute,
+  WorkspaceRoute: WorkspaceRouteWithChildren,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
