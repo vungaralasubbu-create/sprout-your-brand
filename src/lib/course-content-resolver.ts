@@ -32,7 +32,7 @@ export function resolveCourseView(
   cms: CourseCmsPayload | null,
 ): ResolvedCourseView {
   const pack = getCourseContentPack(categorySlug, courseSlug);
-  const course = (cms?.course ?? {}) as Record<string, unknown>;
+  const course = (cms?.course ?? {}) as Record<string, any>;
 
   const cmsHiring = (cms?.hiring_partners ?? [])
     .map((r) => (r as { company_name?: string }).company_name)

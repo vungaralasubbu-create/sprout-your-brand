@@ -122,7 +122,7 @@ function AiStudioPanel() {
                       <CardDescription className="mt-1">{section.description}</CardDescription>
                     </div>
                     {lastRun && (
-                      <Badge variant={lastRun.status === "success" ? "default" : "destructive"}>
+                      <Badge variant={lastRun.status === "success" ? "default" : "danger"}>
                         {lastRun.status === "success" ? (
                           <CheckCircle2 className="mr-1 h-3 w-3" />
                         ) : (
@@ -178,7 +178,7 @@ function AiStudioPanel() {
                         {new Date(row.created_at).toLocaleString()}
                       </span>
                     </div>
-                    <Badge variant={row.status === "success" ? "default" : "destructive"}>
+                    <Badge variant={row.status === "success" ? "default" : "danger"}>
                       {row.status}
                     </Badge>
                   </div>

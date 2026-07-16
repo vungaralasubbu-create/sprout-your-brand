@@ -13,21 +13,21 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export interface CourseCmsPayload {
-  course: Record<string, unknown> | null;
-  modules: Array<Record<string, unknown>>;
-  lessons: Array<Record<string, unknown>>;
-  projects: Array<Record<string, unknown>>;
-  tools: Array<Record<string, unknown>>;
-  skills: Array<Record<string, unknown>>;
-  faqs: Array<Record<string, unknown>>;
-  topics: Array<Record<string, unknown>>;
-  hiring_partners: Array<Record<string, unknown>>;
-  learning_path_stages: Array<Record<string, unknown>>;
-  salary_stages: Array<Record<string, unknown>>;
-  career_roles: Array<Record<string, unknown>>;
-  certifications: Array<Record<string, unknown>>;
-  related: Array<Record<string, unknown>>;
-  category: Record<string, unknown> | null;
+  course: Record<string, any> | null;
+  modules: Array<Record<string, any>>;
+  lessons: Array<Record<string, any>>;
+  projects: Array<Record<string, any>>;
+  tools: Array<Record<string, any>>;
+  skills: Array<Record<string, any>>;
+  faqs: Array<Record<string, any>>;
+  topics: Array<Record<string, any>>;
+  hiring_partners: Array<Record<string, any>>;
+  learning_path_stages: Array<Record<string, any>>;
+  salary_stages: Array<Record<string, any>>;
+  career_roles: Array<Record<string, any>>;
+  certifications: Array<Record<string, any>>;
+  related: Array<Record<string, any>>;
+  category: Record<string, any> | null;
 }
 
 /**
@@ -93,21 +93,21 @@ export const getCourseCmsBySlug = createServerFn({ method: "GET" })
     ]);
 
     return {
-      course: course as Record<string, unknown>,
-      modules: (modules.data ?? []) as Array<Record<string, unknown>>,
-      lessons: (lessons.data ?? []) as Array<Record<string, unknown>>,
-      projects: (projects.data ?? []) as Array<Record<string, unknown>>,
-      tools: (tools.data ?? []) as Array<Record<string, unknown>>,
-      skills: (skills.data ?? []) as Array<Record<string, unknown>>,
-      faqs: (faqs.data ?? []) as Array<Record<string, unknown>>,
-      topics: (topics.data ?? []) as Array<Record<string, unknown>>,
-      hiring_partners: (hiring_partners.data ?? []) as Array<Record<string, unknown>>,
-      learning_path_stages: (learning_path_stages.data ?? []) as Array<Record<string, unknown>>,
-      salary_stages: (salary_stages.data ?? []) as Array<Record<string, unknown>>,
-      career_roles: (career_roles.data ?? []) as Array<Record<string, unknown>>,
-      certifications: (certifications.data ?? []) as Array<Record<string, unknown>>,
-      related: (related.data ?? []) as Array<Record<string, unknown>>,
-      category: category as Record<string, unknown>,
+      course: course as Record<string, any>,
+      modules: (modules.data ?? []) as Array<Record<string, any>>,
+      lessons: (lessons.data ?? []) as Array<Record<string, any>>,
+      projects: (projects.data ?? []) as Array<Record<string, any>>,
+      tools: (tools.data ?? []) as Array<Record<string, any>>,
+      skills: (skills.data ?? []) as Array<Record<string, any>>,
+      faqs: (faqs.data ?? []) as Array<Record<string, any>>,
+      topics: (topics.data ?? []) as Array<Record<string, any>>,
+      hiring_partners: (hiring_partners.data ?? []) as Array<Record<string, any>>,
+      learning_path_stages: (learning_path_stages.data ?? []) as Array<Record<string, any>>,
+      salary_stages: (salary_stages.data ?? []) as Array<Record<string, any>>,
+      career_roles: (career_roles.data ?? []) as Array<Record<string, any>>,
+      certifications: (certifications.data ?? []) as Array<Record<string, any>>,
+      related: (related.data ?? []) as Array<Record<string, any>>,
+      category: category as Record<string, any>,
     };
   });
 
@@ -219,7 +219,7 @@ export const generateCourseSection = createServerFn({ method: "POST" })
 
     try {
       const raw = await callGateway(KIND_PROMPTS[data.kind](ctx), "You output strictly valid JSON. No commentary. No markdown fences.");
-      const parsed = safeParseJson<Record<string, unknown>>(raw, {});
+      const parsed = safeParseJson<Record<string, any>>(raw, {});
       await applyGenerationToCourse(context.supabase, data.courseId, data.kind, parsed);
       await recordGeneration(context.supabase, data.courseId, data.kind, "success", parsed);
       return { ok: true as const, kind: data.kind, output: parsed };
@@ -234,7 +234,7 @@ async function applyGenerationToCourse(
   supabase: import("@supabase/supabase-js").SupabaseClient,
   courseId: string,
   kind: GenKind,
-  output: Record<string, unknown>,
+  output: Record<string, any>,
 ) {
   switch (kind) {
     case "overview": {
