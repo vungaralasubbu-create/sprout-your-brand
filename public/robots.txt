@@ -1,19 +1,48 @@
 User-agent: *
 Allow: /
 
-Disallow: /admin
-Disallow: /admin/
-Disallow: /partner/dashboard
-Disallow: /partner/onboarding
-Disallow: /partner/apply
-Disallow: /student
-Disallow: /student/
-Disallow: /brand
-Disallow: /brand/
+# Auth & onboarding flows
 Disallow: /auth
 Disallow: /_authenticated
 Disallow: /_authenticated/
+
+# Partner private surfaces
+Disallow: /partner/apply
+Disallow: /partner/signup
+Disallow: /partner/dashboard
+Disallow: /partner/onboarding
 Disallow: /partner-support/requests
 Disallow: /partner-support/requests/
+
+# Student private surfaces
+Disallow: /student
+Disallow: /student/
+Disallow: /student-support/requests
+Disallow: /student-support/requests/
+
+# Ambassador / brand / admin dashboards
+Disallow: /ambassador
+Disallow: /ambassador/
+Disallow: /brand
+Disallow: /brand/
+Disallow: /admin
+Disallow: /admin/
+
+# Lead-capture / gated flows
+Disallow: /launch-your-brand/consultation
+Disallow: /launch-your-brand/start
+Disallow: /programs/*/apply
+Disallow: /programs/*/*/apply
+
+# Utility endpoints
+Disallow: /ref/
+Disallow: /verify-certificate/
+Disallow: /api/
+
+# Common tracking / query noise
+Disallow: /*?*utm_
+Disallow: /*?*gclid=
+Disallow: /*?*fbclid=
+Disallow: /*?*ref=
 
 Sitemap: https://glintr.com/sitemap.xml
