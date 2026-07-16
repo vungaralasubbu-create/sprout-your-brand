@@ -165,7 +165,7 @@ const QUESTIONS: { key: QAKey; prompt: string; placeholder: string; suggestions?
 const STEPS = [
   { id: 1, label: "Conversation", icon: Sparkles },
   { id: 2, label: "Brand Identity", icon: Palette },
-  { id: 3, label: "Domain", icon: Globe },
+  { id: 3, label: "Managed URL", icon: Globe },
   { id: 4, label: "Logo Studio", icon: ImageIcon },
   { id: 5, label: "Website", icon: FileText },
   { id: 6, label: "Programs", icon: GraduationCap },
