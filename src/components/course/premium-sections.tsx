@@ -379,7 +379,11 @@ const CAREER_ROADMAP = [
   { title: "Architect", note: "Shape platform strategy & scale." },
 ];
 
-export function CareerRoadmap() {
+type RoadmapStage = { title: string; note: string };
+
+export function CareerRoadmap({ stages }: { stages?: RoadmapStage[] } = {}) {
+  const list = stages && stages.length > 0 ? stages : CAREER_ROADMAP;
+  const cols = list.length >= 6 ? "lg:grid-cols-4" : "lg:grid-cols-4";
   return (
     <Section className="py-14 lg:py-20">
       <Container>
@@ -393,10 +397,10 @@ export function CareerRoadmap() {
           </p>
         </div>
 
-        <ol className="relative grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-          {CAREER_ROADMAP.map((r, i) => (
+        <ol className={cn("relative grid gap-3 md:grid-cols-2", cols)}>
+          {list.map((r, i) => (
             <li
-              key={r.title}
+              key={r.title + i}
               className="relative rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 transition-all"
             >
               <div className="flex items-center gap-3">
@@ -406,7 +410,7 @@ export function CareerRoadmap() {
                 <div className="font-display font-semibold text-[15px] tracking-tight">{r.title}</div>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{r.note}</p>
-              {i < CAREER_ROADMAP.length - 1 ? (
+              {i < list.length - 1 ? (
                 <ChevronRight
                   className="hidden lg:block absolute -right-2 top-1/2 -translate-y-1/2 size-4 text-primary/50"
                   aria-hidden
