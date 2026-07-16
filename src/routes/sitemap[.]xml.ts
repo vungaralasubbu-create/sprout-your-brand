@@ -29,6 +29,7 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/success-stories", changefreq: "weekly", priority: "0.6" },
   { path: "/faqs", changefreq: "monthly", priority: "0.5" },
   { path: "/blog", changefreq: "daily", priority: "0.9" },
+  { path: "/glossary", changefreq: "monthly", priority: "0.7" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/terms-and-conditions", changefreq: "yearly", priority: "0.3" },
   { path: "/revenue-share-terms", changefreq: "yearly", priority: "0.3" },
