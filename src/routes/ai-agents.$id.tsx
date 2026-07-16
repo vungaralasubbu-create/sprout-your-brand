@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, CheckCircle2, Pin, Star, Sparkles, BookOpen, Wrench, Globe, ShieldCheck } from "lucide-react";
-import { getAgent } from "@/lib/aios/agents";
+import { getAgent, type AgentDef } from "@/lib/aios/agents";
 import { getAgentMeta, useAgentInstall } from "@/lib/aios/marketplace";
 import { buildPageHead } from "@/lib/seo-head";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/ai-agents/$id")({
-  loader: ({ params }) => {
+  loader: ({ params }): { agent: AgentDef } => {
     const agent = getAgent(params.id);
     if (!agent) throw notFound();
     return { agent };
