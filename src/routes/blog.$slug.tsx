@@ -41,7 +41,26 @@ import { useBookmark } from "@/components/shared/blog-card";
 const SITE_URL = "https://glintr.com";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: async ({ params }) => ({ post: await getPostBySlug(params.slug) }),
+  loader: async ({ params }) => {
+    const post = await getPostBySlug(params.slug);
+    if (!post) throw notFound();
+    const [related, course] = await Promise.all([
+      listRelatedPosts(post, 6),
+      post.related_course_slug && post.related_course_category_slug
+        ? getCourseBySlug(post.related_course_category_slug, post.related_course_slug)
+        : Promise.resolve(null),
+    ]);
+    const relatedCourse = course
+      ? {
+          slug: course.slug,
+          category_slug: course.category.slug,
+          name: course.name,
+          category_name: course.category.name,
+          short_description: course.short_description,
+        }
+      : null;
+    return { post, related, relatedCourse };
+  },
   head: ({ params, loaderData }) => {
     const post = loaderData?.post ?? null;
     const canonical = `${SITE_URL}/blog/${params.slug}`;
@@ -160,18 +179,21 @@ function MetaBlock({
   );
 }
 
+
 function BlogDetailPage() {
   const { slug } = Route.useParams();
-  const [post, setPost] = React.useState<BlogPost | null>(null);
-  const [related, setRelated] = React.useState<BlogPost[]>([]);
-  const [relatedCourse, setRelatedCourse] = React.useState<{
-    slug: string;
-    category_slug: string;
-    name: string;
-    category_name: string;
-    short_description: string | null;
-  } | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const loaderData = Route.useLoaderData() as {
+    post: BlogPost;
+    related: BlogPost[];
+    relatedCourse: {
+      slug: string;
+      category_slug: string;
+      name: string;
+      category_name: string;
+      short_description: string | null;
+    } | null;
+  };
+  const { post, related, relatedCourse } = loaderData;
   const [progress, setProgress] = React.useState(0);
   const [copied, setCopied] = React.useState(false);
   const [subscribed, setSubscribed] = React.useState(false);
@@ -180,49 +202,16 @@ function BlogDetailPage() {
   const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
   const articleRef = React.useRef<HTMLDivElement | null>(null);
 
+  // Reset transient UI state on slug change so switching articles feels fresh.
   React.useEffect(() => {
-    let alive = true;
-    // Reset state immediately on slug change so we never render a stale post
-    // while the new one loads (fixes "clicking different blogs opens the same article").
-    setPost(null);
-    setRelated([]);
-    setRelatedCourse(null);
     setProgress(0);
     setActiveHeading(null);
-    setLoading(true);
-    (async () => {
-      const p = await getPostBySlug(slug);
-      if (!alive) return;
-      setPost(p);
-      if (p) {
-        const [rel, course] = await Promise.all([
-          listRelatedPosts(p, 6),
-          p.related_course_slug && p.related_course_category_slug
-            ? getCourseBySlug(p.related_course_category_slug, p.related_course_slug)
-            : Promise.resolve(null),
-        ]);
-        if (!alive) return;
-        setRelated(rel);
-        if (course) {
-          setRelatedCourse({
-            slug: course.slug,
-            category_slug: course.category.slug,
-            name: course.name,
-            category_name: course.category.name,
-            short_description: course.short_description,
-          });
-        }
-      }
-      setLoading(false);
-    })();
-    return () => {
-      alive = false;
-    };
+    setTocOpen(false);
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
   }, [slug]);
 
   // reading progress
   React.useEffect(() => {
-    if (!post) return;
     const onScroll = () => {
       const el = articleRef.current;
       if (!el) return;
@@ -234,10 +223,10 @@ function BlogDetailPage() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [post]);
+  }, [post.id]);
 
   const headings: Heading[] = React.useMemo(
-    () => (post ? extractHeadings(post.content_markdown) : []),
+    () => extractHeadings(post.content_markdown),
     [post],
   );
 
@@ -287,8 +276,9 @@ function BlogDetailPage() {
     }
   }
 
-  if (loading) return <ArticleSkeleton />;
-  if (!post) throw notFound();
+  // post is guaranteed by the loader (throws notFound on miss).
+
+
 
   const showToc = headings.length >= 2;
 
