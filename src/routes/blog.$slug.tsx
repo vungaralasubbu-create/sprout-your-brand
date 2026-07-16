@@ -265,8 +265,9 @@ function BlogDetailPage() {
     }
   }
 
-  if (loading) return <ArticleSkeleton />;
-  if (!post) throw notFound();
+  // post is guaranteed by the loader (throws notFound on miss).
+
+
 
   const showToc = headings.length >= 2;
 
