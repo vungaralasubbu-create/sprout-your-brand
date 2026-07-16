@@ -57,6 +57,9 @@ function FactoryPage() {
   const [images, setImages] = useState<Record<string, string>>({});
   const [savedId, setSavedId] = useState<string | null>(null);
   const [qa, setQa] = useState<any>(null);
+  const [checklistOpen, setChecklistOpen] = useState(false);
+  const [checks, setChecks] = useState<Record<string, boolean>>({});
+  const [reviewerName, setReviewerName] = useState("");
 
   const gen = useMutation({
     mutationFn: () =>
