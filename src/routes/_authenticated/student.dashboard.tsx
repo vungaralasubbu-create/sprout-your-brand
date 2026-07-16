@@ -50,7 +50,7 @@ function Page() {
             </Link>
           </Button>
         ) : (
-          <Button asChild size="lg" variant="outline"><Link to="/programs">Browse Programs</Link></Button>
+          <Button asChild size="lg" variant="outline"><Link to="/student/programs">Browse Programs</Link></Button>
         )}
       </div>
 
@@ -83,7 +83,7 @@ function Page() {
         <Card className="lg:col-span-2 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-display text-lg font-semibold">Your Courses</h2>
-            <Button asChild variant="ghost" size="sm"><Link to="/student/courses">View all</Link></Button>
+            <Button asChild variant="ghost" size="sm"><Link to="/student/programs">View all</Link></Button>
           </div>
           <div className="space-y-4">
             {(data?.enrollments ?? []).length === 0 && (
