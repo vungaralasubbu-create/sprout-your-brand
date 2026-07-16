@@ -97,7 +97,6 @@ function emptyDraft(): Draft {
   return {
     qa: {},
     logos: {},
-    favouriteDomains: [],
     programs: [],
     courses: [],
     heroImages: {},
