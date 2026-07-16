@@ -567,7 +567,13 @@ export function CertificationBadges() {
 // =====================================================================
 
 const SUCCESS_STATS = [
-  { icon: Users, value: 1000000, suffix: "+", label: "Paid Learners", format: "compact" as const },
+  {
+    icon: Users,
+    value: 1000000,
+    suffix: "+",
+    label: "Paid Learners",
+    format: (n: number) => (n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n.toLocaleString()),
+  },
   { icon: Building2, value: 5000, suffix: "+", label: "Hiring Partners" },
   { icon: GraduationCap, value: 120, suffix: "+", label: "Programs" },
   { icon: Trophy, value: 95, suffix: "%", label: "Completion Rate" },
