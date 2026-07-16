@@ -32,6 +32,7 @@ import {
 import { SiteHeader } from "@/components/shared/site-header";
 import { SiteFooter } from "@/components/shared/site-footer";
 import { Section, Container } from "@/components/shared/section";
+import { ProgramDiscoveryFooter } from "@/components/shared/program-discovery-footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
