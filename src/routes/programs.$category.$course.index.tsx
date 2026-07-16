@@ -65,6 +65,7 @@ import {
   AIToolsUsage,
   ProgramPersonalization,
 } from "@/components/course/premium-sections";
+import { getCourseContentPack } from "@/lib/course-content-pack";
 import { CertificateShowcase } from "@/components/course/certificate-showcase";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
@@ -262,6 +263,8 @@ function CoursePage() {
       partner_code: ref ?? null,
     });
 
+  // ---- Category-specific content pack (hiring partners, tools, roadmap, etc.) ----
+  const contentPack = getCourseContentPack(c.category.slug, c.slug);
   // ---- Derive dynamic content with graceful fallbacks ----
   const highlights = buildHighlights(c);
   const learningExperience = getExperienceCards(sectionMap.get("learning_experience")?.content);
@@ -477,10 +480,10 @@ function CoursePage() {
       <ProgramPersonalization />
 
       {/* ============ HIRING PARTNERS ============ */}
-      <HiringPartners />
+      <HiringPartners partners={contentPack.hiringPartners} />
 
       {/* ============ TOOLS YOU'LL MASTER ============ */}
-      <ToolsMaster />
+      <ToolsMaster tools={contentPack.tools} />
 
       {/* ============ 8-STAGE JOURNEY ============ */}
       <StudentLearningJourney />
@@ -792,11 +795,14 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
+      {/* ============ PORTFOLIO PROJECTS ============ */}
+      <PortfolioProjects projects={contentPack.portfolio} />
+
       {/* ============ CAREER ROADMAP ============ */}
-      <CareerRoadmap />
+      <CareerRoadmap stages={contentPack.careerRoadmap} />
 
       {/* ============ SALARY GROWTH ============ */}
-      <SalaryGrowth />
+      <SalaryGrowth stages={contentPack.salaryStages} />
 
       {/* ============ CAREER SERVICES ============ */}
       <CareerServices />
@@ -804,8 +810,8 @@ function CoursePage() {
       {/* ============ CERTIFICATION BADGES ============ */}
       <CertificationBadges />
 
-      {/* ============ AI IN YOUR WORKFLOW ============ */}
-      <AIToolsUsage />
+      {/* ============ PRODUCTIVITY / AI IN YOUR WORKFLOW ============ */}
+      <AIToolsUsage items={contentPack.aiToolsUsage} />
 
       {/* ============ PRICING ============ */}
       <CoursePricingPlans

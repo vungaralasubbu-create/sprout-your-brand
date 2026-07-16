@@ -70,7 +70,8 @@ const HIRING_PARTNERS: Array<{ name: string; letter?: string }> = [
   { name: "Meta" },
 ];
 
-export function HiringPartners() {
+export function HiringPartners({ partners }: { partners?: string[] } = {}) {
+  const list = partners && partners.length > 0 ? partners : HIRING_PARTNERS.map((p) => p.name);
   return (
     <Section className="py-14 lg:py-20 border-y bg-surface-1/40">
       <Container>
@@ -82,19 +83,18 @@ export function HiringPartners() {
             Companies our learners have joined.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            From global technology leaders to India's largest IT services firms — our graduates go on to build careers
-            across a broad hiring ecosystem.
+            From global technology leaders to India's largest firms — our graduates go on to build careers across a broad hiring ecosystem.
           </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3">
-          {HIRING_PARTNERS.map((p) => (
+          {list.map((name) => (
             <div
-              key={p.name}
+              key={name}
               className="group flex items-center justify-center rounded-xl border border-border/60 bg-white px-3 py-4 shadow-sm hover:border-primary/40 hover:shadow-md transition-all"
             >
-              <span className="font-display font-semibold text-sm lg:text-[15px] tracking-tight text-foreground/85 group-hover:text-primary transition-colors">
-                {p.name}
+              <span className="font-display font-semibold text-sm lg:text-[15px] tracking-tight text-foreground/85 group-hover:text-primary transition-colors text-center">
+                {name}
               </span>
             </div>
           ))}
@@ -130,7 +130,23 @@ const TOOL_CARDS: Array<{ name: string; icon: React.ComponentType<{ className?: 
   { name: "Notion", icon: BookOpenCheck, tone: "from-[oklch(0.4_0.02_260)] to-[oklch(0.55_0.02_260)]" },
 ];
 
-export function ToolsMaster() {
+const TOOL_TONES = [
+  "from-[oklch(0.75_0.18_240)] to-[oklch(0.6_0.16_210)]",
+  "from-[oklch(0.7_0.16_160)] to-[oklch(0.55_0.14_200)]",
+  "from-[oklch(0.72_0.15_30)] to-[oklch(0.6_0.16_20)]",
+  "from-[oklch(0.72_0.17_260)] to-[oklch(0.58_0.16_220)]",
+  "from-[oklch(0.7_0.13_280)] to-[oklch(0.58_0.14_240)]",
+  "from-[oklch(0.68_0.16_150)] to-[oklch(0.5_0.14_170)]",
+  "from-[oklch(0.7_0.16_80)] to-[oklch(0.55_0.15_60)]",
+  "from-[oklch(0.68_0.17_320)] to-[oklch(0.55_0.16_280)]",
+];
+
+type ToolItem = { name: string; icon: React.ComponentType<{ className?: string }> };
+
+export function ToolsMaster({ tools }: { tools?: ToolItem[] } = {}) {
+  const list: ToolItem[] =
+    tools && tools.length > 0 ? tools : TOOL_CARDS.map((t) => ({ name: t.name, icon: t.icon }));
+
   return (
     <Section className="py-14 lg:py-20">
       <Container>
@@ -140,12 +156,12 @@ export function ToolsMaster() {
             Tools You'll Master
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Hands-on with the exact stack today's teams ship with — from AI copilots to production infrastructure.
+            Hands-on with the exact stack today's teams ship with — every tool below is used in real projects.
           </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
-          {TOOL_CARDS.map((t) => {
+          {list.map((t, i) => {
             const Icon = t.icon;
             return (
               <div
@@ -155,7 +171,7 @@ export function ToolsMaster() {
                 <span
                   className={cn(
                     "inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm",
-                    t.tone,
+                    TOOL_TONES[i % TOOL_TONES.length],
                   )}
                 >
                   <Icon className="size-5" />
@@ -292,7 +308,16 @@ function projectGradient(i: number) {
   return palette[i % palette.length];
 }
 
-export function PortfolioProjects() {
+type PortfolioItem = { name: string; blurb: string; tag: string };
+
+export function PortfolioProjects({ projects }: { projects?: PortfolioItem[] } = {}) {
+  const list = projects && projects.length > 0 ? projects : PORTFOLIO;
+  return (
+    <PortfolioProjectsInner list={list} />
+  );
+}
+
+function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
   return (
     <Section className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
       <div
@@ -305,7 +330,7 @@ export function PortfolioProjects() {
             Portfolio Projects
           </span>
           <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-white text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05]">
-            Build 20+ projects worth showing.
+            Build projects worth showing.
           </h2>
           <p className="mt-4 text-white/70 max-w-xl">
             A curated portfolio — not filler exercises. Each project mirrors a real problem employers and clients pay to solve.
@@ -313,7 +338,7 @@ export function PortfolioProjects() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
-          {PORTFOLIO.map((p, i) => (
+          {list.map((p, i) => (
             <div
               key={p.name}
               className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 lg:p-5 hover:border-[oklch(0.85_0.15_200)]/40 hover:bg-white/[0.06] transition-all"
@@ -354,7 +379,11 @@ const CAREER_ROADMAP = [
   { title: "Architect", note: "Shape platform strategy & scale." },
 ];
 
-export function CareerRoadmap() {
+type RoadmapStage = { title: string; note: string };
+
+export function CareerRoadmap({ stages }: { stages?: RoadmapStage[] } = {}) {
+  const list = stages && stages.length > 0 ? stages : CAREER_ROADMAP;
+  const cols = list.length >= 6 ? "lg:grid-cols-4" : "lg:grid-cols-4";
   return (
     <Section className="py-14 lg:py-20">
       <Container>
@@ -368,10 +397,10 @@ export function CareerRoadmap() {
           </p>
         </div>
 
-        <ol className="relative grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-          {CAREER_ROADMAP.map((r, i) => (
+        <ol className={cn("relative grid gap-3 md:grid-cols-2", cols)}>
+          {list.map((r, i) => (
             <li
-              key={r.title}
+              key={r.title + i}
               className="relative rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 transition-all"
             >
               <div className="flex items-center gap-3">
@@ -381,7 +410,7 @@ export function CareerRoadmap() {
                 <div className="font-display font-semibold text-[15px] tracking-tight">{r.title}</div>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{r.note}</p>
-              {i < CAREER_ROADMAP.length - 1 ? (
+              {i < list.length - 1 ? (
                 <ChevronRight
                   className="hidden lg:block absolute -right-2 top-1/2 -translate-y-1/2 size-4 text-primary/50"
                   aria-hidden
@@ -407,8 +436,11 @@ const SALARY_STAGES = [
   { stage: "Leadership", range: "₹50L+", low: 50, high: 80, note: "Architect / Head-of roles & beyond." },
 ];
 
-export function SalaryGrowth() {
-  const max = 80;
+type SalaryStage = { stage: string; range: string; low: number; high: number; note: string };
+
+export function SalaryGrowth({ stages }: { stages?: SalaryStage[] } = {}) {
+  const list = stages && stages.length > 0 ? stages : SALARY_STAGES;
+  const max = Math.max(...list.map((s) => s.high), 40);
   return (
     <Section className="py-14 lg:py-20 bg-surface-1/50 border-y">
       <Container>
@@ -423,7 +455,7 @@ export function SalaryGrowth() {
         </div>
 
         <div className="space-y-3">
-          {SALARY_STAGES.map((s, i) => {
+          {list.map((s, i) => {
             const widthPct = Math.max(12, Math.round(((s.high - s.low) / max) * 100) + 12);
             const startPct = Math.round((s.low / max) * 100);
             return (
@@ -638,22 +670,25 @@ const AI_TOOLS_USAGE: Array<{ name: string; use: string; icon: React.ComponentTy
   { name: "Power BI AI", use: "Auto-insights and narrative summaries for dashboards.", icon: BarChart3 },
 ];
 
-export function AIToolsUsage() {
+type AIToolItem = { name: string; use: string; icon: React.ComponentType<{ className?: string }> };
+
+export function AIToolsUsage({ items, title, description }: { items?: AIToolItem[]; title?: string; description?: string } = {}) {
+  const list = items && items.length > 0 ? items : AI_TOOLS_USAGE;
   return (
     <Section className="py-14 lg:py-20">
       <Container>
         <div className="max-w-2xl mb-10">
-          <span className="text-caption font-mono uppercase tracking-widest text-primary">AI in Your Workflow</span>
+          <span className="text-caption font-mono uppercase tracking-widest text-primary">Productivity in Your Workflow</span>
           <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-            How students use AI every week.
+            {title ?? "How students use these tools every week."}
           </h2>
           <p className="mt-4 text-muted-foreground">
-            You'll learn not just the tools — but where they fit in your daily learning, projects and career prep.
+            {description ?? "You'll learn not just the tools — but where they fit in your daily learning, projects and career prep."}
           </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {AI_TOOLS_USAGE.map((t) => {
+          {list.map((t) => {
             const Icon = t.icon;
             return (
               <div
