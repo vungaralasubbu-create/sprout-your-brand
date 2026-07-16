@@ -24,7 +24,7 @@ export const Route = createFileRoute("/ai-agents/$id")({
 });
 
 function AgentProfile() {
-  const { agent } = Route.useLoaderData();
+  const { agent } = Route.useLoaderData() as { agent: AgentDef };
   const meta = getAgentMeta(agent.id);
   const { state, toggleEnabled, togglePinned, toggleFavorite, setDefault } = useAgentInstall();
   const Icon = agent.icon;
