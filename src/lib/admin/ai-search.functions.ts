@@ -26,7 +26,7 @@ type Flags = Record<keyof typeof AI_SIGNALS, boolean>;
 function analyzeItem(it: any) {
   const md = String(it.body_markdown ?? "");
   const flags = {} as Flags;
-  for (const [k, re] of Object.entries(AI_SIGNALS)) flags[k] = re.test(md);
+  for (const [k, re] of Object.entries(AI_SIGNALS)) (flags as any)[k] = re.test(md);
 
   const headingCount = (md.match(/^#{2,3}\s.+$/gm) ?? []).length;
   const bulletCount = (md.match(/^[-*]\s.+$/gm) ?? []).length;
