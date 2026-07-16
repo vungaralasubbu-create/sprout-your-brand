@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { listMyPrograms } from "@/lib/student/lms.functions";
-import { listCourses, listCategories, formatPrice } from "@/lib/programs";
+import { listCourses, listCategories, formatPrice, getPricingSettings, resolvePricingDisplay } from "@/lib/programs";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { BookOpen, Search, GraduationCap, Award, Clock, Layers, Sparkles, Eye, CheckCircle2, Signal, IndianRupee } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { ProgramPriceDisplay } from "@/components/student/programs/program-price-display";
+
 
 export const Route = createFileRoute("/_authenticated/student/programs/")({ component: Page });
 
