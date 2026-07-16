@@ -254,25 +254,103 @@ export function formatPrice(amount: number | null | undefined, currency = "INR")
  * returns fake values. Callers hide the pricing block when `null`.
  */
 export type PricingDisplay =
-  | { mode: "starting-from"; label: string; value: string; note?: string | null }
+  | {
+      mode: "starting-from";
+      label: string;
+      value: string;
+      amount: number;
+      original?: string | null;
+      savings?: number | null;
+      savingsLabel?: string | null;
+      emiFrom?: string | null;
+      scholarship?: boolean;
+      note?: string | null;
+    }
   | { mode: "scholarship"; label: string; value: null; note?: string | null }
   | { mode: "contact-advisor"; label: string; value: null; note?: string | null }
   | { mode: "custom"; label: string; value: null; note?: string | null }
   | { mode: "free-intro"; label: string; value: null; note?: string | null };
 
-export function resolvePricingDisplay(course: {
-  base_price: number | null;
-  offer_price: number | null;
-  currency: string | null;
-  scholarship_available: boolean;
-  pricing_notes: string | null;
-}): PricingDisplay | null {
-  const price = course.offer_price ?? course.base_price;
+export interface PricingSettings {
+  currency: string;
+  emiMonths: number;
+  emiMinMonthly: number;
+  scholarshipEnabled: boolean;
+  scholarshipPercent: number;
+  showSavings: boolean;
+}
+
+const DEFAULT_PRICING_SETTINGS: PricingSettings = {
+  currency: "INR",
+  emiMonths: 12,
+  emiMinMonthly: 999,
+  scholarshipEnabled: true,
+  scholarshipPercent: 15,
+  showSavings: true,
+};
+
+let _pricingSettingsCache: { at: number; value: PricingSettings } | null = null;
+
+/** Reads pricing.* keys from platform_settings — 60s cache. */
+export async function getPricingSettings(): Promise<PricingSettings> {
+  const now = Date.now();
+  if (_pricingSettingsCache && now - _pricingSettingsCache.at < 60_000) return _pricingSettingsCache.value;
+  try {
+    const { data } = await supabase
+      .from("platform_settings")
+      .select("key,value")
+      .like("key", "pricing.%");
+    const map = new Map<string, unknown>();
+    for (const row of data ?? []) map.set(row.key, row.value as unknown);
+    const parse = <T,>(k: string, fallback: T): T => {
+      const v = map.get(k);
+      if (v === undefined || v === null) return fallback;
+      return v as T;
+    };
+    const value: PricingSettings = {
+      currency: parse("pricing.default_currency", DEFAULT_PRICING_SETTINGS.currency),
+      emiMonths: parse("pricing.emi_months", DEFAULT_PRICING_SETTINGS.emiMonths),
+      emiMinMonthly: parse("pricing.emi_min_monthly", DEFAULT_PRICING_SETTINGS.emiMinMonthly),
+      scholarshipEnabled: parse("pricing.scholarship_enabled", DEFAULT_PRICING_SETTINGS.scholarshipEnabled),
+      scholarshipPercent: parse("pricing.scholarship_percent", DEFAULT_PRICING_SETTINGS.scholarshipPercent),
+      showSavings: parse("pricing.show_savings", DEFAULT_PRICING_SETTINGS.showSavings),
+    };
+    _pricingSettingsCache = { at: now, value };
+    return value;
+  } catch {
+    return DEFAULT_PRICING_SETTINGS;
+  }
+}
+
+export function resolvePricingDisplay(
+  course: {
+    base_price: number | null;
+    offer_price: number | null;
+    currency: string | null;
+    scholarship_available: boolean;
+    pricing_notes: string | null;
+  },
+  settings?: PricingSettings,
+): PricingDisplay | null {
+  const s = settings ?? DEFAULT_PRICING_SETTINGS;
+  const cur = course.currency ?? s.currency ?? "INR";
+  const offer = course.offer_price;
+  const base = course.base_price;
+  const price = offer ?? base;
   if (typeof price === "number" && price > 0) {
+    const hasDiscount = typeof offer === "number" && typeof base === "number" && offer > 0 && base > offer;
+    const savings = hasDiscount ? (base as number) - (offer as number) : null;
+    const emiMonthly = Math.max(s.emiMinMonthly, Math.round(price / Math.max(1, s.emiMonths) / 100) * 100 - 1);
     return {
       mode: "starting-from",
       label: "Starting from",
-      value: formatPrice(price, course.currency ?? "INR"),
+      value: formatPrice(price, cur),
+      amount: price,
+      original: hasDiscount ? formatPrice(base as number, cur) : null,
+      savings,
+      savingsLabel: savings ? `Save ${formatPrice(savings, cur)}` : null,
+      emiFrom: `EMI from ${formatPrice(emiMonthly, cur)}/mo`,
+      scholarship: !!(s.scholarshipEnabled && course.scholarship_available),
       note: course.pricing_notes,
     };
   }
@@ -291,7 +369,7 @@ export function resolvePricingDisplay(course: {
       return { mode: "contact-advisor", label: "Contact Advisor", value: null, note: course.pricing_notes };
     }
   }
-  // Pricing not published — return null so cards hide the section.
   return null;
 }
+
 
