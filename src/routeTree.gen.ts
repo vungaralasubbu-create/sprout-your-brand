@@ -46,10 +46,12 @@ import { Route as R70RevenueModelRouteImport } from './routes/70-revenue-model'
 import { Route as R50SupportedModelRouteImport } from './routes/50-supported-model'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolsIndexRouteImport } from './routes/tools.index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
+import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as SuccessStoriesStorySlugRouteImport } from './routes/success-stories.$storySlug'
 import { Route as StudentSupportRequestsRouteImport } from './routes/student-support.requests'
 import { Route as RefCodeRouteImport } from './routes/ref.$code'
@@ -379,6 +381,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsIndexRoute = ToolsIndexRouteImport.update({
+  id: '/tools/',
+  path: '/tools/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
   id: '/programs/',
   path: '/programs/',
@@ -397,6 +404,11 @@ const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
 const VerifyCertificateCodeRoute = VerifyCertificateCodeRouteImport.update({
   id: '/verify-certificate/$code',
   path: '/verify-certificate/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSlugRoute = ToolsSlugRouteImport.update({
+  id: '/tools/$slug',
+  path: '/tools/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SuccessStoriesStorySlugRoute = SuccessStoriesStorySlugRouteImport.update({
@@ -1299,10 +1311,12 @@ export interface FileRoutesByFullPath {
   '/ref/$code': typeof RefCodeRoute
   '/student-support/requests': typeof StudentSupportRequestsRouteWithChildren
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
+  '/tools/$slug': typeof ToolsSlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/tools/': typeof ToolsIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
@@ -1483,10 +1497,12 @@ export interface FileRoutesByTo {
   '/ref/$code': typeof RefCodeRoute
   '/student-support/requests': typeof StudentSupportRequestsRouteWithChildren
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
+  '/tools/$slug': typeof ToolsSlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/programs': typeof ProgramsIndexRoute
+  '/tools': typeof ToolsIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
@@ -1670,10 +1686,12 @@ export interface FileRoutesById {
   '/ref/$code': typeof RefCodeRoute
   '/student-support/requests': typeof StudentSupportRequestsRouteWithChildren
   '/success-stories/$storySlug': typeof SuccessStoriesStorySlugRoute
+  '/tools/$slug': typeof ToolsSlugRoute
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/tools/': typeof ToolsIndexRoute
   '/_authenticated/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/_authenticated/admin/account': typeof AuthenticatedAdminAccountRoute
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
@@ -1858,10 +1876,12 @@ export interface FileRouteTypes {
     | '/ref/$code'
     | '/student-support/requests'
     | '/success-stories/$storySlug'
+    | '/tools/$slug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/programs/'
+    | '/tools/'
     | '/admin/access-restricted'
     | '/admin/account'
     | '/admin/activity'
@@ -2042,10 +2062,12 @@ export interface FileRouteTypes {
     | '/ref/$code'
     | '/student-support/requests'
     | '/success-stories/$storySlug'
+    | '/tools/$slug'
     | '/verify-certificate/$code'
     | '/campus-ambassador'
     | '/launch-your-brand'
     | '/programs'
+    | '/tools'
     | '/admin/access-restricted'
     | '/admin/account'
     | '/admin/activity'
@@ -2228,10 +2250,12 @@ export interface FileRouteTypes {
     | '/ref/$code'
     | '/student-support/requests'
     | '/success-stories/$storySlug'
+    | '/tools/$slug'
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/programs/'
+    | '/tools/'
     | '/_authenticated/admin/access-restricted'
     | '/_authenticated/admin/account'
     | '/_authenticated/admin/activity'
@@ -2401,10 +2425,12 @@ export interface RootRouteChildren {
   PartnerApplyRoute: typeof PartnerApplyRoute
   PartnerSignupRoute: typeof PartnerSignupRoute
   RefCodeRoute: typeof RefCodeRoute
+  ToolsSlugRoute: typeof ToolsSlugRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
+  ToolsIndexRoute: typeof ToolsIndexRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
@@ -2671,6 +2697,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/': {
+      id: '/tools/'
+      path: '/tools'
+      fullPath: '/tools/'
+      preLoaderRoute: typeof ToolsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/programs/': {
       id: '/programs/'
       path: '/programs'
@@ -2697,6 +2730,13 @@ declare module '@tanstack/react-router' {
       path: '/verify-certificate/$code'
       fullPath: '/verify-certificate/$code'
       preLoaderRoute: typeof VerifyCertificateCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/$slug': {
+      id: '/tools/$slug'
+      path: '/tools/$slug'
+      fullPath: '/tools/$slug'
+      preLoaderRoute: typeof ToolsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/success-stories/$storySlug': {
@@ -4363,10 +4403,12 @@ const rootRouteChildren: RootRouteChildren = {
   PartnerApplyRoute: PartnerApplyRoute,
   PartnerSignupRoute: PartnerSignupRoute,
   RefCodeRoute: RefCodeRoute,
+  ToolsSlugRoute: ToolsSlugRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
+  ToolsIndexRoute: ToolsIndexRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,

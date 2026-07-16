@@ -14,7 +14,7 @@ import {
 } from "@/data/tools";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/tools")({
+export const Route = createFileRoute("/tools/")({
   head: () => {
     const all = listTools();
     return buildPageHead({
