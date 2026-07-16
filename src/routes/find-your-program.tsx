@@ -231,7 +231,7 @@ export const Route = createFileRoute("/find-your-program")({
       description:
         "A short guided quiz that recommends the right Glintr program, learning path, or partner opportunity based on your goals.",
       path: "/find-your-program",
-      robots: "noindex, follow",
+      noindex: true,
     }),
   component: FindYourProgramPage,
 });
