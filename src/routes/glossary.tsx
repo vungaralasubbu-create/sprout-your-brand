@@ -102,13 +102,31 @@ function GlossaryIndex() {
               Glossary
             </div>
             <h1 className="font-display font-semibold text-balance tracking-[-0.02em] text-[clamp(2.2rem,4.6vw,3.6rem)] leading-[1.02]">
-              A clear vocabulary for modern learning.
+              Technology &amp; Career Glossary
             </h1>
             <p className="mt-5 text-body-lg text-muted-foreground max-w-2xl">
-              Every concept we teach — from AI and Prompt Engineering to VLSI,
-              Embedded Systems, SEO and Medical Coding. Each entry links to
-              related programs, articles and learning paths.
+              Understand important concepts across AI, Programming, Engineering,
+              Business and Healthcare. Every entry links to related programs,
+              guides and articles.
             </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <a
+                href="#browse"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                Browse Terms
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById("glossary-search");
+                  el?.focus();
+                }}
+                className="inline-flex items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+              >
+                Search Glossary
+              </button>
+            </div>
 
             <div className="mt-8 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
