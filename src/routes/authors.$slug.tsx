@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/shared/site-header";
 import { SiteFooter } from "@/components/shared/site-footer";
 import { Section, Container } from "@/components/shared/section";
 import { Badge } from "@/components/ui/badge";
-import { getAuthor, listAuthors } from "@/data/authors";
+import { getAuthor, listAuthors, type Author } from "@/data/authors";
 
 const SITE_URL = "https://glintr.com";
 
@@ -66,7 +66,7 @@ export const Route = createFileRoute("/authors/$slug")({
 });
 
 function AuthorProfilePage() {
-  const a = Route.useLoaderData() as ReturnType<typeof getAuthor> & object;
+  const a = Route.useLoaderData() as Author;
   return (
     <>
       <SiteHeader />
