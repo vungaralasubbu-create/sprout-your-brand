@@ -55,7 +55,7 @@ function DashboardPage() {
                     {CONTENT_TYPE_LABEL[r.type as string]} · {formatDistanceToNow(new Date(r.updated_at))} ago
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-[10px] uppercase">{r.status}</Badge>
+                <Badge variant="outline" className="text-[10px] uppercase">{r.status}</Badge>
               </Link>
             ))}
             {!isLoading && !(data?.recent ?? []).length && (

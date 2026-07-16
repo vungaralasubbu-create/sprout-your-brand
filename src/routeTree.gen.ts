@@ -175,6 +175,7 @@ import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
+import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
 import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_authenticated/admin.assigned-leads'
@@ -204,6 +205,7 @@ import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './route
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
 import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
+import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
@@ -1147,6 +1149,12 @@ const AuthenticatedAdminDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminContentRoute =
+  AuthenticatedAdminContentRouteImport.update({
+    id: '/content',
+    path: '/content',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCategoriesRoute =
   AuthenticatedAdminCategoriesRouteImport.update({
     id: '/categories',
@@ -1320,6 +1328,12 @@ const AuthenticatedAdminCoursesIndexRoute =
     id: '/courses/',
     path: '/courses/',
     getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminContentIndexRoute =
+  AuthenticatedAdminContentIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminContentRoute,
   } as any)
 const ProgramsCategoryCourseApplyRoute =
   ProgramsCategoryCourseApplyRouteImport.update({
@@ -1601,6 +1615,7 @@ export interface FileRoutesByFullPath {
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -1714,6 +1729,7 @@ export interface FileRoutesByFullPath {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
@@ -1937,6 +1953,7 @@ export interface FileRoutesByTo {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
@@ -2054,6 +2071,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -2167,6 +2185,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
@@ -2284,6 +2303,7 @@ export interface FileRouteTypes {
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
     | '/admin/categories'
+    | '/admin/content'
     | '/admin/dashboard'
     | '/admin/employment-settings'
     | '/admin/lead-management'
@@ -2397,6 +2417,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/admin/content/'
     | '/admin/courses/'
     | '/admin/employees/'
     | '/admin/partners/'
@@ -2620,6 +2641,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/admin/content'
     | '/admin/courses'
     | '/admin/employees'
     | '/admin/partners'
@@ -2736,6 +2758,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/assigned-leads'
     | '/_authenticated/admin/attribution-reviews'
     | '/_authenticated/admin/categories'
+    | '/_authenticated/admin/content'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
     | '/_authenticated/admin/lead-management'
@@ -2849,6 +2872,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/employees/'
     | '/_authenticated/admin/partners/'
@@ -4098,6 +4122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/content': {
+      id: '/_authenticated/admin/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AuthenticatedAdminContentRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/categories': {
       id: '/_authenticated/admin/categories'
       path: '/categories'
@@ -4300,6 +4331,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/courses/'
       preLoaderRoute: typeof AuthenticatedAdminCoursesIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/content/': {
+      id: '/_authenticated/admin/content/'
+      path: '/'
+      fullPath: '/admin/content/'
+      preLoaderRoute: typeof AuthenticatedAdminContentIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminContentRoute
     }
     '/programs/$category/$course/apply': {
       id: '/programs/$category/$course/apply'
@@ -4528,6 +4566,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminContentRouteChildren {
+  AuthenticatedAdminContentIndexRoute: typeof AuthenticatedAdminContentIndexRoute
+}
+
+const AuthenticatedAdminContentRouteChildren: AuthenticatedAdminContentRouteChildren =
+  {
+    AuthenticatedAdminContentIndexRoute: AuthenticatedAdminContentIndexRoute,
+  }
+
+const AuthenticatedAdminContentRouteWithChildren =
+  AuthenticatedAdminContentRoute._addFileChildren(
+    AuthenticatedAdminContentRouteChildren,
+  )
+
 interface AuthenticatedAdminRiskReviewRouteChildren {
   AuthenticatedAdminRiskReviewIdRoute: typeof AuthenticatedAdminRiskReviewIdRoute
 }
@@ -4565,6 +4617,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAssignedLeadsRoute: typeof AuthenticatedAdminAssignedLeadsRoute
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
+  AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
@@ -4613,6 +4666,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAttributionReviewsRoute:
     AuthenticatedAdminAttributionReviewsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
+  AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
