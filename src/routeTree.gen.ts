@@ -34,6 +34,9 @@ import { Route as KnowledgeGraphRouteImport } from './routes/knowledge-graph'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator'
 import { Route as GlossaryRouteImport } from './routes/glossary'
+import { Route as ForStudentsRouteImport } from './routes/for-students'
+import { Route as ForProfessionalsRouteImport } from './routes/for-professionals'
+import { Route as ForCompaniesRouteImport } from './routes/for-companies'
 import { Route as FindYourProgramRouteImport } from './routes/find-your-program'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EditorialRouteImport } from './routes/editorial'
@@ -518,6 +521,21 @@ const IncomeCalculatorRoute = IncomeCalculatorRouteImport.update({
 const GlossaryRoute = GlossaryRouteImport.update({
   id: '/glossary',
   path: '/glossary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForStudentsRoute = ForStudentsRouteImport.update({
+  id: '/for-students',
+  path: '/for-students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForProfessionalsRoute = ForProfessionalsRouteImport.update({
+  id: '/for-professionals',
+  path: '/for-professionals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForCompaniesRoute = ForCompaniesRouteImport.update({
+  id: '/for-companies',
+  path: '/for-companies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FindYourProgramRoute = FindYourProgramRouteImport.update({
@@ -2597,6 +2615,9 @@ export interface FileRoutesByFullPath {
   '/editorial': typeof EditorialRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/find-your-program': typeof FindYourProgramRoute
+  '/for-companies': typeof ForCompaniesRoute
+  '/for-professionals': typeof ForProfessionalsRoute
+  '/for-students': typeof ForStudentsRoute
   '/glossary': typeof GlossaryRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
@@ -2983,6 +3004,9 @@ export interface FileRoutesByTo {
   '/editorial': typeof EditorialRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/find-your-program': typeof FindYourProgramRoute
+  '/for-companies': typeof ForCompaniesRoute
+  '/for-professionals': typeof ForProfessionalsRoute
+  '/for-students': typeof ForStudentsRoute
   '/glossary': typeof GlossaryRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
@@ -3357,6 +3381,9 @@ export interface FileRoutesById {
   '/editorial': typeof EditorialRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/find-your-program': typeof FindYourProgramRoute
+  '/for-companies': typeof ForCompaniesRoute
+  '/for-professionals': typeof ForProfessionalsRoute
+  '/for-students': typeof ForStudentsRoute
   '/glossary': typeof GlossaryRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
@@ -3745,6 +3772,9 @@ export interface FileRouteTypes {
     | '/editorial'
     | '/faqs'
     | '/find-your-program'
+    | '/for-companies'
+    | '/for-professionals'
+    | '/for-students'
     | '/glossary'
     | '/income-calculator'
     | '/join'
@@ -4131,6 +4161,9 @@ export interface FileRouteTypes {
     | '/editorial'
     | '/faqs'
     | '/find-your-program'
+    | '/for-companies'
+    | '/for-professionals'
+    | '/for-students'
     | '/glossary'
     | '/income-calculator'
     | '/join'
@@ -4504,6 +4537,9 @@ export interface FileRouteTypes {
     | '/editorial'
     | '/faqs'
     | '/find-your-program'
+    | '/for-companies'
+    | '/for-professionals'
+    | '/for-students'
     | '/glossary'
     | '/income-calculator'
     | '/join'
@@ -4892,6 +4928,9 @@ export interface RootRouteChildren {
   EditorialRoute: typeof EditorialRoute
   FaqsRoute: typeof FaqsRouteWithChildren
   FindYourProgramRoute: typeof FindYourProgramRoute
+  ForCompaniesRoute: typeof ForCompaniesRoute
+  ForProfessionalsRoute: typeof ForProfessionalsRoute
+  ForStudentsRoute: typeof ForStudentsRoute
   GlossaryRoute: typeof GlossaryRouteWithChildren
   IncomeCalculatorRoute: typeof IncomeCalculatorRoute
   JoinRoute: typeof JoinRoute
@@ -5122,6 +5161,27 @@ declare module '@tanstack/react-router' {
       path: '/glossary'
       fullPath: '/glossary'
       preLoaderRoute: typeof GlossaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-students': {
+      id: '/for-students'
+      path: '/for-students'
+      fullPath: '/for-students'
+      preLoaderRoute: typeof ForStudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-professionals': {
+      id: '/for-professionals'
+      path: '/for-professionals'
+      fullPath: '/for-professionals'
+      preLoaderRoute: typeof ForProfessionalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/for-companies': {
+      id: '/for-companies'
+      path: '/for-companies'
+      fullPath: '/for-companies'
+      preLoaderRoute: typeof ForCompaniesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/find-your-program': {
@@ -8849,6 +8909,9 @@ const rootRouteChildren: RootRouteChildren = {
   EditorialRoute: EditorialRoute,
   FaqsRoute: FaqsRouteWithChildren,
   FindYourProgramRoute: FindYourProgramRoute,
+  ForCompaniesRoute: ForCompaniesRoute,
+  ForProfessionalsRoute: ForProfessionalsRoute,
+  ForStudentsRoute: ForStudentsRoute,
   GlossaryRoute: GlossaryRouteWithChildren,
   IncomeCalculatorRoute: IncomeCalculatorRoute,
   JoinRoute: JoinRoute,
