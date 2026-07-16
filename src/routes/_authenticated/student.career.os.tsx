@@ -99,6 +99,12 @@ function CareerOsPage() {
   });
   const [tab, setTab] = useState<Tab>("dashboard");
 
+  useEffect(() => {
+    const handler = (e: Event) => setTab((e as CustomEvent).detail as Tab);
+    window.addEventListener("career-os-tab", handler);
+    return () => window.removeEventListener("career-os-tab", handler);
+  }, []);
+
   return (
     <div className="p-4 lg:p-8 max-w-[1400px] mx-auto space-y-6">
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
