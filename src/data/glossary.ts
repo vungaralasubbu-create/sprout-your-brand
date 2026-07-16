@@ -203,14 +203,14 @@ export const GLOSSARY: GlossaryEntry[] = [
   {
     slug: "medical-coding",
     term: "Medical Coding",
+    category: "Business",
     short:
       "Medical Coding translates clinical documentation into standardised codes used for billing, insurance and healthcare records.",
     overview:
       "Medical Coding converts diagnoses, procedures and services into standardised alphanumeric codes (ICD, CPT, HCPCS). Coders sit at the intersection of clinical documentation, insurance and healthcare data.",
     relatedPrograms: ["medical-coding"],
     relatedBlogs: ["what-is-medical-coding"],
-    category: "Business",
-  } as GlossaryEntry,
+  },
   {
     slug: "finance",
     term: "Finance",
