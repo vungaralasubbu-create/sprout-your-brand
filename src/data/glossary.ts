@@ -203,7 +203,6 @@ export const GLOSSARY: GlossaryEntry[] = [
   {
     slug: "medical-coding",
     term: "Medical Coding",
-    category: "Business",
     short:
       "Medical Coding translates clinical documentation into standardised codes used for billing, insurance and healthcare records.",
     overview:
