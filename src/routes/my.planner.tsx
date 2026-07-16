@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { Plus, Trash2, Wand2 } from "lucide-react";
 import { Panel } from "@/components/workspace/panel";
 import { usePlanner, useProfile, type PlannerBlock } from "@/lib/workspace/storage";
