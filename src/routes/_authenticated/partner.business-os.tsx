@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AcademyGate } from "@/components/partner/academy-gate";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
@@ -18,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/partner/business-os")({
-  component: BusinessOS,
+  component: () => (<AcademyGate><BusinessOS /></AcademyGate>),
   head: () => ({ meta: [{ title: "AI Business OS — Glintr" }, { name: "robots", content: "noindex" }] }),
 });
 

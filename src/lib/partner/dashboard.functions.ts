@@ -27,6 +27,7 @@ export const getPartnerContext = createServerFn({ method: "GET" })
 
     // Notification unread count
     let unreadNotifications = 0;
+    let hasBrandProfile = false;
     if (partner) {
       const { count } = await supabase
         .from("partner_notifications")
@@ -34,10 +35,18 @@ export const getPartnerContext = createServerFn({ method: "GET" })
         .eq("partner_id", partner.id)
         .eq("is_read", false);
       unreadNotifications = count ?? 0;
+
+      const { data: brand } = await supabase
+        .from("partner_brand_profiles")
+        .select("id")
+        .eq("partner_id", partner.id)
+        .maybeSingle();
+      hasBrandProfile = !!brand;
     }
 
-    return { partner: partner ?? null, unreadNotifications, employeeProfile };
+    return { partner: partner ?? null, unreadNotifications, employeeProfile, hasBrandProfile };
   });
+
 
 /** KPI counts + today's follow-ups for /partner/dashboard. */
 export const getDashboardStats = createServerFn({ method: "GET" })

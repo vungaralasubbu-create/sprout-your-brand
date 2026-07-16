@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AcademyGate } from "@/components/partner/academy-gate";
+
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -60,7 +62,7 @@ export const Route = createFileRoute("/_authenticated/partner/academy-builder")(
         "Launch a complete education academy with AI. Brand, website, programs, courses, blogs, marketing — all reviewed before publishing.",
       noindex: true,
     }),
-  component: AcademyBuilder,
+  component: GatedAcademyBuilder,
 });
 
 /* ------------------------------------------------------------------ */
@@ -1506,5 +1508,13 @@ function JsonBlock({ title, data }: { title: string; data: unknown }) {
         {JSON.stringify(data, null, 2)}
       </pre>
     </div>
+  );
+}
+
+function GatedAcademyBuilder() {
+  return (
+    <AcademyGate>
+      <AcademyBuilder />
+    </AcademyGate>
   );
 }

@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AcademyGate } from "@/components/partner/academy-gate";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useRef, useState } from "react";
@@ -39,7 +41,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/partner/brand-profile")({
-  component: BrandProfilePage,
+  component: () => (<AcademyGate><BrandProfilePage /></AcademyGate>),
 });
 
 const STATUS_TONE: Record<string, string> = {
