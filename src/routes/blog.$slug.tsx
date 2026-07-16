@@ -199,49 +199,27 @@ function BlogDetailPage() {
   const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
   const articleRef = React.useRef<HTMLDivElement | null>(null);
 
+function BlogDetailPage() {
+  const { slug } = Route.useParams();
+  const { post, related, relatedCourse } = Route.useLoaderData();
+  const [progress, setProgress] = React.useState(0);
+  const [copied, setCopied] = React.useState(false);
+  const [subscribed, setSubscribed] = React.useState(false);
+  const [copyFailed, setCopyFailed] = React.useState(false);
+  const [tocOpen, setTocOpen] = React.useState(false);
+  const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
+  const articleRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Reset transient UI state on slug change so switching articles feels fresh.
   React.useEffect(() => {
-    let alive = true;
-    // Reset state immediately on slug change so we never render a stale post
-    // while the new one loads (fixes "clicking different blogs opens the same article").
-    setPost(null);
-    setRelated([]);
-    setRelatedCourse(null);
     setProgress(0);
     setActiveHeading(null);
-    setLoading(true);
-    (async () => {
-      const p = await getPostBySlug(slug);
-      if (!alive) return;
-      setPost(p);
-      if (p) {
-        const [rel, course] = await Promise.all([
-          listRelatedPosts(p, 6),
-          p.related_course_slug && p.related_course_category_slug
-            ? getCourseBySlug(p.related_course_category_slug, p.related_course_slug)
-            : Promise.resolve(null),
-        ]);
-        if (!alive) return;
-        setRelated(rel);
-        if (course) {
-          setRelatedCourse({
-            slug: course.slug,
-            category_slug: course.category.slug,
-            name: course.name,
-            category_name: course.category.name,
-            short_description: course.short_description,
-          });
-        }
-      }
-      setLoading(false);
-    })();
-    return () => {
-      alive = false;
-    };
+    setTocOpen(false);
+    if (typeof window !== "undefined") window.scrollTo(0, 0);
   }, [slug]);
 
   // reading progress
   React.useEffect(() => {
-    if (!post) return;
     const onScroll = () => {
       const el = articleRef.current;
       if (!el) return;
@@ -253,10 +231,10 @@ function BlogDetailPage() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [post]);
+  }, [post.id]);
 
   const headings: Heading[] = React.useMemo(
-    () => (post ? extractHeadings(post.content_markdown) : []),
+    () => extractHeadings(post.content_markdown),
     [post],
   );
 
