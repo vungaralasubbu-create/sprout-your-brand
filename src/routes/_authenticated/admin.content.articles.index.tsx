@@ -62,7 +62,7 @@ function ArticlesPage() {
     },
     onSuccess: (r: any) => {
       qc.invalidateQueries({ queryKey: ["content-list"] });
-      navigate({ to: "/admin/content/articles/$id" as any, params: { id: r.id } });
+      navigate({ to: "/admin/content/articles/$id" as any, params: { id: r.id } as any });
     },
     onError: (e: any) => toast.error(e.message ?? "Failed"),
   });

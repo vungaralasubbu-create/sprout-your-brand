@@ -61,6 +61,14 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    key: "content",
+    label: "Content Studio",
+    collapsible: true,
+    items: [
+      { to: "/admin/content", label: "Content Dashboard", icon: BookOpen },
+    ],
+  },
+  {
     key: "programs",
     label: "Programs",
     collapsible: true,
