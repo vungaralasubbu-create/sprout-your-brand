@@ -202,7 +202,7 @@ function GlossaryDetail() {
                     Related Programs
                   </div>
                   <ul className="space-y-2">
-                    {entry.relatedPrograms.map((slug) => (
+                    {entry.relatedPrograms.map((slug: string) => (
                       <li key={slug}>
                         <a
                           href={`/programs`}
@@ -222,7 +222,7 @@ function GlossaryDetail() {
                     Related Articles
                   </div>
                   <ul className="space-y-2">
-                    {entry.relatedBlogs.map((slug) => (
+                    {entry.relatedBlogs.map((slug: string) => (
                       <li key={slug}>
                         <Link
                           to="/blog/$slug"
