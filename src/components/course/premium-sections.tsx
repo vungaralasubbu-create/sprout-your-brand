@@ -608,9 +608,8 @@ export function SuccessCounters() {
                 </span>
                 <div className="font-display font-semibold tracking-tight text-[clamp(1.6rem,3.2vw,2.5rem)] leading-none bg-gradient-to-r from-primary to-[oklch(0.6_0.16_200)] bg-clip-text text-transparent">
                   <AnimatedCounter
-                    value={s.value}
+                    value={"scale" in s && s.scale ? s.value * s.scale : s.value}
                     suffix={s.suffix}
-                    decimals={"decimals" in s ? s.decimals : 0}
                     format={"format" in s ? s.format : undefined}
                   />
                 </div>
