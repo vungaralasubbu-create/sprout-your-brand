@@ -67,6 +67,15 @@ export const Route = createFileRoute("/sitemap.xml")({
             priority: "0.5",
           });
         }
+        for (const p of listLearningPaths()) {
+          entries.push({ path: `/learning-paths/${p.slug}`, changefreq: "monthly", priority: "0.6" });
+        }
+        for (const c of listComparisons()) {
+          entries.push({ path: `/compare/${c.slug}`, changefreq: "monthly", priority: "0.6" });
+        }
+        for (const cm of listCareerMaps()) {
+          entries.push({ path: `/career-maps/${cm.slug}`, changefreq: "monthly", priority: "0.5" });
+        }
 
         if (url && key) {
           try {
