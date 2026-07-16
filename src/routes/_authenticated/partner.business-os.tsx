@@ -7,7 +7,8 @@ import { useState } from "react";
 import {
   Sparkles, Brain, Target, Megaphone, Search, BookOpen, Globe, FileText,
   Wallet, GraduationCap, LifeBuoy, Bell, Zap, TrendingUp, AlertTriangle,
-  CheckCircle2, ArrowRight, Loader2, RefreshCw,
+  CheckCircle2, ArrowRight, Loader2, RefreshCw, Home, ClipboardList,
+  FolderOpen, Settings2, Building2,
 } from "lucide-react";
 import {
   getBusinessBriefing, getSalesCoach, getMarketingIdeas, getPartnerKpis,
@@ -18,6 +19,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import {
+  BrandSwitcher, BusinessHome, TaskCenter, DocumentCenter, SettingsCenter, MultiBrandCenter,
+} from "@/components/business-os/hub-extras";
 
 export const Route = createFileRoute("/_authenticated/partner/business-os")({
   component: () => (<AcademyGate><BusinessOS /></AcademyGate>),
@@ -25,20 +29,26 @@ export const Route = createFileRoute("/_authenticated/partner/business-os")({
 });
 
 const MODULES = [
+  { id: "home", label: "Business Home", icon: Home },
   { id: "advisor", label: "AI Advisor", icon: Brain },
-  { id: "sales", label: "Sales Coach", icon: Target },
+  { id: "tasks", label: "Tasks", icon: ClipboardList },
+  { id: "sales", label: "Sales", icon: Target },
   { id: "marketing", label: "Marketing", icon: Megaphone },
   { id: "seo", label: "SEO", icon: Search },
-  { id: "course", label: "Course Optimizer", icon: BookOpen },
+  { id: "course", label: "Courses", icon: BookOpen },
   { id: "website", label: "Website", icon: Globe },
   { id: "content", label: "Content", icon: FileText },
   { id: "finance", label: "Finance", icon: Wallet },
-  { id: "students", label: "Student Success", icon: GraduationCap },
+  { id: "students", label: "Students", icon: GraduationCap },
   { id: "support", label: "Support", icon: LifeBuoy },
   { id: "insights", label: "Insights", icon: Sparkles },
   { id: "notifications", label: "Inbox", icon: Bell },
   { id: "automation", label: "Automation", icon: Zap },
+  { id: "documents", label: "Documents", icon: FolderOpen },
+  { id: "brands", label: "Brands", icon: Building2 },
+  { id: "settings", label: "Settings", icon: Settings2 },
 ];
+
 
 function BusinessOS() {
   const [tab, setTab] = useState("advisor");
