@@ -12,9 +12,17 @@ import {
   AlertTriangle,
   Eye,
   X,
+  Clock,
+  XCircle,
+  Wallet,
+  Timer,
+  Inbox,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 import {
   getPartnerIdentity,
+  getMyPaymentVerificationOverview,
   getLeadPaymentContext,
   submitPaymentProof,
   listMyPaymentSubmissions,
@@ -51,15 +59,21 @@ export const Route = createFileRoute("/_authenticated/partner/payment-verificati
 
 const STATUS_FILTERS = [
   { value: "all", label: "All" },
-  { value: "pending_verification", label: "Pending Verification" },
+  { value: "pending_verification", label: "Pending" },
   { value: "under_review", label: "Under Review" },
   { value: "verified", label: "Verified" },
   { value: "rejected", label: "Rejected" },
-  { value: "needs_more_info", label: "Needs More Info" },
+  { value: "needs_more_info", label: "Needs Info" },
 ] as const;
 
 const ACCEPTED_MIME = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
 const MAX_SIZE = 10 * 1024 * 1024;
+
+const REVENUE_MODEL_LABELS: Record<string, string> = {
+  own_leads: "Sales Partner · 70% Revenue Share",
+  supported_sales: "Assisted Sales Partner · 50% Revenue Share",
+  dual_model: "Dual Model · Sales + Assisted",
+};
 
 const formatINR = (n: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n || 0);
@@ -81,20 +95,96 @@ function statusTone(status: string) {
   }
 }
 
+function amountBucket(v: string, amount: number) {
+  switch (v) {
+    case "lt5k": return amount < 5000;
+    case "5k_25k": return amount >= 5000 && amount < 25000;
+    case "25k_1l": return amount >= 25000 && amount < 100000;
+    case "gte1l": return amount >= 100000;
+    default: return true;
+  }
+}
+
+function inDateRange(v: string, iso: string) {
+  if (v === "all") return true;
+  const t = new Date(iso).getTime();
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+  if (v === "today") {
+    const start = new Date(); start.setHours(0, 0, 0, 0);
+    return t >= start.getTime();
+  }
+  if (v === "7d") return t >= now - 7 * day;
+  if (v === "30d") return t >= now - 30 * day;
+  if (v === "90d") return t >= now - 90 * day;
+  return true;
+}
+
 function PaymentVerificationPage() {
   const [status, setStatus] = useState<(typeof STATUS_FILTERS)[number]["value"]>("all");
   const [openSubmit, setOpenSubmit] = useState(false);
   const [detailId, setDetailId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [dateRange, setDateRange] = useState("all");
+  const [amountRange, setAmountRange] = useState("all");
+  const [program, setProgram] = useState("all");
 
   const listFn = useServerFn(listMyPaymentSubmissions);
+  const overviewFn = useServerFn(getMyPaymentVerificationOverview);
+
+  // Fetch all rows once for counts + client-side filtering; keeps summary + tab counts in sync.
   const { data: submissions = [], isLoading } = useQuery({
-    queryKey: ["partner", "payment-submissions", status],
-    queryFn: () => listFn({ data: { status } }),
+    queryKey: ["partner", "payment-submissions", "all"],
+    queryFn: () => listFn({ data: { status: "all" } }),
   });
 
+  const { data: overview } = useQuery({
+    queryKey: ["partner", "payment-verification", "overview"],
+    queryFn: () => overviewFn(),
+  });
+
+  // Tab counts derived from the full set so they stay accurate.
+  const tabCounts = useMemo(() => {
+    const c: Record<string, number> = { all: submissions.length, pending_verification: 0, under_review: 0, verified: 0, rejected: 0, needs_more_info: 0 };
+    for (const r of submissions as any[]) {
+      const s = r.is_duplicate_flag && r.status === "duplicate_flagged" ? "pending_verification" : r.status;
+      if (s === "pending_verification" || s === "under_review" || s === "verified" || s === "rejected" || s === "needs_more_info") {
+        c[s] = (c[s] ?? 0) + 1;
+      }
+    }
+    // Pending tab visually includes duplicate_flagged (mirrors server filter).
+    return c;
+  }, [submissions]);
+
+  const programOptions = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of submissions as any[]) if (r.course_name) set.add(r.course_name);
+    return Array.from(set).sort();
+  }, [submissions]);
+
+  const filteredRows = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return (submissions as any[]).filter((r) => {
+      const effectiveStatus = r.is_duplicate_flag && r.status === "duplicate_flagged" ? "pending_verification" : r.status;
+      if (status !== "all" && effectiveStatus !== status) return false;
+      if (program !== "all" && r.course_name !== program) return false;
+      if (!amountBucket(amountRange, Number(r.amount) || 0)) return false;
+      if (!inDateRange(dateRange, r.submitted_at)) return false;
+      if (q) {
+        const hay = `${r.lead_name} ${r.lead_mobile} ${r.utr_reference} ${r.course_name} ${r.plan_label}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [submissions, status, search, dateRange, amountRange, program]);
+
+  const p = overview?.partner ?? null;
+  const revenueModelLabel = p?.sales_model_selection ? (REVENUE_MODEL_LABELS[p.sales_model_selection] ?? "Sales Partner") : "Sales Partner";
+  const metrics = overview?.metrics;
+
   return (
-    <div className="space-y-8">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-8 p-6 lg:p-8 pb-24">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Payment Verification</h1>
           <p className="text-sm text-muted-foreground max-w-2xl">
@@ -106,7 +196,39 @@ function PaymentVerificationPage() {
         </Button>
       </header>
 
-      {/* Filters */}
+      {/* Partner profile card */}
+      {p && (
+        <section className="rounded-2xl border bg-gradient-to-br from-primary/[0.05] via-white to-cyan-50/40 p-5">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <ProfileField label="Partner Name" value={p.display_name} />
+            <ProfileField label="Partner ID" value={<span className="font-mono">{p.partner_code ?? "—"}</span>} />
+            <ProfileField label="Revenue Model" value={revenueModelLabel} />
+            <ProfileField label="Total Earnings" value={formatINR(overview?.totalEarnings ?? 0)} />
+            <ProfileField
+              label="Join Date"
+              value={p.joined_at ? new Date(p.joined_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* Summary cards */}
+      <section className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+        <SummaryCard icon={Inbox} tone="text-slate-700" bg="bg-slate-500/10" label="Total Submitted" value={metrics?.total ?? 0} />
+        <SummaryCard icon={CheckCircle2} tone="text-emerald-700" bg="bg-emerald-500/10" label="Verified" value={metrics?.verified ?? 0} />
+        <SummaryCard icon={Clock} tone="text-blue-700" bg="bg-blue-500/10" label="Pending" value={metrics?.pending ?? 0} />
+        <SummaryCard icon={XCircle} tone="text-red-700" bg="bg-red-500/10" label="Rejected" value={metrics?.rejected ?? 0} />
+        <SummaryCard icon={Wallet} tone="text-emerald-700" bg="bg-emerald-500/10" label="Verified Amount" value={formatINR(metrics?.verifiedAmount ?? 0)} />
+        <SummaryCard
+          icon={Timer}
+          tone="text-cyan-700"
+          bg="bg-cyan-500/10"
+          label="Avg Review Time"
+          value={metrics?.avgReviewHours == null ? "—" : `${metrics.avgReviewHours} h`}
+        />
+      </section>
+
+      {/* Status tabs with counts */}
       <div className="flex flex-wrap gap-2">
         {STATUS_FILTERS.map((f) => (
           <button
@@ -114,22 +236,74 @@ function PaymentVerificationPage() {
             type="button"
             onClick={() => setStatus(f.value)}
             className={cn(
-              "rounded-full border px-3 py-1 text-xs font-medium transition",
+              "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition",
               status === f.value
                 ? "bg-primary text-primary-foreground border-primary"
                 : "bg-card hover:bg-muted",
             )}
           >
-            {f.label}
+            <span>{f.label}</span>
+            <span
+              className={cn(
+                "rounded-full px-1.5 py-0.5 text-[10px] font-mono tabular-nums",
+                status === f.value ? "bg-white/20" : "bg-muted text-muted-foreground",
+              )}
+            >
+              {tabCounts[f.value] ?? 0}
+            </span>
           </button>
         ))}
       </div>
+
+      {/* Filter bar */}
+      {submissions.length > 0 && (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 rounded-2xl border bg-card p-4">
+          <div className="relative sm:col-span-2 lg:col-span-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search lead, UTR, program"
+              className="pl-9"
+            />
+          </div>
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger><SelectValue placeholder="Date" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All time</SelectItem>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+              <SelectItem value="90d">Last 90 days</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={amountRange} onValueChange={setAmountRange}>
+            <SelectTrigger><SelectValue placeholder="Amount" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Any amount</SelectItem>
+              <SelectItem value="lt5k">Below ₹5,000</SelectItem>
+              <SelectItem value="5k_25k">₹5,000 – ₹25,000</SelectItem>
+              <SelectItem value="25k_1l">₹25,000 – ₹1,00,000</SelectItem>
+              <SelectItem value="gte1l">₹1,00,000 and above</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={program} onValueChange={setProgram}>
+            <SelectTrigger><SelectValue placeholder="Program" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All programs</SelectItem>
+              {programOptions.map((c) => (
+                <SelectItem key={c} value={c}>{c}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       <section className="rounded-2xl border bg-card">
         <div className="border-b px-5 py-4">
           <h2 className="font-semibold">My Submissions</h2>
           <p className="text-xs text-muted-foreground">
-            {submissions.length} record{submissions.length === 1 ? "" : "s"}
+            {filteredRows.length} of {submissions.length} record{submissions.length === 1 ? "" : "s"}
           </p>
         </div>
         {isLoading ? (
@@ -137,8 +311,10 @@ function PaymentVerificationPage() {
             <Loader2 className="size-5 animate-spin" />
           </div>
         ) : submissions.length === 0 ? (
+          <EmptyState onSubmit={() => setOpenSubmit(true)} />
+        ) : filteredRows.length === 0 ? (
           <div className="p-10 text-center text-sm text-muted-foreground">
-            No submissions yet. Click <span className="font-medium">Submit Payment Proof</span> to record a payment.
+            No submissions match your filters.
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -156,7 +332,7 @@ function PaymentVerificationPage() {
                 </tr>
               </thead>
               <tbody>
-                {submissions.map((r: any) => (
+                {filteredRows.map((r: any) => (
                   <tr key={r.id} className="border-b last:border-0">
                     <td className="px-5 py-3">
                       <div className="font-medium">{r.lead_name}</div>
@@ -200,9 +376,122 @@ function PaymentVerificationPage() {
 
       <SubmitPaymentDialog open={openSubmit} onClose={() => setOpenSubmit(false)} onViewList={() => setStatus("pending_verification")} />
       <DetailDialog id={detailId} onClose={() => setDetailId(null)} />
+
+      {/* Floating AI Mentor — hidden while dialogs are open so it never overlaps modal content */}
+      {!openSubmit && !detailId && <AiMentorFab />}
     </div>
   );
 }
+
+function ProfileField({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div>
+      <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{label}</div>
+      <div className="mt-0.5 text-sm font-semibold truncate">{value}</div>
+    </div>
+  );
+}
+
+function SummaryCard({
+  icon: Icon,
+  label,
+  value,
+  tone,
+  bg,
+}: {
+  icon: typeof Inbox;
+  label: string;
+  value: React.ReactNode;
+  tone: string;
+  bg: string;
+}) {
+  return (
+    <div className="rounded-2xl border bg-card p-4">
+      <div className="flex items-center justify-between">
+        <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{label}</div>
+        <span className={cn("inline-flex size-7 items-center justify-center rounded-lg", bg, tone)}>
+          <Icon className="size-4" />
+        </span>
+      </div>
+      <div className="mt-2 text-xl font-semibold tracking-tight tabular-nums">{value}</div>
+    </div>
+  );
+}
+
+function EmptyState({ onSubmit }: { onSubmit: () => void }) {
+  const steps = [
+    { label: "Upload", desc: "Attach payment proof", icon: Upload },
+    { label: "Review", desc: "Admin checks details", icon: Search },
+    { label: "Verify", desc: "Payment confirmed", icon: ShieldCheck },
+    { label: "Commission Released", desc: "Earnings credited", icon: Wallet },
+  ];
+  return (
+    <div className="px-6 py-12">
+      <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+        {/* Illustration */}
+        <div className="relative mb-6">
+          <div className="absolute inset-0 -z-0 rounded-full bg-gradient-to-br from-primary/20 via-cyan-200/40 to-emerald-200/30 blur-2xl" />
+          <div className="relative grid size-24 place-items-center rounded-3xl border bg-white shadow-sm">
+            <ShieldCheck className="size-10 text-primary" />
+            <span className="absolute -right-2 -top-2 grid size-8 place-items-center rounded-full bg-emerald-500 text-white shadow">
+              <Upload className="size-4" />
+            </span>
+          </div>
+        </div>
+        <h3 className="text-lg font-semibold">No payment proofs submitted yet</h3>
+        <p className="mt-1 max-w-md text-sm text-muted-foreground">
+          Once a lead has paid, submit the payment proof here. Admin verifies it and your commission is released.
+        </p>
+        <Button className="mt-5" onClick={onSubmit}>
+          <Upload className="size-4" /> Submit Payment Proof
+        </Button>
+
+        <div className="mt-10 w-full">
+          <div className="grid gap-3 sm:grid-cols-4">
+            {steps.map((s, i) => (
+              <div key={s.label} className="relative rounded-2xl border bg-card p-4 text-left">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <s.icon className="size-4" />
+                  </span>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                    Step {i + 1}
+                  </div>
+                </div>
+                <div className="mt-2 text-sm font-semibold">{s.label}</div>
+                <div className="text-xs text-muted-foreground">{s.desc}</div>
+                {i < steps.length - 1 && (
+                  <ArrowRight className="hidden sm:block absolute right-[-14px] top-1/2 size-4 -translate-y-1/2 text-muted-foreground/40" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AiMentorFab() {
+  return (
+    <Link
+      to="/partner/ai-assistant"
+      className={cn(
+        "fixed z-30 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground shadow-lg transition-all",
+        "bottom-4 right-4 lg:bottom-6 lg:right-6",
+        "px-3 py-2 hover:pl-3 hover:pr-4",
+      )}
+      aria-label="Open AI Mentor"
+      title="AI Mentor"
+    >
+      <span className="grid size-7 place-items-center rounded-full bg-white/15">
+        <Sparkles className="size-4" />
+      </span>
+      <span className="hidden sm:inline text-xs font-semibold">AI Mentor</span>
+    </Link>
+  );
+}
+
 
 /* ---------------- Submit Dialog ---------------- */
 
