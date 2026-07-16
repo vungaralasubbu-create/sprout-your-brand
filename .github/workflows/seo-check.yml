@@ -1,0 +1,22 @@
+name: SEO check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "public/robots.txt"
+      - "src/routes/**"
+      - "scripts/seo-check.mjs"
+      - ".github/workflows/seo-check.yml"
+
+jobs:
+  seo-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Verify robots.txt, sitemap.xml, and noindex hygiene
+        run: node scripts/seo-check.mjs
