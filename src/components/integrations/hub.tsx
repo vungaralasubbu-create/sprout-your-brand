@@ -486,7 +486,7 @@ export function ApiCenter() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <Badge variant={k.mode === "live" ? "default" : "outline" as never} className="text-[10px] uppercase">{k.mode}</Badge>
+                  <Badge variant={k.mode === "live" ? "default" : "outline"} className="text-[10px] uppercase">{k.mode}</Badge>
                 </td>
                 <td className="px-4 py-3 text-xs text-muted-foreground">{k.scopes.join(", ")}</td>
                 <td className="px-4 py-3 text-xs text-muted-foreground">{new Date(k.createdAt).toLocaleDateString()}</td>
