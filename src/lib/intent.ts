@@ -114,7 +114,9 @@ export type GlintrEvent =
   | "sticky_cta_clicked"
   | "exit_intent_shown"
   | "exit_intent_action"
-  | "ai_help_opened";
+  | "ai_help_opened"
+  | "mentor_opened"
+  | "mentor_message_sent";
 
 export function track(event: GlintrEvent, meta?: Record<string, string | number | boolean>) {
   if (!isBrowser()) return;

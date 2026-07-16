@@ -15,7 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { RouteTracker } from "@/components/shared/route-tracker";
 import { StickyActionBar } from "@/components/shared/sticky-action-bar";
-import { FloatingAiHelp } from "@/components/shared/floating-ai-help";
+import { AiMentor } from "@/components/mentor/ai-mentor";
 import { ExitIntent } from "@/components/shared/exit-intent";
 
 function NotFoundComponent() {
@@ -189,7 +189,7 @@ function RootComponent() {
       <RouteTracker />
       <Outlet />
       <StickyActionBar />
-      <FloatingAiHelp />
+      <AiMentor />
       <ExitIntent />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
