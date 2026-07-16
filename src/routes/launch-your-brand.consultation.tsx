@@ -32,6 +32,7 @@ export const Route = createFileRoute("/launch-your-brand/consultation")({
         content:
           "Talk to Glintr's Brand Launch team. Share your goals and get a tailored plan for your white-label EdTech brand.",
       },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: ConsultationPage,
