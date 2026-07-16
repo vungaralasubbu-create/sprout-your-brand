@@ -297,13 +297,17 @@ function BlogDetailPage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
 
-      {/* Reading progress */}
-      <div className="sticky top-16 z-30 h-1 bg-transparent" aria-hidden>
-        <div
-          className="h-full bg-gradient-brand transition-[width] duration-100"
-          style={{ width: `${progress}%` }}
-        />
+      {/* Reading progress + milestones */}
+      <div className="sticky top-16 z-30 print:hidden" data-blog-noprint aria-hidden>
+        <div className="h-1 bg-transparent">
+          <div
+            className="h-full bg-gradient-brand transition-[width] duration-100"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <ReadingMilestones progress={progress} />
       </div>
+
 
       {/* HERO */}
       <Section tone="surface" padding="lg">
