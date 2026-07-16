@@ -182,6 +182,13 @@ function BlogDetailPage() {
 
   React.useEffect(() => {
     let alive = true;
+    // Reset state immediately on slug change so we never render a stale post
+    // while the new one loads (fixes "clicking different blogs opens the same article").
+    setPost(null);
+    setRelated([]);
+    setRelatedCourse(null);
+    setProgress(0);
+    setActiveHeading(null);
     setLoading(true);
     (async () => {
       const p = await getPostBySlug(slug);
