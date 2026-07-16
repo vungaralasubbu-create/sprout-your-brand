@@ -35,7 +35,7 @@ interface NavItem {
   exact?: boolean;
 }
 
-const NAV = [
+const NAV: NavItem[] = [
   { to: "/my", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/my/roadmaps", label: "Roadmaps", icon: RouteIcon },
   { to: "/my/bookmarks", label: "Bookmarks", icon: BookmarkIcon },
@@ -46,7 +46,7 @@ const NAV = [
   { to: "/my/discover", label: "Discover", icon: Sparkles },
   { to: "/my/search", label: "Search", icon: Search },
   { to: "/my/profile", label: "Profile", icon: UserCircle },
-] as const;
+];
 
 function WorkspaceLayout() {
   useEffect(() => {
