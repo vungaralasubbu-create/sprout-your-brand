@@ -118,9 +118,15 @@ export type GlintrEvent =
   | "mentor_opened"
   | "mentor_message_sent"
   | "journey_selected"
+  | "journey_reset"
   | "student_branch_selected"
+  | "student_type_selected"
   | "student_year_selected"
-  | "professional_intake_saved";
+  | "professional_intake_saved"
+  | "professional_goal_selected"
+  | "partner_model_selected"
+  | "academy_interest"
+  | "corporate_interest";
 
 export function track(event: GlintrEvent, meta?: Record<string, string | number | boolean>) {
   if (!isBrowser()) return;
