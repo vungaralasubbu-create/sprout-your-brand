@@ -60,7 +60,7 @@ export const Route = createFileRoute("/_authenticated/partner/academy-builder")(
         "Launch a complete education academy with AI. Brand, website, programs, courses, blogs, marketing — all reviewed before publishing.",
       noindex: true,
     }),
-  component: AcademyBuilder,
+  component: GatedAcademyBuilder,
 });
 
 /* ------------------------------------------------------------------ */
