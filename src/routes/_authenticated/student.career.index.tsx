@@ -129,13 +129,18 @@ function CareerContent({ data }: { data: Overview }) {
               Prepare your profile, practice interviews and organise your career journey in one place.
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Button asChild size="sm" className="bg-primary">
+              <Link to="/student/career/os">
+                <Sparkles className="size-4 mr-1.5" /> Career OS
+              </Link>
+            </Button>
             <Button asChild variant="outline" size="sm">
               <Link to="/student/career/resume">
                 <FileText className="size-4 mr-1.5" /> Resume Builder
               </Link>
             </Button>
-            <Button asChild size="sm">
+            <Button asChild variant="outline" size="sm">
               <Link to="/student/career/interview">
                 <MessageSquare className="size-4 mr-1.5" /> Interview Practice
               </Link>
