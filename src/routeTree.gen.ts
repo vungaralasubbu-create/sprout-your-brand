@@ -58,6 +58,7 @@ import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as MyIndexRouteImport } from './routes/my.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
+import { Route as EntitiesIndexRouteImport } from './routes/entities.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as WorkspaceVoiceRouteImport } from './routes/workspace.voice'
 import { Route as WorkspaceStudyRouteImport } from './routes/workspace.study'
@@ -97,6 +98,7 @@ import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-b
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
 import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
 import { Route as FaqsSlugRouteImport } from './routes/faqs.$slug'
+import { Route as EntitiesSlugRouteImport } from './routes/entities.$slug'
 import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
 import { Route as CareerMapsSlugRouteImport } from './routes/career-maps.$slug'
@@ -582,6 +584,11 @@ const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
   path: '/launch-your-brand/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EntitiesIndexRoute = EntitiesIndexRouteImport.update({
+  id: '/entities/',
+  path: '/entities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
   id: '/campus-ambassador/',
   path: '/campus-ambassador/',
@@ -777,6 +784,11 @@ const FaqsSlugRoute = FaqsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => FaqsRoute,
+} as any)
+const EntitiesSlugRoute = EntitiesSlugRouteImport.update({
+  id: '/entities/$slug',
+  path: '/entities/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CompareSlugRoute = CompareSlugRouteImport.update({
   id: '/$slug',
@@ -2241,6 +2253,7 @@ export interface FileRoutesByFullPath {
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
+  '/entities/$slug': typeof EntitiesSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
@@ -2280,6 +2293,7 @@ export interface FileRoutesByFullPath {
   '/workspace/study': typeof WorkspaceStudyRoute
   '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
+  '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
@@ -2565,6 +2579,7 @@ export interface FileRoutesByTo {
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
+  '/entities/$slug': typeof EntitiesSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
@@ -2603,6 +2618,7 @@ export interface FileRoutesByTo {
   '/workspace/search': typeof WorkspaceSearchRoute
   '/workspace/study': typeof WorkspaceStudyRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
+  '/entities': typeof EntitiesIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/learn': typeof LearnIndexRoute
   '/my': typeof MyIndexRoute
@@ -2889,6 +2905,7 @@ export interface FileRoutesById {
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
+  '/entities/$slug': typeof EntitiesSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
@@ -2928,6 +2945,7 @@ export interface FileRoutesById {
   '/workspace/study': typeof WorkspaceStudyRoute
   '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
+  '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
@@ -3220,6 +3238,7 @@ export interface FileRouteTypes {
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
     | '/compare/$slug'
+    | '/entities/$slug'
     | '/faqs/$slug'
     | '/glossary/$slug'
     | '/launch-your-brand/consultation'
@@ -3259,6 +3278,7 @@ export interface FileRouteTypes {
     | '/workspace/study'
     | '/workspace/voice'
     | '/campus-ambassador/'
+    | '/entities/'
     | '/launch-your-brand/'
     | '/learn/'
     | '/my/'
@@ -3544,6 +3564,7 @@ export interface FileRouteTypes {
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
     | '/compare/$slug'
+    | '/entities/$slug'
     | '/faqs/$slug'
     | '/glossary/$slug'
     | '/launch-your-brand/consultation'
@@ -3582,6 +3603,7 @@ export interface FileRouteTypes {
     | '/workspace/search'
     | '/workspace/study'
     | '/campus-ambassador'
+    | '/entities'
     | '/launch-your-brand'
     | '/learn'
     | '/my'
@@ -3867,6 +3889,7 @@ export interface FileRouteTypes {
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
     | '/compare/$slug'
+    | '/entities/$slug'
     | '/faqs/$slug'
     | '/glossary/$slug'
     | '/launch-your-brand/consultation'
@@ -3906,6 +3929,7 @@ export interface FileRouteTypes {
     | '/workspace/study'
     | '/workspace/voice'
     | '/campus-ambassador/'
+    | '/entities/'
     | '/launch-your-brand/'
     | '/learn/'
     | '/my/'
@@ -4188,6 +4212,7 @@ export interface RootRouteChildren {
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   WhiteLabelEdtechRoute: typeof WhiteLabelEdtechRoute
   WorkspaceRoute: typeof WorkspaceRouteWithChildren
+  EntitiesSlugRoute: typeof EntitiesSlugRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -4196,6 +4221,7 @@ export interface RootRouteChildren {
   ToolsSlugRoute: typeof ToolsSlugRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
+  EntitiesIndexRoute: typeof EntitiesIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ToolsIndexRoute: typeof ToolsIndexRoute
@@ -4557,6 +4583,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LaunchYourBrandIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/entities/': {
+      id: '/entities/'
+      path: '/entities'
+      fullPath: '/entities/'
+      preLoaderRoute: typeof EntitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/campus-ambassador/': {
       id: '/campus-ambassador/'
       path: '/campus-ambassador'
@@ -4829,6 +4862,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/faqs/$slug'
       preLoaderRoute: typeof FaqsSlugRouteImport
       parentRoute: typeof FaqsRoute
+    }
+    '/entities/$slug': {
+      id: '/entities/$slug'
+      path: '/entities/$slug'
+      fullPath: '/entities/$slug'
+      preLoaderRoute: typeof EntitiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/compare/$slug': {
       id: '/compare/$slug'
@@ -7583,6 +7623,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsAndConditionsRoute: TermsAndConditionsRoute,
   WhiteLabelEdtechRoute: WhiteLabelEdtechRoute,
   WorkspaceRoute: WorkspaceRouteWithChildren,
+  EntitiesSlugRoute: EntitiesSlugRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
@@ -7591,6 +7632,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsSlugRoute: ToolsSlugRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
+  EntitiesIndexRoute: EntitiesIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   ToolsIndexRoute: ToolsIndexRoute,

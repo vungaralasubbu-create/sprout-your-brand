@@ -57,6 +57,7 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/refund-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/cookie-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/topics", changefreq: "weekly", priority: "0.9" },
+  { path: "/entities", changefreq: "weekly", priority: "0.8" },
 ];
 
 function esc(s: string) {
@@ -78,6 +79,11 @@ export const Route = createFileRoute("/sitemap.xml")({
             path: `/glossary/${g.slug}`,
             changefreq: "monthly",
             priority: "0.5",
+          });
+          entries.push({
+            path: `/entities/${g.slug}`,
+            changefreq: "monthly",
+            priority: "0.6",
           });
         }
         for (const p of listLearningPaths()) {
