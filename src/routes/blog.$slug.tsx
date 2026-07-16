@@ -100,6 +100,9 @@ export const Route = createFileRoute("/blog/$slug")({
           datePublished: post.published_at ?? undefined,
           dateModified: post.editorial_updated_at ?? post.published_at ?? undefined,
           author: { "@type": "Person", name: post.author_display_name },
+          ...(post.reviewer_display_name
+            ? { reviewedBy: { "@type": "Person", name: post.reviewer_display_name } }
+            : {}),
           publisher: {
             "@type": "Organization",
             name: "Glintr",
@@ -109,6 +112,20 @@ export const Route = createFileRoute("/blog/$slug")({
           url: canonical,
         }),
       });
+      if (Array.isArray(post.faqs) && post.faqs.length > 0) {
+        scripts.push({
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: post.faqs.map((f) => ({
+              "@type": "Question",
+              name: f.question,
+              acceptedAnswer: { "@type": "Answer", text: f.answer },
+            })),
+          }),
+        });
+      }
     }
     return {
       meta,
