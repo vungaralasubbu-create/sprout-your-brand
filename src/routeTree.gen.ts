@@ -161,6 +161,7 @@ import { Route as AuthenticatedPartnerApplicationStatusRouteImport } from './rou
 import { Route as AuthenticatedPartnerAnnouncementsRouteImport } from './routes/_authenticated/partner.announcements'
 import { Route as AuthenticatedPartnerAnalyticsRouteImport } from './routes/_authenticated/partner.analytics'
 import { Route as AuthenticatedPartnerAiEmployeesRouteImport } from './routes/_authenticated/partner.ai-employees'
+import { Route as AuthenticatedPartnerAiCooRouteImport } from './routes/_authenticated/partner.ai-coo'
 import { Route as AuthenticatedPartnerAiAssistantRouteImport } from './routes/_authenticated/partner.ai-assistant'
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
@@ -1186,6 +1187,12 @@ const AuthenticatedPartnerAiEmployeesRoute =
   AuthenticatedPartnerAiEmployeesRouteImport.update({
     id: '/ai-employees',
     path: '/ai-employees',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerAiCooRoute =
+  AuthenticatedPartnerAiCooRouteImport.update({
+    id: '/ai-coo',
+    path: '/ai-coo',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerAiAssistantRoute =
@@ -2755,6 +2762,7 @@ export interface FileRoutesByFullPath {
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/partner/ai-assistant': typeof AuthenticatedPartnerAiAssistantRoute
+  '/partner/ai-coo': typeof AuthenticatedPartnerAiCooRoute
   '/partner/ai-employees': typeof AuthenticatedPartnerAiEmployeesRouteWithChildren
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
@@ -3127,6 +3135,7 @@ export interface FileRoutesByTo {
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/partner/ai-assistant': typeof AuthenticatedPartnerAiAssistantRoute
+  '/partner/ai-coo': typeof AuthenticatedPartnerAiCooRoute
   '/partner/ai-employees': typeof AuthenticatedPartnerAiEmployeesRouteWithChildren
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
@@ -3513,6 +3522,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
   '/_authenticated/partner/ai-assistant': typeof AuthenticatedPartnerAiAssistantRoute
+  '/_authenticated/partner/ai-coo': typeof AuthenticatedPartnerAiCooRoute
   '/_authenticated/partner/ai-employees': typeof AuthenticatedPartnerAiEmployeesRouteWithChildren
   '/_authenticated/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/_authenticated/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
@@ -3900,6 +3910,7 @@ export interface FileRouteTypes {
     | '/partner/account'
     | '/partner/add-leads'
     | '/partner/ai-assistant'
+    | '/partner/ai-coo'
     | '/partner/ai-employees'
     | '/partner/analytics'
     | '/partner/announcements'
@@ -4272,6 +4283,7 @@ export interface FileRouteTypes {
     | '/partner/account'
     | '/partner/add-leads'
     | '/partner/ai-assistant'
+    | '/partner/ai-coo'
     | '/partner/ai-employees'
     | '/partner/analytics'
     | '/partner/announcements'
@@ -4657,6 +4669,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/account'
     | '/_authenticated/partner/add-leads'
     | '/_authenticated/partner/ai-assistant'
+    | '/_authenticated/partner/ai-coo'
     | '/_authenticated/partner/ai-employees'
     | '/_authenticated/partner/analytics'
     | '/_authenticated/partner/announcements'
@@ -5997,6 +6010,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-employees'
       fullPath: '/partner/ai-employees'
       preLoaderRoute: typeof AuthenticatedPartnerAiEmployeesRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/ai-coo': {
+      id: '/_authenticated/partner/ai-coo'
+      path: '/ai-coo'
+      fullPath: '/partner/ai-coo'
+      preLoaderRoute: typeof AuthenticatedPartnerAiCooRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/ai-assistant': {
@@ -8304,6 +8324,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerAccountRoute: typeof AuthenticatedPartnerAccountRoute
   AuthenticatedPartnerAddLeadsRoute: typeof AuthenticatedPartnerAddLeadsRoute
   AuthenticatedPartnerAiAssistantRoute: typeof AuthenticatedPartnerAiAssistantRoute
+  AuthenticatedPartnerAiCooRoute: typeof AuthenticatedPartnerAiCooRoute
   AuthenticatedPartnerAiEmployeesRoute: typeof AuthenticatedPartnerAiEmployeesRouteWithChildren
   AuthenticatedPartnerAnalyticsRoute: typeof AuthenticatedPartnerAnalyticsRoute
   AuthenticatedPartnerAnnouncementsRoute: typeof AuthenticatedPartnerAnnouncementsRoute
@@ -8341,6 +8362,7 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerAccountRoute: AuthenticatedPartnerAccountRoute,
   AuthenticatedPartnerAddLeadsRoute: AuthenticatedPartnerAddLeadsRoute,
   AuthenticatedPartnerAiAssistantRoute: AuthenticatedPartnerAiAssistantRoute,
+  AuthenticatedPartnerAiCooRoute: AuthenticatedPartnerAiCooRoute,
   AuthenticatedPartnerAiEmployeesRoute:
     AuthenticatedPartnerAiEmployeesRouteWithChildren,
   AuthenticatedPartnerAnalyticsRoute: AuthenticatedPartnerAnalyticsRoute,

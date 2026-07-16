@@ -120,7 +120,7 @@ function Header({ briefing, onRefresh }: { briefing: CooBriefing; onRefresh: () 
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" onClick={onRefresh} className="bg-white/10 hover:bg-white/20 text-white border-0">
+          <Button variant="muted" size="sm" onClick={onRefresh} className="bg-white/10 hover:bg-white/20 text-white border-0">
             <RefreshCcw className="size-4 mr-2" /> Refresh briefing
           </Button>
           <Link to="/partner/academy/workspace">
@@ -161,7 +161,7 @@ function ScoreCard({ briefing }: { briefing: CooBriefing }) {
           </div>
         </div>
         <div className="flex-1">
-          <Badge className="mb-2" variant="secondary">{briefing.scoreLabel}</Badge>
+          <Badge className="mb-2" variant="muted">{briefing.scoreLabel}</Badge>
           <p className="text-sm text-slate-700 leading-relaxed">{briefing.scoreNarrative}</p>
         </div>
       </div>
@@ -297,7 +297,7 @@ function ActionCenter({ briefing, actions, setStatus }: { briefing: CooBriefing;
                   {st === "approved" ? (
                     <Badge className="bg-emerald-100 text-emerald-800 border-0"><ThumbsUp className="size-3 mr-1" /> Approved</Badge>
                   ) : st === "dismissed" ? (
-                    <Badge variant="secondary">Dismissed</Badge>
+                    <Badge variant="muted">Dismissed</Badge>
                   ) : (
                     <>
                       <Button size="sm" variant="ghost" onClick={() => setStatus(r.id, "dismissed")}>Skip</Button>
