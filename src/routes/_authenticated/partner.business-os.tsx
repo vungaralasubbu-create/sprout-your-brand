@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/partner/business-os")({
-  component: BusinessOS,
+  component: () => (<AcademyGate><BusinessOS /></AcademyGate>),
   head: () => ({ meta: [{ title: "AI Business OS — Glintr" }, { name: "robots", content: "noindex" }] }),
 });
 
