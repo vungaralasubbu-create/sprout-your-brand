@@ -467,25 +467,25 @@ function CoursePage() {
 
 
       {/* ============ WHY THIS PROGRAM ============ */}
-      {c.full_description || whyContent ? (
+      {showWhySection ? (
         <Section className="py-14 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-16">
               <div>
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                  Why This Program
+                  Why Learn {c.name}
                 </span>
                 <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
                   {whyContent?.headline ?? defaultWhyHeadline(c.name)}
                 </h2>
               </div>
               <div className="space-y-6">
-                <p className="text-body-lg text-muted-foreground">
-                  {whyContent?.body ?? c.full_description}
-                </p>
-                {whyContent?.points?.length ? (
+                {whyBody ? (
+                  <p className="text-body-lg text-muted-foreground">{whyBody}</p>
+                ) : null}
+                {whyPoints.length ? (
                   <ul className="grid sm:grid-cols-2 gap-3">
-                    {whyContent.points.map((p, i) => (
+                    {whyPoints.map((p, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 rounded-xl border border-border/60 bg-surface-1 p-4"
@@ -497,6 +497,7 @@ function CoursePage() {
                   </ul>
                 ) : null}
               </div>
+
             </div>
           </Container>
         </Section>
