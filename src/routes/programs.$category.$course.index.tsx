@@ -559,7 +559,7 @@ function CoursePage() {
                 >
                   <span className="inline-flex size-11 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-accent/15 text-primary">
                     {t.logo_url ? (
-                      <img src={t.logo_url} alt={t.name} className="size-8 object-contain" />
+                      <img src={t.logo_url} alt={t.name} width={32} height={32} loading="lazy" decoding="async" className="size-8 object-contain" />
                     ) : (
                       <Wrench className="size-5" />
                     )}
