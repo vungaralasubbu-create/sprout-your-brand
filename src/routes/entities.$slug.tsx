@@ -124,7 +124,7 @@ function EntityDetail() {
     { label: entry.term, hint: "You are here" },
     ...(entry.related ?? [])
       .slice(0, 3)
-      .map((s) => {
+      .map((s: string) => {
         const g = bySlug.get(s);
         return g
           ? { label: g.term, href: `/entities/${g.slug}`, hint: g.short }
