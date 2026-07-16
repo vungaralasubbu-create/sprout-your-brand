@@ -48,6 +48,95 @@ export const getPartnerIdentity = createServerFn({ method: "GET" })
     return { partner_id: partnerId ?? null };
   });
 
+/**
+ * One call for the Payment Verification page: partner card data + summary
+ * metrics (total submitted, verified, pending, rejected, verified amount,
+ * average review time in hours).
+ */
+export const getMyPaymentVerificationOverview = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data: partner } = await supabase
+      .from("partners")
+      .select(
+        "id, display_name, partner_code, sales_model_selection, default_revenue_share, created_at, onboarding_completed_at",
+      )
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (!partner) {
+      return {
+        partner: null,
+        totalEarnings: 0,
+        metrics: {
+          total: 0,
+          pending: 0,
+          verified: 0,
+          rejected: 0,
+          needsInfo: 0,
+          duplicate: 0,
+          verifiedAmount: 0,
+          avgReviewHours: null as number | null,
+        },
+      };
+    }
+
+    const { data: earnings } = await supabase
+      .from("commissions")
+      .select("commission_amount, status")
+      .eq("partner_id", partner.id)
+      .in("status", ["paid", "approved", "available_for_payout"]);
+
+    const totalEarnings = (earnings ?? []).reduce(
+      (s: number, r: any) => s + Number(r.commission_amount ?? 0),
+      0,
+    );
+
+    const { data: rows } = await supabase
+      .from("partner_payment_submissions")
+      .select("status, is_duplicate_flag, amount, submitted_at, reviewed_at")
+      .eq("partner_id", partner.id);
+
+    let pending = 0, verified = 0, rejected = 0, needsInfo = 0, duplicate = 0;
+    let verifiedAmount = 0;
+    let reviewMsSum = 0, reviewCount = 0;
+    for (const r of rows ?? []) {
+      const s = r.status as string;
+      if (s === "verified") { verified++; verifiedAmount += Number(r.amount ?? 0); }
+      else if (s === "rejected") rejected++;
+      else if (s === "needs_more_info") needsInfo++;
+      else if (s === "duplicate_flagged" || r.is_duplicate_flag) { duplicate++; pending++; }
+      else if (s === "pending_verification" || s === "under_review") pending++;
+      if (r.reviewed_at && r.submitted_at) {
+        const ms = new Date(r.reviewed_at as string).getTime() - new Date(r.submitted_at as string).getTime();
+        if (Number.isFinite(ms) && ms >= 0) { reviewMsSum += ms; reviewCount++; }
+      }
+    }
+
+    return {
+      partner: {
+        id: partner.id as string,
+        display_name: partner.display_name as string,
+        partner_code: (partner.partner_code as string | null) ?? null,
+        sales_model_selection: (partner.sales_model_selection as string | null) ?? null,
+        default_revenue_share: Number(partner.default_revenue_share ?? 0),
+        joined_at: (partner.onboarding_completed_at as string | null) ?? (partner.created_at as string | null) ?? null,
+      },
+      totalEarnings,
+      metrics: {
+        total: (rows ?? []).length,
+        pending,
+        verified,
+        rejected,
+        needsInfo,
+        duplicate,
+        verifiedAmount,
+        avgReviewHours: reviewCount ? Math.round((reviewMsSum / reviewCount) / 36e5 * 10) / 10 : null,
+      },
+    };
+  });
+
 /** Lead + all payment-link context the form needs, in one call. */
 export const getLeadPaymentContext = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])

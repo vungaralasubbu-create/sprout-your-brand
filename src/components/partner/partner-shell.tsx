@@ -32,6 +32,8 @@ import {
   Palette,
   Search,
   Rocket,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
@@ -133,8 +135,19 @@ export function PartnerShell() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    try { setCollapsed(localStorage.getItem("glintr.partner.sidebar.collapsed") === "1"); } catch { /* noop */ }
+  }, []);
+  const toggleCollapsed = () => {
+    setCollapsed((c) => {
+      const next = !c;
+      try { localStorage.setItem("glintr.partner.sidebar.collapsed", next ? "1" : "0"); } catch { /* noop */ }
+      return next;
+    });
+  };
 
   const partner = data?.partner ?? null;
   const isFullTime = partner?.work_model === "full_time" && !!data?.employeeProfile;
@@ -229,25 +242,50 @@ export function PartnerShell() {
         />
       )}
 
-      <div className="lg:grid lg:grid-cols-[264px_1fr]">
+      <div
+        className={cn(
+          "lg:grid",
+          collapsed ? "lg:grid-cols-[72px_1fr]" : "lg:grid-cols-[240px_1fr]",
+        )}
+      >
         {/* Sidebar */}
         <aside
           className={cn(
             "bg-white lg:sticky lg:top-0 lg:h-screen lg:flex lg:flex-col lg:border-r",
-            "fixed inset-y-0 left-0 z-50 w-72 border-r shadow-xl transition-transform duration-200 ease-out lg:shadow-none lg:translate-x-0",
+            "fixed inset-y-0 left-0 z-50 w-72 border-r shadow-xl transition-[transform,width] duration-200 ease-out lg:shadow-none lg:translate-x-0",
             open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+            collapsed ? "lg:w-[72px]" : "lg:w-60",
           )}
         >
-          <div className="flex items-center justify-between p-5 border-b">
-            <div>
-              <Link to="/" className="font-display text-xl font-semibold tracking-tight">
-                glintr
-              </Link>
-              <div className="mt-0.5 text-caption font-mono uppercase tracking-widest text-primary">
-                {workspaceLabel}
+          <div className={cn("flex items-center gap-2 border-b", collapsed ? "lg:px-2 lg:py-4 p-5" : "p-5")}>
+            {!collapsed && (
+              <div className="flex-1 min-w-0">
+                <Link to="/" className="font-display text-xl font-semibold tracking-tight">
+                  glintr
+                </Link>
+                <div className="mt-0.5 text-caption font-mono uppercase tracking-widest text-primary truncate">
+                  {workspaceLabel}
+                </div>
               </div>
-
-            </div>
+            )}
+            {collapsed && (
+              <Link
+                to="/"
+                className="hidden lg:flex mx-auto size-9 items-center justify-center rounded-lg bg-primary/10 text-primary font-display text-lg font-semibold"
+                aria-label="Glintr home"
+              >
+                g
+              </Link>
+            )}
+            <button
+              type="button"
+              className="hidden lg:inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              onClick={toggleCollapsed}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
+            </button>
             <button
               className="lg:hidden p-2 rounded-md hover:bg-muted"
               onClick={() => setOpen(false)}
@@ -257,8 +295,8 @@ export function PartnerShell() {
             </button>
           </div>
 
-          <div className="px-3 py-4 flex-1 overflow-y-auto">
-            {partner ? (
+          <div className={cn("py-4 flex-1 overflow-y-auto", collapsed ? "lg:px-2 px-3" : "px-3")}>
+            {partner && !collapsed ? (
               <div className="mb-4 p-3 rounded-xl bg-gradient-to-br from-primary/[0.06] via-white to-cyan-50/60 border border-border/60">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                   Partner Code
@@ -275,10 +313,13 @@ export function PartnerShell() {
             <nav className="space-y-4">
               {groups.map((group, gi) => (
                 <div key={gi}>
-                  {group.label && (
+                  {group.label && !collapsed && (
                     <div className="px-3 pb-1.5 text-[10px] font-mono uppercase tracking-widest text-muted-foreground/80">
                       {group.label}
                     </div>
+                  )}
+                  {group.label && collapsed && gi > 0 && (
+                    <div className="mx-2 mb-1.5 h-px bg-border/60" aria-hidden />
                   )}
                   <div className="space-y-0.5">
                     {group.items.map((item) => {
@@ -288,8 +329,11 @@ export function PartnerShell() {
                         <Link
                           key={item.to + item.label}
                           to={item.to}
+                          title={collapsed ? item.label : undefined}
+                          aria-label={collapsed ? item.label : undefined}
                           className={cn(
-                            "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-150",
+                            "group relative flex items-center rounded-lg text-sm transition-all duration-150",
+                            collapsed ? "justify-center px-2 py-2" : "gap-3 px-3 py-2",
                             active
                               ? "bg-primary/10 text-primary font-medium shadow-[inset_0_0_0_1px_oklch(0.7_0.15_230/0.15)]"
                               : "text-foreground/75 hover:bg-slate-50 hover:text-foreground",
@@ -306,7 +350,7 @@ export function PartnerShell() {
                                 : "text-muted-foreground group-hover:text-foreground",
                             )}
                           />
-                          <span className="flex-1 truncate">{item.label}</span>
+                          {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
                         </Link>
                       );
                     })}
@@ -315,7 +359,7 @@ export function PartnerShell() {
               ))}
             </nav>
 
-            {!academy.enabled && partner && (
+            {!academy.enabled && partner && !collapsed && (
               <div className="mt-6 rounded-xl border border-dashed border-primary/40 bg-gradient-to-br from-primary/[0.04] via-white to-emerald-50/40 p-4">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-primary">
                   Optional Upgrade
@@ -337,15 +381,17 @@ export function PartnerShell() {
           </div>
 
 
-          <div className="px-3 py-4 border-t bg-white">
+          <div className={cn("py-4 border-t bg-white", collapsed ? "lg:px-2 px-3" : "px-3")}>
             <Button
               variant="outline"
               size="sm"
-              className="w-full justify-start"
+              className={cn("w-full", collapsed ? "lg:justify-center lg:px-0" : "justify-start")}
               onClick={handleSignOut}
+              title={collapsed ? "Logout" : undefined}
+              aria-label={collapsed ? "Logout" : undefined}
             >
               <LogOut className="size-4" />
-              Logout
+              {!collapsed && "Logout"}
             </Button>
           </div>
         </aside>
