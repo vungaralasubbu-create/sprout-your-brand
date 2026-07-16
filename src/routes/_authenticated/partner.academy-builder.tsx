@@ -142,7 +142,7 @@ const STEPS = [
   { key: "welcome", label: "Welcome", icon: Sparkles },
   { key: "basics", label: "Basics", icon: BookOpen },
   { key: "brand", label: "Brand & Logo", icon: Palette },
-  { key: "domain", label: "Domain", icon: Globe },
+  { key: "managed", label: "Managed URL", icon: Globe },
   { key: "website", label: "Website", icon: FileText },
   { key: "programs", label: "Programs", icon: GraduationCap },
   { key: "courses", label: "Courses", icon: BookOpen },
