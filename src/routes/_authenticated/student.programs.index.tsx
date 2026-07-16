@@ -295,13 +295,16 @@ function ProgramBriefSheet({ course, onOpenChange }: { course: any | null; onOpe
               )}
 
               <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-border/70">
-                <Button className="flex-1" onClick={() => onOpenChange(false)}>
-                  <Sparkles className="size-4 mr-1.5" /> Request Enrollment
+                <Button asChild className="flex-1">
+                  <Link to="/student/programs/view/$slug" params={{ slug: c.slug }} onClick={() => onOpenChange(false)}>
+                    <Sparkles className="size-4 mr-1.5" /> View Full Details
+                  </Link>
                 </Button>
                 <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>
                   Close
                 </Button>
               </div>
+
               <p className="text-[11px] text-muted-foreground text-center">
                 Your Glintr advisor will confirm access and unlock this program in your workspace.
               </p>
