@@ -71,8 +71,7 @@ type Draft = {
   qa: Partial<Record<QAKey, string>>;
   brand?: any;
   logos: Record<string, string>;
-  domain?: { name: string; ext: string };
-  favouriteDomains: string[];
+  managedSlug?: string;
   website?: any;
   programs: any[];
   courses: any[];
