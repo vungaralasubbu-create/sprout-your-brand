@@ -308,7 +308,16 @@ function projectGradient(i: number) {
   return palette[i % palette.length];
 }
 
-export function PortfolioProjects() {
+type PortfolioItem = { name: string; blurb: string; tag: string };
+
+export function PortfolioProjects({ projects }: { projects?: PortfolioItem[] } = {}) {
+  const list = projects && projects.length > 0 ? projects : PORTFOLIO;
+  return (
+    <PortfolioProjectsInner list={list} />
+  );
+}
+
+function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
   return (
     <Section className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
       <div
