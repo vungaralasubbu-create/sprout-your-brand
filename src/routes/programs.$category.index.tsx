@@ -330,6 +330,57 @@ function CategoryPage() {
           </Container>
         </Section>
 
+        {/* CATEGORY CAREER INSIGHTS */}
+        {(() => {
+          const insights = getCategoryInsights(categorySlug);
+          if (!insights) return null;
+          return (
+            <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
+              <Container>
+                <SectionIntro
+                  eyebrow="Category Insights"
+                  title="What careers this category leads to"
+                  copy="Salary bands, hiring roles and companies commonly recruiting in this field."
+                />
+                <div className="mt-8 grid gap-5 md:grid-cols-3">
+                  <div className="rounded-2xl border border-border bg-card p-6">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Average Salary Range</p>
+                    <p className="mt-3 text-3xl font-display font-semibold" style={{ color: theme.ring }}>
+                      {insights.averageSalary}
+                    </p>
+                    <p className="mt-2 text-caption">Entry-to-senior band across common roles in India.</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card p-6">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Top Hiring Roles</p>
+                    <ul className="mt-3 flex flex-col gap-2">
+                      {insights.topRoles.map((r) => (
+                        <li key={r} className="inline-flex items-center gap-2 text-sm">
+                          <span className="size-1.5 rounded-full" style={{ backgroundColor: theme.ring }} aria-hidden />
+                          {r}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card p-6">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Hiring Companies</p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {insights.companies.map((c) => (
+                        <span
+                          key={c}
+                          className="rounded-full border border-border/70 bg-surface-2/60 px-2.5 py-1 text-caption"
+                        >
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Container>
+            </Section>
+          );
+        })()}
+
+
         {/* COMPARISON */}
         {list.length >= 2 ? (
           <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
