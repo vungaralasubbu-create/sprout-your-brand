@@ -191,6 +191,23 @@ function BlogEditor() {
             .split(",")
             .map((k) => k.trim())
             .filter(Boolean),
+          related_blog_slugs: form.related_blog_slugs
+            .split(",")
+            .map((k) => k.trim())
+            .filter(Boolean),
+          related_course_slugs: form.related_course_slugs
+            .split(",")
+            .map((k) => k.trim())
+            .filter(Boolean),
+          schema_jsonld: form.schema_jsonld.trim()
+            ? (() => {
+                try {
+                  return JSON.parse(form.schema_jsonld);
+                } catch {
+                  throw new Error("Custom schema is not valid JSON");
+                }
+              })()
+            : null,
         },
       }),
     onSuccess: () => {
