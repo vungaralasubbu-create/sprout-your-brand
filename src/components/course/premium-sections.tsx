@@ -678,17 +678,17 @@ export function AIToolsUsage({ items, title, description }: { items?: AIToolItem
     <Section className="py-14 lg:py-20">
       <Container>
         <div className="max-w-2xl mb-10">
-          <span className="text-caption font-mono uppercase tracking-widest text-primary">AI in Your Workflow</span>
+          <span className="text-caption font-mono uppercase tracking-widest text-primary">Productivity in Your Workflow</span>
           <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
-            How students use AI every week.
+            {title ?? "How students use these tools every week."}
           </h2>
           <p className="mt-4 text-muted-foreground">
-            You'll learn not just the tools — but where they fit in your daily learning, projects and career prep.
+            {description ?? "You'll learn not just the tools — but where they fit in your daily learning, projects and career prep."}
           </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {AI_TOOLS_USAGE.map((t) => {
+          {list.map((t) => {
             const Icon = t.icon;
             return (
               <div
