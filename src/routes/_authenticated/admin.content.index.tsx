@@ -46,7 +46,7 @@ function DashboardPage() {
               <Link
                 key={r.id}
                 to={"/admin/content/articles/$id" as any}
-                params={{ id: r.id }}
+                params={{ id: r.id } as any}
                 className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 hover:bg-surface-2/50"
               >
                 <div className="min-w-0">
@@ -105,7 +105,7 @@ function DashboardPage() {
         {(data?.upcoming ?? []).length ? (
           <div className="space-y-2">
             {(data?.upcoming ?? []).map((r: any) => (
-              <Link key={r.id} to={"/admin/content/articles/$id" as any} params={{ id: r.id }} className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-surface-2/50">
+              <Link key={r.id} to={"/admin/content/articles/$id" as any} params={{ id: r.id } as any} className="flex items-center justify-between rounded-md px-2 py-1.5 hover:bg-surface-2/50">
                 <div className="text-sm">{r.title}</div>
                 <div className="text-xs text-muted-foreground">
                   {r.scheduled_for ? new Date(r.scheduled_for).toLocaleString() : "—"}

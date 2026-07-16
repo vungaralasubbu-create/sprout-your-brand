@@ -30,7 +30,7 @@ function AnalyticsPage() {
         </div>
         <div className="divide-y divide-border/60">
           {rows.map((r) => (
-            <Link key={r.id} to={"/admin/content/articles/$id" as any} params={{ id: r.id }} className="grid grid-cols-12 gap-2 px-4 py-2.5 items-center hover:bg-surface-2/40">
+            <Link key={r.id} to={"/admin/content/articles/$id" as any} params={{ id: r.id } as any} className="grid grid-cols-12 gap-2 px-4 py-2.5 items-center hover:bg-surface-2/40">
               <div className="col-span-5 text-sm truncate">{r.title}</div>
               <div className="col-span-2 text-xs">{CONTENT_TYPE_LABEL[r.type]}</div>
               <div className="col-span-2 text-xs text-right font-mono">{r.view_count?.toLocaleString() ?? 0}</div>

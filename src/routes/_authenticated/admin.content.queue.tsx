@@ -41,7 +41,7 @@ function QueuePage() {
             <h2 className="font-medium text-sm">{c.title} <span className="text-muted-foreground">({c.rows.length})</span></h2>
             {c.rows.map((r: any) => (
               <div key={r.id} className="rounded-md border border-border/60 p-2.5 space-y-2">
-                <Link to={"/admin/content/articles/$id" as any} params={{ id: r.id }} className="block">
+                <Link to={"/admin/content/articles/$id" as any} params={{ id: r.id } as any} className="block">
                   <div className="text-sm font-medium truncate">{r.title}</div>
                   <div className="text-[11px] text-muted-foreground">
                     {CONTENT_TYPE_LABEL[r.type]} · {r.scheduled_for ? `for ${new Date(r.scheduled_for).toLocaleString()}` : `updated ${formatDistanceToNow(new Date(r.updated_at))} ago`}

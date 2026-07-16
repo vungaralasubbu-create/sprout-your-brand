@@ -137,7 +137,7 @@ function ArticlesPage() {
           <div className="divide-y divide-border/60">
             {(data!.rows).map((r: any) => (
               <div key={r.id} className="grid grid-cols-12 gap-2 px-4 py-2.5 items-center hover:bg-surface-2/40">
-                <Link to={"/admin/content/articles/$id" as any} params={{ id: r.id }} className="col-span-5 min-w-0">
+                <Link to={"/admin/content/articles/$id" as any} params={{ id: r.id } as any} className="col-span-5 min-w-0">
                   <div className="text-sm font-medium truncate">{r.title}</div>
                   <div className="text-[11px] text-muted-foreground truncate">/{r.slug}</div>
                 </Link>
