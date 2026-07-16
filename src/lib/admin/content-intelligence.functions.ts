@@ -50,7 +50,7 @@ export const getIntelligenceDashboard = createServerFn({ method: "GET" })
     await ensureAdmin(context);
     const s = context.supabase;
     const [{ data: allItems }, { data: cats }, { data: tags }] = await Promise.all([
-      s.from("content_items").select("id, title, slug, type, status, updated_at, created_at, seo_title, seo_description, featured_image, focus_topic, category_id, body_markdown, word_count, reading_time_min, tags"),
+      s.from("content_items").select("id, title, slug, type, status, updated_at, created_at, seo_title, seo_description, featured_image, focus_topic, category_id, body_markdown, word_count, reading_time_min"),
       s.from("content_categories").select("id, name, slug"),
       s.from("content_tags").select("id, name"),
     ]);
@@ -167,14 +167,14 @@ export const getTopicMap = createServerFn({ method: "GET" })
     await ensureAdmin(context);
     const s = context.supabase;
     const { data } = await s.from("content_items")
-      .select("id, title, type, status, focus_topic, tags, body_markdown")
+      .select("id, title, type, status, focus_topic, body_markdown")
       .eq("status", "published");
 
     const clusters = TOPIC_CLUSTERS.map((c) => ({ ...c, count: 0, related: new Set<string>() }));
     const byId: Record<string, typeof clusters[0]> = Object.fromEntries(clusters.map((c) => [c.key, c]));
 
     for (const it of data ?? []) {
-      const text = [it.title, it.focus_topic, (it.tags ?? []).join(" "), String(it.body_markdown ?? "").slice(0, 800)].join(" ");
+      const text = [it.title, it.focus_topic, "", String(it.body_markdown ?? "").slice(0, 800)].join(" ");
       const buckets = bucketOf(text);
       for (const b of buckets) byId[b].count++;
       // Co-occurrence
@@ -277,7 +277,7 @@ export const getRelatedSuggestions = createServerFn({ method: "POST" })
     await ensureAdmin(context);
     const s = context.supabase;
     const { data: items } = await s.from("content_items")
-      .select("id, title, slug, type, focus_topic, tags, body_markdown")
+      .select("id, title, slug, type, focus_topic, body_markdown")
       .eq("status", "published");
 
     const rows = items ?? [];
@@ -288,11 +288,11 @@ export const getRelatedSuggestions = createServerFn({ method: "POST" })
     const targetRows = data.itemId ? rows.filter((r: any) => r.id === data.itemId) : rows.slice(0, 50);
 
     for (const a of targetRows) {
-      const aTokens = tokenize(`${a.title} ${a.focus_topic ?? ""} ${(a.tags ?? []).join(" ")}`);
+      const aTokens = tokenize(`${a.title} ${a.focus_topic ?? ""} ${""}`);
       const aBody = String(a.body_markdown ?? "").toLowerCase();
       for (const b of rows) {
         if (a.id === b.id) continue;
-        const bTokens = tokenize(`${b.title} ${b.focus_topic ?? ""} ${(b.tags ?? []).join(" ")}`);
+        const bTokens = tokenize(`${b.title} ${b.focus_topic ?? ""} ${""}`);
         let overlap = 0;
         for (const t of aTokens) if (bTokens.has(t)) overlap++;
         if (overlap < 3) continue;
@@ -372,7 +372,7 @@ export const getEntityCoverage = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await ensureAdmin(context);
     const s = context.supabase;
-    const { data } = await s.from("content_items").select("id, title, focus_topic, tags, body_markdown").eq("status", "published");
+    const { data } = await s.from("content_items").select("id, title, focus_topic, body_markdown").eq("status", "published");
     const rows = data ?? [];
     const out = ENTITIES.map((e) => {
       const el = e.toLowerCase();
@@ -644,7 +644,7 @@ export const generateReport = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await ensureAdmin(context);
     const s = context.supabase;
-    const { data: items } = await s.from("content_items").select("id, title, slug, type, status, updated_at, created_at, seo_title, seo_description, featured_image, word_count, body_markdown, focus_topic, tags").eq("status", "published");
+    const { data: items } = await s.from("content_items").select("id, title, slug, type, status, updated_at, created_at, seo_title, seo_description, featured_image, word_count, body_markdown, focus_topic").eq("status", "published");
 
     const lines: string[] = [];
     const now = new Date().toISOString().slice(0, 10);
