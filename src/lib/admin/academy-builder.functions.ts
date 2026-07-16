@@ -111,13 +111,13 @@ Return JSON:
   "socialProfileConcept": string
 }`;
 
-    const _r = await callLovableAiJson({
+    return (await callLovableAiJson({
       messages: [
         { role: "system", content: sys },
         { role: "user", content: user },
       ],
       temperature: 0.7,
-    });
+    })) as unknown as Record<string, any>;
   });
 
 /* ------------------------------------------------------------------ */
@@ -237,13 +237,13 @@ Return JSON:
   "notFound": { "headline": string, "message": string, "cta": string }
 }`;
 
-    const _r = await callLovableAiJson({
+    return (await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Marketing copy: concrete, benefit-first, no filler." },
         { role: "user", content: user },
       ],
       temperature: 0.65,
-    });
+    })) as unknown as Record<string, any>;
   });
 
 /* ------------------------------------------------------------------ */
@@ -284,13 +284,13 @@ Return JSON:
     "seo": { "title": string, "metaDescription": string, "keywords": string[8] }
   }
 }`;
-    const _r = await callLovableAiJson({
+    return (await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Content should be specific, avoid clichés." },
         { role: "user", content: user },
       ],
       temperature: 0.6,
-    });
+    })) as unknown as Record<string, any>;
   });
 
 /* ------------------------------------------------------------------ */
@@ -331,13 +331,13 @@ Return JSON:
   "relatedBlogIdeas": string[6],
   "seo": { "title": string, "metaDescription": string, "keywords": string[10], "ogTitle": string, "ogDescription": string }
 }`;
-    const _r = await callLovableAiJson({
+    return (await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Curriculum must be industry-accurate." },
         { role: "user", content: user },
       ],
       temperature: 0.55,
-    });
+    })) as unknown as Record<string, any>;
   });
 
 /* ------------------------------------------------------------------ */
@@ -377,13 +377,13 @@ Return JSON:
   ]
 }
 Return exactly ${data.count} articles.`;
-    const _r = await callLovableAiJson({
+    return (await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Article ideas must be specific, evergreen, and search-worthy." },
         { role: "user", content: user },
       ],
       temperature: 0.7,
-    });
+    })) as unknown as Record<string, any>;
   });
 
 /* ------------------------------------------------------------------ */
@@ -429,13 +429,13 @@ Return JSON:
     "voiceoverScript": string(120-180 words)
   }
 }`;
-    const _r = await callLovableAiJson({
+    return (await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Every field must fit stated limits. Copy must be specific and conversion-focused." },
         { role: "user", content: user },
       ],
       temperature: 0.7,
-    });
+    })) as unknown as Record<string, any>;
   });
 
 /* ------------------------------------------------------------------ */
