@@ -189,6 +189,7 @@ import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminLeadOwnershipRouteImport } from './routes/_authenticated/admin.lead-ownership'
 import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_authenticated/admin.lead-monitoring'
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
+import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
@@ -1275,6 +1276,12 @@ const AuthenticatedAdminLeadManagementRoute =
     path: '/lead-management',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminInfrastructureRoute =
+  AuthenticatedAdminInfrastructureRouteImport.update({
+    id: '/infrastructure',
+    path: '/infrastructure',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminEmploymentSettingsRoute =
   AuthenticatedAdminEmploymentSettingsRouteImport.update({
     id: '/employment-settings',
@@ -2022,6 +2029,7 @@ export interface FileRoutesByFullPath {
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
@@ -2302,6 +2310,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
@@ -2591,6 +2600,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/_authenticated/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/_authenticated/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
@@ -2881,6 +2891,7 @@ export interface FileRouteTypes {
     | '/admin/content-intelligence'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/infrastructure'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
     | '/admin/lead-ownership'
@@ -3161,6 +3172,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/infrastructure'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
     | '/admin/lead-ownership'
@@ -3449,6 +3461,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content-intelligence'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
+    | '/_authenticated/admin/infrastructure'
     | '/_authenticated/admin/lead-management'
     | '/_authenticated/admin/lead-monitoring'
     | '/_authenticated/admin/lead-ownership'
@@ -4956,6 +4969,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLeadManagementRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/infrastructure': {
+      id: '/_authenticated/admin/infrastructure'
+      path: '/infrastructure'
+      fullPath: '/admin/infrastructure'
+      preLoaderRoute: typeof AuthenticatedAdminInfrastructureRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/employment-settings': {
       id: '/_authenticated/admin/employment-settings'
       path: '/employment-settings'
@@ -5900,6 +5920,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
+  AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
   AuthenticatedAdminLeadMonitoringRoute: typeof AuthenticatedAdminLeadMonitoringRoute
   AuthenticatedAdminLeadOwnershipRoute: typeof AuthenticatedAdminLeadOwnershipRoute
@@ -5954,6 +5975,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
+  AuthenticatedAdminInfrastructureRoute: AuthenticatedAdminInfrastructureRoute,
   AuthenticatedAdminLeadManagementRoute: AuthenticatedAdminLeadManagementRoute,
   AuthenticatedAdminLeadMonitoringRoute: AuthenticatedAdminLeadMonitoringRoute,
   AuthenticatedAdminLeadOwnershipRoute: AuthenticatedAdminLeadOwnershipRoute,

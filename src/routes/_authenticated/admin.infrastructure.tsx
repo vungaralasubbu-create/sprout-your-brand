@@ -179,7 +179,7 @@ function OverviewTab() {
               <div className="flex items-center gap-6 text-[12px] text-muted-foreground tabular-nums">
                 <span>{s.latency_ms ? `${s.latency_ms}ms` : "-"}</span>
                 <span>{s.uptime ? `${s.uptime}%` : "-"}</span>
-                <Badge variant="secondary" className="text-[10px] font-mono uppercase">{s.status}</Badge>
+                <Badge variant="muted" className="text-[10px] font-mono uppercase">{s.status}</Badge>
               </div>
             </div>
           ))}
@@ -294,7 +294,7 @@ function CacheTab() {
             <div key={c.name} className="border border-border/60 rounded-md p-3">
               <div className="flex items-center justify-between">
                 <div className="font-medium text-sm">{c.name}</div>
-                <Badge variant="secondary" className="text-[10px] font-mono uppercase"><StatusDot status={c.status === "active" ? "operational" : "pending"} /> <span className="ml-1">{c.status}</span></Badge>
+                <Badge variant="muted" className="text-[10px] font-mono uppercase"><StatusDot status={c.status === "active" ? "operational" : "pending"} /> <span className="ml-1">{c.status}</span></Badge>
               </div>
               <div className="text-[11px] text-muted-foreground mt-1">{c.provider}</div>
               <div className="grid grid-cols-3 gap-2 mt-3 text-[12px]">
@@ -477,7 +477,7 @@ function ErrorsTab() {
                 </div>
                 <div className="text-[11px] text-muted-foreground mt-0.5">{e.source} · first seen {fmtRelative(e.first_seen)}</div>
               </div>
-              <Badge variant="secondary" className="text-[10px] font-mono">×{e.count}</Badge>
+              <Badge variant="muted" className="text-[10px] font-mono">×{e.count}</Badge>
             </div>
           ))}
           {filtered.length === 0 && <div className="py-6 text-center text-sm text-muted-foreground">No matches.</div>}
@@ -582,7 +582,7 @@ function ApiGatewayTab() {
             {API_VERSIONS.map((v) => (
               <tr key={v.version}>
                 <td className="py-2 font-mono font-semibold">{v.version}</td>
-                <td><Badge variant="secondary" className="text-[10px] font-mono uppercase">{v.status}</Badge></td>
+                <td><Badge variant="muted" className="text-[10px] font-mono uppercase">{v.status}</Badge></td>
                 <td className="text-right tabular-nums">{v.requests_24h.toLocaleString()}</td>
                 <td className="text-right tabular-nums">{v.p95_ms}ms</td>
                 <td className="text-right tabular-nums">{v.error_rate}%</td>
@@ -636,7 +636,7 @@ function FeatureFlagsTab() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-sm">{f.label}</span>
-                    <Badge variant="secondary" className="text-[9px] font-mono uppercase">{f.key}</Badge>
+                    <Badge variant="muted" className="text-[9px] font-mono uppercase">{f.key}</Badge>
                   </div>
                   <div className="text-[11px] text-muted-foreground mt-0.5">{f.description}</div>
                 </div>
