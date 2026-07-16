@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AcademyGate } from "@/components/partner/academy-gate";
+
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
