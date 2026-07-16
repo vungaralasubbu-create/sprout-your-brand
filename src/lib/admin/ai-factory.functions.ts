@@ -191,54 +191,27 @@ Rules:
     const body_markdown = String(draft.body_markdown || "");
     const wc = wordCount(body_markdown);
 
-    // --- Image generation ---
-    let images: any = {};
+    // --- Image generation (optional, isolated) ---
+    // Images are generated as a separate background step by default so that
+    // a failure here does not fail article/metadata/SEO/FAQ/link generation.
+    // The article, metadata, SEO, FAQs, and internal links are already fully
+    // populated in `draft` above. Callers should invoke generateFactoryImages
+    // after saveFactoryDraft to attach images asynchronously.
+    let images: Record<string, string> = {};
+    const imageErrors: string[] = [];
     if (data.generateImages) {
-      const stem = `factory/${slug}-${Date.now()}`;
-      const plan = draft.image_plan ?? {};
-      const jobs: [string, string][] = [];
-      if (plan.hero?.prompt) jobs.push(["hero", plan.hero.prompt]);
-      if (plan.thumbnail?.prompt) jobs.push(["thumbnail", plan.thumbnail.prompt]);
-      if (plan.social?.prompt) jobs.push(["social", plan.social.prompt]);
-      (plan.sections ?? []).slice(0, 3).forEach((s: any, i: number) => {
-        if (s?.prompt) jobs.push([`section_${i + 1}`, s.prompt]);
-      });
-      if (plan.infographic?.prompt) jobs.push(["infographic", plan.infographic.prompt]);
-      if (plan.diagram?.prompt) jobs.push(["diagram", plan.diagram.prompt]);
-
-      const results = await Promise.allSettled(
-        jobs.map(async ([kind, prompt]) => {
-          const b64 = await generateImageBase64(prompt);
-          const url = await uploadPngAndSign(context, `${stem}/${kind}.png`, b64);
-          return [kind, url] as const;
-        }),
-      );
-      for (const r of results) {
-        if (r.status === "fulfilled") {
-          const [kind, url] = r.value;
-          images[kind] = url;
-        }
+      try {
+        const out = await runImageGeneration(context, slug, draft.image_plan ?? {});
+        images = out.images;
+        imageErrors.push(...out.errors);
+      } catch (e: any) {
+        // Never let image failure crash article generation.
+        console.error("[generateCompleteDraft] image generation failed", e);
+        imageErrors.push(String(e?.message ?? e));
       }
     }
 
-    // Substitute image tokens in markdown
-    let finalBody = body_markdown;
-    const heroUrl = images.hero || null;
-    const secImgs = [images.section_1, images.section_2, images.section_3];
-    if (heroUrl) {
-      finalBody = finalBody.replace(/\{\{HERO_IMAGE\}\}/g, `![${draft.image_plan?.hero?.alt ?? title}](${heroUrl})`);
-    } else {
-      finalBody = finalBody.replace(/\{\{HERO_IMAGE\}\}/g, "");
-    }
-    [1, 2, 3].forEach((n) => {
-      const url = secImgs[n - 1];
-      const meta = draft.image_plan?.sections?.[n - 1];
-      const alt = meta?.alt ?? `Illustration ${n}`;
-      finalBody = finalBody.replace(
-        new RegExp(`\\{\\{SECTION_IMAGE_${n}\\}\\}`, "g"),
-        url ? `\n\n![${alt}](${url})\n${meta?.caption ? `*${meta.caption}*\n` : ""}` : "",
-      );
-    });
+    const finalBody = substituteImageTokens(body_markdown, images, draft.image_plan ?? {}, title);
 
     return {
       draft: {
@@ -250,7 +223,122 @@ Rules:
         reading_time_min: readingTime(wc),
       },
       images,
+      imageErrors,
     };
+  });
+
+// ---- Shared helpers for image pipeline ----
+
+function substituteImageTokens(
+  body: string,
+  images: Record<string, string>,
+  plan: any,
+  title: string,
+): string {
+  let finalBody = body;
+  const heroUrl = images.hero || null;
+  const secImgs = [images.section_1, images.section_2, images.section_3];
+  if (heroUrl) {
+    finalBody = finalBody.replace(/\{\{HERO_IMAGE\}\}/g, `![${plan?.hero?.alt ?? title}](${heroUrl})`);
+  } else {
+    finalBody = finalBody.replace(/\{\{HERO_IMAGE\}\}/g, "");
+  }
+  [1, 2, 3].forEach((n) => {
+    const url = secImgs[n - 1];
+    const meta = plan?.sections?.[n - 1];
+    const alt = meta?.alt ?? `Illustration ${n}`;
+    finalBody = finalBody.replace(
+      new RegExp(`\\{\\{SECTION_IMAGE_${n}\\}\\}`, "g"),
+      url ? `\n\n![${alt}](${url})\n${meta?.caption ? `*${meta.caption}*\n` : ""}` : "",
+    );
+  });
+  return finalBody;
+}
+
+async function runImageGeneration(
+  context: any,
+  slug: string,
+  plan: any,
+): Promise<{ images: Record<string, string>; errors: string[] }> {
+  const stem = `factory/${slug}-${Date.now()}`;
+  const jobs: [string, string][] = [];
+  if (plan?.hero?.prompt) jobs.push(["hero", plan.hero.prompt]);
+  if (plan?.thumbnail?.prompt) jobs.push(["thumbnail", plan.thumbnail.prompt]);
+  if (plan?.social?.prompt) jobs.push(["social", plan.social.prompt]);
+  (plan?.sections ?? []).slice(0, 3).forEach((s: any, i: number) => {
+    if (s?.prompt) jobs.push([`section_${i + 1}`, s.prompt]);
+  });
+  if (plan?.infographic?.prompt) jobs.push(["infographic", plan.infographic.prompt]);
+  if (plan?.diagram?.prompt) jobs.push(["diagram", plan.diagram.prompt]);
+
+  const images: Record<string, string> = {};
+  const errors: string[] = [];
+  const results = await Promise.allSettled(
+    jobs.map(async ([kind, prompt]) => {
+      const b64 = await generateImageBase64(prompt);
+      const url = await uploadPngAndSign(context, `${stem}/${kind}.png`, b64);
+      return [kind, url] as const;
+    }),
+  );
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+    if (r.status === "fulfilled") {
+      const [kind, url] = r.value;
+      images[kind] = url;
+    } else {
+      errors.push(`${jobs[i][0]}: ${String(r.reason?.message ?? r.reason)}`);
+    }
+  }
+  return { images, errors };
+}
+
+// ============= 1b. GENERATE IMAGES FOR AN EXISTING DRAFT (separate task) =============
+
+const GenImagesInput = z.object({ id: z.string().uuid() });
+export const generateFactoryImages = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => GenImagesInput.parse(i))
+  .handler(async ({ data, context }) => {
+    await ensureAdmin(context);
+    const { data: it } = await context.supabase
+      .from("content_items")
+      .select("id, slug, title, body_markdown, metadata, featured_image")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!it) throw new Error("Not found");
+    const meta = (it as any).metadata ?? {};
+    const plan = meta.image_plan ?? {};
+
+    let images: Record<string, string> = {};
+    let errors: string[] = [];
+    try {
+      const out = await runImageGeneration(context, (it as any).slug, plan);
+      images = out.images;
+      errors = out.errors;
+    } catch (e: any) {
+      console.error("[generateFactoryImages] failed", e);
+      errors.push(String(e?.message ?? e));
+    }
+
+    const finalBody = substituteImageTokens(
+      String((it as any).body_markdown ?? ""),
+      images,
+      plan,
+      (it as any).title ?? "",
+    );
+
+    const md = { ...meta, images: { ...(meta.images ?? {}), ...images }, image_errors: errors };
+    const update: any = {
+      body_markdown: finalBody,
+      metadata: md,
+      last_edited_by: context.userId,
+    };
+    if (images.hero && !(it as any).featured_image) update.featured_image = images.hero;
+
+    const { error } = await context.supabase.from("content_items").update(update).eq("id", data.id);
+    if (error) throw new Error(error.message);
+
+    return { images, errors };
   });
 
 // ============= 2. SAVE FACTORY DRAFT =============
