@@ -21,7 +21,7 @@ export function BadgeStrip({ badges, className }: { badges?: ContentBadge[]; cla
       {badges.map((b) => {
         const Icon = BADGE_ICON[b];
         return (
-          <Badge key={b} variant="secondary" className="gap-1.5">
+          <Badge key={b} variant="muted" className="gap-1.5">
             <Icon className="h-3.5 w-3.5" />
             {b}
           </Badge>
