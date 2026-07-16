@@ -1313,7 +1313,8 @@ function StepReview({
 }) {
   const summary = [
     { label: "Brand", value: d.chosenName || "—" },
-    { label: "Domain", value: d.chosenDomain || "—" },
+    { label: "Managed URL", value: d.managedSlug ? `${d.managedSlug}.glintr.com` : "—" },
+    { label: "Infrastructure", value: "Managed by Glintr" },
     { label: "Tagline", value: d.brand?.tagline || "—" },
     { label: "Website pages", value: d.website ? "12 generated" : "not generated" },
     { label: "Programs", value: `${d.programs.length}` },
