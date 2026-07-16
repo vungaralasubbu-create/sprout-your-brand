@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import { listGlossary } from "@/data/glossary";
 
 const BASE_URL = "https://glintr.com";
 
