@@ -12,6 +12,7 @@ import {
   type Heading,
 } from "@/components/shared/article-markdown";
 import { KeyTakeaways, PeopleAlsoAsk, QuickAnswer } from "@/components/shared/geo";
+import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
 import { LearnToc, LearnReadingProgress } from "@/components/learn/learn-toc";
 import {
   articles,
@@ -213,6 +214,14 @@ function LearnArticlePage() {
 
           {/* Key takeaways */}
           <KeyTakeaways items={article.keyTakeaways} className="mt-12" />
+
+          {/* Workspace actions: summary, flashcards, highlights */}
+          <PageWorkspaceActions
+            className="mt-12"
+            title={article.title}
+            source={article.content}
+            kind="learn"
+          />
 
           {/* AI mentor */}
           <AiMentorCard title={article.title} />

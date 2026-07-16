@@ -30,6 +30,7 @@ import {
   extractHeadings,
   type Heading,
 } from "@/components/shared/article-markdown";
+import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
 
 const SITE_URL = "https://glintr.com";
 
@@ -413,6 +414,14 @@ function BlogDetailPage() {
                 ) : null}
                 <ArticleMarkdown markdown={post.content_markdown} />
               </div>
+
+              {/* Workspace: summarize, flashcards, highlights */}
+              <PageWorkspaceActions
+                className="mt-12"
+                title={post.title}
+                source={post.content_markdown}
+                kind="blog"
+              />
 
               {/* SHARE */}
               <div className="mt-14 rounded-2xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
