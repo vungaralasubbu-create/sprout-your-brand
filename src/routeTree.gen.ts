@@ -255,6 +255,7 @@ import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
 import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
+import { Route as AuthenticatedAdminBlogsIndexRouteImport } from './routes/_authenticated/admin.blogs.index'
 import { Route as AuthenticatedAdminAutomationIndexRouteImport } from './routes/_authenticated/admin.automation.index'
 import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
 import { Route as AuthenticatedAdminAiSearchIndexRouteImport } from './routes/_authenticated/admin.ai-search.index'
@@ -327,6 +328,7 @@ import { Route as AuthenticatedAdminContentIntelligenceCompetitorsRouteImport } 
 import { Route as AuthenticatedAdminContentIntelligenceComparisonsRouteImport } from './routes/_authenticated/admin.content-intelligence.comparisons'
 import { Route as AuthenticatedAdminContentIntelligenceAuthorityRouteImport } from './routes/_authenticated/admin.content-intelligence.authority'
 import { Route as AuthenticatedAdminContentIntelligenceAiCitationRouteImport } from './routes/_authenticated/admin.content-intelligence.ai-citation'
+import { Route as AuthenticatedAdminBlogsIdRouteImport } from './routes/_authenticated/admin.blogs.$id'
 import { Route as AuthenticatedAdminAutomationHistoryRouteImport } from './routes/_authenticated/admin.automation.history'
 import { Route as AuthenticatedAdminAutomationAuditRouteImport } from './routes/_authenticated/admin.automation.audit'
 import { Route as AuthenticatedAdminAiosSettingsRouteImport } from './routes/_authenticated/admin.aios.settings'
@@ -1715,6 +1717,12 @@ const AuthenticatedAdminContentIntelligenceIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
+const AuthenticatedAdminBlogsIndexRoute =
+  AuthenticatedAdminBlogsIndexRouteImport.update({
+    id: '/blogs/',
+    path: '/blogs/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAutomationIndexRoute =
   AuthenticatedAdminAutomationIndexRouteImport.update({
     id: '/automation/',
@@ -2146,6 +2154,12 @@ const AuthenticatedAdminContentIntelligenceAiCitationRoute =
     id: '/ai-citation',
     path: '/ai-citation',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminBlogsIdRoute =
+  AuthenticatedAdminBlogsIdRouteImport.update({
+    id: '/blogs/$id',
+    path: '/blogs/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminAutomationHistoryRoute =
   AuthenticatedAdminAutomationHistoryRouteImport.update({
@@ -2611,6 +2625,7 @@ export interface FileRoutesByFullPath {
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/admin/blogs/$id': typeof AuthenticatedAdminBlogsIdRoute
   '/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
   '/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
@@ -2683,6 +2698,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
+  '/admin/blogs/': typeof AuthenticatedAdminBlogsIndexRoute
   '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -2952,6 +2968,7 @@ export interface FileRoutesByTo {
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/admin/blogs/$id': typeof AuthenticatedAdminBlogsIdRoute
   '/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
   '/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
@@ -3024,6 +3041,7 @@ export interface FileRoutesByTo {
   '/admin/ai-search': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/automation': typeof AuthenticatedAdminAutomationIndexRoute
+  '/admin/blogs': typeof AuthenticatedAdminBlogsIndexRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
@@ -3309,6 +3327,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/_authenticated/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/_authenticated/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/_authenticated/admin/blogs/$id': typeof AuthenticatedAdminBlogsIdRoute
   '/_authenticated/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
   '/_authenticated/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/_authenticated/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
@@ -3381,6 +3400,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/_authenticated/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
+  '/_authenticated/admin/blogs/': typeof AuthenticatedAdminBlogsIndexRoute
   '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -3666,6 +3686,7 @@ export interface FileRouteTypes {
     | '/admin/aios/settings'
     | '/admin/automation/audit'
     | '/admin/automation/history'
+    | '/admin/blogs/$id'
     | '/admin/content-intelligence/ai-citation'
     | '/admin/content-intelligence/authority'
     | '/admin/content-intelligence/comparisons'
@@ -3738,6 +3759,7 @@ export interface FileRouteTypes {
     | '/admin/ai-search/'
     | '/admin/aios/'
     | '/admin/automation/'
+    | '/admin/blogs/'
     | '/admin/content-intelligence/'
     | '/admin/content/'
     | '/admin/courses/'
@@ -4007,6 +4029,7 @@ export interface FileRouteTypes {
     | '/admin/aios/settings'
     | '/admin/automation/audit'
     | '/admin/automation/history'
+    | '/admin/blogs/$id'
     | '/admin/content-intelligence/ai-citation'
     | '/admin/content-intelligence/authority'
     | '/admin/content-intelligence/comparisons'
@@ -4079,6 +4102,7 @@ export interface FileRouteTypes {
     | '/admin/ai-search'
     | '/admin/aios'
     | '/admin/automation'
+    | '/admin/blogs'
     | '/admin/content-intelligence'
     | '/admin/content'
     | '/admin/courses'
@@ -4363,6 +4387,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/aios/settings'
     | '/_authenticated/admin/automation/audit'
     | '/_authenticated/admin/automation/history'
+    | '/_authenticated/admin/blogs/$id'
     | '/_authenticated/admin/content-intelligence/ai-citation'
     | '/_authenticated/admin/content-intelligence/authority'
     | '/_authenticated/admin/content-intelligence/comparisons'
@@ -4435,6 +4460,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-search/'
     | '/_authenticated/admin/aios/'
     | '/_authenticated/admin/automation/'
+    | '/_authenticated/admin/blogs/'
     | '/_authenticated/admin/content-intelligence/'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
@@ -6269,6 +6295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
+    '/_authenticated/admin/blogs/': {
+      id: '/_authenticated/admin/blogs/'
+      path: '/blogs'
+      fullPath: '/admin/blogs/'
+      preLoaderRoute: typeof AuthenticatedAdminBlogsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/automation/': {
       id: '/_authenticated/admin/automation/'
       path: '/automation'
@@ -6772,6 +6805,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/content-intelligence/ai-citation'
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceAiCitationRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/blogs/$id': {
+      id: '/_authenticated/admin/blogs/$id'
+      path: '/blogs/$id'
+      fullPath: '/admin/blogs/$id'
+      preLoaderRoute: typeof AuthenticatedAdminBlogsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/automation/history': {
       id: '/_authenticated/admin/automation/history'
@@ -7370,6 +7410,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminAutomationAuditRoute: typeof AuthenticatedAdminAutomationAuditRoute
   AuthenticatedAdminAutomationHistoryRoute: typeof AuthenticatedAdminAutomationHistoryRoute
+  AuthenticatedAdminBlogsIdRoute: typeof AuthenticatedAdminBlogsIdRoute
   AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
   AuthenticatedAdminEmployeesIdRoute: typeof AuthenticatedAdminEmployeesIdRoute
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
@@ -7382,6 +7423,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminWorkflowsNewRoute: typeof AuthenticatedAdminWorkflowsNewRoute
   AuthenticatedAdminWorkflowsTemplatesRoute: typeof AuthenticatedAdminWorkflowsTemplatesRoute
   AuthenticatedAdminAutomationIndexRoute: typeof AuthenticatedAdminAutomationIndexRoute
+  AuthenticatedAdminBlogsIndexRoute: typeof AuthenticatedAdminBlogsIndexRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
   AuthenticatedAdminEmployeesIndexRoute: typeof AuthenticatedAdminEmployeesIndexRoute
   AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
@@ -7450,6 +7492,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAutomationAuditRoute,
   AuthenticatedAdminAutomationHistoryRoute:
     AuthenticatedAdminAutomationHistoryRoute,
+  AuthenticatedAdminBlogsIdRoute: AuthenticatedAdminBlogsIdRoute,
   AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
   AuthenticatedAdminEmployeesIdRoute: AuthenticatedAdminEmployeesIdRoute,
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
@@ -7466,6 +7509,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminWorkflowsTemplatesRoute,
   AuthenticatedAdminAutomationIndexRoute:
     AuthenticatedAdminAutomationIndexRoute,
+  AuthenticatedAdminBlogsIndexRoute: AuthenticatedAdminBlogsIndexRoute,
   AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
   AuthenticatedAdminEmployeesIndexRoute: AuthenticatedAdminEmployeesIndexRoute,
   AuthenticatedAdminPartnersIndexRoute: AuthenticatedAdminPartnersIndexRoute,
