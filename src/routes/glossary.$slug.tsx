@@ -10,7 +10,8 @@ import {
 } from "@/data/glossary";
 import { BLOG_TITLES } from "@/data/program-editorial";
 import { PeopleAlsoAsk } from "@/components/shared/geo";
-import { ArrowRight, ChevronLeft } from "lucide-react";
+import { EntityCard } from "@/components/shared/entity-card";
+import { ChevronLeft } from "lucide-react";
 
 const SITE_URL = "https://glintr.com";
 
@@ -24,7 +25,7 @@ export const Route = createFileRoute("/glossary/$slug")({
     const entry = loaderData?.entry;
     const canonical = `${SITE_URL}/glossary/${params.slug}`;
     const title = entry
-      ? `${entry.term} — Definition & Overview | Glintr Glossary`
+      ? `${entry.term} — Definition, Examples & Related Concepts | Glintr Glossary`
       : `Glossary | Glintr`;
     const description = entry?.short ?? "Glintr glossary entry.";
     const meta: Array<Record<string, string>> = [
@@ -106,25 +107,31 @@ export const Route = createFileRoute("/glossary/$slug")({
   component: GlossaryDetail,
 });
 
+function toTitle(slug: string) {
+  return slug.split("-").map((w) => w[0]?.toUpperCase() + w.slice(1)).join(" ");
+}
+
 function GlossaryDetail() {
   const { entry } = Route.useLoaderData();
   const related = relatedGlossary(entry);
+  const continueList = listGlossary()
+    .filter((g) => g.slug !== entry.slug && g.category !== entry.category)
+    .slice(0, 6);
 
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <Section className="pt-14 pb-8">
+        <Section className="pt-14 pb-6">
           <Container className="max-w-3xl">
-            <Link
-              to="/glossary"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-            >
-              <ChevronLeft className="size-4" /> Glossary
-            </Link>
-            <Badge variant="muted" className="mt-6">
-              {entry.category}
-            </Badge>
+            <nav aria-label="Breadcrumb" className="mb-4 text-xs text-muted-foreground">
+              <Link to="/" className="hover:text-foreground">Home</Link>
+              <span className="mx-2">/</span>
+              <Link to="/glossary" className="hover:text-foreground">Glossary</Link>
+              <span className="mx-2">/</span>
+              <span className="text-foreground">{entry.term}</span>
+            </nav>
+            <Badge variant="muted">{entry.category}</Badge>
             <h1 className="mt-4 font-display font-semibold tracking-[-0.02em] text-balance text-[clamp(2.2rem,4.6vw,3.4rem)] leading-[1.05]">
               {entry.term}
             </h1>
@@ -133,8 +140,8 @@ function GlossaryDetail() {
                 Also known as: {entry.aliases.join(", ")}
               </p>
             ) : null}
-            <p className="mt-6 text-body-lg text-foreground/85 leading-relaxed">
-              {entry.short}
+            <p className="mt-6 text-body-lg text-foreground/90 leading-relaxed">
+              <strong className="font-semibold">{entry.short}</strong>
             </p>
           </Container>
         </Section>
@@ -144,23 +151,73 @@ function GlossaryDetail() {
             <article
               itemScope
               itemType="https://schema.org/DefinedTerm"
-              className="prose-editorial"
+              className="space-y-10"
             >
-              <h2 className="font-display font-semibold text-2xl md:text-3xl tracking-tight">
-                Overview
-              </h2>
-              <p
-                itemProp="description"
-                className="mt-3 text-body md:text-body-lg text-foreground/85 leading-relaxed"
-              >
-                {entry.overview}
-              </p>
+              <section>
+                <h2 className="font-display font-semibold text-2xl md:text-3xl tracking-tight">
+                  Overview
+                </h2>
+                <p
+                  itemProp="description"
+                  className="mt-3 text-body md:text-body-lg text-foreground/85 leading-relaxed"
+                >
+                  {entry.overview}
+                </p>
+              </section>
+
+              {entry.simple ? (
+                <section>
+                  <h2 className="font-display font-semibold text-2xl tracking-tight">
+                    Simple explanation
+                  </h2>
+                  <p className="mt-3 text-body md:text-body-lg text-foreground/85 leading-relaxed">
+                    {entry.simple}
+                  </p>
+                </section>
+              ) : null}
+
+              {entry.technical ? (
+                <section>
+                  <h2 className="font-display font-semibold text-2xl tracking-tight">
+                    Technical explanation
+                  </h2>
+                  <p className="mt-3 text-body md:text-body-lg text-foreground/85 leading-relaxed">
+                    {entry.technical}
+                  </p>
+                </section>
+              ) : null}
+
+              {entry.examples?.length ? (
+                <section>
+                  <h2 className="font-display font-semibold text-2xl tracking-tight">
+                    Examples
+                  </h2>
+                  <ul className="mt-3 space-y-2 list-disc pl-5 text-body md:text-body-lg text-foreground/85 leading-relaxed">
+                    {entry.examples.map((e, i) => (
+                      <li key={i}>{e}</li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+
+              {entry.mistakes?.length ? (
+                <section>
+                  <h2 className="font-display font-semibold text-2xl tracking-tight">
+                    Common mistakes
+                  </h2>
+                  <ul className="mt-3 space-y-2 list-disc pl-5 text-body md:text-body-lg text-foreground/85 leading-relaxed">
+                    {entry.mistakes.map((e, i) => (
+                      <li key={i}>{e}</li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
             </article>
           </Container>
         </Section>
 
         {entry.faqs?.length ? (
-          <Section className="py-10">
+          <Section className="py-8">
             <Container className="max-w-3xl">
               <PeopleAlsoAsk items={entry.faqs} />
             </Container>
@@ -177,20 +234,7 @@ function GlossaryDetail() {
                   </div>
                   <div className="grid sm:grid-cols-2 gap-3">
                     {related.map((r) => (
-                      <Link
-                        key={r.slug}
-                        to="/glossary/$slug"
-                        params={{ slug: r.slug }}
-                        className="group rounded-xl border p-4 hover:border-primary transition-colors bg-card"
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="font-medium">{r.term}</span>
-                          <ArrowRight className="size-4 text-muted-foreground group-hover:text-primary" />
-                        </div>
-                        <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                          {r.short}
-                        </p>
-                      </Link>
+                      <EntityCard key={r.slug} entry={r} />
                     ))}
                   </div>
                 </section>
@@ -204,10 +248,7 @@ function GlossaryDetail() {
                   <ul className="space-y-2">
                     {entry.relatedPrograms.map((slug: string) => (
                       <li key={slug}>
-                        <a
-                          href={`/programs`}
-                          className="text-primary hover:underline"
-                        >
+                        <a href="/programs" className="text-primary hover:underline">
                           {toTitle(slug)} →
                         </a>
                       </li>
@@ -240,37 +281,22 @@ function GlossaryDetail() {
           </Section>
         ) : null}
 
-        <Section className="py-16">
-          <Container className="max-w-3xl">
-            <div className="text-caption font-mono uppercase tracking-widest text-primary mb-3">
-              Continue exploring
-            </div>
-            <div className="grid sm:grid-cols-3 gap-3">
-              {listGlossary()
-                .filter((g) => g.slug !== entry.slug)
-                .slice(0, 6)
-                .map((g) => (
-                  <Link
-                    key={g.slug}
-                    to="/glossary/$slug"
-                    params={{ slug: g.slug }}
-                    className="rounded-xl border p-4 hover:border-primary transition-colors bg-card"
-                  >
-                    <span className="font-medium">{g.term}</span>
-                  </Link>
+        {continueList.length ? (
+          <Section className="py-16">
+            <Container className="max-w-5xl">
+              <div className="text-caption font-mono uppercase tracking-widest text-primary mb-3">
+                Continue exploring
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {continueList.map((g) => (
+                  <EntityCard key={g.slug} entry={g} />
                 ))}
-            </div>
-          </Container>
-        </Section>
+              </div>
+            </Container>
+          </Section>
+        ) : null}
       </main>
       <SiteFooter />
     </div>
   );
-}
-
-function toTitle(slug: string) {
-  return slug
-    .split("-")
-    .map((w) => w[0]?.toUpperCase() + w.slice(1))
-    .join(" ");
 }
