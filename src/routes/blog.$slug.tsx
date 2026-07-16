@@ -372,7 +372,7 @@ function BlogDetailPage() {
             {/* Reader actions — bookmark, print, workspace */}
             <div className="mt-2 flex flex-wrap items-center gap-2 print:hidden" data-blog-noprint>
               <Button
-                variant={bookmarked ? "default" : "outline"}
+                variant={bookmarked ? "primary" : "outline"}
                 size="sm"
                 onClick={toggleBookmark}
                 aria-pressed={bookmarked}
