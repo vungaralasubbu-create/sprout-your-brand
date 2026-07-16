@@ -186,8 +186,23 @@ function BrowseCard({ c }: { c: any }) {
 function Page() {
   const fn = useServerFn(listMyPrograms);
   const { data = [], isLoading } = useQuery({ queryKey: ["my-programs"], queryFn: () => fn() });
+  const [tab, setTab] = useState<Tab>("mine");
   const [filter, setFilter] = useState<Filter>("all");
   const [q, setQ] = useState("");
+
+  // Browse catalog data
+  const { data: catalog = [], isLoading: catalogLoading } = useQuery({
+    queryKey: ["programs-catalog"],
+    queryFn: () => listCourses(),
+    enabled: tab === "browse",
+  });
+  const { data: categories = [] } = useQuery({
+    queryKey: ["programs-categories"],
+    queryFn: () => listCategories(),
+    enabled: tab === "browse",
+  });
+  const [catFilter, setCatFilter] = useState<string>("all");
+  const [browseQ, setBrowseQ] = useState("");
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -199,6 +214,15 @@ function Page() {
       return true;
     });
   }, [data, filter, q]);
+
+  const filteredCatalog = useMemo(() => {
+    const term = browseQ.trim().toLowerCase();
+    return (catalog as any[]).filter((c) => {
+      if (catFilter !== "all" && c.category?.slug !== catFilter) return false;
+      if (term && !`${c.name} ${c.short_description ?? ""} ${c.category?.name ?? ""}`.toLowerCase().includes(term)) return false;
+      return true;
+    });
+  }, [catalog, catFilter, browseQ]);
 
   const counts = useMemo(() => {
     const c = { all: (data as any[]).length, in_progress: 0, not_started: 0, completed: 0 };
@@ -222,63 +246,151 @@ function Page() {
       <div>
         <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-muted-foreground">Student Workspace</div>
         <h1 className="text-2xl lg:text-3xl font-display font-semibold tracking-tight mt-1 flex items-center gap-2">
-          <GraduationCap className="size-6 text-primary" /> My Programs
+          <GraduationCap className="size-6 text-primary" /> Programs
         </h1>
-        <p className="text-muted-foreground mt-1 text-sm">Everything you're enrolled in, in one place.</p>
+        <p className="text-muted-foreground mt-1 text-sm">Your learning journey and the full Glintr catalog — all in one place.</p>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center gap-3">
-        <div className="flex flex-wrap items-center gap-1.5 bg-white border border-border/70 rounded-lg p-1">
-          {filters.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              className={cn(
-                "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors",
-                filter === f.key ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {f.label}
-              <span className="ml-1.5 text-[10px] text-muted-foreground/70">
-                {counts[f.key as keyof typeof counts]}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="relative md:ml-auto md:w-72">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search my programs…"
-            className="pl-9 h-9 bg-white"
-          />
-        </div>
+      {/* Tabs */}
+      <div className="flex items-center gap-1 border-b border-border">
+        {[
+          { key: "mine" as const, label: "My Programs", count: (data as any[]).length },
+          { key: "browse" as const, label: "Browse Catalog", count: (catalog as any[]).length || undefined },
+        ].map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={cn(
+              "px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors",
+              tab === t.key
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {t.label}
+            {t.count !== undefined && (
+              <span className="ml-1.5 text-[11px] text-muted-foreground/70">{t.count}</span>
+            )}
+          </button>
+        ))}
       </div>
 
-      {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i} className="p-0 overflow-hidden">
-              <div className="aspect-[16/9] bg-surface-1 animate-pulse" />
-              <div className="p-4 space-y-3">
-                <div className="h-3 w-24 bg-surface-1 rounded animate-pulse" />
-                <div className="h-4 w-3/4 bg-surface-1 rounded animate-pulse" />
-                <div className="h-1.5 w-full bg-surface-1 rounded animate-pulse" />
-              </div>
+      {tab === "mine" ? (
+        <>
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="flex flex-wrap items-center gap-1.5 bg-white border border-border/70 rounded-lg p-1">
+              {filters.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setFilter(f.key)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                    filter === f.key ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {f.label}
+                  <span className="ml-1.5 text-[10px] text-muted-foreground/70">
+                    {counts[f.key as keyof typeof counts]}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div className="relative md:ml-auto md:w-72">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search my programs…"
+                className="pl-9 h-9 bg-white"
+              />
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i} className="p-0 overflow-hidden">
+                  <div className="aspect-[16/9] bg-surface-1 animate-pulse" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-3 w-24 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-4 w-3/4 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-1.5 w-full bg-surface-1 rounded animate-pulse" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (data as any[]).length === 0 ? (
+            <EmptyState onBrowse={() => setTab("browse")} />
+          ) : filtered.length === 0 ? (
+            <Card className="p-8 text-center text-sm text-muted-foreground">
+              No programs match this filter.
             </Card>
-          ))}
-        </div>
-      ) : (data as any[]).length === 0 ? (
-        <EmptyState />
-      ) : filtered.length === 0 ? (
-        <Card className="p-8 text-center text-sm text-muted-foreground">
-          No programs match this filter.
-        </Card>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {filtered.map((p: any) => <ProgramCard key={p.enrollmentId} p={p} />)}
+            </div>
+          )}
+        </>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((p: any) => <ProgramCard key={p.enrollmentId} p={p} />)}
-        </div>
+        <>
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="flex flex-wrap items-center gap-1.5 bg-white border border-border/70 rounded-lg p-1 overflow-x-auto max-w-full">
+              <button
+                onClick={() => setCatFilter("all")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors whitespace-nowrap",
+                  catFilter === "all" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                All Categories
+              </button>
+              {(categories as any[]).map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setCatFilter(cat.slug)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors whitespace-nowrap",
+                    catFilter === cat.slug ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+            <div className="relative md:ml-auto md:w-72">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                value={browseQ}
+                onChange={(e) => setBrowseQ(e.target.value)}
+                placeholder="Search catalog…"
+                className="pl-9 h-9 bg-white"
+              />
+            </div>
+          </div>
+
+          {catalogLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card key={i} className="p-0 overflow-hidden">
+                  <div className="aspect-[16/9] bg-surface-1 animate-pulse" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-3 w-24 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-4 w-3/4 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-3 w-full bg-surface-1 rounded animate-pulse" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : filteredCatalog.length === 0 ? (
+            <Card className="p-8 text-center text-sm text-muted-foreground">
+              No programs match your search.
+            </Card>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {filteredCatalog.map((c: any) => <BrowseCard key={c.id} c={c} />)}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
