@@ -107,7 +107,7 @@ const EMPTY: Draft = {
     teachingMode: "hybrid",
     seed: "",
   },
-  domainChecks: {},
+  
   logos: {},
   programs: [],
   courses: [],
