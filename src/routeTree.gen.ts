@@ -304,6 +304,7 @@ import { Route as AuthenticatedAdminContentIntelligenceRoadmapsRouteImport } fro
 import { Route as AuthenticatedAdminContentIntelligenceReportsRouteImport } from './routes/_authenticated/admin.content-intelligence.reports'
 import { Route as AuthenticatedAdminContentIntelligenceRelatedRouteImport } from './routes/_authenticated/admin.content-intelligence.related'
 import { Route as AuthenticatedAdminContentIntelligenceQualityRouteImport } from './routes/_authenticated/admin.content-intelligence.quality'
+import { Route as AuthenticatedAdminContentIntelligencePermissionsRouteImport } from './routes/_authenticated/admin.content-intelligence.permissions'
 import { Route as AuthenticatedAdminContentIntelligenceNotificationsRouteImport } from './routes/_authenticated/admin.content-intelligence.notifications'
 import { Route as AuthenticatedAdminContentIntelligenceGraphHealthRouteImport } from './routes/_authenticated/admin.content-intelligence.graph-health'
 import { Route as AuthenticatedAdminContentIntelligenceGlossaryRouteImport } from './routes/_authenticated/admin.content-intelligence.glossary'
@@ -312,7 +313,10 @@ import { Route as AuthenticatedAdminContentIntelligenceFreshnessRouteImport } fr
 import { Route as AuthenticatedAdminContentIntelligenceFaqsRouteImport } from './routes/_authenticated/admin.content-intelligence.faqs'
 import { Route as AuthenticatedAdminContentIntelligenceEntitiesRouteImport } from './routes/_authenticated/admin.content-intelligence.entities'
 import { Route as AuthenticatedAdminContentIntelligenceDecayRouteImport } from './routes/_authenticated/admin.content-intelligence.decay'
+import { Route as AuthenticatedAdminContentIntelligenceCompetitorsRouteImport } from './routes/_authenticated/admin.content-intelligence.competitors'
 import { Route as AuthenticatedAdminContentIntelligenceComparisonsRouteImport } from './routes/_authenticated/admin.content-intelligence.comparisons'
+import { Route as AuthenticatedAdminContentIntelligenceAuthorityRouteImport } from './routes/_authenticated/admin.content-intelligence.authority'
+import { Route as AuthenticatedAdminContentIntelligenceAiCitationRouteImport } from './routes/_authenticated/admin.content-intelligence.ai-citation'
 import { Route as AuthenticatedAdminAutomationHistoryRouteImport } from './routes/_authenticated/admin.automation.history'
 import { Route as AuthenticatedAdminAutomationAuditRouteImport } from './routes/_authenticated/admin.automation.audit'
 import { Route as AuthenticatedAdminAiosSettingsRouteImport } from './routes/_authenticated/admin.aios.settings'
@@ -1990,6 +1994,12 @@ const AuthenticatedAdminContentIntelligenceQualityRoute =
     path: '/quality',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
+const AuthenticatedAdminContentIntelligencePermissionsRoute =
+  AuthenticatedAdminContentIntelligencePermissionsRouteImport.update({
+    id: '/permissions',
+    path: '/permissions',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
 const AuthenticatedAdminContentIntelligenceNotificationsRoute =
   AuthenticatedAdminContentIntelligenceNotificationsRouteImport.update({
     id: '/notifications',
@@ -2038,10 +2048,28 @@ const AuthenticatedAdminContentIntelligenceDecayRoute =
     path: '/decay',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
+const AuthenticatedAdminContentIntelligenceCompetitorsRoute =
+  AuthenticatedAdminContentIntelligenceCompetitorsRouteImport.update({
+    id: '/competitors',
+    path: '/competitors',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
 const AuthenticatedAdminContentIntelligenceComparisonsRoute =
   AuthenticatedAdminContentIntelligenceComparisonsRouteImport.update({
     id: '/comparisons',
     path: '/comparisons',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceAuthorityRoute =
+  AuthenticatedAdminContentIntelligenceAuthorityRouteImport.update({
+    id: '/authority',
+    path: '/authority',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceAiCitationRoute =
+  AuthenticatedAdminContentIntelligenceAiCitationRouteImport.update({
+    id: '/ai-citation',
+    path: '/ai-citation',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
 const AuthenticatedAdminAutomationHistoryRoute =
@@ -2432,7 +2460,10 @@ export interface FileRoutesByFullPath {
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
+  '/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  '/admin/content-intelligence/competitors': typeof AuthenticatedAdminContentIntelligenceCompetitorsRoute
   '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
   '/admin/content-intelligence/faqs': typeof AuthenticatedAdminContentIntelligenceFaqsRoute
@@ -2441,6 +2472,7 @@ export interface FileRoutesByFullPath {
   '/admin/content-intelligence/glossary': typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
   '/admin/content-intelligence/graph-health': typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
   '/admin/content-intelligence/notifications': typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  '/admin/content-intelligence/permissions': typeof AuthenticatedAdminContentIntelligencePermissionsRoute
   '/admin/content-intelligence/quality': typeof AuthenticatedAdminContentIntelligenceQualityRoute
   '/admin/content-intelligence/related': typeof AuthenticatedAdminContentIntelligenceRelatedRoute
   '/admin/content-intelligence/reports': typeof AuthenticatedAdminContentIntelligenceReportsRoute
@@ -2751,7 +2783,10 @@ export interface FileRoutesByTo {
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
+  '/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  '/admin/content-intelligence/competitors': typeof AuthenticatedAdminContentIntelligenceCompetitorsRoute
   '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
   '/admin/content-intelligence/faqs': typeof AuthenticatedAdminContentIntelligenceFaqsRoute
@@ -2760,6 +2795,7 @@ export interface FileRoutesByTo {
   '/admin/content-intelligence/glossary': typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
   '/admin/content-intelligence/graph-health': typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
   '/admin/content-intelligence/notifications': typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  '/admin/content-intelligence/permissions': typeof AuthenticatedAdminContentIntelligencePermissionsRoute
   '/admin/content-intelligence/quality': typeof AuthenticatedAdminContentIntelligenceQualityRoute
   '/admin/content-intelligence/related': typeof AuthenticatedAdminContentIntelligenceRelatedRoute
   '/admin/content-intelligence/reports': typeof AuthenticatedAdminContentIntelligenceReportsRoute
@@ -3084,7 +3120,10 @@ export interface FileRoutesById {
   '/_authenticated/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/_authenticated/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
   '/_authenticated/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
+  '/_authenticated/admin/content-intelligence/ai-citation': typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
+  '/_authenticated/admin/content-intelligence/authority': typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   '/_authenticated/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  '/_authenticated/admin/content-intelligence/competitors': typeof AuthenticatedAdminContentIntelligenceCompetitorsRoute
   '/_authenticated/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/_authenticated/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
   '/_authenticated/admin/content-intelligence/faqs': typeof AuthenticatedAdminContentIntelligenceFaqsRoute
@@ -3093,6 +3132,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content-intelligence/glossary': typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
   '/_authenticated/admin/content-intelligence/graph-health': typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
   '/_authenticated/admin/content-intelligence/notifications': typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  '/_authenticated/admin/content-intelligence/permissions': typeof AuthenticatedAdminContentIntelligencePermissionsRoute
   '/_authenticated/admin/content-intelligence/quality': typeof AuthenticatedAdminContentIntelligenceQualityRoute
   '/_authenticated/admin/content-intelligence/related': typeof AuthenticatedAdminContentIntelligenceRelatedRoute
   '/_authenticated/admin/content-intelligence/reports': typeof AuthenticatedAdminContentIntelligenceReportsRoute
@@ -3417,7 +3457,10 @@ export interface FileRouteTypes {
     | '/admin/aios/settings'
     | '/admin/automation/audit'
     | '/admin/automation/history'
+    | '/admin/content-intelligence/ai-citation'
+    | '/admin/content-intelligence/authority'
     | '/admin/content-intelligence/comparisons'
+    | '/admin/content-intelligence/competitors'
     | '/admin/content-intelligence/decay'
     | '/admin/content-intelligence/entities'
     | '/admin/content-intelligence/faqs'
@@ -3426,6 +3469,7 @@ export interface FileRouteTypes {
     | '/admin/content-intelligence/glossary'
     | '/admin/content-intelligence/graph-health'
     | '/admin/content-intelligence/notifications'
+    | '/admin/content-intelligence/permissions'
     | '/admin/content-intelligence/quality'
     | '/admin/content-intelligence/related'
     | '/admin/content-intelligence/reports'
@@ -3736,7 +3780,10 @@ export interface FileRouteTypes {
     | '/admin/aios/settings'
     | '/admin/automation/audit'
     | '/admin/automation/history'
+    | '/admin/content-intelligence/ai-citation'
+    | '/admin/content-intelligence/authority'
     | '/admin/content-intelligence/comparisons'
+    | '/admin/content-intelligence/competitors'
     | '/admin/content-intelligence/decay'
     | '/admin/content-intelligence/entities'
     | '/admin/content-intelligence/faqs'
@@ -3745,6 +3792,7 @@ export interface FileRouteTypes {
     | '/admin/content-intelligence/glossary'
     | '/admin/content-intelligence/graph-health'
     | '/admin/content-intelligence/notifications'
+    | '/admin/content-intelligence/permissions'
     | '/admin/content-intelligence/quality'
     | '/admin/content-intelligence/related'
     | '/admin/content-intelligence/reports'
@@ -4068,7 +4116,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/aios/settings'
     | '/_authenticated/admin/automation/audit'
     | '/_authenticated/admin/automation/history'
+    | '/_authenticated/admin/content-intelligence/ai-citation'
+    | '/_authenticated/admin/content-intelligence/authority'
     | '/_authenticated/admin/content-intelligence/comparisons'
+    | '/_authenticated/admin/content-intelligence/competitors'
     | '/_authenticated/admin/content-intelligence/decay'
     | '/_authenticated/admin/content-intelligence/entities'
     | '/_authenticated/admin/content-intelligence/faqs'
@@ -4077,6 +4128,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content-intelligence/glossary'
     | '/_authenticated/admin/content-intelligence/graph-health'
     | '/_authenticated/admin/content-intelligence/notifications'
+    | '/_authenticated/admin/content-intelligence/permissions'
     | '/_authenticated/admin/content-intelligence/quality'
     | '/_authenticated/admin/content-intelligence/related'
     | '/_authenticated/admin/content-intelligence/reports'
@@ -6305,6 +6357,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceQualityRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
+    '/_authenticated/admin/content-intelligence/permissions': {
+      id: '/_authenticated/admin/content-intelligence/permissions'
+      path: '/permissions'
+      fullPath: '/admin/content-intelligence/permissions'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligencePermissionsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
     '/_authenticated/admin/content-intelligence/notifications': {
       id: '/_authenticated/admin/content-intelligence/notifications'
       path: '/notifications'
@@ -6361,11 +6420,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceDecayRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
+    '/_authenticated/admin/content-intelligence/competitors': {
+      id: '/_authenticated/admin/content-intelligence/competitors'
+      path: '/competitors'
+      fullPath: '/admin/content-intelligence/competitors'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceCompetitorsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
     '/_authenticated/admin/content-intelligence/comparisons': {
       id: '/_authenticated/admin/content-intelligence/comparisons'
       path: '/comparisons'
       fullPath: '/admin/content-intelligence/comparisons'
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceComparisonsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/authority': {
+      id: '/_authenticated/admin/content-intelligence/authority'
+      path: '/authority'
+      fullPath: '/admin/content-intelligence/authority'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceAuthorityRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/ai-citation': {
+      id: '/_authenticated/admin/content-intelligence/ai-citation'
+      path: '/ai-citation'
+      fullPath: '/admin/content-intelligence/ai-citation'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceAiCitationRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
     '/_authenticated/admin/automation/history': {
@@ -6690,7 +6770,10 @@ const AuthenticatedAdminContentRouteWithChildren =
   )
 
 interface AuthenticatedAdminContentIntelligenceRouteChildren {
+  AuthenticatedAdminContentIntelligenceAiCitationRoute: typeof AuthenticatedAdminContentIntelligenceAiCitationRoute
+  AuthenticatedAdminContentIntelligenceAuthorityRoute: typeof AuthenticatedAdminContentIntelligenceAuthorityRoute
   AuthenticatedAdminContentIntelligenceComparisonsRoute: typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  AuthenticatedAdminContentIntelligenceCompetitorsRoute: typeof AuthenticatedAdminContentIntelligenceCompetitorsRoute
   AuthenticatedAdminContentIntelligenceDecayRoute: typeof AuthenticatedAdminContentIntelligenceDecayRoute
   AuthenticatedAdminContentIntelligenceEntitiesRoute: typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
   AuthenticatedAdminContentIntelligenceFaqsRoute: typeof AuthenticatedAdminContentIntelligenceFaqsRoute
@@ -6699,6 +6782,7 @@ interface AuthenticatedAdminContentIntelligenceRouteChildren {
   AuthenticatedAdminContentIntelligenceGlossaryRoute: typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
   AuthenticatedAdminContentIntelligenceGraphHealthRoute: typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
   AuthenticatedAdminContentIntelligenceNotificationsRoute: typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  AuthenticatedAdminContentIntelligencePermissionsRoute: typeof AuthenticatedAdminContentIntelligencePermissionsRoute
   AuthenticatedAdminContentIntelligenceQualityRoute: typeof AuthenticatedAdminContentIntelligenceQualityRoute
   AuthenticatedAdminContentIntelligenceRelatedRoute: typeof AuthenticatedAdminContentIntelligenceRelatedRoute
   AuthenticatedAdminContentIntelligenceReportsRoute: typeof AuthenticatedAdminContentIntelligenceReportsRoute
@@ -6711,8 +6795,14 @@ interface AuthenticatedAdminContentIntelligenceRouteChildren {
 
 const AuthenticatedAdminContentIntelligenceRouteChildren: AuthenticatedAdminContentIntelligenceRouteChildren =
   {
+    AuthenticatedAdminContentIntelligenceAiCitationRoute:
+      AuthenticatedAdminContentIntelligenceAiCitationRoute,
+    AuthenticatedAdminContentIntelligenceAuthorityRoute:
+      AuthenticatedAdminContentIntelligenceAuthorityRoute,
     AuthenticatedAdminContentIntelligenceComparisonsRoute:
       AuthenticatedAdminContentIntelligenceComparisonsRoute,
+    AuthenticatedAdminContentIntelligenceCompetitorsRoute:
+      AuthenticatedAdminContentIntelligenceCompetitorsRoute,
     AuthenticatedAdminContentIntelligenceDecayRoute:
       AuthenticatedAdminContentIntelligenceDecayRoute,
     AuthenticatedAdminContentIntelligenceEntitiesRoute:
@@ -6729,6 +6819,8 @@ const AuthenticatedAdminContentIntelligenceRouteChildren: AuthenticatedAdminCont
       AuthenticatedAdminContentIntelligenceGraphHealthRoute,
     AuthenticatedAdminContentIntelligenceNotificationsRoute:
       AuthenticatedAdminContentIntelligenceNotificationsRoute,
+    AuthenticatedAdminContentIntelligencePermissionsRoute:
+      AuthenticatedAdminContentIntelligencePermissionsRoute,
     AuthenticatedAdminContentIntelligenceQualityRoute:
       AuthenticatedAdminContentIntelligenceQualityRoute,
     AuthenticatedAdminContentIntelligenceRelatedRoute:
