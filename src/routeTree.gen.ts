@@ -60,6 +60,7 @@ import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as EntitiesIndexRouteImport } from './routes/entities.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
+import { Route as AuthorsIndexRouteImport } from './routes/authors.index'
 import { Route as WorkspaceVoiceRouteImport } from './routes/workspace.voice'
 import { Route as WorkspaceStudyRouteImport } from './routes/workspace.study'
 import { Route as WorkspaceSearchRouteImport } from './routes/workspace.search'
@@ -596,6 +597,11 @@ const EntitiesIndexRoute = EntitiesIndexRouteImport.update({
 const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
   id: '/campus-ambassador/',
   path: '/campus-ambassador/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthorsIndexRoute = AuthorsIndexRouteImport.update({
+  id: '/authors/',
+  path: '/authors/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorkspaceVoiceRoute = WorkspaceVoiceRouteImport.update({
@@ -2320,6 +2326,7 @@ export interface FileRoutesByFullPath {
   '/workspace/search': typeof WorkspaceSearchRoute
   '/workspace/study': typeof WorkspaceStudyRoute
   '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
+  '/authors/': typeof AuthorsIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -2649,6 +2656,7 @@ export interface FileRoutesByTo {
   '/workspace/revision': typeof WorkspaceRevisionRoute
   '/workspace/search': typeof WorkspaceSearchRoute
   '/workspace/study': typeof WorkspaceStudyRoute
+  '/authors': typeof AuthorsIndexRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/entities': typeof EntitiesIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
@@ -2980,6 +2988,7 @@ export interface FileRoutesById {
   '/workspace/search': typeof WorkspaceSearchRoute
   '/workspace/study': typeof WorkspaceStudyRoute
   '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
+  '/authors/': typeof AuthorsIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -3317,6 +3326,7 @@ export interface FileRouteTypes {
     | '/workspace/search'
     | '/workspace/study'
     | '/workspace/voice'
+    | '/authors/'
     | '/campus-ambassador/'
     | '/entities/'
     | '/launch-your-brand/'
@@ -3646,6 +3656,7 @@ export interface FileRouteTypes {
     | '/workspace/revision'
     | '/workspace/search'
     | '/workspace/study'
+    | '/authors'
     | '/campus-ambassador'
     | '/entities'
     | '/launch-your-brand'
@@ -3976,6 +3987,7 @@ export interface FileRouteTypes {
     | '/workspace/search'
     | '/workspace/study'
     | '/workspace/voice'
+    | '/authors/'
     | '/campus-ambassador/'
     | '/entities/'
     | '/launch-your-brand/'
@@ -4272,6 +4284,7 @@ export interface RootRouteChildren {
   RefCodeRoute: typeof RefCodeRoute
   ToolsSlugRoute: typeof ToolsSlugRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
+  AuthorsIndexRoute: typeof AuthorsIndexRoute
   CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
   EntitiesIndexRoute: typeof EntitiesIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
@@ -4647,6 +4660,13 @@ declare module '@tanstack/react-router' {
       path: '/campus-ambassador'
       fullPath: '/campus-ambassador/'
       preLoaderRoute: typeof CampusAmbassadorIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/authors/': {
+      id: '/authors/'
+      path: '/authors'
+      fullPath: '/authors/'
+      preLoaderRoute: typeof AuthorsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/workspace/voice': {
@@ -7723,6 +7743,7 @@ const rootRouteChildren: RootRouteChildren = {
   RefCodeRoute: RefCodeRoute,
   ToolsSlugRoute: ToolsSlugRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
+  AuthorsIndexRoute: AuthorsIndexRoute,
   CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
   EntitiesIndexRoute: EntitiesIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,

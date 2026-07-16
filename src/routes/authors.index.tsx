@@ -8,7 +8,7 @@ import { listAuthors } from "@/data/authors";
 
 const SITE_URL = "https://glintr.com";
 
-export const Route = createFileRoute("/authors")({
+export const Route = createFileRoute("/authors/")({
   head: () => {
     const canonical = `${SITE_URL}/authors`;
     const title = "Authors & Editors — Glintr Editorial Team";
