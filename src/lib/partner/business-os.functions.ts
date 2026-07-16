@@ -156,7 +156,7 @@ export const getMarketingIdeas = createServerFn({ method: "POST" })
 export const getPartnerKpis = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -165,21 +165,19 @@ export const getPartnerKpis = createServerFn({ method: "GET" })
       supabase
         .from("partner_leads")
         .select("id", { count: "exact", head: true })
-        .eq("partner_user_id", userId)
         .gte("created_at", today.toISOString()),
       supabase
         .from("partner_leads")
         .select("id", { count: "exact", head: true })
-        .eq("partner_user_id", userId)
         .gte("created_at", monthStart.toISOString()),
       supabase
         .from("partner_follow_ups")
         .select("id", { count: "exact", head: true })
-        .eq("assigned_to", userId),
+        .eq("status", "pending"),
       supabase
         .from("partner_support_messages")
         .select("id", { count: "exact", head: true })
-        .eq("is_read", false),
+        .eq("is_admin", true),
     ]);
 
     return {
