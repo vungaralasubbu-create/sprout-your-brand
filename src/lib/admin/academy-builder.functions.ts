@@ -160,36 +160,11 @@ export const generateLogo = createServerFn({ method: "POST" })
   });
 
 /* ------------------------------------------------------------------ */
-/* 3. DOMAIN availability (lightweight DNS check)                     */
+/* 3. (Removed) Domain availability — Academy Partners run on         */
+/*    Glintr-managed infrastructure only. See partner.brand-studio     */
+/*    and partner.academy-builder for managed URL handling.            */
 /* ------------------------------------------------------------------ */
 
-const DomainIn = z.object({ domain: z.string().min(3).max(80) });
-
-export const checkDomain = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => DomainIn.parse(i))
-  .handler(async ({ data, context }) => {
-    await ensurePartner(context);
-    const domain = data.domain.toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "").trim();
-    if (!/^[a-z0-9][a-z0-9-]*(\.[a-z0-9-]+)+$/.test(domain)) {
-      return { domain, status: "invalid" as const, available: false };
-    }
-    // Use Google DNS-over-HTTPS as a coarse availability heuristic.
-    try {
-      const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=A`);
-      const j = await res.json();
-      // Status 3 = NXDOMAIN (likely available), 0 with Answer = taken.
-      const hasAnswer = Array.isArray(j?.Answer) && j.Answer.length > 0;
-      const isNx = j?.Status === 3;
-      return {
-        domain,
-        status: hasAnswer ? ("taken" as const) : isNx ? ("available" as const) : ("unknown" as const),
-        available: !hasAnswer,
-      };
-    } catch {
-      return { domain, status: "unknown" as const, available: false };
-    }
-  });
 
 /* ------------------------------------------------------------------ */
 /* 4. WEBSITE content (all core pages)                                */
