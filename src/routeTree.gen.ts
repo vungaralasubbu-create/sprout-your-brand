@@ -22,6 +22,7 @@ import { Route as PayoutSystemRouteImport } from './routes/payout-system'
 import { Route as PayoutPolicyRouteImport } from './routes/payout-policy'
 import { Route as PartnerSupportRouteImport } from './routes/partner-support'
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
+import { Route as MyRouteImport } from './routes/my'
 import { Route as MarketingSupportRouteImport } from './routes/marketing-support'
 import { Route as LmsRouteImport } from './routes/lms'
 import { Route as LearningPathsRouteImport } from './routes/learning-paths'
@@ -48,6 +49,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsIndexRouteImport } from './routes/tools.index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
+import { Route as MyIndexRouteImport } from './routes/my.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
@@ -58,6 +60,15 @@ import { Route as RefCodeRouteImport } from './routes/ref.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as PartnerSupportRequestsRouteImport } from './routes/partner-support.requests'
+import { Route as MySearchRouteImport } from './routes/my.search'
+import { Route as MyRoadmapsRouteImport } from './routes/my.roadmaps'
+import { Route as MyProfileRouteImport } from './routes/my.profile'
+import { Route as MyPlannerRouteImport } from './routes/my.planner'
+import { Route as MyNotesRouteImport } from './routes/my.notes'
+import { Route as MyDiscoverRouteImport } from './routes/my.discover'
+import { Route as MyBookmarksRouteImport } from './routes/my.bookmarks'
+import { Route as MyActivityRouteImport } from './routes/my.activity'
+import { Route as MyAchievementsRouteImport } from './routes/my.achievements'
 import { Route as LearningPathsSlugRouteImport } from './routes/learning-paths.$slug'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
@@ -262,6 +273,11 @@ const PartnerNetworkRoute = PartnerNetworkRouteImport.update({
   path: '/partner-network',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MyRoute = MyRouteImport.update({
+  id: '/my',
+  path: '/my',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketingSupportRoute = MarketingSupportRouteImport.update({
   id: '/marketing-support',
   path: '/marketing-support',
@@ -391,6 +407,11 @@ const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
   path: '/programs/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MyIndexRoute = MyIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MyRoute,
+} as any)
 const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
   id: '/launch-your-brand/',
   path: '/launch-your-brand/',
@@ -440,6 +461,51 @@ const PartnerSupportRequestsRoute = PartnerSupportRequestsRouteImport.update({
   id: '/requests',
   path: '/requests',
   getParentRoute: () => PartnerSupportRoute,
+} as any)
+const MySearchRoute = MySearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyRoadmapsRoute = MyRoadmapsRouteImport.update({
+  id: '/roadmaps',
+  path: '/roadmaps',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyProfileRoute = MyProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyPlannerRoute = MyPlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyNotesRoute = MyNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyDiscoverRoute = MyDiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyBookmarksRoute = MyBookmarksRouteImport.update({
+  id: '/bookmarks',
+  path: '/bookmarks',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyActivityRoute = MyActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => MyRoute,
+} as any)
+const MyAchievementsRoute = MyAchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => MyRoute,
 } as any)
 const LearningPathsSlugRoute = LearningPathsSlugRouteImport.update({
   id: '/$slug',
@@ -1278,6 +1344,7 @@ export interface FileRoutesByFullPath {
   '/learning-paths': typeof LearningPathsRouteWithChildren
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
+  '/my': typeof MyRouteWithChildren
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/payout-policy': typeof PayoutPolicyRoute
@@ -1305,6 +1372,15 @@ export interface FileRoutesByFullPath {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
+  '/my/achievements': typeof MyAchievementsRoute
+  '/my/activity': typeof MyActivityRoute
+  '/my/bookmarks': typeof MyBookmarksRoute
+  '/my/discover': typeof MyDiscoverRoute
+  '/my/notes': typeof MyNotesRoute
+  '/my/planner': typeof MyPlannerRoute
+  '/my/profile': typeof MyProfileRoute
+  '/my/roadmaps': typeof MyRoadmapsRoute
+  '/my/search': typeof MySearchRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
@@ -1315,6 +1391,7 @@ export interface FileRoutesByFullPath {
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
+  '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
@@ -1491,6 +1568,15 @@ export interface FileRoutesByTo {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
+  '/my/achievements': typeof MyAchievementsRoute
+  '/my/activity': typeof MyActivityRoute
+  '/my/bookmarks': typeof MyBookmarksRoute
+  '/my/discover': typeof MyDiscoverRoute
+  '/my/notes': typeof MyNotesRoute
+  '/my/planner': typeof MyPlannerRoute
+  '/my/profile': typeof MyProfileRoute
+  '/my/roadmaps': typeof MyRoadmapsRoute
+  '/my/search': typeof MySearchRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
@@ -1501,6 +1587,7 @@ export interface FileRoutesByTo {
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
+  '/my': typeof MyIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/tools': typeof ToolsIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
@@ -1653,6 +1740,7 @@ export interface FileRoutesById {
   '/learning-paths': typeof LearningPathsRouteWithChildren
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
+  '/my': typeof MyRouteWithChildren
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
   '/payout-policy': typeof PayoutPolicyRoute
@@ -1680,6 +1768,15 @@ export interface FileRoutesById {
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
+  '/my/achievements': typeof MyAchievementsRoute
+  '/my/activity': typeof MyActivityRoute
+  '/my/bookmarks': typeof MyBookmarksRoute
+  '/my/discover': typeof MyDiscoverRoute
+  '/my/notes': typeof MyNotesRoute
+  '/my/planner': typeof MyPlannerRoute
+  '/my/profile': typeof MyProfileRoute
+  '/my/roadmaps': typeof MyRoadmapsRoute
+  '/my/search': typeof MySearchRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
@@ -1690,6 +1787,7 @@ export interface FileRoutesById {
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
+  '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/_authenticated/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
@@ -1843,6 +1941,7 @@ export interface FileRouteTypes {
     | '/learning-paths'
     | '/lms'
     | '/marketing-support'
+    | '/my'
     | '/partner-network'
     | '/partner-support'
     | '/payout-policy'
@@ -1870,6 +1969,15 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learning-paths/$slug'
+    | '/my/achievements'
+    | '/my/activity'
+    | '/my/bookmarks'
+    | '/my/discover'
+    | '/my/notes'
+    | '/my/planner'
+    | '/my/profile'
+    | '/my/roadmaps'
+    | '/my/search'
     | '/partner-support/requests'
     | '/partner/apply'
     | '/partner/signup'
@@ -1880,6 +1988,7 @@ export interface FileRouteTypes {
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
+    | '/my/'
     | '/programs/'
     | '/tools/'
     | '/admin/access-restricted'
@@ -2056,6 +2165,15 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learning-paths/$slug'
+    | '/my/achievements'
+    | '/my/activity'
+    | '/my/bookmarks'
+    | '/my/discover'
+    | '/my/notes'
+    | '/my/planner'
+    | '/my/profile'
+    | '/my/roadmaps'
+    | '/my/search'
     | '/partner-support/requests'
     | '/partner/apply'
     | '/partner/signup'
@@ -2066,6 +2184,7 @@ export interface FileRouteTypes {
     | '/verify-certificate/$code'
     | '/campus-ambassador'
     | '/launch-your-brand'
+    | '/my'
     | '/programs'
     | '/tools'
     | '/admin/access-restricted'
@@ -2217,6 +2336,7 @@ export interface FileRouteTypes {
     | '/learning-paths'
     | '/lms'
     | '/marketing-support'
+    | '/my'
     | '/partner-network'
     | '/partner-support'
     | '/payout-policy'
@@ -2244,6 +2364,15 @@ export interface FileRouteTypes {
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learning-paths/$slug'
+    | '/my/achievements'
+    | '/my/activity'
+    | '/my/bookmarks'
+    | '/my/discover'
+    | '/my/notes'
+    | '/my/planner'
+    | '/my/profile'
+    | '/my/roadmaps'
+    | '/my/search'
     | '/partner-support/requests'
     | '/partner/apply'
     | '/partner/signup'
@@ -2254,6 +2383,7 @@ export interface FileRouteTypes {
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
+    | '/my/'
     | '/programs/'
     | '/tools/'
     | '/_authenticated/admin/access-restricted'
@@ -2407,6 +2537,7 @@ export interface RootRouteChildren {
   LearningPathsRoute: typeof LearningPathsRouteWithChildren
   LmsRoute: typeof LmsRoute
   MarketingSupportRoute: typeof MarketingSupportRoute
+  MyRoute: typeof MyRouteWithChildren
   PartnerNetworkRoute: typeof PartnerNetworkRoute
   PartnerSupportRoute: typeof PartnerSupportRouteWithChildren
   PayoutPolicyRoute: typeof PayoutPolicyRoute
@@ -2527,6 +2658,13 @@ declare module '@tanstack/react-router' {
       path: '/partner-network'
       fullPath: '/partner-network'
       preLoaderRoute: typeof PartnerNetworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my': {
+      id: '/my'
+      path: '/my'
+      fullPath: '/my'
+      preLoaderRoute: typeof MyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketing-support': {
@@ -2711,6 +2849,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/my/': {
+      id: '/my/'
+      path: '/'
+      fullPath: '/my/'
+      preLoaderRoute: typeof MyIndexRouteImport
+      parentRoute: typeof MyRoute
+    }
     '/launch-your-brand/': {
       id: '/launch-your-brand/'
       path: '/launch-your-brand'
@@ -2780,6 +2925,69 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner-support/requests'
       preLoaderRoute: typeof PartnerSupportRequestsRouteImport
       parentRoute: typeof PartnerSupportRoute
+    }
+    '/my/search': {
+      id: '/my/search'
+      path: '/search'
+      fullPath: '/my/search'
+      preLoaderRoute: typeof MySearchRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/roadmaps': {
+      id: '/my/roadmaps'
+      path: '/roadmaps'
+      fullPath: '/my/roadmaps'
+      preLoaderRoute: typeof MyRoadmapsRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/profile': {
+      id: '/my/profile'
+      path: '/profile'
+      fullPath: '/my/profile'
+      preLoaderRoute: typeof MyProfileRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/planner': {
+      id: '/my/planner'
+      path: '/planner'
+      fullPath: '/my/planner'
+      preLoaderRoute: typeof MyPlannerRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/notes': {
+      id: '/my/notes'
+      path: '/notes'
+      fullPath: '/my/notes'
+      preLoaderRoute: typeof MyNotesRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/discover': {
+      id: '/my/discover'
+      path: '/discover'
+      fullPath: '/my/discover'
+      preLoaderRoute: typeof MyDiscoverRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/bookmarks': {
+      id: '/my/bookmarks'
+      path: '/bookmarks'
+      fullPath: '/my/bookmarks'
+      preLoaderRoute: typeof MyBookmarksRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/activity': {
+      id: '/my/activity'
+      path: '/activity'
+      fullPath: '/my/activity'
+      preLoaderRoute: typeof MyActivityRouteImport
+      parentRoute: typeof MyRoute
+    }
+    '/my/achievements': {
+      id: '/my/achievements'
+      path: '/achievements'
+      fullPath: '/my/achievements'
+      preLoaderRoute: typeof MyAchievementsRouteImport
+      parentRoute: typeof MyRoute
     }
     '/learning-paths/$slug': {
       id: '/learning-paths/$slug'
@@ -4296,6 +4504,34 @@ const LearningPathsRouteWithChildren = LearningPathsRoute._addFileChildren(
   LearningPathsRouteChildren,
 )
 
+interface MyRouteChildren {
+  MyAchievementsRoute: typeof MyAchievementsRoute
+  MyActivityRoute: typeof MyActivityRoute
+  MyBookmarksRoute: typeof MyBookmarksRoute
+  MyDiscoverRoute: typeof MyDiscoverRoute
+  MyNotesRoute: typeof MyNotesRoute
+  MyPlannerRoute: typeof MyPlannerRoute
+  MyProfileRoute: typeof MyProfileRoute
+  MyRoadmapsRoute: typeof MyRoadmapsRoute
+  MySearchRoute: typeof MySearchRoute
+  MyIndexRoute: typeof MyIndexRoute
+}
+
+const MyRouteChildren: MyRouteChildren = {
+  MyAchievementsRoute: MyAchievementsRoute,
+  MyActivityRoute: MyActivityRoute,
+  MyBookmarksRoute: MyBookmarksRoute,
+  MyDiscoverRoute: MyDiscoverRoute,
+  MyNotesRoute: MyNotesRoute,
+  MyPlannerRoute: MyPlannerRoute,
+  MyProfileRoute: MyProfileRoute,
+  MyRoadmapsRoute: MyRoadmapsRoute,
+  MySearchRoute: MySearchRoute,
+  MyIndexRoute: MyIndexRoute,
+}
+
+const MyRouteWithChildren = MyRoute._addFileChildren(MyRouteChildren)
+
 interface PartnerSupportRequestsRouteChildren {
   PartnerSupportRequestsRefRoute: typeof PartnerSupportRequestsRefRoute
 }
@@ -4385,6 +4621,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearningPathsRoute: LearningPathsRouteWithChildren,
   LmsRoute: LmsRoute,
   MarketingSupportRoute: MarketingSupportRoute,
+  MyRoute: MyRouteWithChildren,
   PartnerNetworkRoute: PartnerNetworkRoute,
   PartnerSupportRoute: PartnerSupportRouteWithChildren,
   PayoutPolicyRoute: PayoutPolicyRoute,
