@@ -269,7 +269,7 @@ function AiMentorCard({ title }: { title: string }) {
         <Sparkles className="size-3.5" /> Ask Glintr AI
       </div>
       <p className="text-sm text-muted-foreground">
-        The Glintr AI Mentor is aware of this page. Ask it to explain a concept, summarise this guide, or recommend what to learn next.
+        The GlintrAI is aware of this page. Ask it to explain a concept, summarise this guide, or recommend what to learn next.
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         {[
