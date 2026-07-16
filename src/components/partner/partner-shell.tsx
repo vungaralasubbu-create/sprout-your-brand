@@ -308,7 +308,28 @@ export function PartnerShell() {
                 </div>
               ))}
             </nav>
+
+            {!academy.enabled && partner && (
+              <div className="mt-6 rounded-xl border border-dashed border-primary/40 bg-gradient-to-br from-primary/[0.04] via-white to-emerald-50/40 p-4">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-primary">
+                  Optional Upgrade
+                </div>
+                <div className="mt-1 font-display text-sm font-semibold tracking-tight">
+                  Launch My Own Academy
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Build your own education brand with AI. Website, courses, logo, marketing — generated for you.
+                </p>
+                <Link
+                  to="/partner/launch-academy"
+                  className="mt-3 inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors w-full"
+                >
+                  Explore Academy Builder
+                </Link>
+              </div>
+            )}
           </div>
+
 
           <div className="px-3 py-4 border-t bg-white">
             <Button
