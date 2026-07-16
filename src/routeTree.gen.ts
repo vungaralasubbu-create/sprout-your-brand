@@ -26,6 +26,7 @@ import { Route as MyRouteImport } from './routes/my'
 import { Route as MarketingSupportRouteImport } from './routes/marketing-support'
 import { Route as LmsRouteImport } from './routes/lms'
 import { Route as LearningPathsRouteImport } from './routes/learning-paths'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as KnowledgeGraphRouteImport } from './routes/knowledge-graph'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator'
@@ -50,6 +51,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsIndexRouteImport } from './routes/tools.index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as MyIndexRouteImport } from './routes/my.index'
+import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as VerifyCertificateCodeRouteImport } from './routes/verify-certificate.$code'
@@ -70,6 +72,9 @@ import { Route as MyBookmarksRouteImport } from './routes/my.bookmarks'
 import { Route as MyActivityRouteImport } from './routes/my.activity'
 import { Route as MyAchievementsRouteImport } from './routes/my.achievements'
 import { Route as LearningPathsSlugRouteImport } from './routes/learning-paths.$slug'
+import { Route as LearnTopicsRouteImport } from './routes/learn.topics'
+import { Route as LearnPathsRouteImport } from './routes/learn.paths'
+import { Route as LearnSlugRouteImport } from './routes/learn.$slug'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
 import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
@@ -88,6 +93,7 @@ import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
+import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collections.$slug'
 import { Route as AuthenticatedStudentSupportRouteImport } from './routes/_authenticated/student.support'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
 import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
@@ -316,6 +322,11 @@ const LearningPathsRoute = LearningPathsRouteImport.update({
   path: '/learning-paths',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KnowledgeGraphRoute = KnowledgeGraphRouteImport.update({
   id: '/knowledge-graph',
   path: '/knowledge-graph',
@@ -435,6 +446,11 @@ const MyIndexRoute = MyIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MyRoute,
 } as any)
+const LearnIndexRoute = LearnIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LearnRoute,
+} as any)
 const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
   id: '/launch-your-brand/',
   path: '/launch-your-brand/',
@@ -535,6 +551,21 @@ const LearningPathsSlugRoute = LearningPathsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => LearningPathsRoute,
 } as any)
+const LearnTopicsRoute = LearnTopicsRouteImport.update({
+  id: '/topics',
+  path: '/topics',
+  getParentRoute: () => LearnRoute,
+} as any)
+const LearnPathsRoute = LearnPathsRouteImport.update({
+  id: '/paths',
+  path: '/paths',
+  getParentRoute: () => LearnRoute,
+} as any)
+const LearnSlugRoute = LearnSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => LearnRoute,
+} as any)
 const LaunchYourBrandStartRoute = LaunchYourBrandStartRouteImport.update({
   id: '/launch-your-brand/start',
   path: '/launch-your-brand/start',
@@ -629,6 +660,11 @@ const PartnerSupportRequestsRefRoute =
     path: '/$ref',
     getParentRoute: () => PartnerSupportRequestsRoute,
   } as any)
+const LearnCollectionsSlugRoute = LearnCollectionsSlugRouteImport.update({
+  id: '/collections/$slug',
+  path: '/collections/$slug',
+  getParentRoute: () => LearnRoute,
+} as any)
 const AuthenticatedStudentSupportRoute =
   AuthenticatedStudentSupportRouteImport.update({
     id: '/support',
@@ -1499,6 +1535,7 @@ export interface FileRoutesByFullPath {
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/knowledge-graph': typeof KnowledgeGraphRoute
+  '/learn': typeof LearnRouteWithChildren
   '/learning-paths': typeof LearningPathsRouteWithChildren
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
@@ -1529,6 +1566,9 @@ export interface FileRoutesByFullPath {
   '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
+  '/learn/$slug': typeof LearnSlugRoute
+  '/learn/paths': typeof LearnPathsRoute
+  '/learn/topics': typeof LearnTopicsRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
   '/my/achievements': typeof MyAchievementsRoute
   '/my/activity': typeof MyActivityRoute
@@ -1549,6 +1589,7 @@ export interface FileRoutesByFullPath {
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
+  '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
@@ -1641,6 +1682,7 @@ export interface FileRoutesByFullPath {
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
+  '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -1748,6 +1790,9 @@ export interface FileRoutesByTo {
   '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
+  '/learn/$slug': typeof LearnSlugRoute
+  '/learn/paths': typeof LearnPathsRoute
+  '/learn/topics': typeof LearnTopicsRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
   '/my/achievements': typeof MyAchievementsRoute
   '/my/activity': typeof MyActivityRoute
@@ -1768,6 +1813,7 @@ export interface FileRoutesByTo {
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
+  '/learn': typeof LearnIndexRoute
   '/my': typeof MyIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/tools': typeof ToolsIndexRoute
@@ -1859,6 +1905,7 @@ export interface FileRoutesByTo {
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -1941,6 +1988,7 @@ export interface FileRoutesById {
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/knowledge-graph': typeof KnowledgeGraphRoute
+  '/learn': typeof LearnRouteWithChildren
   '/learning-paths': typeof LearningPathsRouteWithChildren
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
@@ -1971,6 +2019,9 @@ export interface FileRoutesById {
   '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
+  '/learn/$slug': typeof LearnSlugRoute
+  '/learn/paths': typeof LearnPathsRoute
+  '/learn/topics': typeof LearnTopicsRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
   '/my/achievements': typeof MyAchievementsRoute
   '/my/activity': typeof MyActivityRoute
@@ -1991,6 +2042,7 @@ export interface FileRoutesById {
   '/verify-certificate/$code': typeof VerifyCertificateCodeRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
+  '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
@@ -2083,6 +2135,7 @@ export interface FileRoutesById {
   '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
   '/_authenticated/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
+  '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -2165,6 +2218,7 @@ export interface FileRouteTypes {
     | '/income-calculator'
     | '/join'
     | '/knowledge-graph'
+    | '/learn'
     | '/learning-paths'
     | '/lms'
     | '/marketing-support'
@@ -2195,6 +2249,9 @@ export interface FileRouteTypes {
     | '/glossary/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
+    | '/learn/$slug'
+    | '/learn/paths'
+    | '/learn/topics'
     | '/learning-paths/$slug'
     | '/my/achievements'
     | '/my/activity'
@@ -2215,6 +2272,7 @@ export interface FileRouteTypes {
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
+    | '/learn/'
     | '/my/'
     | '/programs/'
     | '/tools/'
@@ -2307,6 +2365,7 @@ export interface FileRouteTypes {
     | '/student/notifications'
     | '/student/profile'
     | '/student/support'
+    | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
     | '/admin/'
@@ -2414,6 +2473,9 @@ export interface FileRouteTypes {
     | '/glossary/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
+    | '/learn/$slug'
+    | '/learn/paths'
+    | '/learn/topics'
     | '/learning-paths/$slug'
     | '/my/achievements'
     | '/my/activity'
@@ -2434,6 +2496,7 @@ export interface FileRouteTypes {
     | '/verify-certificate/$code'
     | '/campus-ambassador'
     | '/launch-your-brand'
+    | '/learn'
     | '/my'
     | '/programs'
     | '/tools'
@@ -2525,6 +2588,7 @@ export interface FileRouteTypes {
     | '/student/mentor'
     | '/student/notifications'
     | '/student/profile'
+    | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
     | '/admin'
@@ -2606,6 +2670,7 @@ export interface FileRouteTypes {
     | '/income-calculator'
     | '/join'
     | '/knowledge-graph'
+    | '/learn'
     | '/learning-paths'
     | '/lms'
     | '/marketing-support'
@@ -2636,6 +2701,9 @@ export interface FileRouteTypes {
     | '/glossary/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
+    | '/learn/$slug'
+    | '/learn/paths'
+    | '/learn/topics'
     | '/learning-paths/$slug'
     | '/my/achievements'
     | '/my/activity'
@@ -2656,6 +2724,7 @@ export interface FileRouteTypes {
     | '/verify-certificate/$code'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
+    | '/learn/'
     | '/my/'
     | '/programs/'
     | '/tools/'
@@ -2748,6 +2817,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
     | '/_authenticated/student/support'
+    | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
     | '/_authenticated/admin/'
@@ -2830,6 +2900,7 @@ export interface RootRouteChildren {
   IncomeCalculatorRoute: typeof IncomeCalculatorRoute
   JoinRoute: typeof JoinRoute
   KnowledgeGraphRoute: typeof KnowledgeGraphRoute
+  LearnRoute: typeof LearnRouteWithChildren
   LearningPathsRoute: typeof LearningPathsRouteWithChildren
   LmsRoute: typeof LmsRoute
   MarketingSupportRoute: typeof MarketingSupportRoute
@@ -2982,6 +3053,13 @@ declare module '@tanstack/react-router' {
       path: '/learning-paths'
       fullPath: '/learning-paths'
       preLoaderRoute: typeof LearningPathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/knowledge-graph': {
@@ -3152,6 +3230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyIndexRouteImport
       parentRoute: typeof MyRoute
     }
+    '/learn/': {
+      id: '/learn/'
+      path: '/'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof LearnRoute
+    }
     '/launch-your-brand/': {
       id: '/launch-your-brand/'
       path: '/launch-your-brand'
@@ -3292,6 +3377,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearningPathsSlugRouteImport
       parentRoute: typeof LearningPathsRoute
     }
+    '/learn/topics': {
+      id: '/learn/topics'
+      path: '/topics'
+      fullPath: '/learn/topics'
+      preLoaderRoute: typeof LearnTopicsRouteImport
+      parentRoute: typeof LearnRoute
+    }
+    '/learn/paths': {
+      id: '/learn/paths'
+      path: '/paths'
+      fullPath: '/learn/paths'
+      preLoaderRoute: typeof LearnPathsRouteImport
+      parentRoute: typeof LearnRoute
+    }
+    '/learn/$slug': {
+      id: '/learn/$slug'
+      path: '/$slug'
+      fullPath: '/learn/$slug'
+      preLoaderRoute: typeof LearnSlugRouteImport
+      parentRoute: typeof LearnRoute
+    }
     '/launch-your-brand/start': {
       id: '/launch-your-brand/start'
       path: '/launch-your-brand/start'
@@ -3417,6 +3523,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner-support/requests/$ref'
       preLoaderRoute: typeof PartnerSupportRequestsRefRouteImport
       parentRoute: typeof PartnerSupportRequestsRoute
+    }
+    '/learn/collections/$slug': {
+      id: '/learn/collections/$slug'
+      path: '/collections/$slug'
+      fullPath: '/learn/collections/$slug'
+      preLoaderRoute: typeof LearnCollectionsSlugRouteImport
+      parentRoute: typeof LearnRoute
     }
     '/_authenticated/student/support': {
       id: '/_authenticated/student/support'
@@ -4996,6 +5109,24 @@ const GlossaryRouteWithChildren = GlossaryRoute._addFileChildren(
   GlossaryRouteChildren,
 )
 
+interface LearnRouteChildren {
+  LearnSlugRoute: typeof LearnSlugRoute
+  LearnPathsRoute: typeof LearnPathsRoute
+  LearnTopicsRoute: typeof LearnTopicsRoute
+  LearnIndexRoute: typeof LearnIndexRoute
+  LearnCollectionsSlugRoute: typeof LearnCollectionsSlugRoute
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnSlugRoute: LearnSlugRoute,
+  LearnPathsRoute: LearnPathsRoute,
+  LearnTopicsRoute: LearnTopicsRoute,
+  LearnIndexRoute: LearnIndexRoute,
+  LearnCollectionsSlugRoute: LearnCollectionsSlugRoute,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
+
 interface LearningPathsRouteChildren {
   LearningPathsSlugRoute: typeof LearningPathsSlugRoute
 }
@@ -5122,6 +5253,7 @@ const rootRouteChildren: RootRouteChildren = {
   IncomeCalculatorRoute: IncomeCalculatorRoute,
   JoinRoute: JoinRoute,
   KnowledgeGraphRoute: KnowledgeGraphRoute,
+  LearnRoute: LearnRouteWithChildren,
   LearningPathsRoute: LearningPathsRouteWithChildren,
   LmsRoute: LmsRoute,
   MarketingSupportRoute: MarketingSupportRoute,
