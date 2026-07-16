@@ -178,10 +178,10 @@ function CategoryPage() {
                   </span>
                 </div>
                 <h1 className="text-display-md md:text-display-lg font-display font-semibold tracking-tight text-balance">
-                  {category?.hero_title ?? category?.name ?? prettify(slug)}
+                  {editorial?.headline ?? category?.hero_title ?? category?.name ?? prettify(slug)}
                 </h1>
                 <p className="mt-5 text-body-lg text-muted-foreground max-w-xl">
-                  {category?.full_description ?? category?.short_description}
+                  {editorial?.subheadline ?? category?.full_description ?? category?.short_description}
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <Button size="lg" variant="gradient" asChild>
