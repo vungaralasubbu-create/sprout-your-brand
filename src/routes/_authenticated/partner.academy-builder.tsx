@@ -83,8 +83,7 @@ type Draft = {
   };
   brand?: any;
   chosenName?: string;
-  chosenDomain?: string;
-  domainChecks: Record<string, { available: boolean; status: string }>;
+  managedSlug?: string;
   logos: Record<string, string>; // variant -> data url
   website?: any;
   programs: any[];
