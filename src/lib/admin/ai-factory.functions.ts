@@ -381,6 +381,7 @@ export const saveFactoryDraft = createServerFn({ method: "POST" })
         focus_keywords: data.focusKeywords ?? [],
         images: data.images ?? {},
         visual_blocks: d.visual_blocks ?? {},
+        image_plan: d.image_plan ?? {},
         internal_links: d.internal_links ?? [],
         related_course_slugs: d.related_course_slugs ?? [],
         related_blog_slugs: d.related_blog_slugs ?? [],
