@@ -108,6 +108,8 @@ import { Route as WorkspaceNotebooksIdRouteImport } from './routes/workspace.not
 import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
 import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collections.$slug'
+import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
+import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as AuthenticatedStudentSupportRouteImport } from './routes/_authenticated/student.support'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
 import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
@@ -286,6 +288,7 @@ import { Route as AuthenticatedAdminAiContentReviewRouteImport } from './routes/
 import { Route as AuthenticatedAdminAiContentClustersRouteImport } from './routes/_authenticated/admin.ai-content.clusters'
 import { Route as AuthenticatedAdminAiContentCalendarRouteImport } from './routes/_authenticated/admin.ai-content.calendar'
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
+import { Route as ApiV1CertificatesVerifyCodeRouteImport } from './routes/api/v1/certificates.verify.$code'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
@@ -791,6 +794,16 @@ const LearnCollectionsSlugRoute = LearnCollectionsSlugRouteImport.update({
   id: '/collections/$slug',
   path: '/collections/$slug',
   getParentRoute: () => LearnRoute,
+} as any)
+const ApiV1VersionRoute = ApiV1VersionRouteImport.update({
+  id: '/api/v1/version',
+  path: '/api/v1/version',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
+  id: '/api/v1/health',
+  path: '/api/v1/health',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedStudentSupportRoute =
   AuthenticatedStudentSupportRouteImport.update({
@@ -1856,6 +1869,12 @@ const AuthenticatedAdminContentArticlesIndexRoute =
     path: '/articles/',
     getParentRoute: () => AuthenticatedAdminContentRoute,
   } as any)
+const ApiV1CertificatesVerifyCodeRoute =
+  ApiV1CertificatesVerifyCodeRouteImport.update({
+    id: '/api/v1/certificates/verify/$code',
+    path: '/api/v1/certificates/verify/$code',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedStudentCareerInterviewSetupRoute =
   AuthenticatedStudentCareerInterviewSetupRouteImport.update({
     id: '/setup',
@@ -2082,6 +2101,8 @@ export interface FileRoutesByFullPath {
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
+  '/api/v1/health': typeof ApiV1HealthRoute
+  '/api/v1/version': typeof ApiV1VersionRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -2180,6 +2201,7 @@ export interface FileRoutesByFullPath {
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
@@ -2358,6 +2380,8 @@ export interface FileRoutesByTo {
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/api/v1/health': typeof ApiV1HealthRoute
+  '/api/v1/version': typeof ApiV1VersionRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -2456,6 +2480,7 @@ export interface FileRoutesByTo {
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/content/articles': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
@@ -2645,6 +2670,8 @@ export interface FileRoutesById {
   '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
   '/_authenticated/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
+  '/api/v1/health': typeof ApiV1HealthRoute
+  '/api/v1/version': typeof ApiV1VersionRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -2743,6 +2770,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/_authenticated/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/_authenticated/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/_authenticated/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/_authenticated/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
@@ -2932,6 +2960,8 @@ export interface FileRouteTypes {
     | '/student/notifications'
     | '/student/profile'
     | '/student/support'
+    | '/api/v1/health'
+    | '/api/v1/version'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -3030,6 +3060,7 @@ export interface FileRouteTypes {
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
+    | '/api/v1/certificates/verify/$code'
     | '/admin/content/articles/'
     | '/student/career/interview/$id/report'
     | '/student/internship/$id/tasks/$taskId'
@@ -3208,6 +3239,8 @@ export interface FileRouteTypes {
     | '/student/mentor'
     | '/student/notifications'
     | '/student/profile'
+    | '/api/v1/health'
+    | '/api/v1/version'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -3306,6 +3339,7 @@ export interface FileRouteTypes {
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
+    | '/api/v1/certificates/verify/$code'
     | '/admin/content/articles'
     | '/student/career/interview/$id/report'
     | '/student/internship/$id/tasks/$taskId'
@@ -3494,6 +3528,8 @@ export interface FileRouteTypes {
     | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
     | '/_authenticated/student/support'
+    | '/api/v1/health'
+    | '/api/v1/version'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -3592,6 +3628,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
     | '/_authenticated/student/career/interview/setup'
+    | '/api/v1/certificates/verify/$code'
     | '/_authenticated/admin/content/articles/'
     | '/_authenticated/student/career/interview/$id/report'
     | '/_authenticated/student/internship/$id/tasks/$taskId'
@@ -3649,9 +3686,12 @@ export interface RootRouteChildren {
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ToolsIndexRoute: typeof ToolsIndexRoute
+  ApiV1HealthRoute: typeof ApiV1HealthRoute
+  ApiV1VersionRoute: typeof ApiV1VersionRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
+  ApiV1CertificatesVerifyCodeRoute: typeof ApiV1CertificatesVerifyCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -4348,6 +4388,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/learn/collections/$slug'
       preLoaderRoute: typeof LearnCollectionsSlugRouteImport
       parentRoute: typeof LearnRoute
+    }
+    '/api/v1/version': {
+      id: '/api/v1/version'
+      path: '/api/v1/version'
+      fullPath: '/api/v1/version'
+      preLoaderRoute: typeof ApiV1VersionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/health': {
+      id: '/api/v1/health'
+      path: '/api/v1/health'
+      fullPath: '/api/v1/health'
+      preLoaderRoute: typeof ApiV1HealthRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/student/support': {
       id: '/_authenticated/student/support'
@@ -5595,6 +5649,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentArticlesIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
     }
+    '/api/v1/certificates/verify/$code': {
+      id: '/api/v1/certificates/verify/$code'
+      path: '/api/v1/certificates/verify/$code'
+      fullPath: '/api/v1/certificates/verify/$code'
+      preLoaderRoute: typeof ApiV1CertificatesVerifyCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/student/career/interview/setup': {
       id: '/_authenticated/student/career/interview/setup'
       path: '/setup'
@@ -6596,9 +6657,12 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   ToolsIndexRoute: ToolsIndexRoute,
+  ApiV1HealthRoute: ApiV1HealthRoute,
+  ApiV1VersionRoute: ApiV1VersionRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
+  ApiV1CertificatesVerifyCodeRoute: ApiV1CertificatesVerifyCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
