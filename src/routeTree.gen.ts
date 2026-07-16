@@ -357,6 +357,7 @@ import { Route as AuthenticatedAdminAiContentWizardRouteImport } from './routes/
 import { Route as AuthenticatedAdminAiContentSuggestionsRouteImport } from './routes/_authenticated/admin.ai-content.suggestions'
 import { Route as AuthenticatedAdminAiContentSettingsRouteImport } from './routes/_authenticated/admin.ai-content.settings'
 import { Route as AuthenticatedAdminAiContentReviewRouteImport } from './routes/_authenticated/admin.ai-content.review'
+import { Route as AuthenticatedAdminAiContentDraftsRouteImport } from './routes/_authenticated/admin.ai-content.drafts'
 import { Route as AuthenticatedAdminAiContentClustersRouteImport } from './routes/_authenticated/admin.ai-content.clusters'
 import { Route as AuthenticatedAdminAiContentCalendarRouteImport } from './routes/_authenticated/admin.ai-content.calendar'
 import { Route as AuthenticatedAdminAiAgentsOrchestratorRouteImport } from './routes/_authenticated/admin.ai-agents.orchestrator'
@@ -2335,6 +2336,12 @@ const AuthenticatedAdminAiContentReviewRoute =
     path: '/review',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
+const AuthenticatedAdminAiContentDraftsRoute =
+  AuthenticatedAdminAiContentDraftsRouteImport.update({
+    id: '/drafts',
+    path: '/drafts',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
 const AuthenticatedAdminAiContentClustersRoute =
   AuthenticatedAdminAiContentClustersRouteImport.update({
     id: '/clusters',
@@ -2645,6 +2652,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
+  '/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
@@ -2994,6 +3002,7 @@ export interface FileRoutesByTo {
   '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
+  '/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
@@ -3359,6 +3368,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
   '/_authenticated/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/_authenticated/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
+  '/_authenticated/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
   '/_authenticated/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
   '/_authenticated/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/_authenticated/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
@@ -3724,6 +3734,7 @@ export interface FileRouteTypes {
     | '/admin/ai-agents/orchestrator'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
+    | '/admin/ai-content/drafts'
     | '/admin/ai-content/review'
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
@@ -4073,6 +4084,7 @@ export interface FileRouteTypes {
     | '/admin/ai-agents/orchestrator'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
+    | '/admin/ai-content/drafts'
     | '/admin/ai-content/review'
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
@@ -4437,6 +4449,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-agents/orchestrator'
     | '/_authenticated/admin/ai-content/calendar'
     | '/_authenticated/admin/ai-content/clusters'
+    | '/_authenticated/admin/ai-content/drafts'
     | '/_authenticated/admin/ai-content/review'
     | '/_authenticated/admin/ai-content/settings'
     | '/_authenticated/admin/ai-content/suggestions'
@@ -7087,6 +7100,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiContentReviewRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
+    '/_authenticated/admin/ai-content/drafts': {
+      id: '/_authenticated/admin/ai-content/drafts'
+      path: '/drafts'
+      fullPath: '/admin/ai-content/drafts'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentDraftsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
     '/_authenticated/admin/ai-content/clusters': {
       id: '/_authenticated/admin/ai-content/clusters'
       path: '/clusters'
@@ -7213,6 +7233,7 @@ const AuthenticatedAdminAiAgentsRouteWithChildren =
 interface AuthenticatedAdminAiContentRouteChildren {
   AuthenticatedAdminAiContentCalendarRoute: typeof AuthenticatedAdminAiContentCalendarRoute
   AuthenticatedAdminAiContentClustersRoute: typeof AuthenticatedAdminAiContentClustersRoute
+  AuthenticatedAdminAiContentDraftsRoute: typeof AuthenticatedAdminAiContentDraftsRoute
   AuthenticatedAdminAiContentReviewRoute: typeof AuthenticatedAdminAiContentReviewRoute
   AuthenticatedAdminAiContentSettingsRoute: typeof AuthenticatedAdminAiContentSettingsRoute
   AuthenticatedAdminAiContentSuggestionsRoute: typeof AuthenticatedAdminAiContentSuggestionsRoute
@@ -7226,6 +7247,8 @@ const AuthenticatedAdminAiContentRouteChildren: AuthenticatedAdminAiContentRoute
       AuthenticatedAdminAiContentCalendarRoute,
     AuthenticatedAdminAiContentClustersRoute:
       AuthenticatedAdminAiContentClustersRoute,
+    AuthenticatedAdminAiContentDraftsRoute:
+      AuthenticatedAdminAiContentDraftsRoute,
     AuthenticatedAdminAiContentReviewRoute:
       AuthenticatedAdminAiContentReviewRoute,
     AuthenticatedAdminAiContentSettingsRoute:
