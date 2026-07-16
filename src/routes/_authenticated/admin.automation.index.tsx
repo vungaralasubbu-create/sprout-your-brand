@@ -76,7 +76,7 @@ function AutomationHome() {
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="text-sm font-medium truncate">{wf.name}</div>
-                    <Badge variant={wf.status === "active" ? "default" : "secondary"} className="text-[10px]">{wf.status}</Badge>
+                    <Badge variant={wf.status === "active" ? "default" : "muted"} className="text-[10px]">{wf.status}</Badge>
                     <span className="text-[11px] text-muted-foreground">v{wf.version}</span>
                   </div>
                   <div className="text-xs text-muted-foreground truncate">{wf.description}</div>

@@ -76,7 +76,7 @@ function WorkflowsList() {
                   <Link to="/admin/workflows/$id" params={{ id: w.id }} className="font-medium hover:text-primary">{w.name}</Link>
                   <div className="text-xs text-muted-foreground line-clamp-1">{w.description}</div>
                 </td>
-                <td className="px-4 py-3"><Badge variant={w.status === "active" ? "default" : "secondary"} className="text-[10px]">{w.status}</Badge></td>
+                <td className="px-4 py-3"><Badge variant={w.status === "active" ? "default" : "muted"} className="text-[10px]">{w.status}</Badge></td>
                 <td className="px-4 py-3 text-xs text-muted-foreground">{w.trigger}</td>
                 <td className="px-4 py-3 text-xs tabular-nums">{w.nodes.length}</td>
                 <td className="px-4 py-3 text-xs tabular-nums">v{w.version}</td>

@@ -69,7 +69,7 @@ function WorkflowBuilder() {
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <input value={wf.name} onChange={(e) => updateWf({ ...wf, name: e.target.value })} className="text-sm font-semibold bg-transparent border-0 outline-none focus:ring-1 focus:ring-primary rounded px-1 -mx-1 min-w-[10rem]" />
-            <Badge variant={wf.status === "active" ? "default" : "secondary"} className="text-[10px]">{wf.status}</Badge>
+            <Badge variant={wf.status === "active" ? "default" : "muted"} className="text-[10px]">{wf.status}</Badge>
             <span className="text-[11px] text-muted-foreground">v{wf.version}</span>
             {saving && <span className="text-[11px] text-muted-foreground">saving…</span>}
           </div>
@@ -139,7 +139,7 @@ function WorkflowBuilder() {
                   {lastRun.steps.map((s, i) => (
                     <div key={i} className="flex items-center justify-between px-4 py-2 text-xs">
                       <div><span className="text-muted-foreground tabular-nums mr-2">{i + 1}.</span><span className="font-medium">{s.label}</span>{s.message && <span className="text-muted-foreground"> — {s.message}</span>}</div>
-                      <Badge variant={s.status === "success" ? "default" : "secondary"} className="text-[10px]">{s.status.replace("_", " ")}</Badge>
+                      <Badge variant={s.status === "success" ? "success" : "muted"} className="text-[10px]">{s.status.replace("_", " ")}</Badge>
                     </div>
                   ))}
                 </div>
