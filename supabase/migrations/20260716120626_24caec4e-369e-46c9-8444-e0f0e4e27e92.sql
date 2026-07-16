@@ -1,0 +1,1 @@
+UPDATE public.blog_posts SET category_id = '179ff54a-4beb-422e-93d2-664a6a720337', topic_id = '346f2372-3c11-4d1f-9c68-123689088f5d' WHERE slug = 'what-is-artificial-intelligence';
