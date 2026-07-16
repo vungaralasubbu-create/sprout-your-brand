@@ -2,7 +2,7 @@
 import type { LucideIcon } from "lucide-react";
 import {
   GraduationCap, Compass, Briefcase, Megaphone, PenSquare, Users, Building2,
-  LifeBuoy, ShieldCheck, Search,
+  LifeBuoy, ShieldCheck, Search, Code2, BarChart3,
 } from "lucide-react";
 
 export type AgentPermission = "student" | "partner" | "brand" | "editor" | "admin" | "public";
