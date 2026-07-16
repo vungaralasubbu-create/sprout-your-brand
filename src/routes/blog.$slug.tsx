@@ -50,7 +50,12 @@ export const Route = createFileRoute("/blog/$slug")({
       post?.seo_description ??
       post?.short_summary ??
       "Ideas, skills and perspectives from Glintr — technology, AI, engineering and modern learning.";
-    const image = post?.featured_image_url ?? post?.thumbnail_url ?? undefined;
+    const image =
+      post?.social_image_url ??
+      post?.hero_image_url ??
+      post?.featured_image_url ??
+      post?.thumbnail_url ??
+      undefined;
     const meta: Array<Record<string, string>> = [
       { title },
       { name: "description", content: description },
