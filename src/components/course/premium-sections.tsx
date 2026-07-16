@@ -436,8 +436,11 @@ const SALARY_STAGES = [
   { stage: "Leadership", range: "₹50L+", low: 50, high: 80, note: "Architect / Head-of roles & beyond." },
 ];
 
-export function SalaryGrowth() {
-  const max = 80;
+type SalaryStage = { stage: string; range: string; low: number; high: number; note: string };
+
+export function SalaryGrowth({ stages }: { stages?: SalaryStage[] } = {}) {
+  const list = stages && stages.length > 0 ? stages : SALARY_STAGES;
+  const max = Math.max(...list.map((s) => s.high), 40);
   return (
     <Section className="py-14 lg:py-20 bg-surface-1/50 border-y">
       <Container>
