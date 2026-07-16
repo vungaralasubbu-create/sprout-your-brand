@@ -180,7 +180,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const deduped = Array.from(seen.values());
 
 
-        const urls = entries.map((e) =>
+        const urls = deduped.map((e) =>
           [
             "  <url>",
             `    <loc>${esc(BASE_URL + e.path)}</loc>`,
