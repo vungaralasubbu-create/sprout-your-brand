@@ -10,6 +10,7 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Programs",
     links: [
+      { label: "Find your best program", href: "/find-your-program" },
       { label: "Computer Science", href: "/programs/computer-science" },
       { label: "Electronics & Electrical", href: "/programs/electronics-electrical" },
       { label: "Mechanical Engineering", href: "/programs/mechanical-engineering" },

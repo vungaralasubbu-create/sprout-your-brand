@@ -32,6 +32,7 @@ import {
 import { SiteHeader } from "@/components/shared/site-header";
 import { SiteFooter } from "@/components/shared/site-footer";
 import { Section, Container } from "@/components/shared/section";
+import { ProgramDiscoveryFooter } from "@/components/shared/program-discovery-footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -1272,11 +1273,19 @@ function NotFound() {
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {
+  const { category } = Route.useParams();
   return (
     <>
       <ProgramScrollProgress />
       <SiteHeader />
-      <main className="pb-24 lg:pb-0">{children}</main>
+      <main className="pb-24 lg:pb-0">
+        {children}
+        <Section>
+          <Container>
+            <ProgramDiscoveryFooter categorySlug={category} />
+          </Container>
+        </Section>
+      </main>
       <SiteFooter />
     </>
   );

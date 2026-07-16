@@ -13,6 +13,10 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
+import { RouteTracker } from "@/components/shared/route-tracker";
+import { StickyActionBar } from "@/components/shared/sticky-action-bar";
+import { FloatingAiHelp } from "@/components/shared/floating-ai-help";
+import { ExitIntent } from "@/components/shared/exit-intent";
 
 function NotFoundComponent() {
   return (
@@ -182,7 +186,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AnalyticsProvider />
+      <RouteTracker />
       <Outlet />
+      <StickyActionBar />
+      <FloatingAiHelp />
+      <ExitIntent />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
