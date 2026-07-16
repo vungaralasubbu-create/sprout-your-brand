@@ -103,6 +103,7 @@ const ASSISTED_TOOLKIT: NavItem[] = [
 // Academy Partner (optional upgrade).
 const ACADEMY_NAV: NavItem[] = [
   { to: "/partner/ai-coo", label: "AI COO — Command Center", icon: Sparkles },
+  { to: "/partner/digital-employees", label: "Digital Employees", icon: Users },
   { to: "/partner/academy/onboarding", label: "Launch My Academy", icon: Rocket },
   { to: "/partner/academy/workspace", label: "Academy Workspace", icon: LayoutDashboard },
   { to: "/partner/ai-employees", label: "AI Employees", icon: Sparkles },
