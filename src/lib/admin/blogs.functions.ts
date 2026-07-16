@@ -257,7 +257,7 @@ export const patchBlogPost = createServerFn({ method: "POST" })
     if (data.is_featured !== undefined) patch.is_featured = data.is_featured;
     if (data.is_trending !== undefined) patch.is_trending = data.is_trending;
 
-    const { error } = await context.supabase.from("blog_posts").update(patch).eq("id", data.id);
+    const { error } = await context.supabase.from("blog_posts").update(patch as any).eq("id", data.id);
     if (error) throw error;
     return { ok: true };
   });
