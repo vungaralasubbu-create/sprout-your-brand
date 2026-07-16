@@ -5016,6 +5016,56 @@ export type Database = {
         }
         Relationships: []
       }
+      course_ai_generations: {
+        Row: {
+          course_id: string
+          created_at: string
+          created_by: string | null
+          error_message: string | null
+          id: string
+          kind: string
+          model: string | null
+          output: Json | null
+          prompt: string | null
+          status: string
+          tokens_used: number | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          kind: string
+          model?: string | null
+          output?: Json | null
+          prompt?: string | null
+          status?: string
+          tokens_used?: number | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          kind?: string
+          model?: string | null
+          output?: Json | null
+          prompt?: string | null
+          status?: string
+          tokens_used?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_ai_generations_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_applications: {
         Row: {
           city: string | null
@@ -5566,6 +5616,82 @@ export type Database = {
           },
         ]
       }
+      course_hiring_partners: {
+        Row: {
+          company_name: string
+          course_id: string
+          created_at: string
+          id: string
+          logo_url: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          company_name: string
+          course_id: string
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          company_name?: string
+          course_id?: string
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_hiring_partners_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_learning_path_stages: {
+        Row: {
+          course_id: string
+          created_at: string
+          id: string
+          note: string | null
+          position: number
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          position?: number
+          stage: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          position?: number
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_learning_path_stages_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_lessons: {
         Row: {
           content: string | null
@@ -5905,6 +6031,53 @@ export type Database = {
           },
         ]
       }
+      course_salary_stages: {
+        Row: {
+          course_id: string
+          created_at: string
+          high: number | null
+          id: string
+          low: number | null
+          note: string | null
+          position: number
+          range_label: string | null
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          high?: number | null
+          id?: string
+          low?: number | null
+          note?: string | null
+          position?: number
+          range_label?: string | null
+          stage: string
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          high?: number | null
+          id?: string
+          low?: number | null
+          note?: string | null
+          position?: number
+          range_label?: string | null
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_salary_stages_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_sales_content: {
         Row: {
           course_id: string
@@ -6099,8 +6272,14 @@ export type Database = {
       }
       courses: {
         Row: {
+          ai_generated_at: string | null
+          ai_generation_status: string | null
           base_price: number | null
           canonical_url: string | null
+          capstone: Json | null
+          career_launch_price: number | null
+          career_pro_price: number | null
+          case_studies: Json
           category_id: string
           created_at: string
           created_by: string | null
@@ -6114,8 +6293,12 @@ export type Database = {
           emi_starting: number | null
           format: string | null
           full_description: string | null
+          gallery_urls: Json
           hero_image_url: string | null
+          highlights: Json
           id: string
+          internal_links: Json
+          internship_details: Json | null
           is_bestseller: boolean
           is_featured: boolean
           is_popular: boolean
@@ -6123,6 +6306,7 @@ export type Database = {
           is_trending: boolean
           language: string | null
           learning_mode: string | null
+          learning_outcomes: Json
           level: string | null
           name: string
           offer_price: number | null
@@ -6133,12 +6317,15 @@ export type Database = {
           pricing_visibility: string | null
           promo_video_url: string | null
           scholarship_available: boolean
+          self_paced_price: number | null
           seo_description: string | null
           seo_keywords: string[] | null
           seo_title: string | null
           short_description: string | null
           slug: string
           status: Database["public"]["Enums"]["content_status"]
+          structured_data: Json | null
+          subcategory: string | null
           supported_sales_eligible: boolean
           target_audience: string | null
           tax_config: Json | null
@@ -6148,10 +6335,17 @@ export type Database = {
           updated_by: string | null
           weekly_commitment: string | null
           white_label_eligible: boolean
+          who_should_join: Json
         }
         Insert: {
+          ai_generated_at?: string | null
+          ai_generation_status?: string | null
           base_price?: number | null
           canonical_url?: string | null
+          capstone?: Json | null
+          career_launch_price?: number | null
+          career_pro_price?: number | null
+          case_studies?: Json
           category_id: string
           created_at?: string
           created_by?: string | null
@@ -6165,8 +6359,12 @@ export type Database = {
           emi_starting?: number | null
           format?: string | null
           full_description?: string | null
+          gallery_urls?: Json
           hero_image_url?: string | null
+          highlights?: Json
           id?: string
+          internal_links?: Json
+          internship_details?: Json | null
           is_bestseller?: boolean
           is_featured?: boolean
           is_popular?: boolean
@@ -6174,6 +6372,7 @@ export type Database = {
           is_trending?: boolean
           language?: string | null
           learning_mode?: string | null
+          learning_outcomes?: Json
           level?: string | null
           name: string
           offer_price?: number | null
@@ -6184,12 +6383,15 @@ export type Database = {
           pricing_visibility?: string | null
           promo_video_url?: string | null
           scholarship_available?: boolean
+          self_paced_price?: number | null
           seo_description?: string | null
           seo_keywords?: string[] | null
           seo_title?: string | null
           short_description?: string | null
           slug: string
           status?: Database["public"]["Enums"]["content_status"]
+          structured_data?: Json | null
+          subcategory?: string | null
           supported_sales_eligible?: boolean
           target_audience?: string | null
           tax_config?: Json | null
@@ -6199,10 +6401,17 @@ export type Database = {
           updated_by?: string | null
           weekly_commitment?: string | null
           white_label_eligible?: boolean
+          who_should_join?: Json
         }
         Update: {
+          ai_generated_at?: string | null
+          ai_generation_status?: string | null
           base_price?: number | null
           canonical_url?: string | null
+          capstone?: Json | null
+          career_launch_price?: number | null
+          career_pro_price?: number | null
+          case_studies?: Json
           category_id?: string
           created_at?: string
           created_by?: string | null
@@ -6216,8 +6425,12 @@ export type Database = {
           emi_starting?: number | null
           format?: string | null
           full_description?: string | null
+          gallery_urls?: Json
           hero_image_url?: string | null
+          highlights?: Json
           id?: string
+          internal_links?: Json
+          internship_details?: Json | null
           is_bestseller?: boolean
           is_featured?: boolean
           is_popular?: boolean
@@ -6225,6 +6438,7 @@ export type Database = {
           is_trending?: boolean
           language?: string | null
           learning_mode?: string | null
+          learning_outcomes?: Json
           level?: string | null
           name?: string
           offer_price?: number | null
@@ -6235,12 +6449,15 @@ export type Database = {
           pricing_visibility?: string | null
           promo_video_url?: string | null
           scholarship_available?: boolean
+          self_paced_price?: number | null
           seo_description?: string | null
           seo_keywords?: string[] | null
           seo_title?: string | null
           short_description?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["content_status"]
+          structured_data?: Json | null
+          subcategory?: string | null
           supported_sales_eligible?: boolean
           target_audience?: string | null
           tax_config?: Json | null
@@ -6250,6 +6467,7 @@ export type Database = {
           updated_by?: string | null
           weekly_commitment?: string | null
           white_label_eligible?: boolean
+          who_should_join?: Json
         }
         Relationships: [
           {
