@@ -6,6 +6,8 @@ import { listLearningPaths } from "@/data/learning-paths";
 import { listComparisons } from "@/data/comparisons";
 import { listCareerMaps } from "@/data/career-maps";
 import { listTools } from "@/data/tools";
+import { articles as learnArticles, collections as learnCollections, topics as learnTopics } from "@/data/learn";
+import { AGENTS } from "@/lib/aios/agents";
 
 const BASE_URL = "https://glintr.com";
 
@@ -28,6 +30,12 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/lms", changefreq: "monthly", priority: "0.7" },
   { path: "/marketing-support", changefreq: "monthly", priority: "0.7" },
   { path: "/book-consultation", changefreq: "monthly", priority: "0.6" },
+  { path: "/contact", changefreq: "monthly", priority: "0.6" },
+  { path: "/learn", changefreq: "weekly", priority: "0.8" },
+  { path: "/learn/paths", changefreq: "monthly", priority: "0.6" },
+  { path: "/learn/topics", changefreq: "monthly", priority: "0.6" },
+  { path: "/ai-agents", changefreq: "weekly", priority: "0.7" },
+  { path: "/live", changefreq: "weekly", priority: "0.6" },
   { path: "/about", changefreq: "monthly", priority: "0.6" },
   { path: "/contact", changefreq: "monthly", priority: "0.6" },
   { path: "/careers", changefreq: "weekly", priority: "0.5" },
@@ -82,11 +90,28 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const t of listTools()) {
           entries.push({ path: `/tools/${t.slug}`, changefreq: "monthly", priority: "0.7" });
         }
+        for (const a of learnArticles) {
+          entries.push({
+            path: `/learn/${a.slug}`,
+            lastmod: (a as any).updatedAt ?? (a as any).publishedAt ?? undefined,
+            changefreq: "monthly",
+            priority: "0.6",
+          });
+        }
+        for (const c of learnCollections) {
+          entries.push({ path: `/learn/collections/${c.slug}`, changefreq: "monthly", priority: "0.5" });
+        }
+        for (const t of learnTopics) {
+          entries.push({ path: `/learn/${t.slug}`, changefreq: "monthly", priority: "0.5" });
+        }
+        for (const ag of AGENTS) {
+          entries.push({ path: `/ai-agents/${ag.id}`, changefreq: "monthly", priority: "0.5" });
+        }
 
         if (url && key) {
           try {
             const sb = createClient(url, key, { auth: { persistSession: false } });
-            const [{ data: cats }, { data: courses }, { data: posts }] = await Promise.all([
+            const [{ data: cats }, { data: courses }, { data: posts }, { data: faqs }, { data: roles }] = await Promise.all([
               sb.from("course_categories").select("slug,updated_at").eq("status", "published").eq("is_active", true),
               sb
                 .from("courses")
@@ -98,6 +123,8 @@ export const Route = createFileRoute("/sitemap.xml")({
                 .select("slug,updated_at,editorial_updated_at,published_at")
                 .eq("is_published", true)
                 .eq("status", "published"),
+              sb.from("faqs").select("slug,updated_at").eq("is_published", true),
+              sb.from("hiring_roles").select("slug,updated_at").eq("is_published", true),
             ]);
 
             for (const c of cats ?? []) {
@@ -126,12 +153,34 @@ export const Route = createFileRoute("/sitemap.xml")({
                 priority: "0.6",
               });
             }
+            for (const f of (faqs ?? []) as Array<{ slug: string; updated_at: string | null }>) {
+              entries.push({
+                path: `/faqs/${f.slug}`,
+                lastmod: f.updated_at ?? undefined,
+                changefreq: "monthly",
+                priority: "0.5",
+              });
+            }
+            for (const r of (roles ?? []) as Array<{ slug: string; updated_at: string | null }>) {
+              entries.push({
+                path: `/careers/${r.slug}`,
+                lastmod: r.updated_at ?? undefined,
+                changefreq: "weekly",
+                priority: "0.5",
+              });
+            }
           } catch (e) {
             console.error("[sitemap] failed to load CMS entries", e);
           }
         }
 
-        const urls = entries.map((e) =>
+        // Dedupe by path (keep last)
+        const seen = new Map<string, typeof entries[number]>();
+        for (const e of entries) seen.set(e.path, e);
+        const deduped = Array.from(seen.values());
+
+
+        const urls = deduped.map((e) =>
           [
             "  <url>",
             `    <loc>${esc(BASE_URL + e.path)}</loc>`,
