@@ -1603,7 +1603,7 @@ function GlintrEcosystem() {
               )}
             </svg>
             <div className="absolute inset-0 grid place-items-center pointer-events-none">
-              <img src={mark.url} alt="" className="h-14 w-14 object-contain" />
+              <img src={mark.url} alt="" width={56} height={56} loading="lazy" decoding="async" className="h-14 w-14 object-contain" />
             </div>
           </div>
 
