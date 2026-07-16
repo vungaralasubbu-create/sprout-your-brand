@@ -173,7 +173,7 @@ export const getPartnerKpis = createServerFn({ method: "GET" })
       supabase
         .from("partner_follow_ups")
         .select("id", { count: "exact", head: true })
-        .eq("status", "pending"),
+        .eq("status", "scheduled"),
       supabase
         .from("partner_support_messages")
         .select("id", { count: "exact", head: true })
