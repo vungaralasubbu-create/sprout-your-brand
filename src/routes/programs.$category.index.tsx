@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
 import {
   ArrowRight, ChevronRight, Search, LayoutGrid, Rows3, X, Sparkles,
-  Compass, Users, Wrench, ChevronDown,
+  Compass, Users, Wrench, ChevronDown, BookOpen, GitCompare, Network, Layers,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
@@ -16,6 +16,8 @@ import { getCategoryBySlug, listCategories, listCourses, formatPrice } from "@/l
 import { getCategorySeo } from "@/lib/seo";
 import { CategoryVisual, slugToVariant, CATEGORY_THEME } from "@/components/programs/category-visuals";
 import { ProgramCard, type ProgramCardData } from "@/components/programs/program-card";
+import { getCategoryEditorial, type CategoryEditorial } from "@/data/category-editorial";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 const SITE_URL = "https://glintr.com";
