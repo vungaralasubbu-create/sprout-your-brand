@@ -359,7 +359,7 @@ export const regenerateFactoryImage = createServerFn({ method: "POST" })
     const path = `factory/${item.slug}-${Date.now()}/${data.kind}.png`;
     const url = await uploadPngAndSign(context, path, b64);
 
-    const md = { ...(item.metadata ?? {}) };
+    const md: any = { ...((item as any).metadata ?? {}) };
     md.images = { ...(md.images ?? {}), [data.kind]: url };
 
     const update: any = { metadata: md, last_edited_by: context.userId };
