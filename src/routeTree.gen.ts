@@ -206,6 +206,7 @@ import { Route as AuthenticatedAdminPartnerPayoutsRouteImport } from './routes/_
 import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_authenticated/admin.partner-brands'
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
+import { Route as AuthenticatedAdminLlmRouteImport } from './routes/_authenticated/admin.llm'
 import { Route as AuthenticatedAdminLiveRouteImport } from './routes/_authenticated/admin.live'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
 import { Route as AuthenticatedAdminLeadOwnershipRouteImport } from './routes/_authenticated/admin.lead-ownership'
@@ -221,6 +222,7 @@ import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './rout
 import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_authenticated/admin.assigned-leads'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminAiosRouteImport } from './routes/_authenticated/admin.aios'
+import { Route as AuthenticatedAdminAiSearchRouteImport } from './routes/_authenticated/admin.ai-search'
 import { Route as AuthenticatedAdminAiContentRouteImport } from './routes/_authenticated/admin.ai-content'
 import { Route as AuthenticatedAdminAiAgentsRouteImport } from './routes/_authenticated/admin.ai-agents'
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
@@ -248,12 +250,14 @@ import { Route as AuthenticatedAdminProgrammaticSeoIndexRouteImport } from './ro
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
+import { Route as AuthenticatedAdminLlmIndexRouteImport } from './routes/_authenticated/admin.llm.index'
 import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
 import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
 import { Route as AuthenticatedAdminAutomationIndexRouteImport } from './routes/_authenticated/admin.automation.index'
 import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
+import { Route as AuthenticatedAdminAiSearchIndexRouteImport } from './routes/_authenticated/admin.ai-search.index'
 import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
 import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
@@ -286,6 +290,8 @@ import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './route
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
+import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
+import { Route as AuthenticatedAdminLlmSectionsRouteImport } from './routes/_authenticated/admin.llm.sections'
 import { Route as AuthenticatedAdminEmployeesIdRouteImport } from './routes/_authenticated/admin.employees.$id'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
 import { Route as AuthenticatedAdminContentTagsRouteImport } from './routes/_authenticated/admin.content.tags'
@@ -329,6 +335,16 @@ import { Route as AuthenticatedAdminAiosKnowledgeRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminAiosFeedbackRouteImport } from './routes/_authenticated/admin.aios.feedback'
 import { Route as AuthenticatedAdminAiosConversationsRouteImport } from './routes/_authenticated/admin.aios.conversations'
 import { Route as AuthenticatedAdminAiosAgentsRouteImport } from './routes/_authenticated/admin.aios.agents'
+import { Route as AuthenticatedAdminAiSearchTasksRouteImport } from './routes/_authenticated/admin.ai-search.tasks'
+import { Route as AuthenticatedAdminAiSearchSummariesRouteImport } from './routes/_authenticated/admin.ai-search.summaries'
+import { Route as AuthenticatedAdminAiSearchSchemaRouteImport } from './routes/_authenticated/admin.ai-search.schema'
+import { Route as AuthenticatedAdminAiSearchReportsRouteImport } from './routes/_authenticated/admin.ai-search.reports'
+import { Route as AuthenticatedAdminAiSearchPreviewRouteImport } from './routes/_authenticated/admin.ai-search.preview'
+import { Route as AuthenticatedAdminAiSearchPermissionsRouteImport } from './routes/_authenticated/admin.ai-search.permissions'
+import { Route as AuthenticatedAdminAiSearchFaqsRouteImport } from './routes/_authenticated/admin.ai-search.faqs'
+import { Route as AuthenticatedAdminAiSearchEntitiesRouteImport } from './routes/_authenticated/admin.ai-search.entities'
+import { Route as AuthenticatedAdminAiSearchDefinitionsRouteImport } from './routes/_authenticated/admin.ai-search.definitions'
+import { Route as AuthenticatedAdminAiSearchCitationRouteImport } from './routes/_authenticated/admin.ai-search.citation'
 import { Route as AuthenticatedAdminAiContentWizardRouteImport } from './routes/_authenticated/admin.ai-content.wizard'
 import { Route as AuthenticatedAdminAiContentSuggestionsRouteImport } from './routes/_authenticated/admin.ai-content.suggestions'
 import { Route as AuthenticatedAdminAiContentSettingsRouteImport } from './routes/_authenticated/admin.ai-content.settings'
@@ -1409,6 +1425,11 @@ const AuthenticatedAdminModelApprovalsRoute =
     path: '/model-approvals',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminLlmRoute = AuthenticatedAdminLlmRouteImport.update({
+  id: '/llm',
+  path: '/llm',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminLiveRoute = AuthenticatedAdminLiveRouteImport.update({
   id: '/live',
   path: '/live',
@@ -1496,6 +1517,12 @@ const AuthenticatedAdminAiosRoute = AuthenticatedAdminAiosRouteImport.update({
   path: '/aios',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminAiSearchRoute =
+  AuthenticatedAdminAiSearchRouteImport.update({
+    id: '/ai-search',
+    path: '/ai-search',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAiContentRoute =
   AuthenticatedAdminAiContentRouteImport.update({
     id: '/ai-content',
@@ -1658,6 +1685,12 @@ const AuthenticatedAdminPartnersIndexRoute =
     path: '/partners/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminLlmIndexRoute =
+  AuthenticatedAdminLlmIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminLlmRoute,
+  } as any)
 const AuthenticatedAdminEmployeesIndexRoute =
   AuthenticatedAdminEmployeesIndexRouteImport.update({
     id: '/employees/',
@@ -1693,6 +1726,12 @@ const AuthenticatedAdminAiosIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminAiosRoute,
+  } as any)
+const AuthenticatedAdminAiSearchIndexRoute =
+  AuthenticatedAdminAiSearchIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
   } as any)
 const AuthenticatedAdminAiContentIndexRoute =
   AuthenticatedAdminAiContentIndexRouteImport.update({
@@ -1885,6 +1924,18 @@ const AuthenticatedAdminPartnersIdRoute =
     id: '/partners/$id',
     path: '/partners/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminLlmSettingsRoute =
+  AuthenticatedAdminLlmSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminLlmRoute,
+  } as any)
+const AuthenticatedAdminLlmSectionsRoute =
+  AuthenticatedAdminLlmSectionsRouteImport.update({
+    id: '/sections',
+    path: '/sections',
+    getParentRoute: () => AuthenticatedAdminLlmRoute,
   } as any)
 const AuthenticatedAdminEmployeesIdRoute =
   AuthenticatedAdminEmployeesIdRouteImport.update({
@@ -2144,6 +2195,66 @@ const AuthenticatedAdminAiosAgentsRoute =
     path: '/agents',
     getParentRoute: () => AuthenticatedAdminAiosRoute,
   } as any)
+const AuthenticatedAdminAiSearchTasksRoute =
+  AuthenticatedAdminAiSearchTasksRouteImport.update({
+    id: '/tasks',
+    path: '/tasks',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchSummariesRoute =
+  AuthenticatedAdminAiSearchSummariesRouteImport.update({
+    id: '/summaries',
+    path: '/summaries',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchSchemaRoute =
+  AuthenticatedAdminAiSearchSchemaRouteImport.update({
+    id: '/schema',
+    path: '/schema',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchReportsRoute =
+  AuthenticatedAdminAiSearchReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchPreviewRoute =
+  AuthenticatedAdminAiSearchPreviewRouteImport.update({
+    id: '/preview',
+    path: '/preview',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchPermissionsRoute =
+  AuthenticatedAdminAiSearchPermissionsRouteImport.update({
+    id: '/permissions',
+    path: '/permissions',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchFaqsRoute =
+  AuthenticatedAdminAiSearchFaqsRouteImport.update({
+    id: '/faqs',
+    path: '/faqs',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchEntitiesRoute =
+  AuthenticatedAdminAiSearchEntitiesRouteImport.update({
+    id: '/entities',
+    path: '/entities',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchDefinitionsRoute =
+  AuthenticatedAdminAiSearchDefinitionsRouteImport.update({
+    id: '/definitions',
+    path: '/definitions',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
+const AuthenticatedAdminAiSearchCitationRoute =
+  AuthenticatedAdminAiSearchCitationRouteImport.update({
+    id: '/citation',
+    path: '/citation',
+    getParentRoute: () => AuthenticatedAdminAiSearchRoute,
+  } as any)
 const AuthenticatedAdminAiContentWizardRoute =
   AuthenticatedAdminAiContentWizardRouteImport.update({
     id: '/wizard',
@@ -2363,6 +2474,7 @@ export interface FileRoutesByFullPath {
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
@@ -2378,6 +2490,7 @@ export interface FileRoutesByFullPath {
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/live': typeof AuthenticatedAdminLiveRoute
+  '/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -2480,6 +2593,16 @@ export interface FileRoutesByFullPath {
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/admin/ai-search/citation': typeof AuthenticatedAdminAiSearchCitationRoute
+  '/admin/ai-search/definitions': typeof AuthenticatedAdminAiSearchDefinitionsRoute
+  '/admin/ai-search/entities': typeof AuthenticatedAdminAiSearchEntitiesRoute
+  '/admin/ai-search/faqs': typeof AuthenticatedAdminAiSearchFaqsRoute
+  '/admin/ai-search/permissions': typeof AuthenticatedAdminAiSearchPermissionsRoute
+  '/admin/ai-search/preview': typeof AuthenticatedAdminAiSearchPreviewRoute
+  '/admin/ai-search/reports': typeof AuthenticatedAdminAiSearchReportsRoute
+  '/admin/ai-search/schema': typeof AuthenticatedAdminAiSearchSchemaRoute
+  '/admin/ai-search/summaries': typeof AuthenticatedAdminAiSearchSummariesRoute
+  '/admin/ai-search/tasks': typeof AuthenticatedAdminAiSearchTasksRoute
   '/admin/aios/agents': typeof AuthenticatedAdminAiosAgentsRoute
   '/admin/aios/conversations': typeof AuthenticatedAdminAiosConversationsRoute
   '/admin/aios/feedback': typeof AuthenticatedAdminAiosFeedbackRoute
@@ -2523,6 +2646,8 @@ export interface FileRoutesByFullPath {
   '/admin/content/tags': typeof AuthenticatedAdminContentTagsRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
+  '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
+  '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -2555,12 +2680,14 @@ export interface FileRoutesByFullPath {
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
+  '/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
   '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
+  '/admin/llm/': typeof AuthenticatedAdminLlmIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
@@ -2807,6 +2934,16 @@ export interface FileRoutesByTo {
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/admin/ai-search/citation': typeof AuthenticatedAdminAiSearchCitationRoute
+  '/admin/ai-search/definitions': typeof AuthenticatedAdminAiSearchDefinitionsRoute
+  '/admin/ai-search/entities': typeof AuthenticatedAdminAiSearchEntitiesRoute
+  '/admin/ai-search/faqs': typeof AuthenticatedAdminAiSearchFaqsRoute
+  '/admin/ai-search/permissions': typeof AuthenticatedAdminAiSearchPermissionsRoute
+  '/admin/ai-search/preview': typeof AuthenticatedAdminAiSearchPreviewRoute
+  '/admin/ai-search/reports': typeof AuthenticatedAdminAiSearchReportsRoute
+  '/admin/ai-search/schema': typeof AuthenticatedAdminAiSearchSchemaRoute
+  '/admin/ai-search/summaries': typeof AuthenticatedAdminAiSearchSummariesRoute
+  '/admin/ai-search/tasks': typeof AuthenticatedAdminAiSearchTasksRoute
   '/admin/aios/agents': typeof AuthenticatedAdminAiosAgentsRoute
   '/admin/aios/conversations': typeof AuthenticatedAdminAiosConversationsRoute
   '/admin/aios/feedback': typeof AuthenticatedAdminAiosFeedbackRoute
@@ -2850,6 +2987,8 @@ export interface FileRoutesByTo {
   '/admin/content/tags': typeof AuthenticatedAdminContentTagsRoute
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
+  '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
+  '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -2882,12 +3021,14 @@ export interface FileRoutesByTo {
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
+  '/admin/ai-search': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/automation': typeof AuthenticatedAdminAutomationIndexRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
+  '/admin/llm': typeof AuthenticatedAdminLlmIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
@@ -3031,6 +3172,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/_authenticated/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/_authenticated/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/_authenticated/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/_authenticated/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
@@ -3046,6 +3188,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/live': typeof AuthenticatedAdminLiveRoute
+  '/_authenticated/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/_authenticated/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -3148,6 +3291,16 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/_authenticated/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/_authenticated/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/_authenticated/admin/ai-search/citation': typeof AuthenticatedAdminAiSearchCitationRoute
+  '/_authenticated/admin/ai-search/definitions': typeof AuthenticatedAdminAiSearchDefinitionsRoute
+  '/_authenticated/admin/ai-search/entities': typeof AuthenticatedAdminAiSearchEntitiesRoute
+  '/_authenticated/admin/ai-search/faqs': typeof AuthenticatedAdminAiSearchFaqsRoute
+  '/_authenticated/admin/ai-search/permissions': typeof AuthenticatedAdminAiSearchPermissionsRoute
+  '/_authenticated/admin/ai-search/preview': typeof AuthenticatedAdminAiSearchPreviewRoute
+  '/_authenticated/admin/ai-search/reports': typeof AuthenticatedAdminAiSearchReportsRoute
+  '/_authenticated/admin/ai-search/schema': typeof AuthenticatedAdminAiSearchSchemaRoute
+  '/_authenticated/admin/ai-search/summaries': typeof AuthenticatedAdminAiSearchSummariesRoute
+  '/_authenticated/admin/ai-search/tasks': typeof AuthenticatedAdminAiSearchTasksRoute
   '/_authenticated/admin/aios/agents': typeof AuthenticatedAdminAiosAgentsRoute
   '/_authenticated/admin/aios/conversations': typeof AuthenticatedAdminAiosConversationsRoute
   '/_authenticated/admin/aios/feedback': typeof AuthenticatedAdminAiosFeedbackRoute
@@ -3191,6 +3344,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/content/tags': typeof AuthenticatedAdminContentTagsRoute
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
   '/_authenticated/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
+  '/_authenticated/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
+  '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -3223,12 +3378,14 @@ export interface FileRoutesById {
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
+  '/_authenticated/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/_authenticated/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
   '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
+  '/_authenticated/admin/llm/': typeof AuthenticatedAdminLlmIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
@@ -3372,6 +3529,7 @@ export interface FileRouteTypes {
     | '/admin/adjustments'
     | '/admin/ai-agents'
     | '/admin/ai-content'
+    | '/admin/ai-search'
     | '/admin/aios'
     | '/admin/applications'
     | '/admin/assigned-leads'
@@ -3387,6 +3545,7 @@ export interface FileRouteTypes {
     | '/admin/lead-ownership'
     | '/admin/leads'
     | '/admin/live'
+    | '/admin/llm'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
     | '/admin/partner-brands'
@@ -3489,6 +3648,16 @@ export interface FileRouteTypes {
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
     | '/admin/ai-content/wizard'
+    | '/admin/ai-search/citation'
+    | '/admin/ai-search/definitions'
+    | '/admin/ai-search/entities'
+    | '/admin/ai-search/faqs'
+    | '/admin/ai-search/permissions'
+    | '/admin/ai-search/preview'
+    | '/admin/ai-search/reports'
+    | '/admin/ai-search/schema'
+    | '/admin/ai-search/summaries'
+    | '/admin/ai-search/tasks'
     | '/admin/aios/agents'
     | '/admin/aios/conversations'
     | '/admin/aios/feedback'
@@ -3532,6 +3701,8 @@ export interface FileRouteTypes {
     | '/admin/content/tags'
     | '/admin/courses/$id'
     | '/admin/employees/$id'
+    | '/admin/llm/sections'
+    | '/admin/llm/settings'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -3564,12 +3735,14 @@ export interface FileRouteTypes {
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents/'
     | '/admin/ai-content/'
+    | '/admin/ai-search/'
     | '/admin/aios/'
     | '/admin/automation/'
     | '/admin/content-intelligence/'
     | '/admin/content/'
     | '/admin/courses/'
     | '/admin/employees/'
+    | '/admin/llm/'
     | '/admin/partners/'
     | '/admin/payment-links/'
     | '/admin/payouts/'
@@ -3816,6 +3989,16 @@ export interface FileRouteTypes {
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
     | '/admin/ai-content/wizard'
+    | '/admin/ai-search/citation'
+    | '/admin/ai-search/definitions'
+    | '/admin/ai-search/entities'
+    | '/admin/ai-search/faqs'
+    | '/admin/ai-search/permissions'
+    | '/admin/ai-search/preview'
+    | '/admin/ai-search/reports'
+    | '/admin/ai-search/schema'
+    | '/admin/ai-search/summaries'
+    | '/admin/ai-search/tasks'
     | '/admin/aios/agents'
     | '/admin/aios/conversations'
     | '/admin/aios/feedback'
@@ -3859,6 +4042,8 @@ export interface FileRouteTypes {
     | '/admin/content/tags'
     | '/admin/courses/$id'
     | '/admin/employees/$id'
+    | '/admin/llm/sections'
+    | '/admin/llm/settings'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -3891,12 +4076,14 @@ export interface FileRouteTypes {
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents'
     | '/admin/ai-content'
+    | '/admin/ai-search'
     | '/admin/aios'
     | '/admin/automation'
     | '/admin/content-intelligence'
     | '/admin/content'
     | '/admin/courses'
     | '/admin/employees'
+    | '/admin/llm'
     | '/admin/partners'
     | '/admin/payment-links'
     | '/admin/payouts'
@@ -4039,6 +4226,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/adjustments'
     | '/_authenticated/admin/ai-agents'
     | '/_authenticated/admin/ai-content'
+    | '/_authenticated/admin/ai-search'
     | '/_authenticated/admin/aios'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/assigned-leads'
@@ -4054,6 +4242,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/lead-ownership'
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/live'
+    | '/_authenticated/admin/llm'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
     | '/_authenticated/admin/partner-brands'
@@ -4156,6 +4345,16 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-content/settings'
     | '/_authenticated/admin/ai-content/suggestions'
     | '/_authenticated/admin/ai-content/wizard'
+    | '/_authenticated/admin/ai-search/citation'
+    | '/_authenticated/admin/ai-search/definitions'
+    | '/_authenticated/admin/ai-search/entities'
+    | '/_authenticated/admin/ai-search/faqs'
+    | '/_authenticated/admin/ai-search/permissions'
+    | '/_authenticated/admin/ai-search/preview'
+    | '/_authenticated/admin/ai-search/reports'
+    | '/_authenticated/admin/ai-search/schema'
+    | '/_authenticated/admin/ai-search/summaries'
+    | '/_authenticated/admin/ai-search/tasks'
     | '/_authenticated/admin/aios/agents'
     | '/_authenticated/admin/aios/conversations'
     | '/_authenticated/admin/aios/feedback'
@@ -4199,6 +4398,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content/tags'
     | '/_authenticated/admin/courses/$id'
     | '/_authenticated/admin/employees/$id'
+    | '/_authenticated/admin/llm/sections'
+    | '/_authenticated/admin/llm/settings'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payouts/$id'
@@ -4231,12 +4432,14 @@ export interface FileRouteTypes {
     | '/workspace/voice/session/$mode'
     | '/_authenticated/admin/ai-agents/'
     | '/_authenticated/admin/ai-content/'
+    | '/_authenticated/admin/ai-search/'
     | '/_authenticated/admin/aios/'
     | '/_authenticated/admin/automation/'
     | '/_authenticated/admin/content-intelligence/'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/employees/'
+    | '/_authenticated/admin/llm/'
     | '/_authenticated/admin/partners/'
     | '/_authenticated/admin/payment-links/'
     | '/_authenticated/admin/payouts/'
@@ -5723,6 +5926,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminModelApprovalsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/llm': {
+      id: '/_authenticated/admin/llm'
+      path: '/llm'
+      fullPath: '/admin/llm'
+      preLoaderRoute: typeof AuthenticatedAdminLlmRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/live': {
       id: '/_authenticated/admin/live'
       path: '/live'
@@ -5826,6 +6036,13 @@ declare module '@tanstack/react-router' {
       path: '/aios'
       fullPath: '/admin/aios'
       preLoaderRoute: typeof AuthenticatedAdminAiosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/ai-search': {
+      id: '/_authenticated/admin/ai-search'
+      path: '/ai-search'
+      fullPath: '/admin/ai-search'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/ai-content': {
@@ -6017,6 +6234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/llm/': {
+      id: '/_authenticated/admin/llm/'
+      path: '/'
+      fullPath: '/admin/llm/'
+      preLoaderRoute: typeof AuthenticatedAdminLlmIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminLlmRoute
+    }
     '/_authenticated/admin/employees/': {
       id: '/_authenticated/admin/employees/'
       path: '/employees'
@@ -6058,6 +6282,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/aios/'
       preLoaderRoute: typeof AuthenticatedAdminAiosIndexRouteImport
       parentRoute: typeof AuthenticatedAdminAiosRoute
+    }
+    '/_authenticated/admin/ai-search/': {
+      id: '/_authenticated/admin/ai-search/'
+      path: '/'
+      fullPath: '/admin/ai-search/'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
     }
     '/_authenticated/admin/ai-content/': {
       id: '/_authenticated/admin/ai-content/'
@@ -6282,6 +6513,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/partners/$id'
       preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/llm/settings': {
+      id: '/_authenticated/admin/llm/settings'
+      path: '/settings'
+      fullPath: '/admin/llm/settings'
+      preLoaderRoute: typeof AuthenticatedAdminLlmSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminLlmRoute
+    }
+    '/_authenticated/admin/llm/sections': {
+      id: '/_authenticated/admin/llm/sections'
+      path: '/sections'
+      fullPath: '/admin/llm/sections'
+      preLoaderRoute: typeof AuthenticatedAdminLlmSectionsRouteImport
+      parentRoute: typeof AuthenticatedAdminLlmRoute
     }
     '/_authenticated/admin/employees/$id': {
       id: '/_authenticated/admin/employees/$id'
@@ -6584,6 +6829,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiosAgentsRouteImport
       parentRoute: typeof AuthenticatedAdminAiosRoute
     }
+    '/_authenticated/admin/ai-search/tasks': {
+      id: '/_authenticated/admin/ai-search/tasks'
+      path: '/tasks'
+      fullPath: '/admin/ai-search/tasks'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchTasksRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/summaries': {
+      id: '/_authenticated/admin/ai-search/summaries'
+      path: '/summaries'
+      fullPath: '/admin/ai-search/summaries'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchSummariesRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/schema': {
+      id: '/_authenticated/admin/ai-search/schema'
+      path: '/schema'
+      fullPath: '/admin/ai-search/schema'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchSchemaRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/reports': {
+      id: '/_authenticated/admin/ai-search/reports'
+      path: '/reports'
+      fullPath: '/admin/ai-search/reports'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchReportsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/preview': {
+      id: '/_authenticated/admin/ai-search/preview'
+      path: '/preview'
+      fullPath: '/admin/ai-search/preview'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchPreviewRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/permissions': {
+      id: '/_authenticated/admin/ai-search/permissions'
+      path: '/permissions'
+      fullPath: '/admin/ai-search/permissions'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchPermissionsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/faqs': {
+      id: '/_authenticated/admin/ai-search/faqs'
+      path: '/faqs'
+      fullPath: '/admin/ai-search/faqs'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchFaqsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/entities': {
+      id: '/_authenticated/admin/ai-search/entities'
+      path: '/entities'
+      fullPath: '/admin/ai-search/entities'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchEntitiesRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/definitions': {
+      id: '/_authenticated/admin/ai-search/definitions'
+      path: '/definitions'
+      fullPath: '/admin/ai-search/definitions'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchDefinitionsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
+    '/_authenticated/admin/ai-search/citation': {
+      id: '/_authenticated/admin/ai-search/citation'
+      path: '/citation'
+      fullPath: '/admin/ai-search/citation'
+      preLoaderRoute: typeof AuthenticatedAdminAiSearchCitationRouteImport
+      parentRoute: typeof AuthenticatedAdminAiSearchRoute
+    }
     '/_authenticated/admin/ai-content/wizard': {
       id: '/_authenticated/admin/ai-content/wizard'
       path: '/wizard'
@@ -6768,6 +7083,48 @@ const AuthenticatedAdminAiContentRouteWithChildren =
     AuthenticatedAdminAiContentRouteChildren,
   )
 
+interface AuthenticatedAdminAiSearchRouteChildren {
+  AuthenticatedAdminAiSearchCitationRoute: typeof AuthenticatedAdminAiSearchCitationRoute
+  AuthenticatedAdminAiSearchDefinitionsRoute: typeof AuthenticatedAdminAiSearchDefinitionsRoute
+  AuthenticatedAdminAiSearchEntitiesRoute: typeof AuthenticatedAdminAiSearchEntitiesRoute
+  AuthenticatedAdminAiSearchFaqsRoute: typeof AuthenticatedAdminAiSearchFaqsRoute
+  AuthenticatedAdminAiSearchPermissionsRoute: typeof AuthenticatedAdminAiSearchPermissionsRoute
+  AuthenticatedAdminAiSearchPreviewRoute: typeof AuthenticatedAdminAiSearchPreviewRoute
+  AuthenticatedAdminAiSearchReportsRoute: typeof AuthenticatedAdminAiSearchReportsRoute
+  AuthenticatedAdminAiSearchSchemaRoute: typeof AuthenticatedAdminAiSearchSchemaRoute
+  AuthenticatedAdminAiSearchSummariesRoute: typeof AuthenticatedAdminAiSearchSummariesRoute
+  AuthenticatedAdminAiSearchTasksRoute: typeof AuthenticatedAdminAiSearchTasksRoute
+  AuthenticatedAdminAiSearchIndexRoute: typeof AuthenticatedAdminAiSearchIndexRoute
+}
+
+const AuthenticatedAdminAiSearchRouteChildren: AuthenticatedAdminAiSearchRouteChildren =
+  {
+    AuthenticatedAdminAiSearchCitationRoute:
+      AuthenticatedAdminAiSearchCitationRoute,
+    AuthenticatedAdminAiSearchDefinitionsRoute:
+      AuthenticatedAdminAiSearchDefinitionsRoute,
+    AuthenticatedAdminAiSearchEntitiesRoute:
+      AuthenticatedAdminAiSearchEntitiesRoute,
+    AuthenticatedAdminAiSearchFaqsRoute: AuthenticatedAdminAiSearchFaqsRoute,
+    AuthenticatedAdminAiSearchPermissionsRoute:
+      AuthenticatedAdminAiSearchPermissionsRoute,
+    AuthenticatedAdminAiSearchPreviewRoute:
+      AuthenticatedAdminAiSearchPreviewRoute,
+    AuthenticatedAdminAiSearchReportsRoute:
+      AuthenticatedAdminAiSearchReportsRoute,
+    AuthenticatedAdminAiSearchSchemaRoute:
+      AuthenticatedAdminAiSearchSchemaRoute,
+    AuthenticatedAdminAiSearchSummariesRoute:
+      AuthenticatedAdminAiSearchSummariesRoute,
+    AuthenticatedAdminAiSearchTasksRoute: AuthenticatedAdminAiSearchTasksRoute,
+    AuthenticatedAdminAiSearchIndexRoute: AuthenticatedAdminAiSearchIndexRoute,
+  }
+
+const AuthenticatedAdminAiSearchRouteWithChildren =
+  AuthenticatedAdminAiSearchRoute._addFileChildren(
+    AuthenticatedAdminAiSearchRouteChildren,
+  )
+
 interface AuthenticatedAdminAiosRouteChildren {
   AuthenticatedAdminAiosAgentsRoute: typeof AuthenticatedAdminAiosAgentsRoute
   AuthenticatedAdminAiosConversationsRoute: typeof AuthenticatedAdminAiosConversationsRoute
@@ -6924,6 +7281,23 @@ const AuthenticatedAdminContentIntelligenceRouteWithChildren =
     AuthenticatedAdminContentIntelligenceRouteChildren,
   )
 
+interface AuthenticatedAdminLlmRouteChildren {
+  AuthenticatedAdminLlmSectionsRoute: typeof AuthenticatedAdminLlmSectionsRoute
+  AuthenticatedAdminLlmSettingsRoute: typeof AuthenticatedAdminLlmSettingsRoute
+  AuthenticatedAdminLlmIndexRoute: typeof AuthenticatedAdminLlmIndexRoute
+}
+
+const AuthenticatedAdminLlmRouteChildren: AuthenticatedAdminLlmRouteChildren = {
+  AuthenticatedAdminLlmSectionsRoute: AuthenticatedAdminLlmSectionsRoute,
+  AuthenticatedAdminLlmSettingsRoute: AuthenticatedAdminLlmSettingsRoute,
+  AuthenticatedAdminLlmIndexRoute: AuthenticatedAdminLlmIndexRoute,
+}
+
+const AuthenticatedAdminLlmRouteWithChildren =
+  AuthenticatedAdminLlmRoute._addFileChildren(
+    AuthenticatedAdminLlmRouteChildren,
+  )
+
 interface AuthenticatedAdminRiskReviewRouteChildren {
   AuthenticatedAdminRiskReviewIdRoute: typeof AuthenticatedAdminRiskReviewIdRoute
 }
@@ -6959,6 +7333,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdjustmentsRoute: typeof AuthenticatedAdminAdjustmentsRoute
   AuthenticatedAdminAiAgentsRoute: typeof AuthenticatedAdminAiAgentsRouteWithChildren
   AuthenticatedAdminAiContentRoute: typeof AuthenticatedAdminAiContentRouteWithChildren
+  AuthenticatedAdminAiSearchRoute: typeof AuthenticatedAdminAiSearchRouteWithChildren
   AuthenticatedAdminAiosRoute: typeof AuthenticatedAdminAiosRouteWithChildren
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
   AuthenticatedAdminAssignedLeadsRoute: typeof AuthenticatedAdminAssignedLeadsRoute
@@ -6974,6 +7349,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminLeadOwnershipRoute: typeof AuthenticatedAdminLeadOwnershipRoute
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminLiveRoute: typeof AuthenticatedAdminLiveRoute
+  AuthenticatedAdminLlmRoute: typeof AuthenticatedAdminLlmRouteWithChildren
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
   AuthenticatedAdminPartnerBrandsRoute: typeof AuthenticatedAdminPartnerBrandsRoute
@@ -7025,6 +7401,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAiAgentsRoute: AuthenticatedAdminAiAgentsRouteWithChildren,
   AuthenticatedAdminAiContentRoute:
     AuthenticatedAdminAiContentRouteWithChildren,
+  AuthenticatedAdminAiSearchRoute: AuthenticatedAdminAiSearchRouteWithChildren,
   AuthenticatedAdminAiosRoute: AuthenticatedAdminAiosRouteWithChildren,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
   AuthenticatedAdminAssignedLeadsRoute: AuthenticatedAdminAssignedLeadsRoute,
@@ -7043,6 +7420,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminLeadOwnershipRoute: AuthenticatedAdminLeadOwnershipRoute,
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminLiveRoute: AuthenticatedAdminLiveRoute,
+  AuthenticatedAdminLlmRoute: AuthenticatedAdminLlmRouteWithChildren,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
     AuthenticatedAdminPartnerApplicationsRoute,
