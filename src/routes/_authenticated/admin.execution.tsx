@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import {
   Activity, AlertTriangle, CheckCircle2, ChevronRight, ClipboardCheck, Clock, Command, FileText,
   History, ListChecks, Loader2, Pause, Play, RotateCcw, Rocket, Settings2, ShieldCheck, Sparkles,
-  Users, Wand2, Workflow, XCircle, Zap,
+  Users, Wand2, Workflow as WorkflowIcon, XCircle, Zap,
 } from "lucide-react";
 import {
   APPROVER_ROLES, EXECUTION_MODES, QA_CHECKS, WORKFLOWS,
