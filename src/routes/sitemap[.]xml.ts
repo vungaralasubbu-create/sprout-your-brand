@@ -90,6 +90,23 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const t of listTools()) {
           entries.push({ path: `/tools/${t.slug}`, changefreq: "monthly", priority: "0.7" });
         }
+        for (const a of learnArticles) {
+          entries.push({
+            path: `/learn/${a.slug}`,
+            lastmod: (a as any).updatedAt ?? (a as any).publishedAt ?? undefined,
+            changefreq: "monthly",
+            priority: "0.6",
+          });
+        }
+        for (const c of learnCollections) {
+          entries.push({ path: `/learn/collections/${c.slug}`, changefreq: "monthly", priority: "0.5" });
+        }
+        for (const t of learnTopics) {
+          entries.push({ path: `/learn/${t.slug}`, changefreq: "monthly", priority: "0.5" });
+        }
+        for (const ag of AGENTS) {
+          entries.push({ path: `/ai-agents/${ag.id}`, changefreq: "monthly", priority: "0.5" });
+        }
 
         if (url && key) {
           try {
