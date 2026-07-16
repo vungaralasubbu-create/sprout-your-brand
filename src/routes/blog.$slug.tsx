@@ -766,6 +766,12 @@ function BlogDetailPage() {
       </Section>
 
       <SiteFooter />
+      <AiAssistantFab
+        title={post.title}
+        summary={post.short_summary}
+        source={post.content_markdown}
+      />
+
     </div>
   );
 }
