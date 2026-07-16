@@ -570,7 +570,7 @@ const CHECKLIST_ITEMS: {
     detail: "Each answer is factual, self-contained, and 2–4 sentences.",
     verify: (d) => {
       const n = (d?.faqs ?? []).length;
-      return { ok: n >= 4, hint: `${n} FAQ${n === 1 ? "" : "s"}` },
+      return { ok: n >= 4, hint: `${n} FAQ${n === 1 ? "" : "s"}` };
     },
   },
   {
