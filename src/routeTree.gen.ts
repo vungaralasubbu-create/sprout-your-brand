@@ -238,6 +238,7 @@ import { Route as AuthenticatedAmbassadorEnrollmentsIndexRouteImport } from './r
 import { Route as AuthenticatedAmbassadorEarningsIndexRouteImport } from './routes/_authenticated/ambassador.earnings.index'
 import { Route as AuthenticatedAdminWorkflowsIndexRouteImport } from './routes/_authenticated/admin.workflows.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
+import { Route as AuthenticatedAdminProgrammaticSeoIndexRouteImport } from './routes/_authenticated/admin.programmatic-seo.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
@@ -274,6 +275,8 @@ import { Route as AuthenticatedAdminWorkflowsIdRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminTeamIdRouteImport } from './routes/_authenticated/admin.team.$id'
 import { Route as AuthenticatedAdminSupportIdRouteImport } from './routes/_authenticated/admin.support.$id'
 import { Route as AuthenticatedAdminRiskReviewIdRouteImport } from './routes/_authenticated/admin.risk-review.$id'
+import { Route as AuthenticatedAdminProgrammaticSeoNewRouteImport } from './routes/_authenticated/admin.programmatic-seo.new'
+import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './routes/_authenticated/admin.programmatic-seo.$id'
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
@@ -1591,6 +1594,12 @@ const AuthenticatedAdminTeamIndexRoute =
     path: '/team/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminProgrammaticSeoIndexRoute =
+  AuthenticatedAdminProgrammaticSeoIndexRouteImport.update({
+    id: '/programmatic-seo/',
+    path: '/programmatic-seo/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPayoutsIndexRoute =
   AuthenticatedAdminPayoutsIndexRouteImport.update({
     id: '/payouts/',
@@ -1806,6 +1815,18 @@ const AuthenticatedAdminRiskReviewIdRoute =
     id: '/$id',
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminRiskReviewRoute,
+  } as any)
+const AuthenticatedAdminProgrammaticSeoNewRoute =
+  AuthenticatedAdminProgrammaticSeoNewRouteImport.update({
+    id: '/programmatic-seo/new',
+    path: '/programmatic-seo/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminProgrammaticSeoIdRoute =
+  AuthenticatedAdminProgrammaticSeoIdRouteImport.update({
+    id: '/programmatic-seo/$id',
+    path: '/programmatic-seo/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminPayoutsIdRoute =
   AuthenticatedAdminPayoutsIdRouteImport.update({
@@ -2431,6 +2452,8 @@ export interface FileRoutesByFullPath {
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
+  '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
+  '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
@@ -2467,6 +2490,7 @@ export interface FileRoutesByFullPath {
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/admin/programmatic-seo/': typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/admin/workflows/': typeof AuthenticatedAdminWorkflowsIndexRoute
   '/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
@@ -2745,6 +2769,8 @@ export interface FileRoutesByTo {
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
+  '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
+  '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
@@ -2781,6 +2807,7 @@ export interface FileRoutesByTo {
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/admin/programmatic-seo': typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
   '/admin/workflows': typeof AuthenticatedAdminWorkflowsIndexRoute
   '/ambassador/earnings': typeof AuthenticatedAmbassadorEarningsIndexRoute
@@ -3073,6 +3100,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
+  '/_authenticated/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
+  '/_authenticated/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/_authenticated/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/_authenticated/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/_authenticated/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
@@ -3109,6 +3138,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
+  '/_authenticated/admin/programmatic-seo/': typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
   '/_authenticated/admin/workflows/': typeof AuthenticatedAdminWorkflowsIndexRoute
   '/_authenticated/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
@@ -3401,6 +3431,8 @@ export interface FileRouteTypes {
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
+    | '/admin/programmatic-seo/$id'
+    | '/admin/programmatic-seo/new'
     | '/admin/risk-review/$id'
     | '/admin/support/$id'
     | '/admin/team/$id'
@@ -3437,6 +3469,7 @@ export interface FileRouteTypes {
     | '/admin/partners/'
     | '/admin/payment-links/'
     | '/admin/payouts/'
+    | '/admin/programmatic-seo/'
     | '/admin/team/'
     | '/admin/workflows/'
     | '/ambassador/earnings/'
@@ -3715,6 +3748,8 @@ export interface FileRouteTypes {
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
+    | '/admin/programmatic-seo/$id'
+    | '/admin/programmatic-seo/new'
     | '/admin/risk-review/$id'
     | '/admin/support/$id'
     | '/admin/team/$id'
@@ -3751,6 +3786,7 @@ export interface FileRouteTypes {
     | '/admin/partners'
     | '/admin/payment-links'
     | '/admin/payouts'
+    | '/admin/programmatic-seo'
     | '/admin/team'
     | '/admin/workflows'
     | '/ambassador/earnings'
@@ -4042,6 +4078,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payouts/$id'
+    | '/_authenticated/admin/programmatic-seo/$id'
+    | '/_authenticated/admin/programmatic-seo/new'
     | '/_authenticated/admin/risk-review/$id'
     | '/_authenticated/admin/support/$id'
     | '/_authenticated/admin/team/$id'
@@ -4078,6 +4116,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partners/'
     | '/_authenticated/admin/payment-links/'
     | '/_authenticated/admin/payouts/'
+    | '/_authenticated/admin/programmatic-seo/'
     | '/_authenticated/admin/team/'
     | '/_authenticated/admin/workflows/'
     | '/_authenticated/ambassador/earnings/'
@@ -5778,6 +5817,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminTeamIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/programmatic-seo/': {
+      id: '/_authenticated/admin/programmatic-seo/'
+      path: '/programmatic-seo'
+      fullPath: '/admin/programmatic-seo/'
+      preLoaderRoute: typeof AuthenticatedAdminProgrammaticSeoIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/payouts/': {
       id: '/_authenticated/admin/payouts/'
       path: '/payouts'
@@ -6029,6 +6075,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/risk-review/$id'
       preLoaderRoute: typeof AuthenticatedAdminRiskReviewIdRouteImport
       parentRoute: typeof AuthenticatedAdminRiskReviewRoute
+    }
+    '/_authenticated/admin/programmatic-seo/new': {
+      id: '/_authenticated/admin/programmatic-seo/new'
+      path: '/programmatic-seo/new'
+      fullPath: '/admin/programmatic-seo/new'
+      preLoaderRoute: typeof AuthenticatedAdminProgrammaticSeoNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/programmatic-seo/$id': {
+      id: '/_authenticated/admin/programmatic-seo/$id'
+      path: '/programmatic-seo/$id'
+      fullPath: '/admin/programmatic-seo/$id'
+      preLoaderRoute: typeof AuthenticatedAdminProgrammaticSeoIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/payouts/$id': {
       id: '/_authenticated/admin/payouts/$id'
@@ -6727,6 +6787,8 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
   AuthenticatedAdminPaymentLinksIdRoute: typeof AuthenticatedAdminPaymentLinksIdRoute
   AuthenticatedAdminPayoutsIdRoute: typeof AuthenticatedAdminPayoutsIdRoute
+  AuthenticatedAdminProgrammaticSeoIdRoute: typeof AuthenticatedAdminProgrammaticSeoIdRoute
+  AuthenticatedAdminProgrammaticSeoNewRoute: typeof AuthenticatedAdminProgrammaticSeoNewRoute
   AuthenticatedAdminTeamIdRoute: typeof AuthenticatedAdminTeamIdRoute
   AuthenticatedAdminWorkflowsIdRoute: typeof AuthenticatedAdminWorkflowsIdRoute
   AuthenticatedAdminWorkflowsNewRoute: typeof AuthenticatedAdminWorkflowsNewRoute
@@ -6737,6 +6799,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
   AuthenticatedAdminPaymentLinksIndexRoute: typeof AuthenticatedAdminPaymentLinksIndexRoute
   AuthenticatedAdminPayoutsIndexRoute: typeof AuthenticatedAdminPayoutsIndexRoute
+  AuthenticatedAdminProgrammaticSeoIndexRoute: typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   AuthenticatedAdminTeamIndexRoute: typeof AuthenticatedAdminTeamIndexRoute
   AuthenticatedAdminWorkflowsIndexRoute: typeof AuthenticatedAdminWorkflowsIndexRoute
 }
@@ -6802,6 +6865,10 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
   AuthenticatedAdminPaymentLinksIdRoute: AuthenticatedAdminPaymentLinksIdRoute,
   AuthenticatedAdminPayoutsIdRoute: AuthenticatedAdminPayoutsIdRoute,
+  AuthenticatedAdminProgrammaticSeoIdRoute:
+    AuthenticatedAdminProgrammaticSeoIdRoute,
+  AuthenticatedAdminProgrammaticSeoNewRoute:
+    AuthenticatedAdminProgrammaticSeoNewRoute,
   AuthenticatedAdminTeamIdRoute: AuthenticatedAdminTeamIdRoute,
   AuthenticatedAdminWorkflowsIdRoute: AuthenticatedAdminWorkflowsIdRoute,
   AuthenticatedAdminWorkflowsNewRoute: AuthenticatedAdminWorkflowsNewRoute,
@@ -6815,6 +6882,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPaymentLinksIndexRoute:
     AuthenticatedAdminPaymentLinksIndexRoute,
   AuthenticatedAdminPayoutsIndexRoute: AuthenticatedAdminPayoutsIndexRoute,
+  AuthenticatedAdminProgrammaticSeoIndexRoute:
+    AuthenticatedAdminProgrammaticSeoIndexRoute,
   AuthenticatedAdminTeamIndexRoute: AuthenticatedAdminTeamIndexRoute,
   AuthenticatedAdminWorkflowsIndexRoute: AuthenticatedAdminWorkflowsIndexRoute,
 }
