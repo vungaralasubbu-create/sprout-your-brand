@@ -238,8 +238,9 @@ export function PartnerShell() {
                 glintr
               </Link>
               <div className="mt-0.5 text-caption font-mono uppercase tracking-widest text-primary">
-                Sales Workspace
+                {workspaceLabel}
               </div>
+
             </div>
             <button
               className="lg:hidden p-2 rounded-md hover:bg-muted"
