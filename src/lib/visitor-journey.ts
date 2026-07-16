@@ -19,6 +19,7 @@ export type JourneyId =
 export interface JourneyProfile {
   id: JourneyId;
   // Student sub-profile
+  studentType?: string;
   branch?: string;
   year?: string;
   // Professional sub-profile
@@ -28,6 +29,13 @@ export interface JourneyProfile {
   targetSalary?: string;
   learningTime?: string;
   industry?: string;
+  careerGoal?: string;
+  learningSchedule?: string;
+  // Partner
+  revenueModel?: "70" | "50";
+  // Interest flags
+  academyInterest?: boolean;
+  corporateInterest?: boolean;
   updatedAt: number;
 }
 
