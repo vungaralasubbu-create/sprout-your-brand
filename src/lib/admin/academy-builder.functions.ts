@@ -89,7 +89,7 @@ Input:
 Return JSON:
 {
   "nameSuggestions": [ { "name": string, "rationale": string } x6 ],
-  "domainSuggestions": [ "example.com", "example.in", ... ] (10, mix .com .in .co .ai .io),
+  "managedSlugSuggestions": [ "your-brand", "brand-academy", ... ] (10 lowercase, hyphenated slugs for {slug}.glintr.com),
   "tagline": string,
   "brandStory": string (120-160 words),
   "mission": string,
