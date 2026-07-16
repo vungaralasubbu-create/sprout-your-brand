@@ -193,7 +193,7 @@ function GlossaryDetail() {
                     Examples
                   </h2>
                   <ul className="mt-3 space-y-2 list-disc pl-5 text-body md:text-body-lg text-foreground/85 leading-relaxed">
-                    {entry.examples.map((e, i) => (
+                    {entry.examples.map((e: string, i: number) => (
                       <li key={i}>{e}</li>
                     ))}
                   </ul>
@@ -206,7 +206,7 @@ function GlossaryDetail() {
                     Common mistakes
                   </h2>
                   <ul className="mt-3 space-y-2 list-disc pl-5 text-body md:text-body-lg text-foreground/85 leading-relaxed">
-                    {entry.mistakes.map((e, i) => (
+                    {entry.mistakes.map((e: string, i: number) => (
                       <li key={i}>{e}</li>
                     ))}
                   </ul>

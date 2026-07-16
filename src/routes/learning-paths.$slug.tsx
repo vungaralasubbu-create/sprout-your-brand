@@ -119,7 +119,7 @@ function LearningPathDetail() {
               The path
             </h2>
             <ol className="mt-6 space-y-3">
-              {p.steps.map((step, i) => {
+              {p.steps.map((step: any, i: number) => {
                 const g = step.glossary ? getGlossaryEntry(step.glossary) : null;
                 return (
                   <li
@@ -164,7 +164,7 @@ function LearningPathDetail() {
                 By the end you can
               </h2>
               <ul className="mt-4 space-y-2 list-disc pl-5 text-body md:text-body-lg text-foreground/85 leading-relaxed">
-                {p.outcomes.map((o, i) => (
+                {p.outcomes.map((o: string, i: number) => (
                   <li key={i}>{o}</li>
                 ))}
               </ul>

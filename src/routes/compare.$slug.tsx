@@ -124,7 +124,7 @@ function CompareDetail() {
                     <th className="text-left font-mono uppercase tracking-widest text-[11px] text-muted-foreground px-4 py-3">
                       Dimension
                     </th>
-                    {c.items.map((it) => (
+                    {c.items.map((it: string) => (
                       <th
                         key={it}
                         className="text-left font-display font-semibold px-4 py-3"
@@ -135,7 +135,7 @@ function CompareDetail() {
                   </tr>
                 </thead>
                 <tbody>
-                  {c.rows.map((r, i) => (
+                  {c.rows.map((r: any, i: number) => (
                     <tr key={i} className="border-t">
                       <td className="px-4 py-3 font-medium">{r.dimension}</td>
                       <td className="px-4 py-3 text-foreground/85">{r.a}</td>
@@ -157,7 +157,7 @@ function CompareDetail() {
               Key differences
             </h2>
             <ul className="mt-4 space-y-2 list-disc pl-5 text-body md:text-body-lg text-foreground/85 leading-relaxed">
-              {c.differences.map((d, i) => (
+              {c.differences.map((d: string, i: number) => (
                 <li key={i}>{d}</li>
               ))}
             </ul>

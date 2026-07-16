@@ -110,7 +110,7 @@ function CareerMapDetail() {
                 Foundations
               </h2>
               <div className="mt-4 flex flex-wrap gap-2">
-                {m.foundations.map((f) => (
+                {m.foundations.map((f: string) => (
                   <span
                     key={f}
                     className="text-xs font-mono uppercase tracking-wider px-3 py-1 rounded-full border text-muted-foreground"
@@ -129,7 +129,7 @@ function CareerMapDetail() {
               Role families
             </h2>
             <div className="mt-6 grid md:grid-cols-2 gap-3">
-              {m.roles.map((r) => (
+              {m.roles.map((r: any) => (
                 <div key={r.title} className="rounded-2xl border p-5 bg-card">
                   <div className="font-display font-semibold">{r.title}</div>
                   <p className="mt-2 text-sm text-muted-foreground">
@@ -137,7 +137,7 @@ function CareerMapDetail() {
                   </p>
                   {r.glossary?.length ? (
                     <div className="mt-3 flex flex-wrap gap-1.5">
-                      {r.glossary.map((slug) => {
+                      {r.glossary.map((slug: string) => {
                         const g = getGlossaryEntry(slug);
                         if (!g) return null;
                         return (
