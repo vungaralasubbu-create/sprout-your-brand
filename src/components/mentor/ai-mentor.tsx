@@ -6,9 +6,13 @@ import {
   BookmarkCheck,
   Clock,
   Compass,
+  LifeBuoy,
+  Mail,
   MessageSquare,
+  Phone,
   Send,
   Sparkles,
+  Trash2,
   X,
 } from "lucide-react";
 
@@ -25,21 +29,46 @@ import {
   useRecentlyViewed,
 } from "@/lib/mentor/storage";
 
+type MessageKind = "text" | "support" | "escalation";
+
 type ChatMessage = {
   id: string;
   role: "user" | "assistant";
   content: string;
+  kind?: MessageKind;
   suggestions?: string[];
   links?: MentorLink[];
 };
 
-const QUICK_ACTIONS: { label: string; href: string }[] = [
-  { label: "Book consultation", href: "/book-consultation" },
-  { label: "Find your program", href: "/find-your-program" },
-  { label: "Learning paths", href: "/learning-paths" },
-  { label: "Compare programs", href: "/compare" },
-  { label: "AI tools", href: "/tools" },
-  { label: "Start earning", href: "/earn" },
+// GlintrAI quick actions (per platform brand spec)
+const QUICK_ACTIONS: { label: string; prompt: string }[] = [
+  { label: "Recommend a course", prompt: "Recommend a course for me based on my goals." },
+  { label: "Build my learning roadmap", prompt: "Build me a personalised learning roadmap." },
+  { label: "Help me choose a career", prompt: "Help me choose a career path that fits my skills." },
+  { label: "Compare programs", prompt: "Compare programs so I can decide which one to pick." },
+  { label: "Explain a concept", prompt: "Explain a concept to me clearly with an example." },
+  { label: "Help me become a partner", prompt: "How do I become a Glintr sales partner?" },
+  { label: "Launch my academy", prompt: "How do I launch my own academy with Glintr?" },
+];
+
+// Support contact — surfaced in the support card.
+const SUPPORT_CONTACT = {
+  email: "support@glintr.com",
+  phone: "+91 80000 00000",
+  whatsapp: "+91 80000 00000",
+  hours: "Mon–Sat, 10:00 AM – 7:00 PM IST",
+};
+
+// Phrases that trigger an immediate hand-off to the human support card.
+const HUMAN_TRIGGERS = [
+  /\bhuman\s+(support|help|agent)\b/i,
+  /\bspeak\s+to\s+(a\s+)?(person|human|someone|agent|representative)\b/i,
+  /\btalk\s+to\s+(a\s+)?(person|human|someone|agent|representative)\b/i,
+  /\bcontact\s+support\b/i,
+  /\bcall\s+(someone|support|glintr)\b/i,
+  /\braise\s+(a\s+)?ticket\b/i,
+  /\bbook\s+(a\s+)?(consultation|call|demo)\b/i,
+  /\breal\s+person\b/i,
 ];
 
 const SUPPRESS_PATHS = ["/auth", "/dashboard", "/admin", "/partner-support", "/student-support"];
