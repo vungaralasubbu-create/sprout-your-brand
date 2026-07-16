@@ -455,7 +455,7 @@ export function SalaryGrowth({ stages }: { stages?: SalaryStage[] } = {}) {
         </div>
 
         <div className="space-y-3">
-          {SALARY_STAGES.map((s, i) => {
+          {list.map((s, i) => {
             const widthPct = Math.max(12, Math.round(((s.high - s.low) / max) * 100) + 12);
             const startPct = Math.round((s.low / max) * 100);
             return (
