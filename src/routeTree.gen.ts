@@ -44,6 +44,7 @@ import { Route as BrandSetupRouteImport } from './routes/brand-setup'
 import { Route as BookConsultationRouteImport } from './routes/book-consultation'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AiAgentsRouteImport } from './routes/ai-agents'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as R70RevenueModelRouteImport } from './routes/70-revenue-model'
 import { Route as R50SupportedModelRouteImport } from './routes/50-supported-model'
@@ -95,6 +96,7 @@ import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
 import { Route as CareerMapsSlugRouteImport } from './routes/career-maps.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AiAgentsIdRouteImport } from './routes/ai-agents.$id'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
@@ -200,6 +202,7 @@ import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminAiosRouteImport } from './routes/_authenticated/admin.aios'
 import { Route as AuthenticatedAdminAiContentRouteImport } from './routes/_authenticated/admin.ai-content'
+import { Route as AuthenticatedAdminAiAgentsRouteImport } from './routes/_authenticated/admin.ai-agents'
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
 import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
 import { Route as AuthenticatedAdminAccountRouteImport } from './routes/_authenticated/admin.account'
@@ -229,6 +232,7 @@ import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
 import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
 import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
+import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
@@ -296,6 +300,9 @@ import { Route as AuthenticatedAdminAiContentSettingsRouteImport } from './route
 import { Route as AuthenticatedAdminAiContentReviewRouteImport } from './routes/_authenticated/admin.ai-content.review'
 import { Route as AuthenticatedAdminAiContentClustersRouteImport } from './routes/_authenticated/admin.ai-content.clusters'
 import { Route as AuthenticatedAdminAiContentCalendarRouteImport } from './routes/_authenticated/admin.ai-content.calendar'
+import { Route as AuthenticatedAdminAiAgentsOrchestratorRouteImport } from './routes/_authenticated/admin.ai-agents.orchestrator'
+import { Route as AuthenticatedAdminAiAgentsNewRouteImport } from './routes/_authenticated/admin.ai-agents.new'
+import { Route as AuthenticatedAdminAiAgentsAnalyticsRouteImport } from './routes/_authenticated/admin.ai-agents.analytics'
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
 import { Route as ApiV1CertificatesVerifyCodeRouteImport } from './routes/api/v1/certificates.verify.$code'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
@@ -479,6 +486,11 @@ const BlogRoute = BlogRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiAgentsRoute = AiAgentsRouteImport.update({
+  id: '/ai-agents',
+  path: '/ai-agents',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -735,6 +747,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => BlogRoute,
+} as any)
+const AiAgentsIdRoute = AiAgentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AiAgentsRoute,
 } as any)
 const AuthenticatedStudentRoute = AuthenticatedStudentRouteImport.update({
   id: '/student',
@@ -1349,6 +1366,12 @@ const AuthenticatedAdminAiContentRoute =
     path: '/ai-content',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAiAgentsRoute =
+  AuthenticatedAdminAiAgentsRouteImport.update({
+    id: '/ai-agents',
+    path: '/ai-agents',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdjustmentsRoute =
   AuthenticatedAdminAdjustmentsRouteImport.update({
     id: '/adjustments',
@@ -1522,6 +1545,12 @@ const AuthenticatedAdminAiContentIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiAgentsIndexRoute =
+  AuthenticatedAdminAiAgentsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminAiAgentsRoute,
   } as any)
 const ProgramsCategoryCourseApplyRoute =
   ProgramsCategoryCourseApplyRouteImport.update({
@@ -1925,6 +1954,24 @@ const AuthenticatedAdminAiContentCalendarRoute =
     path: '/calendar',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
+const AuthenticatedAdminAiAgentsOrchestratorRoute =
+  AuthenticatedAdminAiAgentsOrchestratorRouteImport.update({
+    id: '/orchestrator',
+    path: '/orchestrator',
+    getParentRoute: () => AuthenticatedAdminAiAgentsRoute,
+  } as any)
+const AuthenticatedAdminAiAgentsNewRoute =
+  AuthenticatedAdminAiAgentsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedAdminAiAgentsRoute,
+  } as any)
+const AuthenticatedAdminAiAgentsAnalyticsRoute =
+  AuthenticatedAdminAiAgentsAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAdminAiAgentsRoute,
+  } as any)
 const AuthenticatedAdminContentArticlesIndexRoute =
   AuthenticatedAdminContentArticlesIndexRouteImport.update({
     id: '/articles/',
@@ -1985,6 +2032,7 @@ export interface FileRoutesByFullPath {
   '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
+  '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/book-consultation': typeof BookConsultationRoute
@@ -2025,6 +2073,7 @@ export interface FileRoutesByFullPath {
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
+  '/ai-agents/$id': typeof AiAgentsIdRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
@@ -2075,6 +2124,7 @@ export interface FileRoutesByFullPath {
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
+  '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
   '/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
@@ -2175,6 +2225,9 @@ export interface FileRoutesByFullPath {
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
+  '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
+  '/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
+  '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
@@ -2242,6 +2295,7 @@ export interface FileRoutesByFullPath {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
@@ -2282,6 +2336,7 @@ export interface FileRoutesByTo {
   '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
+  '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/book-consultation': typeof BookConsultationRoute
@@ -2317,6 +2372,7 @@ export interface FileRoutesByTo {
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
+  '/ai-agents/$id': typeof AiAgentsIdRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
@@ -2462,6 +2518,9 @@ export interface FileRoutesByTo {
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/workspace/notebooks': typeof WorkspaceNotebooksIndexRoute
+  '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
+  '/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
+  '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
@@ -2529,6 +2588,7 @@ export interface FileRoutesByTo {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
@@ -2571,6 +2631,7 @@ export interface FileRoutesById {
   '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
+  '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/book-consultation': typeof BookConsultationRoute
@@ -2611,6 +2672,7 @@ export interface FileRoutesById {
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
+  '/ai-agents/$id': typeof AiAgentsIdRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
@@ -2661,6 +2723,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/account': typeof AuthenticatedAdminAccountRoute
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
+  '/_authenticated/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/_authenticated/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
   '/_authenticated/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
@@ -2761,6 +2824,9 @@ export interface FileRoutesById {
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
+  '/_authenticated/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
+  '/_authenticated/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
+  '/_authenticated/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
   '/_authenticated/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/_authenticated/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/_authenticated/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
@@ -2828,6 +2894,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
@@ -2870,6 +2937,7 @@ export interface FileRouteTypes {
     | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
+    | '/ai-agents'
     | '/auth'
     | '/blog'
     | '/book-consultation'
@@ -2910,6 +2978,7 @@ export interface FileRouteTypes {
     | '/brand'
     | '/partner'
     | '/student'
+    | '/ai-agents/$id'
     | '/blog/$slug'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
@@ -2960,6 +3029,7 @@ export interface FileRouteTypes {
     | '/admin/account'
     | '/admin/activity'
     | '/admin/adjustments'
+    | '/admin/ai-agents'
     | '/admin/ai-content'
     | '/admin/aios'
     | '/admin/applications'
@@ -3060,6 +3130,9 @@ export interface FileRouteTypes {
     | '/student/'
     | '/programs/$category/'
     | '/workspace/notebooks/'
+    | '/admin/ai-agents/analytics'
+    | '/admin/ai-agents/new'
+    | '/admin/ai-agents/orchestrator'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/review'
@@ -3127,6 +3200,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/admin/ai-agents/'
     | '/admin/ai-content/'
     | '/admin/aios/'
     | '/admin/content-intelligence/'
@@ -3167,6 +3241,7 @@ export interface FileRouteTypes {
     | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
+    | '/ai-agents'
     | '/auth'
     | '/blog'
     | '/book-consultation'
@@ -3202,6 +3277,7 @@ export interface FileRouteTypes {
     | '/ambassador'
     | '/brand'
     | '/partner'
+    | '/ai-agents/$id'
     | '/blog/$slug'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
@@ -3347,6 +3423,9 @@ export interface FileRouteTypes {
     | '/student'
     | '/programs/$category'
     | '/workspace/notebooks'
+    | '/admin/ai-agents/analytics'
+    | '/admin/ai-agents/new'
+    | '/admin/ai-agents/orchestrator'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/review'
@@ -3414,6 +3493,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/admin/ai-agents'
     | '/admin/ai-content'
     | '/admin/aios'
     | '/admin/content-intelligence'
@@ -3455,6 +3535,7 @@ export interface FileRouteTypes {
     | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
+    | '/ai-agents'
     | '/auth'
     | '/blog'
     | '/book-consultation'
@@ -3495,6 +3576,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand'
     | '/_authenticated/partner'
     | '/_authenticated/student'
+    | '/ai-agents/$id'
     | '/blog/$slug'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
@@ -3545,6 +3627,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/account'
     | '/_authenticated/admin/activity'
     | '/_authenticated/admin/adjustments'
+    | '/_authenticated/admin/ai-agents'
     | '/_authenticated/admin/ai-content'
     | '/_authenticated/admin/aios'
     | '/_authenticated/admin/applications'
@@ -3645,6 +3728,9 @@ export interface FileRouteTypes {
     | '/_authenticated/student/'
     | '/programs/$category/'
     | '/workspace/notebooks/'
+    | '/_authenticated/admin/ai-agents/analytics'
+    | '/_authenticated/admin/ai-agents/new'
+    | '/_authenticated/admin/ai-agents/orchestrator'
     | '/_authenticated/admin/ai-content/calendar'
     | '/_authenticated/admin/ai-content/clusters'
     | '/_authenticated/admin/ai-content/review'
@@ -3712,6 +3798,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/_authenticated/admin/ai-agents/'
     | '/_authenticated/admin/ai-content/'
     | '/_authenticated/admin/aios/'
     | '/_authenticated/admin/content-intelligence/'
@@ -3754,6 +3841,7 @@ export interface RootRouteChildren {
   R50SupportedModelRoute: typeof R50SupportedModelRoute
   R70RevenueModelRoute: typeof R70RevenueModelRoute
   AboutRoute: typeof AboutRoute
+  AiAgentsRoute: typeof AiAgentsRouteWithChildren
   AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRouteWithChildren
   BookConsultationRoute: typeof BookConsultationRoute
@@ -4053,6 +4141,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-agents': {
+      id: '/ai-agents'
+      path: '/ai-agents'
+      fullPath: '/ai-agents'
+      preLoaderRoute: typeof AiAgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -4411,6 +4506,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
+    }
+    '/ai-agents/$id': {
+      id: '/ai-agents/$id'
+      path: '/$id'
+      fullPath: '/ai-agents/$id'
+      preLoaderRoute: typeof AiAgentsIdRouteImport
+      parentRoute: typeof AiAgentsRoute
     }
     '/_authenticated/student': {
       id: '/_authenticated/student'
@@ -5147,6 +5249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiContentRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ai-agents': {
+      id: '/_authenticated/admin/ai-agents'
+      path: '/ai-agents'
+      fullPath: '/admin/ai-agents'
+      preLoaderRoute: typeof AuthenticatedAdminAiAgentsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/adjustments': {
       id: '/_authenticated/admin/adjustments'
       path: '/adjustments'
@@ -5349,6 +5458,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/ai-content/'
       preLoaderRoute: typeof AuthenticatedAdminAiContentIndexRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-agents/': {
+      id: '/_authenticated/admin/ai-agents/'
+      path: '/'
+      fullPath: '/admin/ai-agents/'
+      preLoaderRoute: typeof AuthenticatedAdminAiAgentsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminAiAgentsRoute
     }
     '/programs/$category/$course/apply': {
       id: '/programs/$category/$course/apply'
@@ -5819,6 +5935,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiContentCalendarRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
+    '/_authenticated/admin/ai-agents/orchestrator': {
+      id: '/_authenticated/admin/ai-agents/orchestrator'
+      path: '/orchestrator'
+      fullPath: '/admin/ai-agents/orchestrator'
+      preLoaderRoute: typeof AuthenticatedAdminAiAgentsOrchestratorRouteImport
+      parentRoute: typeof AuthenticatedAdminAiAgentsRoute
+    }
+    '/_authenticated/admin/ai-agents/new': {
+      id: '/_authenticated/admin/ai-agents/new'
+      path: '/new'
+      fullPath: '/admin/ai-agents/new'
+      preLoaderRoute: typeof AuthenticatedAdminAiAgentsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminAiAgentsRoute
+    }
+    '/_authenticated/admin/ai-agents/analytics': {
+      id: '/_authenticated/admin/ai-agents/analytics'
+      path: '/analytics'
+      fullPath: '/admin/ai-agents/analytics'
+      preLoaderRoute: typeof AuthenticatedAdminAiAgentsAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiAgentsRoute
+    }
     '/_authenticated/admin/content/articles/': {
       id: '/_authenticated/admin/content/articles/'
       path: '/articles'
@@ -5884,6 +6021,28 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminAiAgentsRouteChildren {
+  AuthenticatedAdminAiAgentsAnalyticsRoute: typeof AuthenticatedAdminAiAgentsAnalyticsRoute
+  AuthenticatedAdminAiAgentsNewRoute: typeof AuthenticatedAdminAiAgentsNewRoute
+  AuthenticatedAdminAiAgentsOrchestratorRoute: typeof AuthenticatedAdminAiAgentsOrchestratorRoute
+  AuthenticatedAdminAiAgentsIndexRoute: typeof AuthenticatedAdminAiAgentsIndexRoute
+}
+
+const AuthenticatedAdminAiAgentsRouteChildren: AuthenticatedAdminAiAgentsRouteChildren =
+  {
+    AuthenticatedAdminAiAgentsAnalyticsRoute:
+      AuthenticatedAdminAiAgentsAnalyticsRoute,
+    AuthenticatedAdminAiAgentsNewRoute: AuthenticatedAdminAiAgentsNewRoute,
+    AuthenticatedAdminAiAgentsOrchestratorRoute:
+      AuthenticatedAdminAiAgentsOrchestratorRoute,
+    AuthenticatedAdminAiAgentsIndexRoute: AuthenticatedAdminAiAgentsIndexRoute,
+  }
+
+const AuthenticatedAdminAiAgentsRouteWithChildren =
+  AuthenticatedAdminAiAgentsRoute._addFileChildren(
+    AuthenticatedAdminAiAgentsRouteChildren,
+  )
 
 interface AuthenticatedAdminAiContentRouteChildren {
   AuthenticatedAdminAiContentCalendarRoute: typeof AuthenticatedAdminAiContentCalendarRoute
@@ -6095,6 +6254,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAccountRoute: typeof AuthenticatedAdminAccountRoute
   AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
   AuthenticatedAdminAdjustmentsRoute: typeof AuthenticatedAdminAdjustmentsRoute
+  AuthenticatedAdminAiAgentsRoute: typeof AuthenticatedAdminAiAgentsRouteWithChildren
   AuthenticatedAdminAiContentRoute: typeof AuthenticatedAdminAiContentRouteWithChildren
   AuthenticatedAdminAiosRoute: typeof AuthenticatedAdminAiosRouteWithChildren
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
@@ -6147,6 +6307,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAccountRoute: AuthenticatedAdminAccountRoute,
   AuthenticatedAdminActivityRoute: AuthenticatedAdminActivityRoute,
   AuthenticatedAdminAdjustmentsRoute: AuthenticatedAdminAdjustmentsRoute,
+  AuthenticatedAdminAiAgentsRoute: AuthenticatedAdminAiAgentsRouteWithChildren,
   AuthenticatedAdminAiContentRoute:
     AuthenticatedAdminAiContentRouteWithChildren,
   AuthenticatedAdminAiosRoute: AuthenticatedAdminAiosRouteWithChildren,
@@ -6589,6 +6750,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AiAgentsRouteChildren {
+  AiAgentsIdRoute: typeof AiAgentsIdRoute
+}
+
+const AiAgentsRouteChildren: AiAgentsRouteChildren = {
+  AiAgentsIdRoute: AiAgentsIdRoute,
+}
+
+const AiAgentsRouteWithChildren = AiAgentsRoute._addFileChildren(
+  AiAgentsRouteChildren,
+)
+
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
 }
@@ -6819,6 +6992,7 @@ const rootRouteChildren: RootRouteChildren = {
   R50SupportedModelRoute: R50SupportedModelRoute,
   R70RevenueModelRoute: R70RevenueModelRoute,
   AboutRoute: AboutRoute,
+  AiAgentsRoute: AiAgentsRouteWithChildren,
   AuthRoute: AuthRoute,
   BlogRoute: BlogRouteWithChildren,
   BookConsultationRoute: BookConsultationRoute,

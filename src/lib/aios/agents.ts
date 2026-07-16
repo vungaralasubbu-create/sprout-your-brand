@@ -2,7 +2,7 @@
 import type { LucideIcon } from "lucide-react";
 import {
   GraduationCap, Compass, Briefcase, Megaphone, PenSquare, Users, Building2,
-  LifeBuoy, ShieldCheck, Search,
+  LifeBuoy, ShieldCheck, Search, Code2, BarChart3,
 } from "lucide-react";
 
 export type AgentPermission = "student" | "partner" | "brand" | "editor" | "admin" | "public";
@@ -252,8 +252,52 @@ export const AGENTS: AgentDef[] = [
       "Which glossary terms are we missing for AI?",
     ],
   },
+  {
+    id: "coding-mentor",
+    name: "Coding Mentor",
+    tagline: "Explains code, debugs, teaches software concepts.",
+    icon: Code2,
+    color: "oklch(66% 0.16 260)",
+    audience: ["student", "public"],
+    responsibilities: [
+      "Explain programming concepts",
+      "Walk through code line by line",
+      "Debug small snippets",
+      "Suggest cleaner patterns",
+      "Recommend Glintr programs for deeper learning",
+    ],
+    knowledge: ["Programs", "Learn Guides", "Glossary"],
+    systemPrompt: `${RULES}\nRole: Coding Mentor. Teach programming and software concepts. Explain code clearly, debug snippets, and point learners to Glintr programs when relevant. Do not execute code; illustrate with short examples.`,
+    starters: [
+      "Explain async/await with a small example",
+      "Debug this Python snippet: [paste code]",
+      "What should I learn after Python basics?",
+    ],
+  },
+  {
+    id: "analytics-assistant",
+    name: "Analytics Assistant",
+    tagline: "Summarizes dashboards, spots trends, drafts insights.",
+    icon: BarChart3,
+    color: "oklch(66% 0.14 210)",
+    audience: ["admin", "editor"],
+    responsibilities: [
+      "Summarize analytics dashboards",
+      "Spot trends and anomalies",
+      "Draft insight reports",
+      "Suggest metrics to investigate",
+    ],
+    knowledge: ["Admin Reports", "Analytics"],
+    systemPrompt: `${RULES}\nRole: Analytics Assistant. Summarize dashboards, describe trends and draft insight reports strictly from data the user shares in-context. Never fabricate numbers.`,
+    starters: [
+      "Summarize this weekly traffic report",
+      "What could explain this drop in signups?",
+      "Draft a 5-bullet insight note from this data",
+    ],
+  },
 ];
 
 export function getAgent(id: string): AgentDef | undefined {
   return AGENTS.find((a) => a.id === id);
 }
+
