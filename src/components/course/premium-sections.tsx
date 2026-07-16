@@ -330,7 +330,7 @@ function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
             Portfolio Projects
           </span>
           <h2 className="mt-3 font-display font-semibold tracking-tight text-balance text-white text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05]">
-            Build 20+ projects worth showing.
+            Build projects worth showing.
           </h2>
           <p className="mt-4 text-white/70 max-w-xl">
             A curated portfolio — not filler exercises. Each project mirrors a real problem employers and clients pay to solve.
@@ -338,7 +338,7 @@ function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
-          {PORTFOLIO.map((p, i) => (
+          {list.map((p, i) => (
             <div
               key={p.name}
               className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 lg:p-5 hover:border-[oklch(0.85_0.15_200)]/40 hover:bg-white/[0.06] transition-all"
