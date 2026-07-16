@@ -46,7 +46,11 @@ export const Route = createFileRoute("/launch-your-brand/")({
         content:
           "Choose your brand name, select programs, and launch on Glintr's shared infrastructure. Standard eligible configurations in under 24 hours.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://glintr.com/launch-your-brand" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://glintr.com/launch-your-brand" }],
   }),
   component: LaunchYourBrandPage,
 });

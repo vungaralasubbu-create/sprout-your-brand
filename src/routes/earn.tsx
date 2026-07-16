@@ -42,7 +42,11 @@ export const Route = createFileRoute("/earn")({
         content:
           "Two proven models: sell using your own leads (up to 70%) or with company-supplied leads (up to 50%). Transparent payouts every week.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://glintr.com/earn" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://glintr.com/earn" }],
   }),
   component: EarnPage,
 });

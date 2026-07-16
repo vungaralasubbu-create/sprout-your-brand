@@ -41,7 +41,11 @@ export const Route = createFileRoute("/income-calculator")({
         content:
           "Explore your Partner revenue share across the 70% Revenue Model and 50% Supported Model. Deterministic, illustrative calculations.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://glintr.com/income-calculator" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://glintr.com/income-calculator" }],
   }),
   component: IncomeCalculatorPage,
 });

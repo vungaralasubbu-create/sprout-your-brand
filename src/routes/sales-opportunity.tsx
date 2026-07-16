@@ -16,8 +16,10 @@ export const Route = createFileRoute("/sales-opportunity")({
       { property: "og:title", content: "Your Sales Skills Should Create More Opportunities — Glintr" },
       { property: "og:description", content: "Choose eligible career programs, work flexibly, and earn revenue share from verified successful sales." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://glintr.com/sales-opportunity" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://glintr.com/sales-opportunity" }],
   }),
   component: SalesOpportunityPage,
 });
