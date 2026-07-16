@@ -131,6 +131,7 @@ function GlossaryIndex() {
             <div className="mt-8 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <input
+                id="glossary-search"
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -139,6 +140,40 @@ function GlossaryIndex() {
                 aria-label="Search glossary"
               />
             </div>
+
+            {/* Category filter chips */}
+            <div className="mt-5 flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => setActiveCategory(null)}
+                className={cn(
+                  "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
+                  activeCategory === null
+                    ? "bg-foreground text-background border-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                All categories
+              </button>
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() =>
+                    setActiveCategory((cur) => (cur === c ? null : c))
+                  }
+                  className={cn(
+                    "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
+                    activeCategory === c
+                      ? "bg-foreground text-background border-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+
 
             {/* Alphabet nav — desktop sticky, mobile horizontal scroll */}
             <div className="mt-6 -mx-4 md:mx-0 md:sticky md:top-16 md:z-10 md:bg-background/80 md:backdrop-blur md:py-2">
