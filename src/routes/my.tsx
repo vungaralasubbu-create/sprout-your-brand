@@ -19,14 +19,21 @@ export const Route = createFileRoute("/my")({
   ssr: false,
   head: () =>
     buildPageHead({
+      path: "/my",
       title: "My Learning Workspace — Glintr",
       description:
         "Your personal Glintr learning workspace: continue courses, track progress, plan study, save roadmaps, and get AI mentor guidance.",
-      canonicalPath: "/my",
-      robots: "noindex, nofollow",
+      noindex: true,
     }),
   component: WorkspaceLayout,
 });
+
+interface NavItem {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+}
 
 const NAV = [
   { to: "/my", label: "Dashboard", icon: LayoutDashboard, exact: true },
