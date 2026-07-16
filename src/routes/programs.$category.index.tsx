@@ -367,6 +367,125 @@ function CategoryPage() {
           </Container>
         </Section>
 
+        {/* LEARNING INTENT SELECTOR */}
+        {editorial?.learningIntents?.length ? (
+          <Section className="py-14 md:py-20 border-t border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="I Want To Learn…"
+                title="Pick an intent, see a recommendation"
+                copy="A quick way to align an interest with a program in this category."
+              />
+              <LearningIntentSelector editorial={editorial} courses={list} theme={theme} />
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* RELATED SKILLS */}
+        {editorial?.relatedSkills?.length ? (
+          <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Connected Skills"
+                title="Skills that cluster in this field"
+                copy="A snapshot of the surrounding vocabulary — useful when comparing programs or reading further."
+              />
+              <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {editorial.relatedSkills.map((g) => (
+                  <div key={g.group} className="rounded-2xl border border-border bg-card p-5">
+                    <p className="font-display text-base font-semibold" style={{ color: theme.ring }}>
+                      {g.group}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {g.items.map((s) => (
+                        <span key={s} className="rounded-full border border-border px-3 py-1 text-caption">
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* INSIGHTS — RELATED BLOGS */}
+        {editorial?.featuredBlogSlugs?.length && blogPosts.length > 0 ? (
+          <Section id="insights" className="py-14 md:py-20 border-t border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Insights"
+                title="Read alongside these programs"
+                copy="Editorial articles that explain the field before you commit to a program."
+              />
+              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {blogPosts.map((b) => (
+                  <Link
+                    key={b.slug}
+                    to="/blog/$slug"
+                    params={{ slug: b.slug }}
+                    className="group rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-[3px] hover:shadow-md hover:border-border-strong"
+                  >
+                    <div className="inline-flex items-center gap-2 text-caption">
+                      <BookOpen className="size-3.5" style={{ color: theme.ring }} />
+                      <span className="uppercase tracking-wider">Article</span>
+                    </div>
+                    <h3 className="mt-3 font-display text-base font-semibold leading-snug line-clamp-2">
+                      {b.title}
+                    </h3>
+                    {b.excerpt ? (
+                      <p className="mt-2 text-caption line-clamp-3">{b.excerpt}</p>
+                    ) : null}
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary">
+                      Read insight <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-8">
+                <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-primary">
+                  Browse all articles <ArrowRight className="size-3.5" />
+                </Link>
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* PROGRAM COMPARISONS */}
+        {editorial?.comparisons?.length ? (
+          <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Program Comparisons"
+                title="How to think about the choices"
+                copy="Editorial comparisons for the most common decisions inside this category."
+              />
+              <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {editorial.comparisons.map((c) => (
+                  <div key={c.title} className="rounded-2xl border border-border bg-card p-5 flex flex-col gap-3">
+                    <div className="inline-flex items-center gap-2 text-caption">
+                      <GitCompare className="size-3.5" style={{ color: theme.ring }} />
+                      <span className="uppercase tracking-wider">Compare</span>
+                    </div>
+                    <h3 className="font-display text-lg font-semibold leading-snug">{c.title}</h3>
+                    <p className="text-caption">{c.copy}</p>
+                    {c.blogSlug ? (
+                      <Link
+                        to="/blog/$slug"
+                        params={{ slug: c.blogSlug }}
+                        className="mt-auto inline-flex items-center gap-1 text-sm text-primary"
+                      >
+                        Read the comparison <ArrowRight className="size-3.5" />
+                      </Link>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
         {/* FAQ */}
         <Section className="py-14 md:py-20">
           <Container className="max-w-3xl">
@@ -376,9 +495,10 @@ function CategoryPage() {
               copy="Quick answers on how to explore, compare, and choose programs in this category."
               center
             />
-            <CategoryFAQ categoryName={category?.name ?? prettify(slug)} />
+            <CategoryFAQ categoryName={category?.name ?? prettify(slug)} editorial={editorial} />
           </Container>
         </Section>
+
 
         {/* EXPLORE ANOTHER FIELD */}
         <Section className="py-14 md:py-20 bg-surface-2/40 border-t border-border/60">
