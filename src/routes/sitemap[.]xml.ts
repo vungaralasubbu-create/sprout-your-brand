@@ -79,6 +79,9 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const cm of listCareerMaps()) {
           entries.push({ path: `/career-maps/${cm.slug}`, changefreq: "monthly", priority: "0.5" });
         }
+        for (const t of listTools()) {
+          entries.push({ path: `/tools/${t.slug}`, changefreq: "monthly", priority: "0.7" });
+        }
 
         if (url && key) {
           try {
