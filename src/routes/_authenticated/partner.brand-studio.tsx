@@ -622,7 +622,7 @@ function StepDomain({
                     {isFav ? "Saved" : "Save"}
                   </Button>
                   {status === "available" && (
-                    <Button size="sm" variant="muted" onClick={() => update({ domain: { name: query, ext } })}>
+                    <Button size="sm" variant="secondary" onClick={() => update({ domain: { name: query, ext } })}>
                       Use
                     </Button>
                   )}
