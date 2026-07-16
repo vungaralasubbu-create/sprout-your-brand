@@ -135,8 +135,19 @@ export function PartnerShell() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    try { setCollapsed(localStorage.getItem("glintr.partner.sidebar.collapsed") === "1"); } catch { /* noop */ }
+  }, []);
+  const toggleCollapsed = () => {
+    setCollapsed((c) => {
+      const next = !c;
+      try { localStorage.setItem("glintr.partner.sidebar.collapsed", next ? "1" : "0"); } catch { /* noop */ }
+      return next;
+    });
+  };
 
   const partner = data?.partner ?? null;
   const isFullTime = partner?.work_model === "full_time" && !!data?.employeeProfile;
