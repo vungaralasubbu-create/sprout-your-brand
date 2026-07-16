@@ -1042,6 +1042,216 @@ function WhoItIsFor({ categoryName, courses }: { categoryName: string; courses: 
 }
 
 /* --- FAQ --- */
+/* --- Interactive Skill Map --- */
+function SkillMap({
+  editorial,
+  courses,
+  theme,
+}: {
+  editorial: CategoryEditorial;
+  courses: ProgramCardData[];
+  theme: (typeof CATEGORY_THEME)[keyof typeof CATEGORY_THEME];
+}) {
+  const nodes = editorial.skillMap;
+  const [activeId, setActiveId] = React.useState<string>(nodes[1]?.id ?? nodes[0]?.id ?? "");
+  const active = nodes.find((n) => n.id === activeId) ?? nodes[0];
+
+  const related = React.useMemo(() => {
+    if (!active?.match?.length) return courses.slice(0, 3);
+    const matched = courses.filter((c) => {
+      const hay = `${c.name} ${c.short_description ?? ""}`.toLowerCase();
+      return active.match.some((m) => hay.includes(m));
+    });
+    return matched.length ? matched.slice(0, 4) : courses.slice(0, 3);
+  }, [active, courses]);
+
+  return (
+    <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+      {/* Node graph */}
+      <div className="relative rounded-2xl border border-border bg-card p-5 md:p-6">
+        <div className="flex items-center gap-2">
+          <Network className="size-4" style={{ color: theme.ring }} />
+          <p className="text-caption uppercase tracking-wider">Skill graph</p>
+        </div>
+        <ol className="mt-5 space-y-2">
+          {nodes.map((n, i) => {
+            const isActive = n.id === activeId;
+            const isRoot = i === 0;
+            return (
+              <li key={n.id} className="relative">
+                {i > 0 ? (
+                  <span
+                    aria-hidden
+                    className="absolute left-4 -top-2 h-2 w-px"
+                    style={{ backgroundColor: `${theme.ring}55` }}
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setActiveId(n.id)}
+                  aria-pressed={isActive}
+                  className={cn(
+                    "group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all",
+                    isActive
+                      ? "border-transparent shadow-sm"
+                      : "border-border hover:border-border-strong",
+                    isRoot && "font-semibold",
+                  )}
+                  style={
+                    isActive
+                      ? { backgroundColor: `${theme.ring}12`, borderColor: theme.ring }
+                      : undefined
+                  }
+                >
+                  <span
+                    className="grid size-8 shrink-0 place-items-center rounded-full text-mono text-[11px] font-semibold"
+                    style={{ backgroundColor: theme.ring, color: "white" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium truncate">{n.label}</div>
+                    <div className="text-caption line-clamp-1 hidden sm:block">{n.note}</div>
+                  </div>
+                  <ChevronRight
+                    className={cn(
+                      "size-4 shrink-0 text-muted-foreground transition-transform",
+                      isActive && "translate-x-0.5",
+                    )}
+                  />
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      {/* Active node detail */}
+      <div
+        className="relative overflow-hidden rounded-2xl border border-border p-6 md:p-8"
+        style={{
+          background: `radial-gradient(80% 80% at 100% 0%, ${theme.from}, transparent 60%), var(--card)`,
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <Layers className="size-4" style={{ color: theme.ring }} />
+          <p className="text-caption uppercase tracking-wider">Node</p>
+        </div>
+        <h3 className="mt-2 font-display text-2xl font-semibold">{active?.label}</h3>
+        <p className="mt-2 text-body text-muted-foreground max-w-md">{active?.note}</p>
+
+        <div className="mt-6">
+          <p className="text-caption uppercase tracking-wider">Related programs</p>
+          {related.length ? (
+            <ul className="mt-3 space-y-2">
+              {related.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    to="/programs/$category/$course"
+                    params={{ category: c.category.slug, course: c.slug }}
+                    className="group flex items-center gap-3 rounded-lg border border-border bg-card p-3 transition-all hover:-translate-y-[2px] hover:shadow-sm hover:border-border-strong"
+                  >
+                    <span
+                      className="size-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: theme.ring }}
+                    />
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">{c.name}</span>
+                    <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-caption">No programs mapped to this node yet.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --- Learning Intent Selector --- */
+function LearningIntentSelector({
+  editorial,
+  courses,
+  theme,
+}: {
+  editorial: CategoryEditorial;
+  courses: ProgramCardData[];
+  theme: (typeof CATEGORY_THEME)[keyof typeof CATEGORY_THEME];
+}) {
+  const [active, setActive] = React.useState(0);
+  const intent = editorial.learningIntents[active] ?? editorial.learningIntents[0];
+
+  const matches = React.useMemo(() => {
+    if (!intent) return [] as ProgramCardData[];
+    const m = courses.filter((c) => {
+      const hay = `${c.name} ${c.short_description ?? ""}`.toLowerCase();
+      return intent.match.some((k) => hay.includes(k));
+    });
+    return (m.length ? m : courses).slice(0, 3);
+  }, [intent, courses]);
+
+  return (
+    <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.3fr]">
+      <div className="rounded-2xl border border-border bg-card p-5 md:p-6">
+        <p className="text-caption uppercase tracking-wider">I want to learn…</p>
+        <div className="mt-4 grid gap-2">
+          {editorial.learningIntents.map((it, i) => {
+            const isActive = active === i;
+            return (
+              <button
+                key={it.label}
+                type="button"
+                onClick={() => setActive(i)}
+                aria-pressed={isActive}
+                className={cn(
+                  "text-left rounded-lg border px-4 py-3 text-sm transition-all",
+                  "hover:-translate-y-[2px] hover:shadow-sm",
+                  isActive ? "border-transparent shadow-sm" : "border-border text-muted-foreground",
+                )}
+                style={isActive ? { backgroundColor: `${theme.ring}12`, borderColor: theme.ring } : undefined}
+              >
+                <div className="font-medium text-foreground">{it.label}</div>
+                <div className="text-caption mt-0.5">{it.blurb}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div
+        className="relative overflow-hidden rounded-2xl border border-border p-6 md:p-8"
+        style={{
+          background: `radial-gradient(80% 80% at 100% 0%, ${theme.to}, transparent 60%), var(--card)`,
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <Compass className="size-4" style={{ color: theme.ring }} />
+          <p className="text-caption uppercase tracking-wider">Recommended programs</p>
+        </div>
+        <h3 className="mt-2 font-display text-xl font-semibold">{intent?.label}</h3>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          {matches.map((c) => (
+            <li key={c.id}>
+              <Link
+                to="/programs/$category/$course"
+                params={{ category: c.category.slug, course: c.slug }}
+                className="group block rounded-xl border border-border bg-card p-4 transition-all hover:-translate-y-[2px] hover:shadow-sm hover:border-border-strong"
+              >
+                <div className="font-medium truncate">{c.name}</div>
+                <div className="text-caption mt-1 line-clamp-2">{c.short_description ?? "Explore this program"}</div>
+                <span className="mt-3 inline-flex items-center gap-1 text-sm text-primary">
+                  Open program <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 function CategoryFAQ({ categoryName, editorial }: { categoryName: string; editorial?: CategoryEditorial | null }) {
   const faqs = editorial?.faqs?.length
     ? editorial.faqs
