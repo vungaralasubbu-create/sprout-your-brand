@@ -153,19 +153,17 @@ function CommandBar() {
           </button>
         ))}
       </div>
-      <AnimatePresence>
-        {answer && (
-          <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mt-4 rounded-2xl border border-cyan-400/20 bg-black/40 p-4">
-            <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-cyan-300"><Bot className="h-3.5 w-3.5" /> AI Director</div>
-            <pre className="whitespace-pre-wrap font-sans text-sm text-white/90">{answer}</pre>
-            <div className="mt-3 flex gap-2">
-              <Button size="sm" variant="ghost" onClick={() => { navigator.clipboard.writeText(answer); toast.success("Copied"); }}>
-                <Copy className="mr-1 h-3.5 w-3.5" />Copy
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {answer && (
+        <div className="mt-4 rounded-2xl border border-cyan-400/20 bg-black/40 p-4">
+          <div className="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-cyan-300"><Bot className="h-3.5 w-3.5" /> AI Director</div>
+          <pre className="whitespace-pre-wrap font-sans text-sm text-white/90">{answer}</pre>
+          <div className="mt-3 flex gap-2">
+            <Button size="sm" variant="ghost" onClick={() => { navigator.clipboard.writeText(answer); toast.success("Copied"); }}>
+              <Copy className="mr-1 h-3.5 w-3.5" />Copy
+            </Button>
+          </div>
+        </div>
+      )}
       {history.length > 0 && (
         <div className="mt-4">
           <div className="mb-1 text-xs uppercase tracking-wider text-white/40">Recent</div>
