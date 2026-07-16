@@ -42,7 +42,6 @@ import { buildPageHead } from "@/lib/seo-head";
 import {
   generateBrandIdentity,
   generateLogo,
-  checkDomain,
   generateWebsiteContent,
   generateProgram,
   generateCourse,
@@ -84,8 +83,7 @@ type Draft = {
   };
   brand?: any;
   chosenName?: string;
-  chosenDomain?: string;
-  domainChecks: Record<string, { available: boolean; status: string }>;
+  managedSlug?: string;
   logos: Record<string, string>; // variant -> data url
   website?: any;
   programs: any[];
@@ -109,7 +107,7 @@ const EMPTY: Draft = {
     teachingMode: "hybrid",
     seed: "",
   },
-  domainChecks: {},
+  
   logos: {},
   programs: [],
   courses: [],
@@ -144,7 +142,7 @@ const STEPS = [
   { key: "welcome", label: "Welcome", icon: Sparkles },
   { key: "basics", label: "Basics", icon: BookOpen },
   { key: "brand", label: "Brand & Logo", icon: Palette },
-  { key: "domain", label: "Domain", icon: Globe },
+  { key: "managed", label: "Managed URL", icon: Globe },
   { key: "website", label: "Website", icon: FileText },
   { key: "programs", label: "Programs", icon: GraduationCap },
   { key: "courses", label: "Courses", icon: BookOpen },
@@ -190,7 +188,7 @@ function AcademyBuilder() {
         {d.step === 1 && <StepWelcome d={d} update={update} onNext={() => go(2)} />}
         {d.step === 2 && <StepBasics d={d} update={update} onNext={() => go(3)} onBack={() => go(1)} />}
         {d.step === 3 && <StepBrand d={d} update={update} onNext={() => go(4)} onBack={() => go(2)} />}
-        {d.step === 4 && <StepDomain d={d} update={update} onNext={() => go(5)} onBack={() => go(3)} />}
+        {d.step === 4 && <StepManaged d={d} update={update} onNext={() => go(5)} onBack={() => go(3)} />}
         {d.step === 5 && <StepWebsite d={d} update={update} onNext={() => go(6)} onBack={() => go(4)} />}
         {d.step === 6 && <StepPrograms d={d} update={update} onNext={() => go(7)} onBack={() => go(5)} />}
         {d.step === 7 && <StepCourses d={d} update={update} onNext={() => go(8)} onBack={() => go(6)} />}
@@ -331,7 +329,7 @@ function StepWelcome({
               <div className="text-sm font-semibold text-slate-900">{opt}</div>
               <div className="mt-1 text-xs text-slate-500">
                 {opt === "White Label Academy"
-                  ? "Full brand + website + LMS under your domain."
+                  ? "Full brand + website + LMS, fully managed by Glintr."
                   : opt === "Personal Brand"
                   ? "Launch a solo educator brand fast."
                   : opt === "College" || opt === "Training Institute"
@@ -675,10 +673,10 @@ function StepBrand({
 }
 
 /* ------------------------------------------------------------------ */
-/* Step 4 — Domain                                                    */
+/* Step 4 — Managed URL (Glintr Managed Infrastructure)               */
 /* ------------------------------------------------------------------ */
 
-function StepDomain({
+function StepManaged({
   d,
   update,
   onNext,
@@ -689,86 +687,102 @@ function StepDomain({
   onNext: () => void;
   onBack: () => void;
 }) {
-  const check = useServerFn(checkDomain);
-  const [busy, setBusy] = useState<string | null>(null);
+  const defaultSlug = useMemo(
+    () =>
+      (d.chosenName || d.basics.academyName || "brand")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "")
+        .slice(0, 40),
+    [d.chosenName, d.basics.academyName],
+  );
+  const [slug, setSlug] = useState(d.managedSlug || defaultSlug);
 
-  const suggestions: string[] = useMemo(() => {
-    const fromAI = (d.brand?.domainSuggestions ?? []) as string[];
-    const base = (d.chosenName || d.basics.academyName || "brand")
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "");
-    const seed = [`${base}.com`, `${base}.in`, `${base}.co`, `${base}.ai`, `${base}.io`];
-    return Array.from(new Set([...seed, ...fromAI])).slice(0, 15);
-  }, [d.brand, d.chosenName, d.basics.academyName]);
+  useEffect(() => {
+    if (!d.managedSlug && defaultSlug) setSlug(defaultSlug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultSlug]);
 
-  async function runCheck(domain: string) {
-    setBusy(domain);
-    try {
-      const res = await check({ data: { domain } });
-      update((x) => {
-        x.domainChecks[res.domain] = { available: res.available, status: res.status };
-      });
-    } catch (e: any) {
-      toast.error(e?.message ?? "Check failed");
-    } finally {
-      setBusy(null);
-    }
-  }
+  const cleaned = slug
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/(^-|-$)/g, "");
+  const managedUrl = cleaned ? `${cleaned}.glintr.com` : "your-brand.glintr.com";
+
+  const managed = [
+    "Website",
+    "Hosting",
+    "SSL certificate",
+    "Global CDN",
+    "Daily backups",
+    "Security & DDoS",
+    "Analytics",
+    "SEO",
+    "Blog engine",
+    "LMS",
+    "CRM",
+    "Email delivery",
+    "Certificates",
+    "Performance monitoring",
+    "Ongoing maintenance",
+  ];
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-slate-900">Pick a domain</h2>
+      <h2 className="text-xl font-semibold text-slate-900">Glintr Managed Infrastructure</h2>
       <p className="mt-1 text-sm text-slate-600">
-        We check .com, .in, .co, .ai, .io — one-click purchase is coming from your Domains settings.
+        No domains to buy. No DNS. No hosting. Glintr provisions and manages every technical
+        layer for you as part of the revenue-share partnership.
       </p>
-      <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
-        {suggestions.map((dom) => {
-          const s = d.domainChecks[dom];
-          const chosen = d.chosenDomain === dom;
-          return (
-            <div
-              key={dom}
-              className={`flex items-center justify-between rounded-lg border p-3 ${
-                chosen ? "border-cyan-500 bg-cyan-50/40" : "border-slate-200"
-              }`}
-            >
-              <div>
-                <div className="text-sm font-mono text-slate-900">{dom}</div>
-                <div className="mt-0.5 text-xs">
-                  {s ? (
-                    <span
-                      className={
-                        s.status === "available"
-                          ? "text-emerald-600"
-                          : s.status === "taken"
-                          ? "text-red-600"
-                          : "text-slate-500"
-                      }
-                    >
-                      {s.status}
-                    </span>
-                  ) : (
-                    <span className="text-slate-400">not checked</span>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button size="sm" variant="outline" onClick={() => runCheck(dom)} disabled={busy === dom}>
-                  {busy === dom ? <Loader2 className="size-3 animate-spin" /> : "Check"}
-                </Button>
-                <Button
-                  size="sm"
-                  variant={chosen ? "primary" : "ghost"}
-                  onClick={() => update((x) => { x.chosenDomain = dom; })}
-                >
-                  {chosen ? "Selected" : "Select"}
-                </Button>
-              </div>
-            </div>
-          );
-        })}
+
+      <div className="mt-6 rounded-xl border border-slate-200 p-4">
+        <div className="text-[10px] uppercase tracking-wide text-slate-500 mb-1">
+          Your managed academy URL
+        </div>
+        <div className="flex flex-col sm:flex-row gap-2 items-stretch">
+          <Input
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            onBlur={() => update((x) => { x.managedSlug = cleaned; })}
+            placeholder="your-brand"
+            className="flex-1 font-mono"
+          />
+          <div className="inline-flex items-center px-3 rounded-md border bg-slate-50 text-sm text-slate-600 font-mono">
+            .glintr.com
+          </div>
+        </div>
+        <div className="mt-2 text-xs text-slate-500">
+          Live URL: <span className="font-mono text-slate-900">{managedUrl}</span>. If Glintr
+          later purchases a dedicated domain for your academy, our team migrates you internally —
+          you never touch DNS or SSL.
+        </div>
       </div>
-      <NavRow onBack={onBack} onNext={onNext} />
+
+      <div className="mt-6">
+        <div className="text-[10px] uppercase tracking-wide text-slate-500 mb-2">
+          Glintr manages, end-to-end
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+          {managed.map((m) => (
+            <div
+              key={m}
+              className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+            >
+              <Check className="size-4 text-emerald-600 shrink-0" />
+              <span>{m}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-lg border border-dashed border-slate-200 p-4 text-sm text-slate-600">
+        <b className="text-slate-900">Your focus:</b> teaching, selling, creating courses,
+        recording videos, engaging students and growing enrollments. Everything else is handled
+        by Glintr.
+      </div>
+
+      <NavRow onBack={onBack} onNext={onNext} nextDisabled={!cleaned} />
     </div>
   );
 }
@@ -1299,7 +1313,8 @@ function StepReview({
 }) {
   const summary = [
     { label: "Brand", value: d.chosenName || "—" },
-    { label: "Domain", value: d.chosenDomain || "—" },
+    { label: "Managed URL", value: d.managedSlug ? `${d.managedSlug}.glintr.com` : "—" },
+    { label: "Infrastructure", value: "Managed by Glintr" },
     { label: "Tagline", value: d.brand?.tagline || "—" },
     { label: "Website pages", value: d.website ? "12 generated" : "not generated" },
     { label: "Programs", value: `${d.programs.length}` },
@@ -1348,7 +1363,7 @@ function StepReview({
 
 const CHECKLIST = [
   { key: "brand", label: "Brand identity reviewed (name, tagline, palette, voice)" },
-  { key: "domain", label: "Domain selected and checked" },
+  { key: "managed", label: "Managed URL confirmed (Glintr provisions hosting, SSL & CDN)" },
   { key: "website", label: "Website pages reviewed (home, about, legal, FAQ, 404)" },
   { key: "programs", label: "Program pages reviewed" },
   { key: "courses", label: "Course pages reviewed (curriculum, pricing, FAQs)" },
@@ -1384,7 +1399,7 @@ function StepPublish({
           reviewerName: reviewer,
           draftSummary: {
             brandName: d.chosenName || "Untitled",
-            domain: d.chosenDomain,
+            managedUrl: d.managedSlug ? `${d.managedSlug}.glintr.com` : undefined,
             programsCount: d.programs.length,
             coursesCount: d.courses.length,
             blogsCount: d.blogs?.articles?.length ?? 0,

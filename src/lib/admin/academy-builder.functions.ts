@@ -89,7 +89,7 @@ Input:
 Return JSON:
 {
   "nameSuggestions": [ { "name": string, "rationale": string } x6 ],
-  "domainSuggestions": [ "example.com", "example.in", ... ] (10, mix .com .in .co .ai .io),
+  "managedSlugSuggestions": [ "your-brand", "brand-academy", ... ] (10 lowercase, hyphenated slugs for {slug}.glintr.com),
   "tagline": string,
   "brandStory": string (120-160 words),
   "mission": string,
@@ -160,36 +160,11 @@ export const generateLogo = createServerFn({ method: "POST" })
   });
 
 /* ------------------------------------------------------------------ */
-/* 3. DOMAIN availability (lightweight DNS check)                     */
+/* 3. (Removed) Domain availability — Academy Partners run on         */
+/*    Glintr-managed infrastructure only. See partner.brand-studio     */
+/*    and partner.academy-builder for managed URL handling.            */
 /* ------------------------------------------------------------------ */
 
-const DomainIn = z.object({ domain: z.string().min(3).max(80) });
-
-export const checkDomain = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) => DomainIn.parse(i))
-  .handler(async ({ data, context }) => {
-    await ensurePartner(context);
-    const domain = data.domain.toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "").trim();
-    if (!/^[a-z0-9][a-z0-9-]*(\.[a-z0-9-]+)+$/.test(domain)) {
-      return { domain, status: "invalid" as const, available: false };
-    }
-    // Use Google DNS-over-HTTPS as a coarse availability heuristic.
-    try {
-      const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=A`);
-      const j = await res.json();
-      // Status 3 = NXDOMAIN (likely available), 0 with Answer = taken.
-      const hasAnswer = Array.isArray(j?.Answer) && j.Answer.length > 0;
-      const isNx = j?.Status === 3;
-      return {
-        domain,
-        status: hasAnswer ? ("taken" as const) : isNx ? ("available" as const) : ("unknown" as const),
-        available: !hasAnswer,
-      };
-    } catch {
-      return { domain, status: "unknown" as const, available: false };
-    }
-  });
 
 /* ------------------------------------------------------------------ */
 /* 4. WEBSITE content (all core pages)                                */
@@ -467,7 +442,7 @@ const PublishIn = z.object({
   reviewerName: z.string().min(1).max(120),
   draftSummary: z.object({
     brandName: z.string().min(1),
-    domain: z.string().optional(),
+    managedUrl: z.string().optional(),
     programsCount: z.number().int().nonnegative(),
     coursesCount: z.number().int().nonnegative(),
     blogsCount: z.number().int().nonnegative(),
