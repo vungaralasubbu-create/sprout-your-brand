@@ -1272,11 +1272,19 @@ function NotFound() {
 }
 
 function PageShell({ children }: { children: React.ReactNode }) {
+  const { category } = Route.useParams();
   return (
     <>
       <ProgramScrollProgress />
       <SiteHeader />
-      <main className="pb-24 lg:pb-0">{children}</main>
+      <main className="pb-24 lg:pb-0">
+        {children}
+        <Section>
+          <Container>
+            <ProgramDiscoveryFooter categorySlug={category} />
+          </Container>
+        </Section>
+      </main>
       <SiteFooter />
     </>
   );
