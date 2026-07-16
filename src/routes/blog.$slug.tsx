@@ -565,6 +565,92 @@ function BlogDetailPage() {
         </Container>
       </Section>
 
+      {/* FAQ */}
+      {Array.isArray(post.faqs) && post.faqs.length > 0 ? (
+        <Section padding="lg" tone="surface">
+          <Container size="md">
+            <div className="mb-8">
+              <div className="text-xs uppercase tracking-widest text-primary">Frequently Asked</div>
+              <h2 className="text-section mt-2">Questions About This Topic</h2>
+            </div>
+            <div className="divide-y rounded-2xl border bg-card">
+              {post.faqs.map((faq, i) => (
+                <details key={i} className="group">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 md:p-6">
+                    <span className="font-medium text-foreground">{faq.question}</span>
+                    <ChevronRight className="size-4 shrink-0 transition-transform group-open:rotate-90" />
+                  </summary>
+                  <div className="px-5 md:px-6 pb-6 text-body text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </Container>
+        </Section>
+      ) : null}
+
+      {/* NEWSLETTER */}
+      <Section padding="lg">
+        <Container size="md">
+          <div className="relative overflow-hidden rounded-3xl border bg-gradient-brand-soft p-8 md:p-12">
+            <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="max-w-xl">
+                <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary">
+                  <Sparkles className="size-3.5" /> The Glintr Dispatch
+                </div>
+                <h2 className="mt-3 text-section">Insights Like This, Weekly.</h2>
+                <p className="mt-2 text-body text-muted-foreground">
+                  Get one carefully edited briefing every week — no spam, unsubscribe anytime.
+                </p>
+              </div>
+              <form
+                className="flex w-full max-w-md flex-col gap-2 sm:flex-row"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const email = new FormData(e.currentTarget).get("email");
+                  if (typeof email === "string" && email.includes("@")) {
+                    (e.currentTarget as HTMLFormElement).reset();
+                    setSubscribed(true);
+                  }
+                }}
+              >
+                <Input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="you@work.com"
+                  aria-label="Email address"
+                  className="flex-1"
+                />
+                <Button type="submit" size="lg">
+                  {subscribed ? "Subscribed" : "Subscribe"}
+                </Button>
+              </form>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* COMMENTS PLACEHOLDER */}
+      <Section padding="lg" tone="surface">
+        <Container size="md">
+          <div className="rounded-2xl border bg-card p-6 md:p-8 text-center">
+            <MessageSquare className="mx-auto size-6 text-muted-foreground" />
+            <h2 className="mt-3 font-display text-xl font-semibold">Join The Conversation</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Comments open soon. In the meantime, share your thoughts with our editors.
+            </p>
+            <div className="mt-4">
+              <Button variant="outline" asChild>
+                <Link to="/contact">Reach The Editors</Link>
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+
       {/* RELATED ARTICLES */}
       {related.length > 0 ? (
         <Section tone="surface" padding="lg">
