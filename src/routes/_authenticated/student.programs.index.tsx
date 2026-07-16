@@ -331,8 +331,13 @@ function Page() {
     queryFn: () => listCategories(),
     enabled: tab === "browse",
   });
+  const { data: pricingSettings } = useQuery({
+    queryKey: ["pricing-settings"],
+    queryFn: () => getPricingSettings(),
+  });
   const [catFilter, setCatFilter] = useState<string>("all");
   const [browseQ, setBrowseQ] = useState("");
+
   const [previewCourse, setPreviewCourse] = useState<any | null>(null);
 
   const filtered = useMemo(() => {
