@@ -268,7 +268,7 @@ export function AiMentor() {
       {/* Floating trigger */}
       <button
         type="button"
-        aria-label="Open Glintr AI Mentor"
+        aria-label="Open GlintrAI"
         aria-haspopup="dialog"
         onClick={() => {
           setOpen(true);
@@ -280,7 +280,7 @@ export function AiMentor() {
           "size-12 md:size-14 bg-foreground text-background shadow-xl",
           "transition-all duration-300 hover:scale-[1.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         )}
-        title="Glintr AI Mentor"
+        title="GlintrAI"
       >
         <span
           className={cn(
@@ -295,7 +295,7 @@ export function AiMentor() {
             />
           )}
         </span>
-        <span className="sr-only">Open Glintr AI Mentor</span>
+        <span className="sr-only">Open GlintrAI</span>
       </button>
 
 
@@ -315,26 +315,48 @@ export function AiMentor() {
                 <Sparkles className="size-4 text-white" aria-hidden />
               </span>
               <div className="leading-tight">
-                <div className="text-sm font-semibold">Glintr AI Mentor</div>
+                <div className="text-sm font-semibold">GlintrAI</div>
                 <div className="text-[11px] text-muted-foreground">
-                  Your learning guide
+                  Your intelligent assistant
                 </div>
               </div>
             </div>
-            <button
-              type="button"
-              aria-label="Close mentor"
-              onClick={() => setOpen(false)}
-              className="rounded-full p-1.5 text-muted-foreground hover:bg-accent"
-            >
-              <X className="size-4" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                aria-label="Talk to a human"
+                title="Talk to a human"
+                onClick={pushSupportCard}
+                className="rounded-full p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+              >
+                <LifeBuoy className="size-4" />
+              </button>
+              {tab === "chat" && messages.length > 1 && (
+                <button
+                  type="button"
+                  aria-label="Clear conversation"
+                  title="Clear conversation"
+                  onClick={clearChat}
+                  className="rounded-full p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              )}
+              <button
+                type="button"
+                aria-label="Close GlintrAI"
+                onClick={() => setOpen(false)}
+                className="rounded-full p-1.5 text-muted-foreground hover:bg-accent"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
           </div>
 
           {/* Tabs */}
           <div
             role="tablist"
-            aria-label="Mentor sections"
+            aria-label="GlintrAI sections"
             className="flex items-center gap-1 border-b px-2 py-1.5 text-xs"
           >
             <TabBtn active={tab === "chat"} onClick={() => setTab("chat")} icon={<MessageSquare className="size-3.5" />} label="Chat" />
@@ -357,6 +379,7 @@ export function AiMentor() {
                       message={m}
                       onSuggestion={send}
                       onLink={() => setOpen(false)}
+                      onEscalate={pushSupportCard}
                     />
                   ))}
                   {loading && <TypingIndicator />}
@@ -384,22 +407,23 @@ export function AiMentor() {
                 </div>
               )}
 
-              {/* Quick actions row */}
+              {/* Quick actions row — GlintrAI prompts */}
               <div className="border-t px-3 py-2">
                 <div className="flex items-center gap-1.5 overflow-x-auto">
                   <Compass className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
                   {QUICK_ACTIONS.map((a) => (
-                    <Link
-                      key={a.href}
-                      to={a.href}
-                      onClick={() => setOpen(false)}
+                    <button
+                      key={a.label}
+                      type="button"
+                      onClick={() => send(a.prompt)}
                       className="shrink-0 rounded-full border border-border/70 bg-card px-2.5 py-1 text-[11px] font-medium text-foreground hover:bg-accent"
                     >
                       {a.label}
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </div>
+
 
               {/* Composer */}
               <form
