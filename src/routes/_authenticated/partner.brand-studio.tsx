@@ -1186,7 +1186,8 @@ function StepPublish({ draft, brandName }: { draft: Draft; brandName: string }) 
         <>
           <div className="rounded-lg border bg-white p-4 text-sm space-y-1">
             <div><b>Brand:</b> {brandName}</div>
-            <div><b>Domain:</b> {draft.domain ? `${draft.domain.name}${draft.domain.ext}` : "—"}</div>
+            <div><b>Managed URL:</b> {draft.managedSlug ? `${draft.managedSlug}.glintr.com` : "—"}</div>
+            <div className="text-xs text-muted-foreground">Website, hosting, SSL, CDN, backups, SEO, blog, LMS and CRM are provisioned and managed by Glintr.</div>
             <div><b>Programs:</b> {draft.programs.length}</div>
             <div><b>Courses:</b> {draft.courses.length}</div>
             <div><b>Blog drafts:</b> {draft.blogs?.articles?.length || 0}</div>
