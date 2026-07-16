@@ -31,6 +31,7 @@ import {
   Megaphone,
   Palette,
   Search,
+  Rocket,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
