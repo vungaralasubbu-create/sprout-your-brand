@@ -97,6 +97,7 @@ import { Route as AuthenticatedStudentCoursesRouteImport } from './routes/_authe
 import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_authenticated/student.certificates'
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
 import { Route as AuthenticatedPartnerSupportRouteImport } from './routes/_authenticated/partner.support'
+import { Route as AuthenticatedPartnerSearchRouteImport } from './routes/_authenticated/partner.search'
 import { Route as AuthenticatedPartnerReferralBonusRouteImport } from './routes/_authenticated/partner.referral-bonus'
 import { Route as AuthenticatedPartnerQuickStartRouteImport } from './routes/_authenticated/partner.quick-start'
 import { Route as AuthenticatedPartnerProgramsRouteImport } from './routes/_authenticated/partner.programs'
@@ -105,13 +106,16 @@ import { Route as AuthenticatedPartnerPaymentLinksRouteImport } from './routes/_
 import { Route as AuthenticatedPartnerOwnershipReviewsRouteImport } from './routes/_authenticated/partner.ownership-reviews'
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerMyLeadsRouteImport } from './routes/_authenticated/partner.my-leads'
+import { Route as AuthenticatedPartnerMarketingRouteImport } from './routes/_authenticated/partner.marketing'
 import { Route as AuthenticatedPartnerEarningsStatementRouteImport } from './routes/_authenticated/partner.earnings-statement'
 import { Route as AuthenticatedPartnerEarningsRouteImport } from './routes/_authenticated/partner.earnings'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
 import { Route as AuthenticatedPartnerComingSoonRouteImport } from './routes/_authenticated/partner.coming-soon'
 import { Route as AuthenticatedPartnerBrandProfileRouteImport } from './routes/_authenticated/partner.brand-profile'
 import { Route as AuthenticatedPartnerApplicationStatusRouteImport } from './routes/_authenticated/partner.application-status'
+import { Route as AuthenticatedPartnerAnnouncementsRouteImport } from './routes/_authenticated/partner.announcements'
 import { Route as AuthenticatedPartnerAnalyticsRouteImport } from './routes/_authenticated/partner.analytics'
+import { Route as AuthenticatedPartnerAiAssistantRouteImport } from './routes/_authenticated/partner.ai-assistant'
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
@@ -166,6 +170,7 @@ import { Route as AuthenticatedStudentInternshipIndexRouteImport } from './route
 import { Route as AuthenticatedStudentCareerIndexRouteImport } from './routes/_authenticated/student.career.index'
 import { Route as AuthenticatedStudentAssignmentsIndexRouteImport } from './routes/_authenticated/student.assignments.index'
 import { Route as AuthenticatedPartnerEmploymentIndexRouteImport } from './routes/_authenticated/partner.employment.index'
+import { Route as AuthenticatedPartnerAcademyIndexRouteImport } from './routes/_authenticated/partner.academy.index'
 import { Route as AuthenticatedAmbassadorReferralsIndexRouteImport } from './routes/_authenticated/ambassador.referrals.index'
 import { Route as AuthenticatedAmbassadorMarketingResourcesIndexRouteImport } from './routes/_authenticated/ambassador.marketing-resources.index'
 import { Route as AuthenticatedAmbassadorEnrollmentsIndexRouteImport } from './routes/_authenticated/ambassador.enrollments.index'
@@ -189,6 +194,7 @@ import { Route as AuthenticatedStudentCareerInterviewRouteImport } from './route
 import { Route as AuthenticatedStudentAssignmentsIdRouteImport } from './routes/_authenticated/student.assignments.$id'
 import { Route as AuthenticatedPartnerSupportIdRouteImport } from './routes/_authenticated/partner.support.$id'
 import { Route as AuthenticatedPartnerProgramsSlugRouteImport } from './routes/_authenticated/partner.programs.$slug'
+import { Route as AuthenticatedPartnerAcademySlugRouteImport } from './routes/_authenticated/partner.academy.$slug'
 import { Route as AuthenticatedAmbassadorReferralsIdRouteImport } from './routes/_authenticated/ambassador.referrals.$id'
 import { Route as AuthenticatedAmbassadorPayoutsIdRouteImport } from './routes/_authenticated/ambassador.payouts.$id'
 import { Route as AuthenticatedAmbassadorEnrollmentsIdRouteImport } from './routes/_authenticated/ambassador.enrollments.$id'
@@ -660,6 +666,12 @@ const AuthenticatedPartnerSupportRoute =
     path: '/support',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerSearchRoute =
+  AuthenticatedPartnerSearchRouteImport.update({
+    id: '/search',
+    path: '/search',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerReferralBonusRoute =
   AuthenticatedPartnerReferralBonusRouteImport.update({
     id: '/referral-bonus',
@@ -708,6 +720,12 @@ const AuthenticatedPartnerMyLeadsRoute =
     path: '/my-leads',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerMarketingRoute =
+  AuthenticatedPartnerMarketingRouteImport.update({
+    id: '/marketing',
+    path: '/marketing',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerEarningsStatementRoute =
   AuthenticatedPartnerEarningsStatementRouteImport.update({
     id: '/earnings-statement',
@@ -744,10 +762,22 @@ const AuthenticatedPartnerApplicationStatusRoute =
     path: '/application-status',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerAnnouncementsRoute =
+  AuthenticatedPartnerAnnouncementsRouteImport.update({
+    id: '/announcements',
+    path: '/announcements',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedPartnerAnalyticsRoute =
   AuthenticatedPartnerAnalyticsRouteImport.update({
     id: '/analytics',
     path: '/analytics',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerAiAssistantRoute =
+  AuthenticatedPartnerAiAssistantRouteImport.update({
+    id: '/ai-assistant',
+    path: '/ai-assistant',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerAddLeadsRoute =
@@ -1073,6 +1103,12 @@ const AuthenticatedPartnerEmploymentIndexRoute =
     path: '/employment/',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedPartnerAcademyIndexRoute =
+  AuthenticatedPartnerAcademyIndexRouteImport.update({
+    id: '/academy/',
+    path: '/academy/',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
 const AuthenticatedAmbassadorReferralsIndexRoute =
   AuthenticatedAmbassadorReferralsIndexRouteImport.update({
     id: '/referrals/',
@@ -1210,6 +1246,12 @@ const AuthenticatedPartnerProgramsSlugRoute =
     id: '/$slug',
     path: '/$slug',
     getParentRoute: () => AuthenticatedPartnerProgramsRoute,
+  } as any)
+const AuthenticatedPartnerAcademySlugRoute =
+  AuthenticatedPartnerAcademySlugRouteImport.update({
+    id: '/academy/$slug',
+    path: '/academy/$slug',
+    getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedAmbassadorReferralsIdRoute =
   AuthenticatedAmbassadorReferralsIdRouteImport.update({
@@ -1438,13 +1480,16 @@ export interface FileRoutesByFullPath {
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
+  '/partner/ai-assistant': typeof AuthenticatedPartnerAiAssistantRoute
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
+  '/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
   '/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/partner/marketing': typeof AuthenticatedPartnerMarketingRoute
   '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/ownership-reviews': typeof AuthenticatedPartnerOwnershipReviewsRoute
@@ -1453,6 +1498,7 @@ export interface FileRoutesByFullPath {
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
   '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
+  '/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -1479,6 +1525,7 @@ export interface FileRoutesByFullPath {
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
   '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
@@ -1502,6 +1549,7 @@ export interface FileRoutesByFullPath {
   '/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
+  '/partner/academy/': typeof AuthenticatedPartnerAcademyIndexRoute
   '/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/student/career/': typeof AuthenticatedStudentCareerIndexRoute
@@ -1634,13 +1682,16 @@ export interface FileRoutesByTo {
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
+  '/partner/ai-assistant': typeof AuthenticatedPartnerAiAssistantRoute
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
+  '/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
   '/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/partner/marketing': typeof AuthenticatedPartnerMarketingRoute
   '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/partner/ownership-reviews': typeof AuthenticatedPartnerOwnershipReviewsRoute
@@ -1649,6 +1700,7 @@ export interface FileRoutesByTo {
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
   '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
+  '/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -1674,6 +1726,7 @@ export interface FileRoutesByTo {
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
   '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
@@ -1697,6 +1750,7 @@ export interface FileRoutesByTo {
   '/ambassador/enrollments': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/ambassador/marketing-resources': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/ambassador/referrals': typeof AuthenticatedAmbassadorReferralsIndexRoute
+  '/partner/academy': typeof AuthenticatedPartnerAcademyIndexRoute
   '/partner/employment': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/student/assignments': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/student/career': typeof AuthenticatedStudentCareerIndexRoute
@@ -1834,13 +1888,16 @@ export interface FileRoutesById {
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
+  '/_authenticated/partner/ai-assistant': typeof AuthenticatedPartnerAiAssistantRoute
   '/_authenticated/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
+  '/_authenticated/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
   '/_authenticated/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
   '/_authenticated/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/_authenticated/partner/coming-soon': typeof AuthenticatedPartnerComingSoonRoute
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/_authenticated/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/_authenticated/partner/marketing': typeof AuthenticatedPartnerMarketingRoute
   '/_authenticated/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
   '/_authenticated/partner/ownership-reviews': typeof AuthenticatedPartnerOwnershipReviewsRoute
@@ -1849,6 +1906,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
   '/_authenticated/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/_authenticated/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
+  '/_authenticated/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/_authenticated/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/_authenticated/student/certificates': typeof AuthenticatedStudentCertificatesRoute
@@ -1875,6 +1933,7 @@ export interface FileRoutesById {
   '/_authenticated/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/_authenticated/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/_authenticated/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/_authenticated/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/_authenticated/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/_authenticated/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
   '/_authenticated/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
@@ -1898,6 +1957,7 @@ export interface FileRoutesById {
   '/_authenticated/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/_authenticated/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
   '/_authenticated/ambassador/referrals/': typeof AuthenticatedAmbassadorReferralsIndexRoute
+  '/_authenticated/partner/academy/': typeof AuthenticatedPartnerAcademyIndexRoute
   '/_authenticated/partner/employment/': typeof AuthenticatedPartnerEmploymentIndexRoute
   '/_authenticated/student/assignments/': typeof AuthenticatedStudentAssignmentsIndexRoute
   '/_authenticated/student/career/': typeof AuthenticatedStudentCareerIndexRoute
@@ -2035,13 +2095,16 @@ export interface FileRouteTypes {
     | '/campus-ambassador/status'
     | '/partner/account'
     | '/partner/add-leads'
+    | '/partner/ai-assistant'
     | '/partner/analytics'
+    | '/partner/announcements'
     | '/partner/application-status'
     | '/partner/brand-profile'
     | '/partner/coming-soon'
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
+    | '/partner/marketing'
     | '/partner/my-leads'
     | '/partner/onboarding'
     | '/partner/ownership-reviews'
@@ -2050,6 +2113,7 @@ export interface FileRouteTypes {
     | '/partner/programs'
     | '/partner/quick-start'
     | '/partner/referral-bonus'
+    | '/partner/search'
     | '/partner/support'
     | '/student/assessments'
     | '/student/certificates'
@@ -2076,6 +2140,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
     | '/ambassador/referrals/$id'
+    | '/partner/academy/$slug'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
     | '/student/assignments/$id'
@@ -2099,6 +2164,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments/'
     | '/ambassador/marketing-resources/'
     | '/ambassador/referrals/'
+    | '/partner/academy/'
     | '/partner/employment/'
     | '/student/assignments/'
     | '/student/career/'
@@ -2231,13 +2297,16 @@ export interface FileRouteTypes {
     | '/campus-ambassador/status'
     | '/partner/account'
     | '/partner/add-leads'
+    | '/partner/ai-assistant'
     | '/partner/analytics'
+    | '/partner/announcements'
     | '/partner/application-status'
     | '/partner/brand-profile'
     | '/partner/coming-soon'
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
+    | '/partner/marketing'
     | '/partner/my-leads'
     | '/partner/onboarding'
     | '/partner/ownership-reviews'
@@ -2246,6 +2315,7 @@ export interface FileRouteTypes {
     | '/partner/programs'
     | '/partner/quick-start'
     | '/partner/referral-bonus'
+    | '/partner/search'
     | '/partner/support'
     | '/student/assessments'
     | '/student/certificates'
@@ -2271,6 +2341,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
     | '/ambassador/referrals/$id'
+    | '/partner/academy/$slug'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
     | '/student/assignments/$id'
@@ -2294,6 +2365,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments'
     | '/ambassador/marketing-resources'
     | '/ambassador/referrals'
+    | '/partner/academy'
     | '/partner/employment'
     | '/student/assignments'
     | '/student/career'
@@ -2430,13 +2502,16 @@ export interface FileRouteTypes {
     | '/_authenticated/campus-ambassador/status'
     | '/_authenticated/partner/account'
     | '/_authenticated/partner/add-leads'
+    | '/_authenticated/partner/ai-assistant'
     | '/_authenticated/partner/analytics'
+    | '/_authenticated/partner/announcements'
     | '/_authenticated/partner/application-status'
     | '/_authenticated/partner/brand-profile'
     | '/_authenticated/partner/coming-soon'
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/earnings'
     | '/_authenticated/partner/earnings-statement'
+    | '/_authenticated/partner/marketing'
     | '/_authenticated/partner/my-leads'
     | '/_authenticated/partner/onboarding'
     | '/_authenticated/partner/ownership-reviews'
@@ -2445,6 +2520,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/programs'
     | '/_authenticated/partner/quick-start'
     | '/_authenticated/partner/referral-bonus'
+    | '/_authenticated/partner/search'
     | '/_authenticated/partner/support'
     | '/_authenticated/student/assessments'
     | '/_authenticated/student/certificates'
@@ -2471,6 +2547,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador/enrollments/$id'
     | '/_authenticated/ambassador/payouts/$id'
     | '/_authenticated/ambassador/referrals/$id'
+    | '/_authenticated/partner/academy/$slug'
     | '/_authenticated/partner/programs/$slug'
     | '/_authenticated/partner/support/$id'
     | '/_authenticated/student/assignments/$id'
@@ -2494,6 +2571,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador/enrollments/'
     | '/_authenticated/ambassador/marketing-resources/'
     | '/_authenticated/ambassador/referrals/'
+    | '/_authenticated/partner/academy/'
     | '/_authenticated/partner/employment/'
     | '/_authenticated/student/assignments/'
     | '/_authenticated/student/career/'
@@ -3185,6 +3263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerSupportRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/partner/search': {
+      id: '/_authenticated/partner/search'
+      path: '/search'
+      fullPath: '/partner/search'
+      preLoaderRoute: typeof AuthenticatedPartnerSearchRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/partner/referral-bonus': {
       id: '/_authenticated/partner/referral-bonus'
       path: '/referral-bonus'
@@ -3241,6 +3326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerMyLeadsRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/partner/marketing': {
+      id: '/_authenticated/partner/marketing'
+      path: '/marketing'
+      fullPath: '/partner/marketing'
+      preLoaderRoute: typeof AuthenticatedPartnerMarketingRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/partner/earnings-statement': {
       id: '/_authenticated/partner/earnings-statement'
       path: '/earnings-statement'
@@ -3283,11 +3375,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerApplicationStatusRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/partner/announcements': {
+      id: '/_authenticated/partner/announcements'
+      path: '/announcements'
+      fullPath: '/partner/announcements'
+      preLoaderRoute: typeof AuthenticatedPartnerAnnouncementsRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/partner/analytics': {
       id: '/_authenticated/partner/analytics'
       path: '/analytics'
       fullPath: '/partner/analytics'
       preLoaderRoute: typeof AuthenticatedPartnerAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/ai-assistant': {
+      id: '/_authenticated/partner/ai-assistant'
+      path: '/ai-assistant'
+      fullPath: '/partner/ai-assistant'
+      preLoaderRoute: typeof AuthenticatedPartnerAiAssistantRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/add-leads': {
@@ -3668,6 +3774,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerEmploymentIndexRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/partner/academy/': {
+      id: '/_authenticated/partner/academy/'
+      path: '/academy'
+      fullPath: '/partner/academy/'
+      preLoaderRoute: typeof AuthenticatedPartnerAcademyIndexRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
     '/_authenticated/ambassador/referrals/': {
       id: '/_authenticated/ambassador/referrals/'
       path: '/referrals'
@@ -3828,6 +3941,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner/programs/$slug'
       preLoaderRoute: typeof AuthenticatedPartnerProgramsSlugRouteImport
       parentRoute: typeof AuthenticatedPartnerProgramsRoute
+    }
+    '/_authenticated/partner/academy/$slug': {
+      id: '/_authenticated/partner/academy/$slug'
+      path: '/academy/$slug'
+      fullPath: '/partner/academy/$slug'
+      preLoaderRoute: typeof AuthenticatedPartnerAcademySlugRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/ambassador/referrals/$id': {
       id: '/_authenticated/ambassador/referrals/$id'
@@ -4211,13 +4331,16 @@ const AuthenticatedPartnerSupportRouteWithChildren =
 interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerAccountRoute: typeof AuthenticatedPartnerAccountRoute
   AuthenticatedPartnerAddLeadsRoute: typeof AuthenticatedPartnerAddLeadsRoute
+  AuthenticatedPartnerAiAssistantRoute: typeof AuthenticatedPartnerAiAssistantRoute
   AuthenticatedPartnerAnalyticsRoute: typeof AuthenticatedPartnerAnalyticsRoute
+  AuthenticatedPartnerAnnouncementsRoute: typeof AuthenticatedPartnerAnnouncementsRoute
   AuthenticatedPartnerApplicationStatusRoute: typeof AuthenticatedPartnerApplicationStatusRoute
   AuthenticatedPartnerBrandProfileRoute: typeof AuthenticatedPartnerBrandProfileRoute
   AuthenticatedPartnerComingSoonRoute: typeof AuthenticatedPartnerComingSoonRoute
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
   AuthenticatedPartnerEarningsRoute: typeof AuthenticatedPartnerEarningsRoute
   AuthenticatedPartnerEarningsStatementRoute: typeof AuthenticatedPartnerEarningsStatementRoute
+  AuthenticatedPartnerMarketingRoute: typeof AuthenticatedPartnerMarketingRoute
   AuthenticatedPartnerMyLeadsRoute: typeof AuthenticatedPartnerMyLeadsRoute
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
   AuthenticatedPartnerOwnershipReviewsRoute: typeof AuthenticatedPartnerOwnershipReviewsRoute
@@ -4226,7 +4349,10 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerProgramsRoute: typeof AuthenticatedPartnerProgramsRouteWithChildren
   AuthenticatedPartnerQuickStartRoute: typeof AuthenticatedPartnerQuickStartRoute
   AuthenticatedPartnerReferralBonusRoute: typeof AuthenticatedPartnerReferralBonusRoute
+  AuthenticatedPartnerSearchRoute: typeof AuthenticatedPartnerSearchRoute
   AuthenticatedPartnerSupportRoute: typeof AuthenticatedPartnerSupportRouteWithChildren
+  AuthenticatedPartnerAcademySlugRoute: typeof AuthenticatedPartnerAcademySlugRoute
+  AuthenticatedPartnerAcademyIndexRoute: typeof AuthenticatedPartnerAcademyIndexRoute
   AuthenticatedPartnerEmploymentIndexRoute: typeof AuthenticatedPartnerEmploymentIndexRoute
   AuthenticatedPartnerEmploymentSalarySlipsIdRoute: typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
 }
@@ -4234,7 +4360,10 @@ interface AuthenticatedPartnerRouteChildren {
 const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerAccountRoute: AuthenticatedPartnerAccountRoute,
   AuthenticatedPartnerAddLeadsRoute: AuthenticatedPartnerAddLeadsRoute,
+  AuthenticatedPartnerAiAssistantRoute: AuthenticatedPartnerAiAssistantRoute,
   AuthenticatedPartnerAnalyticsRoute: AuthenticatedPartnerAnalyticsRoute,
+  AuthenticatedPartnerAnnouncementsRoute:
+    AuthenticatedPartnerAnnouncementsRoute,
   AuthenticatedPartnerApplicationStatusRoute:
     AuthenticatedPartnerApplicationStatusRoute,
   AuthenticatedPartnerBrandProfileRoute: AuthenticatedPartnerBrandProfileRoute,
@@ -4243,6 +4372,7 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerEarningsRoute: AuthenticatedPartnerEarningsRoute,
   AuthenticatedPartnerEarningsStatementRoute:
     AuthenticatedPartnerEarningsStatementRoute,
+  AuthenticatedPartnerMarketingRoute: AuthenticatedPartnerMarketingRoute,
   AuthenticatedPartnerMyLeadsRoute: AuthenticatedPartnerMyLeadsRoute,
   AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
   AuthenticatedPartnerOwnershipReviewsRoute:
@@ -4255,8 +4385,11 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerQuickStartRoute: AuthenticatedPartnerQuickStartRoute,
   AuthenticatedPartnerReferralBonusRoute:
     AuthenticatedPartnerReferralBonusRoute,
+  AuthenticatedPartnerSearchRoute: AuthenticatedPartnerSearchRoute,
   AuthenticatedPartnerSupportRoute:
     AuthenticatedPartnerSupportRouteWithChildren,
+  AuthenticatedPartnerAcademySlugRoute: AuthenticatedPartnerAcademySlugRoute,
+  AuthenticatedPartnerAcademyIndexRoute: AuthenticatedPartnerAcademyIndexRoute,
   AuthenticatedPartnerEmploymentIndexRoute:
     AuthenticatedPartnerEmploymentIndexRoute,
   AuthenticatedPartnerEmploymentSalarySlipsIdRoute:

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { GraduationCap, ArrowRight, Clock } from "lucide-react";
 import { ACADEMY_MODULES } from "@/data/partner-academy";
 
-export const Route = createFileRoute("/_authenticated/partner/academy")({
+export const Route = createFileRoute("/_authenticated/partner/academy/")({
   head: () => ({ meta: [{ title: "Sales Academy — Glintr Partner" }, { name: "robots", content: "noindex" }] }),
   component: AcademyIndex,
 });

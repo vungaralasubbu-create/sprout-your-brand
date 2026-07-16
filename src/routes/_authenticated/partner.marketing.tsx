@@ -124,7 +124,7 @@ function AssetCard({ asset }: { asset: MarketingAsset }) {
 
       <div className="flex items-center gap-2">
         {asset.kind === "template" && asset.body && (
-          <Button size="sm" variant={copied ? "outline" : "default"} onClick={handleCopy}>
+          <Button size="sm" variant={copied ? "outline" : "primary"} onClick={handleCopy}>
             {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
             {copied ? "Copied" : "Copy template"}
           </Button>

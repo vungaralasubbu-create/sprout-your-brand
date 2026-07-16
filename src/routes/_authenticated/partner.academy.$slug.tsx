@@ -44,7 +44,7 @@ function AcademyModulePage() {
       </header>
 
       <div className="space-y-6">
-        {module.lessons.map((l, i) => (
+        {module.lessons.map((l: (typeof module.lessons)[number], i: number) => (
           <section key={i} className="rounded-2xl border bg-white p-6 sm:p-8 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
             <div className="flex items-center justify-between mb-3">
               <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
