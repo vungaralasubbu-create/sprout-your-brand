@@ -122,12 +122,17 @@ function EmptyState({ onBrowse }: { onBrowse: () => void }) {
   );
 }
 
-function BrowseCard({ c }: { c: any }) {
+function BrowseCard({ c, onView }: { c: any; onView: (course: any) => void }) {
   const price = c.offer_price ?? c.base_price;
   const hasDiscount = c.offer_price && c.base_price && c.offer_price < c.base_price;
   return (
     <Card className="p-0 overflow-hidden group hover:shadow-md transition-shadow flex flex-col">
-      <div className="aspect-[16/9] bg-surface-1 relative overflow-hidden">
+      <button
+        type="button"
+        onClick={() => onView(c)}
+        className="aspect-[16/9] bg-surface-1 relative overflow-hidden text-left"
+        aria-label={`View ${c.name} details`}
+      >
         {c.thumbnail_url ? (
           <img src={c.thumbnail_url} alt={c.name} className="size-full object-cover group-hover:scale-[1.02] transition-transform duration-300" />
         ) : (
@@ -140,7 +145,7 @@ function BrowseCard({ c }: { c: any }) {
           {c.is_trending && !c.is_bestseller && <Badge className="bg-primary/95 text-white border-0 text-[10px] font-mono uppercase tracking-widest">Trending</Badge>}
           {c.is_featured && !c.is_bestseller && !c.is_trending && <Badge className="bg-emerald-600/95 text-white border-0 text-[10px] font-mono uppercase tracking-widest">Featured</Badge>}
         </div>
-      </div>
+      </button>
       <div className="p-4 space-y-3 flex flex-col flex-1">
         <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
           <span>{c.category?.name ?? "Program"}</span>
@@ -171,16 +176,133 @@ function BrowseCard({ c }: { c: any }) {
               <div className="text-[11px] text-muted-foreground">Contact for pricing</div>
             )}
           </div>
-          {c.category?.slug && c.slug ? (
-            <Button asChild size="sm" variant="outline">
-              <a href={`/programs/${c.category.slug}/${c.slug}`} target="_blank" rel="noreferrer">
-                View <ExternalLink className="size-3 ml-1" />
-              </a>
-            </Button>
-          ) : null}
+          <Button size="sm" variant="outline" onClick={() => onView(c)}>
+            <Eye className="size-3.5 mr-1" /> View Brief
+          </Button>
         </div>
       </div>
     </Card>
+  );
+}
+
+function toStringList(value: unknown): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.map((v) => String(v)).filter(Boolean);
+  if (typeof value === "string") {
+    return value
+      .split(/\r?\n|•|\u2022|;|\|/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function ProgramBriefSheet({ course, onOpenChange }: { course: any | null; onOpenChange: (open: boolean) => void }) {
+  const c = course;
+  const outcomes = c ? toStringList(c.learning_outcomes ?? c.what_you_will_learn ?? c.highlights) : [];
+  const skills = c ? toStringList(c.key_skills ?? c.skills_covered) : [];
+  const price = c ? (c.offer_price ?? c.base_price) : null;
+  const hasDiscount = c && c.offer_price && c.base_price && c.offer_price < c.base_price;
+
+  return (
+    <Sheet open={!!c} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto p-0">
+        {c ? (
+          <div className="flex flex-col">
+            <div className="aspect-[16/9] bg-surface-1 relative overflow-hidden">
+              {c.thumbnail_url ? (
+                <img src={c.thumbnail_url} alt={c.name} className="size-full object-cover" />
+              ) : (
+                <div className="size-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+                  <BookOpen className="size-12 text-primary/50" />
+                </div>
+              )}
+            </div>
+            <SheetHeader className="px-6 pt-5 pb-2 text-left">
+              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                <span>{c.category?.name ?? "Program"}</span>
+                {c.level && <><span>·</span><span>{c.level}</span></>}
+                {c.learning_mode && <><span>·</span><span>{c.learning_mode}</span></>}
+              </div>
+              <SheetTitle className="font-display text-2xl leading-tight">{c.name}</SheetTitle>
+              {c.short_description && (
+                <SheetDescription className="text-sm">{c.short_description}</SheetDescription>
+              )}
+            </SheetHeader>
+
+            <div className="px-6 pb-6 space-y-5">
+              <div className="grid grid-cols-3 gap-2">
+                {c.duration && (
+                  <div className="rounded-lg border border-border/70 p-3">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1"><Clock className="size-3" /> Duration</div>
+                    <div className="text-sm font-medium mt-1">{c.duration}</div>
+                  </div>
+                )}
+                {c.level && (
+                  <div className="rounded-lg border border-border/70 p-3">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1"><Signal className="size-3" /> Level</div>
+                    <div className="text-sm font-medium mt-1">{c.level}</div>
+                  </div>
+                )}
+                {price != null && (
+                  <div className="rounded-lg border border-border/70 p-3">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1"><IndianRupee className="size-3" /> Price</div>
+                    <div className="text-sm font-semibold mt-1">{formatPrice(price, c.currency ?? "INR")}</div>
+                    {hasDiscount && (
+                      <div className="text-[10px] text-muted-foreground line-through">{formatPrice(c.base_price, c.currency ?? "INR")}</div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {c.full_description && (
+                <section>
+                  <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-muted-foreground mb-2">About this program</div>
+                  <p className="text-sm text-foreground/85 whitespace-pre-wrap leading-relaxed">{c.full_description}</p>
+                </section>
+              )}
+
+              {outcomes.length > 0 && (
+                <section>
+                  <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-muted-foreground mb-2">What you'll learn</div>
+                  <ul className="space-y-1.5">
+                    {outcomes.slice(0, 8).map((o, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <CheckCircle2 className="size-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <span>{o}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {skills.length > 0 && (
+                <section>
+                  <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-muted-foreground mb-2">Skills covered</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {skills.slice(0, 20).map((s, i) => (
+                      <Badge key={i} variant="outline" className="text-[11px]">{s}</Badge>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-border/70">
+                <Button className="flex-1" onClick={() => onOpenChange(false)}>
+                  <Sparkles className="size-4 mr-1.5" /> Request Enrollment
+                </Button>
+                <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>
+                  Close
+                </Button>
+              </div>
+              <p className="text-[11px] text-muted-foreground text-center">
+                Your Glintr advisor will confirm access and unlock this program in your workspace.
+              </p>
+            </div>
+          </div>
+        ) : null}
+      </SheetContent>
+    </Sheet>
   );
 }
 
