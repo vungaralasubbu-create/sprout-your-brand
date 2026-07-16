@@ -34,6 +34,7 @@ import {
   type BlogCategory,
 } from "@/lib/blog";
 import { listCategories as listProgramCategories, listCourses, type DbCategory, type DbCourse } from "@/lib/programs";
+import { BlogCover } from "@/components/shared/blog-cover";
 
 const searchSchema = z.object({
   topic: z.string().optional(),
@@ -544,21 +545,10 @@ function FeaturedInsight({ post }: { post: BlogPost }) {
       <Link
         to="/blog/$slug"
         params={{ slug: post.slug }}
-        className="group relative bg-gradient-brand-soft aspect-[4/3] md:aspect-auto overflow-hidden"
+        className="group relative aspect-[4/3] md:aspect-auto overflow-hidden"
         aria-label={`Read ${post.title}`}
       >
-        {post.featured_image_url ? (
-          <img
-            src={post.featured_image_url}
-            alt=""
-            loading="lazy"
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-          />
-        ) : (
-          <div className="size-full flex items-center justify-center">
-            <TopicGlyph style={post.topic?.visual_style ?? "grid"} />
-          </div>
-        )}
+        <BlogCover post={post} variant="hero" eager />
       </Link>
       <div className="p-8 md:p-12 flex flex-col justify-center gap-4">
         <div className="flex items-center gap-2 text-xs">
@@ -636,19 +626,8 @@ function TrendingRail({ posts }: { posts: BlogPost[] }) {
             params={{ slug: p.slug }}
             className="group snap-start shrink-0 w-[80vw] sm:w-[380px] rounded-2xl border bg-card overflow-hidden hover:border-primary/40 transition"
           >
-            <div className="aspect-[16/10] bg-gradient-brand-soft overflow-hidden">
-              {p.featured_image_url ? (
-                <img
-                  src={p.featured_image_url}
-                  alt=""
-                  loading="lazy"
-                  className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                />
-              ) : (
-                <div className="size-full flex items-center justify-center">
-                  <TopicGlyph style={p.topic?.visual_style ?? "grid"} />
-                </div>
-              )}
+            <div className="aspect-[16/10] overflow-hidden">
+              <BlogCover post={p} variant="card" />
             </div>
             <div className="p-5">
               <div className="text-xs text-muted-foreground">{p.topic?.name ?? "Insights"}</div>
