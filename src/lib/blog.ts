@@ -40,6 +40,12 @@ export interface BlogPost {
   author_bio: string | null;
   featured_image_url: string | null;
   thumbnail_url: string | null;
+  hero_image_url: string | null;
+  social_image_url: string | null;
+  reviewer_display_name: string | null;
+  reviewer_display_role: string | null;
+  skill_level: string | null;
+  faqs: Array<{ question: string; answer: string }>;
   is_featured: boolean;
   is_trending: boolean;
   status: string;
