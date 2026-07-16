@@ -30,6 +30,7 @@ import {
   extractHeadings,
   type Heading,
 } from "@/components/shared/article-markdown";
+import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
 
 const SITE_URL = "https://glintr.com";
 
