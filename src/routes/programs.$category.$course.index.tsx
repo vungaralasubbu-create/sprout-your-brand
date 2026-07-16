@@ -792,6 +792,21 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
+      {/* ============ CAREER ROADMAP ============ */}
+      <CareerRoadmap />
+
+      {/* ============ SALARY GROWTH ============ */}
+      <SalaryGrowth />
+
+      {/* ============ CAREER SERVICES ============ */}
+      <CareerServices />
+
+      {/* ============ CERTIFICATION BADGES ============ */}
+      <CertificationBadges />
+
+      {/* ============ AI IN YOUR WORKFLOW ============ */}
+      <AIToolsUsage />
+
       {/* ============ PRICING ============ */}
       <CoursePricingPlans
         applyTo={applyTo}
