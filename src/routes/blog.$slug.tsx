@@ -3,14 +3,16 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ArrowRight,
-  Check,
+  BadgeCheck,
+  Bookmark,
+  BookmarkCheck,
   ChevronRight,
   Clock,
-  Copy,
+  Download,
   GraduationCap,
   List,
   MessageSquare,
-  Share2,
+  Printer,
   Sparkles,
 } from "lucide-react";
 
@@ -37,6 +39,10 @@ import {
 import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
 import { BlogCover } from "@/components/shared/blog-cover";
 import { useBookmark } from "@/components/shared/blog-card";
+import { ShareBar } from "@/components/blog/share-bar";
+import { AiAssistantFab } from "@/components/blog/ai-assistant-fab";
+import { ReadingMilestones } from "@/components/blog/reading-milestones";
+
 
 const SITE_URL = "https://glintr.com";
 
