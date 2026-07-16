@@ -186,7 +186,7 @@ function EntityDetail() {
       ? `Used in: ${entry.applications.slice(0, 3).join(", ")}.`
       : null,
     entry.related?.length
-      ? `Connects to ${entry.related.slice(0, 3).map((s) => bySlug.get(s)?.term ?? s).join(", ")}.`
+      ? `Connects to ${entry.related.slice(0, 3).map((s: string) => bySlug.get(s)?.term ?? s).join(", ")}.`
       : null,
     entry.relatedPrograms?.length
       ? `Careers: ${entry.relatedPrograms.slice(0, 3).join(", ")}.`
@@ -283,7 +283,7 @@ function EntityDetail() {
                   Related Programs
                 </div>
                 <ul className="space-y-1.5 text-sm">
-                  {entry.relatedPrograms.slice(0, 6).map((p) => (
+                  {entry.relatedPrograms.slice(0, 6).map((p: string) => (
                     <li key={p}>
                       <a
                         href={`/programs?q=${encodeURIComponent(p)}`}
