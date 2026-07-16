@@ -480,10 +480,10 @@ function CoursePage() {
       <ProgramPersonalization />
 
       {/* ============ HIRING PARTNERS ============ */}
-      <HiringPartners />
+      <HiringPartners partners={contentPack.hiringPartners} />
 
       {/* ============ TOOLS YOU'LL MASTER ============ */}
-      <ToolsMaster />
+      <ToolsMaster tools={contentPack.tools} />
 
       {/* ============ 8-STAGE JOURNEY ============ */}
       <StudentLearningJourney />
