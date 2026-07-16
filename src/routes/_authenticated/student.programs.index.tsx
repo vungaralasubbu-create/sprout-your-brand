@@ -3,15 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { listMyPrograms } from "@/lib/student/lms.functions";
+import { listCourses, listCategories, formatPrice } from "@/lib/programs";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Search, GraduationCap, Award, Clock, Layers } from "lucide-react";
+import { BookOpen, Search, GraduationCap, Award, Clock, Layers, ExternalLink, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/student/programs/")({ component: Page });
+
+type Tab = "mine" | "browse";
 
 type Filter = "all" | "in_progress" | "not_started" | "completed";
 
