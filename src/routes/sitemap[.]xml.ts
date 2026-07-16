@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { listGlossary } from "@/data/glossary";
+import { listLearningPaths } from "@/data/learning-paths";
+import { listComparisons } from "@/data/comparisons";
+import { listCareerMaps } from "@/data/career-maps";
 
 const BASE_URL = "https://glintr.com";
 
@@ -31,6 +34,10 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/faqs", changefreq: "monthly", priority: "0.5" },
   { path: "/blog", changefreq: "daily", priority: "0.9" },
   { path: "/glossary", changefreq: "monthly", priority: "0.7" },
+  { path: "/learning-paths", changefreq: "monthly", priority: "0.7" },
+  { path: "/compare", changefreq: "monthly", priority: "0.7" },
+  { path: "/career-maps", changefreq: "monthly", priority: "0.7" },
+  { path: "/knowledge-graph", changefreq: "monthly", priority: "0.5" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/terms-and-conditions", changefreq: "yearly", priority: "0.3" },
   { path: "/revenue-share-terms", changefreq: "yearly", priority: "0.3" },
@@ -59,6 +66,15 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "monthly",
             priority: "0.5",
           });
+        }
+        for (const p of listLearningPaths()) {
+          entries.push({ path: `/learning-paths/${p.slug}`, changefreq: "monthly", priority: "0.6" });
+        }
+        for (const c of listComparisons()) {
+          entries.push({ path: `/compare/${c.slug}`, changefreq: "monthly", priority: "0.6" });
+        }
+        for (const cm of listCareerMaps()) {
+          entries.push({ path: `/career-maps/${cm.slug}`, changefreq: "monthly", priority: "0.5" });
         }
 
         if (url && key) {
