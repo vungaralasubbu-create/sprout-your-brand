@@ -36,9 +36,8 @@ export function RelatedTopics({
   const current = currentPillarSlug ? all.find((p) => p.slug === currentPillarSlug) : undefined;
 
   const relatedPillars = pickRelatedPillars(all, current, keywords, 4);
-  const clusters = current
-    ? // sibling clusters when we know the pillar
-      require("@/data/topics").listClusters(current.slug).filter((c: Cluster) => c.slug !== currentClusterSlug).slice(0, limit)
+  const clusters: Cluster[] = current
+    ? listClusters(current.slug).filter((c) => c.slug !== currentClusterSlug).slice(0, limit)
     : [];
   const alsoLike = pickAlsoLike(all, current, 4);
 
