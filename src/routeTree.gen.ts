@@ -113,6 +113,7 @@ import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 import { Route as AiAgentsIdRouteImport } from './routes/ai-agents.$id'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
+import { Route as AuthenticatedHqRouteImport } from './routes/_authenticated/hq'
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
 import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -921,6 +922,11 @@ const AuthenticatedStudentRoute = AuthenticatedStudentRouteImport.update({
 const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
   id: '/partner',
   path: '/partner',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHqRoute = AuthenticatedHqRouteImport.update({
+  id: '/hq',
+  path: '/hq',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedBrandRoute = AuthenticatedBrandRouteImport.update({
@@ -2681,6 +2687,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
+  '/hq': typeof AuthenticatedHqRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
@@ -3071,6 +3078,7 @@ export interface FileRoutesByTo {
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
+  '/hq': typeof AuthenticatedHqRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
   '/authors/$slug': typeof AuthorsSlugRoute
@@ -3457,6 +3465,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
+  '/_authenticated/hq': typeof AuthenticatedHqRoute
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
@@ -3853,6 +3862,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ambassador'
     | '/brand'
+    | '/hq'
     | '/partner'
     | '/student'
     | '/ai-agents/$id'
@@ -4243,6 +4253,7 @@ export interface FileRouteTypes {
     | '/white-label-edtech'
     | '/ambassador'
     | '/brand'
+    | '/hq'
     | '/partner'
     | '/ai-agents/$id'
     | '/authors/$slug'
@@ -4628,6 +4639,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
     | '/_authenticated/brand'
+    | '/_authenticated/hq'
     | '/_authenticated/partner'
     | '/_authenticated/student'
     | '/ai-agents/$id'
@@ -5779,6 +5791,13 @@ declare module '@tanstack/react-router' {
       path: '/partner'
       fullPath: '/partner'
       preLoaderRoute: typeof AuthenticatedPartnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hq': {
+      id: '/_authenticated/hq'
+      path: '/hq'
+      fullPath: '/hq'
+      preLoaderRoute: typeof AuthenticatedHqRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/brand': {
@@ -8736,6 +8755,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
+  AuthenticatedHqRoute: typeof AuthenticatedHqRoute
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
@@ -8746,6 +8766,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
+  AuthenticatedHqRoute: AuthenticatedHqRoute,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
   AuthenticatedCampusAmbassadorApplyRoute:
