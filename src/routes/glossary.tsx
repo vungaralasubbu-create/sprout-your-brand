@@ -59,26 +59,33 @@ function GlossaryIndex() {
   const all = React.useMemo(() => listGlossary(), []);
   const [query, setQuery] = React.useState("");
   const [activeLetter, setActiveLetter] = React.useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q && !activeLetter) return all;
+    if (!q && !activeLetter && !activeCategory) return all;
     return all.filter((g) => {
       const inLetter = activeLetter ? g.term[0]!.toUpperCase() === activeLetter : true;
+      const inCategory = activeCategory ? g.category === activeCategory : true;
       const inQuery = q
         ? g.term.toLowerCase().includes(q) ||
           g.short.toLowerCase().includes(q) ||
           (g.aliases ?? []).some((a) => a.toLowerCase().includes(q)) ||
           g.category.toLowerCase().includes(q)
         : true;
-      return inLetter && inQuery;
+      return inLetter && inCategory && inQuery;
     });
-  }, [all, query, activeLetter]);
+  }, [all, query, activeLetter, activeCategory]);
 
   const letters = React.useMemo(() => glossaryByLetter(), []);
   const byCategory = React.useMemo(() => glossaryByCategory(), []);
   const popular = React.useMemo(() => popularGlossary(), []);
-  const isFiltering = query.trim().length > 0 || activeLetter !== null;
+  const categories = React.useMemo(
+    () => Array.from(new Set(all.map((g) => g.category))).sort(),
+    [all],
+  );
+  const isFiltering =
+    query.trim().length > 0 || activeLetter !== null || activeCategory !== null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,17 +102,36 @@ function GlossaryIndex() {
               Glossary
             </div>
             <h1 className="font-display font-semibold text-balance tracking-[-0.02em] text-[clamp(2.2rem,4.6vw,3.6rem)] leading-[1.02]">
-              A clear vocabulary for modern learning.
+              Technology &amp; Career Glossary
             </h1>
             <p className="mt-5 text-body-lg text-muted-foreground max-w-2xl">
-              Every concept we teach — from AI and Prompt Engineering to VLSI,
-              Embedded Systems, SEO and Medical Coding. Each entry links to
-              related programs, articles and learning paths.
+              Understand important concepts across AI, Programming, Engineering,
+              Business and Healthcare. Every entry links to related programs,
+              guides and articles.
             </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <a
+                href="#browse"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                Browse Terms
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById("glossary-search");
+                  el?.focus();
+                }}
+                className="inline-flex items-center gap-1.5 rounded-full border bg-card px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+              >
+                Search Glossary
+              </button>
+            </div>
 
             <div className="mt-8 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <input
+                id="glossary-search"
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -114,6 +140,40 @@ function GlossaryIndex() {
                 aria-label="Search glossary"
               />
             </div>
+
+            {/* Category filter chips */}
+            <div className="mt-5 flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => setActiveCategory(null)}
+                className={cn(
+                  "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
+                  activeCategory === null
+                    ? "bg-foreground text-background border-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                All categories
+              </button>
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() =>
+                    setActiveCategory((cur) => (cur === c ? null : c))
+                  }
+                  className={cn(
+                    "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
+                    activeCategory === c
+                      ? "bg-foreground text-background border-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+
 
             {/* Alphabet nav — desktop sticky, mobile horizontal scroll */}
             <div className="mt-6 -mx-4 md:mx-0 md:sticky md:top-16 md:z-10 md:bg-background/80 md:backdrop-blur md:py-2">
@@ -234,8 +294,9 @@ function GlossaryIndex() {
               </Container>
             </Section>
 
-            <Section className="pb-24">
+            <Section className="pb-24" id="browse">
               <Container className="max-w-5xl space-y-14">
+
                 {byCategory.map(([cat, entries]) => (
                   <section key={cat} id={cat.replace(/\s+/g, "-").toLowerCase()}>
                     <div className="text-caption font-mono uppercase tracking-widest text-primary mb-4">
