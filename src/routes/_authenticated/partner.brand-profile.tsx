@@ -41,7 +41,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/partner/brand-profile")({
-  component: BrandProfilePage,
+  component: () => (<AcademyGate><BrandProfilePage /></AcademyGate>),
 });
 
 const STATUS_TONE: Record<string, string> = {
