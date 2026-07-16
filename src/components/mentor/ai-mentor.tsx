@@ -519,12 +519,45 @@ function MessageBubble({
   message,
   onSuggestion,
   onLink,
+  onEscalate,
 }: {
   message: ChatMessage;
   onSuggestion: (text: string) => void;
   onLink: () => void;
+  onEscalate: () => void;
 }) {
   const isUser = message.role === "user";
+
+  if (!isUser && message.kind === "support") {
+    return <SupportCard intro={message.content} onLink={onLink} />;
+  }
+
+  if (!isUser && message.kind === "escalation") {
+    return (
+      <div className="flex justify-start">
+        <div className="max-w-[86%] rounded-2xl rounded-bl-md border border-primary/30 bg-primary/5 px-3.5 py-2.5 text-sm">
+          <p className="leading-relaxed">{message.content}</p>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={onEscalate}
+              className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-background hover:opacity-90"
+            >
+              <LifeBuoy className="size-3" /> Yes, connect me
+            </button>
+            <button
+              type="button"
+              onClick={() => onSuggestion("Let me rephrase my question.")}
+              className="rounded-full border bg-background px-3 py-1 text-[11px] font-medium hover:bg-accent"
+            >
+              No, I'll rephrase
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
       <div
@@ -592,6 +625,67 @@ function MessageBubble({
             ))}
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function SupportCard({ intro, onLink }: { intro: string; onLink: () => void }) {
+  return (
+    <div className="flex justify-start">
+      <div className="max-w-[92%] rounded-2xl rounded-bl-md border border-primary/30 bg-gradient-to-br from-primary/5 to-accent/30 px-4 py-3.5 text-sm shadow-sm">
+        <div className="mb-2 flex items-center gap-2">
+          <span className="inline-flex size-7 items-center justify-center rounded-full bg-foreground text-background">
+            <LifeBuoy className="size-3.5" />
+          </span>
+          <div className="font-semibold">Glintr Support Team</div>
+        </div>
+        <p className="mb-3 leading-relaxed text-muted-foreground">{intro}</p>
+        <ul className="mb-3 space-y-1.5 text-[12.5px]">
+          <li className="flex items-center gap-2">
+            <Mail className="size-3.5 text-muted-foreground" />
+            <a href={`mailto:${SUPPORT_CONTACT.email}`} className="font-medium text-foreground hover:text-primary">
+              {SUPPORT_CONTACT.email}
+            </a>
+          </li>
+          <li className="flex items-center gap-2">
+            <Phone className="size-3.5 text-muted-foreground" />
+            <a href={`tel:${SUPPORT_CONTACT.phone.replace(/\s/g, "")}`} className="font-medium text-foreground hover:text-primary">
+              {SUPPORT_CONTACT.phone}
+            </a>
+          </li>
+          <li className="flex items-center gap-2">
+            <MessageSquare className="size-3.5 text-muted-foreground" />
+            <a
+              href={`https://wa.me/${SUPPORT_CONTACT.whatsapp.replace(/[^\d]/g, "")}`}
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-foreground hover:text-primary"
+            >
+              WhatsApp {SUPPORT_CONTACT.whatsapp}
+            </a>
+          </li>
+          <li className="flex items-center gap-2 text-muted-foreground">
+            <Clock className="size-3.5" />
+            {SUPPORT_CONTACT.hours}
+          </li>
+        </ul>
+        <div className="flex flex-wrap gap-1.5">
+          <Link
+            to="/book-consultation"
+            onClick={onLink}
+            className="inline-flex items-center rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background hover:opacity-90"
+          >
+            Book a consultation
+          </Link>
+          <Link
+            to="/contact"
+            onClick={onLink}
+            className="inline-flex items-center rounded-full border bg-background px-3 py-1.5 text-[11px] font-medium hover:bg-accent"
+          >
+            Contact form
+          </Link>
+        </div>
       </div>
     </div>
   );
