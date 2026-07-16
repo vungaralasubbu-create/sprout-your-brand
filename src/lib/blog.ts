@@ -117,7 +117,7 @@ export async function listPosts(filters: BlogFilters = {}): Promise<BlogPost[]> 
   }
   const { data, error } = await q;
   if (error) throw error;
-  return (data ?? []) as BlogPost[];
+  return (data ?? []) as unknown as BlogPost[];
 }
 
 export async function getFeaturedPost(): Promise<BlogPost | null> {
@@ -129,7 +129,7 @@ export async function getFeaturedPost(): Promise<BlogPost | null> {
     .order("published_at", { ascending: false })
     .limit(1)
     .maybeSingle();
-  return (data ?? null) as BlogPost | null;
+  return (data ?? null) as unknown as BlogPost | null;
 }
 
 export async function listTrendingPosts(limit = 8): Promise<BlogPost[]> {
@@ -139,7 +139,7 @@ export async function listTrendingPosts(limit = 8): Promise<BlogPost[]> {
     .eq("is_trending", true)
     .order("published_at", { ascending: false })
     .limit(limit);
-  return (data ?? []) as BlogPost[];
+  return (data ?? []) as unknown as BlogPost[];
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
@@ -148,7 +148,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     .select(POST_SELECT)
     .eq("slug", slug)
     .maybeSingle();
-  return (data ?? null) as BlogPost | null;
+  return (data ?? null) as unknown as BlogPost | null;
 }
 
 export async function listRelatedPosts(post: BlogPost, limit = 4): Promise<BlogPost[]> {
@@ -160,7 +160,7 @@ export async function listRelatedPosts(post: BlogPost, limit = 4): Promise<BlogP
     .limit(limit);
   if (post.topic_id) q = q.eq("topic_id", post.topic_id);
   const { data } = await q;
-  if ((data ?? []).length >= limit || !post.category_id) return (data ?? []) as BlogPost[];
+  if ((data ?? []).length >= limit || !post.category_id) return (data ?? []) as unknown as BlogPost[];
   const need = limit - (data ?? []).length;
   const seen = new Set([post.id, ...(data ?? []).map((d) => d.id)]);
   const { data: more } = await supabase
@@ -170,7 +170,7 @@ export async function listRelatedPosts(post: BlogPost, limit = 4): Promise<BlogP
     .not("id", "in", `(${[...seen].map((s) => `"${s}"`).join(",")})`)
     .order("published_at", { ascending: false })
     .limit(need);
-  return [...(data ?? []), ...(more ?? [])] as BlogPost[];
+  return [...(data ?? []), ...(more ?? [])] as unknown as BlogPost[];
 }
 
 export function formatPublished(iso: string | null): string {
