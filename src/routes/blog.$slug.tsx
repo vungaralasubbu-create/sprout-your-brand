@@ -321,7 +321,11 @@ function BlogDetailPage() {
               <img
                 src={post.featured_image_url}
                 alt=""
-                loading="lazy"
+                width={1600}
+                height={900}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
                 className="w-full h-auto object-cover"
               />
             </div>
