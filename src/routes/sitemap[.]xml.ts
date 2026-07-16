@@ -153,10 +153,32 @@ export const Route = createFileRoute("/sitemap.xml")({
                 priority: "0.6",
               });
             }
+            for (const f of (faqs ?? []) as Array<{ slug: string; updated_at: string | null }>) {
+              entries.push({
+                path: `/faqs/${f.slug}`,
+                lastmod: f.updated_at ?? undefined,
+                changefreq: "monthly",
+                priority: "0.5",
+              });
+            }
+            for (const r of (roles ?? []) as Array<{ slug: string; updated_at: string | null }>) {
+              entries.push({
+                path: `/careers/${r.slug}`,
+                lastmod: r.updated_at ?? undefined,
+                changefreq: "weekly",
+                priority: "0.5",
+              });
+            }
           } catch (e) {
             console.error("[sitemap] failed to load CMS entries", e);
           }
         }
+
+        // Dedupe by path (keep last)
+        const seen = new Map<string, typeof entries[number]>();
+        for (const e of entries) seen.set(e.path, e);
+        const deduped = Array.from(seen.values());
+
 
         const urls = entries.map((e) =>
           [
