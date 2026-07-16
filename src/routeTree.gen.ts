@@ -45,7 +45,6 @@ import { Route as CareersRouteImport } from './routes/careers'
 import { Route as CareerMapsRouteImport } from './routes/career-maps'
 import { Route as BrandSetupRouteImport } from './routes/brand-setup'
 import { Route as BookConsultationRouteImport } from './routes/book-consultation'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AiAgentsRouteImport } from './routes/ai-agents'
 import { Route as AboutRouteImport } from './routes/about'
@@ -62,6 +61,7 @@ import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as EntitiesIndexRouteImport } from './routes/entities.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AuthorsIndexRouteImport } from './routes/authors.index'
 import { Route as WorkspaceVoiceRouteImport } from './routes/workspace.voice'
 import { Route as WorkspaceStudyRouteImport } from './routes/workspace.study'
@@ -575,11 +575,6 @@ const BookConsultationRoute = BookConsultationRouteImport.update({
   path: '/book-consultation',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -657,6 +652,11 @@ const EntitiesIndexRoute = EntitiesIndexRouteImport.update({
 const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
   id: '/campus-ambassador/',
   path: '/campus-ambassador/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthorsIndexRoute = AuthorsIndexRouteImport.update({
@@ -876,9 +876,9 @@ const CareerMapsSlugRoute = CareerMapsSlugRouteImport.update({
   getParentRoute: () => CareerMapsRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
   id: '/authors/$slug',
@@ -2586,7 +2586,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/book-consultation': typeof BookConsultationRoute
   '/brand-setup': typeof BrandSetupRoute
   '/career-maps': typeof CareerMapsRouteWithChildren
@@ -2674,6 +2673,7 @@ export interface FileRoutesByFullPath {
   '/workspace/study': typeof WorkspaceStudyRoute
   '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
   '/authors/': typeof AuthorsIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -2972,7 +2972,6 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/book-consultation': typeof BookConsultationRoute
   '/brand-setup': typeof BrandSetupRoute
   '/career-maps': typeof CareerMapsRouteWithChildren
@@ -3054,6 +3053,7 @@ export interface FileRoutesByTo {
   '/workspace/search': typeof WorkspaceSearchRoute
   '/workspace/study': typeof WorkspaceStudyRoute
   '/authors': typeof AuthorsIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/entities': typeof EntitiesIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
@@ -3346,7 +3346,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/book-consultation': typeof BookConsultationRoute
   '/brand-setup': typeof BrandSetupRoute
   '/career-maps': typeof CareerMapsRouteWithChildren
@@ -3434,6 +3433,7 @@ export interface FileRoutesById {
   '/workspace/study': typeof WorkspaceStudyRoute
   '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
   '/authors/': typeof AuthorsIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
@@ -3734,7 +3734,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-agents'
     | '/auth'
-    | '/blog'
     | '/book-consultation'
     | '/brand-setup'
     | '/career-maps'
@@ -3822,6 +3821,7 @@ export interface FileRouteTypes {
     | '/workspace/study'
     | '/workspace/voice'
     | '/authors/'
+    | '/blog/'
     | '/campus-ambassador/'
     | '/entities/'
     | '/launch-your-brand/'
@@ -4120,7 +4120,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-agents'
     | '/auth'
-    | '/blog'
     | '/book-consultation'
     | '/brand-setup'
     | '/career-maps'
@@ -4202,6 +4201,7 @@ export interface FileRouteTypes {
     | '/workspace/search'
     | '/workspace/study'
     | '/authors'
+    | '/blog'
     | '/campus-ambassador'
     | '/entities'
     | '/launch-your-brand'
@@ -4493,7 +4493,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/ai-agents'
     | '/auth'
-    | '/blog'
     | '/book-consultation'
     | '/brand-setup'
     | '/career-maps'
@@ -4581,6 +4580,7 @@ export interface FileRouteTypes {
     | '/workspace/study'
     | '/workspace/voice'
     | '/authors/'
+    | '/blog/'
     | '/campus-ambassador/'
     | '/entities/'
     | '/launch-your-brand/'
@@ -4881,7 +4881,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AiAgentsRoute: typeof AiAgentsRouteWithChildren
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRouteWithChildren
   BookConsultationRoute: typeof BookConsultationRoute
   BrandSetupRoute: typeof BrandSetupRoute
   CareerMapsRoute: typeof CareerMapsRouteWithChildren
@@ -4919,6 +4918,7 @@ export interface RootRouteChildren {
   WhiteLabelEdtechRoute: typeof WhiteLabelEdtechRoute
   WorkspaceRoute: typeof WorkspaceRouteWithChildren
   AuthorsSlugRoute: typeof AuthorsSlugRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   EntitiesSlugRoute: typeof EntitiesSlugRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
@@ -4928,6 +4928,7 @@ export interface RootRouteChildren {
   ToolsSlugRoute: typeof ToolsSlugRoute
   VerifyCertificateCodeRoute: typeof VerifyCertificateCodeRoute
   AuthorsIndexRoute: typeof AuthorsIndexRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
   EntitiesIndexRoute: typeof EntitiesIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
@@ -5200,13 +5201,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookConsultationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -5317,6 +5311,13 @@ declare module '@tanstack/react-router' {
       path: '/campus-ambassador'
       fullPath: '/campus-ambassador/'
       preLoaderRoute: typeof CampusAmbassadorIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/authors/': {
@@ -5622,10 +5623,10 @@ declare module '@tanstack/react-router' {
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/authors/$slug': {
       id: '/authors/$slug'
@@ -8583,16 +8584,6 @@ const AiAgentsRouteWithChildren = AiAgentsRoute._addFileChildren(
   AiAgentsRouteChildren,
 )
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
 interface CareerMapsRouteChildren {
   CareerMapsSlugRoute: typeof CareerMapsSlugRoute
 }
@@ -8847,7 +8838,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AiAgentsRoute: AiAgentsRouteWithChildren,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRouteWithChildren,
   BookConsultationRoute: BookConsultationRoute,
   BrandSetupRoute: BrandSetupRoute,
   CareerMapsRoute: CareerMapsRouteWithChildren,
@@ -8885,6 +8875,7 @@ const rootRouteChildren: RootRouteChildren = {
   WhiteLabelEdtechRoute: WhiteLabelEdtechRoute,
   WorkspaceRoute: WorkspaceRouteWithChildren,
   AuthorsSlugRoute: AuthorsSlugRoute,
+  BlogSlugRoute: BlogSlugRoute,
   EntitiesSlugRoute: EntitiesSlugRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
@@ -8894,6 +8885,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsSlugRoute: ToolsSlugRoute,
   VerifyCertificateCodeRoute: VerifyCertificateCodeRoute,
   AuthorsIndexRoute: AuthorsIndexRoute,
+  BlogIndexRoute: BlogIndexRoute,
   CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
   EntitiesIndexRoute: EntitiesIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
@@ -8914,3 +8906,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
