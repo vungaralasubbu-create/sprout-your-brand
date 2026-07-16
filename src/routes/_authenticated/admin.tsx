@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import {
   LayoutDashboard, Activity, Users, UserCheck, Target, Scale, ShieldCheck, FileSignature, Wallet,
   Handshake, Building2, Bell, Shield, GraduationCap, FolderTree, BookOpen, ClipboardList,
-  History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown,
+  History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown, Sparkles,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -66,6 +66,7 @@ const NAV: NavGroup[] = [
     collapsible: true,
     items: [
       { to: "/admin/content", label: "Content Dashboard", icon: BookOpen },
+      { to: "/admin/ai-content", label: "AI Content Factory", icon: Sparkles },
     ],
   },
   {
