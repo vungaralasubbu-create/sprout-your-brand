@@ -31,6 +31,7 @@ import {
   Megaphone,
   Palette,
   Search,
+  Rocket,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
@@ -98,6 +99,7 @@ const ASSISTED_TOOLKIT: NavItem[] = [
 // Academy Partner (optional upgrade).
 const ACADEMY_NAV: NavItem[] = [
   { to: "/partner/business-os", label: "AI Business OS", icon: Sparkles },
+  { to: "/partner/brand-studio", label: "Brand Launch Studio", icon: Rocket },
   { to: "/partner/academy-builder", label: "Academy Builder", icon: GraduationCap },
   { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
 ];
