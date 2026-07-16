@@ -437,7 +437,7 @@ export const generateContentSuggestions = createServerFn({ method: "GET" })
     await ensureAdmin(context);
     // Programs that don't have a related program_support / learn_guide
     const [programs, learnGuides, glossary, comparisons] = await Promise.all([
-      context.supabase.from("courses").select("id, title, slug, description").eq("status", "published").limit(100),
+      context.supabase.from("courses").select("id, name, slug").eq("status", "published").limit(100),
       context.supabase.from("content_items").select("title, slug, focus_topic").eq("type", "learn_guide"),
       context.supabase.from("content_items").select("title, slug").eq("type", "glossary"),
       context.supabase.from("content_items").select("title").eq("type", "comparison"),
@@ -449,12 +449,12 @@ export const generateContentSuggestions = createServerFn({ method: "GET" })
 
     // Missing learn guides for programs
     const missingProgramGuides = (programs.data ?? [])
-      .filter((p: any) => !learnTopics.has((p.title ?? "").toLowerCase()))
+      .filter((p: any) => !learnTopics.has((p.name ?? "").toLowerCase()))
       .slice(0, 12)
       .map((p: any) => ({
         kind: "learn_guide",
-        title: `${p.title} — complete beginner's guide`,
-        rationale: `You have a program "${p.title}" but no matching learn guide. This closes the loop from search to enrollment.`,
+        title: `${p.name} — complete beginner's guide`,
+        rationale: `You have a program "${p.name}" but no matching learn guide. This closes the loop from search to enrollment.`,
         source: { program_slug: p.slug, program_id: p.id },
       }));
 
@@ -463,7 +463,7 @@ export const generateContentSuggestions = createServerFn({ method: "GET" })
     const list = (programs.data ?? []).slice(0, 20);
     for (let i = 0; i < list.length; i++) {
       for (let j = i + 1; j < list.length; j++) {
-        const title = `${list[i].title} vs ${list[j].title}`;
+        const title = `${list[i].name} vs ${list[j].name}`;
         if (!existingComparisons.has(title.toLowerCase()) && compIdeas.length < 8) {
           compIdeas.push({ kind: "comparison", title, rationale: "Comparison articles capture bottom-of-funnel search intent.", source: { a: list[i].slug, b: list[j].slug } });
         }
