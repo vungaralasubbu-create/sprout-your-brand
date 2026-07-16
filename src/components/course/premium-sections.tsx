@@ -670,7 +670,10 @@ const AI_TOOLS_USAGE: Array<{ name: string; use: string; icon: React.ComponentTy
   { name: "Power BI AI", use: "Auto-insights and narrative summaries for dashboards.", icon: BarChart3 },
 ];
 
-export function AIToolsUsage() {
+type AIToolItem = { name: string; use: string; icon: React.ComponentType<{ className?: string }> };
+
+export function AIToolsUsage({ items, title, description }: { items?: AIToolItem[]; title?: string; description?: string } = {}) {
+  const list = items && items.length > 0 ? items : AI_TOOLS_USAGE;
   return (
     <Section className="py-14 lg:py-20">
       <Container>
