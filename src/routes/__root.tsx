@@ -206,7 +206,7 @@ function RootComponent() {
       <Outlet />
       <StickyActionBar />
       <AiMentor />
-      <ExitIntent />
+      <SmartPopup />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
