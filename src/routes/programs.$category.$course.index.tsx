@@ -129,6 +129,23 @@ export const Route = createFileRoute("/programs/$category/$course/")({
         }),
       });
     }
+    // FAQ JSON-LD from editorial content (unique per program).
+    const editorialFaqs = getProgramEditorial(params.course).faqs ?? [];
+    if (editorialFaqs.length > 0) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: editorialFaqs.map((f) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: { "@type": "Answer", text: f.answer },
+          })),
+        }),
+      });
+    }
+
     return {
       meta,
       links: [{ rel: "canonical", href: canonical }],
