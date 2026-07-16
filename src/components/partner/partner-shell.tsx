@@ -57,36 +57,68 @@ type NavGroup = {
 
 const OVERVIEW: NavItem[] = [
   { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
-  { to: "/partner/business-os", label: "AI Business OS", icon: LayoutDashboard },
 ];
 
-const LEADS: NavItem[] = [
-  { to: "/partner/my-leads", label: "My Leads", icon: Users },
+// Sales Partner (70%, own leads) — sells Glintr programs via own network.
+const SALES_LEADS: NavItem[] = [
+  { to: "/partner/my-leads", label: "Lead Dashboard", icon: Users },
   { to: "/partner/add-leads", label: "Add Leads", icon: UserPlus },
-  { to: "/partner/ownership-reviews", label: "Ownership Reviews", icon: Scale },
 ];
-
-const REVENUE: NavItem[] = [
+const SALES_REVENUE: NavItem[] = [
   { to: "/partner/payment-links", label: "Payment Links", icon: Link2 },
   { to: "/partner/payment-verification", label: "Payment Verification", icon: ShieldCheck },
-  { to: "/partner/coming-soon", label: "My Sales", icon: ShoppingBag },
-  { to: "/partner/earnings", label: "Earnings", icon: Wallet },
+  { to: "/partner/earnings", label: "Commission Wallet", icon: Wallet },
   { to: "/partner/referral-bonus", label: "Referral Bonus", icon: Gift },
 ];
-
-const GROW: NavItem[] = [
+const SALES_TOOLKIT: NavItem[] = [
   { to: "/partner/programs", label: "Programs", icon: Package },
-  { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
-  { to: "/partner/analytics", label: "Analytics", icon: BarChart3 },
-];
-
-const TOOLKIT: NavItem[] = [
-  { to: "/partner/ai-assistant", label: "AI Assistant", icon: Sparkles },
-  { to: "/partner/marketing", label: "Marketing Assets", icon: Palette },
-  { to: "/partner/academy", label: "Sales Academy", icon: GraduationCap },
+  { to: "/partner/analytics", label: "Performance Analytics", icon: BarChart3 },
+  { to: "/partner/marketing", label: "Marketing Materials", icon: Palette },
+  { to: "/partner/academy", label: "Sales Scripts & Academy", icon: GraduationCap },
+  { to: "/partner/ai-assistant", label: "AI Sales Assistant", icon: Sparkles },
   { to: "/partner/announcements", label: "Announcements", icon: Megaphone },
   { to: "/partner/search", label: "Search", icon: Search },
 ];
+
+// Assisted Sales Partner (50%, receives verified leads).
+const ASSISTED_LEADS: NavItem[] = [
+  { to: "/partner/my-leads", label: "Lead Queue", icon: Users },
+  { to: "/partner/ownership-reviews", label: "Lead Ownership", icon: Scale },
+];
+const ASSISTED_REVENUE: NavItem[] = [
+  { to: "/partner/earnings", label: "Commission Wallet", icon: Wallet },
+];
+const ASSISTED_TOOLKIT: NavItem[] = [
+  { to: "/partner/analytics", label: "Performance Analytics", icon: BarChart3 },
+  { to: "/partner/ai-assistant", label: "AI Call Assistant", icon: Sparkles },
+  { to: "/partner/academy", label: "Sales Training", icon: GraduationCap },
+  { to: "/partner/announcements", label: "Announcements", icon: Megaphone },
+];
+
+// Academy Partner (optional upgrade).
+const ACADEMY_NAV: NavItem[] = [
+  { to: "/partner/business-os", label: "AI Business OS", icon: Sparkles },
+  { to: "/partner/academy-builder", label: "Academy Builder", icon: GraduationCap },
+  { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
+];
+
+const ACADEMY_OPT_IN_KEY = "glintr.partner.academy.optin";
+
+function useAcademyEnabled(hasBrandProfile: boolean) {
+  const [optIn, setOptIn] = useState(false);
+  useEffect(() => {
+    try {
+      setOptIn(localStorage.getItem(ACADEMY_OPT_IN_KEY) === "1");
+    } catch { /* noop */ }
+  }, []);
+  return {
+    enabled: hasBrandProfile || optIn,
+    enable: () => {
+      try { localStorage.setItem(ACADEMY_OPT_IN_KEY, "1"); } catch { /* noop */ }
+      setOptIn(true);
+    },
+  };
+}
 
 export function PartnerShell() {
   const fetchCtx = useServerFn(getPartnerContext);
@@ -96,32 +128,52 @@ export function PartnerShell() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
-  // Close mobile drawer on route change.
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   const partner = data?.partner ?? null;
   const isFullTime = partner?.work_model === "full_time" && !!data?.employeeProfile;
+  const model = (partner?.sales_model_selection as string | null) ?? null;
+  const isAssisted = model === "supported_sales";
+  const isDual = model === "dual_model";
+  const isSales = model === "own_leads" || !model; // default to sales partner view
+
+  const academy = useAcademyEnabled(!!data?.hasBrandProfile);
 
   const employmentItem: NavItem = isFullTime
     ? { to: "/partner/employment", label: "Employment", icon: Briefcase }
     : { to: "/partner/earnings-statement", label: "Monthly Statement", icon: Briefcase };
 
+  // Merge nav based on selected model(s).
+  const leadItems: NavItem[] = isDual
+    ? [...SALES_LEADS, { to: "/partner/ownership-reviews", label: "Lead Ownership", icon: Scale }]
+    : isAssisted ? ASSISTED_LEADS : SALES_LEADS;
+
+  const revenueItems: NavItem[] = isAssisted && !isDual
+    ? [...ASSISTED_REVENUE, employmentItem]
+    : [...SALES_REVENUE, employmentItem];
+
+  const toolkitItems: NavItem[] = isDual
+    ? [...SALES_TOOLKIT]
+    : isAssisted ? ASSISTED_TOOLKIT : SALES_TOOLKIT;
+
   const groups: NavGroup[] = [
     { label: "", items: OVERVIEW },
-    { label: "Leads", items: LEADS },
-    { label: "Revenue", items: [...REVENUE, employmentItem] },
-    { label: "Grow", items: GROW },
-    { label: "Toolkit", items: TOOLKIT },
-    {
-      label: "Workspace",
-      items: [
-        { to: "/partner/support", label: "Support", icon: LifeBuoy },
-        { to: "/partner/account", label: "Account", icon: UserCircle },
-      ],
-    },
+    { label: "Leads", items: leadItems },
+    { label: "Revenue", items: revenueItems },
+    { label: "Toolkit", items: toolkitItems },
   ];
+
+  if (academy.enabled) {
+    groups.push({ label: "Academy", items: ACADEMY_NAV });
+  }
+
+  groups.push({
+    label: "Workspace",
+    items: [
+      { to: "/partner/support", label: "Support", icon: LifeBuoy },
+      { to: "/partner/account", label: "Account", icon: UserCircle },
+    ],
+  });
 
   async function handleSignOut() {
     await queryClient.cancelQueries();
@@ -135,6 +187,11 @@ export function PartnerShell() {
     if (to === "/partner/coming-soon") return false;
     return pathname === to || pathname.startsWith(to + "/");
   };
+
+  const workspaceLabel = isAssisted && !isDual
+    ? "Assisted Sales"
+    : academy.enabled ? "Academy Workspace" : "Sales Workspace";
+
 
   return (
     <div className="min-h-screen bg-[oklch(0.985_0.005_240)] text-foreground">
