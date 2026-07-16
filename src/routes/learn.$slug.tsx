@@ -12,6 +12,7 @@ import {
   type Heading,
 } from "@/components/shared/article-markdown";
 import { KeyTakeaways, PeopleAlsoAsk, QuickAnswer } from "@/components/shared/geo";
+import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
 import { LearnToc, LearnReadingProgress } from "@/components/learn/learn-toc";
 import {
   articles,
