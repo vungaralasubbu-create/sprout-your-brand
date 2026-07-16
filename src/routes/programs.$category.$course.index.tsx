@@ -262,6 +262,8 @@ function CoursePage() {
       partner_code: ref ?? null,
     });
 
+  // ---- Category-specific content pack (hiring partners, tools, roadmap, etc.) ----
+  const contentPack = getCourseContentPack(c.category.slug, c.slug);
   // ---- Derive dynamic content with graceful fallbacks ----
   const highlights = buildHighlights(c);
   const learningExperience = getExperienceCards(sectionMap.get("learning_experience")?.content);
