@@ -120,7 +120,7 @@ function Header({ briefing, onRefresh }: { briefing: CooBriefing; onRefresh: () 
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="muted" size="sm" onClick={onRefresh} className="bg-white/10 hover:bg-white/20 text-white border-0">
+          <Button variant="secondary" size="sm" onClick={onRefresh} className="bg-white/10 hover:bg-white/20 text-white border-0">
             <RefreshCcw className="size-4 mr-2" /> Refresh briefing
           </Button>
           <Link to="/partner/academy/workspace">
