@@ -80,17 +80,17 @@ function makeId() {
 function greeting(section?: string): string {
   switch (section) {
     case "programs":
-      return "Exploring programs? I can help you compare, plan your learning, or pick a starting course.";
+      return "Hi, I'm GlintrAI. Exploring programs? I can help you compare, plan your learning, or pick a starting course.";
     case "earn":
-      return "Curious about earning with Glintr? Ask me about the 70% or 50% models, payouts, or how to apply.";
+      return "Hi, I'm GlintrAI. Curious about earning with Glintr? Ask me about the 70% or 50% models, payouts, or how to apply.";
     case "launch":
-      return "Want to launch your own EdTech brand? I can walk you through white-label, LMS, and marketing support.";
+      return "Hi, I'm GlintrAI. Want to launch your own EdTech brand? I can walk you through white-label, LMS, and marketing support.";
     case "blog":
-      return "I can recommend related reads, explain any concept, or suggest a program that goes deeper.";
+      return "Hi, I'm GlintrAI. I can recommend related reads, explain any concept, or suggest a program that goes deeper.";
     case "glossary":
-      return "Ask me to explain any term simply — with examples, related terms, and programs to go deeper.";
+      return "Hi, I'm GlintrAI. Ask me to explain any term simply — with examples, related terms, and programs to go deeper.";
     default:
-      return "What would you like to learn today? I can help you choose a program, explain concepts, or plan your learning.";
+      return "Hi, I'm GlintrAI. What would you like to explore today? I can help with courses, career guidance, learning roadmaps, becoming a partner, or launching your own academy.";
   }
 }
 
