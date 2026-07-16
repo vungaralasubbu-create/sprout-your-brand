@@ -796,10 +796,10 @@ function CoursePage() {
       ) : null}
 
       {/* ============ CAREER ROADMAP ============ */}
-      <CareerRoadmap />
+      <CareerRoadmap stages={contentPack.careerRoadmap} />
 
       {/* ============ SALARY GROWTH ============ */}
-      <SalaryGrowth />
+      <SalaryGrowth stages={contentPack.salaryStages} />
 
       {/* ============ CAREER SERVICES ============ */}
       <CareerServices />
@@ -807,8 +807,8 @@ function CoursePage() {
       {/* ============ CERTIFICATION BADGES ============ */}
       <CertificationBadges />
 
-      {/* ============ AI IN YOUR WORKFLOW ============ */}
-      <AIToolsUsage />
+      {/* ============ PRODUCTIVITY / AI IN YOUR WORKFLOW ============ */}
+      <AIToolsUsage items={contentPack.aiToolsUsage} />
 
       {/* ============ PRICING ============ */}
       <CoursePricingPlans
