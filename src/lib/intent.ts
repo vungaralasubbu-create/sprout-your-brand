@@ -116,7 +116,11 @@ export type GlintrEvent =
   | "exit_intent_action"
   | "ai_help_opened"
   | "mentor_opened"
-  | "mentor_message_sent";
+  | "mentor_message_sent"
+  | "journey_selected"
+  | "student_branch_selected"
+  | "student_year_selected"
+  | "professional_intake_saved";
 
 export function track(event: GlintrEvent, meta?: Record<string, string | number | boolean>) {
   if (!isBrowser()) return;
