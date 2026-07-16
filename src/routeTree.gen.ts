@@ -57,6 +57,7 @@ import { Route as MyIndexRouteImport } from './routes/my.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
+import { Route as WorkspaceVoiceRouteImport } from './routes/workspace.voice'
 import { Route as WorkspaceStudyRouteImport } from './routes/workspace.study'
 import { Route as WorkspaceSearchRouteImport } from './routes/workspace.search'
 import { Route as WorkspaceRevisionRouteImport } from './routes/workspace.revision'
@@ -102,14 +103,19 @@ import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
 import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as WorkspaceVoiceIndexRouteImport } from './routes/workspace.voice.index'
 import { Route as WorkspaceNotebooksIndexRouteImport } from './routes/workspace.notebooks.index'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as WorkspaceVoiceSettingsRouteImport } from './routes/workspace.voice.settings'
+import { Route as WorkspaceVoiceHistoryRouteImport } from './routes/workspace.voice.history'
 import { Route as WorkspaceNotebooksIdRouteImport } from './routes/workspace.notebooks.$id'
 import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
 import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collections.$slug'
+import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/transcribe'
+import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as AuthenticatedStudentSupportRouteImport } from './routes/_authenticated/student.support'
@@ -171,6 +177,7 @@ import { Route as AuthenticatedAmbassadorNotificationsRouteImport } from './rout
 import { Route as AuthenticatedAmbassadorLeaderboardRouteImport } from './routes/_authenticated/ambassador.leaderboard'
 import { Route as AuthenticatedAmbassadorDashboardRouteImport } from './routes/_authenticated/ambassador.dashboard'
 import { Route as AuthenticatedAmbassadorCommissionStructureRouteImport } from './routes/_authenticated/ambassador.commission-structure'
+import { Route as AuthenticatedAdminVoiceAiRouteImport } from './routes/_authenticated/admin.voice-ai'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
@@ -233,6 +240,7 @@ import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from '
 import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
 import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
 import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
+import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
@@ -552,6 +560,11 @@ const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
   path: '/campus-ambassador/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkspaceVoiceRoute = WorkspaceVoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 const WorkspaceStudyRoute = WorkspaceStudyRouteImport.update({
   id: '/study',
   path: '/study',
@@ -778,6 +791,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const WorkspaceVoiceIndexRoute = WorkspaceVoiceIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WorkspaceVoiceRoute,
+} as any)
 const WorkspaceNotebooksIndexRoute = WorkspaceNotebooksIndexRouteImport.update({
   id: '/notebooks/',
   path: '/notebooks/',
@@ -798,6 +816,16 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const WorkspaceVoiceSettingsRoute = WorkspaceVoiceSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => WorkspaceVoiceRoute,
+} as any)
+const WorkspaceVoiceHistoryRoute = WorkspaceVoiceHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => WorkspaceVoiceRoute,
 } as any)
 const WorkspaceNotebooksIdRoute = WorkspaceNotebooksIdRouteImport.update({
   id: '/notebooks/$id',
@@ -820,6 +848,16 @@ const LearnCollectionsSlugRoute = LearnCollectionsSlugRouteImport.update({
   id: '/collections/$slug',
   path: '/collections/$slug',
   getParentRoute: () => LearnRoute,
+} as any)
+const ApiVoiceTranscribeRoute = ApiVoiceTranscribeRouteImport.update({
+  id: '/api/voice/transcribe',
+  path: '/api/voice/transcribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiVoiceSpeakRoute = ApiVoiceSpeakRouteImport.update({
+  id: '/api/voice/speak',
+  path: '/api/voice/speak',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiV1VersionRoute = ApiV1VersionRouteImport.update({
   id: '/api/v1/version',
@@ -1181,6 +1219,12 @@ const AuthenticatedAmbassadorCommissionStructureRoute =
     id: '/commission-structure',
     path: '/commission-structure',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
+const AuthenticatedAdminVoiceAiRoute =
+  AuthenticatedAdminVoiceAiRouteImport.update({
+    id: '/voice-ai',
+    path: '/voice-ai',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminSupportRoute =
   AuthenticatedAdminSupportRouteImport.update({
@@ -1551,6 +1595,12 @@ const AuthenticatedAdminAiAgentsIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminAiAgentsRoute,
+  } as any)
+const WorkspaceVoiceSessionModeRoute =
+  WorkspaceVoiceSessionModeRouteImport.update({
+    id: '/session/$mode',
+    path: '/session/$mode',
+    getParentRoute: () => WorkspaceVoiceRoute,
   } as any)
 const ProgramsCategoryCourseApplyRoute =
   ProgramsCategoryCourseApplyRouteImport.update({
@@ -2113,6 +2163,7 @@ export interface FileRoutesByFullPath {
   '/workspace/revision': typeof WorkspaceRevisionRoute
   '/workspace/search': typeof WorkspaceSearchRoute
   '/workspace/study': typeof WorkspaceStudyRoute
+  '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
@@ -2156,6 +2207,7 @@ export interface FileRoutesByFullPath {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/ambassador/leaderboard': typeof AuthenticatedAmbassadorLeaderboardRoute
@@ -2217,14 +2269,19 @@ export interface FileRoutesByFullPath {
   '/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
+  '/api/voice/speak': typeof ApiVoiceSpeakRoute
+  '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
+  '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
+  '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
+  '/workspace/voice/': typeof WorkspaceVoiceIndexRoute
   '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
   '/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
   '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
@@ -2295,6 +2352,7 @@ export interface FileRoutesByFullPath {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
@@ -2450,6 +2508,7 @@ export interface FileRoutesByTo {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/ambassador/leaderboard': typeof AuthenticatedAmbassadorLeaderboardRoute
@@ -2510,14 +2569,19 @@ export interface FileRoutesByTo {
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
+  '/api/voice/speak': typeof ApiVoiceSpeakRoute
+  '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
+  '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
+  '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/workspace/notebooks': typeof WorkspaceNotebooksIndexRoute
+  '/workspace/voice': typeof WorkspaceVoiceIndexRoute
   '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
   '/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
   '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
@@ -2588,6 +2652,7 @@ export interface FileRoutesByTo {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
@@ -2712,6 +2777,7 @@ export interface FileRoutesById {
   '/workspace/revision': typeof WorkspaceRevisionRoute
   '/workspace/search': typeof WorkspaceSearchRoute
   '/workspace/study': typeof WorkspaceStudyRoute
+  '/workspace/voice': typeof WorkspaceVoiceRouteWithChildren
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
@@ -2755,6 +2821,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/_authenticated/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
   '/_authenticated/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/_authenticated/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
   '/_authenticated/ambassador/leaderboard': typeof AuthenticatedAmbassadorLeaderboardRoute
@@ -2816,14 +2883,19 @@ export interface FileRoutesById {
   '/_authenticated/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
+  '/api/voice/speak': typeof ApiVoiceSpeakRoute
+  '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
   '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
+  '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
+  '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
+  '/workspace/voice/': typeof WorkspaceVoiceIndexRoute
   '/_authenticated/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
   '/_authenticated/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
   '/_authenticated/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
@@ -2894,6 +2966,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
@@ -3018,6 +3091,7 @@ export interface FileRouteTypes {
     | '/workspace/revision'
     | '/workspace/search'
     | '/workspace/study'
+    | '/workspace/voice'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/learn/'
@@ -3061,6 +3135,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/admin/voice-ai'
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
     | '/ambassador/leaderboard'
@@ -3122,14 +3197,19 @@ export interface FileRouteTypes {
     | '/student/support'
     | '/api/v1/health'
     | '/api/v1/version'
+    | '/api/voice/speak'
+    | '/api/voice/transcribe'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
     | '/workspace/notebooks/$id'
+    | '/workspace/voice/history'
+    | '/workspace/voice/settings'
     | '/admin/'
     | '/student/'
     | '/programs/$category/'
     | '/workspace/notebooks/'
+    | '/workspace/voice/'
     | '/admin/ai-agents/analytics'
     | '/admin/ai-agents/new'
     | '/admin/ai-agents/orchestrator'
@@ -3200,6 +3280,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/workspace/voice/session/$mode'
     | '/admin/ai-agents/'
     | '/admin/ai-content/'
     | '/admin/aios/'
@@ -3355,6 +3436,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/admin/voice-ai'
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
     | '/ambassador/leaderboard'
@@ -3415,14 +3497,19 @@ export interface FileRouteTypes {
     | '/student/profile'
     | '/api/v1/health'
     | '/api/v1/version'
+    | '/api/voice/speak'
+    | '/api/voice/transcribe'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
     | '/workspace/notebooks/$id'
+    | '/workspace/voice/history'
+    | '/workspace/voice/settings'
     | '/admin'
     | '/student'
     | '/programs/$category'
     | '/workspace/notebooks'
+    | '/workspace/voice'
     | '/admin/ai-agents/analytics'
     | '/admin/ai-agents/new'
     | '/admin/ai-agents/orchestrator'
@@ -3493,6 +3580,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/workspace/voice/session/$mode'
     | '/admin/ai-agents'
     | '/admin/ai-content'
     | '/admin/aios'
@@ -3616,6 +3704,7 @@ export interface FileRouteTypes {
     | '/workspace/revision'
     | '/workspace/search'
     | '/workspace/study'
+    | '/workspace/voice'
     | '/campus-ambassador/'
     | '/launch-your-brand/'
     | '/learn/'
@@ -3659,6 +3748,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/support'
+    | '/_authenticated/admin/voice-ai'
     | '/_authenticated/ambassador/commission-structure'
     | '/_authenticated/ambassador/dashboard'
     | '/_authenticated/ambassador/leaderboard'
@@ -3720,14 +3810,19 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support'
     | '/api/v1/health'
     | '/api/v1/version'
+    | '/api/voice/speak'
+    | '/api/voice/transcribe'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
     | '/workspace/notebooks/$id'
+    | '/workspace/voice/history'
+    | '/workspace/voice/settings'
     | '/_authenticated/admin/'
     | '/_authenticated/student/'
     | '/programs/$category/'
     | '/workspace/notebooks/'
+    | '/workspace/voice/'
     | '/_authenticated/admin/ai-agents/analytics'
     | '/_authenticated/admin/ai-agents/new'
     | '/_authenticated/admin/ai-agents/orchestrator'
@@ -3798,6 +3893,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/workspace/voice/session/$mode'
     | '/_authenticated/admin/ai-agents/'
     | '/_authenticated/admin/ai-content/'
     | '/_authenticated/admin/aios/'
@@ -3890,6 +3986,8 @@ export interface RootRouteChildren {
   ToolsIndexRoute: typeof ToolsIndexRoute
   ApiV1HealthRoute: typeof ApiV1HealthRoute
   ApiV1VersionRoute: typeof ApiV1VersionRoute
+  ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
+  ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
@@ -4234,6 +4332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampusAmbassadorIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workspace/voice': {
+      id: '/workspace/voice'
+      path: '/voice'
+      fullPath: '/workspace/voice'
+      preLoaderRoute: typeof WorkspaceVoiceRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
     '/workspace/study': {
       id: '/workspace/study'
       path: '/study'
@@ -4549,6 +4654,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/workspace/voice/': {
+      id: '/workspace/voice/'
+      path: '/'
+      fullPath: '/workspace/voice/'
+      preLoaderRoute: typeof WorkspaceVoiceIndexRouteImport
+      parentRoute: typeof WorkspaceVoiceRoute
+    }
     '/workspace/notebooks/': {
       id: '/workspace/notebooks/'
       path: '/notebooks'
@@ -4577,6 +4689,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/workspace/voice/settings': {
+      id: '/workspace/voice/settings'
+      path: '/settings'
+      fullPath: '/workspace/voice/settings'
+      preLoaderRoute: typeof WorkspaceVoiceSettingsRouteImport
+      parentRoute: typeof WorkspaceVoiceRoute
+    }
+    '/workspace/voice/history': {
+      id: '/workspace/voice/history'
+      path: '/history'
+      fullPath: '/workspace/voice/history'
+      preLoaderRoute: typeof WorkspaceVoiceHistoryRouteImport
+      parentRoute: typeof WorkspaceVoiceRoute
+    }
     '/workspace/notebooks/$id': {
       id: '/workspace/notebooks/$id'
       path: '/notebooks/$id'
@@ -4604,6 +4730,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/learn/collections/$slug'
       preLoaderRoute: typeof LearnCollectionsSlugRouteImport
       parentRoute: typeof LearnRoute
+    }
+    '/api/voice/transcribe': {
+      id: '/api/voice/transcribe'
+      path: '/api/voice/transcribe'
+      fullPath: '/api/voice/transcribe'
+      preLoaderRoute: typeof ApiVoiceTranscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/voice/speak': {
+      id: '/api/voice/speak'
+      path: '/api/voice/speak'
+      fullPath: '/api/voice/speak'
+      preLoaderRoute: typeof ApiVoiceSpeakRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/v1/version': {
       id: '/api/v1/version'
@@ -5031,6 +5171,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/ambassador/commission-structure'
       preLoaderRoute: typeof AuthenticatedAmbassadorCommissionStructureRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
+    '/_authenticated/admin/voice-ai': {
+      id: '/_authenticated/admin/voice-ai'
+      path: '/voice-ai'
+      fullPath: '/admin/voice-ai'
+      preLoaderRoute: typeof AuthenticatedAdminVoiceAiRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/support': {
       id: '/_authenticated/admin/support'
@@ -5465,6 +5612,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/ai-agents/'
       preLoaderRoute: typeof AuthenticatedAdminAiAgentsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminAiAgentsRoute
+    }
+    '/workspace/voice/session/$mode': {
+      id: '/workspace/voice/session/$mode'
+      path: '/session/$mode'
+      fullPath: '/workspace/voice/session/$mode'
+      preLoaderRoute: typeof WorkspaceVoiceSessionModeRouteImport
+      parentRoute: typeof WorkspaceVoiceRoute
     }
     '/programs/$category/$course/apply': {
       id: '/programs/$category/$course/apply'
@@ -6286,6 +6440,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSalesCommandRoute: typeof AuthenticatedAdminSalesCommandRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRouteWithChildren
+  AuthenticatedAdminVoiceAiRoute: typeof AuthenticatedAdminVoiceAiRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
   AuthenticatedAdminEmployeesIdRoute: typeof AuthenticatedAdminEmployeesIdRoute
@@ -6350,6 +6505,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSalesCommandRoute: AuthenticatedAdminSalesCommandRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRouteWithChildren,
+  AuthenticatedAdminVoiceAiRoute: AuthenticatedAdminVoiceAiRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
   AuthenticatedAdminEmployeesIdRoute: AuthenticatedAdminEmployeesIdRoute,
@@ -6950,6 +7106,24 @@ const SuccessStoriesRouteWithChildren = SuccessStoriesRoute._addFileChildren(
   SuccessStoriesRouteChildren,
 )
 
+interface WorkspaceVoiceRouteChildren {
+  WorkspaceVoiceHistoryRoute: typeof WorkspaceVoiceHistoryRoute
+  WorkspaceVoiceSettingsRoute: typeof WorkspaceVoiceSettingsRoute
+  WorkspaceVoiceIndexRoute: typeof WorkspaceVoiceIndexRoute
+  WorkspaceVoiceSessionModeRoute: typeof WorkspaceVoiceSessionModeRoute
+}
+
+const WorkspaceVoiceRouteChildren: WorkspaceVoiceRouteChildren = {
+  WorkspaceVoiceHistoryRoute: WorkspaceVoiceHistoryRoute,
+  WorkspaceVoiceSettingsRoute: WorkspaceVoiceSettingsRoute,
+  WorkspaceVoiceIndexRoute: WorkspaceVoiceIndexRoute,
+  WorkspaceVoiceSessionModeRoute: WorkspaceVoiceSessionModeRoute,
+}
+
+const WorkspaceVoiceRouteWithChildren = WorkspaceVoiceRoute._addFileChildren(
+  WorkspaceVoiceRouteChildren,
+)
+
 interface WorkspaceRouteChildren {
   WorkspaceActivityRoute: typeof WorkspaceActivityRoute
   WorkspaceBookmarksRoute: typeof WorkspaceBookmarksRoute
@@ -6961,6 +7135,7 @@ interface WorkspaceRouteChildren {
   WorkspaceRevisionRoute: typeof WorkspaceRevisionRoute
   WorkspaceSearchRoute: typeof WorkspaceSearchRoute
   WorkspaceStudyRoute: typeof WorkspaceStudyRoute
+  WorkspaceVoiceRoute: typeof WorkspaceVoiceRouteWithChildren
   WorkspaceIndexRoute: typeof WorkspaceIndexRoute
   WorkspaceNotebooksIdRoute: typeof WorkspaceNotebooksIdRoute
   WorkspaceNotebooksIndexRoute: typeof WorkspaceNotebooksIndexRoute
@@ -6977,6 +7152,7 @@ const WorkspaceRouteChildren: WorkspaceRouteChildren = {
   WorkspaceRevisionRoute: WorkspaceRevisionRoute,
   WorkspaceSearchRoute: WorkspaceSearchRoute,
   WorkspaceStudyRoute: WorkspaceStudyRoute,
+  WorkspaceVoiceRoute: WorkspaceVoiceRouteWithChildren,
   WorkspaceIndexRoute: WorkspaceIndexRoute,
   WorkspaceNotebooksIdRoute: WorkspaceNotebooksIdRoute,
   WorkspaceNotebooksIndexRoute: WorkspaceNotebooksIndexRoute,
@@ -7041,6 +7217,8 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsIndexRoute: ToolsIndexRoute,
   ApiV1HealthRoute: ApiV1HealthRoute,
   ApiV1VersionRoute: ApiV1VersionRoute,
+  ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
+  ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
