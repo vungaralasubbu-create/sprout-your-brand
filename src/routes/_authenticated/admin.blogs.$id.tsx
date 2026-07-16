@@ -146,6 +146,11 @@ function BlogEditor() {
       seo_title: post.seo_title ?? "",
       seo_description: post.seo_description ?? "",
       keywords: (post.keywords ?? []).join(", "),
+      related_blog_slugs: ((post as any).related_blog_slugs ?? []).join(", "),
+      related_course_slugs: ((post as any).related_course_slugs ?? []).join(", "),
+      schema_jsonld: (post as any).schema_jsonld
+        ? JSON.stringify((post as any).schema_jsonld, null, 2)
+        : "",
     });
   }, [post]);
 
