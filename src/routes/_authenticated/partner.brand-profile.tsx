@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AcademyGate } from "@/components/partner/academy-gate";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useRef, useState } from "react";
