@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-rout
 import {
   LayoutDashboard, Network, Search, LinkIcon, Clock, Gauge, Boxes, GitCompare, Route as RouteIcon,
   BookOpen, HelpCircle, TrendingUp, Snowflake, ClipboardList, Share2, FileText, Bell, Brain,
+  Sparkles, Swords, ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +12,11 @@ export const Route = createFileRoute("/_authenticated/admin/content-intelligence
 
 const NAV = [
   { to: "/admin/content-intelligence", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/content-intelligence/authority", label: "Topical Authority", icon: Network },
   { to: "/admin/content-intelligence/topic-map", label: "Topic Map", icon: Network },
+  { to: "/admin/content-intelligence/ai-citation", label: "AI Citation", icon: Sparkles },
+  { to: "/admin/content-intelligence/competitors", label: "Competitors", icon: Swords },
+  { to: "/admin/content-intelligence/permissions", label: "Permissions", icon: ShieldCheck },
   { to: "/admin/content-intelligence/gaps", label: "Content Gaps", icon: Search },
   { to: "/admin/content-intelligence/related", label: "Related Content", icon: LinkIcon },
   { to: "/admin/content-intelligence/freshness", label: "Content Freshness", icon: Clock },

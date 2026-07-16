@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getIntelligenceDashboard } from "@/lib/admin/content-intelligence.functions";
+import { getIntelSummary } from "@/lib/content-intelligence/intel.functions";
 import { Card } from "@/components/ui/card";
-import { Brain, FileText, Clock, ShieldCheck, AlertTriangle, Copy, LinkIcon, ImageOff } from "lucide-react";
+import { Brain, FileText, Clock, ShieldCheck, AlertTriangle, Copy, LinkIcon, ImageOff, Sparkles, Network, Search, Share2, Gauge, TrendingUp, Boxes } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/content-intelligence/")({
   component: Dashboard,
@@ -12,6 +13,9 @@ export const Route = createFileRoute("/_authenticated/admin/content-intelligence
 function Dashboard() {
   const fn = useServerFn(getIntelligenceDashboard);
   const { data, isLoading } = useQuery({ queryKey: ["ci-dashboard"], queryFn: () => fn(), staleTime: 30_000 });
+  const summaryFn = useServerFn(getIntelSummary);
+  const { data: summary } = useQuery({ queryKey: ["intel-summary"], queryFn: () => summaryFn(), staleTime: 60_000 });
+  const s = summary?.scores;
 
   const h = data?.health;
 
@@ -28,6 +32,25 @@ function Dashboard() {
         <Kpi icon={Clock} label="Stale (180d+)" value={data?.staleCount} tone="warn" loading={isLoading} />
         <Kpi icon={AlertTriangle} label="Overall health" value={`${h?.overall ?? 0}/100`} tone="info" loading={isLoading} />
       </div>
+
+      <Card className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold">Ten scores of a topically authoritative library</h2>
+          <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-muted-foreground">Phase 5</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <ScoreTile icon={Gauge} label="Overall SEO" value={s?.overallSeo} to="/admin/content-intelligence/quality" />
+          <ScoreTile icon={Network} label="Topical Authority" value={s?.topicalAuthority} to="/admin/content-intelligence/authority" />
+          <ScoreTile icon={Boxes} label="Entity Coverage" value={s?.entityCoverage} to="/admin/content-intelligence/entities" />
+          <ScoreTile icon={Share2} label="Graph Health" value={s?.knowledgeGraphHealth} to="/admin/content-intelligence/graph-health" />
+          <ScoreTile icon={LinkIcon} label="Internal Links" value={s?.internalLinkHealth} to="/admin/content-intelligence/related" />
+          <ScoreTile icon={Clock} label="Freshness" value={s?.contentFreshness} to="/admin/content-intelligence/freshness" />
+          <ScoreTile icon={Sparkles} label="GEO Score" value={s?.geoScore} to="/admin/content-intelligence/ai-citation" />
+          <ScoreTile icon={Sparkles} label="AI Citation" value={s?.aiCitationReadiness} to="/admin/content-intelligence/ai-citation" />
+          <ScoreTile icon={TrendingUp} label="Search Visibility" value={s?.searchVisibility} to="/admin/content-intelligence/search-insights" />
+          <ScoreTile icon={Search} label="Content Quality" value={s?.contentQuality} to="/admin/content-intelligence/quality" />
+        </div>
+      </Card>
 
       <Card className="p-5">
         <h2 className="text-sm font-semibold mb-4">Content health across dimensions</h2>
@@ -88,6 +111,24 @@ function SignalCard({ icon: Icon, title, value, to }: any) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm font-medium"><Icon className="size-4 text-muted-foreground" /> {title}</div>
           <div className="text-2xl font-semibold">{value}</div>
+        </div>
+      </Card>
+    </Link>
+  );
+}
+function ScoreTile({ icon: Icon, label, value, to }: { icon: any; label: string; value?: number; to: string }) {
+  const v = value ?? 0;
+  const tone = v >= 70 ? "bg-emerald-500" : v >= 45 ? "bg-amber-500" : "bg-rose-500";
+  return (
+    <Link to={to as any} className="block">
+      <Card className="p-3 hover:border-primary/40 transition-colors">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-muted-foreground"><Icon className="size-3.5" /> {label}</div>
+        <div className="mt-1 flex items-baseline justify-between">
+          <div className="text-2xl font-semibold">{value ?? "—"}</div>
+          <div className="text-[10px] text-muted-foreground font-mono">/100</div>
+        </div>
+        <div className="mt-2 h-1 rounded-full bg-surface-2 overflow-hidden">
+          <div className={`h-full ${tone}`} style={{ width: `${v}%` }} />
         </div>
       </Card>
     </Link>
