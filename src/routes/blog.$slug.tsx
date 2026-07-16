@@ -142,6 +142,24 @@ function toTitleGuess(slug: string) {
   return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+function MetaBlock({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string | null;
+}) {
+  return (
+    <div className="rounded-xl border bg-card/40 px-3.5 py-2.5">
+      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+      <div className="mt-0.5 text-sm font-medium text-foreground line-clamp-1">{value}</div>
+      {sub ? <div className="text-xs text-muted-foreground line-clamp-1">{sub}</div> : null}
+    </div>
+  );
+}
+
 function BlogDetailPage() {
   const { slug } = Route.useParams();
   const [post, setPost] = React.useState<BlogPost | null>(null);
@@ -562,18 +580,8 @@ function BlogDetailPage() {
                   params={{ slug: r.slug }}
                   className="group flex flex-col rounded-2xl border bg-card overflow-hidden hover:border-primary/40 transition h-full"
                 >
-                  <div className="aspect-[16/10] bg-gradient-brand-soft overflow-hidden">
-                    {r.featured_image_url ? (
-                      <img
-                        src={r.featured_image_url}
-                        alt=""
-                        width={800}
-                        height={500}
-                        loading="lazy"
-                        decoding="async"
-                        className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                      />
-                    ) : null}
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <BlogCover post={r} />
                   </div>
                   <div className="p-5 flex flex-col gap-3 flex-1">
                     <div className="text-xs text-muted-foreground">{r.topic?.name ?? "Insights"}</div>
