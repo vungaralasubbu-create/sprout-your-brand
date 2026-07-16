@@ -317,7 +317,7 @@ function GlossaryDetail() {
                     Real-world Applications
                   </h2>
                   <div className="mt-4 grid sm:grid-cols-2 gap-3">
-                    {entry.applications.map((app, i) => (
+                    {entry.applications.map((app: string, i: number) => (
                       <div
                         key={i}
                         className="rounded-xl border bg-card p-4 text-sm text-foreground/85 leading-relaxed"
