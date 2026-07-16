@@ -86,7 +86,7 @@ export const getMyPaymentVerificationOverview = createServerFn({ method: "GET" }
       .from("commissions")
       .select("commission_amount, status")
       .eq("partner_id", partner.id)
-      .in("status", ["paid", "verified", "approved", "released"]);
+      .in("status", ["paid", "approved", "available_for_payout"]);
 
     const totalEarnings = (earnings ?? []).reduce(
       (s: number, r: any) => s + Number(r.commission_amount ?? 0),
