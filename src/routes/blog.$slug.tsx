@@ -182,7 +182,18 @@ function MetaBlock({
 
 function BlogDetailPage() {
   const { slug } = Route.useParams();
-  const { post, related, relatedCourse } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData() as {
+    post: BlogPost;
+    related: BlogPost[];
+    relatedCourse: {
+      slug: string;
+      category_slug: string;
+      name: string;
+      category_name: string;
+      short_description: string | null;
+    } | null;
+  };
+  const { post, related, relatedCourse } = loaderData;
   const [progress, setProgress] = React.useState(0);
   const [copied, setCopied] = React.useState(false);
   const [subscribed, setSubscribed] = React.useState(false);
