@@ -175,6 +175,7 @@ import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
+import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
@@ -1172,6 +1173,12 @@ const AuthenticatedAdminDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminContentIntelligenceRoute =
+  AuthenticatedAdminContentIntelligenceRouteImport.update({
+    id: '/content-intelligence',
+    path: '/content-intelligence',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminContentRoute =
   AuthenticatedAdminContentRouteImport.update({
     id: '/content',
@@ -1778,6 +1785,7 @@ export interface FileRoutesByFullPath {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -2025,6 +2033,7 @@ export interface FileRoutesByTo {
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
+  '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -2279,6 +2288,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -2534,6 +2544,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/categories'
     | '/admin/content'
+    | '/admin/content-intelligence'
     | '/admin/dashboard'
     | '/admin/employment-settings'
     | '/admin/lead-management'
@@ -2781,6 +2792,7 @@ export interface FileRouteTypes {
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
     | '/admin/categories'
+    | '/admin/content-intelligence'
     | '/admin/dashboard'
     | '/admin/employment-settings'
     | '/admin/lead-management'
@@ -3034,6 +3046,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/attribution-reviews'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/content'
+    | '/_authenticated/admin/content-intelligence'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
     | '/_authenticated/admin/lead-management'
@@ -4419,6 +4432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/content-intelligence': {
+      id: '/_authenticated/admin/content-intelligence'
+      path: '/content-intelligence'
+      fullPath: '/admin/content-intelligence'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/content': {
       id: '/_authenticated/admin/content'
       path: '/content'
@@ -5150,6 +5170,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
+  AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
@@ -5201,6 +5222,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAttributionReviewsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
+  AuthenticatedAdminContentIntelligenceRoute:
+    AuthenticatedAdminContentIntelligenceRoute,
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
