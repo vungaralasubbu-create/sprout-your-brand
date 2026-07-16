@@ -498,7 +498,10 @@ function BlogDetailPage() {
                       <img
                         src={r.featured_image_url}
                         alt=""
+                        width={800}
+                        height={500}
                         loading="lazy"
+                        decoding="async"
                         className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
                       />
                     ) : null}
