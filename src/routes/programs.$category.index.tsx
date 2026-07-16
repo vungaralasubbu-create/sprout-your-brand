@@ -220,6 +220,78 @@ function CategoryPage() {
           </Container>
         </Section>
 
+        {/* EDITORIAL OVERVIEW */}
+        {editorial ? (
+          <Section className="py-14 md:py-20 border-t border-border/60">
+            <Container>
+              <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
+                <div>
+                  <SectionIntro
+                    eyebrow="Editorial Overview"
+                    title={`About ${category?.name ?? prettify(slug)}`}
+                  />
+                  <div className="mt-6 space-y-4 text-body text-muted-foreground max-w-xl">
+                    {editorial.overview.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-border bg-card p-5">
+                    <p className="text-caption uppercase tracking-wider">What it covers</p>
+                    <ul className="mt-3 space-y-2 text-sm">
+                      {editorial.covers.map((c) => (
+                        <li key={c} className="flex gap-2">
+                          <span className="mt-1 size-1.5 shrink-0 rounded-full" style={{ backgroundColor: theme.ring }} />
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card p-5">
+                    <p className="text-caption uppercase tracking-wider">Industries</p>
+                    <ul className="mt-3 space-y-2 text-sm">
+                      {editorial.industries.map((c) => (
+                        <li key={c} className="flex gap-2">
+                          <span className="mt-1 size-1.5 shrink-0 rounded-full bg-primary/60" />
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="sm:col-span-2 rounded-2xl border border-border bg-card p-5">
+                    <p className="text-caption uppercase tracking-wider">Learning pathways</p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      {editorial.pathways.map((p) => (
+                        <div key={p.label}>
+                          <p className="font-display text-sm font-semibold">{p.label}</p>
+                          <p className="mt-1 text-caption">{p.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* SKILL MAP */}
+        {editorial?.skillMap?.length ? (
+          <Section className="py-14 md:py-20 bg-surface-2/40 border-t border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Interactive Skill Map"
+                title="How skills in this field connect"
+                copy="Tap a node to see how it links to programs and adjacent skills."
+              />
+              <SkillMap editorial={editorial} courses={list} theme={theme} />
+            </Container>
+          </Section>
+        ) : null}
+
+
+
         {/* FEATURED */}
         {featured.length > 0 ? (
           <Section className="py-14 md:py-20 border-t border-border/60">
