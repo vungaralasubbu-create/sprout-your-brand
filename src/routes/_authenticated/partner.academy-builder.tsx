@@ -590,7 +590,7 @@ function StepBrand({
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {(brand.brandVoice?.adjectives ?? []).map((a: string) => (
-                    <Badge key={a} variant="secondary">
+                    <Badge key={a} variant="muted">
                       {a}
                     </Badge>
                   ))}
@@ -756,7 +756,7 @@ function StepDomain({
                 </Button>
                 <Button
                   size="sm"
-                  variant={chosen ? "default" : "ghost"}
+                  variant={chosen ? "primary" : "ghost"}
                   onClick={() => update((x) => { x.chosenDomain = dom; })}
                 >
                   {chosen ? "Selected" : "Select"}
