@@ -188,7 +188,7 @@ function AcademyBuilder() {
         {d.step === 1 && <StepWelcome d={d} update={update} onNext={() => go(2)} />}
         {d.step === 2 && <StepBasics d={d} update={update} onNext={() => go(3)} onBack={() => go(1)} />}
         {d.step === 3 && <StepBrand d={d} update={update} onNext={() => go(4)} onBack={() => go(2)} />}
-        {d.step === 4 && <StepDomain d={d} update={update} onNext={() => go(5)} onBack={() => go(3)} />}
+        {d.step === 4 && <StepManaged d={d} update={update} onNext={() => go(5)} onBack={() => go(3)} />}
         {d.step === 5 && <StepWebsite d={d} update={update} onNext={() => go(6)} onBack={() => go(4)} />}
         {d.step === 6 && <StepPrograms d={d} update={update} onNext={() => go(7)} onBack={() => go(5)} />}
         {d.step === 7 && <StepCourses d={d} update={update} onNext={() => go(8)} onBack={() => go(6)} />}
