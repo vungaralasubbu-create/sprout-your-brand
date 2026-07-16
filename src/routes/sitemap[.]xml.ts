@@ -53,6 +53,14 @@ export const Route = createFileRoute("/sitemap.xml")({
         type Entry = { path: string; lastmod?: string; changefreq?: string; priority?: string };
         const entries: Entry[] = [...STATIC_PATHS];
 
+        for (const g of listGlossary()) {
+          entries.push({
+            path: `/glossary/${g.slug}`,
+            changefreq: "monthly",
+            priority: "0.5",
+          });
+        }
+
         if (url && key) {
           try {
             const sb = createClient(url, key, { auth: { persistSession: false } });
