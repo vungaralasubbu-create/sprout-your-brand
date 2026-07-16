@@ -17,20 +17,39 @@ import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
+      <div className="max-w-lg text-center">
         <p className="text-label mb-3">Error 404</p>
         <h1 className="text-display text-gradient-brand">Page not found</h1>
         <p className="text-subheading mt-4">
-          The page you're looking for doesn't exist or has been moved.
+          The page you're looking for doesn't exist or has been moved. Try one of these instead:
         </p>
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to="/"
             className="inline-flex h-11 items-center justify-center rounded-lg bg-gradient-brand px-6 text-sm font-semibold text-primary-foreground shadow-lg transition-transform hover:-translate-y-0.5"
           >
-            Back to home
+            Return home
+          </Link>
+          <Link
+            to="/programs"
+            className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-6 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            Explore programs
+          </Link>
+          <Link
+            to="/blog"
+            className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-6 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            Read the blog
           </Link>
         </div>
+        <p className="mt-6 text-xs text-muted-foreground">
+          Still can't find it?{" "}
+          <Link to="/contact" className="underline underline-offset-4 hover:text-foreground">
+            Contact us
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );
