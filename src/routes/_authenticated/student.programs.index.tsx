@@ -3,15 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { listMyPrograms } from "@/lib/student/lms.functions";
+import { listCourses, listCategories, formatPrice } from "@/lib/programs";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BookOpen, Search, GraduationCap, Award, Clock, Layers } from "lucide-react";
+import { BookOpen, Search, GraduationCap, Award, Clock, Layers, ExternalLink, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/student/programs/")({ component: Page });
+
+type Tab = "mine" | "browse";
 
 type Filter = "all" | "in_progress" | "not_started" | "completed";
 
@@ -103,7 +106,7 @@ function ProgramCard({ p }: { p: any }) {
   );
 }
 
-function EmptyState() {
+function EmptyState({ onBrowse }: { onBrowse: () => void }) {
   return (
     <Card className="p-10 text-center">
       <div className="mx-auto size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
@@ -113,7 +116,69 @@ function EmptyState() {
       <div className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
         Your Glintr programs will appear here once your learning access is activated.
       </div>
-      <Button asChild className="mt-5"><Link to="/student/programs">Explore Programs</Link></Button>
+      <Button className="mt-5" onClick={onBrowse}><Sparkles className="size-4 mr-1.5" /> Browse Catalog</Button>
+    </Card>
+  );
+}
+
+function BrowseCard({ c }: { c: any }) {
+  const price = c.offer_price ?? c.base_price;
+  const hasDiscount = c.offer_price && c.base_price && c.offer_price < c.base_price;
+  return (
+    <Card className="p-0 overflow-hidden group hover:shadow-md transition-shadow flex flex-col">
+      <div className="aspect-[16/9] bg-surface-1 relative overflow-hidden">
+        {c.thumbnail_url ? (
+          <img src={c.thumbnail_url} alt={c.name} className="size-full object-cover group-hover:scale-[1.02] transition-transform duration-300" />
+        ) : (
+          <div className="size-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+            <BookOpen className="size-10 text-primary/50" />
+          </div>
+        )}
+        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+          {c.is_bestseller && <Badge className="bg-amber-500/95 text-white border-0 text-[10px] font-mono uppercase tracking-widest">Bestseller</Badge>}
+          {c.is_trending && !c.is_bestseller && <Badge className="bg-primary/95 text-white border-0 text-[10px] font-mono uppercase tracking-widest">Trending</Badge>}
+          {c.is_featured && !c.is_bestseller && !c.is_trending && <Badge className="bg-emerald-600/95 text-white border-0 text-[10px] font-mono uppercase tracking-widest">Featured</Badge>}
+        </div>
+      </div>
+      <div className="p-4 space-y-3 flex flex-col flex-1">
+        <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+          <span>{c.category?.name ?? "Program"}</span>
+          {c.level && <><span>·</span><span>{c.level}</span></>}
+        </div>
+        <h3 className="font-display text-[15px] font-semibold leading-snug line-clamp-2">{c.name}</h3>
+        {c.short_description && (
+          <p className="text-[12px] text-muted-foreground line-clamp-2">{c.short_description}</p>
+        )}
+        <div className="grid grid-cols-2 gap-2 text-[11px] text-muted-foreground pt-1">
+          {c.duration && (
+            <div className="flex items-center gap-1.5 min-w-0"><Clock className="size-3 shrink-0" /><span className="truncate">{c.duration}</span></div>
+          )}
+          {c.learning_mode && (
+            <div className="flex items-center gap-1.5 min-w-0"><Layers className="size-3 shrink-0" /><span className="truncate">{c.learning_mode}</span></div>
+          )}
+        </div>
+        <div className="mt-auto pt-2 flex items-end justify-between gap-3">
+          <div>
+            {price != null ? (
+              <>
+                <div className="font-display text-lg font-semibold leading-none">{formatPrice(price, c.currency ?? "INR")}</div>
+                {hasDiscount && (
+                  <div className="text-[11px] text-muted-foreground line-through mt-0.5">{formatPrice(c.base_price, c.currency ?? "INR")}</div>
+                )}
+              </>
+            ) : (
+              <div className="text-[11px] text-muted-foreground">Contact for pricing</div>
+            )}
+          </div>
+          {c.category?.slug && c.slug ? (
+            <Button asChild size="sm" variant="outline">
+              <a href={`/programs/${c.category.slug}/${c.slug}`} target="_blank" rel="noreferrer">
+                View <ExternalLink className="size-3 ml-1" />
+              </a>
+            </Button>
+          ) : null}
+        </div>
+      </div>
     </Card>
   );
 }
@@ -121,8 +186,23 @@ function EmptyState() {
 function Page() {
   const fn = useServerFn(listMyPrograms);
   const { data = [], isLoading } = useQuery({ queryKey: ["my-programs"], queryFn: () => fn() });
+  const [tab, setTab] = useState<Tab>("mine");
   const [filter, setFilter] = useState<Filter>("all");
   const [q, setQ] = useState("");
+
+  // Browse catalog data
+  const { data: catalog = [], isLoading: catalogLoading } = useQuery({
+    queryKey: ["programs-catalog"],
+    queryFn: () => listCourses(),
+    enabled: tab === "browse",
+  });
+  const { data: categories = [] } = useQuery({
+    queryKey: ["programs-categories"],
+    queryFn: () => listCategories(),
+    enabled: tab === "browse",
+  });
+  const [catFilter, setCatFilter] = useState<string>("all");
+  const [browseQ, setBrowseQ] = useState("");
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -134,6 +214,15 @@ function Page() {
       return true;
     });
   }, [data, filter, q]);
+
+  const filteredCatalog = useMemo(() => {
+    const term = browseQ.trim().toLowerCase();
+    return (catalog as any[]).filter((c) => {
+      if (catFilter !== "all" && c.category?.slug !== catFilter) return false;
+      if (term && !`${c.name} ${c.short_description ?? ""} ${c.category?.name ?? ""}`.toLowerCase().includes(term)) return false;
+      return true;
+    });
+  }, [catalog, catFilter, browseQ]);
 
   const counts = useMemo(() => {
     const c = { all: (data as any[]).length, in_progress: 0, not_started: 0, completed: 0 };
@@ -157,63 +246,151 @@ function Page() {
       <div>
         <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-muted-foreground">Student Workspace</div>
         <h1 className="text-2xl lg:text-3xl font-display font-semibold tracking-tight mt-1 flex items-center gap-2">
-          <GraduationCap className="size-6 text-primary" /> My Programs
+          <GraduationCap className="size-6 text-primary" /> Programs
         </h1>
-        <p className="text-muted-foreground mt-1 text-sm">Everything you're enrolled in, in one place.</p>
+        <p className="text-muted-foreground mt-1 text-sm">Your learning journey and the full Glintr catalog — all in one place.</p>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center gap-3">
-        <div className="flex flex-wrap items-center gap-1.5 bg-white border border-border/70 rounded-lg p-1">
-          {filters.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              className={cn(
-                "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors",
-                filter === f.key ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {f.label}
-              <span className="ml-1.5 text-[10px] text-muted-foreground/70">
-                {counts[f.key as keyof typeof counts]}
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="relative md:ml-auto md:w-72">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search my programs…"
-            className="pl-9 h-9 bg-white"
-          />
-        </div>
+      {/* Tabs */}
+      <div className="flex items-center gap-1 border-b border-border">
+        {[
+          { key: "mine" as const, label: "My Programs", count: (data as any[]).length },
+          { key: "browse" as const, label: "Browse Catalog", count: (catalog as any[]).length || undefined },
+        ].map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={cn(
+              "px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors",
+              tab === t.key
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {t.label}
+            {t.count !== undefined && (
+              <span className="ml-1.5 text-[11px] text-muted-foreground/70">{t.count}</span>
+            )}
+          </button>
+        ))}
       </div>
 
-      {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i} className="p-0 overflow-hidden">
-              <div className="aspect-[16/9] bg-surface-1 animate-pulse" />
-              <div className="p-4 space-y-3">
-                <div className="h-3 w-24 bg-surface-1 rounded animate-pulse" />
-                <div className="h-4 w-3/4 bg-surface-1 rounded animate-pulse" />
-                <div className="h-1.5 w-full bg-surface-1 rounded animate-pulse" />
-              </div>
+      {tab === "mine" ? (
+        <>
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="flex flex-wrap items-center gap-1.5 bg-white border border-border/70 rounded-lg p-1">
+              {filters.map((f) => (
+                <button
+                  key={f.key}
+                  onClick={() => setFilter(f.key)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                    filter === f.key ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {f.label}
+                  <span className="ml-1.5 text-[10px] text-muted-foreground/70">
+                    {counts[f.key as keyof typeof counts]}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div className="relative md:ml-auto md:w-72">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search my programs…"
+                className="pl-9 h-9 bg-white"
+              />
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i} className="p-0 overflow-hidden">
+                  <div className="aspect-[16/9] bg-surface-1 animate-pulse" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-3 w-24 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-4 w-3/4 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-1.5 w-full bg-surface-1 rounded animate-pulse" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (data as any[]).length === 0 ? (
+            <EmptyState onBrowse={() => setTab("browse")} />
+          ) : filtered.length === 0 ? (
+            <Card className="p-8 text-center text-sm text-muted-foreground">
+              No programs match this filter.
             </Card>
-          ))}
-        </div>
-      ) : (data as any[]).length === 0 ? (
-        <EmptyState />
-      ) : filtered.length === 0 ? (
-        <Card className="p-8 text-center text-sm text-muted-foreground">
-          No programs match this filter.
-        </Card>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {filtered.map((p: any) => <ProgramCard key={p.enrollmentId} p={p} />)}
+            </div>
+          )}
+        </>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((p: any) => <ProgramCard key={p.enrollmentId} p={p} />)}
-        </div>
+        <>
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="flex flex-wrap items-center gap-1.5 bg-white border border-border/70 rounded-lg p-1 overflow-x-auto max-w-full">
+              <button
+                onClick={() => setCatFilter("all")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors whitespace-nowrap",
+                  catFilter === "all" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                All Categories
+              </button>
+              {(categories as any[]).map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setCatFilter(cat.slug)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-[12px] font-medium transition-colors whitespace-nowrap",
+                    catFilter === cat.slug ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+            <div className="relative md:ml-auto md:w-72">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                value={browseQ}
+                onChange={(e) => setBrowseQ(e.target.value)}
+                placeholder="Search catalog…"
+                className="pl-9 h-9 bg-white"
+              />
+            </div>
+          </div>
+
+          {catalogLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card key={i} className="p-0 overflow-hidden">
+                  <div className="aspect-[16/9] bg-surface-1 animate-pulse" />
+                  <div className="p-4 space-y-3">
+                    <div className="h-3 w-24 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-4 w-3/4 bg-surface-1 rounded animate-pulse" />
+                    <div className="h-3 w-full bg-surface-1 rounded animate-pulse" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : filteredCatalog.length === 0 ? (
+            <Card className="p-8 text-center text-sm text-muted-foreground">
+              No programs match your search.
+            </Card>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {filteredCatalog.map((c: any) => <BrowseCard key={c.id} c={c} />)}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
