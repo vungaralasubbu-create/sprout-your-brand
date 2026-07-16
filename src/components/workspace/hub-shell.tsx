@@ -14,6 +14,7 @@ import {
   GraduationCap,
   Library,
   Mic,
+  Radio,
 } from "lucide-react";
 
 const NAV = [
@@ -25,6 +26,7 @@ const NAV = [
   { to: "/workspace/revision", label: "Revision", icon: BrainCircuit },
   { to: "/workspace/library", label: "Library", icon: Library },
   { to: "/workspace/calendar", label: "Calendar", icon: CalendarDays },
+  { to: "/workspace/live", label: "Live Classes", icon: Radio },
   { to: "/workspace/study", label: "AI Study Mode", icon: GraduationCap },
   { to: "/workspace/mentor", label: "AI Mentor", icon: Sparkles },
   { to: "/workspace/voice", label: "Voice AI", icon: Mic },

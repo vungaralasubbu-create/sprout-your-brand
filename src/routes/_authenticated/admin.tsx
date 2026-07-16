@@ -101,6 +101,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/aios", label: "AIOS", icon: Sparkles, perms: ["system_settings.view"] },
       { to: "/admin/ai-agents", label: "AI Agents", icon: Sparkles, perms: ["system_settings.view"] },
       { to: "/admin/voice-ai", label: "Voice AI", icon: Sparkles, perms: ["system_settings.view"] },
+      { to: "/admin/live", label: "Live Classroom", icon: Sparkles, perms: ["system_settings.view"] },
       { to: "/admin/settings", label: "Settings", icon: Settings, perms: ["system_settings.view"] },
     ],
   },
