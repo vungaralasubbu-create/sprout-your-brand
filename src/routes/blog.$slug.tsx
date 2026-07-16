@@ -174,6 +174,7 @@ function BlogDetailPage() {
   const [loading, setLoading] = React.useState(true);
   const [progress, setProgress] = React.useState(0);
   const [copied, setCopied] = React.useState(false);
+  const [subscribed, setSubscribed] = React.useState(false);
   const [copyFailed, setCopyFailed] = React.useState(false);
   const [tocOpen, setTocOpen] = React.useState(false);
   const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
