@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 export const Route = createFileRoute("/_authenticated/brand/analytics")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/analytics", title: "Analytics — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/analytics", title: "Analytics — Glintr", description: "White Label OS", noindex: true }),
   component: Analytics,
 });
 

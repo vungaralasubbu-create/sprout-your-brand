@@ -5,7 +5,7 @@ import { Mail, Image as ImageIcon, FileText, Video, MessageCircle, Layers } from
 
 export const Route = createFileRoute("/_authenticated/brand/marketing")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/marketing", title: "Marketing Center — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/marketing", title: "Marketing Center — Glintr", description: "White Label OS", noindex: true }),
   component: Marketing,
 });
 

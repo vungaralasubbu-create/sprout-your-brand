@@ -8,7 +8,7 @@ import { buildPageHead } from "@/lib/seo-head";
 
 export const Route = createFileRoute("/_authenticated/brand/lms")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/lms", title: "LMS Settings — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/lms", title: "LMS Settings — Glintr", description: "White Label OS", noindex: true }),
   component: Lms,
 });
 

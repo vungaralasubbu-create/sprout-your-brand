@@ -7,7 +7,7 @@ import { buildPageHead } from "@/lib/seo-head";
 
 export const Route = createFileRoute("/_authenticated/brand/certificates")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/certificates", title: "Certificates — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/certificates", title: "Certificates — Glintr", description: "White Label OS", noindex: true }),
   component: Certificates,
 });
 

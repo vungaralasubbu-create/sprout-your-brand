@@ -9,7 +9,7 @@ import { buildPageHead } from "@/lib/seo-head";
 
 export const Route = createFileRoute("/_authenticated/brand/security")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/security", title: "Security — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/security", title: "Security — Glintr", description: "White Label OS", noindex: true }),
   component: Security,
 });
 

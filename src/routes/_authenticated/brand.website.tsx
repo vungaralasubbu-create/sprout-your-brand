@@ -10,7 +10,7 @@ import { buildPageHead } from "@/lib/seo-head";
 
 export const Route = createFileRoute("/_authenticated/brand/website")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/website", title: "Website Builder — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/website", title: "Website Builder — Glintr", description: "White Label OS", noindex: true }),
   component: Website,
 });
 

@@ -8,7 +8,7 @@ import { buildPageHead } from "@/lib/seo-head";
 
 export const Route = createFileRoute("/_authenticated/brand/preview")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/preview", title: "Live Preview — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/preview", title: "Live Preview — Glintr", description: "White Label OS", noindex: true }),
   component: Preview,
 });
 

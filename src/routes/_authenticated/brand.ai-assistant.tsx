@@ -11,7 +11,7 @@ import { buildPageHead } from "@/lib/seo-head";
 
 export const Route = createFileRoute("/_authenticated/brand/ai-assistant")({
   ssr: false,
-  head: () => buildPageHead({ path: "/brand/ai-assistant", title: "AI Business Assistant — Glintr", noindex: true }),
+  head: () => buildPageHead({ path: "/brand/ai-assistant", title: "AI Business Assistant — Glintr", description: "White Label OS", noindex: true }),
   component: Assistant,
 });
 
