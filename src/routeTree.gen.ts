@@ -190,6 +190,7 @@ import { Route as AuthenticatedAmbassadorLeaderboardRouteImport } from './routes
 import { Route as AuthenticatedAmbassadorDashboardRouteImport } from './routes/_authenticated/ambassador.dashboard'
 import { Route as AuthenticatedAmbassadorCommissionStructureRouteImport } from './routes/_authenticated/ambassador.commission-structure'
 import { Route as AuthenticatedAdminVoiceAiRouteImport } from './routes/_authenticated/admin.voice-ai'
+import { Route as AuthenticatedAdminTagsRouteImport } from './routes/_authenticated/admin.tags'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
@@ -206,6 +207,7 @@ import { Route as AuthenticatedAdminPartnerPayoutsRouteImport } from './routes/_
 import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_authenticated/admin.partner-brands'
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
+import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminLlmRouteImport } from './routes/_authenticated/admin.llm'
 import { Route as AuthenticatedAdminLiveRouteImport } from './routes/_authenticated/admin.live'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
@@ -219,8 +221,10 @@ import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
+import { Route as AuthenticatedAdminAuthorsRouteImport } from './routes/_authenticated/admin.authors'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
 import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_authenticated/admin.assigned-leads'
+import { Route as AuthenticatedAdminArticlesRouteImport } from './routes/_authenticated/admin.articles'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminAiosRouteImport } from './routes/_authenticated/admin.aios'
 import { Route as AuthenticatedAdminAiSearchRouteImport } from './routes/_authenticated/admin.ai-search'
@@ -1345,6 +1349,11 @@ const AuthenticatedAdminVoiceAiRoute =
     path: '/voice-ai',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminTagsRoute = AuthenticatedAdminTagsRouteImport.update({
+  id: '/tags',
+  path: '/tags',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminSupportRoute =
   AuthenticatedAdminSupportRouteImport.update({
     id: '/support',
@@ -1441,6 +1450,11 @@ const AuthenticatedAdminModelApprovalsRoute =
     path: '/model-approvals',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminLlmRoute = AuthenticatedAdminLlmRouteImport.update({
   id: '/llm',
   path: '/llm',
@@ -1516,6 +1530,12 @@ const AuthenticatedAdminCategoriesRoute =
     path: '/categories',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAuthorsRoute =
+  AuthenticatedAdminAuthorsRouteImport.update({
+    id: '/authors',
+    path: '/authors',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAttributionReviewsRoute =
   AuthenticatedAdminAttributionReviewsRouteImport.update({
     id: '/attribution-reviews',
@@ -1526,6 +1546,12 @@ const AuthenticatedAdminAssignedLeadsRoute =
   AuthenticatedAdminAssignedLeadsRouteImport.update({
     id: '/assigned-leads',
     path: '/assigned-leads',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminArticlesRoute =
+  AuthenticatedAdminArticlesRouteImport.update({
+    id: '/articles',
+    path: '/articles',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminApplicationsRoute =
@@ -2589,8 +2615,10 @@ export interface FileRoutesByFullPath {
   '/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
+  '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -2604,6 +2632,7 @@ export interface FileRoutesByFullPath {
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/live': typeof AuthenticatedAdminLiveRoute
   '/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -2620,6 +2649,7 @@ export interface FileRoutesByFullPath {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
@@ -2950,8 +2980,10 @@ export interface FileRoutesByTo {
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
+  '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -2962,6 +2994,7 @@ export interface FileRoutesByTo {
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/live': typeof AuthenticatedAdminLiveRoute
+  '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -2978,6 +3011,7 @@ export interface FileRoutesByTo {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
   '/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
@@ -3319,8 +3353,10 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/_authenticated/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/_authenticated/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/_authenticated/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
+  '/_authenticated/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -3334,6 +3370,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/live': typeof AuthenticatedAdminLiveRoute
   '/_authenticated/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
+  '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/_authenticated/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -3350,6 +3387,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
+  '/_authenticated/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/_authenticated/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
   '/_authenticated/ambassador/commission-structure': typeof AuthenticatedAmbassadorCommissionStructureRoute
   '/_authenticated/ambassador/dashboard': typeof AuthenticatedAmbassadorDashboardRoute
@@ -3692,8 +3730,10 @@ export interface FileRouteTypes {
     | '/admin/ai-search'
     | '/admin/aios'
     | '/admin/applications'
+    | '/admin/articles'
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
+    | '/admin/authors'
     | '/admin/categories'
     | '/admin/content'
     | '/admin/content-intelligence'
@@ -3707,6 +3747,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/live'
     | '/admin/llm'
+    | '/admin/media'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
     | '/admin/partner-brands'
@@ -3723,6 +3764,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/admin/tags'
     | '/admin/voice-ai'
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
@@ -4053,8 +4095,10 @@ export interface FileRouteTypes {
     | '/admin/activity'
     | '/admin/adjustments'
     | '/admin/applications'
+    | '/admin/articles'
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
+    | '/admin/authors'
     | '/admin/categories'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
@@ -4065,6 +4109,7 @@ export interface FileRouteTypes {
     | '/admin/lead-ownership'
     | '/admin/leads'
     | '/admin/live'
+    | '/admin/media'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
     | '/admin/partner-brands'
@@ -4081,6 +4126,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/settings'
     | '/admin/support'
+    | '/admin/tags'
     | '/admin/voice-ai'
     | '/ambassador/commission-structure'
     | '/ambassador/dashboard'
@@ -4421,8 +4467,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-search'
     | '/_authenticated/admin/aios'
     | '/_authenticated/admin/applications'
+    | '/_authenticated/admin/articles'
     | '/_authenticated/admin/assigned-leads'
     | '/_authenticated/admin/attribution-reviews'
+    | '/_authenticated/admin/authors'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/content'
     | '/_authenticated/admin/content-intelligence'
@@ -4436,6 +4484,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/live'
     | '/_authenticated/admin/llm'
+    | '/_authenticated/admin/media'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
     | '/_authenticated/admin/partner-brands'
@@ -4452,6 +4501,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/support'
+    | '/_authenticated/admin/tags'
     | '/_authenticated/admin/voice-ai'
     | '/_authenticated/ambassador/commission-structure'
     | '/_authenticated/ambassador/dashboard'
@@ -6022,6 +6072,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVoiceAiRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/tags': {
+      id: '/_authenticated/admin/tags'
+      path: '/tags'
+      fullPath: '/admin/tags'
+      preLoaderRoute: typeof AuthenticatedAdminTagsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/support': {
       id: '/_authenticated/admin/support'
       path: '/support'
@@ -6134,6 +6191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminModelApprovalsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/media': {
+      id: '/_authenticated/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/llm': {
       id: '/_authenticated/admin/llm'
       path: '/llm'
@@ -6225,6 +6289,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/authors': {
+      id: '/_authenticated/admin/authors'
+      path: '/authors'
+      fullPath: '/admin/authors'
+      preLoaderRoute: typeof AuthenticatedAdminAuthorsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/attribution-reviews': {
       id: '/_authenticated/admin/attribution-reviews'
       path: '/attribution-reviews'
@@ -6237,6 +6308,13 @@ declare module '@tanstack/react-router' {
       path: '/assigned-leads'
       fullPath: '/admin/assigned-leads'
       preLoaderRoute: typeof AuthenticatedAdminAssignedLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/articles': {
+      id: '/_authenticated/admin/articles'
+      path: '/articles'
+      fullPath: '/admin/articles'
+      preLoaderRoute: typeof AuthenticatedAdminArticlesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/applications': {
@@ -7691,8 +7769,10 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAiSearchRoute: typeof AuthenticatedAdminAiSearchRouteWithChildren
   AuthenticatedAdminAiosRoute: typeof AuthenticatedAdminAiosRouteWithChildren
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
+  AuthenticatedAdminArticlesRoute: typeof AuthenticatedAdminArticlesRoute
   AuthenticatedAdminAssignedLeadsRoute: typeof AuthenticatedAdminAssignedLeadsRoute
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
+  AuthenticatedAdminAuthorsRoute: typeof AuthenticatedAdminAuthorsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -7706,6 +7786,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminLiveRoute: typeof AuthenticatedAdminLiveRoute
   AuthenticatedAdminLlmRoute: typeof AuthenticatedAdminLlmRouteWithChildren
+  AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
   AuthenticatedAdminPartnerBrandsRoute: typeof AuthenticatedAdminPartnerBrandsRoute
@@ -7722,6 +7803,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSalesCommandRoute: typeof AuthenticatedAdminSalesCommandRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRouteWithChildren
+  AuthenticatedAdminTagsRoute: typeof AuthenticatedAdminTagsRoute
   AuthenticatedAdminVoiceAiRoute: typeof AuthenticatedAdminVoiceAiRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminAutomationAuditRoute: typeof AuthenticatedAdminAutomationAuditRoute
@@ -7762,9 +7844,11 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAiSearchRoute: AuthenticatedAdminAiSearchRouteWithChildren,
   AuthenticatedAdminAiosRoute: AuthenticatedAdminAiosRouteWithChildren,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
+  AuthenticatedAdminArticlesRoute: AuthenticatedAdminArticlesRoute,
   AuthenticatedAdminAssignedLeadsRoute: AuthenticatedAdminAssignedLeadsRoute,
   AuthenticatedAdminAttributionReviewsRoute:
     AuthenticatedAdminAttributionReviewsRoute,
+  AuthenticatedAdminAuthorsRoute: AuthenticatedAdminAuthorsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
   AuthenticatedAdminContentIntelligenceRoute:
@@ -7781,6 +7865,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminLiveRoute: AuthenticatedAdminLiveRoute,
   AuthenticatedAdminLlmRoute: AuthenticatedAdminLlmRouteWithChildren,
+  AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
     AuthenticatedAdminPartnerApplicationsRoute,
@@ -7804,6 +7889,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSalesCommandRoute: AuthenticatedAdminSalesCommandRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRouteWithChildren,
+  AuthenticatedAdminTagsRoute: AuthenticatedAdminTagsRoute,
   AuthenticatedAdminVoiceAiRoute: AuthenticatedAdminVoiceAiRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminAutomationAuditRoute:
