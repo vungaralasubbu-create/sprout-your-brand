@@ -80,6 +80,11 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "monthly",
             priority: "0.5",
           });
+          entries.push({
+            path: `/entities/${g.slug}`,
+            changefreq: "monthly",
+            priority: "0.6",
+          });
         }
         for (const p of listLearningPaths()) {
           entries.push({ path: `/learning-paths/${p.slug}`, changefreq: "monthly", priority: "0.6" });
