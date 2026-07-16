@@ -215,12 +215,26 @@ function BlogDetailPage() {
   };
   const { post, related, relatedCourse } = loaderData;
   const [progress, setProgress] = React.useState(0);
-  const [copied, setCopied] = React.useState(false);
   const [subscribed, setSubscribed] = React.useState(false);
-  const [copyFailed, setCopyFailed] = React.useState(false);
   const [tocOpen, setTocOpen] = React.useState(false);
   const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
   const articleRef = React.useRef<HTMLDivElement | null>(null);
+  const { bookmarked, toggle: toggleBookmark } = useBookmark(post.slug);
+
+  const shareUrl = `${SITE_URL}/blog/${post.slug}`;
+  const authorInitials = React.useMemo(() => {
+    return post.author_display_name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0]!.toUpperCase())
+      .join("") || "G";
+  }, [post.author_display_name]);
+
+  const onPrint = React.useCallback(() => {
+    if (typeof window !== "undefined") window.print();
+  }, []);
+
 
   // Reset transient UI state on slug change so switching articles feels fresh.
   React.useEffect(() => {
