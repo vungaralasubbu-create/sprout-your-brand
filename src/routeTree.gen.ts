@@ -198,6 +198,7 @@ import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
 import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_authenticated/admin.assigned-leads'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
+import { Route as AuthenticatedAdminAiosRouteImport } from './routes/_authenticated/admin.aios'
 import { Route as AuthenticatedAdminAiContentRouteImport } from './routes/_authenticated/admin.ai-content'
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
 import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
@@ -226,6 +227,7 @@ import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
 import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
+import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
 import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
@@ -282,6 +284,12 @@ import { Route as AuthenticatedAdminContentIntelligenceFaqsRouteImport } from '.
 import { Route as AuthenticatedAdminContentIntelligenceEntitiesRouteImport } from './routes/_authenticated/admin.content-intelligence.entities'
 import { Route as AuthenticatedAdminContentIntelligenceDecayRouteImport } from './routes/_authenticated/admin.content-intelligence.decay'
 import { Route as AuthenticatedAdminContentIntelligenceComparisonsRouteImport } from './routes/_authenticated/admin.content-intelligence.comparisons'
+import { Route as AuthenticatedAdminAiosSettingsRouteImport } from './routes/_authenticated/admin.aios.settings'
+import { Route as AuthenticatedAdminAiosPromptsRouteImport } from './routes/_authenticated/admin.aios.prompts'
+import { Route as AuthenticatedAdminAiosKnowledgeRouteImport } from './routes/_authenticated/admin.aios.knowledge'
+import { Route as AuthenticatedAdminAiosFeedbackRouteImport } from './routes/_authenticated/admin.aios.feedback'
+import { Route as AuthenticatedAdminAiosConversationsRouteImport } from './routes/_authenticated/admin.aios.conversations'
+import { Route as AuthenticatedAdminAiosAgentsRouteImport } from './routes/_authenticated/admin.aios.agents'
 import { Route as AuthenticatedAdminAiContentWizardRouteImport } from './routes/_authenticated/admin.ai-content.wizard'
 import { Route as AuthenticatedAdminAiContentSuggestionsRouteImport } from './routes/_authenticated/admin.ai-content.suggestions'
 import { Route as AuthenticatedAdminAiContentSettingsRouteImport } from './routes/_authenticated/admin.ai-content.settings'
@@ -1330,6 +1338,11 @@ const AuthenticatedAdminApplicationsRoute =
     path: '/applications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAiosRoute = AuthenticatedAdminAiosRouteImport.update({
+  id: '/aios',
+  path: '/aios',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminAiContentRoute =
   AuthenticatedAdminAiContentRouteImport.update({
     id: '/ai-content',
@@ -1497,6 +1510,12 @@ const AuthenticatedAdminContentIntelligenceIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminAiosIndexRoute =
+  AuthenticatedAdminAiosIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminAiosRoute,
   } as any)
 const AuthenticatedAdminAiContentIndexRoute =
   AuthenticatedAdminAiContentIndexRouteImport.update({
@@ -1834,6 +1853,42 @@ const AuthenticatedAdminContentIntelligenceComparisonsRoute =
     path: '/comparisons',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
+const AuthenticatedAdminAiosSettingsRoute =
+  AuthenticatedAdminAiosSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminAiosRoute,
+  } as any)
+const AuthenticatedAdminAiosPromptsRoute =
+  AuthenticatedAdminAiosPromptsRouteImport.update({
+    id: '/prompts',
+    path: '/prompts',
+    getParentRoute: () => AuthenticatedAdminAiosRoute,
+  } as any)
+const AuthenticatedAdminAiosKnowledgeRoute =
+  AuthenticatedAdminAiosKnowledgeRouteImport.update({
+    id: '/knowledge',
+    path: '/knowledge',
+    getParentRoute: () => AuthenticatedAdminAiosRoute,
+  } as any)
+const AuthenticatedAdminAiosFeedbackRoute =
+  AuthenticatedAdminAiosFeedbackRouteImport.update({
+    id: '/feedback',
+    path: '/feedback',
+    getParentRoute: () => AuthenticatedAdminAiosRoute,
+  } as any)
+const AuthenticatedAdminAiosConversationsRoute =
+  AuthenticatedAdminAiosConversationsRouteImport.update({
+    id: '/conversations',
+    path: '/conversations',
+    getParentRoute: () => AuthenticatedAdminAiosRoute,
+  } as any)
+const AuthenticatedAdminAiosAgentsRoute =
+  AuthenticatedAdminAiosAgentsRouteImport.update({
+    id: '/agents',
+    path: '/agents',
+    getParentRoute: () => AuthenticatedAdminAiosRoute,
+  } as any)
 const AuthenticatedAdminAiContentWizardRoute =
   AuthenticatedAdminAiContentWizardRouteImport.update({
     id: '/wizard',
@@ -2021,6 +2076,7 @@ export interface FileRoutesByFullPath {
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
@@ -2125,6 +2181,12 @@ export interface FileRoutesByFullPath {
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/admin/aios/agents': typeof AuthenticatedAdminAiosAgentsRoute
+  '/admin/aios/conversations': typeof AuthenticatedAdminAiosConversationsRoute
+  '/admin/aios/feedback': typeof AuthenticatedAdminAiosFeedbackRoute
+  '/admin/aios/knowledge': typeof AuthenticatedAdminAiosKnowledgeRoute
+  '/admin/aios/prompts': typeof AuthenticatedAdminAiosPromptsRoute
+  '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
   '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
@@ -2181,6 +2243,7 @@ export interface FileRoutesByFullPath {
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
+  '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -2405,6 +2468,12 @@ export interface FileRoutesByTo {
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/admin/aios/agents': typeof AuthenticatedAdminAiosAgentsRoute
+  '/admin/aios/conversations': typeof AuthenticatedAdminAiosConversationsRoute
+  '/admin/aios/feedback': typeof AuthenticatedAdminAiosFeedbackRoute
+  '/admin/aios/knowledge': typeof AuthenticatedAdminAiosKnowledgeRoute
+  '/admin/aios/prompts': typeof AuthenticatedAdminAiosPromptsRoute
+  '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
   '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
@@ -2461,6 +2530,7 @@ export interface FileRoutesByTo {
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
+  '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
@@ -2592,6 +2662,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/_authenticated/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/_authenticated/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
@@ -2696,6 +2767,12 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/_authenticated/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/_authenticated/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/_authenticated/admin/aios/agents': typeof AuthenticatedAdminAiosAgentsRoute
+  '/_authenticated/admin/aios/conversations': typeof AuthenticatedAdminAiosConversationsRoute
+  '/_authenticated/admin/aios/feedback': typeof AuthenticatedAdminAiosFeedbackRoute
+  '/_authenticated/admin/aios/knowledge': typeof AuthenticatedAdminAiosKnowledgeRoute
+  '/_authenticated/admin/aios/prompts': typeof AuthenticatedAdminAiosPromptsRoute
+  '/_authenticated/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
   '/_authenticated/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
   '/_authenticated/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/_authenticated/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
@@ -2752,6 +2829,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
+  '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -2883,6 +2961,7 @@ export interface FileRouteTypes {
     | '/admin/activity'
     | '/admin/adjustments'
     | '/admin/ai-content'
+    | '/admin/aios'
     | '/admin/applications'
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
@@ -2987,6 +3066,12 @@ export interface FileRouteTypes {
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
     | '/admin/ai-content/wizard'
+    | '/admin/aios/agents'
+    | '/admin/aios/conversations'
+    | '/admin/aios/feedback'
+    | '/admin/aios/knowledge'
+    | '/admin/aios/prompts'
+    | '/admin/aios/settings'
     | '/admin/content-intelligence/comparisons'
     | '/admin/content-intelligence/decay'
     | '/admin/content-intelligence/entities'
@@ -3043,6 +3128,7 @@ export interface FileRouteTypes {
     | '/student/support/new'
     | '/programs/$category/$course/apply'
     | '/admin/ai-content/'
+    | '/admin/aios/'
     | '/admin/content-intelligence/'
     | '/admin/content/'
     | '/admin/courses/'
@@ -3267,6 +3353,12 @@ export interface FileRouteTypes {
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
     | '/admin/ai-content/wizard'
+    | '/admin/aios/agents'
+    | '/admin/aios/conversations'
+    | '/admin/aios/feedback'
+    | '/admin/aios/knowledge'
+    | '/admin/aios/prompts'
+    | '/admin/aios/settings'
     | '/admin/content-intelligence/comparisons'
     | '/admin/content-intelligence/decay'
     | '/admin/content-intelligence/entities'
@@ -3323,6 +3415,7 @@ export interface FileRouteTypes {
     | '/student/support/new'
     | '/programs/$category/$course/apply'
     | '/admin/ai-content'
+    | '/admin/aios'
     | '/admin/content-intelligence'
     | '/admin/content'
     | '/admin/courses'
@@ -3453,6 +3546,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/activity'
     | '/_authenticated/admin/adjustments'
     | '/_authenticated/admin/ai-content'
+    | '/_authenticated/admin/aios'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/assigned-leads'
     | '/_authenticated/admin/attribution-reviews'
@@ -3557,6 +3651,12 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-content/settings'
     | '/_authenticated/admin/ai-content/suggestions'
     | '/_authenticated/admin/ai-content/wizard'
+    | '/_authenticated/admin/aios/agents'
+    | '/_authenticated/admin/aios/conversations'
+    | '/_authenticated/admin/aios/feedback'
+    | '/_authenticated/admin/aios/knowledge'
+    | '/_authenticated/admin/aios/prompts'
+    | '/_authenticated/admin/aios/settings'
     | '/_authenticated/admin/content-intelligence/comparisons'
     | '/_authenticated/admin/content-intelligence/decay'
     | '/_authenticated/admin/content-intelligence/entities'
@@ -3613,6 +3713,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/new'
     | '/programs/$category/$course/apply'
     | '/_authenticated/admin/ai-content/'
+    | '/_authenticated/admin/aios/'
     | '/_authenticated/admin/content-intelligence/'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
@@ -5032,6 +5133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminApplicationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/aios': {
+      id: '/_authenticated/admin/aios'
+      path: '/aios'
+      fullPath: '/admin/aios'
+      preLoaderRoute: typeof AuthenticatedAdminAiosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ai-content': {
       id: '/_authenticated/admin/ai-content'
       path: '/ai-content'
@@ -5227,6 +5335,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/content-intelligence/'
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/aios/': {
+      id: '/_authenticated/admin/aios/'
+      path: '/'
+      fullPath: '/admin/aios/'
+      preLoaderRoute: typeof AuthenticatedAdminAiosIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminAiosRoute
     }
     '/_authenticated/admin/ai-content/': {
       id: '/_authenticated/admin/ai-content/'
@@ -5620,6 +5735,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceComparisonsRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
+    '/_authenticated/admin/aios/settings': {
+      id: '/_authenticated/admin/aios/settings'
+      path: '/settings'
+      fullPath: '/admin/aios/settings'
+      preLoaderRoute: typeof AuthenticatedAdminAiosSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiosRoute
+    }
+    '/_authenticated/admin/aios/prompts': {
+      id: '/_authenticated/admin/aios/prompts'
+      path: '/prompts'
+      fullPath: '/admin/aios/prompts'
+      preLoaderRoute: typeof AuthenticatedAdminAiosPromptsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiosRoute
+    }
+    '/_authenticated/admin/aios/knowledge': {
+      id: '/_authenticated/admin/aios/knowledge'
+      path: '/knowledge'
+      fullPath: '/admin/aios/knowledge'
+      preLoaderRoute: typeof AuthenticatedAdminAiosKnowledgeRouteImport
+      parentRoute: typeof AuthenticatedAdminAiosRoute
+    }
+    '/_authenticated/admin/aios/feedback': {
+      id: '/_authenticated/admin/aios/feedback'
+      path: '/feedback'
+      fullPath: '/admin/aios/feedback'
+      preLoaderRoute: typeof AuthenticatedAdminAiosFeedbackRouteImport
+      parentRoute: typeof AuthenticatedAdminAiosRoute
+    }
+    '/_authenticated/admin/aios/conversations': {
+      id: '/_authenticated/admin/aios/conversations'
+      path: '/conversations'
+      fullPath: '/admin/aios/conversations'
+      preLoaderRoute: typeof AuthenticatedAdminAiosConversationsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiosRoute
+    }
+    '/_authenticated/admin/aios/agents': {
+      id: '/_authenticated/admin/aios/agents'
+      path: '/agents'
+      fullPath: '/admin/aios/agents'
+      preLoaderRoute: typeof AuthenticatedAdminAiosAgentsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiosRoute
+    }
     '/_authenticated/admin/ai-content/wizard': {
       id: '/_authenticated/admin/ai-content/wizard'
       path: '/wizard'
@@ -5759,6 +5916,33 @@ const AuthenticatedAdminAiContentRouteChildren: AuthenticatedAdminAiContentRoute
 const AuthenticatedAdminAiContentRouteWithChildren =
   AuthenticatedAdminAiContentRoute._addFileChildren(
     AuthenticatedAdminAiContentRouteChildren,
+  )
+
+interface AuthenticatedAdminAiosRouteChildren {
+  AuthenticatedAdminAiosAgentsRoute: typeof AuthenticatedAdminAiosAgentsRoute
+  AuthenticatedAdminAiosConversationsRoute: typeof AuthenticatedAdminAiosConversationsRoute
+  AuthenticatedAdminAiosFeedbackRoute: typeof AuthenticatedAdminAiosFeedbackRoute
+  AuthenticatedAdminAiosKnowledgeRoute: typeof AuthenticatedAdminAiosKnowledgeRoute
+  AuthenticatedAdminAiosPromptsRoute: typeof AuthenticatedAdminAiosPromptsRoute
+  AuthenticatedAdminAiosSettingsRoute: typeof AuthenticatedAdminAiosSettingsRoute
+  AuthenticatedAdminAiosIndexRoute: typeof AuthenticatedAdminAiosIndexRoute
+}
+
+const AuthenticatedAdminAiosRouteChildren: AuthenticatedAdminAiosRouteChildren =
+  {
+    AuthenticatedAdminAiosAgentsRoute: AuthenticatedAdminAiosAgentsRoute,
+    AuthenticatedAdminAiosConversationsRoute:
+      AuthenticatedAdminAiosConversationsRoute,
+    AuthenticatedAdminAiosFeedbackRoute: AuthenticatedAdminAiosFeedbackRoute,
+    AuthenticatedAdminAiosKnowledgeRoute: AuthenticatedAdminAiosKnowledgeRoute,
+    AuthenticatedAdminAiosPromptsRoute: AuthenticatedAdminAiosPromptsRoute,
+    AuthenticatedAdminAiosSettingsRoute: AuthenticatedAdminAiosSettingsRoute,
+    AuthenticatedAdminAiosIndexRoute: AuthenticatedAdminAiosIndexRoute,
+  }
+
+const AuthenticatedAdminAiosRouteWithChildren =
+  AuthenticatedAdminAiosRoute._addFileChildren(
+    AuthenticatedAdminAiosRouteChildren,
   )
 
 interface AuthenticatedAdminContentRouteChildren {
@@ -5912,6 +6096,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
   AuthenticatedAdminAdjustmentsRoute: typeof AuthenticatedAdminAdjustmentsRoute
   AuthenticatedAdminAiContentRoute: typeof AuthenticatedAdminAiContentRouteWithChildren
+  AuthenticatedAdminAiosRoute: typeof AuthenticatedAdminAiosRouteWithChildren
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
   AuthenticatedAdminAssignedLeadsRoute: typeof AuthenticatedAdminAssignedLeadsRoute
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
@@ -5964,6 +6149,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAdjustmentsRoute: AuthenticatedAdminAdjustmentsRoute,
   AuthenticatedAdminAiContentRoute:
     AuthenticatedAdminAiContentRouteWithChildren,
+  AuthenticatedAdminAiosRoute: AuthenticatedAdminAiosRouteWithChildren,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
   AuthenticatedAdminAssignedLeadsRoute: AuthenticatedAdminAssignedLeadsRoute,
   AuthenticatedAdminAttributionReviewsRoute:
