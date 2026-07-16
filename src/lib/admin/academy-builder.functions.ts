@@ -111,7 +111,7 @@ Return JSON:
   "socialProfileConcept": string
 }`;
 
-    return callLovableAiJson<Record<string, unknown>>({
+    const _r = await callLovableAiJson({
       messages: [
         { role: "system", content: sys },
         { role: "user", content: user },
@@ -237,7 +237,7 @@ Return JSON:
   "notFound": { "headline": string, "message": string, "cta": string }
 }`;
 
-    return callLovableAiJson<Record<string, unknown>>({
+    const _r = await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Marketing copy: concrete, benefit-first, no filler." },
         { role: "user", content: user },
@@ -284,7 +284,7 @@ Return JSON:
     "seo": { "title": string, "metaDescription": string, "keywords": string[8] }
   }
 }`;
-    return callLovableAiJson<Record<string, unknown>>({
+    const _r = await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Content should be specific, avoid clichés." },
         { role: "user", content: user },
@@ -331,7 +331,7 @@ Return JSON:
   "relatedBlogIdeas": string[6],
   "seo": { "title": string, "metaDescription": string, "keywords": string[10], "ogTitle": string, "ogDescription": string }
 }`;
-    return callLovableAiJson<Record<string, unknown>>({
+    const _r = await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Curriculum must be industry-accurate." },
         { role: "user", content: user },
@@ -377,7 +377,7 @@ Return JSON:
   ]
 }
 Return exactly ${data.count} articles.`;
-    return callLovableAiJson<Record<string, unknown>>({
+    const _r = await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Article ideas must be specific, evergreen, and search-worthy." },
         { role: "user", content: user },
@@ -429,7 +429,7 @@ Return JSON:
     "voiceoverScript": string(120-180 words)
   }
 }`;
-    return callLovableAiJson<Record<string, unknown>>({
+    const _r = await callLovableAiJson({
       messages: [
         { role: "system", content: "Return strict JSON. Every field must fit stated limits. Copy must be specific and conversion-focused." },
         { role: "user", content: user },
