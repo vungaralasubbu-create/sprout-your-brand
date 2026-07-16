@@ -147,6 +147,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           slogan: "Launch. Sell. Grow.",
           description:
             "Premium EdTech platform for sales professionals — become a revenue partner or launch your own white-label EdTech brand.",
+          sameAs: [
+            "https://www.linkedin.com/company/glintr",
+            "https://www.instagram.com/glintr",
+            "https://x.com/glintr",
+            "https://www.youtube.com/@glintr",
+            "https://www.facebook.com/glintr",
+          ],
         }),
       },
       {
@@ -156,9 +163,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "WebSite",
           name: "Glintr",
           url: "https://glintr.com",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: "https://glintr.com/search?q={search_term_string}",
+            },
+            "query-input": "required name=search_term_string",
+          },
         }),
       },
     ],
+
   }),
   shellComponent: RootShell,
   component: RootComponent,
