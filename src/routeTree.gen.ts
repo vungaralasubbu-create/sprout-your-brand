@@ -368,6 +368,7 @@ import { Route as AuthenticatedAdminAiContentReviewRouteImport } from './routes/
 import { Route as AuthenticatedAdminAiContentQueueRouteImport } from './routes/_authenticated/admin.ai-content.queue'
 import { Route as AuthenticatedAdminAiContentMediaRouteImport } from './routes/_authenticated/admin.ai-content.media'
 import { Route as AuthenticatedAdminAiContentKnowledgeGraphRouteImport } from './routes/_authenticated/admin.ai-content.knowledge-graph'
+import { Route as AuthenticatedAdminAiContentFactoryRouteImport } from './routes/_authenticated/admin.ai-content.factory'
 import { Route as AuthenticatedAdminAiContentDraftsRouteImport } from './routes/_authenticated/admin.ai-content.drafts'
 import { Route as AuthenticatedAdminAiContentClustersRouteImport } from './routes/_authenticated/admin.ai-content.clusters'
 import { Route as AuthenticatedAdminAiContentCalendarRouteImport } from './routes/_authenticated/admin.ai-content.calendar'
@@ -2412,6 +2413,12 @@ const AuthenticatedAdminAiContentKnowledgeGraphRoute =
     path: '/knowledge-graph',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
+const AuthenticatedAdminAiContentFactoryRoute =
+  AuthenticatedAdminAiContentFactoryRouteImport.update({
+    id: '/factory',
+    path: '/factory',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
 const AuthenticatedAdminAiContentDraftsRoute =
   AuthenticatedAdminAiContentDraftsRouteImport.update({
     id: '/drafts',
@@ -2742,6 +2749,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
+  '/admin/ai-content/factory': typeof AuthenticatedAdminAiContentFactoryRoute
   '/admin/ai-content/knowledge-graph': typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
   '/admin/ai-content/media': typeof AuthenticatedAdminAiContentMediaRoute
   '/admin/ai-content/queue': typeof AuthenticatedAdminAiContentQueueRoute
@@ -3104,6 +3112,7 @@ export interface FileRoutesByTo {
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
+  '/admin/ai-content/factory': typeof AuthenticatedAdminAiContentFactoryRoute
   '/admin/ai-content/knowledge-graph': typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
   '/admin/ai-content/media': typeof AuthenticatedAdminAiContentMediaRoute
   '/admin/ai-content/queue': typeof AuthenticatedAdminAiContentQueueRoute
@@ -3482,6 +3491,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/_authenticated/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/_authenticated/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
+  '/_authenticated/admin/ai-content/factory': typeof AuthenticatedAdminAiContentFactoryRoute
   '/_authenticated/admin/ai-content/knowledge-graph': typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
   '/_authenticated/admin/ai-content/media': typeof AuthenticatedAdminAiContentMediaRoute
   '/_authenticated/admin/ai-content/queue': typeof AuthenticatedAdminAiContentQueueRoute
@@ -3860,6 +3870,7 @@ export interface FileRouteTypes {
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/drafts'
+    | '/admin/ai-content/factory'
     | '/admin/ai-content/knowledge-graph'
     | '/admin/ai-content/media'
     | '/admin/ai-content/queue'
@@ -4222,6 +4233,7 @@ export interface FileRouteTypes {
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/drafts'
+    | '/admin/ai-content/factory'
     | '/admin/ai-content/knowledge-graph'
     | '/admin/ai-content/media'
     | '/admin/ai-content/queue'
@@ -4599,6 +4611,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-content/calendar'
     | '/_authenticated/admin/ai-content/clusters'
     | '/_authenticated/admin/ai-content/drafts'
+    | '/_authenticated/admin/ai-content/factory'
     | '/_authenticated/admin/ai-content/knowledge-graph'
     | '/_authenticated/admin/ai-content/media'
     | '/_authenticated/admin/ai-content/queue'
@@ -7331,6 +7344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiContentKnowledgeGraphRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
+    '/_authenticated/admin/ai-content/factory': {
+      id: '/_authenticated/admin/ai-content/factory'
+      path: '/factory'
+      fullPath: '/admin/ai-content/factory'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentFactoryRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
     '/_authenticated/admin/ai-content/drafts': {
       id: '/_authenticated/admin/ai-content/drafts'
       path: '/drafts'
@@ -7473,6 +7493,7 @@ interface AuthenticatedAdminAiContentRouteChildren {
   AuthenticatedAdminAiContentCalendarRoute: typeof AuthenticatedAdminAiContentCalendarRoute
   AuthenticatedAdminAiContentClustersRoute: typeof AuthenticatedAdminAiContentClustersRoute
   AuthenticatedAdminAiContentDraftsRoute: typeof AuthenticatedAdminAiContentDraftsRoute
+  AuthenticatedAdminAiContentFactoryRoute: typeof AuthenticatedAdminAiContentFactoryRoute
   AuthenticatedAdminAiContentKnowledgeGraphRoute: typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
   AuthenticatedAdminAiContentMediaRoute: typeof AuthenticatedAdminAiContentMediaRoute
   AuthenticatedAdminAiContentQueueRoute: typeof AuthenticatedAdminAiContentQueueRoute
@@ -7495,6 +7516,8 @@ const AuthenticatedAdminAiContentRouteChildren: AuthenticatedAdminAiContentRoute
       AuthenticatedAdminAiContentClustersRoute,
     AuthenticatedAdminAiContentDraftsRoute:
       AuthenticatedAdminAiContentDraftsRoute,
+    AuthenticatedAdminAiContentFactoryRoute:
+      AuthenticatedAdminAiContentFactoryRoute,
     AuthenticatedAdminAiContentKnowledgeGraphRoute:
       AuthenticatedAdminAiContentKnowledgeGraphRoute,
     AuthenticatedAdminAiContentMediaRoute:

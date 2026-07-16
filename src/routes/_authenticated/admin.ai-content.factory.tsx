@@ -372,7 +372,7 @@ function FactoryPage() {
               <div>
                 <Label>Tags</Label>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {(draft.tags ?? []).map((k: string) => <Badge key={k} variant="secondary" className="text-[11px]">{k}</Badge>)}
+                  {(draft.tags ?? []).map((k: string) => <Badge key={k} variant="outline" className="text-[11px]">{k}</Badge>)}
                 </div>
               </div>
               <details>
