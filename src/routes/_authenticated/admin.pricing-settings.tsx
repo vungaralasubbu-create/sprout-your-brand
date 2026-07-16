@@ -41,7 +41,7 @@ async function fetchAll() {
 }
 
 async function upsertOne(key: string, value: unknown) {
-  const { error } = await supabase.from("platform_settings").upsert({ key, value }, { onConflict: "key" });
+  const { error } = await supabase.from("platform_settings").upsert({ key, value: value as any }, { onConflict: "key" });
   if (error) throw error;
 }
 

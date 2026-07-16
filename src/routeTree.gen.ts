@@ -211,6 +211,7 @@ import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './rou
 import { Route as AuthenticatedAdminRevenueRouteImport } from './routes/_authenticated/admin.revenue'
 import { Route as AuthenticatedAdminReferralManagementRouteImport } from './routes/_authenticated/admin.referral-management'
 import { Route as AuthenticatedAdminProgramSalesContentRouteImport } from './routes/_authenticated/admin.program-sales-content'
+import { Route as AuthenticatedAdminPricingSettingsRouteImport } from './routes/_authenticated/admin.pricing-settings'
 import { Route as AuthenticatedAdminPopupSettingsRouteImport } from './routes/_authenticated/admin.popup-settings'
 import { Route as AuthenticatedAdminPayrollRouteImport } from './routes/_authenticated/admin.payroll'
 import { Route as AuthenticatedAdminPaymentVerificationRouteImport } from './routes/_authenticated/admin.payment-verification'
@@ -1491,6 +1492,12 @@ const AuthenticatedAdminProgramSalesContentRoute =
   AuthenticatedAdminProgramSalesContentRouteImport.update({
     id: '/program-sales-content',
     path: '/program-sales-content',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPricingSettingsRoute =
+  AuthenticatedAdminPricingSettingsRouteImport.update({
+    id: '/pricing-settings',
+    path: '/pricing-settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminPopupSettingsRoute =
@@ -2806,6 +2813,7 @@ export interface FileRoutesByFullPath {
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
   '/admin/payroll': typeof AuthenticatedAdminPayrollRoute
   '/admin/popup-settings': typeof AuthenticatedAdminPopupSettingsRoute
+  '/admin/pricing-settings': typeof AuthenticatedAdminPricingSettingsRoute
   '/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
@@ -3191,6 +3199,7 @@ export interface FileRoutesByTo {
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
   '/admin/payroll': typeof AuthenticatedAdminPayrollRoute
   '/admin/popup-settings': typeof AuthenticatedAdminPopupSettingsRoute
+  '/admin/pricing-settings': typeof AuthenticatedAdminPricingSettingsRoute
   '/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
@@ -3590,6 +3599,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
   '/_authenticated/admin/payroll': typeof AuthenticatedAdminPayrollRoute
   '/_authenticated/admin/popup-settings': typeof AuthenticatedAdminPopupSettingsRoute
+  '/_authenticated/admin/pricing-settings': typeof AuthenticatedAdminPricingSettingsRoute
   '/_authenticated/admin/program-sales-content': typeof AuthenticatedAdminProgramSalesContentRoute
   '/_authenticated/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/_authenticated/admin/revenue': typeof AuthenticatedAdminRevenueRoute
@@ -3990,6 +4000,7 @@ export interface FileRouteTypes {
     | '/admin/payment-verification'
     | '/admin/payroll'
     | '/admin/popup-settings'
+    | '/admin/pricing-settings'
     | '/admin/program-sales-content'
     | '/admin/referral-management'
     | '/admin/revenue'
@@ -4375,6 +4386,7 @@ export interface FileRouteTypes {
     | '/admin/payment-verification'
     | '/admin/payroll'
     | '/admin/popup-settings'
+    | '/admin/pricing-settings'
     | '/admin/program-sales-content'
     | '/admin/referral-management'
     | '/admin/revenue'
@@ -4773,6 +4785,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/payment-verification'
     | '/_authenticated/admin/payroll'
     | '/_authenticated/admin/popup-settings'
+    | '/_authenticated/admin/pricing-settings'
     | '/_authenticated/admin/program-sales-content'
     | '/_authenticated/admin/referral-management'
     | '/_authenticated/admin/revenue'
@@ -6516,6 +6529,13 @@ declare module '@tanstack/react-router' {
       path: '/program-sales-content'
       fullPath: '/admin/program-sales-content'
       preLoaderRoute: typeof AuthenticatedAdminProgramSalesContentRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/pricing-settings': {
+      id: '/_authenticated/admin/pricing-settings'
+      path: '/pricing-settings'
+      fullPath: '/admin/pricing-settings'
+      preLoaderRoute: typeof AuthenticatedAdminPricingSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/popup-settings': {
@@ -8277,6 +8297,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPaymentVerificationRoute: typeof AuthenticatedAdminPaymentVerificationRoute
   AuthenticatedAdminPayrollRoute: typeof AuthenticatedAdminPayrollRoute
   AuthenticatedAdminPopupSettingsRoute: typeof AuthenticatedAdminPopupSettingsRoute
+  AuthenticatedAdminPricingSettingsRoute: typeof AuthenticatedAdminPricingSettingsRoute
   AuthenticatedAdminProgramSalesContentRoute: typeof AuthenticatedAdminProgramSalesContentRoute
   AuthenticatedAdminReferralManagementRoute: typeof AuthenticatedAdminReferralManagementRoute
   AuthenticatedAdminRevenueRoute: typeof AuthenticatedAdminRevenueRoute
@@ -8363,6 +8384,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminPaymentVerificationRoute,
   AuthenticatedAdminPayrollRoute: AuthenticatedAdminPayrollRoute,
   AuthenticatedAdminPopupSettingsRoute: AuthenticatedAdminPopupSettingsRoute,
+  AuthenticatedAdminPricingSettingsRoute:
+    AuthenticatedAdminPricingSettingsRoute,
   AuthenticatedAdminProgramSalesContentRoute:
     AuthenticatedAdminProgramSalesContentRoute,
   AuthenticatedAdminReferralManagementRoute:
