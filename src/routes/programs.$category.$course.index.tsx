@@ -58,6 +58,7 @@ import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/c
 import { cn } from "@/lib/utils";
 import { ProgramScrollProgress } from "@/components/programs/program-scroll-progress";
 import { ProgramHeroGraphic } from "@/components/programs/program-hero-graphic";
+import { QuickAnswer, KeyTakeaways } from "@/components/shared/geo";
 
 
 const SITE_URL = "https://glintr.com";
