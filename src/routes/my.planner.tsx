@@ -78,7 +78,8 @@ function PlannerPage() {
                 </div>
               ))}
               {HOURS.map((h) => (
-                <>
+                <Fragment key={`row-${h}`}>
+
                   <div
                     key={`h-${h}`}
                     className="pr-2 text-right text-[10px] font-medium text-muted-foreground"
