@@ -17,6 +17,7 @@ import { RouteTracker } from "@/components/shared/route-tracker";
 import { StickyActionBar } from "@/components/shared/sticky-action-bar";
 import { AiMentor } from "@/components/mentor/ai-mentor";
 import { SmartPopup } from "@/components/shared/smart-popup";
+import { GlobalPalette } from "@/components/command-center/global-palette";
 
 function NotFoundComponent() {
   return (
@@ -207,6 +208,7 @@ function RootComponent() {
       <StickyActionBar />
       <AiMentor />
       <SmartPopup />
+      <GlobalPalette />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
