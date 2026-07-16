@@ -140,22 +140,25 @@ function useReadingProgress() {
   return progress;
 }
 
-function useRelatedLearn(entryCategory: string, slugs?: string[]) {
+function useRelatedLearn(entryCategory: string, entrySlug: string, slugs?: string[]) {
   return React.useMemo(() => {
     if (slugs?.length) {
       return learnArticles.filter((a) => slugs.includes(a.slug)).slice(0, 4);
     }
-    const cat = entryCategory.toLowerCase();
+    const catKey = entryCategory.toLowerCase().split(" ")[0]!;
     return learnArticles
       .filter((a) => {
-        const topic = learnTopics.find((t) => t.slug === a.topic);
+        if (a.relatedGlossary?.includes(entrySlug)) return true;
+        const topics = a.topics
+          .map((t) => learnTopics.find((x) => x.slug === t)?.name.toLowerCase() ?? "")
+          .join(" ");
         return (
-          a.title.toLowerCase().includes(cat.split(" ")[0]!) ||
-          topic?.name.toLowerCase().includes(cat.split(" ")[0]!)
+          a.title.toLowerCase().includes(catKey) ||
+          topics.includes(catKey)
         );
       })
       .slice(0, 4);
-  }, [entryCategory, slugs]);
+  }, [entryCategory, entrySlug, slugs]);
 }
 
 function ShareButton({ title, url }: { title: string; url: string }) {
