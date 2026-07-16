@@ -30,7 +30,6 @@ import {
 import {
   generateBrandIdentity,
   generateLogo,
-  checkDomain,
   generateWebsiteContent,
   generateProgram,
   generateCourse,
