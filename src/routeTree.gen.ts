@@ -149,6 +149,7 @@ import { Route as AuthenticatedPartnerOwnershipReviewsRouteImport } from './rout
 import { Route as AuthenticatedPartnerOnboardingRouteImport } from './routes/_authenticated/partner.onboarding'
 import { Route as AuthenticatedPartnerMyLeadsRouteImport } from './routes/_authenticated/partner.my-leads'
 import { Route as AuthenticatedPartnerMarketingRouteImport } from './routes/_authenticated/partner.marketing'
+import { Route as AuthenticatedPartnerLaunchAcademyRouteImport } from './routes/_authenticated/partner.launch-academy'
 import { Route as AuthenticatedPartnerEarningsStatementRouteImport } from './routes/_authenticated/partner.earnings-statement'
 import { Route as AuthenticatedPartnerEarningsRouteImport } from './routes/_authenticated/partner.earnings'
 import { Route as AuthenticatedPartnerDashboardRouteImport } from './routes/_authenticated/partner.dashboard'
@@ -1108,6 +1109,12 @@ const AuthenticatedPartnerMarketingRoute =
   AuthenticatedPartnerMarketingRouteImport.update({
     id: '/marketing',
     path: '/marketing',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerLaunchAcademyRoute =
+  AuthenticatedPartnerLaunchAcademyRouteImport.update({
+    id: '/launch-academy',
+    path: '/launch-academy',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerEarningsStatementRoute =
@@ -2722,6 +2729,7 @@ export interface FileRoutesByFullPath {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/partner/launch-academy': typeof AuthenticatedPartnerLaunchAcademyRoute
   '/partner/marketing': typeof AuthenticatedPartnerMarketingRoute
   '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
@@ -3088,6 +3096,7 @@ export interface FileRoutesByTo {
   '/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/partner/launch-academy': typeof AuthenticatedPartnerLaunchAcademyRoute
   '/partner/marketing': typeof AuthenticatedPartnerMarketingRoute
   '/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
@@ -3468,6 +3477,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/dashboard': typeof AuthenticatedPartnerDashboardRoute
   '/_authenticated/partner/earnings': typeof AuthenticatedPartnerEarningsRoute
   '/_authenticated/partner/earnings-statement': typeof AuthenticatedPartnerEarningsStatementRoute
+  '/_authenticated/partner/launch-academy': typeof AuthenticatedPartnerLaunchAcademyRoute
   '/_authenticated/partner/marketing': typeof AuthenticatedPartnerMarketingRoute
   '/_authenticated/partner/my-leads': typeof AuthenticatedPartnerMyLeadsRoute
   '/_authenticated/partner/onboarding': typeof AuthenticatedPartnerOnboardingRoute
@@ -3849,6 +3859,7 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
+    | '/partner/launch-academy'
     | '/partner/marketing'
     | '/partner/my-leads'
     | '/partner/onboarding'
@@ -4215,6 +4226,7 @@ export interface FileRouteTypes {
     | '/partner/dashboard'
     | '/partner/earnings'
     | '/partner/earnings-statement'
+    | '/partner/launch-academy'
     | '/partner/marketing'
     | '/partner/my-leads'
     | '/partner/onboarding'
@@ -4594,6 +4606,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/dashboard'
     | '/_authenticated/partner/earnings'
     | '/_authenticated/partner/earnings-statement'
+    | '/_authenticated/partner/launch-academy'
     | '/_authenticated/partner/marketing'
     | '/_authenticated/partner/my-leads'
     | '/_authenticated/partner/onboarding'
@@ -5835,6 +5848,13 @@ declare module '@tanstack/react-router' {
       path: '/marketing'
       fullPath: '/partner/marketing'
       preLoaderRoute: typeof AuthenticatedPartnerMarketingRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/launch-academy': {
+      id: '/_authenticated/partner/launch-academy'
+      path: '/launch-academy'
+      fullPath: '/partner/launch-academy'
+      preLoaderRoute: typeof AuthenticatedPartnerLaunchAcademyRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/earnings-statement': {
@@ -8178,6 +8198,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerDashboardRoute: typeof AuthenticatedPartnerDashboardRoute
   AuthenticatedPartnerEarningsRoute: typeof AuthenticatedPartnerEarningsRoute
   AuthenticatedPartnerEarningsStatementRoute: typeof AuthenticatedPartnerEarningsStatementRoute
+  AuthenticatedPartnerLaunchAcademyRoute: typeof AuthenticatedPartnerLaunchAcademyRoute
   AuthenticatedPartnerMarketingRoute: typeof AuthenticatedPartnerMarketingRoute
   AuthenticatedPartnerMyLeadsRoute: typeof AuthenticatedPartnerMyLeadsRoute
   AuthenticatedPartnerOnboardingRoute: typeof AuthenticatedPartnerOnboardingRoute
@@ -8213,6 +8234,8 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerEarningsRoute: AuthenticatedPartnerEarningsRoute,
   AuthenticatedPartnerEarningsStatementRoute:
     AuthenticatedPartnerEarningsStatementRoute,
+  AuthenticatedPartnerLaunchAcademyRoute:
+    AuthenticatedPartnerLaunchAcademyRoute,
   AuthenticatedPartnerMarketingRoute: AuthenticatedPartnerMarketingRoute,
   AuthenticatedPartnerMyLeadsRoute: AuthenticatedPartnerMyLeadsRoute,
   AuthenticatedPartnerOnboardingRoute: AuthenticatedPartnerOnboardingRoute,
