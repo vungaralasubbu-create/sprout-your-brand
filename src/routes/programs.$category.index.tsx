@@ -121,6 +121,21 @@ function CategoryPage() {
     queryKey: ["categories"],
     queryFn: listCategories,
   });
+  const editorial = getCategoryEditorial(slug);
+  const { data: blogPosts = [] } = useQuery({
+    queryKey: ["cat-blogs", slug],
+    enabled: Boolean(editorial?.featuredBlogSlugs?.length),
+    queryFn: async () => {
+      const slugs = editorial?.featuredBlogSlugs ?? [];
+      if (!slugs.length) return [] as Array<{ slug: string; title: string; excerpt: string | null }>;
+      const { data } = await supabase
+        .from("blog_posts")
+        .select("slug,title,excerpt")
+        .in("slug", slugs)
+        .eq("is_published", true);
+      return (data ?? []) as Array<{ slug: string; title: string; excerpt: string | null }>;
+    },
+  });
 
   if (category === null) return <NotFoundState />;
 
