@@ -33,7 +33,11 @@ export const Route = createFileRoute("/payout-system")({
         content:
           "How eligible Partner revenue moves through Glintr's transparent revenue and payout process.",
       },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://glintr.com/payout-system" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://glintr.com/payout-system" }],
   }),
   component: PayoutSystemPage,
 });
