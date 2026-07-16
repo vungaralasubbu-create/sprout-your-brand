@@ -111,7 +111,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         if (url && key) {
           try {
             const sb = createClient(url, key, { auth: { persistSession: false } });
-            const [{ data: cats }, { data: courses }, { data: posts }] = await Promise.all([
+            const [{ data: cats }, { data: courses }, { data: posts }, { data: faqs }, { data: roles }] = await Promise.all([
               sb.from("course_categories").select("slug,updated_at").eq("status", "published").eq("is_active", true),
               sb
                 .from("courses")
@@ -123,6 +123,8 @@ export const Route = createFileRoute("/sitemap.xml")({
                 .select("slug,updated_at,editorial_updated_at,published_at")
                 .eq("is_published", true)
                 .eq("status", "published"),
+              sb.from("faqs").select("slug,updated_at").eq("is_published", true),
+              sb.from("hiring_roles").select("slug,updated_at").eq("is_published", true),
             ]);
 
             for (const c of cats ?? []) {
