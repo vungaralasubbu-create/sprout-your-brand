@@ -116,3 +116,21 @@ function SignalCard({ icon: Icon, title, value, to }: any) {
     </Link>
   );
 }
+function ScoreTile({ icon: Icon, label, value, to }: { icon: any; label: string; value?: number; to: string }) {
+  const v = value ?? 0;
+  const tone = v >= 70 ? "bg-emerald-500" : v >= 45 ? "bg-amber-500" : "bg-rose-500";
+  return (
+    <Link to={to as any} className="block">
+      <Card className="p-3 hover:border-primary/40 transition-colors">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-muted-foreground"><Icon className="size-3.5" /> {label}</div>
+        <div className="mt-1 flex items-baseline justify-between">
+          <div className="text-2xl font-semibold">{value ?? "—"}</div>
+          <div className="text-[10px] text-muted-foreground font-mono">/100</div>
+        </div>
+        <div className="mt-2 h-1 rounded-full bg-surface-2 overflow-hidden">
+          <div className={`h-full ${tone}`} style={{ width: `${v}%` }} />
+        </div>
+      </Card>
+    </Link>
+  );
+}
