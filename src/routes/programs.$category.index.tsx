@@ -26,10 +26,12 @@ export const Route = createFileRoute("/programs/$category/")({
   loader: async ({ params }) => ({ seo: await getCategorySeo(params.category) }),
   head: ({ params, loaderData }) => {
     const seo = loaderData?.seo;
+    const editorial = getCategoryEditorial(params.category);
     const canonical = `${SITE_URL}/programs/${params.category}`;
     const name = seo?.name ?? prettify(params.category);
-    const title = seo?.seo_title ?? `${name} Programs | Glintr`;
+    const title = editorial?.seoTitle ?? seo?.seo_title ?? `${name} Programs | Glintr`;
     const description =
+      editorial?.seoDescription ??
       seo?.seo_description ??
       seo?.short_description ??
       `Explore ${name} career programs on Glintr — practical, mentor-led courses.`;
@@ -58,10 +60,37 @@ export const Route = createFileRoute("/programs/$category/")({
         { "@type": "ListItem", position: 3, name, item: canonical },
       ],
     };
+    const scripts: Array<{ type: string; children: string }> = [
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbs) },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: title,
+          description,
+          url: canonical,
+        }),
+      },
+    ];
+    if (editorial?.faqs?.length) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: editorial.faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      });
+    }
     return {
       meta,
       links: [{ rel: "canonical", href: canonical }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(breadcrumbs) }],
+      scripts,
     };
   },
   component: CategoryPage,
