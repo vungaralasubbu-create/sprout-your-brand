@@ -158,7 +158,7 @@ function FeaturedGuides({ guides }: { guides: LearnArticle[] }) {
             )}
           >
             <div className="mb-4 flex items-center gap-3 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              <Badge variant="secondary" className="rounded-full">
+              <Badge variant="muted" className="rounded-full">
                 {g.level}
               </Badge>
               <span className="inline-flex items-center gap-1">

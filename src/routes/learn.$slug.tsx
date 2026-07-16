@@ -140,7 +140,7 @@ function LearnArticlePage() {
           {/* header */}
           <header className="mb-10">
             <div className="mb-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-              <Badge variant="secondary" className="rounded-full uppercase tracking-wider">
+              <Badge variant="muted" className="rounded-full uppercase tracking-wider">
                 {article.level}
               </Badge>
               <span className="inline-flex items-center gap-1">
@@ -156,7 +156,7 @@ function LearnArticlePage() {
             <p className="mt-4 text-pretty text-lg text-muted-foreground">{article.subtitle}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button
-                variant={bookmarked ? "default" : "outline"}
+                variant={bookmarked ? "primary" : "outline"}
                 size="sm"
                 onClick={() => {
                   const list = toggleLearnBookmark(slug);
