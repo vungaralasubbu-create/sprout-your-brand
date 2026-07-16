@@ -361,9 +361,41 @@ function BlogDetailPage() {
             </div>
             <h1 className="text-hero text-balance">{post.title}</h1>
             {post.subtitle ? (
-              <p className="text-subheading text-muted-foreground text-pretty">{post.subtitle}</p>
+              <p className="text-subheading text-muted-foreground text-pretty" data-speakable>
+                {post.subtitle}
+              </p>
             ) : null}
-            <p className="text-body text-muted-foreground">{post.short_summary}</p>
+            <p className="text-body text-muted-foreground" data-speakable>
+              {post.short_summary}
+            </p>
+
+            {/* Reader actions — bookmark, print, workspace */}
+            <div className="mt-2 flex flex-wrap items-center gap-2 print:hidden" data-blog-noprint>
+              <Button
+                variant={bookmarked ? "default" : "outline"}
+                size="sm"
+                onClick={toggleBookmark}
+                aria-pressed={bookmarked}
+                aria-label={bookmarked ? "Remove bookmark" : "Bookmark this article"}
+              >
+                {bookmarked ? (
+                  <>
+                    <BookmarkCheck className="size-4 mr-1.5" /> Saved
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="size-4 mr-1.5" /> Save
+                  </>
+                )}
+              </Button>
+              <Button variant="outline" size="sm" onClick={onPrint} aria-label="Print or save as PDF">
+                <Printer className="size-4 mr-1.5" /> Print / PDF
+              </Button>
+              <Button variant="outline" size="sm" onClick={onPrint} aria-label="Download as PDF">
+                <Download className="size-4 mr-1.5" /> Download PDF
+              </Button>
+            </div>
+
 
             {/* Meta strip */}
             <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-caption">
