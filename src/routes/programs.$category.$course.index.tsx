@@ -51,7 +51,20 @@ import {
 
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
-import { CourseTrustStats } from "@/components/course/trust-stats";
+
+import {
+  HiringPartners,
+  ToolsMaster,
+  StudentLearningJourney,
+  PortfolioProjects,
+  CareerRoadmap,
+  SalaryGrowth,
+  CareerServices,
+  CertificationBadges,
+  SuccessCounters,
+  AIToolsUsage,
+  ProgramPersonalization,
+} from "@/components/course/premium-sections";
 import { CertificateShowcase } from "@/components/course/certificate-showcase";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
@@ -457,8 +470,20 @@ function CoursePage() {
         </Container>
       </Section>
 
-      {/* ============ TRUST STATS ============ */}
-      <CourseTrustStats />
+      {/* ============ SUCCESS COUNTERS ============ */}
+      <SuccessCounters />
+
+      {/* ============ PERSONALIZATION (journey-aware) ============ */}
+      <ProgramPersonalization />
+
+      {/* ============ HIRING PARTNERS ============ */}
+      <HiringPartners />
+
+      {/* ============ TOOLS YOU'LL MASTER ============ */}
+      <ToolsMaster />
+
+      {/* ============ 8-STAGE JOURNEY ============ */}
+      <StudentLearningJourney />
 
       {/* ============ LEARNING JOURNEY ============ */}
       <Section className="py-16 lg:py-24 bg-surface-2/40 border-y">
@@ -766,6 +791,21 @@ function CoursePage() {
           </div>
         </SectionBlock>
       ) : null}
+
+      {/* ============ CAREER ROADMAP ============ */}
+      <CareerRoadmap />
+
+      {/* ============ SALARY GROWTH ============ */}
+      <SalaryGrowth />
+
+      {/* ============ CAREER SERVICES ============ */}
+      <CareerServices />
+
+      {/* ============ CERTIFICATION BADGES ============ */}
+      <CertificationBadges />
+
+      {/* ============ AI IN YOUR WORKFLOW ============ */}
+      <AIToolsUsage />
 
       {/* ============ PRICING ============ */}
       <CoursePricingPlans
