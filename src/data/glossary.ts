@@ -15,17 +15,21 @@ export type GlossaryCategory =
   | "Software Development"
   | "Programming"
   | "Cloud"
+  | "Cyber Security"
   | "VLSI"
   | "Embedded Systems"
   | "IoT"
   | "Robotics"
   | "Mechanical Engineering"
   | "Digital Marketing"
+  | "Business"
   | "Finance"
   | "Investment Banking"
   | "Human Resources"
+  | "Healthcare"
   | "Medical Coding"
   | "Genetic Engineering"
+  | "Career"
   | "General Technology";
 
 export interface GlossaryEntry {
@@ -37,10 +41,15 @@ export interface GlossaryEntry {
   technical?: string;
   examples?: string[];
   mistakes?: string[];
+  applications?: string[];
+  advantages?: string[];
+  limitations?: string[];
   aliases?: string[];
   related?: string[];
   relatedPrograms?: string[];
   relatedBlogs?: string[];
+  relatedLearn?: string[];
+  nextTopic?: string;
   faqs?: Array<{ question: string; answer: string }>;
   category: GlossaryCategory;
   popular?: boolean;
