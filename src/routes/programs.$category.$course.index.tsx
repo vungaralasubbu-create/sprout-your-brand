@@ -795,6 +795,9 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
+      {/* ============ PORTFOLIO PROJECTS ============ */}
+      <PortfolioProjects projects={contentPack.portfolio} />
+
       {/* ============ CAREER ROADMAP ============ */}
       <CareerRoadmap stages={contentPack.careerRoadmap} />
 
