@@ -15,7 +15,7 @@ function statusBadge(status: WorkflowRun["status"]) {
   if (status === "success") return <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200"><CheckCircle2 className="size-3 mr-1" />success</Badge>;
   if (status === "failed") return <Badge className="bg-rose-100 text-rose-800 border-rose-200"><XCircle className="size-3 mr-1" />failed</Badge>;
   if (status === "waiting_approval") return <Badge className="bg-amber-100 text-amber-800 border-amber-200">approval</Badge>;
-  return <Badge variant="secondary"><Clock className="size-3 mr-1" />{status}</Badge>;
+  return <Badge variant="muted"><Clock className="size-3 mr-1" />{status}</Badge>;
 }
 
 function History() {

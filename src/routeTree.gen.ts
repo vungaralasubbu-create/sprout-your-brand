@@ -233,6 +233,7 @@ import { Route as AuthenticatedAmbassadorReferralsIndexRouteImport } from './rou
 import { Route as AuthenticatedAmbassadorMarketingResourcesIndexRouteImport } from './routes/_authenticated/ambassador.marketing-resources.index'
 import { Route as AuthenticatedAmbassadorEnrollmentsIndexRouteImport } from './routes/_authenticated/ambassador.enrollments.index'
 import { Route as AuthenticatedAmbassadorEarningsIndexRouteImport } from './routes/_authenticated/ambassador.earnings.index'
+import { Route as AuthenticatedAdminWorkflowsIndexRouteImport } from './routes/_authenticated/admin.workflows.index'
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
@@ -241,6 +242,7 @@ import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
 import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
+import { Route as AuthenticatedAdminAutomationIndexRouteImport } from './routes/_authenticated/admin.automation.index'
 import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
 import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
 import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
@@ -263,6 +265,9 @@ import { Route as AuthenticatedAmbassadorReferralsIdRouteImport } from './routes
 import { Route as AuthenticatedAmbassadorPayoutsIdRouteImport } from './routes/_authenticated/ambassador.payouts.$id'
 import { Route as AuthenticatedAmbassadorEnrollmentsIdRouteImport } from './routes/_authenticated/ambassador.enrollments.$id'
 import { Route as AuthenticatedAmbassadorEarningsIdRouteImport } from './routes/_authenticated/ambassador.earnings.$id'
+import { Route as AuthenticatedAdminWorkflowsTemplatesRouteImport } from './routes/_authenticated/admin.workflows.templates'
+import { Route as AuthenticatedAdminWorkflowsNewRouteImport } from './routes/_authenticated/admin.workflows.new'
+import { Route as AuthenticatedAdminWorkflowsIdRouteImport } from './routes/_authenticated/admin.workflows.$id'
 import { Route as AuthenticatedAdminTeamIdRouteImport } from './routes/_authenticated/admin.team.$id'
 import { Route as AuthenticatedAdminSupportIdRouteImport } from './routes/_authenticated/admin.support.$id'
 import { Route as AuthenticatedAdminRiskReviewIdRouteImport } from './routes/_authenticated/admin.risk-review.$id'
@@ -300,6 +305,8 @@ import { Route as AuthenticatedAdminContentIntelligenceFaqsRouteImport } from '.
 import { Route as AuthenticatedAdminContentIntelligenceEntitiesRouteImport } from './routes/_authenticated/admin.content-intelligence.entities'
 import { Route as AuthenticatedAdminContentIntelligenceDecayRouteImport } from './routes/_authenticated/admin.content-intelligence.decay'
 import { Route as AuthenticatedAdminContentIntelligenceComparisonsRouteImport } from './routes/_authenticated/admin.content-intelligence.comparisons'
+import { Route as AuthenticatedAdminAutomationHistoryRouteImport } from './routes/_authenticated/admin.automation.history'
+import { Route as AuthenticatedAdminAutomationAuditRouteImport } from './routes/_authenticated/admin.automation.audit'
 import { Route as AuthenticatedAdminAiosSettingsRouteImport } from './routes/_authenticated/admin.aios.settings'
 import { Route as AuthenticatedAdminAiosPromptsRouteImport } from './routes/_authenticated/admin.aios.prompts'
 import { Route as AuthenticatedAdminAiosKnowledgeRouteImport } from './routes/_authenticated/admin.aios.knowledge'
@@ -1554,6 +1561,12 @@ const AuthenticatedAmbassadorEarningsIndexRoute =
     path: '/earnings/',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAdminWorkflowsIndexRoute =
+  AuthenticatedAdminWorkflowsIndexRouteImport.update({
+    id: '/workflows/',
+    path: '/workflows/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminTeamIndexRoute =
   AuthenticatedAdminTeamIndexRouteImport.update({
     id: '/team/',
@@ -1601,6 +1614,12 @@ const AuthenticatedAdminContentIntelligenceIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminAutomationIndexRoute =
+  AuthenticatedAdminAutomationIndexRouteImport.update({
+    id: '/automation/',
+    path: '/automation/',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminAiosIndexRoute =
   AuthenticatedAdminAiosIndexRouteImport.update({
@@ -1733,6 +1752,24 @@ const AuthenticatedAmbassadorEarningsIdRoute =
     id: '/earnings/$id',
     path: '/earnings/$id',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
+  } as any)
+const AuthenticatedAdminWorkflowsTemplatesRoute =
+  AuthenticatedAdminWorkflowsTemplatesRouteImport.update({
+    id: '/workflows/templates',
+    path: '/workflows/templates',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminWorkflowsNewRoute =
+  AuthenticatedAdminWorkflowsNewRouteImport.update({
+    id: '/workflows/new',
+    path: '/workflows/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminWorkflowsIdRoute =
+  AuthenticatedAdminWorkflowsIdRouteImport.update({
+    id: '/workflows/$id',
+    path: '/workflows/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminTeamIdRoute =
   AuthenticatedAdminTeamIdRouteImport.update({
@@ -1955,6 +1992,18 @@ const AuthenticatedAdminContentIntelligenceComparisonsRoute =
     id: '/comparisons',
     path: '/comparisons',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminAutomationHistoryRoute =
+  AuthenticatedAdminAutomationHistoryRouteImport.update({
+    id: '/automation/history',
+    path: '/automation/history',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminAutomationAuditRoute =
+  AuthenticatedAdminAutomationAuditRouteImport.update({
+    id: '/automation/audit',
+    path: '/automation/audit',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminAiosSettingsRoute =
   AuthenticatedAdminAiosSettingsRouteImport.update({
@@ -2325,6 +2374,8 @@ export interface FileRoutesByFullPath {
   '/admin/aios/knowledge': typeof AuthenticatedAdminAiosKnowledgeRoute
   '/admin/aios/prompts': typeof AuthenticatedAdminAiosPromptsRoute
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
+  '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
+  '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
   '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
@@ -2362,6 +2413,9 @@ export interface FileRoutesByFullPath {
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
+  '/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
+  '/admin/workflows/new': typeof AuthenticatedAdminWorkflowsNewRoute
+  '/admin/workflows/templates': typeof AuthenticatedAdminWorkflowsTemplatesRoute
   '/ambassador/earnings/$id': typeof AuthenticatedAmbassadorEarningsIdRoute
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
@@ -2384,6 +2438,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
+  '/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
   '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -2392,6 +2447,7 @@ export interface FileRoutesByFullPath {
   '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
+  '/admin/workflows/': typeof AuthenticatedAdminWorkflowsIndexRoute
   '/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
@@ -2629,6 +2685,8 @@ export interface FileRoutesByTo {
   '/admin/aios/knowledge': typeof AuthenticatedAdminAiosKnowledgeRoute
   '/admin/aios/prompts': typeof AuthenticatedAdminAiosPromptsRoute
   '/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
+  '/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
+  '/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
   '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
   '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
@@ -2666,6 +2724,9 @@ export interface FileRoutesByTo {
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
+  '/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
+  '/admin/workflows/new': typeof AuthenticatedAdminWorkflowsNewRoute
+  '/admin/workflows/templates': typeof AuthenticatedAdminWorkflowsTemplatesRoute
   '/ambassador/earnings/$id': typeof AuthenticatedAmbassadorEarningsIdRoute
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
@@ -2688,6 +2749,7 @@ export interface FileRoutesByTo {
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
+  '/admin/automation': typeof AuthenticatedAdminAutomationIndexRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
@@ -2696,6 +2758,7 @@ export interface FileRoutesByTo {
   '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
+  '/admin/workflows': typeof AuthenticatedAdminWorkflowsIndexRoute
   '/ambassador/earnings': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/ambassador/enrollments': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/ambassador/marketing-resources': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
@@ -2947,6 +3010,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/aios/knowledge': typeof AuthenticatedAdminAiosKnowledgeRoute
   '/_authenticated/admin/aios/prompts': typeof AuthenticatedAdminAiosPromptsRoute
   '/_authenticated/admin/aios/settings': typeof AuthenticatedAdminAiosSettingsRoute
+  '/_authenticated/admin/automation/audit': typeof AuthenticatedAdminAutomationAuditRoute
+  '/_authenticated/admin/automation/history': typeof AuthenticatedAdminAutomationHistoryRoute
   '/_authenticated/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
   '/_authenticated/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
   '/_authenticated/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
@@ -2984,6 +3049,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
   '/_authenticated/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/_authenticated/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
+  '/_authenticated/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
+  '/_authenticated/admin/workflows/new': typeof AuthenticatedAdminWorkflowsNewRoute
+  '/_authenticated/admin/workflows/templates': typeof AuthenticatedAdminWorkflowsTemplatesRoute
   '/_authenticated/ambassador/earnings/$id': typeof AuthenticatedAmbassadorEarningsIdRoute
   '/_authenticated/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/_authenticated/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
@@ -3006,6 +3074,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
   '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
+  '/_authenticated/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
   '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -3014,6 +3083,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
+  '/_authenticated/admin/workflows/': typeof AuthenticatedAdminWorkflowsIndexRoute
   '/_authenticated/ambassador/earnings/': typeof AuthenticatedAmbassadorEarningsIndexRoute
   '/_authenticated/ambassador/enrollments/': typeof AuthenticatedAmbassadorEnrollmentsIndexRoute
   '/_authenticated/ambassador/marketing-resources/': typeof AuthenticatedAmbassadorMarketingResourcesIndexRoute
@@ -3265,6 +3335,8 @@ export interface FileRouteTypes {
     | '/admin/aios/knowledge'
     | '/admin/aios/prompts'
     | '/admin/aios/settings'
+    | '/admin/automation/audit'
+    | '/admin/automation/history'
     | '/admin/content-intelligence/comparisons'
     | '/admin/content-intelligence/decay'
     | '/admin/content-intelligence/entities'
@@ -3302,6 +3374,9 @@ export interface FileRouteTypes {
     | '/admin/risk-review/$id'
     | '/admin/support/$id'
     | '/admin/team/$id'
+    | '/admin/workflows/$id'
+    | '/admin/workflows/new'
+    | '/admin/workflows/templates'
     | '/ambassador/earnings/$id'
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
@@ -3324,6 +3399,7 @@ export interface FileRouteTypes {
     | '/admin/ai-agents/'
     | '/admin/ai-content/'
     | '/admin/aios/'
+    | '/admin/automation/'
     | '/admin/content-intelligence/'
     | '/admin/content/'
     | '/admin/courses/'
@@ -3332,6 +3408,7 @@ export interface FileRouteTypes {
     | '/admin/payment-links/'
     | '/admin/payouts/'
     | '/admin/team/'
+    | '/admin/workflows/'
     | '/ambassador/earnings/'
     | '/ambassador/enrollments/'
     | '/ambassador/marketing-resources/'
@@ -3569,6 +3646,8 @@ export interface FileRouteTypes {
     | '/admin/aios/knowledge'
     | '/admin/aios/prompts'
     | '/admin/aios/settings'
+    | '/admin/automation/audit'
+    | '/admin/automation/history'
     | '/admin/content-intelligence/comparisons'
     | '/admin/content-intelligence/decay'
     | '/admin/content-intelligence/entities'
@@ -3606,6 +3685,9 @@ export interface FileRouteTypes {
     | '/admin/risk-review/$id'
     | '/admin/support/$id'
     | '/admin/team/$id'
+    | '/admin/workflows/$id'
+    | '/admin/workflows/new'
+    | '/admin/workflows/templates'
     | '/ambassador/earnings/$id'
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
@@ -3628,6 +3710,7 @@ export interface FileRouteTypes {
     | '/admin/ai-agents'
     | '/admin/ai-content'
     | '/admin/aios'
+    | '/admin/automation'
     | '/admin/content-intelligence'
     | '/admin/content'
     | '/admin/courses'
@@ -3636,6 +3719,7 @@ export interface FileRouteTypes {
     | '/admin/payment-links'
     | '/admin/payouts'
     | '/admin/team'
+    | '/admin/workflows'
     | '/ambassador/earnings'
     | '/ambassador/enrollments'
     | '/ambassador/marketing-resources'
@@ -3886,6 +3970,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/aios/knowledge'
     | '/_authenticated/admin/aios/prompts'
     | '/_authenticated/admin/aios/settings'
+    | '/_authenticated/admin/automation/audit'
+    | '/_authenticated/admin/automation/history'
     | '/_authenticated/admin/content-intelligence/comparisons'
     | '/_authenticated/admin/content-intelligence/decay'
     | '/_authenticated/admin/content-intelligence/entities'
@@ -3923,6 +4009,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/risk-review/$id'
     | '/_authenticated/admin/support/$id'
     | '/_authenticated/admin/team/$id'
+    | '/_authenticated/admin/workflows/$id'
+    | '/_authenticated/admin/workflows/new'
+    | '/_authenticated/admin/workflows/templates'
     | '/_authenticated/ambassador/earnings/$id'
     | '/_authenticated/ambassador/enrollments/$id'
     | '/_authenticated/ambassador/payouts/$id'
@@ -3945,6 +4034,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-agents/'
     | '/_authenticated/admin/ai-content/'
     | '/_authenticated/admin/aios/'
+    | '/_authenticated/admin/automation/'
     | '/_authenticated/admin/content-intelligence/'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
@@ -3953,6 +4043,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/payment-links/'
     | '/_authenticated/admin/payouts/'
     | '/_authenticated/admin/team/'
+    | '/_authenticated/admin/workflows/'
     | '/_authenticated/ambassador/earnings/'
     | '/_authenticated/ambassador/enrollments/'
     | '/_authenticated/ambassador/marketing-resources/'
@@ -5613,6 +5704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorEarningsIndexRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/admin/workflows/': {
+      id: '/_authenticated/admin/workflows/'
+      path: '/workflows'
+      fullPath: '/admin/workflows/'
+      preLoaderRoute: typeof AuthenticatedAdminWorkflowsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/team/': {
       id: '/_authenticated/admin/team/'
       path: '/team'
@@ -5668,6 +5766,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/content-intelligence/'
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/automation/': {
+      id: '/_authenticated/admin/automation/'
+      path: '/automation'
+      fullPath: '/admin/automation/'
+      preLoaderRoute: typeof AuthenticatedAdminAutomationIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/aios/': {
       id: '/_authenticated/admin/aios/'
@@ -5822,6 +5927,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/ambassador/earnings/$id'
       preLoaderRoute: typeof AuthenticatedAmbassadorEarningsIdRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
+    }
+    '/_authenticated/admin/workflows/templates': {
+      id: '/_authenticated/admin/workflows/templates'
+      path: '/workflows/templates'
+      fullPath: '/admin/workflows/templates'
+      preLoaderRoute: typeof AuthenticatedAdminWorkflowsTemplatesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/workflows/new': {
+      id: '/_authenticated/admin/workflows/new'
+      path: '/workflows/new'
+      fullPath: '/admin/workflows/new'
+      preLoaderRoute: typeof AuthenticatedAdminWorkflowsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/workflows/$id': {
+      id: '/_authenticated/admin/workflows/$id'
+      path: '/workflows/$id'
+      fullPath: '/admin/workflows/$id'
+      preLoaderRoute: typeof AuthenticatedAdminWorkflowsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/team/$id': {
       id: '/_authenticated/admin/team/$id'
@@ -6081,6 +6207,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/content-intelligence/comparisons'
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceComparisonsRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/automation/history': {
+      id: '/_authenticated/admin/automation/history'
+      path: '/automation/history'
+      fullPath: '/admin/automation/history'
+      preLoaderRoute: typeof AuthenticatedAdminAutomationHistoryRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/automation/audit': {
+      id: '/_authenticated/admin/automation/audit'
+      path: '/automation/audit'
+      fullPath: '/admin/automation/audit'
+      preLoaderRoute: typeof AuthenticatedAdminAutomationAuditRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/aios/settings': {
       id: '/_authenticated/admin/aios/settings'
@@ -6520,18 +6660,25 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRouteWithChildren
   AuthenticatedAdminVoiceAiRoute: typeof AuthenticatedAdminVoiceAiRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminAutomationAuditRoute: typeof AuthenticatedAdminAutomationAuditRoute
+  AuthenticatedAdminAutomationHistoryRoute: typeof AuthenticatedAdminAutomationHistoryRoute
   AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
   AuthenticatedAdminEmployeesIdRoute: typeof AuthenticatedAdminEmployeesIdRoute
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
   AuthenticatedAdminPaymentLinksIdRoute: typeof AuthenticatedAdminPaymentLinksIdRoute
   AuthenticatedAdminPayoutsIdRoute: typeof AuthenticatedAdminPayoutsIdRoute
   AuthenticatedAdminTeamIdRoute: typeof AuthenticatedAdminTeamIdRoute
+  AuthenticatedAdminWorkflowsIdRoute: typeof AuthenticatedAdminWorkflowsIdRoute
+  AuthenticatedAdminWorkflowsNewRoute: typeof AuthenticatedAdminWorkflowsNewRoute
+  AuthenticatedAdminWorkflowsTemplatesRoute: typeof AuthenticatedAdminWorkflowsTemplatesRoute
+  AuthenticatedAdminAutomationIndexRoute: typeof AuthenticatedAdminAutomationIndexRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
   AuthenticatedAdminEmployeesIndexRoute: typeof AuthenticatedAdminEmployeesIndexRoute
   AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
   AuthenticatedAdminPaymentLinksIndexRoute: typeof AuthenticatedAdminPaymentLinksIndexRoute
   AuthenticatedAdminPayoutsIndexRoute: typeof AuthenticatedAdminPayoutsIndexRoute
   AuthenticatedAdminTeamIndexRoute: typeof AuthenticatedAdminTeamIndexRoute
+  AuthenticatedAdminWorkflowsIndexRoute: typeof AuthenticatedAdminWorkflowsIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
@@ -6586,12 +6733,22 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRouteWithChildren,
   AuthenticatedAdminVoiceAiRoute: AuthenticatedAdminVoiceAiRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminAutomationAuditRoute:
+    AuthenticatedAdminAutomationAuditRoute,
+  AuthenticatedAdminAutomationHistoryRoute:
+    AuthenticatedAdminAutomationHistoryRoute,
   AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
   AuthenticatedAdminEmployeesIdRoute: AuthenticatedAdminEmployeesIdRoute,
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
   AuthenticatedAdminPaymentLinksIdRoute: AuthenticatedAdminPaymentLinksIdRoute,
   AuthenticatedAdminPayoutsIdRoute: AuthenticatedAdminPayoutsIdRoute,
   AuthenticatedAdminTeamIdRoute: AuthenticatedAdminTeamIdRoute,
+  AuthenticatedAdminWorkflowsIdRoute: AuthenticatedAdminWorkflowsIdRoute,
+  AuthenticatedAdminWorkflowsNewRoute: AuthenticatedAdminWorkflowsNewRoute,
+  AuthenticatedAdminWorkflowsTemplatesRoute:
+    AuthenticatedAdminWorkflowsTemplatesRoute,
+  AuthenticatedAdminAutomationIndexRoute:
+    AuthenticatedAdminAutomationIndexRoute,
   AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
   AuthenticatedAdminEmployeesIndexRoute: AuthenticatedAdminEmployeesIndexRoute,
   AuthenticatedAdminPartnersIndexRoute: AuthenticatedAdminPartnersIndexRoute,
@@ -6599,6 +6756,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminPaymentLinksIndexRoute,
   AuthenticatedAdminPayoutsIndexRoute: AuthenticatedAdminPayoutsIndexRoute,
   AuthenticatedAdminTeamIndexRoute: AuthenticatedAdminTeamIndexRoute,
+  AuthenticatedAdminWorkflowsIndexRoute: AuthenticatedAdminWorkflowsIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =

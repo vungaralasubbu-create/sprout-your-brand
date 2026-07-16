@@ -133,7 +133,7 @@ function WorkflowBuilder() {
                   </div>
                   {lastRun.status === "success" ? <Badge className="bg-emerald-100 text-emerald-800"><CheckCircle2 className="size-3 mr-1" />success</Badge>
                    : lastRun.status === "failed" ? <Badge className="bg-rose-100 text-rose-800"><XCircle className="size-3 mr-1" />failed</Badge>
-                   : <Badge variant="secondary">{lastRun.status.replace("_", " ")}</Badge>}
+                   : <Badge variant="muted">{lastRun.status.replace("_", " ")}</Badge>}
                 </div>
                 <div className="divide-y divide-border/60">
                   {lastRun.steps.map((s, i) => (

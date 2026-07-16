@@ -23,7 +23,7 @@ function TemplateLibrary() {
         {TEMPLATES.map((t) => (
           <div key={t.id} className="rounded-lg border border-border/60 bg-white p-4 flex flex-col">
             <div className="flex items-center justify-between">
-              <Badge variant="secondary" className="text-[10px]">{t.category}</Badge>
+              <Badge variant="muted" className="text-[10px]">{t.category}</Badge>
               <span className="text-[10px] font-mono uppercase text-muted-foreground">{t.nodes.length} blocks</span>
             </div>
             <h3 className="mt-2 text-base font-semibold">{t.name}</h3>
