@@ -392,8 +392,21 @@ function CoursePage() {
         </Container>
       </Section>
 
+      {/* ============ GEO: QUICK ANSWER + KEY TAKEAWAYS ============ */}
+      <Section className="py-10 lg:py-14 border-t bg-surface-1/40">
+        <Container>
+          <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 lg:gap-8">
+            <QuickAnswer
+              term={c.name}
+              question={`What is ${c.name}?`}
+              answer={quickAnswer}
+            />
+            {keyTakeaways.length ? <KeyTakeaways items={keyTakeaways} /> : null}
+          </div>
+        </Container>
+      </Section>
 
-      {/* ============ DARK COURSE INTRO ============ */}
+
       <Section className="relative overflow-hidden py-20 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
         <div
           aria-hidden
