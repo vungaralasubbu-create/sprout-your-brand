@@ -109,7 +109,7 @@ export function generateMessage(lead: SalesLead, channel: MessageChannel, intent
 
 export interface FollowUpStep {
   offsetHours: number;
-  channel: MessageChannel;
+  channel: MessageChannel | "call";
   action: string;
   detail: string;
 }
