@@ -4521,6 +4521,474 @@ export type Database = {
         }
         Relationships: []
       }
+      content_analytics_events: {
+        Row: {
+          content_id: string
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          reading_time_sec: number | null
+          referrer: string | null
+          scroll_percent: number | null
+          session_id: string | null
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          reading_time_sec?: number | null
+          referrer?: string | null
+          scroll_percent?: number | null
+          session_id?: string | null
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          reading_time_sec?: number | null
+          referrer?: string | null
+          scroll_percent?: number | null
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_analytics_events_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_authors: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          id: string
+          name: string
+          role: string | null
+          slug: string
+          socials: Json | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          role?: string | null
+          slug: string
+          socials?: Json | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          role?: string | null
+          slug?: string
+          socials?: Json | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      content_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          parent_id: string | null
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          parent_id?: string | null
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          parent_id?: string | null
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_comments: {
+        Row: {
+          anchor: string | null
+          author_name: string | null
+          author_user_id: string | null
+          body: string
+          content_id: string
+          created_at: string
+          id: string
+          resolved: boolean
+        }
+        Insert: {
+          anchor?: string | null
+          author_name?: string | null
+          author_user_id?: string | null
+          body: string
+          content_id: string
+          created_at?: string
+          id?: string
+          resolved?: boolean
+        }
+        Update: {
+          anchor?: string | null
+          author_name?: string | null
+          author_user_id?: string | null
+          body?: string
+          content_id?: string
+          created_at?: string
+          id?: string
+          resolved?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_comments_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_internal_links: {
+        Row: {
+          anchor_text: string | null
+          created_at: string
+          id: string
+          source_content_id: string
+          target_content_id: string | null
+          target_kind: string | null
+          target_url: string
+        }
+        Insert: {
+          anchor_text?: string | null
+          created_at?: string
+          id?: string
+          source_content_id: string
+          target_content_id?: string | null
+          target_kind?: string | null
+          target_url: string
+        }
+        Update: {
+          anchor_text?: string | null
+          created_at?: string
+          id?: string
+          source_content_id?: string
+          target_content_id?: string | null
+          target_kind?: string | null
+          target_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_internal_links_source_content_id_fkey"
+            columns: ["source_content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_internal_links_target_content_id_fkey"
+            columns: ["target_content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_items: {
+        Row: {
+          archived_at: string | null
+          author_id: string | null
+          avg_reading_time_sec: number | null
+          body_markdown: string | null
+          canonical_url: string | null
+          category_id: string | null
+          completion_rate: number | null
+          created_at: string
+          created_by: string | null
+          featured_image: string | null
+          featured_image_alt: string | null
+          focus_topic: string | null
+          id: string
+          internal_click_count: number
+          last_edited_by: string | null
+          metadata: Json | null
+          og_image: string | null
+          outline: Json | null
+          published_at: string | null
+          reading_time_min: number | null
+          related_topics: string[] | null
+          reviewer_id: string | null
+          scheduled_for: string | null
+          schema_type: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: Database["public"]["Enums"]["content_status"]
+          summary: string | null
+          tag_slugs: string[] | null
+          title: string
+          type: Database["public"]["Enums"]["content_type"]
+          updated_at: string
+          view_count: number
+          word_count: number | null
+        }
+        Insert: {
+          archived_at?: string | null
+          author_id?: string | null
+          avg_reading_time_sec?: number | null
+          body_markdown?: string | null
+          canonical_url?: string | null
+          category_id?: string | null
+          completion_rate?: number | null
+          created_at?: string
+          created_by?: string | null
+          featured_image?: string | null
+          featured_image_alt?: string | null
+          focus_topic?: string | null
+          id?: string
+          internal_click_count?: number
+          last_edited_by?: string | null
+          metadata?: Json | null
+          og_image?: string | null
+          outline?: Json | null
+          published_at?: string | null
+          reading_time_min?: number | null
+          related_topics?: string[] | null
+          reviewer_id?: string | null
+          scheduled_for?: string | null
+          schema_type?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["content_status"]
+          summary?: string | null
+          tag_slugs?: string[] | null
+          title: string
+          type: Database["public"]["Enums"]["content_type"]
+          updated_at?: string
+          view_count?: number
+          word_count?: number | null
+        }
+        Update: {
+          archived_at?: string | null
+          author_id?: string | null
+          avg_reading_time_sec?: number | null
+          body_markdown?: string | null
+          canonical_url?: string | null
+          category_id?: string | null
+          completion_rate?: number | null
+          created_at?: string
+          created_by?: string | null
+          featured_image?: string | null
+          featured_image_alt?: string | null
+          focus_topic?: string | null
+          id?: string
+          internal_click_count?: number
+          last_edited_by?: string | null
+          metadata?: Json | null
+          og_image?: string | null
+          outline?: Json | null
+          published_at?: string | null
+          reading_time_min?: number | null
+          related_topics?: string[] | null
+          reviewer_id?: string | null
+          scheduled_for?: string | null
+          schema_type?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["content_status"]
+          summary?: string | null
+          tag_slugs?: string[] | null
+          title?: string
+          type?: Database["public"]["Enums"]["content_type"]
+          updated_at?: string
+          view_count?: number
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_items_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "content_authors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_items_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "content_authors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_media: {
+        Row: {
+          alt_text: string | null
+          caption: string | null
+          created_at: string
+          file_name: string
+          folder: string | null
+          height: number | null
+          id: string
+          mime_type: string | null
+          public_url: string
+          size_bytes: number | null
+          storage_path: string
+          tags: string[] | null
+          uploaded_by: string | null
+          width: number | null
+        }
+        Insert: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string
+          file_name: string
+          folder?: string | null
+          height?: number | null
+          id?: string
+          mime_type?: string | null
+          public_url: string
+          size_bytes?: number | null
+          storage_path: string
+          tags?: string[] | null
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Update: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string
+          file_name?: string
+          folder?: string | null
+          height?: number | null
+          id?: string
+          mime_type?: string | null
+          public_url?: string
+          size_bytes?: number | null
+          storage_path?: string
+          tags?: string[] | null
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Relationships: []
+      }
+      content_revisions: {
+        Row: {
+          body_markdown: string | null
+          change_note: string | null
+          content_id: string
+          created_at: string
+          edited_by: string | null
+          id: string
+          revision_number: number
+          snapshot: Json
+          status: Database["public"]["Enums"]["content_status"] | null
+          title: string | null
+        }
+        Insert: {
+          body_markdown?: string | null
+          change_note?: string | null
+          content_id: string
+          created_at?: string
+          edited_by?: string | null
+          id?: string
+          revision_number: number
+          snapshot: Json
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title?: string | null
+        }
+        Update: {
+          body_markdown?: string | null
+          change_note?: string | null
+          content_id?: string
+          created_at?: string
+          edited_by?: string | null
+          id?: string
+          revision_number?: number
+          snapshot?: Json
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_revisions_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_tags: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          usage_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          usage_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       course_applications: {
         Row: {
           city: string | null
@@ -12116,6 +12584,7 @@ export type Database = {
       normalize_phone: { Args: { _phone: string }; Returns: string }
       notify_campaigns_ending_soon: { Args: never; Returns: number }
       partner_id_for: { Args: { _user_id: string }; Returns: string }
+      promote_scheduled_content: { Args: never; Returns: undefined }
       scan_referral_patterns: { Args: never; Returns: number }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
@@ -12369,7 +12838,24 @@ export type Database = {
         | "media"
         | "careers"
         | "other"
-      content_status: "draft" | "published" | "archived"
+      content_status:
+        | "draft"
+        | "published"
+        | "archived"
+        | "in_review"
+        | "approved"
+        | "scheduled"
+      content_type:
+        | "learn_guide"
+        | "glossary"
+        | "comparison"
+        | "faq"
+        | "roadmap"
+        | "career_guide"
+        | "interview_guide"
+        | "cheat_sheet"
+        | "learning_path"
+        | "program_support"
       course_app_status:
         | "new"
         | "contacted"
@@ -13105,7 +13591,26 @@ export const Constants = {
         "careers",
         "other",
       ],
-      content_status: ["draft", "published", "archived"],
+      content_status: [
+        "draft",
+        "published",
+        "archived",
+        "in_review",
+        "approved",
+        "scheduled",
+      ],
+      content_type: [
+        "learn_guide",
+        "glossary",
+        "comparison",
+        "faq",
+        "roadmap",
+        "career_guide",
+        "interview_guide",
+        "cheat_sheet",
+        "learning_path",
+        "program_support",
+      ],
       course_app_status: [
         "new",
         "contacted",
