@@ -43,7 +43,7 @@ const searchSchema = z.object({
 });
 type BlogSearch = z.infer<typeof searchSchema>;
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/blog/")({
   validateSearch: (s) => searchSchema.parse(s),
   head: () => ({
     meta: [
