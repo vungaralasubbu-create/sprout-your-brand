@@ -246,8 +246,8 @@ function FactoryPage() {
                   <Button variant="outline" onClick={() => runQa.mutate()} disabled={runQa.isPending}>
                     {runQa.isPending ? <Loader2 className="size-4 animate-spin" /> : <ClipboardCheck className="size-4 mr-1.5" />} Run QA
                   </Button>
-                  <Button onClick={() => publish.mutate()} disabled={publish.isPending}>
-                    {publish.isPending ? <><Loader2 className="size-4 mr-1.5 animate-spin" />Publishing…</> : <><Rocket className="size-4 mr-1.5" />Publish blog</>}
+                  <Button onClick={() => setChecklistOpen(true)} disabled={publish.isPending}>
+                    {publish.isPending ? <><Loader2 className="size-4 mr-1.5 animate-spin" />Publishing…</> : <><Rocket className="size-4 mr-1.5" />Review &amp; publish</>}
                   </Button>
                 </>
               )}
