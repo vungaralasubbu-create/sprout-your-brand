@@ -6,7 +6,7 @@ import { glossaryByCategory, listGlossary } from "@/data/glossary";
 
 const SITE_URL = "https://glintr.com";
 
-export const Route = createFileRoute("/entities")({
+export const Route = createFileRoute("/entities/")({
   head: () => {
     const canonical = `${SITE_URL}/entities`;
     const title = "Entity Directory — AI, Engineering, Finance & More | Glintr";
