@@ -165,6 +165,21 @@ export function AiMentor() {
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
+  const failStreakRef = useRef(0);
+
+  const pushSupportCard = useCallback(() => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: makeId(),
+        role: "assistant",
+        kind: "support",
+        content:
+          "I'll hand you over to our team so you get help quickly. Their details are right here.",
+      },
+    ]);
+  }, []);
+
   const send = useCallback(
     async (text: string) => {
       const clean = text.trim();
@@ -173,8 +188,16 @@ export function AiMentor() {
       const nextHistory = [...messages, userMsg];
       setMessages(nextHistory);
       setInput("");
-      setLoading(true);
       track("mentor_message_sent", { path: pathname });
+
+      // Human-support escalation trigger — skip the AI call entirely.
+      if (HUMAN_TRIGGERS.some((rx) => rx.test(clean))) {
+        pushSupportCard();
+        setTimeout(() => inputRef.current?.focus(), 60);
+        return;
+      }
+
+      setLoading(true);
       try {
         const res = await askMentor({
           data: {
@@ -182,6 +205,7 @@ export function AiMentor() {
             pageContext: ctx,
           },
         });
+        failStreakRef.current = 0;
         setMessages((prev) => [
           ...prev,
           {
@@ -193,22 +217,49 @@ export function AiMentor() {
           },
         ]);
       } catch {
+        failStreakRef.current += 1;
         setMessages((prev) => [
           ...prev,
           {
             id: makeId(),
             role: "assistant",
             content:
-              "I couldn't reach the mentor service just now. Try again in a moment, or explore [Find Your Program](/find-your-program).",
+              "I couldn't reach GlintrAI just now. Try again in a moment, or explore [Find Your Program](/find-your-program).",
           },
         ]);
+        // Smart escalation after repeated failures
+        if (failStreakRef.current >= 2) {
+          failStreakRef.current = 0;
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: makeId(),
+              role: "assistant",
+              kind: "escalation",
+              content:
+                "I'm not completely confident I can resolve this. Would you like me to connect you with the Glintr support team?",
+            },
+          ]);
+        }
       } finally {
         setLoading(false);
         setTimeout(() => inputRef.current?.focus(), 60);
       }
     },
-    [ctx, loading, messages, pathname],
+    [ctx, loading, messages, pathname, pushSupportCard],
   );
+
+  const clearChat = useCallback(() => {
+    setMessages([
+      {
+        id: makeId(),
+        role: "assistant",
+        content: greeting(ctx.section),
+        suggestions: chips,
+      },
+    ]);
+    setTimeout(() => inputRef.current?.focus(), 60);
+  }, [ctx.section, chips]);
 
   if (suppress) return null;
 
