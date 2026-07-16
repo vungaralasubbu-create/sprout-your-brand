@@ -15,6 +15,8 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
   generateCompleteDraft, saveFactoryDraft, aiEditText,
@@ -55,6 +57,9 @@ function FactoryPage() {
   const [images, setImages] = useState<Record<string, string>>({});
   const [savedId, setSavedId] = useState<string | null>(null);
   const [qa, setQa] = useState<any>(null);
+  const [checklistOpen, setChecklistOpen] = useState(false);
+  const [checks, setChecks] = useState<Record<string, boolean>>({});
+  const [reviewerName, setReviewerName] = useState("");
 
   const gen = useMutation({
     mutationFn: () =>
@@ -241,8 +246,8 @@ function FactoryPage() {
                   <Button variant="outline" onClick={() => runQa.mutate()} disabled={runQa.isPending}>
                     {runQa.isPending ? <Loader2 className="size-4 animate-spin" /> : <ClipboardCheck className="size-4 mr-1.5" />} Run QA
                   </Button>
-                  <Button onClick={() => publish.mutate()} disabled={publish.isPending}>
-                    {publish.isPending ? <><Loader2 className="size-4 mr-1.5 animate-spin" />Publishing…</> : <><Rocket className="size-4 mr-1.5" />Publish blog</>}
+                  <Button onClick={() => setChecklistOpen(true)} disabled={publish.isPending}>
+                    {publish.isPending ? <><Loader2 className="size-4 mr-1.5 animate-spin" />Publishing…</> : <><Rocket className="size-4 mr-1.5" />Review &amp; publish</>}
                   </Button>
                 </>
               )}
@@ -502,7 +507,206 @@ function FactoryPage() {
           </Tabs>
         </Card>
       )}
+
+      {/* PRE-PUBLISH EDITORIAL QA CHECKLIST */}
+      <PrePublishChecklist
+        open={checklistOpen}
+        onOpenChange={setChecklistOpen}
+        draft={draft}
+        images={images}
+        checks={checks}
+        setChecks={setChecks}
+        reviewerName={reviewerName}
+        setReviewerName={setReviewerName}
+        publishing={publish.isPending}
+        onConfirm={() => {
+          setChecklistOpen(false);
+          publish.mutate();
+        }}
+      />
     </div>
+  );
+}
+
+// ---------- Checklist ----------
+
+const CHECKLIST_ITEMS: {
+  key: string;
+  label: string;
+  detail: string;
+  verify: (d: any, images: Record<string, string>) => { ok: boolean; hint: string };
+}[] = [
+  {
+    key: "seo_title",
+    label: "SEO title is compelling and 40–65 characters",
+    detail: "Concise, keyword-forward, matches the article's promise.",
+    verify: (d) => {
+      const n = (d?.seo_title ?? "").length;
+      return { ok: n >= 40 && n <= 65, hint: `${n} chars` };
+    },
+  },
+  {
+    key: "meta_description",
+    label: "Meta description is 130–158 characters",
+    detail: "Reads as a natural summary; includes the primary keyword once.",
+    verify: (d) => {
+      const n = (d?.seo_description ?? "").length;
+      return { ok: n >= 130 && n <= 158, hint: `${n} chars` };
+    },
+  },
+  {
+    key: "slug",
+    label: "Slug is clean, lowercase, and unique",
+    detail: "kebab-case, no dates or filler words. Confirm it doesn't clash with an existing blog post.",
+    verify: (d) => {
+      const s = d?.slug ?? "";
+      const ok = /^[a-z0-9]+(-[a-z0-9]+)*$/.test(s) && s.length >= 3 && s.length <= 90;
+      return { ok, hint: s || "(missing)" };
+    },
+  },
+  {
+    key: "faqs",
+    label: "FAQs answer real user questions (at least 4)",
+    detail: "Each answer is factual, self-contained, and 2–4 sentences.",
+    verify: (d) => {
+      const n = (d?.faqs ?? []).length;
+      return { ok: n >= 4, hint: `${n} FAQ${n === 1 ? "" : "s"}` };
+    },
+  },
+  {
+    key: "internal_links",
+    label: "Internal links point to real Glintr pages (at least 3)",
+    detail: "Anchor text is descriptive; every path resolves in the catalog.",
+    verify: (d) => {
+      const n = (d?.internal_links ?? []).length;
+      return { ok: n >= 3, hint: `${n} link${n === 1 ? "" : "s"}` };
+    },
+  },
+  {
+    key: "cta",
+    label: "Call-to-action is on-brand and actionable",
+    detail: "Points to a relevant program or next step, not a generic 'learn more'.",
+    verify: (d) => {
+      const h = (d?.cta_headline ?? "").trim();
+      const b = (d?.cta_body ?? "").trim();
+      return { ok: h.length >= 4 && b.length >= 20, hint: h ? "present" : "missing" };
+    },
+  },
+  {
+    key: "hero_image",
+    label: "Hero image is set and on-brand",
+    detail: "Visually strong, no faces/logos, matches the article topic.",
+    verify: (_d, images) => ({ ok: !!images?.hero, hint: images?.hero ? "set" : "missing" }),
+  },
+  {
+    key: "facts_verified",
+    label: "All statistics, quotes, and claims are verified",
+    detail: "Any AI-flagged warnings above have been checked or removed.",
+    verify: () => ({ ok: true, hint: "editor confirms" }),
+  },
+];
+
+function PrePublishChecklist({
+  open, onOpenChange, draft, images, checks, setChecks,
+  reviewerName, setReviewerName, publishing, onConfirm,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  draft: any;
+  images: Record<string, string>;
+  checks: Record<string, boolean>;
+  setChecks: (v: Record<string, boolean>) => void;
+  reviewerName: string;
+  setReviewerName: (v: string) => void;
+  publishing: boolean;
+  onConfirm: () => void;
+}) {
+  const allChecked = CHECKLIST_ITEMS.every((i) => checks[i.key]);
+  const canPublish = allChecked && reviewerName.trim().length >= 2;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <ClipboardCheck className="size-5 text-primary" />
+            Editor pre-publish checklist
+          </DialogTitle>
+          <DialogDescription>
+            Confirm each item before this draft goes live at <code>/blog/{draft?.slug}</code>. Nothing publishes until every box is ticked.
+          </DialogDescription>
+        </DialogHeader>
+
+        <ul className="space-y-2">
+          {CHECKLIST_ITEMS.map((item) => {
+            const status = item.verify(draft, images);
+            const ticked = !!checks[item.key];
+            return (
+              <li
+                key={item.key}
+                className={cn(
+                  "rounded-md border p-3 transition-colors",
+                  ticked ? "border-emerald-500/40 bg-emerald-50/40" : "border-border/60 bg-white",
+                )}
+              >
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <Checkbox
+                    checked={ticked}
+                    onCheckedChange={(v) => setChecks({ ...checks, [item.key]: !!v })}
+                    className="mt-0.5"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-medium">{item.label}</span>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "text-[10px]",
+                          status.ok ? "border-emerald-500/50 text-emerald-700" : "border-amber-500/50 text-amber-700",
+                        )}
+                      >
+                        {status.ok ? <CheckCircle2 className="size-2.5 mr-1" /> : <AlertTriangle className="size-2.5 mr-1" />}
+                        {status.hint}
+                      </Badge>
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-0.5">{item.detail}</div>
+                  </div>
+                </label>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="rounded-md border border-border/60 p-3">
+          <Label htmlFor="reviewer-name" className="text-xs">Reviewer name (for the audit trail)</Label>
+          <Input
+            id="reviewer-name"
+            value={reviewerName}
+            onChange={(e) => setReviewerName(e.target.value)}
+            placeholder="Your full name"
+            className="mt-1"
+          />
+        </div>
+
+        <DialogFooter className="gap-2 sm:gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={publishing}>
+            Back to draft
+          </Button>
+          <Button onClick={onConfirm} disabled={!canPublish || publishing}>
+            {publishing ? (
+              <><Loader2 className="size-4 mr-1.5 animate-spin" />Publishing…</>
+            ) : (
+              <><Rocket className="size-4 mr-1.5" />Confirm &amp; publish</>
+            )}
+          </Button>
+        </DialogFooter>
+        {!canPublish && (
+          <p className="text-[11px] text-muted-foreground text-right -mt-2">
+            {allChecked ? "Add your reviewer name to publish." : `Tick all ${CHECKLIST_ITEMS.length} items to enable publishing.`}
+          </p>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 
