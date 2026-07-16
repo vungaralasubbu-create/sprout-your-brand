@@ -284,31 +284,8 @@ function BlogDetailPage() {
     return () => obs.disconnect();
   }, [headings]);
 
-  async function onShare() {
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: post?.title, text: post?.short_summary, url });
-        return;
-      } catch {
-        // fall through to copy
-      }
-    }
-    await copyLink();
-  }
 
-  async function copyLink() {
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setCopyFailed(false);
-      setTimeout(() => setCopied(false), 2200);
-    } catch {
-      setCopyFailed(true);
-      setTimeout(() => setCopyFailed(false), 2500);
-    }
-  }
+
 
   // post is guaranteed by the loader (throws notFound on miss).
 
