@@ -41,7 +41,26 @@ import { useBookmark } from "@/components/shared/blog-card";
 const SITE_URL = "https://glintr.com";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: async ({ params }) => ({ post: await getPostBySlug(params.slug) }),
+  loader: async ({ params }) => {
+    const post = await getPostBySlug(params.slug);
+    if (!post) throw notFound();
+    const [related, course] = await Promise.all([
+      listRelatedPosts(post, 6),
+      post.related_course_slug && post.related_course_category_slug
+        ? getCourseBySlug(post.related_course_category_slug, post.related_course_slug)
+        : Promise.resolve(null),
+    ]);
+    const relatedCourse = course
+      ? {
+          slug: course.slug,
+          category_slug: course.category.slug,
+          name: course.name,
+          category_name: course.category.name,
+          short_description: course.short_description,
+        }
+      : null;
+    return { post, related, relatedCourse };
+  },
   head: ({ params, loaderData }) => {
     const post = loaderData?.post ?? null;
     const canonical = `${SITE_URL}/blog/${params.slug}`;
