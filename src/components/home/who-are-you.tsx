@@ -608,7 +608,7 @@ function StudentFlow({ card }: { card: CardDef }) {
               { label: "Resume Builder", to: "/tools" },
               { label: "Mock Interviews", to: "/tools" },
               { label: "Blogs", to: "/blog" },
-              { label: "AI Mentor", to: "/tools", hint: "Ask anything" },
+              { label: "GlintrAI", to: "/tools", hint: "Ask anything" },
             ]}
           />
           <HubCta card={card} />

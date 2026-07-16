@@ -6,9 +6,13 @@ import {
   BookmarkCheck,
   Clock,
   Compass,
+  LifeBuoy,
+  Mail,
   MessageSquare,
+  Phone,
   Send,
   Sparkles,
+  Trash2,
   X,
 } from "lucide-react";
 
@@ -25,21 +29,46 @@ import {
   useRecentlyViewed,
 } from "@/lib/mentor/storage";
 
+type MessageKind = "text" | "support" | "escalation";
+
 type ChatMessage = {
   id: string;
   role: "user" | "assistant";
   content: string;
+  kind?: MessageKind;
   suggestions?: string[];
   links?: MentorLink[];
 };
 
-const QUICK_ACTIONS: { label: string; href: string }[] = [
-  { label: "Book consultation", href: "/book-consultation" },
-  { label: "Find your program", href: "/find-your-program" },
-  { label: "Learning paths", href: "/learning-paths" },
-  { label: "Compare programs", href: "/compare" },
-  { label: "AI tools", href: "/tools" },
-  { label: "Start earning", href: "/earn" },
+// GlintrAI quick actions (per platform brand spec)
+const QUICK_ACTIONS: { label: string; prompt: string }[] = [
+  { label: "Recommend a course", prompt: "Recommend a course for me based on my goals." },
+  { label: "Build my learning roadmap", prompt: "Build me a personalised learning roadmap." },
+  { label: "Help me choose a career", prompt: "Help me choose a career path that fits my skills." },
+  { label: "Compare programs", prompt: "Compare programs so I can decide which one to pick." },
+  { label: "Explain a concept", prompt: "Explain a concept to me clearly with an example." },
+  { label: "Help me become a partner", prompt: "How do I become a Glintr sales partner?" },
+  { label: "Launch my academy", prompt: "How do I launch my own academy with Glintr?" },
+];
+
+// Support contact — surfaced in the support card.
+const SUPPORT_CONTACT = {
+  email: "support@glintr.com",
+  phone: "+91 80000 00000",
+  whatsapp: "+91 80000 00000",
+  hours: "Mon–Sat, 10:00 AM – 7:00 PM IST",
+};
+
+// Phrases that trigger an immediate hand-off to the human support card.
+const HUMAN_TRIGGERS = [
+  /\bhuman\s+(support|help|agent)\b/i,
+  /\bspeak\s+to\s+(a\s+)?(person|human|someone|agent|representative)\b/i,
+  /\btalk\s+to\s+(a\s+)?(person|human|someone|agent|representative)\b/i,
+  /\bcontact\s+support\b/i,
+  /\bcall\s+(someone|support|glintr)\b/i,
+  /\braise\s+(a\s+)?ticket\b/i,
+  /\bbook\s+(a\s+)?(consultation|call|demo)\b/i,
+  /\breal\s+person\b/i,
 ];
 
 const SUPPRESS_PATHS = ["/auth", "/dashboard", "/admin", "/partner-support", "/student-support"];
@@ -51,17 +80,17 @@ function makeId() {
 function greeting(section?: string): string {
   switch (section) {
     case "programs":
-      return "Exploring programs? I can help you compare, plan your learning, or pick a starting course.";
+      return "Hi, I'm GlintrAI. Exploring programs? I can help you compare, plan your learning, or pick a starting course.";
     case "earn":
-      return "Curious about earning with Glintr? Ask me about the 70% or 50% models, payouts, or how to apply.";
+      return "Hi, I'm GlintrAI. Curious about earning with Glintr? Ask me about the 70% or 50% models, payouts, or how to apply.";
     case "launch":
-      return "Want to launch your own EdTech brand? I can walk you through white-label, LMS, and marketing support.";
+      return "Hi, I'm GlintrAI. Want to launch your own EdTech brand? I can walk you through white-label, LMS, and marketing support.";
     case "blog":
-      return "I can recommend related reads, explain any concept, or suggest a program that goes deeper.";
+      return "Hi, I'm GlintrAI. I can recommend related reads, explain any concept, or suggest a program that goes deeper.";
     case "glossary":
-      return "Ask me to explain any term simply — with examples, related terms, and programs to go deeper.";
+      return "Hi, I'm GlintrAI. Ask me to explain any term simply — with examples, related terms, and programs to go deeper.";
     default:
-      return "What would you like to learn today? I can help you choose a program, explain concepts, or plan your learning.";
+      return "Hi, I'm GlintrAI. What would you like to explore today? I can help with courses, career guidance, learning roadmaps, becoming a partner, or launching your own academy.";
   }
 }
 
@@ -136,6 +165,21 @@ export function AiMentor() {
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
+  const failStreakRef = useRef(0);
+
+  const pushSupportCard = useCallback(() => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: makeId(),
+        role: "assistant",
+        kind: "support",
+        content:
+          "I'll hand you over to our team so you get help quickly. Their details are right here.",
+      },
+    ]);
+  }, []);
+
   const send = useCallback(
     async (text: string) => {
       const clean = text.trim();
@@ -144,8 +188,16 @@ export function AiMentor() {
       const nextHistory = [...messages, userMsg];
       setMessages(nextHistory);
       setInput("");
-      setLoading(true);
       track("mentor_message_sent", { path: pathname });
+
+      // Human-support escalation trigger — skip the AI call entirely.
+      if (HUMAN_TRIGGERS.some((rx) => rx.test(clean))) {
+        pushSupportCard();
+        setTimeout(() => inputRef.current?.focus(), 60);
+        return;
+      }
+
+      setLoading(true);
       try {
         const res = await askMentor({
           data: {
@@ -153,6 +205,7 @@ export function AiMentor() {
             pageContext: ctx,
           },
         });
+        failStreakRef.current = 0;
         setMessages((prev) => [
           ...prev,
           {
@@ -164,22 +217,49 @@ export function AiMentor() {
           },
         ]);
       } catch {
+        failStreakRef.current += 1;
         setMessages((prev) => [
           ...prev,
           {
             id: makeId(),
             role: "assistant",
             content:
-              "I couldn't reach the mentor service just now. Try again in a moment, or explore [Find Your Program](/find-your-program).",
+              "I couldn't reach GlintrAI just now. Try again in a moment, or explore [Find Your Program](/find-your-program).",
           },
         ]);
+        // Smart escalation after repeated failures
+        if (failStreakRef.current >= 2) {
+          failStreakRef.current = 0;
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: makeId(),
+              role: "assistant",
+              kind: "escalation",
+              content:
+                "I'm not completely confident I can resolve this. Would you like me to connect you with the Glintr support team?",
+            },
+          ]);
+        }
       } finally {
         setLoading(false);
         setTimeout(() => inputRef.current?.focus(), 60);
       }
     },
-    [ctx, loading, messages, pathname],
+    [ctx, loading, messages, pathname, pushSupportCard],
   );
+
+  const clearChat = useCallback(() => {
+    setMessages([
+      {
+        id: makeId(),
+        role: "assistant",
+        content: greeting(ctx.section),
+        suggestions: chips,
+      },
+    ]);
+    setTimeout(() => inputRef.current?.focus(), 60);
+  }, [ctx.section, chips]);
 
   if (suppress) return null;
 
@@ -188,7 +268,7 @@ export function AiMentor() {
       {/* Floating trigger */}
       <button
         type="button"
-        aria-label="Open Glintr AI Mentor"
+        aria-label="Open GlintrAI"
         aria-haspopup="dialog"
         onClick={() => {
           setOpen(true);
@@ -200,7 +280,7 @@ export function AiMentor() {
           "size-12 md:size-14 bg-foreground text-background shadow-xl",
           "transition-all duration-300 hover:scale-[1.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
         )}
-        title="Glintr AI Mentor"
+        title="GlintrAI"
       >
         <span
           className={cn(
@@ -215,7 +295,7 @@ export function AiMentor() {
             />
           )}
         </span>
-        <span className="sr-only">Open Glintr AI Mentor</span>
+        <span className="sr-only">Open GlintrAI</span>
       </button>
 
 
@@ -235,26 +315,48 @@ export function AiMentor() {
                 <Sparkles className="size-4 text-white" aria-hidden />
               </span>
               <div className="leading-tight">
-                <div className="text-sm font-semibold">Glintr AI Mentor</div>
+                <div className="text-sm font-semibold">GlintrAI</div>
                 <div className="text-[11px] text-muted-foreground">
-                  Your learning guide
+                  Your intelligent assistant
                 </div>
               </div>
             </div>
-            <button
-              type="button"
-              aria-label="Close mentor"
-              onClick={() => setOpen(false)}
-              className="rounded-full p-1.5 text-muted-foreground hover:bg-accent"
-            >
-              <X className="size-4" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                aria-label="Talk to a human"
+                title="Talk to a human"
+                onClick={pushSupportCard}
+                className="rounded-full p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+              >
+                <LifeBuoy className="size-4" />
+              </button>
+              {tab === "chat" && messages.length > 1 && (
+                <button
+                  type="button"
+                  aria-label="Clear conversation"
+                  title="Clear conversation"
+                  onClick={clearChat}
+                  className="rounded-full p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              )}
+              <button
+                type="button"
+                aria-label="Close GlintrAI"
+                onClick={() => setOpen(false)}
+                className="rounded-full p-1.5 text-muted-foreground hover:bg-accent"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
           </div>
 
           {/* Tabs */}
           <div
             role="tablist"
-            aria-label="Mentor sections"
+            aria-label="GlintrAI sections"
             className="flex items-center gap-1 border-b px-2 py-1.5 text-xs"
           >
             <TabBtn active={tab === "chat"} onClick={() => setTab("chat")} icon={<MessageSquare className="size-3.5" />} label="Chat" />
@@ -277,6 +379,7 @@ export function AiMentor() {
                       message={m}
                       onSuggestion={send}
                       onLink={() => setOpen(false)}
+                      onEscalate={pushSupportCard}
                     />
                   ))}
                   {loading && <TypingIndicator />}
@@ -304,22 +407,23 @@ export function AiMentor() {
                 </div>
               )}
 
-              {/* Quick actions row */}
+              {/* Quick actions row — GlintrAI prompts */}
               <div className="border-t px-3 py-2">
                 <div className="flex items-center gap-1.5 overflow-x-auto">
                   <Compass className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
                   {QUICK_ACTIONS.map((a) => (
-                    <Link
-                      key={a.href}
-                      to={a.href}
-                      onClick={() => setOpen(false)}
+                    <button
+                      key={a.label}
+                      type="button"
+                      onClick={() => send(a.prompt)}
                       className="shrink-0 rounded-full border border-border/70 bg-card px-2.5 py-1 text-[11px] font-medium text-foreground hover:bg-accent"
                     >
                       {a.label}
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </div>
+
 
               {/* Composer */}
               <form
@@ -341,7 +445,7 @@ export function AiMentor() {
                       }
                     }}
                     rows={1}
-                    aria-label="Ask the Glintr AI Mentor"
+                    aria-label="Ask GlintrAI"
                     placeholder="Ask about programs, careers, or concepts…"
                     className="flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground max-h-32"
                     maxLength={2000}
@@ -415,12 +519,45 @@ function MessageBubble({
   message,
   onSuggestion,
   onLink,
+  onEscalate,
 }: {
   message: ChatMessage;
   onSuggestion: (text: string) => void;
   onLink: () => void;
+  onEscalate: () => void;
 }) {
   const isUser = message.role === "user";
+
+  if (!isUser && message.kind === "support") {
+    return <SupportCard intro={message.content} onLink={onLink} />;
+  }
+
+  if (!isUser && message.kind === "escalation") {
+    return (
+      <div className="flex justify-start">
+        <div className="max-w-[86%] rounded-2xl rounded-bl-md border border-primary/30 bg-primary/5 px-3.5 py-2.5 text-sm">
+          <p className="leading-relaxed">{message.content}</p>
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={onEscalate}
+              className="inline-flex items-center gap-1 rounded-full bg-foreground px-3 py-1 text-[11px] font-semibold text-background hover:opacity-90"
+            >
+              <LifeBuoy className="size-3" /> Yes, connect me
+            </button>
+            <button
+              type="button"
+              onClick={() => onSuggestion("Let me rephrase my question.")}
+              className="rounded-full border bg-background px-3 py-1 text-[11px] font-medium hover:bg-accent"
+            >
+              No, I'll rephrase
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
       <div
@@ -493,9 +630,70 @@ function MessageBubble({
   );
 }
 
+function SupportCard({ intro, onLink }: { intro: string; onLink: () => void }) {
+  return (
+    <div className="flex justify-start">
+      <div className="max-w-[92%] rounded-2xl rounded-bl-md border border-primary/30 bg-gradient-to-br from-primary/5 to-accent/30 px-4 py-3.5 text-sm shadow-sm">
+        <div className="mb-2 flex items-center gap-2">
+          <span className="inline-flex size-7 items-center justify-center rounded-full bg-foreground text-background">
+            <LifeBuoy className="size-3.5" />
+          </span>
+          <div className="font-semibold">Glintr Support Team</div>
+        </div>
+        <p className="mb-3 leading-relaxed text-muted-foreground">{intro}</p>
+        <ul className="mb-3 space-y-1.5 text-[12.5px]">
+          <li className="flex items-center gap-2">
+            <Mail className="size-3.5 text-muted-foreground" />
+            <a href={`mailto:${SUPPORT_CONTACT.email}`} className="font-medium text-foreground hover:text-primary">
+              {SUPPORT_CONTACT.email}
+            </a>
+          </li>
+          <li className="flex items-center gap-2">
+            <Phone className="size-3.5 text-muted-foreground" />
+            <a href={`tel:${SUPPORT_CONTACT.phone.replace(/\s/g, "")}`} className="font-medium text-foreground hover:text-primary">
+              {SUPPORT_CONTACT.phone}
+            </a>
+          </li>
+          <li className="flex items-center gap-2">
+            <MessageSquare className="size-3.5 text-muted-foreground" />
+            <a
+              href={`https://wa.me/${SUPPORT_CONTACT.whatsapp.replace(/[^\d]/g, "")}`}
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium text-foreground hover:text-primary"
+            >
+              WhatsApp {SUPPORT_CONTACT.whatsapp}
+            </a>
+          </li>
+          <li className="flex items-center gap-2 text-muted-foreground">
+            <Clock className="size-3.5" />
+            {SUPPORT_CONTACT.hours}
+          </li>
+        </ul>
+        <div className="flex flex-wrap gap-1.5">
+          <Link
+            to="/book-consultation"
+            onClick={onLink}
+            className="inline-flex items-center rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background hover:opacity-90"
+          >
+            Book a consultation
+          </Link>
+          <Link
+            to="/contact"
+            onClick={onLink}
+            className="inline-flex items-center rounded-full border bg-background px-3 py-1.5 text-[11px] font-medium hover:bg-accent"
+          >
+            Contact form
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function TypingIndicator() {
   return (
-    <div className="flex justify-start" aria-label="Mentor is thinking">
+    <div className="flex justify-start" aria-label="GlintrAI is thinking">
       <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-md border bg-card px-3.5 py-2.5">
         <span className="size-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.2s]" />
         <span className="size-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.1s]" />

@@ -63,7 +63,7 @@ function MentorPage() {
   return (
     <div className="space-y-6">
       <SectionHeader
-        eyebrow="AI Mentor"
+        eyebrow="GlintrAI"
         title="Chat with your mentor"
         description="Ask anything about programs, concepts, careers or study plans. Every chat is saved to your workspace."
         action={

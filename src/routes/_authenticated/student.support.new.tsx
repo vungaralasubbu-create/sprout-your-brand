@@ -59,7 +59,7 @@ const CATEGORIES: { value: SupportCategory; label: string }[] = [
   { value: "career_center", label: "Career Center" },
   { value: "resume_builder", label: "Resume Builder" },
   { value: "interview_practice", label: "Interview Practice" },
-  { value: "ai_mentor", label: "AI Mentor" },
+  { value: "ai_mentor", label: "GlintrAI" },
   { value: "technical_issue", label: "Technical Issue" },
   { value: "account_issue", label: "Account Issue" },
   { value: "other", label: "Other" },
@@ -187,10 +187,10 @@ function NewTicket() {
           <Sparkles className="h-4 w-4 text-cyan-600 mt-0.5" />
           <div className="text-xs text-slate-700 flex-1">
             <div className="font-medium text-slate-900">Need help understanding a learning concept?</div>
-            <div className="text-slate-500">Ask AI Mentor for guidance on learning concepts. For account, access or ticket-based help, continue this support request.</div>
+            <div className="text-slate-500">Ask GlintrAI for guidance on learning concepts. For account, access or ticket-based help, continue this support request.</div>
           </div>
           <Button asChild size="sm" variant="outline">
-            <Link to="/student/mentor">Ask AI Mentor</Link>
+            <Link to="/student/mentor">Ask GlintrAI</Link>
           </Button>
         </Card>
       )}

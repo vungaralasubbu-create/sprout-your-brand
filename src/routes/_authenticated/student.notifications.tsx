@@ -51,7 +51,7 @@ const ACTIVITY_FILTERS = [
   { key: "live_sessions", label: "Live Sessions" },
   { key: "internship", label: "Internship" },
   { key: "career", label: "Career" },
-  { key: "ai_mentor", label: "AI Mentor" },
+  { key: "ai_mentor", label: "GlintrAI" },
   { key: "support", label: "Support" },
 ] as const;
 
@@ -64,7 +64,7 @@ const PREF_ROWS: { key: string; label: string }[] = [
   { key: "internship", label: "Internship Updates" },
   { key: "career", label: "Career Updates" },
   { key: "interview", label: "Interview Practice Updates" },
-  { key: "ai_mentor", label: "AI Mentor Updates" },
+  { key: "ai_mentor", label: "GlintrAI Updates" },
   { key: "support", label: "Support Updates" },
 ];
 
@@ -94,7 +94,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   internship: "Internship",
   career: "Career",
   interview: "Interview",
-  ai_mentor: "AI Mentor",
+  ai_mentor: "GlintrAI",
   support: "Support",
   account: "Account",
   system: "System",

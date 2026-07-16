@@ -374,12 +374,12 @@ function GlossaryDetail() {
           </Container>
         </Section>
 
-        {/* AI Mentor quick actions */}
+        {/* GlintrAI quick actions */}
         <Section className="py-8">
           <Container className="max-w-3xl">
             <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent p-6">
               <div className="flex items-center gap-2 text-caption font-mono uppercase tracking-widest text-primary mb-2">
-                <Sparkles className="size-3.5" /> Ask Glintr AI Mentor
+                <Sparkles className="size-3.5" /> Ask GlintrAI
               </div>
               <h2 className="font-display font-semibold text-xl md:text-2xl tracking-tight">
                 Go deeper on {entry.term}

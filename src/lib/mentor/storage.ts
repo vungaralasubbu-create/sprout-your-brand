@@ -1,4 +1,4 @@
-// Local (session + persistent) storage helpers for the AI Mentor.
+// Local (session + persistent) storage helpers for the GlintrAI.
 // Bookmarks: persistent (localStorage). Recently viewed: persistent. Conversation: session.
 
 import { useEffect, useState, useCallback } from "react";

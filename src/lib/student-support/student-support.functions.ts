@@ -637,7 +637,7 @@ export const STUDENT_SUPPORT_CATEGORY_LABELS: Record<StudentSupportCategory, str
   career_center: "Career Center",
   resume_builder: "Resume Builder",
   interview_practice: "Interview Practice",
-  ai_mentor: "AI Mentor",
+  ai_mentor: "GlintrAI",
   technical_issue: "Technical Issue",
   account_issue: "Account Issue",
   other: "Other",

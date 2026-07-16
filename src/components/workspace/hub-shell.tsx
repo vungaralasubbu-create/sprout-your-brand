@@ -28,7 +28,7 @@ const NAV = [
   { to: "/workspace/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/workspace/live", label: "Live Classes", icon: Radio },
   { to: "/workspace/study", label: "AI Study Mode", icon: GraduationCap },
-  { to: "/workspace/mentor", label: "AI Mentor", icon: Sparkles },
+  { to: "/workspace/mentor", label: "GlintrAI", icon: Sparkles },
   { to: "/workspace/voice", label: "Voice AI", icon: Mic },
   { to: "/workspace/activity", label: "Activity", icon: Activity },
   { to: "/workspace/search", label: "Search", icon: Search },
