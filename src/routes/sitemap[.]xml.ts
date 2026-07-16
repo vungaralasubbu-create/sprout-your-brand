@@ -8,6 +8,7 @@ import { listCareerMaps } from "@/data/career-maps";
 import { listTools } from "@/data/tools";
 import { articles as learnArticles, collections as learnCollections, topics as learnTopics } from "@/data/learn";
 import { AGENTS } from "@/lib/aios/agents";
+import { listPillars, listAllClusters } from "@/data/topics";
 
 const BASE_URL = "https://glintr.com";
 
