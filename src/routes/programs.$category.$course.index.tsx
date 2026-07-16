@@ -42,6 +42,11 @@ import {
 } from "@/components/ui/accordion";
 import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs";
 import { getCourseSeo } from "@/lib/seo";
+import {
+  getProgramEditorial,
+  getRelatedBlogsForProgram,
+} from "@/data/program-editorial";
+
 
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
