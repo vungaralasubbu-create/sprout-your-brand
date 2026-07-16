@@ -48,9 +48,9 @@ export const getBusinessBriefing = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<BusinessBriefing> => {
     const ctx = data.context ?? {};
     // Enrich with some real stats
-    const { supabase, userId } = context;
+    const { supabase } = context;
     const [{ count: leads }, { count: enrollments }] = await Promise.all([
-      supabase.from("partner_leads").select("id", { count: "exact", head: true }).eq("partner_user_id", userId),
+      supabase.from("partner_leads").select("id", { count: "exact", head: true }),
       supabase.from("enrollments").select("id", { count: "exact", head: true }),
     ]);
     const enriched = { ...ctx, leads: leads ?? 0, enrollments: enrollments ?? 0 };
