@@ -133,6 +133,7 @@ export const COMMAND_ITEMS: CommandItem[] = [
   { id: "admin-support", label: "Support Center", to: "/admin/support", group: "nav", roles: ["admin"], icon: ShieldCheck },
   { id: "admin-settings", label: "Platform Settings", to: "/admin/settings", group: "settings", roles: ["admin"], icon: Settings },
   { id: "admin-integrations", label: "Integration Hub", to: "/admin/integrations", group: "nav", roles: ["admin", "founder", "academy_partner"], icon: Package, keywords: ["connect", "api", "webhook", "razorpay", "stripe", "zoom", "gmail"] },
+  { id: "admin-marketplace", label: "Marketplace — Apps & AI Agents", to: "/admin/marketplace", group: "nav", roles: ["admin", "founder", "academy_partner"], icon: Sparkles, keywords: ["app store", "agents", "install", "workflow", "extensions", "plugin"] },
 
   // Corporate / college
   { id: "corp-dash", label: "Corporate Dashboard", to: "/corporate", group: "nav", roles: ["corporate"], icon: Building2 },
