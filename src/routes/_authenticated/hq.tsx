@@ -346,7 +346,7 @@ function HqWorkspace() {
                         {t.title}
                       </span>
                       {t.due && (
-                        <Badge variant="secondary" className="text-[10px]">
+                        <Badge variant="muted" className="text-[10px]">
                           {new Date(t.due).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </Badge>
                       )}
