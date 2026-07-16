@@ -70,6 +70,7 @@ export function inferRole(pathname: string): CommandRole {
   if (pathname.startsWith("/college")) return "college";
   if (pathname.startsWith("/corporate")) return "corporate";
   if (
+    pathname.startsWith("/student") ||
     pathname.startsWith("/my") ||
     pathname.startsWith("/learn") ||
     pathname.startsWith("/workspace")
@@ -100,6 +101,7 @@ export const COMMAND_ITEMS: CommandItem[] = [
   { id: "contact", label: "Contact Us", to: "/contact", group: "nav", roles: "*", icon: MessageSquare },
 
   // Student
+  { id: "student-programs", label: "My Programs", to: "/student/programs", group: "nav", roles: ["student"], icon: GraduationCap, keywords: ["courses", "programs", "enrolled"] },
   { id: "my", label: "My Learning", to: "/my", group: "nav", roles: ["student"], icon: LayoutDashboard, keywords: ["dashboard", "home"] },
   { id: "workspace", label: "AI Workspace", to: "/workspace", group: "action", roles: ["student"], icon: BrainCircuit, keywords: ["notes", "flashcards"] },
   { id: "learn-live", label: "Live Classroom", to: "/live", group: "action", roles: ["student"], icon: Calendar },

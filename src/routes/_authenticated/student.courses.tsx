@@ -26,7 +26,7 @@ function Page() {
         <Card className="p-10 text-center">
           <div className="font-display text-lg mb-1">No enrollments yet.</div>
           <div className="text-sm text-muted-foreground mb-4">Explore Glintr programs and get started.</div>
-          <Button asChild><Link to="/programs">Browse Programs</Link></Button>
+          <Button asChild><Link to="/student/programs">Browse Programs</Link></Button>
         </Card>
       )}
 

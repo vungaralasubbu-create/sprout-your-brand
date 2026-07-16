@@ -113,7 +113,7 @@ function EmptyState() {
       <div className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
         Your Glintr programs will appear here once your learning access is activated.
       </div>
-      <Button asChild className="mt-5"><Link to="/programs">Explore Programs</Link></Button>
+      <Button asChild className="mt-5"><Link to="/student/programs">Explore Programs</Link></Button>
     </Card>
   );
 }
