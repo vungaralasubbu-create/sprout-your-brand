@@ -11,6 +11,7 @@ export const Route = createFileRoute("/_authenticated/admin/ai-content")({
 
 const NAV_PRIMARY = [
   { to: "/admin/ai-content", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/ai-content/factory", label: "One-Click Factory", icon: Sparkles },
   { to: "/admin/ai-content/wizard", label: "Generate Content", icon: Wand2 },
   { to: "/admin/ai-content/drafts", label: "Drafts", icon: FileEdit },
   { to: "/admin/ai-content/queue", label: "Publishing Queue", icon: Send },
