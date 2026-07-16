@@ -241,7 +241,7 @@ export const patchBlogPost = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => PatchInput.parse(i))
   .handler(async ({ data, context }) => {
     await ensureAdmin(context);
-    const patch: Record<string, unknown> = { editorial_updated_at: new Date().toISOString() };
+    const patch: Record<string, any> = { editorial_updated_at: new Date().toISOString() };
     if (data.status !== undefined) {
       patch.status = data.status;
       patch.is_published = data.status === "published";
