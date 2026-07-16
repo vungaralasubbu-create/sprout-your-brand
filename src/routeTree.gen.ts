@@ -232,6 +232,7 @@ import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
 import { Route as AuthenticatedAdminEmployeesIdRouteImport } from './routes/_authenticated/admin.employees.$id'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
+import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
@@ -1491,6 +1492,12 @@ const AuthenticatedAdminCoursesIdRoute =
     path: '/courses/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminContentArticlesIndexRoute =
+  AuthenticatedAdminContentArticlesIndexRouteImport.update({
+    id: '/articles/',
+    path: '/articles/',
+    getParentRoute: () => AuthenticatedAdminContentRoute,
+  } as any)
 const AuthenticatedStudentCareerInterviewSetupRoute =
   AuthenticatedStudentCareerInterviewSetupRouteImport.update({
     id: '/setup',
@@ -1755,6 +1762,7 @@ export interface FileRoutesByFullPath {
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
 }
@@ -1979,6 +1987,7 @@ export interface FileRoutesByTo {
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/admin/content/articles': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
 }
@@ -2211,6 +2220,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/_authenticated/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
+  '/_authenticated/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/_authenticated/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/_authenticated/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
 }
@@ -2443,6 +2453,7 @@ export interface FileRouteTypes {
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
+    | '/admin/content/articles/'
     | '/student/career/interview/$id/report'
     | '/student/internship/$id/tasks/$taskId'
   fileRoutesByTo: FileRoutesByTo
@@ -2667,6 +2678,7 @@ export interface FileRouteTypes {
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
+    | '/admin/content/articles'
     | '/student/career/interview/$id/report'
     | '/student/internship/$id/tasks/$taskId'
   id:
@@ -2898,6 +2910,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
     | '/_authenticated/student/career/interview/setup'
+    | '/_authenticated/admin/content/articles/'
     | '/_authenticated/student/career/interview/$id/report'
     | '/_authenticated/student/internship/$id/tasks/$taskId'
   fileRoutesById: FileRoutesById
@@ -4521,6 +4534,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCoursesIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/content/articles/': {
+      id: '/_authenticated/admin/content/articles/'
+      path: '/articles'
+      fullPath: '/admin/content/articles/'
+      preLoaderRoute: typeof AuthenticatedAdminContentArticlesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminContentRoute
+    }
     '/_authenticated/student/career/interview/setup': {
       id: '/_authenticated/student/career/interview/setup'
       path: '/setup'
@@ -4568,11 +4588,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminContentRouteChildren {
   AuthenticatedAdminContentIndexRoute: typeof AuthenticatedAdminContentIndexRoute
+  AuthenticatedAdminContentArticlesIndexRoute: typeof AuthenticatedAdminContentArticlesIndexRoute
 }
 
 const AuthenticatedAdminContentRouteChildren: AuthenticatedAdminContentRouteChildren =
   {
     AuthenticatedAdminContentIndexRoute: AuthenticatedAdminContentIndexRoute,
+    AuthenticatedAdminContentArticlesIndexRoute:
+      AuthenticatedAdminContentArticlesIndexRoute,
   }
 
 const AuthenticatedAdminContentRouteWithChildren =
