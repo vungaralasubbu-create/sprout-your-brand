@@ -255,6 +255,7 @@ import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
 import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
+import { Route as AuthenticatedAdminBlogsIndexRouteImport } from './routes/_authenticated/admin.blogs.index'
 import { Route as AuthenticatedAdminAutomationIndexRouteImport } from './routes/_authenticated/admin.automation.index'
 import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
 import { Route as AuthenticatedAdminAiSearchIndexRouteImport } from './routes/_authenticated/admin.ai-search.index'
@@ -1715,6 +1716,12 @@ const AuthenticatedAdminContentIntelligenceIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
+const AuthenticatedAdminBlogsIndexRoute =
+  AuthenticatedAdminBlogsIndexRouteImport.update({
+    id: '/blogs/',
+    path: '/blogs/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAutomationIndexRoute =
   AuthenticatedAdminAutomationIndexRouteImport.update({
     id: '/automation/',
@@ -2683,6 +2690,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
+  '/admin/blogs/': typeof AuthenticatedAdminBlogsIndexRoute
   '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -3024,6 +3032,7 @@ export interface FileRoutesByTo {
   '/admin/ai-search': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
   '/admin/automation': typeof AuthenticatedAdminAutomationIndexRoute
+  '/admin/blogs': typeof AuthenticatedAdminBlogsIndexRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
@@ -3381,6 +3390,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
   '/_authenticated/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
+  '/_authenticated/admin/blogs/': typeof AuthenticatedAdminBlogsIndexRoute
   '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
@@ -3738,6 +3748,7 @@ export interface FileRouteTypes {
     | '/admin/ai-search/'
     | '/admin/aios/'
     | '/admin/automation/'
+    | '/admin/blogs/'
     | '/admin/content-intelligence/'
     | '/admin/content/'
     | '/admin/courses/'
@@ -4079,6 +4090,7 @@ export interface FileRouteTypes {
     | '/admin/ai-search'
     | '/admin/aios'
     | '/admin/automation'
+    | '/admin/blogs'
     | '/admin/content-intelligence'
     | '/admin/content'
     | '/admin/courses'
@@ -4435,6 +4447,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-search/'
     | '/_authenticated/admin/aios/'
     | '/_authenticated/admin/automation/'
+    | '/_authenticated/admin/blogs/'
     | '/_authenticated/admin/content-intelligence/'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
@@ -6269,6 +6282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
+    '/_authenticated/admin/blogs/': {
+      id: '/_authenticated/admin/blogs/'
+      path: '/blogs'
+      fullPath: '/admin/blogs/'
+      preLoaderRoute: typeof AuthenticatedAdminBlogsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/automation/': {
       id: '/_authenticated/admin/automation/'
       path: '/automation'
@@ -7382,6 +7402,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminWorkflowsNewRoute: typeof AuthenticatedAdminWorkflowsNewRoute
   AuthenticatedAdminWorkflowsTemplatesRoute: typeof AuthenticatedAdminWorkflowsTemplatesRoute
   AuthenticatedAdminAutomationIndexRoute: typeof AuthenticatedAdminAutomationIndexRoute
+  AuthenticatedAdminBlogsIndexRoute: typeof AuthenticatedAdminBlogsIndexRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
   AuthenticatedAdminEmployeesIndexRoute: typeof AuthenticatedAdminEmployeesIndexRoute
   AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
@@ -7466,6 +7487,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminWorkflowsTemplatesRoute,
   AuthenticatedAdminAutomationIndexRoute:
     AuthenticatedAdminAutomationIndexRoute,
+  AuthenticatedAdminBlogsIndexRoute: AuthenticatedAdminBlogsIndexRoute,
   AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
   AuthenticatedAdminEmployeesIndexRoute: AuthenticatedAdminEmployeesIndexRoute,
   AuthenticatedAdminPartnersIndexRoute: AuthenticatedAdminPartnersIndexRoute,

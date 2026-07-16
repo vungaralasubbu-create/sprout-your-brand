@@ -66,6 +66,7 @@ const NAV: NavGroup[] = [
     collapsible: true,
     items: [
       { to: "/admin/content", label: "Content Dashboard", icon: BookOpen },
+      { to: "/admin/blogs", label: "Blog CMS", icon: BookOpen },
       { to: "/admin/ai-content", label: "AI Content Factory", icon: Sparkles },
       { to: "/admin/content-intelligence", label: "Content Intelligence", icon: Activity },
     ],
