@@ -7,7 +7,6 @@
  */
 
 import { useMemo, useState } from "react";
-import { useMemo, useState } from "react";
 import {
   Sparkles, Target, MessageSquare, Clock, Headphones, ShieldQuestion, FileText,
   ScrollText, Calendar, Handshake, CheckCircle2, Database, LineChart, Trophy,
