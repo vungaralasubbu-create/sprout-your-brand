@@ -41,9 +41,26 @@ function AiFactoryShell() {
           <Sparkles className="size-3 text-primary" /> AI Content Factory
         </div>
         <nav className="space-y-0.5">
-          {NAV.map((n) => {
+          {NAV_PRIMARY.map((n) => {
             const Icon = n.icon;
             const active = isActive(n.to, n.exact);
+            return (
+              <Link
+                key={n.to}
+                to={n.to as any}
+                className={cn(
+                  "flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors",
+                  active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-surface-2/60 hover:text-foreground",
+                )}
+              >
+                <Icon className="size-[15px]" /> {n.label}
+              </Link>
+            );
+          })}
+          <div className="pt-3 mt-3 border-t border-border/60 text-[10px] font-mono uppercase tracking-[0.16em] text-muted-foreground/60 px-1 pb-1">Workflow</div>
+          {NAV_SECONDARY.map((n) => {
+            const Icon = n.icon;
+            const active = isActive(n.to);
             return (
               <Link
                 key={n.to}
