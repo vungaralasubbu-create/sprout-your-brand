@@ -175,6 +175,7 @@ import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
+import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
@@ -207,6 +208,7 @@ import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
+import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
 import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
@@ -247,6 +249,22 @@ import { Route as AuthenticatedAdminContentCategoriesRouteImport } from './route
 import { Route as AuthenticatedAdminContentAuthorsRouteImport } from './routes/_authenticated/admin.content.authors'
 import { Route as AuthenticatedAdminContentAnalyticsRouteImport } from './routes/_authenticated/admin.content.analytics'
 import { Route as AuthenticatedAdminContentAiWriterRouteImport } from './routes/_authenticated/admin.content.ai-writer'
+import { Route as AuthenticatedAdminContentIntelligenceTopicMapRouteImport } from './routes/_authenticated/admin.content-intelligence.topic-map'
+import { Route as AuthenticatedAdminContentIntelligenceTasksRouteImport } from './routes/_authenticated/admin.content-intelligence.tasks'
+import { Route as AuthenticatedAdminContentIntelligenceSearchInsightsRouteImport } from './routes/_authenticated/admin.content-intelligence.search-insights'
+import { Route as AuthenticatedAdminContentIntelligenceRoadmapsRouteImport } from './routes/_authenticated/admin.content-intelligence.roadmaps'
+import { Route as AuthenticatedAdminContentIntelligenceReportsRouteImport } from './routes/_authenticated/admin.content-intelligence.reports'
+import { Route as AuthenticatedAdminContentIntelligenceRelatedRouteImport } from './routes/_authenticated/admin.content-intelligence.related'
+import { Route as AuthenticatedAdminContentIntelligenceQualityRouteImport } from './routes/_authenticated/admin.content-intelligence.quality'
+import { Route as AuthenticatedAdminContentIntelligenceNotificationsRouteImport } from './routes/_authenticated/admin.content-intelligence.notifications'
+import { Route as AuthenticatedAdminContentIntelligenceGraphHealthRouteImport } from './routes/_authenticated/admin.content-intelligence.graph-health'
+import { Route as AuthenticatedAdminContentIntelligenceGlossaryRouteImport } from './routes/_authenticated/admin.content-intelligence.glossary'
+import { Route as AuthenticatedAdminContentIntelligenceGapsRouteImport } from './routes/_authenticated/admin.content-intelligence.gaps'
+import { Route as AuthenticatedAdminContentIntelligenceFreshnessRouteImport } from './routes/_authenticated/admin.content-intelligence.freshness'
+import { Route as AuthenticatedAdminContentIntelligenceFaqsRouteImport } from './routes/_authenticated/admin.content-intelligence.faqs'
+import { Route as AuthenticatedAdminContentIntelligenceEntitiesRouteImport } from './routes/_authenticated/admin.content-intelligence.entities'
+import { Route as AuthenticatedAdminContentIntelligenceDecayRouteImport } from './routes/_authenticated/admin.content-intelligence.decay'
+import { Route as AuthenticatedAdminContentIntelligenceComparisonsRouteImport } from './routes/_authenticated/admin.content-intelligence.comparisons'
 import { Route as AuthenticatedAdminAiContentWizardRouteImport } from './routes/_authenticated/admin.ai-content.wizard'
 import { Route as AuthenticatedAdminAiContentSuggestionsRouteImport } from './routes/_authenticated/admin.ai-content.suggestions'
 import { Route as AuthenticatedAdminAiContentSettingsRouteImport } from './routes/_authenticated/admin.ai-content.settings'
@@ -1172,6 +1190,12 @@ const AuthenticatedAdminDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminContentIntelligenceRoute =
+  AuthenticatedAdminContentIntelligenceRouteImport.update({
+    id: '/content-intelligence',
+    path: '/content-intelligence',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminContentRoute =
   AuthenticatedAdminContentRouteImport.update({
     id: '/content',
@@ -1363,6 +1387,12 @@ const AuthenticatedAdminContentIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminContentRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceIndexRoute =
+  AuthenticatedAdminContentIntelligenceIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
   } as any)
 const AuthenticatedAdminAiContentIndexRoute =
   AuthenticatedAdminAiContentIndexRouteImport.update({
@@ -1604,6 +1634,102 @@ const AuthenticatedAdminContentAiWriterRoute =
     path: '/ai-writer',
     getParentRoute: () => AuthenticatedAdminContentRoute,
   } as any)
+const AuthenticatedAdminContentIntelligenceTopicMapRoute =
+  AuthenticatedAdminContentIntelligenceTopicMapRouteImport.update({
+    id: '/topic-map',
+    path: '/topic-map',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceTasksRoute =
+  AuthenticatedAdminContentIntelligenceTasksRouteImport.update({
+    id: '/tasks',
+    path: '/tasks',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceSearchInsightsRoute =
+  AuthenticatedAdminContentIntelligenceSearchInsightsRouteImport.update({
+    id: '/search-insights',
+    path: '/search-insights',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceRoadmapsRoute =
+  AuthenticatedAdminContentIntelligenceRoadmapsRouteImport.update({
+    id: '/roadmaps',
+    path: '/roadmaps',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceReportsRoute =
+  AuthenticatedAdminContentIntelligenceReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceRelatedRoute =
+  AuthenticatedAdminContentIntelligenceRelatedRouteImport.update({
+    id: '/related',
+    path: '/related',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceQualityRoute =
+  AuthenticatedAdminContentIntelligenceQualityRouteImport.update({
+    id: '/quality',
+    path: '/quality',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceNotificationsRoute =
+  AuthenticatedAdminContentIntelligenceNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceGraphHealthRoute =
+  AuthenticatedAdminContentIntelligenceGraphHealthRouteImport.update({
+    id: '/graph-health',
+    path: '/graph-health',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceGlossaryRoute =
+  AuthenticatedAdminContentIntelligenceGlossaryRouteImport.update({
+    id: '/glossary',
+    path: '/glossary',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceGapsRoute =
+  AuthenticatedAdminContentIntelligenceGapsRouteImport.update({
+    id: '/gaps',
+    path: '/gaps',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceFreshnessRoute =
+  AuthenticatedAdminContentIntelligenceFreshnessRouteImport.update({
+    id: '/freshness',
+    path: '/freshness',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceFaqsRoute =
+  AuthenticatedAdminContentIntelligenceFaqsRouteImport.update({
+    id: '/faqs',
+    path: '/faqs',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceEntitiesRoute =
+  AuthenticatedAdminContentIntelligenceEntitiesRouteImport.update({
+    id: '/entities',
+    path: '/entities',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceDecayRoute =
+  AuthenticatedAdminContentIntelligenceDecayRouteImport.update({
+    id: '/decay',
+    path: '/decay',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
+const AuthenticatedAdminContentIntelligenceComparisonsRoute =
+  AuthenticatedAdminContentIntelligenceComparisonsRouteImport.update({
+    id: '/comparisons',
+    path: '/comparisons',
+    getParentRoute: () => AuthenticatedAdminContentIntelligenceRoute,
+  } as any)
 const AuthenticatedAdminAiContentWizardRoute =
   AuthenticatedAdminAiContentWizardRouteImport.update({
     id: '/wizard',
@@ -1778,6 +1904,7 @@ export interface FileRoutesByFullPath {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -1871,6 +1998,22 @@ export interface FileRoutesByFullPath {
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
+  '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
+  '/admin/content-intelligence/faqs': typeof AuthenticatedAdminContentIntelligenceFaqsRoute
+  '/admin/content-intelligence/freshness': typeof AuthenticatedAdminContentIntelligenceFreshnessRoute
+  '/admin/content-intelligence/gaps': typeof AuthenticatedAdminContentIntelligenceGapsRoute
+  '/admin/content-intelligence/glossary': typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
+  '/admin/content-intelligence/graph-health': typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
+  '/admin/content-intelligence/notifications': typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  '/admin/content-intelligence/quality': typeof AuthenticatedAdminContentIntelligenceQualityRoute
+  '/admin/content-intelligence/related': typeof AuthenticatedAdminContentIntelligenceRelatedRoute
+  '/admin/content-intelligence/reports': typeof AuthenticatedAdminContentIntelligenceReportsRoute
+  '/admin/content-intelligence/roadmaps': typeof AuthenticatedAdminContentIntelligenceRoadmapsRoute
+  '/admin/content-intelligence/search-insights': typeof AuthenticatedAdminContentIntelligenceSearchInsightsRoute
+  '/admin/content-intelligence/tasks': typeof AuthenticatedAdminContentIntelligenceTasksRoute
+  '/admin/content-intelligence/topic-map': typeof AuthenticatedAdminContentIntelligenceTopicMapRoute
   '/admin/content/ai-writer': typeof AuthenticatedAdminContentAiWriterRoute
   '/admin/content/analytics': typeof AuthenticatedAdminContentAnalyticsRoute
   '/admin/content/authors': typeof AuthenticatedAdminContentAuthorsRoute
@@ -1911,6 +2054,7 @@ export interface FileRoutesByFullPath {
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
+  '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
@@ -2117,6 +2261,22 @@ export interface FileRoutesByTo {
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  '/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
+  '/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
+  '/admin/content-intelligence/faqs': typeof AuthenticatedAdminContentIntelligenceFaqsRoute
+  '/admin/content-intelligence/freshness': typeof AuthenticatedAdminContentIntelligenceFreshnessRoute
+  '/admin/content-intelligence/gaps': typeof AuthenticatedAdminContentIntelligenceGapsRoute
+  '/admin/content-intelligence/glossary': typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
+  '/admin/content-intelligence/graph-health': typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
+  '/admin/content-intelligence/notifications': typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  '/admin/content-intelligence/quality': typeof AuthenticatedAdminContentIntelligenceQualityRoute
+  '/admin/content-intelligence/related': typeof AuthenticatedAdminContentIntelligenceRelatedRoute
+  '/admin/content-intelligence/reports': typeof AuthenticatedAdminContentIntelligenceReportsRoute
+  '/admin/content-intelligence/roadmaps': typeof AuthenticatedAdminContentIntelligenceRoadmapsRoute
+  '/admin/content-intelligence/search-insights': typeof AuthenticatedAdminContentIntelligenceSearchInsightsRoute
+  '/admin/content-intelligence/tasks': typeof AuthenticatedAdminContentIntelligenceTasksRoute
+  '/admin/content-intelligence/topic-map': typeof AuthenticatedAdminContentIntelligenceTopicMapRoute
   '/admin/content/ai-writer': typeof AuthenticatedAdminContentAiWriterRoute
   '/admin/content/analytics': typeof AuthenticatedAdminContentAnalyticsRoute
   '/admin/content/authors': typeof AuthenticatedAdminContentAuthorsRoute
@@ -2157,6 +2317,7 @@ export interface FileRoutesByTo {
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
+  '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
@@ -2279,6 +2440,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -2372,6 +2534,22 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/_authenticated/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
   '/_authenticated/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
+  '/_authenticated/admin/content-intelligence/comparisons': typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  '/_authenticated/admin/content-intelligence/decay': typeof AuthenticatedAdminContentIntelligenceDecayRoute
+  '/_authenticated/admin/content-intelligence/entities': typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
+  '/_authenticated/admin/content-intelligence/faqs': typeof AuthenticatedAdminContentIntelligenceFaqsRoute
+  '/_authenticated/admin/content-intelligence/freshness': typeof AuthenticatedAdminContentIntelligenceFreshnessRoute
+  '/_authenticated/admin/content-intelligence/gaps': typeof AuthenticatedAdminContentIntelligenceGapsRoute
+  '/_authenticated/admin/content-intelligence/glossary': typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
+  '/_authenticated/admin/content-intelligence/graph-health': typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
+  '/_authenticated/admin/content-intelligence/notifications': typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  '/_authenticated/admin/content-intelligence/quality': typeof AuthenticatedAdminContentIntelligenceQualityRoute
+  '/_authenticated/admin/content-intelligence/related': typeof AuthenticatedAdminContentIntelligenceRelatedRoute
+  '/_authenticated/admin/content-intelligence/reports': typeof AuthenticatedAdminContentIntelligenceReportsRoute
+  '/_authenticated/admin/content-intelligence/roadmaps': typeof AuthenticatedAdminContentIntelligenceRoadmapsRoute
+  '/_authenticated/admin/content-intelligence/search-insights': typeof AuthenticatedAdminContentIntelligenceSearchInsightsRoute
+  '/_authenticated/admin/content-intelligence/tasks': typeof AuthenticatedAdminContentIntelligenceTasksRoute
+  '/_authenticated/admin/content-intelligence/topic-map': typeof AuthenticatedAdminContentIntelligenceTopicMapRoute
   '/_authenticated/admin/content/ai-writer': typeof AuthenticatedAdminContentAiWriterRoute
   '/_authenticated/admin/content/analytics': typeof AuthenticatedAdminContentAnalyticsRoute
   '/_authenticated/admin/content/authors': typeof AuthenticatedAdminContentAuthorsRoute
@@ -2412,6 +2590,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
+  '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
@@ -2534,6 +2713,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/categories'
     | '/admin/content'
+    | '/admin/content-intelligence'
     | '/admin/dashboard'
     | '/admin/employment-settings'
     | '/admin/lead-management'
@@ -2627,6 +2807,22 @@ export interface FileRouteTypes {
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
     | '/admin/ai-content/wizard'
+    | '/admin/content-intelligence/comparisons'
+    | '/admin/content-intelligence/decay'
+    | '/admin/content-intelligence/entities'
+    | '/admin/content-intelligence/faqs'
+    | '/admin/content-intelligence/freshness'
+    | '/admin/content-intelligence/gaps'
+    | '/admin/content-intelligence/glossary'
+    | '/admin/content-intelligence/graph-health'
+    | '/admin/content-intelligence/notifications'
+    | '/admin/content-intelligence/quality'
+    | '/admin/content-intelligence/related'
+    | '/admin/content-intelligence/reports'
+    | '/admin/content-intelligence/roadmaps'
+    | '/admin/content-intelligence/search-insights'
+    | '/admin/content-intelligence/tasks'
+    | '/admin/content-intelligence/topic-map'
     | '/admin/content/ai-writer'
     | '/admin/content/analytics'
     | '/admin/content/authors'
@@ -2667,6 +2863,7 @@ export interface FileRouteTypes {
     | '/student/support/new'
     | '/programs/$category/$course/apply'
     | '/admin/ai-content/'
+    | '/admin/content-intelligence/'
     | '/admin/content/'
     | '/admin/courses/'
     | '/admin/employees/'
@@ -2873,6 +3070,22 @@ export interface FileRouteTypes {
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
     | '/admin/ai-content/wizard'
+    | '/admin/content-intelligence/comparisons'
+    | '/admin/content-intelligence/decay'
+    | '/admin/content-intelligence/entities'
+    | '/admin/content-intelligence/faqs'
+    | '/admin/content-intelligence/freshness'
+    | '/admin/content-intelligence/gaps'
+    | '/admin/content-intelligence/glossary'
+    | '/admin/content-intelligence/graph-health'
+    | '/admin/content-intelligence/notifications'
+    | '/admin/content-intelligence/quality'
+    | '/admin/content-intelligence/related'
+    | '/admin/content-intelligence/reports'
+    | '/admin/content-intelligence/roadmaps'
+    | '/admin/content-intelligence/search-insights'
+    | '/admin/content-intelligence/tasks'
+    | '/admin/content-intelligence/topic-map'
     | '/admin/content/ai-writer'
     | '/admin/content/analytics'
     | '/admin/content/authors'
@@ -2913,6 +3126,7 @@ export interface FileRouteTypes {
     | '/student/support/new'
     | '/programs/$category/$course/apply'
     | '/admin/ai-content'
+    | '/admin/content-intelligence'
     | '/admin/content'
     | '/admin/courses'
     | '/admin/employees'
@@ -3034,6 +3248,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/attribution-reviews'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/content'
+    | '/_authenticated/admin/content-intelligence'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
     | '/_authenticated/admin/lead-management'
@@ -3127,6 +3342,22 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-content/settings'
     | '/_authenticated/admin/ai-content/suggestions'
     | '/_authenticated/admin/ai-content/wizard'
+    | '/_authenticated/admin/content-intelligence/comparisons'
+    | '/_authenticated/admin/content-intelligence/decay'
+    | '/_authenticated/admin/content-intelligence/entities'
+    | '/_authenticated/admin/content-intelligence/faqs'
+    | '/_authenticated/admin/content-intelligence/freshness'
+    | '/_authenticated/admin/content-intelligence/gaps'
+    | '/_authenticated/admin/content-intelligence/glossary'
+    | '/_authenticated/admin/content-intelligence/graph-health'
+    | '/_authenticated/admin/content-intelligence/notifications'
+    | '/_authenticated/admin/content-intelligence/quality'
+    | '/_authenticated/admin/content-intelligence/related'
+    | '/_authenticated/admin/content-intelligence/reports'
+    | '/_authenticated/admin/content-intelligence/roadmaps'
+    | '/_authenticated/admin/content-intelligence/search-insights'
+    | '/_authenticated/admin/content-intelligence/tasks'
+    | '/_authenticated/admin/content-intelligence/topic-map'
     | '/_authenticated/admin/content/ai-writer'
     | '/_authenticated/admin/content/analytics'
     | '/_authenticated/admin/content/authors'
@@ -3167,6 +3398,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/new'
     | '/programs/$category/$course/apply'
     | '/_authenticated/admin/ai-content/'
+    | '/_authenticated/admin/content-intelligence/'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/employees/'
@@ -4419,6 +4651,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/content-intelligence': {
+      id: '/_authenticated/admin/content-intelligence'
+      path: '/content-intelligence'
+      fullPath: '/admin/content-intelligence'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/content': {
       id: '/_authenticated/admin/content'
       path: '/content'
@@ -4642,6 +4881,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/content/'
       preLoaderRoute: typeof AuthenticatedAdminContentIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
+    }
+    '/_authenticated/admin/content-intelligence/': {
+      id: '/_authenticated/admin/content-intelligence/'
+      path: '/'
+      fullPath: '/admin/content-intelligence/'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
     }
     '/_authenticated/admin/ai-content/': {
       id: '/_authenticated/admin/ai-content/'
@@ -4923,6 +5169,118 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentAiWriterRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
     }
+    '/_authenticated/admin/content-intelligence/topic-map': {
+      id: '/_authenticated/admin/content-intelligence/topic-map'
+      path: '/topic-map'
+      fullPath: '/admin/content-intelligence/topic-map'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceTopicMapRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/tasks': {
+      id: '/_authenticated/admin/content-intelligence/tasks'
+      path: '/tasks'
+      fullPath: '/admin/content-intelligence/tasks'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceTasksRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/search-insights': {
+      id: '/_authenticated/admin/content-intelligence/search-insights'
+      path: '/search-insights'
+      fullPath: '/admin/content-intelligence/search-insights'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceSearchInsightsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/roadmaps': {
+      id: '/_authenticated/admin/content-intelligence/roadmaps'
+      path: '/roadmaps'
+      fullPath: '/admin/content-intelligence/roadmaps'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceRoadmapsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/reports': {
+      id: '/_authenticated/admin/content-intelligence/reports'
+      path: '/reports'
+      fullPath: '/admin/content-intelligence/reports'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceReportsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/related': {
+      id: '/_authenticated/admin/content-intelligence/related'
+      path: '/related'
+      fullPath: '/admin/content-intelligence/related'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceRelatedRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/quality': {
+      id: '/_authenticated/admin/content-intelligence/quality'
+      path: '/quality'
+      fullPath: '/admin/content-intelligence/quality'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceQualityRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/notifications': {
+      id: '/_authenticated/admin/content-intelligence/notifications'
+      path: '/notifications'
+      fullPath: '/admin/content-intelligence/notifications'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceNotificationsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/graph-health': {
+      id: '/_authenticated/admin/content-intelligence/graph-health'
+      path: '/graph-health'
+      fullPath: '/admin/content-intelligence/graph-health'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceGraphHealthRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/glossary': {
+      id: '/_authenticated/admin/content-intelligence/glossary'
+      path: '/glossary'
+      fullPath: '/admin/content-intelligence/glossary'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceGlossaryRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/gaps': {
+      id: '/_authenticated/admin/content-intelligence/gaps'
+      path: '/gaps'
+      fullPath: '/admin/content-intelligence/gaps'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceGapsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/freshness': {
+      id: '/_authenticated/admin/content-intelligence/freshness'
+      path: '/freshness'
+      fullPath: '/admin/content-intelligence/freshness'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceFreshnessRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/faqs': {
+      id: '/_authenticated/admin/content-intelligence/faqs'
+      path: '/faqs'
+      fullPath: '/admin/content-intelligence/faqs'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceFaqsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/entities': {
+      id: '/_authenticated/admin/content-intelligence/entities'
+      path: '/entities'
+      fullPath: '/admin/content-intelligence/entities'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceEntitiesRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/decay': {
+      id: '/_authenticated/admin/content-intelligence/decay'
+      path: '/decay'
+      fullPath: '/admin/content-intelligence/decay'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceDecayRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
+    '/_authenticated/admin/content-intelligence/comparisons': {
+      id: '/_authenticated/admin/content-intelligence/comparisons'
+      path: '/comparisons'
+      fullPath: '/admin/content-intelligence/comparisons'
+      preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceComparisonsRouteImport
+      parentRoute: typeof AuthenticatedAdminContentIntelligenceRoute
+    }
     '/_authenticated/admin/ai-content/wizard': {
       id: '/_authenticated/admin/ai-content/wizard'
       path: '/wizard'
@@ -5111,6 +5469,69 @@ const AuthenticatedAdminContentRouteWithChildren =
     AuthenticatedAdminContentRouteChildren,
   )
 
+interface AuthenticatedAdminContentIntelligenceRouteChildren {
+  AuthenticatedAdminContentIntelligenceComparisonsRoute: typeof AuthenticatedAdminContentIntelligenceComparisonsRoute
+  AuthenticatedAdminContentIntelligenceDecayRoute: typeof AuthenticatedAdminContentIntelligenceDecayRoute
+  AuthenticatedAdminContentIntelligenceEntitiesRoute: typeof AuthenticatedAdminContentIntelligenceEntitiesRoute
+  AuthenticatedAdminContentIntelligenceFaqsRoute: typeof AuthenticatedAdminContentIntelligenceFaqsRoute
+  AuthenticatedAdminContentIntelligenceFreshnessRoute: typeof AuthenticatedAdminContentIntelligenceFreshnessRoute
+  AuthenticatedAdminContentIntelligenceGapsRoute: typeof AuthenticatedAdminContentIntelligenceGapsRoute
+  AuthenticatedAdminContentIntelligenceGlossaryRoute: typeof AuthenticatedAdminContentIntelligenceGlossaryRoute
+  AuthenticatedAdminContentIntelligenceGraphHealthRoute: typeof AuthenticatedAdminContentIntelligenceGraphHealthRoute
+  AuthenticatedAdminContentIntelligenceNotificationsRoute: typeof AuthenticatedAdminContentIntelligenceNotificationsRoute
+  AuthenticatedAdminContentIntelligenceQualityRoute: typeof AuthenticatedAdminContentIntelligenceQualityRoute
+  AuthenticatedAdminContentIntelligenceRelatedRoute: typeof AuthenticatedAdminContentIntelligenceRelatedRoute
+  AuthenticatedAdminContentIntelligenceReportsRoute: typeof AuthenticatedAdminContentIntelligenceReportsRoute
+  AuthenticatedAdminContentIntelligenceRoadmapsRoute: typeof AuthenticatedAdminContentIntelligenceRoadmapsRoute
+  AuthenticatedAdminContentIntelligenceSearchInsightsRoute: typeof AuthenticatedAdminContentIntelligenceSearchInsightsRoute
+  AuthenticatedAdminContentIntelligenceTasksRoute: typeof AuthenticatedAdminContentIntelligenceTasksRoute
+  AuthenticatedAdminContentIntelligenceTopicMapRoute: typeof AuthenticatedAdminContentIntelligenceTopicMapRoute
+  AuthenticatedAdminContentIntelligenceIndexRoute: typeof AuthenticatedAdminContentIntelligenceIndexRoute
+}
+
+const AuthenticatedAdminContentIntelligenceRouteChildren: AuthenticatedAdminContentIntelligenceRouteChildren =
+  {
+    AuthenticatedAdminContentIntelligenceComparisonsRoute:
+      AuthenticatedAdminContentIntelligenceComparisonsRoute,
+    AuthenticatedAdminContentIntelligenceDecayRoute:
+      AuthenticatedAdminContentIntelligenceDecayRoute,
+    AuthenticatedAdminContentIntelligenceEntitiesRoute:
+      AuthenticatedAdminContentIntelligenceEntitiesRoute,
+    AuthenticatedAdminContentIntelligenceFaqsRoute:
+      AuthenticatedAdminContentIntelligenceFaqsRoute,
+    AuthenticatedAdminContentIntelligenceFreshnessRoute:
+      AuthenticatedAdminContentIntelligenceFreshnessRoute,
+    AuthenticatedAdminContentIntelligenceGapsRoute:
+      AuthenticatedAdminContentIntelligenceGapsRoute,
+    AuthenticatedAdminContentIntelligenceGlossaryRoute:
+      AuthenticatedAdminContentIntelligenceGlossaryRoute,
+    AuthenticatedAdminContentIntelligenceGraphHealthRoute:
+      AuthenticatedAdminContentIntelligenceGraphHealthRoute,
+    AuthenticatedAdminContentIntelligenceNotificationsRoute:
+      AuthenticatedAdminContentIntelligenceNotificationsRoute,
+    AuthenticatedAdminContentIntelligenceQualityRoute:
+      AuthenticatedAdminContentIntelligenceQualityRoute,
+    AuthenticatedAdminContentIntelligenceRelatedRoute:
+      AuthenticatedAdminContentIntelligenceRelatedRoute,
+    AuthenticatedAdminContentIntelligenceReportsRoute:
+      AuthenticatedAdminContentIntelligenceReportsRoute,
+    AuthenticatedAdminContentIntelligenceRoadmapsRoute:
+      AuthenticatedAdminContentIntelligenceRoadmapsRoute,
+    AuthenticatedAdminContentIntelligenceSearchInsightsRoute:
+      AuthenticatedAdminContentIntelligenceSearchInsightsRoute,
+    AuthenticatedAdminContentIntelligenceTasksRoute:
+      AuthenticatedAdminContentIntelligenceTasksRoute,
+    AuthenticatedAdminContentIntelligenceTopicMapRoute:
+      AuthenticatedAdminContentIntelligenceTopicMapRoute,
+    AuthenticatedAdminContentIntelligenceIndexRoute:
+      AuthenticatedAdminContentIntelligenceIndexRoute,
+  }
+
+const AuthenticatedAdminContentIntelligenceRouteWithChildren =
+  AuthenticatedAdminContentIntelligenceRoute._addFileChildren(
+    AuthenticatedAdminContentIntelligenceRouteChildren,
+  )
+
 interface AuthenticatedAdminRiskReviewRouteChildren {
   AuthenticatedAdminRiskReviewIdRoute: typeof AuthenticatedAdminRiskReviewIdRoute
 }
@@ -5150,6 +5571,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
+  AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
@@ -5201,6 +5623,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAttributionReviewsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
+  AuthenticatedAdminContentIntelligenceRoute:
+    AuthenticatedAdminContentIntelligenceRouteWithChildren,
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
