@@ -22,7 +22,7 @@ type Tab = "overview" | "workflows" | "runs" | "approvals" | "audit" | "settings
 
 const TABS: { id: Tab; label: string; icon: any }[] = [
   { id: "overview", label: "Overview", icon: Activity },
-  { id: "workflows", label: "Workflow Library", icon: Workflow },
+  { id: "workflows", label: "Workflow Library", icon: WorkflowIcon },
   { id: "runs", label: "Runs", icon: Play },
   { id: "approvals", label: "Approvals", icon: ClipboardCheck },
   { id: "audit", label: "Audit", icon: History },
@@ -259,7 +259,7 @@ function OverviewTab({ stats, runs, onOpenWorkflows }: { stats: any; runs: RunRe
     { label: "Content Generated", value: stats.content, icon: FileText },
     { label: "Campaigns Published", value: stats.campaigns, icon: Rocket },
     { label: "SEO Improvements", value: stats.seo, icon: ShieldCheck },
-    { label: "Active Workflows", value: WORKFLOWS.length, icon: Workflow },
+    { label: "Active Workflows", value: WORKFLOWS.length, icon: WorkflowIcon },
   ];
   const recent = runs.slice(0, 6);
   return (
