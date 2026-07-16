@@ -122,7 +122,7 @@ function GlossaryDetail() {
             >
               <ChevronLeft className="size-4" /> Glossary
             </Link>
-            <Badge variant="secondary" className="mt-6">
+            <Badge variant="muted" className="mt-6">
               {entry.category}
             </Badge>
             <h1 className="mt-4 font-display font-semibold tracking-[-0.02em] text-balance text-[clamp(2.2rem,4.6vw,3.4rem)] leading-[1.05]">
