@@ -35,7 +35,7 @@ export const ACTIONS: BlockDef[] = [
   { id: "act.send_email", kind: "action", label: "Send Email", description: "Send a transactional email.", configSchema: [{ key: "template", label: "Template", type: "text" }] },
   { id: "act.send_notification", kind: "action", label: "Send Notification", description: "Send in-app notification." },
   { id: "act.create_task", kind: "action", label: "Create Task", description: "Create an internal task." },
-  { id: "act.assign_mentor", kind: "action", label: "Assign AI Mentor", description: "Attach an AI mentor to a learner." },
+  { id: "act.assign_mentor", kind: "action", label: "Assign GlintrAI", description: "Attach an AI mentor to a learner." },
   { id: "act.generate_plan", kind: "action", label: "Generate Study Plan", description: "Build a personalized study plan." },
   { id: "act.issue_certificate", kind: "action", label: "Issue Certificate", description: "Issue a completion certificate." },
   { id: "act.assign_lead", kind: "action", label: "Assign Lead", description: "Route lead to an owner." },

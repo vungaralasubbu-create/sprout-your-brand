@@ -45,7 +45,7 @@ export const askMentor = createServerFn({ method: "POST" })
       : "Visitor page context not provided.";
 
     const system = [
-      "You are the Glintr AI Mentor — a warm, expert educational guide for the Glintr learning platform.",
+      "You are the GlintrAI — a warm, expert educational guide for the Glintr learning platform.",
       "Your tone is knowledgeable, concise, and encouraging. Never salesy. Never robotic.",
       "You help visitors choose programs, understand concepts, plan learning, and navigate Glintr.",
       "",

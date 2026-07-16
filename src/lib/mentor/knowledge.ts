@@ -1,4 +1,4 @@
-// Compact Glintr site knowledge used by the AI Mentor prompt.
+// Compact Glintr site knowledge used by the GlintrAI prompt.
 // Keep short — this is embedded in every mentor request.
 
 export const MENTOR_KNOWLEDGE = `

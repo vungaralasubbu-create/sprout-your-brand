@@ -377,7 +377,7 @@ function PaymentVerificationPage() {
       <SubmitPaymentDialog open={openSubmit} onClose={() => setOpenSubmit(false)} onViewList={() => setStatus("pending_verification")} />
       <DetailDialog id={detailId} onClose={() => setDetailId(null)} />
 
-      {/* Floating AI Mentor — hidden while dialogs are open so it never overlaps modal content */}
+      {/* Floating GlintrAI — hidden while dialogs are open so it never overlaps modal content */}
       {!openSubmit && !detailId && <AiMentorFab />}
     </div>
   );
@@ -481,13 +481,13 @@ function AiMentorFab() {
         "bottom-4 right-4 lg:bottom-6 lg:right-6",
         "px-3 py-2 hover:pl-3 hover:pr-4",
       )}
-      aria-label="Open AI Mentor"
-      title="AI Mentor"
+      aria-label="Open GlintrAI"
+      title="GlintrAI"
     >
       <span className="grid size-7 place-items-center rounded-full bg-white/15">
         <Sparkles className="size-4" />
       </span>
-      <span className="hidden sm:inline text-xs font-semibold">AI Mentor</span>
+      <span className="hidden sm:inline text-xs font-semibold">GlintrAI</span>
     </Link>
   );
 }

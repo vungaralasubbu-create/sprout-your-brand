@@ -23,7 +23,7 @@ export const TEMPLATES: WorkflowTemplate[] = [
     nodes: [
       n("t", "trg.student_registered", "trigger", "Student Registered", 60, 60, "a1"),
       n("a1", "act.send_email", "action", "Send Welcome Email", 60, 180, "a2"),
-      n("a2", "act.assign_mentor", "action", "Assign AI Mentor", 60, 300, "a3"),
+      n("a2", "act.assign_mentor", "action", "Assign GlintrAI", 60, 300, "a3"),
       n("a3", "ai.study_plan", "ai_action", "AI: Generate Study Plan", 60, 420, "e"),
       n("e", "end.stop", "end", "End", 60, 540),
     ],

@@ -144,7 +144,7 @@ export const createMentorConversation = createServerFn({ method: "POST" })
       .from("ai_mentor_conversations")
       .insert({
         student_user_id: uid,
-        title: data.title || "New AI Mentor Conversation",
+        title: data.title || "New GlintrAI Conversation",
         program_id: data.program_id ?? null,
         context_type: data.context_type,
         context_record_id: data.context_record_id ?? null,
@@ -614,9 +614,9 @@ export const sendMentorMessage = createServerFn({ method: "POST" })
       .order("created_at", { ascending: true })
       .limit(20);
 
-    const systemPrompt = `You are Glintr AI Mentor — a personalised learning support assistant for Glintr LMS students.
+    const systemPrompt = `You are GlintrAI — a personalised learning support assistant for Glintr LMS students.
 Rules:
-- Identify yourself as "Glintr AI Mentor" (not a human mentor).
+- Identify yourself as "GlintrAI" (not a human mentor).
 - Help the student understand and organise their learning. Explain concepts clearly, use examples, and connect to their program when relevant.
 - Never approve, mark, or submit any project, assignment, or internship task. Never issue certificates or change scores.
 - Do not fabricate lesson content that is not in the provided context.
@@ -714,7 +714,7 @@ ${progress}`.trim();
     };
     if (
       suggestedTitle &&
-      (!(conv as any).title || (conv as any).title === "New AI Mentor Conversation") &&
+      (!(conv as any).title || (conv as any).title === "New GlintrAI Conversation") &&
       suggestedTitle.length <= 80
     ) {
       patch.title = suggestedTitle;

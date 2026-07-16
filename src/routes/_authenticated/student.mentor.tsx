@@ -170,7 +170,7 @@ function MentorPage() {
             <Sparkles className="h-4 w-4" />
           </div>
           <div className="flex-1">
-            <div className="text-sm font-semibold">Glintr AI Mentor</div>
+            <div className="text-sm font-semibold">GlintrAI</div>
             <div className="text-[11px] text-slate-500">Personalised learning support</div>
           </div>
         </div>
@@ -357,7 +357,7 @@ function ChatArea({
                 <Sparkles className="h-7 w-7" />
               </div>
               <h2 className="mt-4 text-lg font-semibold text-slate-900">
-                Hi — I'm your Glintr AI Mentor
+                Hi — I'm your GlintrAI
               </h2>
               <p className="mt-1 text-sm text-slate-500 max-w-md mx-auto">
                 Ask me to explain a concept, plan your studies, review an approach, or give you
@@ -420,7 +420,7 @@ function ChatArea({
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask Glintr AI Mentor…"
+              placeholder="Ask GlintrAI…"
               className="min-h-[52px] max-h-40 resize-none"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -436,7 +436,7 @@ function ChatArea({
             </Button>
           </div>
           <div className="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
-            <Info className="h-3 w-3" /> AI Mentor gives guidance, not grades. Verify important
+            <Info className="h-3 w-3" /> GlintrAI gives guidance, not grades. Verify important
             details with your program mentor.
           </div>
         </div>
@@ -458,7 +458,7 @@ function MessageBubble({
   if (message.status === "failed") {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-        AI Mentor is temporarily unavailable{message.error_reason ? `: ${message.error_reason}` : "."}
+        GlintrAI is temporarily unavailable{message.error_reason ? `: ${message.error_reason}` : "."}
       </div>
     );
   }
