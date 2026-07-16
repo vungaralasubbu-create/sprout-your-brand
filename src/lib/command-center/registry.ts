@@ -111,6 +111,7 @@ export const COMMAND_ITEMS: CommandItem[] = [
   { id: "partner-leads", label: "Leads", to: "/partner/leads", group: "nav", roles: ["sales_partner"], icon: Users, keywords: ["crm", "prospects"] },
   { id: "partner-earnings", label: "Earnings & Payouts", to: "/partner/earnings", group: "nav", roles: ["sales_partner"], icon: Wallet, keywords: ["commission", "money"] },
   { id: "partner-marketing", label: "Marketing Assets", to: "/partner/marketing", group: "action", roles: ["sales_partner"], icon: Megaphone },
+  { id: "partner-sales-ai", label: "Sales AI Center", to: "/partner/sales-ai", group: "action", roles: ["sales_partner", "academy_partner"], icon: Sparkles, keywords: ["ai", "agents", "qualification", "objections", "proposal", "forecast"] },
   { id: "partner-ai-coo", label: "AI COO", to: "/partner/ai-coo", group: "action", roles: ["sales_partner", "academy_partner"], icon: BrainCircuit, keywords: ["advisor", "recommendations"] },
   { id: "launch-academy", label: "Launch My Academy", to: "/partner/launch-academy", group: "action", roles: ["sales_partner"], icon: Rocket },
 
