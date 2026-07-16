@@ -56,6 +56,7 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/payout-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/refund-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/cookie-policy", changefreq: "yearly", priority: "0.3" },
+  { path: "/topics", changefreq: "weekly", priority: "0.9" },
 ];
 
 function esc(s: string) {
