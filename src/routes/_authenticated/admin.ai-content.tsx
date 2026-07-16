@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, Link, useLocation } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Sparkles, Wand2, Lightbulb, Calendar, Network, ShieldCheck, Settings,
+  LayoutDashboard, Sparkles, Wand2, FileEdit, Send, LayoutTemplate, Image as ImageIcon,
+  Search, Network, BarChart3, Settings, ShieldCheck, Lightbulb, Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -8,14 +9,24 @@ export const Route = createFileRoute("/_authenticated/admin/ai-content")({
   component: AiFactoryShell,
 });
 
-const NAV = [
-  { to: "/admin/ai-content", label: "Factory Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/admin/ai-content/wizard", label: "Content Wizard", icon: Wand2 },
+const NAV_PRIMARY = [
+  { to: "/admin/ai-content", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/ai-content/wizard", label: "Generate Content", icon: Wand2 },
+  { to: "/admin/ai-content/drafts", label: "Drafts", icon: FileEdit },
+  { to: "/admin/ai-content/queue", label: "Publishing Queue", icon: Send },
+  { to: "/admin/ai-content/templates", label: "Templates", icon: LayoutTemplate },
+  { to: "/admin/ai-content/media", label: "Media", icon: ImageIcon },
+  { to: "/admin/ai-content/seo", label: "SEO", icon: Search },
+  { to: "/admin/ai-content/knowledge-graph", label: "Knowledge Graph", icon: Network },
+  { to: "/admin/ai-content/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/admin/ai-content/settings", label: "Settings", icon: Settings },
+];
+
+const NAV_SECONDARY = [
   { to: "/admin/ai-content/review", label: "Editor Review", icon: ShieldCheck },
   { to: "/admin/ai-content/suggestions", label: "AI Suggestions", icon: Lightbulb },
   { to: "/admin/ai-content/calendar", label: "Content Calendar", icon: Calendar },
   { to: "/admin/ai-content/clusters", label: "Topic Clusters", icon: Network },
-  { to: "/admin/ai-content/settings", label: "AI Rules & Settings", icon: Settings },
 ];
 
 function AiFactoryShell() {
