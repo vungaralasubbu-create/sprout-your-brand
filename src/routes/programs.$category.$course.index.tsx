@@ -52,6 +52,19 @@ import {
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
 import { CourseTrustStats } from "@/components/course/trust-stats";
+import {
+  HiringPartners,
+  ToolsMaster,
+  StudentLearningJourney,
+  PortfolioProjects,
+  CareerRoadmap,
+  SalaryGrowth,
+  CareerServices,
+  CertificationBadges,
+  SuccessCounters,
+  AIToolsUsage,
+  ProgramPersonalization,
+} from "@/components/course/premium-sections";
 import { CertificateShowcase } from "@/components/course/certificate-showcase";
 import { supabase } from "@/integrations/supabase/client";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
