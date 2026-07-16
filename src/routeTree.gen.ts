@@ -354,12 +354,18 @@ import { Route as AuthenticatedAdminAiSearchEntitiesRouteImport } from './routes
 import { Route as AuthenticatedAdminAiSearchDefinitionsRouteImport } from './routes/_authenticated/admin.ai-search.definitions'
 import { Route as AuthenticatedAdminAiSearchCitationRouteImport } from './routes/_authenticated/admin.ai-search.citation'
 import { Route as AuthenticatedAdminAiContentWizardRouteImport } from './routes/_authenticated/admin.ai-content.wizard'
+import { Route as AuthenticatedAdminAiContentTemplatesRouteImport } from './routes/_authenticated/admin.ai-content.templates'
 import { Route as AuthenticatedAdminAiContentSuggestionsRouteImport } from './routes/_authenticated/admin.ai-content.suggestions'
 import { Route as AuthenticatedAdminAiContentSettingsRouteImport } from './routes/_authenticated/admin.ai-content.settings'
+import { Route as AuthenticatedAdminAiContentSeoRouteImport } from './routes/_authenticated/admin.ai-content.seo'
 import { Route as AuthenticatedAdminAiContentReviewRouteImport } from './routes/_authenticated/admin.ai-content.review'
+import { Route as AuthenticatedAdminAiContentQueueRouteImport } from './routes/_authenticated/admin.ai-content.queue'
+import { Route as AuthenticatedAdminAiContentMediaRouteImport } from './routes/_authenticated/admin.ai-content.media'
+import { Route as AuthenticatedAdminAiContentKnowledgeGraphRouteImport } from './routes/_authenticated/admin.ai-content.knowledge-graph'
 import { Route as AuthenticatedAdminAiContentDraftsRouteImport } from './routes/_authenticated/admin.ai-content.drafts'
 import { Route as AuthenticatedAdminAiContentClustersRouteImport } from './routes/_authenticated/admin.ai-content.clusters'
 import { Route as AuthenticatedAdminAiContentCalendarRouteImport } from './routes/_authenticated/admin.ai-content.calendar'
+import { Route as AuthenticatedAdminAiContentAnalyticsRouteImport } from './routes/_authenticated/admin.ai-content.analytics'
 import { Route as AuthenticatedAdminAiAgentsOrchestratorRouteImport } from './routes/_authenticated/admin.ai-agents.orchestrator'
 import { Route as AuthenticatedAdminAiAgentsNewRouteImport } from './routes/_authenticated/admin.ai-agents.new'
 import { Route as AuthenticatedAdminAiAgentsAnalyticsRouteImport } from './routes/_authenticated/admin.ai-agents.analytics'
@@ -2318,6 +2324,12 @@ const AuthenticatedAdminAiContentWizardRoute =
     path: '/wizard',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
+const AuthenticatedAdminAiContentTemplatesRoute =
+  AuthenticatedAdminAiContentTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
 const AuthenticatedAdminAiContentSuggestionsRoute =
   AuthenticatedAdminAiContentSuggestionsRouteImport.update({
     id: '/suggestions',
@@ -2330,10 +2342,34 @@ const AuthenticatedAdminAiContentSettingsRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
+const AuthenticatedAdminAiContentSeoRoute =
+  AuthenticatedAdminAiContentSeoRouteImport.update({
+    id: '/seo',
+    path: '/seo',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
 const AuthenticatedAdminAiContentReviewRoute =
   AuthenticatedAdminAiContentReviewRouteImport.update({
     id: '/review',
     path: '/review',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentQueueRoute =
+  AuthenticatedAdminAiContentQueueRouteImport.update({
+    id: '/queue',
+    path: '/queue',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentMediaRoute =
+  AuthenticatedAdminAiContentMediaRouteImport.update({
+    id: '/media',
+    path: '/media',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentKnowledgeGraphRoute =
+  AuthenticatedAdminAiContentKnowledgeGraphRouteImport.update({
+    id: '/knowledge-graph',
+    path: '/knowledge-graph',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
 const AuthenticatedAdminAiContentDraftsRoute =
@@ -2352,6 +2388,12 @@ const AuthenticatedAdminAiContentCalendarRoute =
   AuthenticatedAdminAiContentCalendarRouteImport.update({
     id: '/calendar',
     path: '/calendar',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentAnalyticsRoute =
+  AuthenticatedAdminAiContentAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
     getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
 const AuthenticatedAdminAiAgentsOrchestratorRoute =
@@ -2650,12 +2692,18 @@ export interface FileRoutesByFullPath {
   '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
   '/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
   '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
+  '/admin/ai-content/analytics': typeof AuthenticatedAdminAiContentAnalyticsRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
+  '/admin/ai-content/knowledge-graph': typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
+  '/admin/ai-content/media': typeof AuthenticatedAdminAiContentMediaRoute
+  '/admin/ai-content/queue': typeof AuthenticatedAdminAiContentQueueRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
+  '/admin/ai-content/seo': typeof AuthenticatedAdminAiContentSeoRoute
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
+  '/admin/ai-content/templates': typeof AuthenticatedAdminAiContentTemplatesRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
   '/admin/ai-search/citation': typeof AuthenticatedAdminAiSearchCitationRoute
   '/admin/ai-search/definitions': typeof AuthenticatedAdminAiSearchDefinitionsRoute
@@ -3000,12 +3048,18 @@ export interface FileRoutesByTo {
   '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
   '/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
   '/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
+  '/admin/ai-content/analytics': typeof AuthenticatedAdminAiContentAnalyticsRoute
   '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
+  '/admin/ai-content/knowledge-graph': typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
+  '/admin/ai-content/media': typeof AuthenticatedAdminAiContentMediaRoute
+  '/admin/ai-content/queue': typeof AuthenticatedAdminAiContentQueueRoute
   '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
+  '/admin/ai-content/seo': typeof AuthenticatedAdminAiContentSeoRoute
   '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
+  '/admin/ai-content/templates': typeof AuthenticatedAdminAiContentTemplatesRoute
   '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
   '/admin/ai-search/citation': typeof AuthenticatedAdminAiSearchCitationRoute
   '/admin/ai-search/definitions': typeof AuthenticatedAdminAiSearchDefinitionsRoute
@@ -3366,12 +3420,18 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
   '/_authenticated/admin/ai-agents/new': typeof AuthenticatedAdminAiAgentsNewRoute
   '/_authenticated/admin/ai-agents/orchestrator': typeof AuthenticatedAdminAiAgentsOrchestratorRoute
+  '/_authenticated/admin/ai-content/analytics': typeof AuthenticatedAdminAiContentAnalyticsRoute
   '/_authenticated/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
   '/_authenticated/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
   '/_authenticated/admin/ai-content/drafts': typeof AuthenticatedAdminAiContentDraftsRoute
+  '/_authenticated/admin/ai-content/knowledge-graph': typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
+  '/_authenticated/admin/ai-content/media': typeof AuthenticatedAdminAiContentMediaRoute
+  '/_authenticated/admin/ai-content/queue': typeof AuthenticatedAdminAiContentQueueRoute
   '/_authenticated/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
+  '/_authenticated/admin/ai-content/seo': typeof AuthenticatedAdminAiContentSeoRoute
   '/_authenticated/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
   '/_authenticated/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
+  '/_authenticated/admin/ai-content/templates': typeof AuthenticatedAdminAiContentTemplatesRoute
   '/_authenticated/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
   '/_authenticated/admin/ai-search/citation': typeof AuthenticatedAdminAiSearchCitationRoute
   '/_authenticated/admin/ai-search/definitions': typeof AuthenticatedAdminAiSearchDefinitionsRoute
@@ -3732,12 +3792,18 @@ export interface FileRouteTypes {
     | '/admin/ai-agents/analytics'
     | '/admin/ai-agents/new'
     | '/admin/ai-agents/orchestrator'
+    | '/admin/ai-content/analytics'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/drafts'
+    | '/admin/ai-content/knowledge-graph'
+    | '/admin/ai-content/media'
+    | '/admin/ai-content/queue'
     | '/admin/ai-content/review'
+    | '/admin/ai-content/seo'
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
+    | '/admin/ai-content/templates'
     | '/admin/ai-content/wizard'
     | '/admin/ai-search/citation'
     | '/admin/ai-search/definitions'
@@ -4082,12 +4148,18 @@ export interface FileRouteTypes {
     | '/admin/ai-agents/analytics'
     | '/admin/ai-agents/new'
     | '/admin/ai-agents/orchestrator'
+    | '/admin/ai-content/analytics'
     | '/admin/ai-content/calendar'
     | '/admin/ai-content/clusters'
     | '/admin/ai-content/drafts'
+    | '/admin/ai-content/knowledge-graph'
+    | '/admin/ai-content/media'
+    | '/admin/ai-content/queue'
     | '/admin/ai-content/review'
+    | '/admin/ai-content/seo'
     | '/admin/ai-content/settings'
     | '/admin/ai-content/suggestions'
+    | '/admin/ai-content/templates'
     | '/admin/ai-content/wizard'
     | '/admin/ai-search/citation'
     | '/admin/ai-search/definitions'
@@ -4447,12 +4519,18 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-agents/analytics'
     | '/_authenticated/admin/ai-agents/new'
     | '/_authenticated/admin/ai-agents/orchestrator'
+    | '/_authenticated/admin/ai-content/analytics'
     | '/_authenticated/admin/ai-content/calendar'
     | '/_authenticated/admin/ai-content/clusters'
     | '/_authenticated/admin/ai-content/drafts'
+    | '/_authenticated/admin/ai-content/knowledge-graph'
+    | '/_authenticated/admin/ai-content/media'
+    | '/_authenticated/admin/ai-content/queue'
     | '/_authenticated/admin/ai-content/review'
+    | '/_authenticated/admin/ai-content/seo'
     | '/_authenticated/admin/ai-content/settings'
     | '/_authenticated/admin/ai-content/suggestions'
+    | '/_authenticated/admin/ai-content/templates'
     | '/_authenticated/admin/ai-content/wizard'
     | '/_authenticated/admin/ai-search/citation'
     | '/_authenticated/admin/ai-search/definitions'
@@ -7079,6 +7157,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiContentWizardRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
+    '/_authenticated/admin/ai-content/templates': {
+      id: '/_authenticated/admin/ai-content/templates'
+      path: '/templates'
+      fullPath: '/admin/ai-content/templates'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentTemplatesRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
     '/_authenticated/admin/ai-content/suggestions': {
       id: '/_authenticated/admin/ai-content/suggestions'
       path: '/suggestions'
@@ -7093,11 +7178,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiContentSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
+    '/_authenticated/admin/ai-content/seo': {
+      id: '/_authenticated/admin/ai-content/seo'
+      path: '/seo'
+      fullPath: '/admin/ai-content/seo'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentSeoRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
     '/_authenticated/admin/ai-content/review': {
       id: '/_authenticated/admin/ai-content/review'
       path: '/review'
       fullPath: '/admin/ai-content/review'
       preLoaderRoute: typeof AuthenticatedAdminAiContentReviewRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/queue': {
+      id: '/_authenticated/admin/ai-content/queue'
+      path: '/queue'
+      fullPath: '/admin/ai-content/queue'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentQueueRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/media': {
+      id: '/_authenticated/admin/ai-content/media'
+      path: '/media'
+      fullPath: '/admin/ai-content/media'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentMediaRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/knowledge-graph': {
+      id: '/_authenticated/admin/ai-content/knowledge-graph'
+      path: '/knowledge-graph'
+      fullPath: '/admin/ai-content/knowledge-graph'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentKnowledgeGraphRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
     '/_authenticated/admin/ai-content/drafts': {
@@ -7119,6 +7232,13 @@ declare module '@tanstack/react-router' {
       path: '/calendar'
       fullPath: '/admin/ai-content/calendar'
       preLoaderRoute: typeof AuthenticatedAdminAiContentCalendarRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/analytics': {
+      id: '/_authenticated/admin/ai-content/analytics'
+      path: '/analytics'
+      fullPath: '/admin/ai-content/analytics'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentAnalyticsRouteImport
       parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
     '/_authenticated/admin/ai-agents/orchestrator': {
@@ -7231,30 +7351,47 @@ const AuthenticatedAdminAiAgentsRouteWithChildren =
   )
 
 interface AuthenticatedAdminAiContentRouteChildren {
+  AuthenticatedAdminAiContentAnalyticsRoute: typeof AuthenticatedAdminAiContentAnalyticsRoute
   AuthenticatedAdminAiContentCalendarRoute: typeof AuthenticatedAdminAiContentCalendarRoute
   AuthenticatedAdminAiContentClustersRoute: typeof AuthenticatedAdminAiContentClustersRoute
   AuthenticatedAdminAiContentDraftsRoute: typeof AuthenticatedAdminAiContentDraftsRoute
+  AuthenticatedAdminAiContentKnowledgeGraphRoute: typeof AuthenticatedAdminAiContentKnowledgeGraphRoute
+  AuthenticatedAdminAiContentMediaRoute: typeof AuthenticatedAdminAiContentMediaRoute
+  AuthenticatedAdminAiContentQueueRoute: typeof AuthenticatedAdminAiContentQueueRoute
   AuthenticatedAdminAiContentReviewRoute: typeof AuthenticatedAdminAiContentReviewRoute
+  AuthenticatedAdminAiContentSeoRoute: typeof AuthenticatedAdminAiContentSeoRoute
   AuthenticatedAdminAiContentSettingsRoute: typeof AuthenticatedAdminAiContentSettingsRoute
   AuthenticatedAdminAiContentSuggestionsRoute: typeof AuthenticatedAdminAiContentSuggestionsRoute
+  AuthenticatedAdminAiContentTemplatesRoute: typeof AuthenticatedAdminAiContentTemplatesRoute
   AuthenticatedAdminAiContentWizardRoute: typeof AuthenticatedAdminAiContentWizardRoute
   AuthenticatedAdminAiContentIndexRoute: typeof AuthenticatedAdminAiContentIndexRoute
 }
 
 const AuthenticatedAdminAiContentRouteChildren: AuthenticatedAdminAiContentRouteChildren =
   {
+    AuthenticatedAdminAiContentAnalyticsRoute:
+      AuthenticatedAdminAiContentAnalyticsRoute,
     AuthenticatedAdminAiContentCalendarRoute:
       AuthenticatedAdminAiContentCalendarRoute,
     AuthenticatedAdminAiContentClustersRoute:
       AuthenticatedAdminAiContentClustersRoute,
     AuthenticatedAdminAiContentDraftsRoute:
       AuthenticatedAdminAiContentDraftsRoute,
+    AuthenticatedAdminAiContentKnowledgeGraphRoute:
+      AuthenticatedAdminAiContentKnowledgeGraphRoute,
+    AuthenticatedAdminAiContentMediaRoute:
+      AuthenticatedAdminAiContentMediaRoute,
+    AuthenticatedAdminAiContentQueueRoute:
+      AuthenticatedAdminAiContentQueueRoute,
     AuthenticatedAdminAiContentReviewRoute:
       AuthenticatedAdminAiContentReviewRoute,
+    AuthenticatedAdminAiContentSeoRoute: AuthenticatedAdminAiContentSeoRoute,
     AuthenticatedAdminAiContentSettingsRoute:
       AuthenticatedAdminAiContentSettingsRoute,
     AuthenticatedAdminAiContentSuggestionsRoute:
       AuthenticatedAdminAiContentSuggestionsRoute,
+    AuthenticatedAdminAiContentTemplatesRoute:
+      AuthenticatedAdminAiContentTemplatesRoute,
     AuthenticatedAdminAiContentWizardRoute:
       AuthenticatedAdminAiContentWizardRoute,
     AuthenticatedAdminAiContentIndexRoute:

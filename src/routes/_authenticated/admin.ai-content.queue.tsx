@@ -40,7 +40,7 @@ function QueuePage() {
                 <div className="text-xs text-muted-foreground italic">No articles in this lane yet.</div>
               </div>
               <div className="mt-3 pt-3 border-t border-border/60 text-[11px] text-muted-foreground">
-                <Badge variant="secondary" className="text-[10px]">0 items</Badge>
+                <Badge variant="muted" className="text-[10px]">0 items</Badge>
               </div>
             </Card>
           );
