@@ -439,7 +439,7 @@ function MessageBubble({
           <div className="prose prose-sm max-w-none prose-p:my-1.5 prose-ul:my-1.5 prose-a:text-primary prose-a:underline-offset-2">
             <ReactMarkdown
               components={{
-                a: ({ href, children }) => {
+                a: ({ href, children }: { href?: string; children?: React.ReactNode }) => {
                   const to = href || "";
                   if (to.startsWith("/")) {
                     return (
