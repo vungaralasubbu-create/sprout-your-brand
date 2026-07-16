@@ -38,6 +38,7 @@ import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
 import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
 import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
 import { GlintrDimension } from "@/components/home/glintr-dimension";
+import { WhoAreYou } from "@/components/home/who-are-you";
 import {
   GlintrWorld,
   CertificationEcosystem,
@@ -1838,6 +1839,7 @@ export function PremiumHomepage() {
   return (
     <>
       <HeroUniverse />
+      <WhoAreYou />
       <ThreeJourneys />
       <MotionStatement />
       <EarnSpotlight />
