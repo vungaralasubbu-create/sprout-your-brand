@@ -393,6 +393,19 @@ function BlogDetailPage() {
               ) : null}
 
               <div ref={articleRef}>
+                {post.short_summary ? (
+                  <aside
+                    aria-label="TL;DR — Quick summary"
+                    className="mb-8 rounded-2xl border bg-surface-1/60 p-5 md:p-6"
+                  >
+                    <div className="text-caption font-mono uppercase tracking-widest text-primary mb-2">
+                      TL;DR
+                    </div>
+                    <p className="text-body text-foreground/85 leading-relaxed">
+                      {post.short_summary}
+                    </p>
+                  </aside>
+                ) : null}
                 {post.intro ? (
                   <p className="text-xl md:text-2xl font-display text-foreground/90 leading-relaxed mb-8">
                     {post.intro}

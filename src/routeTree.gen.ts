@@ -26,6 +26,7 @@ import { Route as MarketingSupportRouteImport } from './routes/marketing-support
 import { Route as LmsRouteImport } from './routes/lms'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator'
+import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
@@ -52,6 +53,7 @@ import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as PartnerSupportRequestsRouteImport } from './routes/partner-support.requests'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
+import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
 import { Route as FaqsSlugRouteImport } from './routes/faqs.$slug'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -270,6 +272,11 @@ const IncomeCalculatorRoute = IncomeCalculatorRouteImport.update({
   path: '/income-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GlossaryRoute = GlossaryRouteImport.update({
+  id: '/glossary',
+  path: '/glossary',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqsRoute = FaqsRouteImport.update({
   id: '/faqs',
   path: '/faqs',
@@ -400,6 +407,11 @@ const LaunchYourBrandConsultationRoute =
     path: '/launch-your-brand/consultation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const GlossarySlugRoute = GlossarySlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => GlossaryRoute,
+} as any)
 const FaqsSlugRoute = FaqsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -1196,6 +1208,7 @@ export interface FileRoutesByFullPath {
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/glossary': typeof GlossaryRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/lms': typeof LmsRoute
@@ -1221,6 +1234,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
+  '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
@@ -1372,6 +1386,7 @@ export interface FileRoutesByTo {
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/glossary': typeof GlossaryRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/lms': typeof LmsRoute
@@ -1395,6 +1410,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
+  '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
@@ -1547,6 +1563,7 @@ export interface FileRoutesById {
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/glossary': typeof GlossaryRouteWithChildren
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/lms': typeof LmsRoute
@@ -1572,6 +1589,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
+  '/glossary/$slug': typeof GlossarySlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
@@ -1725,6 +1743,7 @@ export interface FileRouteTypes {
     | '/cookie-policy'
     | '/earn'
     | '/faqs'
+    | '/glossary'
     | '/income-calculator'
     | '/join'
     | '/lms'
@@ -1750,6 +1769,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/careers/$roleSlug'
     | '/faqs/$slug'
+    | '/glossary/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner-support/requests'
@@ -1901,6 +1921,7 @@ export interface FileRouteTypes {
     | '/cookie-policy'
     | '/earn'
     | '/faqs'
+    | '/glossary'
     | '/income-calculator'
     | '/join'
     | '/lms'
@@ -1924,6 +1945,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/careers/$roleSlug'
     | '/faqs/$slug'
+    | '/glossary/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner-support/requests'
@@ -2075,6 +2097,7 @@ export interface FileRouteTypes {
     | '/cookie-policy'
     | '/earn'
     | '/faqs'
+    | '/glossary'
     | '/income-calculator'
     | '/join'
     | '/lms'
@@ -2100,6 +2123,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/careers/$roleSlug'
     | '/faqs/$slug'
+    | '/glossary/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/partner-support/requests'
@@ -2253,6 +2277,7 @@ export interface RootRouteChildren {
   CookiePolicyRoute: typeof CookiePolicyRoute
   EarnRoute: typeof EarnRoute
   FaqsRoute: typeof FaqsRouteWithChildren
+  GlossaryRoute: typeof GlossaryRouteWithChildren
   IncomeCalculatorRoute: typeof IncomeCalculatorRoute
   JoinRoute: typeof JoinRoute
   LmsRoute: typeof LmsRoute
@@ -2403,6 +2428,13 @@ declare module '@tanstack/react-router' {
       path: '/income-calculator'
       fullPath: '/income-calculator'
       preLoaderRoute: typeof IncomeCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossary': {
+      id: '/glossary'
+      path: '/glossary'
+      fullPath: '/glossary'
+      preLoaderRoute: typeof GlossaryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faqs': {
@@ -2586,6 +2618,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/launch-your-brand/consultation'
       preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/glossary/$slug': {
+      id: '/glossary/$slug'
+      path: '/$slug'
+      fullPath: '/glossary/$slug'
+      preLoaderRoute: typeof GlossarySlugRouteImport
+      parentRoute: typeof GlossaryRoute
     }
     '/faqs/$slug': {
       id: '/faqs/$slug'
@@ -4013,6 +4052,18 @@ const FaqsRouteChildren: FaqsRouteChildren = {
 
 const FaqsRouteWithChildren = FaqsRoute._addFileChildren(FaqsRouteChildren)
 
+interface GlossaryRouteChildren {
+  GlossarySlugRoute: typeof GlossarySlugRoute
+}
+
+const GlossaryRouteChildren: GlossaryRouteChildren = {
+  GlossarySlugRoute: GlossarySlugRoute,
+}
+
+const GlossaryRouteWithChildren = GlossaryRoute._addFileChildren(
+  GlossaryRouteChildren,
+)
+
 interface PartnerSupportRequestsRouteChildren {
   PartnerSupportRequestsRefRoute: typeof PartnerSupportRequestsRefRoute
 }
@@ -4092,6 +4143,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiePolicyRoute: CookiePolicyRoute,
   EarnRoute: EarnRoute,
   FaqsRoute: FaqsRouteWithChildren,
+  GlossaryRoute: GlossaryRouteWithChildren,
   IncomeCalculatorRoute: IncomeCalculatorRoute,
   JoinRoute: JoinRoute,
   LmsRoute: LmsRoute,

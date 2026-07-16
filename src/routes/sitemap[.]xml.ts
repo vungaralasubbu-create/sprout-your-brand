@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import { listGlossary } from "@/data/glossary";
 
 const BASE_URL = "https://glintr.com";
 
@@ -29,6 +30,7 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/success-stories", changefreq: "weekly", priority: "0.6" },
   { path: "/faqs", changefreq: "monthly", priority: "0.5" },
   { path: "/blog", changefreq: "daily", priority: "0.9" },
+  { path: "/glossary", changefreq: "monthly", priority: "0.7" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/terms-and-conditions", changefreq: "yearly", priority: "0.3" },
   { path: "/revenue-share-terms", changefreq: "yearly", priority: "0.3" },
@@ -50,6 +52,14 @@ export const Route = createFileRoute("/sitemap.xml")({
 
         type Entry = { path: string; lastmod?: string; changefreq?: string; priority?: string };
         const entries: Entry[] = [...STATIC_PATHS];
+
+        for (const g of listGlossary()) {
+          entries.push({
+            path: `/glossary/${g.slug}`,
+            changefreq: "monthly",
+            priority: "0.5",
+          });
+        }
 
         if (url && key) {
           try {

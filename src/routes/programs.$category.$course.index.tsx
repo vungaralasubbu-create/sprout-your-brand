@@ -58,6 +58,7 @@ import { trackProgramView, trackApplyClick, trackEvent } from "@/lib/analytics/c
 import { cn } from "@/lib/utils";
 import { ProgramScrollProgress } from "@/components/programs/program-scroll-progress";
 import { ProgramHeroGraphic } from "@/components/programs/program-hero-graphic";
+import { QuickAnswer, KeyTakeaways } from "@/components/shared/geo";
 
 
 const SITE_URL = "https://glintr.com";
@@ -266,6 +267,11 @@ function CoursePage() {
   const whyBody = whyContent?.body ?? c.full_description ?? editorial.overview ?? null;
   const showWhySection = Boolean(whyBody || whyPoints.length);
 
+  // ---- GEO: Quick Answer + Key Takeaways (AI-search primitives) ----
+  const quickAnswer =
+    c.short_description ?? editorial.overview ?? whyBody ?? `${c.name} is a structured educational program from Glintr, designed to build a clear working understanding of ${c.name} through guided lessons, projects and mentor support.`;
+  const keyTakeaways = (whyPoints.length ? whyPoints : editorial.whyPoints ?? []).slice(0, 5);
+
 
   return (
     <PageShell>
@@ -387,8 +393,21 @@ function CoursePage() {
         </Container>
       </Section>
 
+      {/* ============ GEO: QUICK ANSWER + KEY TAKEAWAYS ============ */}
+      <Section className="py-10 lg:py-14 border-t bg-surface-1/40">
+        <Container>
+          <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 lg:gap-8">
+            <QuickAnswer
+              term={c.name}
+              question={`What is ${c.name}?`}
+              answer={quickAnswer}
+            />
+            {keyTakeaways.length ? <KeyTakeaways items={keyTakeaways} /> : null}
+          </div>
+        </Container>
+      </Section>
 
-      {/* ============ DARK COURSE INTRO ============ */}
+
       <Section className="relative overflow-hidden py-20 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
         <div
           aria-hidden
