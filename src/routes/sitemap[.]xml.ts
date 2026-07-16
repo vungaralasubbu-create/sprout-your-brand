@@ -5,6 +5,7 @@ import { listGlossary } from "@/data/glossary";
 import { listLearningPaths } from "@/data/learning-paths";
 import { listComparisons } from "@/data/comparisons";
 import { listCareerMaps } from "@/data/career-maps";
+import { listTools } from "@/data/tools";
 
 const BASE_URL = "https://glintr.com";
 
@@ -38,6 +39,8 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/compare", changefreq: "monthly", priority: "0.7" },
   { path: "/career-maps", changefreq: "monthly", priority: "0.7" },
   { path: "/knowledge-graph", changefreq: "monthly", priority: "0.5" },
+  { path: "/tools", changefreq: "weekly", priority: "0.8" },
+  { path: "/find-your-program", changefreq: "monthly", priority: "0.7" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/terms-and-conditions", changefreq: "yearly", priority: "0.3" },
   { path: "/revenue-share-terms", changefreq: "yearly", priority: "0.3" },
