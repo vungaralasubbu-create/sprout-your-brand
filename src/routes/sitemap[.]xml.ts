@@ -2,6 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { listGlossary } from "@/data/glossary";
+import { listLearningPaths } from "@/data/learning-paths";
+import { listComparisons } from "@/data/comparisons";
+import { listCareerMaps } from "@/data/career-maps";
 
 const BASE_URL = "https://glintr.com";
 
