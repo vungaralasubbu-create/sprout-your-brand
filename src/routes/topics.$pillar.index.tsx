@@ -74,7 +74,7 @@ export const Route = createFileRoute("/topics/$pillar/")({
         {
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: pillar.faqs.map((f) => ({
+          mainEntity: pillar.faqs.map((f: { q: string; a: string }) => ({
             "@type": "Question",
             name: f.q,
             acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -174,7 +174,7 @@ function PillarPage() {
                 <Layers className="h-5 w-5 text-primary" /> Industry applications
               </h2>
               <div className="grid gap-2 sm:grid-cols-2">
-                {pillar.applications.map((a) => (
+                {pillar.applications.map((a: string) => (
                   <div key={a} className="flex items-start gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                     <span>{a}</span>
@@ -197,7 +197,7 @@ function PillarPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {pillar.careers.map((c) => (
+                    {pillar.careers.map((c: { role: string; salaryInr: string }) => (
                       <tr key={c.role} className="border-t border-border">
                         <td className="px-4 py-3 font-medium">{c.role}</td>
                         <td className="px-4 py-3 text-muted-foreground">{c.salaryInr}</td>
@@ -212,7 +212,7 @@ function PillarPage() {
             <section>
               <h2 id="skills" className="text-heading mb-4">Skills roadmap</h2>
               <div className="flex flex-wrap gap-2">
-                {pillar.skills.map((s) => (
+                {pillar.skills.map((s: string) => (
                   <span key={s} className="rounded-full border border-border bg-card px-3 py-1 text-xs">{s}</span>
                 ))}
               </div>
@@ -224,7 +224,7 @@ function PillarPage() {
                 <Compass className="h-5 w-5 text-primary" /> Learning roadmap
               </h2>
               <ol className="space-y-4">
-                {pillar.roadmap.map((r, i) => (
+                {pillar.roadmap.map((r: { phase: string; weeks?: string; items: string[] }, i: number) => (
                   <li key={r.phase} className="rounded-2xl border border-border bg-card p-5">
                     <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="rounded-full bg-primary/10 px-2 py-0.5 font-mono text-primary">Phase {i + 1}</span>
@@ -232,7 +232,7 @@ function PillarPage() {
                     </div>
                     <div className="text-base font-semibold">{r.phase}</div>
                     <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
-                      {r.items.map((it) => (
+                      {r.items.map((it: string) => (
                         <li key={it} className="flex items-start gap-2 text-sm text-muted-foreground">
                           <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-primary" /> {it}
                         </li>
@@ -249,7 +249,7 @@ function PillarPage() {
                 <TrendingUp className="h-5 w-5 text-primary" /> Latest trends (2026)
               </h2>
               <ul className="grid gap-2 sm:grid-cols-2">
-                {pillar.trends.map((t) => (
+                {pillar.trends.map((t: string) => (
                   <li key={t} className="flex items-start gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm">
                     <TrendingUp className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                     <span>{t}</span>
@@ -264,7 +264,7 @@ function PillarPage() {
                 <Wrench className="h-5 w-5 text-primary" /> Tools used
               </h2>
               <div className="flex flex-wrap gap-2">
-                {pillar.tools.map((t) => (
+                {pillar.tools.map((t: string) => (
                   <span key={t} className="rounded-full border border-border bg-card px-3 py-1 text-xs">{t}</span>
                 ))}
               </div>
@@ -279,7 +279,7 @@ function PillarPage() {
                 {clusters.length} in-depth {pillar.name} guides — from beginner concepts to career and interview prep.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                {clusters.map((c) => (
+                {clusters.map((c: any) => (
                   <Link
                     key={c.slug}
                     to="/topics/$pillar/$cluster"
@@ -308,7 +308,7 @@ function PillarPage() {
             <section>
               <h2 id="faqs" className="text-heading mb-4">Frequently asked questions</h2>
               <div className="divide-y divide-border rounded-2xl border border-border bg-card">
-                {pillar.faqs.map((f) => (
+                {pillar.faqs.map((f: { q: string; a: string }) => (
                   <details key={f.q} className="group px-5 py-4">
                     <summary className="cursor-pointer list-none text-sm font-semibold marker:hidden">
                       {f.q}

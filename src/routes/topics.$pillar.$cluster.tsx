@@ -71,7 +71,7 @@ export const Route = createFileRoute("/topics/$pillar/$cluster")({
               {
                 "@context": "https://schema.org",
                 "@type": "FAQPage",
-                mainEntity: cluster.faqs.map((f) => ({
+                mainEntity: cluster.faqs.map((f: { q: string; a: string }) => ({
                   "@type": "Question",
                   name: f.q,
                   acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -129,13 +129,13 @@ function ClusterPage() {
 
         <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 lg:grid-cols-[1fr_260px]">
           <article className="min-w-0 space-y-10">
-            {cluster.sections.map((s, i) => (
+            {cluster.sections.map((s: any, i: number) => (
               <section key={i}>
                 <h2 className="text-heading mb-3">{s.heading}</h2>
                 {s.body && <p className="text-muted-foreground">{s.body}</p>}
                 {s.bullets && s.bullets.length > 0 && (
                   <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {s.bullets.map((b) => (
+                    {s.bullets.map((b: string) => (
                       <li key={b} className="flex items-start gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm">
                         <ChevronRight className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                         <span>{b}</span>
@@ -150,7 +150,7 @@ function ClusterPage() {
               <section>
                 <h2 className="text-heading mb-4">FAQs</h2>
                 <div className="divide-y divide-border rounded-2xl border border-border bg-card">
-                  {cluster.faqs.map((f) => (
+                  {cluster.faqs.map((f: { q: string; a: string }) => (
                     <details key={f.q} className="px-5 py-4">
                       <summary className="cursor-pointer list-none text-sm font-semibold marker:hidden">{f.q}</summary>
                       <p className="mt-2 text-sm text-muted-foreground">{f.a}</p>
@@ -175,7 +175,7 @@ function ClusterPage() {
                   </div>
                   <div className="text-xs text-muted-foreground">The full overview, roadmap and career map.</div>
                 </Link>
-                {siblings.slice(0, 5).map((c) => (
+                {siblings.slice(0, 5).map((c: any) => (
                   <Link
                     key={c.slug}
                     to="/topics/$pillar/$cluster"
@@ -204,7 +204,7 @@ function ClusterPage() {
                       {pillar.name} pillar
                     </Link>
                   </li>
-                  {siblings.slice(0, 8).map((c) => (
+                  {siblings.slice(0, 8).map((c: any) => (
                     <li key={c.slug}>
                       <Link
                         to="/topics/$pillar/$cluster"
