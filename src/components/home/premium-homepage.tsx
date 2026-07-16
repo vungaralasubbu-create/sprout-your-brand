@@ -1171,7 +1171,7 @@ function SkillsNetwork() {
                   className="absolute inset-0 -m-6 rounded-full blur-2xl"
                   style={{ background: "radial-gradient(circle, oklch(0.78 0.16 175 / 0.35), transparent 70%)" }}
                 />
-                <img src={mark.url} alt="" className="relative h-16 w-16 object-contain" />
+                <img src={mark.url} alt="" width={64} height={64} loading="lazy" decoding="async" className="relative h-16 w-16 object-contain" />
               </div>
             </div>
           </div>
