@@ -332,7 +332,7 @@ function CategoryPage() {
 
         {/* CATEGORY CAREER INSIGHTS */}
         {(() => {
-          const insights = getCategoryInsights(categorySlug);
+          const insights = getCategoryInsights(slug);
           if (!insights) return null;
           return (
             <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
