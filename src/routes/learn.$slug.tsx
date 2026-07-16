@@ -214,6 +214,14 @@ function LearnArticlePage() {
           {/* Key takeaways */}
           <KeyTakeaways items={article.keyTakeaways} className="mt-12" />
 
+          {/* Workspace actions: summary, flashcards, highlights */}
+          <PageWorkspaceActions
+            className="mt-12"
+            title={article.title}
+            source={article.content}
+            kind="learn"
+          />
+
           {/* AI mentor */}
           <AiMentorCard title={article.title} />
 
