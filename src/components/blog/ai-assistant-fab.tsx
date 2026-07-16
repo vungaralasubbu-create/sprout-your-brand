@@ -4,7 +4,7 @@ import { Sparkles, X, BookOpen, ListChecks, Languages, HelpCircle, Wand2, FileTe
 import { cn } from "@/lib/utils";
 
 /**
- * Floating AI Learning Assistant.
+ * Floating GlintrAI.
  *
  * - Collapsed by default (compact circular FAB, bottom-right).
  * - Never blocks reading — the menu is positioned above the FAB and closes on
@@ -49,7 +49,7 @@ export function AiAssistantFab({ articleTitle, articleSlug }: { articleTitle: st
         {open ? (
           <div
             role="dialog"
-            aria-label="AI Learning Assistant"
+            aria-label="GlintrAI"
             className={cn(
               "mb-3 w-[calc(100vw-2.5rem)] max-w-sm origin-bottom-right rounded-2xl border bg-card shadow-2xl",
               "animate-in fade-in-0 zoom-in-95",
@@ -61,14 +61,14 @@ export function AiAssistantFab({ articleTitle, articleSlug }: { articleTitle: st
                   <Sparkles className="size-4" />
                 </span>
                 <div>
-                  <div className="text-sm font-semibold">AI Learning Assistant</div>
+                  <div className="text-sm font-semibold">GlintrAI</div>
                   <div className="text-[11px] text-muted-foreground">Powered by Glintr AI</div>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close AI Assistant"
+                aria-label="Close GlintrAI"
                 className="inline-flex size-8 items-center justify-center rounded-full text-muted-foreground hover:bg-muted"
               >
                 <X className="size-4" />
@@ -100,7 +100,7 @@ export function AiAssistantFab({ articleTitle, articleSlug }: { articleTitle: st
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={open ? "Close AI Learning Assistant" : "Open AI Learning Assistant"}
+          aria-label={open ? "Close GlintrAI" : "Open GlintrAI"}
           className={cn(
             "inline-flex items-center gap-2 rounded-full bg-gradient-brand px-4 py-3 text-white shadow-lg transition-all",
             "hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60",

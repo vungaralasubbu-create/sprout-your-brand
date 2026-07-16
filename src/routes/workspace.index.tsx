@@ -286,7 +286,7 @@ function WorkspaceHome() {
       <Card>
         <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
           <div>
-            <Pill tone="primary">AI Mentor</Pill>
+            <Pill tone="primary">GlintrAI</Pill>
             <h2 className="mt-2 text-base font-semibold text-foreground">Chat with a context-aware mentor</h2>
             <p className="mt-1 text-xs text-muted-foreground">
               Ask questions, generate summaries, build flashcards from anything you're studying.
