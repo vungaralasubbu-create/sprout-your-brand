@@ -577,7 +577,14 @@ const SUCCESS_STATS = [
   { icon: Building2, value: 5000, suffix: "+", label: "Hiring Partners" },
   { icon: GraduationCap, value: 120, suffix: "+", label: "Programs" },
   { icon: Trophy, value: 95, suffix: "%", label: "Completion Rate" },
-  { icon: Star, value: 4.8, suffix: "★", label: "Average Rating", decimals: 1 as const },
+  {
+    icon: Star,
+    value: 4.8,
+    suffix: "★",
+    label: "Average Rating",
+    format: (n: number) => (n / 10).toFixed(1),
+    scale: 10 as const,
+  },
 ];
 
 export function SuccessCounters() {
