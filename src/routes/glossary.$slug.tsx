@@ -195,7 +195,7 @@ function ShareButton({ title, url }: { title: string; url: string }) {
 function GlossaryDetail() {
   const { entry } = Route.useLoaderData();
   const related = relatedGlossary(entry);
-  const relatedLearn = useRelatedLearn(entry.category, entry.relatedLearn);
+  const relatedLearn = useRelatedLearn(entry.category, entry.slug, entry.relatedLearn);
   const nextEntry = entry.nextTopic ? getGlossaryEntry(entry.nextTopic) : null;
   const continueList = listGlossary()
     .filter((g) => g.slug !== entry.slug && g.category !== entry.category)
