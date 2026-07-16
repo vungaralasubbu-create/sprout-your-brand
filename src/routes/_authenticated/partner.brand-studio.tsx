@@ -539,10 +539,10 @@ function StepBrand({
 }
 
 /* ==================================================================
-   STEP 3 — Domain
+   STEP 3 — Managed URL (Glintr Managed Infrastructure)
 ================================================================== */
 
-function StepDomain({
+function StepManagedUrl({
   draft,
   update,
   brandName,
@@ -551,102 +551,85 @@ function StepDomain({
   update: (p: Partial<Draft>) => void;
   brandName: string;
 }) {
-  const fn = useServerFn(checkDomain);
-  const [query, setQuery] = useState(
-    (brandName || "").toLowerCase().replace(/[^a-z0-9]/g, ""),
-  );
-  const [results, setResults] = useState<Record<string, "available" | "taken" | "unknown">>({});
-  const [loading, setLoading] = useState(false);
-  const exts = [".com", ".in", ".co", ".io", ".ai"];
+  const defaultSlug = (brandName || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 40);
+  const [slug, setSlug] = useState(draft.managedSlug || defaultSlug);
 
-  const check = async () => {
-    if (!query) return;
-    setLoading(true);
-    const next: typeof results = { ...results };
-    for (const ext of exts) {
-      try {
-        const res: any = await fn({ data: { domain: `${query}${ext}` } } as any);
-        next[`${query}${ext}`] = res?.available ? "available" : "taken";
-      } catch {
-        next[`${query}${ext}`] = "unknown";
-      }
+  useEffect(() => {
+    if (!draft.managedSlug && defaultSlug) {
+      setSlug(defaultSlug);
     }
-    setResults(next);
-    setLoading(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultSlug]);
 
-  const toggleFav = (d: string) => {
-    const has = draft.favouriteDomains.includes(d);
-    update({
-      favouriteDomains: has ? draft.favouriteDomains.filter((x) => x !== d) : [...draft.favouriteDomains, d],
-    });
-  };
+  const cleaned = slug.toLowerCase().replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").replace(/(^-|-$)/g, "");
+  const managedUrl = cleaned ? `${cleaned}.glintr.com` : "your-brand.glintr.com";
+
+  const managed = [
+    "Website",
+    "Hosting",
+    "SSL certificate",
+    "Global CDN",
+    "Daily backups",
+    "Security & DDoS",
+    "Analytics",
+    "SEO",
+    "Blog engine",
+    "LMS",
+    "CRM",
+    "Email delivery",
+    "Certificates",
+    "Performance monitoring",
+    "Ongoing maintenance",
+  ];
 
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Globe} title="Domain Assistant" subtitle="Search .com .in .co .io .ai and save favourites." />
+      <SectionHeader
+        icon={Globe}
+        title="Glintr Managed Infrastructure"
+        subtitle="You focus on teaching and selling. Glintr owns and runs everything technical."
+      />
 
-      <div className="flex flex-col sm:flex-row gap-2">
-        <Input value={query} onChange={(e) => setQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="yourbrand" className="flex-1" />
-        <Button onClick={check} disabled={loading} className="gap-2">
-          {loading ? <Loader2 className="size-4 animate-spin" /> : <Globe className="size-4" />}
-          Check availability
-        </Button>
-      </div>
-
-      {Object.keys(results).length > 0 && (
-        <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
-          {exts.map((ext) => {
-            const domain = `${query}${ext}`;
-            const status = results[domain];
-            const isFav = draft.favouriteDomains.includes(domain);
-            return (
-              <div key={ext} className="rounded-lg border bg-white p-3 flex items-center justify-between">
-                <div>
-                  <div className="font-medium text-sm">{domain}</div>
-                  <div className="text-xs mt-0.5">
-                    {status === "available" && <span className="text-emerald-600">● Available</span>}
-                    {status === "taken" && <span className="text-red-600">● Unavailable</span>}
-                    {status === "unknown" && <span className="text-muted-foreground">— Unknown</span>}
-                  </div>
-                </div>
-                <div className="flex gap-1">
-                  <Button
-                    size="sm"
-                    variant={isFav ? "primary" : "outline"}
-                    onClick={() => toggleFav(domain)}
-                  >
-                    {isFav ? "Saved" : "Save"}
-                  </Button>
-                  {status === "available" && (
-                    <Button size="sm" variant="secondary" onClick={() => update({ domain: { name: query, ext } })}>
-                      Use
-                    </Button>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {draft.domain && (
-        <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-sm">
-          <b>Chosen domain:</b> {draft.domain.name}
-          {draft.domain.ext} — purchase can be finalised at publish.
-        </div>
-      )}
-
-      {draft.favouriteDomains.length > 0 && (
+      <div className="rounded-xl border bg-white p-5 space-y-4">
         <div>
-          <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Favourites</div>
-          <div className="flex flex-wrap gap-2">
-            {draft.favouriteDomains.map((d) => (
-              <Badge key={d} variant="muted">{d}</Badge>
-            ))}
+          <div className="text-xs uppercase tracking-wide text-muted-foreground mb-1">Your managed academy URL</div>
+          <div className="flex flex-col sm:flex-row gap-2 items-stretch">
+            <Input
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              onBlur={() => update({ managedSlug: cleaned })}
+              placeholder="your-brand"
+              className="flex-1 font-mono"
+            />
+            <div className="inline-flex items-center px-3 rounded-md border bg-slate-50 text-sm text-slate-600 font-mono">
+              .glintr.com
+            </div>
+          </div>
+          <div className="text-xs text-muted-foreground mt-2">
+            Live URL will be <span className="font-mono text-foreground">{managedUrl}</span>. Glintr provisions the site, SSL and CDN automatically after approval.
           </div>
         </div>
-      )}
+
+        <div className="rounded-lg bg-cyan-50 border border-cyan-200 p-3 text-sm">
+          <b>No domains to buy, no DNS, no hosting.</b> If Glintr later purchases a dedicated domain for your academy, our team migrates you internally — you never touch DNS or SSL.
+        </div>
+      </div>
+
+      <div>
+        <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Glintr manages, end-to-end</div>
+        <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
+          {managed.map((m) => (
+            <div key={m} className="flex items-center gap-2 rounded-lg border bg-white px-3 py-2 text-sm">
+              <Check className="size-4 text-emerald-600 shrink-0" />
+              <span>{m}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+        <b className="text-foreground">Your job:</b> teaching, selling, creating courses, recording videos, engaging students and growing enrollments. Everything else is handled by Glintr as part of your revenue-share partnership.
+      </div>
     </div>
   );
 }
