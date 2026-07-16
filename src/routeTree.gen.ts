@@ -143,6 +143,7 @@ import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
 import { Route as AuthenticatedPartnerSupportRouteImport } from './routes/_authenticated/partner.support'
 import { Route as AuthenticatedPartnerSearchRouteImport } from './routes/_authenticated/partner.search'
+import { Route as AuthenticatedPartnerSalesAiRouteImport } from './routes/_authenticated/partner.sales-ai'
 import { Route as AuthenticatedPartnerReferralBonusRouteImport } from './routes/_authenticated/partner.referral-bonus'
 import { Route as AuthenticatedPartnerQuickStartRouteImport } from './routes/_authenticated/partner.quick-start'
 import { Route as AuthenticatedPartnerProgramsRouteImport } from './routes/_authenticated/partner.programs'
@@ -1082,6 +1083,12 @@ const AuthenticatedPartnerSearchRoute =
   AuthenticatedPartnerSearchRouteImport.update({
     id: '/search',
     path: '/search',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerSalesAiRoute =
+  AuthenticatedPartnerSalesAiRouteImport.update({
+    id: '/sales-ai',
+    path: '/sales-ai',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerReferralBonusRoute =
@@ -2828,6 +2835,7 @@ export interface FileRoutesByFullPath {
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
   '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
+  '/partner/sales-ai': typeof AuthenticatedPartnerSalesAiRoute
   '/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
@@ -3207,6 +3215,7 @@ export interface FileRoutesByTo {
   '/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
   '/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
+  '/partner/sales-ai': typeof AuthenticatedPartnerSalesAiRoute
   '/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
@@ -3600,6 +3609,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/programs': typeof AuthenticatedPartnerProgramsRouteWithChildren
   '/_authenticated/partner/quick-start': typeof AuthenticatedPartnerQuickStartRoute
   '/_authenticated/partner/referral-bonus': typeof AuthenticatedPartnerReferralBonusRoute
+  '/_authenticated/partner/sales-ai': typeof AuthenticatedPartnerSalesAiRoute
   '/_authenticated/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/_authenticated/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
@@ -3994,6 +4004,7 @@ export interface FileRouteTypes {
     | '/partner/programs'
     | '/partner/quick-start'
     | '/partner/referral-bonus'
+    | '/partner/sales-ai'
     | '/partner/search'
     | '/partner/support'
     | '/student/assessments'
@@ -4373,6 +4384,7 @@ export interface FileRouteTypes {
     | '/partner/programs'
     | '/partner/quick-start'
     | '/partner/referral-bonus'
+    | '/partner/sales-ai'
     | '/partner/search'
     | '/partner/support'
     | '/student/assessments'
@@ -4765,6 +4777,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/programs'
     | '/_authenticated/partner/quick-start'
     | '/_authenticated/partner/referral-bonus'
+    | '/_authenticated/partner/sales-ai'
     | '/_authenticated/partner/search'
     | '/_authenticated/partner/support'
     | '/_authenticated/student/assessments'
@@ -5963,6 +5976,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/partner/search'
       preLoaderRoute: typeof AuthenticatedPartnerSearchRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/sales-ai': {
+      id: '/_authenticated/partner/sales-ai'
+      path: '/sales-ai'
+      fullPath: '/partner/sales-ai'
+      preLoaderRoute: typeof AuthenticatedPartnerSalesAiRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/referral-bonus': {
@@ -8487,6 +8507,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerProgramsRoute: typeof AuthenticatedPartnerProgramsRouteWithChildren
   AuthenticatedPartnerQuickStartRoute: typeof AuthenticatedPartnerQuickStartRoute
   AuthenticatedPartnerReferralBonusRoute: typeof AuthenticatedPartnerReferralBonusRoute
+  AuthenticatedPartnerSalesAiRoute: typeof AuthenticatedPartnerSalesAiRoute
   AuthenticatedPartnerSearchRoute: typeof AuthenticatedPartnerSearchRoute
   AuthenticatedPartnerSupportRoute: typeof AuthenticatedPartnerSupportRouteWithChildren
   AuthenticatedPartnerAcademySlugRoute: typeof AuthenticatedPartnerAcademySlugRoute
@@ -8534,6 +8555,7 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
   AuthenticatedPartnerQuickStartRoute: AuthenticatedPartnerQuickStartRoute,
   AuthenticatedPartnerReferralBonusRoute:
     AuthenticatedPartnerReferralBonusRoute,
+  AuthenticatedPartnerSalesAiRoute: AuthenticatedPartnerSalesAiRoute,
   AuthenticatedPartnerSearchRoute: AuthenticatedPartnerSearchRoute,
   AuthenticatedPartnerSupportRoute:
     AuthenticatedPartnerSupportRouteWithChildren,
