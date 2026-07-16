@@ -1042,14 +1042,16 @@ function WhoItIsFor({ categoryName, courses }: { categoryName: string; courses: 
 }
 
 /* --- FAQ --- */
-function CategoryFAQ({ categoryName }: { categoryName: string }) {
-  const faqs = [
-    { q: `Which ${categoryName} program should I explore first?`, a: `Start with the featured programs above, or use the Skill Path Explorer to see a suggested direction based on what interests you.` },
-    { q: "How do I compare Glintr programs?", a: "Use the Compare Program Directions section on this page. Pick up to three programs from this category to see their level, focus, and starting price side by side." },
-    { q: "Can I view program details before starting an enrollment journey?", a: "Yes. Every program has its own detail page with modules, projects, skills, and pricing. You can also request a counsellor if you need help choosing." },
-    { q: "Do you save what I explore?", a: "The Skill Path Explorer and Comparison Explorer are entirely session-based. Nothing is stored to your account when you're just exploring." },
-    { q: "Are prices shown on Glintr accurate?", a: "Yes — the price on each program card reflects the current offer price for that program. Any EMI or scholarship information is shown on the program's detail page." },
-  ];
+function CategoryFAQ({ categoryName, editorial }: { categoryName: string; editorial?: CategoryEditorial | null }) {
+  const faqs = editorial?.faqs?.length
+    ? editorial.faqs
+    : [
+        { q: `Which ${categoryName} program should I explore first?`, a: `Start with the featured programs above, or use the Skill Path Explorer to see a suggested direction based on what interests you.` },
+        { q: "How do I compare Glintr programs?", a: "Use the Compare Program Directions section on this page. Pick up to three programs from this category to see their level, focus, and starting price side by side." },
+        { q: "Can I view program details before starting an enrollment journey?", a: "Yes. Every program has its own detail page with modules, projects, skills, and pricing. You can also request a counsellor if you need help choosing." },
+        { q: "Do you save what I explore?", a: "The Skill Path Explorer and Comparison Explorer are entirely session-based. Nothing is stored to your account when you're just exploring." },
+        { q: "Are prices shown on Glintr accurate?", a: "Yes — the price on each program card reflects the current offer price for that program. Any EMI or scholarship information is shown on the program's detail page." },
+      ];
   const [open, setOpen] = React.useState<number | null>(0);
   return (
     <ul className="mt-8 space-y-3">
