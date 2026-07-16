@@ -57,6 +57,9 @@ type FormState = {
   seo_title: string;
   seo_description: string;
   keywords: string;
+  related_blog_slugs: string;
+  related_course_slugs: string;
+  schema_jsonld: string;
 };
 
 const empty: FormState = {
@@ -87,6 +90,9 @@ const empty: FormState = {
   seo_title: "",
   seo_description: "",
   keywords: "",
+  related_blog_slugs: "",
+  related_course_slugs: "",
+  schema_jsonld: "",
 };
 
 function BlogEditor() {
