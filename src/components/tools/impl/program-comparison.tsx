@@ -23,7 +23,7 @@ export function ProgramComparisonTool() {
                 params={{ slug: c.slug }}
                 className="block rounded-xl border border-border bg-background p-4 transition hover:border-primary hover:bg-primary/5"
               >
-                <div className="text-caption text-muted-foreground">{c.category ?? "Comparison"}</div>
+                <div className="text-caption text-muted-foreground">Comparison</div>
                 <div className="mt-1 text-lg font-bold">{c.title}</div>
                 <div className="mt-1 text-sm text-muted-foreground">{c.short}</div>
                 <div className="mt-3 text-sm font-semibold text-primary">Open comparison →</div>
