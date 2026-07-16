@@ -113,6 +113,7 @@ const nav: NavEntry[] = [
     groups: [
       {
         items: [
+          { label: "Topics", href: "/topics", description: "Pillar guides across AI, tech, engineering, business" },
           { label: "Partner Network", href: "/partner-network" },
           { label: "Success Stories", href: "/success-stories" },
           { label: "Careers", href: "/careers" },
