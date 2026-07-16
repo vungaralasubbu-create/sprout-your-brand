@@ -213,7 +213,7 @@ function ProviderCard({
 
       <div className="mt-auto flex items-center justify-between gap-2">
         <Button
-          variant={connected ? "outline" : "default"}
+          variant={connected ? "outline" : "primary"}
           size="sm"
           className="h-8 text-xs"
           onClick={onConnect}
@@ -396,7 +396,7 @@ export function AppMarketplace() {
                 <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{app.category}</span>
                 <Button
                   size="sm"
-                  variant={isInstalled ? "outline" : "default"}
+                  variant={isInstalled ? "outline" : "primary"}
                   disabled={isFuture}
                   onClick={() => {
                     setAppInstalled(app.id, !isInstalled);
@@ -486,7 +486,7 @@ export function ApiCenter() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <Badge variant={k.mode === "live" ? "default" : "outline"} className="text-[10px] uppercase">{k.mode}</Badge>
+                  <Badge variant={k.mode === "live" ? "default" : "outline" as never} className="text-[10px] uppercase">{k.mode}</Badge>
                 </td>
                 <td className="px-4 py-3 text-xs text-muted-foreground">{k.scopes.join(", ")}</td>
                 <td className="px-4 py-3 text-xs text-muted-foreground">{new Date(k.createdAt).toLocaleDateString()}</td>
