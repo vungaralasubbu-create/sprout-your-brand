@@ -130,10 +130,12 @@ function CategoryPage() {
       if (!slugs.length) return [] as Array<{ slug: string; title: string; excerpt: string | null }>;
       const { data } = await supabase
         .from("blog_posts")
-        .select("slug,title,excerpt")
+        .select("slug,title,short_summary")
         .in("slug", slugs)
         .eq("is_published", true);
-      return (data ?? []) as Array<{ slug: string; title: string; excerpt: string | null }>;
+      return ((data ?? []) as Array<{ slug: string; title: string; short_summary: string | null }>).map(
+        (r) => ({ slug: r.slug, title: r.title, excerpt: r.short_summary }),
+      );
     },
   });
 
