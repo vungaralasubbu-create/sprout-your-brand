@@ -16,8 +16,10 @@ export const Route = createFileRoute("/join")({
       { property: "og:title", content: "Join Glintr — Choose How You Want To Grow" },
       { property: "og:description", content: "Earn revenue share as a Sales Partner, build career skills through Glintr programs, or launch your own EdTech brand." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://glintr.com/join" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://glintr.com/join" }],
   }),
   component: JoinPage,
 });
