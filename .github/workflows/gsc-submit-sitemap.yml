@@ -1,0 +1,28 @@
+name: GSC sitemap submit
+
+on:
+  # After a successful production publish; adjust to your deployment signal.
+  workflow_dispatch:
+  schedule:
+    # Weekly refresh so Google keeps the sitemap in rotation.
+    - cron: "0 6 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - "src/routes/sitemap[.]xml.ts"
+      - "public/robots.txt"
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Submit sitemap to Google Search Console
+        env:
+          GSC_SITE_URL: ${{ vars.GSC_SITE_URL }}
+          SITEMAP_URL: ${{ vars.SITEMAP_URL }}
+          GCP_SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
+        run: node scripts/gsc-submit-sitemap.mjs
