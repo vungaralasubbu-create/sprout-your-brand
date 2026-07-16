@@ -4,11 +4,14 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronRight,
   Clock,
   Copy,
-  Link2,
+  GraduationCap,
   List,
+  MessageSquare,
   Share2,
+  Sparkles,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
@@ -16,6 +19,7 @@ import { SiteFooter } from "@/components/shared/site-footer";
 import { Section, Container } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import {
@@ -31,6 +35,8 @@ import {
   type Heading,
 } from "@/components/shared/article-markdown";
 import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
+import { BlogCover } from "@/components/shared/blog-cover";
+import { useBookmark } from "@/components/shared/blog-card";
 
 const SITE_URL = "https://glintr.com";
 
