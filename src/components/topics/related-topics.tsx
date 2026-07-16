@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight, BookOpen, GraduationCap, Briefcase, Wrench, Sparkles } from "lucide-react";
 
 import type { Cluster, Pillar } from "@/data/topics";
-import { listPillars } from "@/data/topics";
+import { listClusters, listPillars } from "@/data/topics";
 
 type ContextKind = "pillar" | "cluster" | "blog" | "course" | "career";
 
