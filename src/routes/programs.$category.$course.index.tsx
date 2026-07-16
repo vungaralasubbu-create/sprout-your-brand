@@ -42,6 +42,11 @@ import {
 } from "@/components/ui/accordion";
 import { getCourseBySlug, getRelatedCourses, formatPrice } from "@/lib/programs";
 import { getCourseSeo } from "@/lib/seo";
+import {
+  getProgramEditorial,
+  getRelatedBlogsForProgram,
+} from "@/data/program-editorial";
+
 
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
@@ -124,6 +129,23 @@ export const Route = createFileRoute("/programs/$category/$course/")({
         }),
       });
     }
+    // FAQ JSON-LD from editorial content (unique per program).
+    const editorialFaqs = getProgramEditorial(params.course).faqs ?? [];
+    if (editorialFaqs.length > 0) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: editorialFaqs.map((f) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: { "@type": "Answer", text: f.answer },
+          })),
+        }),
+      });
+    }
+
     return {
       meta,
       links: [{ rel: "canonical", href: canonical }],
@@ -233,6 +255,17 @@ function CoursePage() {
   const whyContent = sectionMap.get("why_this_program")?.content as
     | { headline?: string; body?: string; points?: string[] }
     | undefined;
+  const editorial = getProgramEditorial(c.slug);
+  const editorialBlogs = getRelatedBlogsForProgram(c.slug);
+  const displayAudience = audienceCards.length > 0 ? audienceCards : (editorial.audience ?? []);
+  const displayFaqs = c.faqs.length > 0 ? c.faqs : (editorial.faqs ?? []);
+  const whyPoints =
+    whyContent?.points && whyContent.points.length > 0
+      ? whyContent.points
+      : (editorial.whyPoints ?? []);
+  const whyBody = whyContent?.body ?? c.full_description ?? editorial.overview ?? null;
+  const showWhySection = Boolean(whyBody || whyPoints.length);
+
 
   return (
     <PageShell>
@@ -434,25 +467,25 @@ function CoursePage() {
 
 
       {/* ============ WHY THIS PROGRAM ============ */}
-      {c.full_description || whyContent ? (
+      {showWhySection ? (
         <Section className="py-14 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-16">
               <div>
                 <span className="text-caption font-mono uppercase tracking-widest text-primary">
-                  Why This Program
+                  Why Learn {c.name}
                 </span>
                 <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
                   {whyContent?.headline ?? defaultWhyHeadline(c.name)}
                 </h2>
               </div>
               <div className="space-y-6">
-                <p className="text-body-lg text-muted-foreground">
-                  {whyContent?.body ?? c.full_description}
-                </p>
-                {whyContent?.points?.length ? (
+                {whyBody ? (
+                  <p className="text-body-lg text-muted-foreground">{whyBody}</p>
+                ) : null}
+                {whyPoints.length ? (
                   <ul className="grid sm:grid-cols-2 gap-3">
-                    {whyContent.points.map((p, i) => (
+                    {whyPoints.map((p, i) => (
                       <li
                         key={i}
                         className="flex items-start gap-3 rounded-xl border border-border/60 bg-surface-1 p-4"
@@ -464,6 +497,7 @@ function CoursePage() {
                   </ul>
                 ) : null}
               </div>
+
             </div>
           </Container>
         </Section>
@@ -694,11 +728,11 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
-      {/* ============ WHO SHOULD JOIN ============ */}
-      {audienceCards.length > 0 ? (
-        <SectionBlock eyebrow="Audience" title="Is This Program For You?" tone="soft">
+      {/* ============ WHO CAN LEARN ============ */}
+      {displayAudience.length > 0 ? (
+        <SectionBlock eyebrow="Who Can Learn This" title="Is This Program For You?" tone="soft">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {audienceCards.slice(0, 6).map((a, i) => (
+            {displayAudience.slice(0, 6).map((a, i) => (
               <div key={i} className="rounded-2xl border border-border/60 bg-surface-1 p-6">
                 <span className="inline-flex size-10 items-center justify-center rounded-lg bg-accent/15 text-accent">
                   <Users className="size-5" />
@@ -722,10 +756,10 @@ function CoursePage() {
 
 
       {/* ============ FAQ ============ */}
-      {c.faqs.length > 0 ? (
+      {displayFaqs.length > 0 ? (
         <SectionBlock eyebrow="Questions" title="Frequently Asked Questions" tone="soft">
           <Accordion type="single" collapsible className="max-w-3xl mx-auto">
-            {c.faqs.map((f, i) => (
+            {displayFaqs.map((f, i) => (
               <AccordionItem key={i} value={`faq-${i}`} className="border-border/60">
                 <AccordionTrigger className="text-left text-base font-medium">
                   {f.question}
@@ -739,9 +773,9 @@ function CoursePage() {
         </SectionBlock>
       ) : null}
 
-      {/* ============ RELATED ============ */}
+      {/* ============ RELATED PROGRAMS ============ */}
       {related.length > 0 ? (
-        <SectionBlock eyebrow="Explore More" title="You May Also Explore" className="!pb-8 lg:!pb-10">
+        <SectionBlock eyebrow="Explore More" title="Related Programs" className="!pb-8 lg:!pb-10">
           <div className="grid md:grid-cols-3 gap-6">
             {related.slice(0, 3).map((r: any) => (
               <Link
@@ -775,6 +809,39 @@ function CoursePage() {
           </div>
         </SectionBlock>
       ) : null}
+
+      {/* ============ RELATED BLOG ARTICLES ============ */}
+      {editorialBlogs.length > 0 ? (
+        <SectionBlock eyebrow="Read More" title="Related Articles" tone="soft" className="!pb-8 lg:!pb-10">
+          <div className="grid md:grid-cols-3 gap-6">
+            {editorialBlogs.map((b) => (
+              <Link
+                key={b.slug}
+                to="/blog/$slug"
+                params={{ slug: b.slug }}
+                className="group rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
+              >
+                <div className="text-caption font-mono uppercase tracking-widest text-primary">
+                  Article
+                </div>
+                <h3 className="mt-3 font-display font-semibold text-lg group-hover:text-primary transition-colors line-clamp-3">
+                  {b.title}
+                </h3>
+                <div className="mt-auto pt-4 flex items-center gap-2 text-sm font-medium text-primary">
+                  Read article
+                  <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Button asChild variant="outline">
+              <Link to="/blog">Explore All Articles</Link>
+            </Button>
+          </div>
+        </SectionBlock>
+      ) : null}
+
 
       {/* ============ FINAL CTA ============ */}
       <Section className="relative overflow-hidden py-10 lg:py-14">
