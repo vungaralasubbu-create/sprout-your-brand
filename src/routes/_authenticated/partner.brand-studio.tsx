@@ -1076,7 +1076,7 @@ function StepReview({
 }) {
   const items = [
     { key: "brand", label: "Brand identity", ready: !!draft.brand },
-    { key: "domain", label: "Domain chosen", ready: !!draft.domain, optional: true },
+    { key: "managedUrl", label: "Managed URL set", ready: !!draft.managedSlug, optional: true },
     { key: "logos", label: "Logos", ready: Object.keys(draft.logos).length >= 3 },
     { key: "website", label: "Website pages", ready: !!draft.website },
     { key: "programs", label: `Programs (${draft.programs.length})`, ready: draft.programs.length >= 1 },
