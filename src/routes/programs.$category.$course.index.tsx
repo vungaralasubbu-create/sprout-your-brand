@@ -266,6 +266,11 @@ function CoursePage() {
   const whyBody = whyContent?.body ?? c.full_description ?? editorial.overview ?? null;
   const showWhySection = Boolean(whyBody || whyPoints.length);
 
+  // ---- GEO: Quick Answer + Key Takeaways (AI-search primitives) ----
+  const quickAnswer =
+    c.short_description ?? editorial.overview ?? whyBody ?? `${c.name} is a structured educational program from Glintr, designed to build a clear working understanding of ${c.name} through guided lessons, projects and mentor support.`;
+  const keyTakeaways = (whyPoints.length ? whyPoints : editorial.whyPoints ?? []).slice(0, 5);
+
 
   return (
     <PageShell>
