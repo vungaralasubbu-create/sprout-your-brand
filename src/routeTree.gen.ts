@@ -120,7 +120,24 @@ import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_auth
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
+import { Route as AuthenticatedBrandWebsiteRouteImport } from './routes/_authenticated/brand.website'
+import { Route as AuthenticatedBrandTeamRouteImport } from './routes/_authenticated/brand.team'
+import { Route as AuthenticatedBrandSupportRouteImport } from './routes/_authenticated/brand.support'
+import { Route as AuthenticatedBrandStudentsRouteImport } from './routes/_authenticated/brand.students'
+import { Route as AuthenticatedBrandSetupRouteImport } from './routes/_authenticated/brand.setup'
+import { Route as AuthenticatedBrandSecurityRouteImport } from './routes/_authenticated/brand.security'
+import { Route as AuthenticatedBrandPreviewRouteImport } from './routes/_authenticated/brand.preview'
+import { Route as AuthenticatedBrandMarketingRouteImport } from './routes/_authenticated/brand.marketing'
+import { Route as AuthenticatedBrandLmsRouteImport } from './routes/_authenticated/brand.lms'
+import { Route as AuthenticatedBrandFacultyRouteImport } from './routes/_authenticated/brand.faculty'
+import { Route as AuthenticatedBrandDomainRouteImport } from './routes/_authenticated/brand.domain'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
+import { Route as AuthenticatedBrandCoursesRouteImport } from './routes/_authenticated/brand.courses'
+import { Route as AuthenticatedBrandCommunicationsRouteImport } from './routes/_authenticated/brand.communications'
+import { Route as AuthenticatedBrandCertificatesRouteImport } from './routes/_authenticated/brand.certificates'
+import { Route as AuthenticatedBrandBillingRouteImport } from './routes/_authenticated/brand.billing'
+import { Route as AuthenticatedBrandAnalyticsRouteImport } from './routes/_authenticated/brand.analytics'
+import { Route as AuthenticatedBrandAiAssistantRouteImport } from './routes/_authenticated/brand.ai-assistant'
 import { Route as AuthenticatedAmbassadorSettingsRouteImport } from './routes/_authenticated/ambassador.settings'
 import { Route as AuthenticatedAmbassadorRecognitionRouteImport } from './routes/_authenticated/ambassador.recognition'
 import { Route as AuthenticatedAmbassadorRankHistoryRouteImport } from './routes/_authenticated/ambassador.rank-history'
@@ -804,10 +821,109 @@ const AuthenticatedCampusAmbassadorApplyRoute =
     path: '/campus-ambassador/apply',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBrandWebsiteRoute =
+  AuthenticatedBrandWebsiteRouteImport.update({
+    id: '/website',
+    path: '/website',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandTeamRoute = AuthenticatedBrandTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthenticatedBrandRoute,
+} as any)
+const AuthenticatedBrandSupportRoute =
+  AuthenticatedBrandSupportRouteImport.update({
+    id: '/support',
+    path: '/support',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandStudentsRoute =
+  AuthenticatedBrandStudentsRouteImport.update({
+    id: '/students',
+    path: '/students',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandSetupRoute = AuthenticatedBrandSetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => AuthenticatedBrandRoute,
+} as any)
+const AuthenticatedBrandSecurityRoute =
+  AuthenticatedBrandSecurityRouteImport.update({
+    id: '/security',
+    path: '/security',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandPreviewRoute =
+  AuthenticatedBrandPreviewRouteImport.update({
+    id: '/preview',
+    path: '/preview',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandMarketingRoute =
+  AuthenticatedBrandMarketingRouteImport.update({
+    id: '/marketing',
+    path: '/marketing',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandLmsRoute = AuthenticatedBrandLmsRouteImport.update({
+  id: '/lms',
+  path: '/lms',
+  getParentRoute: () => AuthenticatedBrandRoute,
+} as any)
+const AuthenticatedBrandFacultyRoute =
+  AuthenticatedBrandFacultyRouteImport.update({
+    id: '/faculty',
+    path: '/faculty',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandDomainRoute =
+  AuthenticatedBrandDomainRouteImport.update({
+    id: '/domain',
+    path: '/domain',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
 const AuthenticatedBrandDashboardRoute =
   AuthenticatedBrandDashboardRouteImport.update({
     id: '/dashboard',
     path: '/dashboard',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandCoursesRoute =
+  AuthenticatedBrandCoursesRouteImport.update({
+    id: '/courses',
+    path: '/courses',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandCommunicationsRoute =
+  AuthenticatedBrandCommunicationsRouteImport.update({
+    id: '/communications',
+    path: '/communications',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandCertificatesRoute =
+  AuthenticatedBrandCertificatesRouteImport.update({
+    id: '/certificates',
+    path: '/certificates',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandBillingRoute =
+  AuthenticatedBrandBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandAnalyticsRoute =
+  AuthenticatedBrandAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandAiAssistantRoute =
+  AuthenticatedBrandAiAssistantRouteImport.update({
+    id: '/ai-assistant',
+    path: '/ai-assistant',
     getParentRoute: () => AuthenticatedBrandRoute,
   } as any)
 const AuthenticatedAmbassadorSettingsRoute =
@@ -1475,7 +1591,24 @@ export interface FileRoutesByFullPath {
   '/ambassador/rank-history': typeof AuthenticatedAmbassadorRankHistoryRoute
   '/ambassador/recognition': typeof AuthenticatedAmbassadorRecognitionRoute
   '/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
+  '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
+  '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
+  '/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
+  '/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
+  '/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
+  '/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/brand/lms': typeof AuthenticatedBrandLmsRoute
+  '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
+  '/brand/preview': typeof AuthenticatedBrandPreviewRoute
+  '/brand/security': typeof AuthenticatedBrandSecurityRoute
+  '/brand/setup': typeof AuthenticatedBrandSetupRoute
+  '/brand/students': typeof AuthenticatedBrandStudentsRoute
+  '/brand/support': typeof AuthenticatedBrandSupportRoute
+  '/brand/team': typeof AuthenticatedBrandTeamRoute
+  '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
@@ -1677,7 +1810,24 @@ export interface FileRoutesByTo {
   '/ambassador/rank-history': typeof AuthenticatedAmbassadorRankHistoryRoute
   '/ambassador/recognition': typeof AuthenticatedAmbassadorRecognitionRoute
   '/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
+  '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
+  '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
+  '/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
+  '/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
+  '/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
+  '/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/brand/lms': typeof AuthenticatedBrandLmsRoute
+  '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
+  '/brand/preview': typeof AuthenticatedBrandPreviewRoute
+  '/brand/security': typeof AuthenticatedBrandSecurityRoute
+  '/brand/setup': typeof AuthenticatedBrandSetupRoute
+  '/brand/students': typeof AuthenticatedBrandStudentsRoute
+  '/brand/support': typeof AuthenticatedBrandSupportRoute
+  '/brand/team': typeof AuthenticatedBrandTeamRoute
+  '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
@@ -1883,7 +2033,24 @@ export interface FileRoutesById {
   '/_authenticated/ambassador/rank-history': typeof AuthenticatedAmbassadorRankHistoryRoute
   '/_authenticated/ambassador/recognition': typeof AuthenticatedAmbassadorRecognitionRoute
   '/_authenticated/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
+  '/_authenticated/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
+  '/_authenticated/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
+  '/_authenticated/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/_authenticated/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
+  '/_authenticated/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
+  '/_authenticated/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
+  '/_authenticated/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/_authenticated/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/_authenticated/brand/lms': typeof AuthenticatedBrandLmsRoute
+  '/_authenticated/brand/marketing': typeof AuthenticatedBrandMarketingRoute
+  '/_authenticated/brand/preview': typeof AuthenticatedBrandPreviewRoute
+  '/_authenticated/brand/security': typeof AuthenticatedBrandSecurityRoute
+  '/_authenticated/brand/setup': typeof AuthenticatedBrandSetupRoute
+  '/_authenticated/brand/students': typeof AuthenticatedBrandStudentsRoute
+  '/_authenticated/brand/support': typeof AuthenticatedBrandSupportRoute
+  '/_authenticated/brand/team': typeof AuthenticatedBrandTeamRoute
+  '/_authenticated/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
@@ -2090,7 +2257,24 @@ export interface FileRouteTypes {
     | '/ambassador/rank-history'
     | '/ambassador/recognition'
     | '/ambassador/settings'
+    | '/brand/ai-assistant'
+    | '/brand/analytics'
+    | '/brand/billing'
+    | '/brand/certificates'
+    | '/brand/communications'
+    | '/brand/courses'
     | '/brand/dashboard'
+    | '/brand/domain'
+    | '/brand/faculty'
+    | '/brand/lms'
+    | '/brand/marketing'
+    | '/brand/preview'
+    | '/brand/security'
+    | '/brand/setup'
+    | '/brand/students'
+    | '/brand/support'
+    | '/brand/team'
+    | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
     | '/partner/account'
@@ -2292,7 +2476,24 @@ export interface FileRouteTypes {
     | '/ambassador/rank-history'
     | '/ambassador/recognition'
     | '/ambassador/settings'
+    | '/brand/ai-assistant'
+    | '/brand/analytics'
+    | '/brand/billing'
+    | '/brand/certificates'
+    | '/brand/communications'
+    | '/brand/courses'
     | '/brand/dashboard'
+    | '/brand/domain'
+    | '/brand/faculty'
+    | '/brand/lms'
+    | '/brand/marketing'
+    | '/brand/preview'
+    | '/brand/security'
+    | '/brand/setup'
+    | '/brand/students'
+    | '/brand/support'
+    | '/brand/team'
+    | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
     | '/partner/account'
@@ -2497,7 +2698,24 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador/rank-history'
     | '/_authenticated/ambassador/recognition'
     | '/_authenticated/ambassador/settings'
+    | '/_authenticated/brand/ai-assistant'
+    | '/_authenticated/brand/analytics'
+    | '/_authenticated/brand/billing'
+    | '/_authenticated/brand/certificates'
+    | '/_authenticated/brand/communications'
+    | '/_authenticated/brand/courses'
     | '/_authenticated/brand/dashboard'
+    | '/_authenticated/brand/domain'
+    | '/_authenticated/brand/faculty'
+    | '/_authenticated/brand/lms'
+    | '/_authenticated/brand/marketing'
+    | '/_authenticated/brand/preview'
+    | '/_authenticated/brand/security'
+    | '/_authenticated/brand/setup'
+    | '/_authenticated/brand/students'
+    | '/_authenticated/brand/support'
+    | '/_authenticated/brand/team'
+    | '/_authenticated/brand/website'
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
     | '/_authenticated/partner/account'
@@ -3424,11 +3642,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCampusAmbassadorApplyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/brand/website': {
+      id: '/_authenticated/brand/website'
+      path: '/website'
+      fullPath: '/brand/website'
+      preLoaderRoute: typeof AuthenticatedBrandWebsiteRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/team': {
+      id: '/_authenticated/brand/team'
+      path: '/team'
+      fullPath: '/brand/team'
+      preLoaderRoute: typeof AuthenticatedBrandTeamRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/support': {
+      id: '/_authenticated/brand/support'
+      path: '/support'
+      fullPath: '/brand/support'
+      preLoaderRoute: typeof AuthenticatedBrandSupportRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/students': {
+      id: '/_authenticated/brand/students'
+      path: '/students'
+      fullPath: '/brand/students'
+      preLoaderRoute: typeof AuthenticatedBrandStudentsRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/setup': {
+      id: '/_authenticated/brand/setup'
+      path: '/setup'
+      fullPath: '/brand/setup'
+      preLoaderRoute: typeof AuthenticatedBrandSetupRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/security': {
+      id: '/_authenticated/brand/security'
+      path: '/security'
+      fullPath: '/brand/security'
+      preLoaderRoute: typeof AuthenticatedBrandSecurityRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/preview': {
+      id: '/_authenticated/brand/preview'
+      path: '/preview'
+      fullPath: '/brand/preview'
+      preLoaderRoute: typeof AuthenticatedBrandPreviewRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/marketing': {
+      id: '/_authenticated/brand/marketing'
+      path: '/marketing'
+      fullPath: '/brand/marketing'
+      preLoaderRoute: typeof AuthenticatedBrandMarketingRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/lms': {
+      id: '/_authenticated/brand/lms'
+      path: '/lms'
+      fullPath: '/brand/lms'
+      preLoaderRoute: typeof AuthenticatedBrandLmsRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/faculty': {
+      id: '/_authenticated/brand/faculty'
+      path: '/faculty'
+      fullPath: '/brand/faculty'
+      preLoaderRoute: typeof AuthenticatedBrandFacultyRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/domain': {
+      id: '/_authenticated/brand/domain'
+      path: '/domain'
+      fullPath: '/brand/domain'
+      preLoaderRoute: typeof AuthenticatedBrandDomainRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
     '/_authenticated/brand/dashboard': {
       id: '/_authenticated/brand/dashboard'
       path: '/dashboard'
       fullPath: '/brand/dashboard'
       preLoaderRoute: typeof AuthenticatedBrandDashboardRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/courses': {
+      id: '/_authenticated/brand/courses'
+      path: '/courses'
+      fullPath: '/brand/courses'
+      preLoaderRoute: typeof AuthenticatedBrandCoursesRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/communications': {
+      id: '/_authenticated/brand/communications'
+      path: '/communications'
+      fullPath: '/brand/communications'
+      preLoaderRoute: typeof AuthenticatedBrandCommunicationsRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/certificates': {
+      id: '/_authenticated/brand/certificates'
+      path: '/certificates'
+      fullPath: '/brand/certificates'
+      preLoaderRoute: typeof AuthenticatedBrandCertificatesRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/billing': {
+      id: '/_authenticated/brand/billing'
+      path: '/billing'
+      fullPath: '/brand/billing'
+      preLoaderRoute: typeof AuthenticatedBrandBillingRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/analytics': {
+      id: '/_authenticated/brand/analytics'
+      path: '/analytics'
+      fullPath: '/brand/analytics'
+      preLoaderRoute: typeof AuthenticatedBrandAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/ai-assistant': {
+      id: '/_authenticated/brand/ai-assistant'
+      path: '/ai-assistant'
+      fullPath: '/brand/ai-assistant'
+      preLoaderRoute: typeof AuthenticatedBrandAiAssistantRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
     '/_authenticated/ambassador/settings': {
@@ -4289,11 +4626,45 @@ const AuthenticatedAmbassadorRouteWithChildren =
   )
 
 interface AuthenticatedBrandRouteChildren {
+  AuthenticatedBrandAiAssistantRoute: typeof AuthenticatedBrandAiAssistantRoute
+  AuthenticatedBrandAnalyticsRoute: typeof AuthenticatedBrandAnalyticsRoute
+  AuthenticatedBrandBillingRoute: typeof AuthenticatedBrandBillingRoute
+  AuthenticatedBrandCertificatesRoute: typeof AuthenticatedBrandCertificatesRoute
+  AuthenticatedBrandCommunicationsRoute: typeof AuthenticatedBrandCommunicationsRoute
+  AuthenticatedBrandCoursesRoute: typeof AuthenticatedBrandCoursesRoute
   AuthenticatedBrandDashboardRoute: typeof AuthenticatedBrandDashboardRoute
+  AuthenticatedBrandDomainRoute: typeof AuthenticatedBrandDomainRoute
+  AuthenticatedBrandFacultyRoute: typeof AuthenticatedBrandFacultyRoute
+  AuthenticatedBrandLmsRoute: typeof AuthenticatedBrandLmsRoute
+  AuthenticatedBrandMarketingRoute: typeof AuthenticatedBrandMarketingRoute
+  AuthenticatedBrandPreviewRoute: typeof AuthenticatedBrandPreviewRoute
+  AuthenticatedBrandSecurityRoute: typeof AuthenticatedBrandSecurityRoute
+  AuthenticatedBrandSetupRoute: typeof AuthenticatedBrandSetupRoute
+  AuthenticatedBrandStudentsRoute: typeof AuthenticatedBrandStudentsRoute
+  AuthenticatedBrandSupportRoute: typeof AuthenticatedBrandSupportRoute
+  AuthenticatedBrandTeamRoute: typeof AuthenticatedBrandTeamRoute
+  AuthenticatedBrandWebsiteRoute: typeof AuthenticatedBrandWebsiteRoute
 }
 
 const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
+  AuthenticatedBrandAiAssistantRoute: AuthenticatedBrandAiAssistantRoute,
+  AuthenticatedBrandAnalyticsRoute: AuthenticatedBrandAnalyticsRoute,
+  AuthenticatedBrandBillingRoute: AuthenticatedBrandBillingRoute,
+  AuthenticatedBrandCertificatesRoute: AuthenticatedBrandCertificatesRoute,
+  AuthenticatedBrandCommunicationsRoute: AuthenticatedBrandCommunicationsRoute,
+  AuthenticatedBrandCoursesRoute: AuthenticatedBrandCoursesRoute,
   AuthenticatedBrandDashboardRoute: AuthenticatedBrandDashboardRoute,
+  AuthenticatedBrandDomainRoute: AuthenticatedBrandDomainRoute,
+  AuthenticatedBrandFacultyRoute: AuthenticatedBrandFacultyRoute,
+  AuthenticatedBrandLmsRoute: AuthenticatedBrandLmsRoute,
+  AuthenticatedBrandMarketingRoute: AuthenticatedBrandMarketingRoute,
+  AuthenticatedBrandPreviewRoute: AuthenticatedBrandPreviewRoute,
+  AuthenticatedBrandSecurityRoute: AuthenticatedBrandSecurityRoute,
+  AuthenticatedBrandSetupRoute: AuthenticatedBrandSetupRoute,
+  AuthenticatedBrandStudentsRoute: AuthenticatedBrandStudentsRoute,
+  AuthenticatedBrandSupportRoute: AuthenticatedBrandSupportRoute,
+  AuthenticatedBrandTeamRoute: AuthenticatedBrandTeamRoute,
+  AuthenticatedBrandWebsiteRoute: AuthenticatedBrandWebsiteRoute,
 }
 
 const AuthenticatedBrandRouteWithChildren =
