@@ -1399,7 +1399,7 @@ function StepPublish({
           reviewerName: reviewer,
           draftSummary: {
             brandName: d.chosenName || "Untitled",
-            domain: d.chosenDomain,
+            managedUrl: d.managedSlug ? `${d.managedSlug}.glintr.com` : undefined,
             programsCount: d.programs.length,
             coursesCount: d.courses.length,
             blogsCount: d.blogs?.articles?.length ?? 0,
