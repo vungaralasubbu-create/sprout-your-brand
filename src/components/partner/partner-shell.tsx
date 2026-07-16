@@ -57,6 +57,7 @@ type NavGroup = {
 
 const OVERVIEW: NavItem[] = [
   { to: "/partner/dashboard", label: "Overview", icon: LayoutDashboard },
+  { to: "/partner/business-os", label: "AI Business OS", icon: LayoutDashboard },
 ];
 
 const LEADS: NavItem[] = [
