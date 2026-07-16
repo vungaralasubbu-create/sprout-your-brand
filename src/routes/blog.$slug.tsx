@@ -507,51 +507,61 @@ function BlogDetailPage() {
               />
 
               {/* SHARE */}
-              <div className="mt-14 rounded-2xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <div className="text-sm font-semibold">Share Insight</div>
-                  <div className="text-xs text-muted-foreground">
-                    {copied
-                      ? "Link Copied"
-                      : copyFailed
-                        ? "Copy failed. Please copy the address manually."
-                        : "Copy this insight or share via your device."}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" onClick={copyLink}>
-                    {copied ? (
-                      <>
-                        <Check className="size-4 mr-1.5" /> Link Copied
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="size-4 mr-1.5" /> Copy Link
-                      </>
-                    )}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={onShare}>
-                    <Share2 className="size-4 mr-1.5" /> Share
-                  </Button>
-                </div>
-              </div>
+              <ShareBar
+                className="mt-14"
+                url={shareUrl}
+                title={post.title}
+                summary={post.short_summary}
+              />
 
               {/* AUTHOR */}
               <div className="mt-8 rounded-2xl border bg-card p-6">
-                <div className="text-xs uppercase tracking-widest text-muted-foreground">Written By</div>
-                <div className="mt-2 flex items-start gap-4">
-                  <div className="size-12 rounded-full bg-gradient-brand shrink-0" aria-hidden />
-                  <div>
-                    <div className="font-semibold">{post.author_display_name}</div>
-                    {post.author_display_role ? (
-                      <div className="text-sm text-muted-foreground">{post.author_display_role}</div>
-                    ) : null}
-                    {post.author_bio ? (
-                      <p className="text-sm text-muted-foreground mt-2 max-w-2xl">{post.author_bio}</p>
-                    ) : null}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="grid size-14 shrink-0 place-items-center rounded-full bg-gradient-brand text-lg font-semibold text-white"
+                      aria-hidden
+                    >
+                      {authorInitials}
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                        Written by
+                      </div>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                        <span className="font-semibold">{post.author_display_name}</span>
+                        {post.reviewer_display_name ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                            <BadgeCheck className="size-3" /> Expert Reviewed
+                          </span>
+                        ) : null}
+                      </div>
+                      {post.author_display_role ? (
+                        <div className="text-sm text-muted-foreground">{post.author_display_role}</div>
+                      ) : null}
+                      {post.author_bio ? (
+                        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{post.author_bio}</p>
+                      ) : null}
+                      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                        {post.editorial_updated_at ? (
+                          <span>Last updated {formatPublished(post.editorial_updated_at)}</span>
+                        ) : post.published_at ? (
+                          <span>Published {formatPublished(post.published_at)}</span>
+                        ) : null}
+                        {post.reading_time_minutes ? (
+                          <span className="inline-flex items-center gap-1">
+                            <Clock className="size-3.5" /> {post.reading_time_minutes} min read
+                          </span>
+                        ) : null}
+                        {post.reviewer_display_name ? (
+                          <span>Reviewed by {post.reviewer_display_name}</span>
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
 
               {/* RELATED PROGRAM */}
               {relatedCourse ? (
