@@ -1363,7 +1363,7 @@ function StepReview({
 
 const CHECKLIST = [
   { key: "brand", label: "Brand identity reviewed (name, tagline, palette, voice)" },
-  { key: "domain", label: "Domain selected and checked" },
+  { key: "managed", label: "Managed URL confirmed (Glintr provisions hosting, SSL & CDN)" },
   { key: "website", label: "Website pages reviewed (home, about, legal, FAQ, 404)" },
   { key: "programs", label: "Program pages reviewed" },
   { key: "courses", label: "Course pages reviewed (curriculum, pricing, FAQs)" },
