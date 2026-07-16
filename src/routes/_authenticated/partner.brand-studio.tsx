@@ -616,13 +616,13 @@ function StepDomain({
                 <div className="flex gap-1">
                   <Button
                     size="sm"
-                    variant={isFav ? "default" : "outline"}
+                    variant={isFav ? "primary" : "outline"}
                     onClick={() => toggleFav(domain)}
                   >
                     {isFav ? "Saved" : "Save"}
                   </Button>
                   {status === "available" && (
-                    <Button size="sm" variant="secondary" onClick={() => update({ domain: { name: query, ext } })}>
+                    <Button size="sm" variant="muted" onClick={() => update({ domain: { name: query, ext } })}>
                       Use
                     </Button>
                   )}
@@ -645,7 +645,7 @@ function StepDomain({
           <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Favourites</div>
           <div className="flex flex-wrap gap-2">
             {draft.favouriteDomains.map((d) => (
-              <Badge key={d} variant="secondary">{d}</Badge>
+              <Badge key={d} variant="muted">{d}</Badge>
             ))}
           </div>
         </div>
@@ -863,7 +863,7 @@ function StepPrograms({
             </div>
             <div className="mt-2 flex flex-wrap gap-1">
               {(p.landingPage?.coreSkills || []).slice(0, 5).map((s: string) => (
-                <Badge key={s} variant="secondary" className="text-[10px]">{s}</Badge>
+                <Badge key={s} variant="muted" className="text-[10px]">{s}</Badge>
               ))}
             </div>
           </div>
@@ -998,7 +998,7 @@ function StepBlog({
               <div className="text-xs text-muted-foreground mt-1 line-clamp-3">{a.excerpt}</div>
               <div className="mt-2 flex flex-wrap gap-1">
                 <Badge variant="outline" className="text-[10px]">{a.targetKeyword}</Badge>
-                <Badge variant="secondary" className="text-[10px]">{a.estimatedWordCount} words</Badge>
+                <Badge variant="muted" className="text-[10px]">{a.estimatedWordCount} words</Badge>
               </div>
             </div>
           ))}
@@ -1072,7 +1072,7 @@ function StepMarketing({
           {sections.map(([label, count]) => (
             <div key={label as string} className="rounded-lg border bg-white p-3 flex items-center justify-between">
               <div className="text-sm font-medium">{label as string}</div>
-              <Badge variant="secondary">{count || 0}</Badge>
+              <Badge variant="muted">{count || 0}</Badge>
             </div>
           ))}
         </div>
@@ -1127,7 +1127,7 @@ function StepReview({
             </div>
             <Button
               size="sm"
-              variant={draft.approved[it.key] ? "default" : "outline"}
+              variant={draft.approved[it.key] ? "primary" : "outline"}
               disabled={!it.ready}
               onClick={() => toggleApprove(it.key)}
               className="gap-1"
