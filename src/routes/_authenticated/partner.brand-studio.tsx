@@ -253,7 +253,7 @@ function BrandStudio() {
         <div className="rounded-2xl border bg-white shadow-sm p-5 sm:p-8">
           {step === 1 && <StepConversation draft={draft} onAnswer={updateQa} onDone={() => setStep(2)} />}
           {step === 2 && <StepBrand draft={draft} update={update} brandName={brandName} />}
-          {step === 3 && <StepDomain draft={draft} update={update} brandName={brandName} />}
+          {step === 3 && <StepManagedUrl draft={draft} update={update} brandName={brandName} />}
           {step === 4 && <StepLogo draft={draft} update={update} brandName={brandName} />}
           {step === 5 && <StepWebsite draft={draft} update={update} brandName={brandName} />}
           {step === 6 && <StepPrograms draft={draft} update={update} brandName={brandName} />}
