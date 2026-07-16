@@ -4,11 +4,14 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronRight,
   Clock,
   Copy,
-  Link2,
+  GraduationCap,
   List,
+  MessageSquare,
   Share2,
+  Sparkles,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
@@ -16,6 +19,7 @@ import { SiteFooter } from "@/components/shared/site-footer";
 import { Section, Container } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import {
@@ -31,6 +35,8 @@ import {
   type Heading,
 } from "@/components/shared/article-markdown";
 import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
+import { BlogCover } from "@/components/shared/blog-cover";
+import { useBookmark } from "@/components/shared/blog-card";
 
 const SITE_URL = "https://glintr.com";
 
@@ -44,7 +50,12 @@ export const Route = createFileRoute("/blog/$slug")({
       post?.seo_description ??
       post?.short_summary ??
       "Ideas, skills and perspectives from Glintr — technology, AI, engineering and modern learning.";
-    const image = post?.featured_image_url ?? post?.thumbnail_url ?? undefined;
+    const image =
+      post?.social_image_url ??
+      post?.hero_image_url ??
+      post?.featured_image_url ??
+      post?.thumbnail_url ??
+      undefined;
     const meta: Array<Record<string, string>> = [
       { title },
       { name: "description", content: description },
@@ -89,6 +100,9 @@ export const Route = createFileRoute("/blog/$slug")({
           datePublished: post.published_at ?? undefined,
           dateModified: post.editorial_updated_at ?? post.published_at ?? undefined,
           author: { "@type": "Person", name: post.author_display_name },
+          ...(post.reviewer_display_name
+            ? { reviewedBy: { "@type": "Person", name: post.reviewer_display_name } }
+            : {}),
           publisher: {
             "@type": "Organization",
             name: "Glintr",
@@ -98,6 +112,20 @@ export const Route = createFileRoute("/blog/$slug")({
           url: canonical,
         }),
       });
+      if (Array.isArray(post.faqs) && post.faqs.length > 0) {
+        scripts.push({
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: post.faqs.map((f) => ({
+              "@type": "Question",
+              name: f.question,
+              acceptedAnswer: { "@type": "Answer", text: f.answer },
+            })),
+          }),
+        });
+      }
     }
     return {
       meta,
@@ -114,6 +142,24 @@ function toTitleGuess(slug: string) {
   return slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+function MetaBlock({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string | null;
+}) {
+  return (
+    <div className="rounded-xl border bg-card/40 px-3.5 py-2.5">
+      <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+      <div className="mt-0.5 text-sm font-medium text-foreground line-clamp-1">{value}</div>
+      {sub ? <div className="text-xs text-muted-foreground line-clamp-1">{sub}</div> : null}
+    </div>
+  );
+}
+
 function BlogDetailPage() {
   const { slug } = Route.useParams();
   const [post, setPost] = React.useState<BlogPost | null>(null);
@@ -128,6 +174,7 @@ function BlogDetailPage() {
   const [loading, setLoading] = React.useState(true);
   const [progress, setProgress] = React.useState(0);
   const [copied, setCopied] = React.useState(false);
+  const [subscribed, setSubscribed] = React.useState(false);
   const [copyFailed, setCopyFailed] = React.useState(false);
   const [tocOpen, setTocOpen] = React.useState(false);
   const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
@@ -250,89 +297,108 @@ function BlogDetailPage() {
         />
       </div>
 
-      {/* Article structured data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.title,
-            description: post.short_summary,
-            datePublished: post.published_at,
-            dateModified: post.editorial_updated_at ?? post.published_at,
-            author: { "@type": "Organization", name: post.author_display_name },
-            publisher: { "@type": "Organization", name: "Glintr" },
-            mainEntityOfPage: `https://glintr.com/blog/${post.slug}`,
-            image: post.featured_image_url ?? undefined,
-          }),
-        }}
-      />
-
       {/* HERO */}
       <Section tone="surface" padding="lg">
         <Container size="md">
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" className="mb-5">
+            <ol className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+              <li>
+                <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+              </li>
+              <li aria-hidden><ChevronRight className="size-3" /></li>
+              <li>
+                <Link to="/blog" className="hover:text-foreground transition-colors">Insights</Link>
+              </li>
+              {post.topic ? (
+                <>
+                  <li aria-hidden><ChevronRight className="size-3" /></li>
+                  <li>
+                    <Link
+                      to="/blog"
+                      search={{ topic: post.topic.slug }}
+                      className="hover:text-foreground transition-colors"
+                    >
+                      {post.topic.name}
+                    </Link>
+                  </li>
+                </>
+              ) : null}
+              <li aria-hidden><ChevronRight className="size-3" /></li>
+              <li className="text-foreground/80 line-clamp-1 max-w-[60ch]">
+                {post.title}
+              </li>
+            </ol>
+          </nav>
+
           <Button variant="ghost" size="sm" asChild className="mb-6 -ml-2">
             <Link to="/blog">
               <ArrowLeft className="size-4 mr-2" />
               Back To Insights
             </Link>
           </Button>
+
           <div className="flex flex-col gap-4">
-            {post.topic ? (
-              <Badge variant="primary" className="w-fit uppercase tracking-wider">
-                {post.topic.name}
-              </Badge>
-            ) : null}
+            <div className="flex flex-wrap items-center gap-2">
+              {post.topic ? (
+                <Badge variant="primary" className="uppercase tracking-wider">
+                  {post.topic.name}
+                </Badge>
+              ) : null}
+              {post.skill_level ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                  <GraduationCap className="size-3.5" /> {post.skill_level}
+                </span>
+              ) : null}
+            </div>
             <h1 className="text-hero text-balance">{post.title}</h1>
             {post.subtitle ? (
               <p className="text-subheading text-muted-foreground text-pretty">{post.subtitle}</p>
             ) : null}
             <p className="text-body text-muted-foreground">{post.short_summary}</p>
-            <div className="flex flex-wrap items-center gap-4 text-caption mt-2">
-              <span>{formatPublished(post.published_at)}</span>
+
+            {/* Meta strip */}
+            <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-caption">
+              <MetaBlock label="Written By" value={post.author_display_name} sub={post.author_display_role} />
+              {post.reviewer_display_name ? (
+                <MetaBlock
+                  label="Reviewed By"
+                  value={post.reviewer_display_name}
+                  sub={post.reviewer_display_role}
+                />
+              ) : null}
+              <MetaBlock
+                label="Published"
+                value={formatPublished(post.published_at) || "—"}
+                sub={
+                  post.editorial_updated_at &&
+                  post.published_at &&
+                  new Date(post.editorial_updated_at).getTime() >
+                    new Date(post.published_at).getTime() + 24 * 3600 * 1000
+                    ? `Updated ${formatPublished(post.editorial_updated_at)}`
+                    : null
+                }
+              />
               {post.reading_time_minutes ? (
-                <span className="inline-flex items-center gap-1">
-                  <Clock className="size-3.5" /> {post.reading_time_minutes} min read
-                </span>
+                <MetaBlock
+                  label="Reading Time"
+                  value={`${post.reading_time_minutes} min read`}
+                  sub={null}
+                />
               ) : null}
-              {post.editorial_updated_at &&
-              post.published_at &&
-              new Date(post.editorial_updated_at).getTime() >
-                new Date(post.published_at).getTime() + 24 * 3600 * 1000 ? (
-                <span>Updated {formatPublished(post.editorial_updated_at)}</span>
-              ) : null}
-              <span className="inline-flex items-center gap-2">
-                <span className="size-6 rounded-full bg-gradient-brand" aria-hidden />
-                <span>
-                  {post.author_display_name}
-                  {post.author_display_role ? ` · ${post.author_display_role}` : ""}
-                </span>
-              </span>
             </div>
           </div>
         </Container>
       </Section>
 
-      {/* FEATURED VISUAL */}
-      {post.featured_image_url ? (
-        <Section padding="none" className="py-6 md:py-10">
-          <Container size="md">
-            <div className="rounded-3xl overflow-hidden border bg-gradient-brand-soft">
-              <img
-                src={post.featured_image_url}
-                alt=""
-                width={1600}
-                height={900}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                className="w-full h-auto object-cover"
-              />
-            </div>
-          </Container>
-        </Section>
-      ) : null}
+      {/* FEATURED VISUAL — always render (image or generated cover) */}
+      <Section padding="none" className="py-6 md:py-10">
+        <Container size="md">
+          <div className="relative rounded-3xl overflow-hidden border aspect-[16/9]">
+            <BlogCover post={post} variant="hero" eager />
+          </div>
+        </Container>
+      </Section>
 
       {/* BODY */}
       <Section padding="lg">
@@ -500,6 +566,92 @@ function BlogDetailPage() {
         </Container>
       </Section>
 
+      {/* FAQ */}
+      {Array.isArray(post.faqs) && post.faqs.length > 0 ? (
+        <Section padding="lg" tone="surface">
+          <Container size="md">
+            <div className="mb-8">
+              <div className="text-xs uppercase tracking-widest text-primary">Frequently Asked</div>
+              <h2 className="text-section mt-2">Questions About This Topic</h2>
+            </div>
+            <div className="divide-y rounded-2xl border bg-card">
+              {post.faqs.map((faq, i) => (
+                <details key={i} className="group">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 md:p-6">
+                    <span className="font-medium text-foreground">{faq.question}</span>
+                    <ChevronRight className="size-4 shrink-0 transition-transform group-open:rotate-90" />
+                  </summary>
+                  <div className="px-5 md:px-6 pb-6 text-body text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </Container>
+        </Section>
+      ) : null}
+
+      {/* NEWSLETTER */}
+      <Section padding="lg">
+        <Container size="md">
+          <div className="relative overflow-hidden rounded-3xl border bg-gradient-brand-soft p-8 md:p-12">
+            <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="max-w-xl">
+                <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary">
+                  <Sparkles className="size-3.5" /> The Glintr Dispatch
+                </div>
+                <h2 className="mt-3 text-section">Insights Like This, Weekly.</h2>
+                <p className="mt-2 text-body text-muted-foreground">
+                  Get one carefully edited briefing every week — no spam, unsubscribe anytime.
+                </p>
+              </div>
+              <form
+                className="flex w-full max-w-md flex-col gap-2 sm:flex-row"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const email = new FormData(e.currentTarget).get("email");
+                  if (typeof email === "string" && email.includes("@")) {
+                    (e.currentTarget as HTMLFormElement).reset();
+                    setSubscribed(true);
+                  }
+                }}
+              >
+                <Input
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="you@work.com"
+                  aria-label="Email address"
+                  className="flex-1"
+                />
+                <Button type="submit" size="lg">
+                  {subscribed ? "Subscribed" : "Subscribe"}
+                </Button>
+              </form>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {/* COMMENTS PLACEHOLDER */}
+      <Section padding="lg" tone="surface">
+        <Container size="md">
+          <div className="rounded-2xl border bg-card p-6 md:p-8 text-center">
+            <MessageSquare className="mx-auto size-6 text-muted-foreground" />
+            <h2 className="mt-3 font-display text-xl font-semibold">Join The Conversation</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Comments open soon. In the meantime, share your thoughts with our editors.
+            </p>
+            <div className="mt-4">
+              <Button variant="outline" asChild>
+                <Link to="/contact">Reach The Editors</Link>
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+
       {/* RELATED ARTICLES */}
       {related.length > 0 ? (
         <Section tone="surface" padding="lg">
@@ -515,18 +667,8 @@ function BlogDetailPage() {
                   params={{ slug: r.slug }}
                   className="group flex flex-col rounded-2xl border bg-card overflow-hidden hover:border-primary/40 transition h-full"
                 >
-                  <div className="aspect-[16/10] bg-gradient-brand-soft overflow-hidden">
-                    {r.featured_image_url ? (
-                      <img
-                        src={r.featured_image_url}
-                        alt=""
-                        width={800}
-                        height={500}
-                        loading="lazy"
-                        decoding="async"
-                        className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                      />
-                    ) : null}
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <BlogCover post={r} />
                   </div>
                   <div className="p-5 flex flex-col gap-3 flex-1">
                     <div className="text-xs text-muted-foreground">{r.topic?.name ?? "Insights"}</div>

@@ -3072,7 +3072,9 @@ export type Database = {
           created_at: string
           display_order: number
           editorial_updated_at: string | null
+          faqs: Json
           featured_image_url: string | null
+          hero_image_url: string | null
           id: string
           intro: string | null
           is_featured: boolean
@@ -3084,10 +3086,14 @@ export type Database = {
           reading_time_minutes: number | null
           related_course_category_slug: string | null
           related_course_slug: string | null
+          reviewer_display_name: string | null
+          reviewer_display_role: string | null
           seo_description: string | null
           seo_title: string | null
           short_summary: string
+          skill_level: string | null
           slug: string
+          social_image_url: string | null
           status: string
           subtitle: string | null
           thumbnail_url: string | null
@@ -3104,7 +3110,9 @@ export type Database = {
           created_at?: string
           display_order?: number
           editorial_updated_at?: string | null
+          faqs?: Json
           featured_image_url?: string | null
+          hero_image_url?: string | null
           id?: string
           intro?: string | null
           is_featured?: boolean
@@ -3116,10 +3124,14 @@ export type Database = {
           reading_time_minutes?: number | null
           related_course_category_slug?: string | null
           related_course_slug?: string | null
+          reviewer_display_name?: string | null
+          reviewer_display_role?: string | null
           seo_description?: string | null
           seo_title?: string | null
           short_summary: string
+          skill_level?: string | null
           slug: string
+          social_image_url?: string | null
           status?: string
           subtitle?: string | null
           thumbnail_url?: string | null
@@ -3136,7 +3148,9 @@ export type Database = {
           created_at?: string
           display_order?: number
           editorial_updated_at?: string | null
+          faqs?: Json
           featured_image_url?: string | null
+          hero_image_url?: string | null
           id?: string
           intro?: string | null
           is_featured?: boolean
@@ -3148,10 +3162,14 @@ export type Database = {
           reading_time_minutes?: number | null
           related_course_category_slug?: string | null
           related_course_slug?: string | null
+          reviewer_display_name?: string | null
+          reviewer_display_role?: string | null
           seo_description?: string | null
           seo_title?: string | null
           short_summary?: string
+          skill_level?: string | null
           slug?: string
+          social_image_url?: string | null
           status?: string
           subtitle?: string | null
           thumbnail_url?: string | null
