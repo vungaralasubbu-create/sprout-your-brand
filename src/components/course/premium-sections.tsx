@@ -130,7 +130,23 @@ const TOOL_CARDS: Array<{ name: string; icon: React.ComponentType<{ className?: 
   { name: "Notion", icon: BookOpenCheck, tone: "from-[oklch(0.4_0.02_260)] to-[oklch(0.55_0.02_260)]" },
 ];
 
-export function ToolsMaster() {
+const TOOL_TONES = [
+  "from-[oklch(0.75_0.18_240)] to-[oklch(0.6_0.16_210)]",
+  "from-[oklch(0.7_0.16_160)] to-[oklch(0.55_0.14_200)]",
+  "from-[oklch(0.72_0.15_30)] to-[oklch(0.6_0.16_20)]",
+  "from-[oklch(0.72_0.17_260)] to-[oklch(0.58_0.16_220)]",
+  "from-[oklch(0.7_0.13_280)] to-[oklch(0.58_0.14_240)]",
+  "from-[oklch(0.68_0.16_150)] to-[oklch(0.5_0.14_170)]",
+  "from-[oklch(0.7_0.16_80)] to-[oklch(0.55_0.15_60)]",
+  "from-[oklch(0.68_0.17_320)] to-[oklch(0.55_0.16_280)]",
+];
+
+type ToolItem = { name: string; icon: React.ComponentType<{ className?: string }> };
+
+export function ToolsMaster({ tools }: { tools?: ToolItem[] } = {}) {
+  const list: ToolItem[] =
+    tools && tools.length > 0 ? tools : TOOL_CARDS.map((t) => ({ name: t.name, icon: t.icon }));
+
   return (
     <Section className="py-14 lg:py-20">
       <Container>
@@ -140,12 +156,12 @@ export function ToolsMaster() {
             Tools You'll Master
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Hands-on with the exact stack today's teams ship with — from AI copilots to production infrastructure.
+            Hands-on with the exact stack today's teams ship with — every tool below is used in real projects.
           </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
-          {TOOL_CARDS.map((t) => {
+          {list.map((t, i) => {
             const Icon = t.icon;
             return (
               <div
@@ -155,7 +171,7 @@ export function ToolsMaster() {
                 <span
                   className={cn(
                     "inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm",
-                    t.tone,
+                    TOOL_TONES[i % TOOL_TONES.length],
                   )}
                 >
                   <Icon className="size-5" />
