@@ -16,7 +16,7 @@ import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { RouteTracker } from "@/components/shared/route-tracker";
 import { StickyActionBar } from "@/components/shared/sticky-action-bar";
 import { AiMentor } from "@/components/mentor/ai-mentor";
-import { ExitIntent } from "@/components/shared/exit-intent";
+import { SmartPopup } from "@/components/shared/smart-popup";
 
 function NotFoundComponent() {
   return (
@@ -206,7 +206,7 @@ function RootComponent() {
       <Outlet />
       <StickyActionBar />
       <AiMentor />
-      <ExitIntent />
+      <SmartPopup />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
