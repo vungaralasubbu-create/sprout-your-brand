@@ -32,6 +32,8 @@ import {
   Palette,
   Search,
   Rocket,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
