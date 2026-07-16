@@ -89,18 +89,17 @@ export const getSalesCoach = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(() => ({}))
   .handler(async ({ context }): Promise<SalesCoachOutput> => {
-    const { supabase, userId } = context;
+    const { supabase } = context;
     const { data: leads } = await supabase
       .from("partner_leads")
-      .select("id, name, status, created_at, follow_up_at, notes")
-      .eq("partner_user_id", userId)
+      .select("id, full_name, status, created_at, notes")
       .order("created_at", { ascending: false })
       .limit(30);
 
     if (!isAiAvailable() || !leads || leads.length === 0) {
       return {
         hotLeads: (leads ?? []).slice(0, 3).map((l) => ({
-          name: (l.name as string) ?? "Lead",
+          name: (l.full_name as string) ?? "Lead",
           reason: "Recent activity",
           probability: 55,
           nextAction: "Call within 24h",
