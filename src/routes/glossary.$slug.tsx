@@ -349,7 +349,7 @@ function GlossaryDetail() {
                         Limitations
                       </div>
                       <ul className="space-y-2 text-sm text-foreground/85 leading-relaxed list-disc pl-5">
-                        {entry.limitations.map((a, i) => (
+                        {entry.limitations.map((a: string, i: number) => (
                           <li key={i}>{a}</li>
                         ))}
                       </ul>
