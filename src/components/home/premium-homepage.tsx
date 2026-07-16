@@ -1171,7 +1171,7 @@ function SkillsNetwork() {
                   className="absolute inset-0 -m-6 rounded-full blur-2xl"
                   style={{ background: "radial-gradient(circle, oklch(0.78 0.16 175 / 0.35), transparent 70%)" }}
                 />
-                <img src={mark.url} alt="" className="relative h-16 w-16 object-contain" />
+                <img src={mark.url} alt="" width={64} height={64} loading="lazy" decoding="async" className="relative h-16 w-16 object-contain" />
               </div>
             </div>
           </div>
@@ -1603,7 +1603,7 @@ function GlintrEcosystem() {
               )}
             </svg>
             <div className="absolute inset-0 grid place-items-center pointer-events-none">
-              <img src={mark.url} alt="" className="h-14 w-14 object-contain" />
+              <img src={mark.url} alt="" width={56} height={56} loading="lazy" decoding="async" className="h-14 w-14 object-contain" />
             </div>
           </div>
 
@@ -1715,7 +1715,7 @@ function FinalBrandStatement() {
                   "radial-gradient(circle, oklch(0.78 0.16 175 / 0.35), transparent 70%)",
               }}
             />
-            <img src={mark.url} alt="Glintr" className="relative h-24 w-24 object-contain" />
+            <img src={mark.url} alt="Glintr" width={96} height={96} loading="lazy" decoding="async" className="relative h-24 w-24 object-contain" />
           </div>
           <h2 className="mt-8 font-display text-4xl md:text-6xl font-bold tracking-tight text-balance">
             The next skill can change your direction.

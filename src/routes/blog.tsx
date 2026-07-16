@@ -848,7 +848,7 @@ function LargeCard({ post, flip }: { post: BlogPost; flip: boolean }) {
         className="md:col-span-3 group aspect-[16/10] md:aspect-auto md:min-h-[320px] bg-gradient-brand-soft overflow-hidden [direction:ltr]"
       >
         {post.featured_image_url ? (
-          <img src={post.featured_image_url} alt="" loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
+          <img src={post.featured_image_url} alt="" loading="lazy" decoding="async" width="1200" height="750" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
         ) : (
           <div className="size-full flex items-center justify-center"><TopicGlyph style={post.topic?.visual_style ?? "grid"} /></div>
         )}
@@ -884,7 +884,7 @@ function WideCard({ post }: { post: BlogPost }) {
     <article className="rounded-3xl border bg-card overflow-hidden">
       <Link to="/blog/$slug" params={{ slug: post.slug }} className="group block aspect-[21/9] bg-gradient-brand-soft overflow-hidden">
         {post.featured_image_url ? (
-          <img src={post.featured_image_url} alt="" loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
+          <img src={post.featured_image_url} alt="" loading="lazy" decoding="async" width="1200" height="750" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
         ) : (
           <div className="size-full flex items-center justify-center"><TopicGlyph style={post.topic?.visual_style ?? "grid"} /></div>
         )}
@@ -918,7 +918,7 @@ function CompactCard({ post }: { post: BlogPost }) {
     >
       <div className="aspect-[16/10] bg-gradient-brand-soft overflow-hidden">
         {post.featured_image_url ? (
-          <img src={post.featured_image_url} alt="" loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
+          <img src={post.featured_image_url} alt="" loading="lazy" decoding="async" width="1200" height="750" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
         ) : (
           <div className="size-full flex items-center justify-center"><TopicGlyph style={post.topic?.visual_style ?? "grid"} /></div>
         )}
