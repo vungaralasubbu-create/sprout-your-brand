@@ -84,7 +84,7 @@ function LaunchAcademyIntro() {
           <ul className="mt-3 space-y-2 text-sm">
             {[
               "Brand Name & Logo Generator",
-              "Domain Availability Checker + AI suggestions",
+              "Managed academy URL (yourbrand.glintr.com — no DNS, no hosting)",
               "Website Generator (landing, about, curriculum)",
               "Course & Curriculum Generator",
               "Blog Generator (25 draft articles)",
