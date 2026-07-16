@@ -83,7 +83,10 @@ const CompleteInput = z.object({
   audience: z.enum(AUDIENCES).default("intermediate"),
   focusKeywords: z.array(z.string()).optional(),
   notes: z.string().optional(),
-  generateImages: z.boolean().default(true),
+  // Kept for backward compatibility with existing UI; images now run as a
+  // separate background task via generateFactoryImages so a failure in image
+  // generation never fails article generation.
+  generateImages: z.boolean().default(false),
 });
 
 export const generateCompleteDraft = createServerFn({ method: "POST" })
