@@ -1510,3 +1510,11 @@ function JsonBlock({ title, data }: { title: string; data: unknown }) {
     </div>
   );
 }
+
+function GatedAcademyBuilder() {
+  return (
+    <AcademyGate>
+      <AcademyBuilder />
+    </AcademyGate>
+  );
+}
