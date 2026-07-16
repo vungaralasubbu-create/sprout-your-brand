@@ -6,6 +6,8 @@ import { listLearningPaths } from "@/data/learning-paths";
 import { listComparisons } from "@/data/comparisons";
 import { listCareerMaps } from "@/data/career-maps";
 import { listTools } from "@/data/tools";
+import { articles as learnArticles, collections as learnCollections, topics as learnTopics } from "@/data/learn";
+import { AGENTS } from "@/lib/aios/agents";
 
 const BASE_URL = "https://glintr.com";
 
