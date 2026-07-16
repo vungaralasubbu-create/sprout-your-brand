@@ -329,7 +329,7 @@ function StepWelcome({
               <div className="text-sm font-semibold text-slate-900">{opt}</div>
               <div className="mt-1 text-xs text-slate-500">
                 {opt === "White Label Academy"
-                  ? "Full brand + website + LMS under your domain."
+                  ? "Full brand + website + LMS, fully managed by Glintr."
                   : opt === "Personal Brand"
                   ? "Launch a solo educator brand fast."
                   : opt === "College" || opt === "Training Institute"
