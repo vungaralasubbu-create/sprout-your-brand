@@ -230,6 +230,7 @@ import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
+import { Route as AuthenticatedAdminExecutionRouteImport } from './routes/_authenticated/admin.execution'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/_authenticated/admin.content-pipeline'
@@ -1600,6 +1601,12 @@ const AuthenticatedAdminInfrastructureRoute =
     path: '/infrastructure',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminExecutionRoute =
+  AuthenticatedAdminExecutionRouteImport.update({
+    id: '/execution',
+    path: '/execution',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminEmploymentSettingsRoute =
   AuthenticatedAdminEmploymentSettingsRouteImport.update({
     id: '/employment-settings',
@@ -2765,6 +2772,7 @@ export interface FileRoutesByFullPath {
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -3148,6 +3156,7 @@ export interface FileRoutesByTo {
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -3543,6 +3552,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/_authenticated/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
@@ -3940,6 +3950,7 @@ export interface FileRouteTypes {
     | '/admin/content-pipeline'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/execution'
     | '/admin/infrastructure'
     | '/admin/integrations'
     | '/admin/lead-management'
@@ -4323,6 +4334,7 @@ export interface FileRouteTypes {
     | '/admin/content-pipeline'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/execution'
     | '/admin/infrastructure'
     | '/admin/integrations'
     | '/admin/lead-management'
@@ -4717,6 +4729,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content-pipeline'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
+    | '/_authenticated/admin/execution'
     | '/_authenticated/admin/infrastructure'
     | '/_authenticated/admin/integrations'
     | '/_authenticated/admin/lead-management'
@@ -6612,6 +6625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminInfrastructureRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/execution': {
+      id: '/_authenticated/admin/execution'
+      path: '/execution'
+      fullPath: '/admin/execution'
+      preLoaderRoute: typeof AuthenticatedAdminExecutionRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/employment-settings': {
       id: '/_authenticated/admin/employment-settings'
       path: '/employment-settings'
@@ -8197,6 +8217,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContentPipelineRoute: typeof AuthenticatedAdminContentPipelineRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
+  AuthenticatedAdminExecutionRoute: typeof AuthenticatedAdminExecutionRoute
   AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
   AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
@@ -8279,6 +8300,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
+  AuthenticatedAdminExecutionRoute: AuthenticatedAdminExecutionRoute,
   AuthenticatedAdminInfrastructureRoute: AuthenticatedAdminInfrastructureRoute,
   AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
   AuthenticatedAdminLeadManagementRoute: AuthenticatedAdminLeadManagementRoute,
