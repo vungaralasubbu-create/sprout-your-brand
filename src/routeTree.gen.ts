@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkspaceRouteImport } from './routes/workspace'
 import { Route as WhiteLabelEdtechRouteImport } from './routes/white-label-edtech'
+import { Route as TrustCenterRouteImport } from './routes/trust-center'
 import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
@@ -35,6 +36,7 @@ import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator
 import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as FindYourProgramRouteImport } from './routes/find-your-program'
 import { Route as FaqsRouteImport } from './routes/faqs'
+import { Route as EditorialRouteImport } from './routes/editorial'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -104,6 +106,7 @@ import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
 import { Route as CareerMapsSlugRouteImport } from './routes/career-maps.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 import { Route as AiAgentsIdRouteImport } from './routes/ai-agents.$id'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
@@ -355,6 +358,11 @@ const WhiteLabelEdtechRoute = WhiteLabelEdtechRouteImport.update({
   path: '/white-label-edtech',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrustCenterRoute = TrustCenterRouteImport.update({
+  id: '/trust-center',
+  path: '/trust-center',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
   id: '/terms-and-conditions',
   path: '/terms-and-conditions',
@@ -473,6 +481,11 @@ const FindYourProgramRoute = FindYourProgramRouteImport.update({
 const FaqsRoute = FaqsRouteImport.update({
   id: '/faqs',
   path: '/faqs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditorialRoute = EditorialRouteImport.update({
+  id: '/editorial',
+  path: '/editorial',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EarnRoute = EarnRouteImport.update({
@@ -819,6 +832,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => BlogRoute,
+} as any)
+const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
+  id: '/authors/$slug',
+  path: '/authors/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AiAgentsIdRoute = AiAgentsIdRouteImport.update({
   id: '/$id',
@@ -2251,6 +2269,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
+  '/editorial': typeof EditorialRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/find-your-program': typeof FindYourProgramRoute
   '/glossary': typeof GlossaryRouteWithChildren
@@ -2275,6 +2294,7 @@ export interface FileRoutesByFullPath {
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/terms-and-conditions': typeof TermsAndConditionsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/workspace': typeof WorkspaceRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -2283,6 +2303,7 @@ export interface FileRoutesByFullPath {
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
@@ -2587,6 +2608,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
+  '/editorial': typeof EditorialRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/find-your-program': typeof FindYourProgramRoute
   '/glossary': typeof GlossaryRouteWithChildren
@@ -2609,11 +2631,13 @@ export interface FileRoutesByTo {
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/terms-and-conditions': typeof TermsAndConditionsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
@@ -2913,6 +2937,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
+  '/editorial': typeof EditorialRoute
   '/faqs': typeof FaqsRouteWithChildren
   '/find-your-program': typeof FindYourProgramRoute
   '/glossary': typeof GlossaryRouteWithChildren
@@ -2937,6 +2962,7 @@ export interface FileRoutesById {
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
   '/terms-and-conditions': typeof TermsAndConditionsRoute
+  '/trust-center': typeof TrustCenterRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/workspace': typeof WorkspaceRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
@@ -2945,6 +2971,7 @@ export interface FileRoutesById {
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
@@ -3251,6 +3278,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookie-policy'
     | '/earn'
+    | '/editorial'
     | '/faqs'
     | '/find-your-program'
     | '/glossary'
@@ -3275,6 +3303,7 @@ export interface FileRouteTypes {
     | '/student-support'
     | '/success-stories'
     | '/terms-and-conditions'
+    | '/trust-center'
     | '/white-label-edtech'
     | '/workspace'
     | '/admin'
@@ -3283,6 +3312,7 @@ export interface FileRouteTypes {
     | '/partner'
     | '/student'
     | '/ai-agents/$id'
+    | '/authors/$slug'
     | '/blog/$slug'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
@@ -3587,6 +3617,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookie-policy'
     | '/earn'
+    | '/editorial'
     | '/faqs'
     | '/find-your-program'
     | '/glossary'
@@ -3609,11 +3640,13 @@ export interface FileRouteTypes {
     | '/student-support'
     | '/success-stories'
     | '/terms-and-conditions'
+    | '/trust-center'
     | '/white-label-edtech'
     | '/ambassador'
     | '/brand'
     | '/partner'
     | '/ai-agents/$id'
+    | '/authors/$slug'
     | '/blog/$slug'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
@@ -3912,6 +3945,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/cookie-policy'
     | '/earn'
+    | '/editorial'
     | '/faqs'
     | '/find-your-program'
     | '/glossary'
@@ -3936,6 +3970,7 @@ export interface FileRouteTypes {
     | '/student-support'
     | '/success-stories'
     | '/terms-and-conditions'
+    | '/trust-center'
     | '/white-label-edtech'
     | '/workspace'
     | '/_authenticated/admin'
@@ -3944,6 +3979,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner'
     | '/_authenticated/student'
     | '/ai-agents/$id'
+    | '/authors/$slug'
     | '/blog/$slug'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
@@ -4250,6 +4286,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   CookiePolicyRoute: typeof CookiePolicyRoute
   EarnRoute: typeof EarnRoute
+  EditorialRoute: typeof EditorialRoute
   FaqsRoute: typeof FaqsRouteWithChildren
   FindYourProgramRoute: typeof FindYourProgramRoute
   GlossaryRoute: typeof GlossaryRouteWithChildren
@@ -4274,8 +4311,10 @@ export interface RootRouteChildren {
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
+  TrustCenterRoute: typeof TrustCenterRoute
   WhiteLabelEdtechRoute: typeof WhiteLabelEdtechRoute
   WorkspaceRoute: typeof WorkspaceRouteWithChildren
+  AuthorsSlugRoute: typeof AuthorsSlugRoute
   EntitiesSlugRoute: typeof EntitiesSlugRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
@@ -4317,6 +4356,13 @@ declare module '@tanstack/react-router' {
       path: '/white-label-edtech'
       fullPath: '/white-label-edtech'
       preLoaderRoute: typeof WhiteLabelEdtechRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trust-center': {
+      id: '/trust-center'
+      path: '/trust-center'
+      fullPath: '/trust-center'
+      preLoaderRoute: typeof TrustCenterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms-and-conditions': {
@@ -4485,6 +4531,13 @@ declare module '@tanstack/react-router' {
       path: '/faqs'
       fullPath: '/faqs'
       preLoaderRoute: typeof FaqsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editorial': {
+      id: '/editorial'
+      path: '/editorial'
+      fullPath: '/editorial'
+      preLoaderRoute: typeof EditorialRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/earn': {
@@ -4969,6 +5022,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
+    }
+    '/authors/$slug': {
+      id: '/authors/$slug'
+      path: '/authors/$slug'
+      fullPath: '/authors/$slug'
+      preLoaderRoute: typeof AuthorsSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/ai-agents/$id': {
       id: '/ai-agents/$id'
@@ -7709,6 +7769,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   CookiePolicyRoute: CookiePolicyRoute,
   EarnRoute: EarnRoute,
+  EditorialRoute: EditorialRoute,
   FaqsRoute: FaqsRouteWithChildren,
   FindYourProgramRoute: FindYourProgramRoute,
   GlossaryRoute: GlossaryRouteWithChildren,
@@ -7733,8 +7794,10 @@ const rootRouteChildren: RootRouteChildren = {
   StudentSupportRoute: StudentSupportRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
+  TrustCenterRoute: TrustCenterRoute,
   WhiteLabelEdtechRoute: WhiteLabelEdtechRoute,
   WorkspaceRoute: WorkspaceRouteWithChildren,
+  AuthorsSlugRoute: AuthorsSlugRoute,
   EntitiesSlugRoute: EntitiesSlugRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,

@@ -66,7 +66,7 @@ export const Route = createFileRoute("/authors/$slug")({
 });
 
 function AuthorProfilePage() {
-  const a = Route.useLoaderData();
+  const a = Route.useLoaderData() as ReturnType<typeof getAuthor> & object;
   return (
     <>
       <SiteHeader />
