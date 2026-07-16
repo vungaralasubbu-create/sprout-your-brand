@@ -34,6 +34,25 @@ function Dashboard() {
       </div>
 
       <Card className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-sm font-semibold">Ten scores of a topically authoritative library</h2>
+          <span className="text-[10px] font-mono uppercase tracking-[0.14em] text-muted-foreground">Phase 5</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <ScoreTile icon={Gauge} label="Overall SEO" value={s?.overallSeo} to="/admin/content-intelligence/quality" />
+          <ScoreTile icon={Network} label="Topical Authority" value={s?.topicalAuthority} to="/admin/content-intelligence/authority" />
+          <ScoreTile icon={Boxes} label="Entity Coverage" value={s?.entityCoverage} to="/admin/content-intelligence/entities" />
+          <ScoreTile icon={Share2} label="Graph Health" value={s?.knowledgeGraphHealth} to="/admin/content-intelligence/graph-health" />
+          <ScoreTile icon={LinkIcon} label="Internal Links" value={s?.internalLinkHealth} to="/admin/content-intelligence/related" />
+          <ScoreTile icon={Clock} label="Freshness" value={s?.contentFreshness} to="/admin/content-intelligence/freshness" />
+          <ScoreTile icon={Sparkles} label="GEO Score" value={s?.geoScore} to="/admin/content-intelligence/ai-citation" />
+          <ScoreTile icon={Sparkles} label="AI Citation" value={s?.aiCitationReadiness} to="/admin/content-intelligence/ai-citation" />
+          <ScoreTile icon={TrendingUp} label="Search Visibility" value={s?.searchVisibility} to="/admin/content-intelligence/search-insights" />
+          <ScoreTile icon={Search} label="Content Quality" value={s?.contentQuality} to="/admin/content-intelligence/quality" />
+        </div>
+      </Card>
+
+      <Card className="p-5">
         <h2 className="text-sm font-semibold mb-4">Content health across dimensions</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {h && Object.entries({
