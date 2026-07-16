@@ -63,6 +63,7 @@ import { Route as WorkspaceStudyRouteImport } from './routes/workspace.study'
 import { Route as WorkspaceSearchRouteImport } from './routes/workspace.search'
 import { Route as WorkspaceRevisionRouteImport } from './routes/workspace.revision'
 import { Route as WorkspaceMentorRouteImport } from './routes/workspace.mentor'
+import { Route as WorkspaceLiveRouteImport } from './routes/workspace.live'
 import { Route as WorkspaceLibraryRouteImport } from './routes/workspace.library'
 import { Route as WorkspaceHighlightsRouteImport } from './routes/workspace.highlights'
 import { Route as WorkspaceFlashcardsRouteImport } from './routes/workspace.flashcards'
@@ -86,6 +87,7 @@ import { Route as MyDiscoverRouteImport } from './routes/my.discover'
 import { Route as MyBookmarksRouteImport } from './routes/my.bookmarks'
 import { Route as MyActivityRouteImport } from './routes/my.activity'
 import { Route as MyAchievementsRouteImport } from './routes/my.achievements'
+import { Route as LiveClassIdRouteImport } from './routes/live.$classId'
 import { Route as LearningPathsSlugRouteImport } from './routes/learning-paths.$slug'
 import { Route as LearnTopicsRouteImport } from './routes/learn.topics'
 import { Route as LearnPathsRouteImport } from './routes/learn.paths'
@@ -195,6 +197,7 @@ import { Route as AuthenticatedAdminPartnerPayoutsRouteImport } from './routes/_
 import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_authenticated/admin.partner-brands'
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
+import { Route as AuthenticatedAdminLiveRouteImport } from './routes/_authenticated/admin.live'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
 import { Route as AuthenticatedAdminLeadOwnershipRouteImport } from './routes/_authenticated/admin.lead-ownership'
 import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_authenticated/admin.lead-monitoring'
@@ -591,6 +594,11 @@ const WorkspaceMentorRoute = WorkspaceMentorRouteImport.update({
   path: '/mentor',
   getParentRoute: () => WorkspaceRoute,
 } as any)
+const WorkspaceLiveRoute = WorkspaceLiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => WorkspaceRoute,
+} as any)
 const WorkspaceLibraryRoute = WorkspaceLibraryRouteImport.update({
   id: '/library',
   path: '/library',
@@ -705,6 +713,11 @@ const MyAchievementsRoute = MyAchievementsRouteImport.update({
   id: '/achievements',
   path: '/achievements',
   getParentRoute: () => MyRoute,
+} as any)
+const LiveClassIdRoute = LiveClassIdRouteImport.update({
+  id: '/$classId',
+  path: '/$classId',
+  getParentRoute: () => LiveRoute,
 } as any)
 const LearningPathsSlugRoute = LearningPathsSlugRouteImport.update({
   id: '/$slug',
@@ -1328,6 +1341,11 @@ const AuthenticatedAdminModelApprovalsRoute =
     path: '/model-approvals',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminLiveRoute = AuthenticatedAdminLiveRouteImport.update({
+  id: '/live',
+  path: '/live',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminLeadsRoute = AuthenticatedAdminLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
@@ -2107,7 +2125,7 @@ export interface FileRoutesByFullPath {
   '/knowledge-graph': typeof KnowledgeGraphRoute
   '/learn': typeof LearnRouteWithChildren
   '/learning-paths': typeof LearningPathsRouteWithChildren
-  '/live': typeof LiveRoute
+  '/live': typeof LiveRouteWithChildren
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/my': typeof MyRouteWithChildren
@@ -2143,6 +2161,7 @@ export interface FileRoutesByFullPath {
   '/learn/paths': typeof LearnPathsRoute
   '/learn/topics': typeof LearnTopicsRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
+  '/live/$classId': typeof LiveClassIdRoute
   '/my/achievements': typeof MyAchievementsRoute
   '/my/activity': typeof MyActivityRoute
   '/my/bookmarks': typeof MyBookmarksRoute
@@ -2166,6 +2185,7 @@ export interface FileRoutesByFullPath {
   '/workspace/flashcards': typeof WorkspaceFlashcardsRoute
   '/workspace/highlights': typeof WorkspaceHighlightsRoute
   '/workspace/library': typeof WorkspaceLibraryRoute
+  '/workspace/live': typeof WorkspaceLiveRoute
   '/workspace/mentor': typeof WorkspaceMentorRoute
   '/workspace/revision': typeof WorkspaceRevisionRoute
   '/workspace/search': typeof WorkspaceSearchRoute
@@ -2198,6 +2218,7 @@ export interface FileRoutesByFullPath {
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/admin/live': typeof AuthenticatedAdminLiveRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -2419,7 +2440,7 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/knowledge-graph': typeof KnowledgeGraphRoute
   '/learning-paths': typeof LearningPathsRouteWithChildren
-  '/live': typeof LiveRoute
+  '/live': typeof LiveRouteWithChildren
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/partner-network': typeof PartnerNetworkRoute
@@ -2451,6 +2472,7 @@ export interface FileRoutesByTo {
   '/learn/paths': typeof LearnPathsRoute
   '/learn/topics': typeof LearnTopicsRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
+  '/live/$classId': typeof LiveClassIdRoute
   '/my/achievements': typeof MyAchievementsRoute
   '/my/activity': typeof MyActivityRoute
   '/my/bookmarks': typeof MyBookmarksRoute
@@ -2474,6 +2496,7 @@ export interface FileRoutesByTo {
   '/workspace/flashcards': typeof WorkspaceFlashcardsRoute
   '/workspace/highlights': typeof WorkspaceHighlightsRoute
   '/workspace/library': typeof WorkspaceLibraryRoute
+  '/workspace/live': typeof WorkspaceLiveRoute
   '/workspace/mentor': typeof WorkspaceMentorRoute
   '/workspace/revision': typeof WorkspaceRevisionRoute
   '/workspace/search': typeof WorkspaceSearchRoute
@@ -2500,6 +2523,7 @@ export interface FileRoutesByTo {
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/admin/live': typeof AuthenticatedAdminLiveRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -2723,7 +2747,7 @@ export interface FileRoutesById {
   '/knowledge-graph': typeof KnowledgeGraphRoute
   '/learn': typeof LearnRouteWithChildren
   '/learning-paths': typeof LearningPathsRouteWithChildren
-  '/live': typeof LiveRoute
+  '/live': typeof LiveRouteWithChildren
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/my': typeof MyRouteWithChildren
@@ -2759,6 +2783,7 @@ export interface FileRoutesById {
   '/learn/paths': typeof LearnPathsRoute
   '/learn/topics': typeof LearnTopicsRoute
   '/learning-paths/$slug': typeof LearningPathsSlugRoute
+  '/live/$classId': typeof LiveClassIdRoute
   '/my/achievements': typeof MyAchievementsRoute
   '/my/activity': typeof MyActivityRoute
   '/my/bookmarks': typeof MyBookmarksRoute
@@ -2782,6 +2807,7 @@ export interface FileRoutesById {
   '/workspace/flashcards': typeof WorkspaceFlashcardsRoute
   '/workspace/highlights': typeof WorkspaceHighlightsRoute
   '/workspace/library': typeof WorkspaceLibraryRoute
+  '/workspace/live': typeof WorkspaceLiveRoute
   '/workspace/mentor': typeof WorkspaceMentorRoute
   '/workspace/revision': typeof WorkspaceRevisionRoute
   '/workspace/search': typeof WorkspaceSearchRoute
@@ -2814,6 +2840,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/_authenticated/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
+  '/_authenticated/admin/live': typeof AuthenticatedAdminLiveRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
   '/_authenticated/admin/partner-brands': typeof AuthenticatedAdminPartnerBrandsRoute
@@ -3074,6 +3101,7 @@ export interface FileRouteTypes {
     | '/learn/paths'
     | '/learn/topics'
     | '/learning-paths/$slug'
+    | '/live/$classId'
     | '/my/achievements'
     | '/my/activity'
     | '/my/bookmarks'
@@ -3097,6 +3125,7 @@ export interface FileRouteTypes {
     | '/workspace/flashcards'
     | '/workspace/highlights'
     | '/workspace/library'
+    | '/workspace/live'
     | '/workspace/mentor'
     | '/workspace/revision'
     | '/workspace/search'
@@ -3129,6 +3158,7 @@ export interface FileRouteTypes {
     | '/admin/lead-monitoring'
     | '/admin/lead-ownership'
     | '/admin/leads'
+    | '/admin/live'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
     | '/admin/partner-brands'
@@ -3382,6 +3412,7 @@ export interface FileRouteTypes {
     | '/learn/paths'
     | '/learn/topics'
     | '/learning-paths/$slug'
+    | '/live/$classId'
     | '/my/achievements'
     | '/my/activity'
     | '/my/bookmarks'
@@ -3405,6 +3436,7 @@ export interface FileRouteTypes {
     | '/workspace/flashcards'
     | '/workspace/highlights'
     | '/workspace/library'
+    | '/workspace/live'
     | '/workspace/mentor'
     | '/workspace/revision'
     | '/workspace/search'
@@ -3431,6 +3463,7 @@ export interface FileRouteTypes {
     | '/admin/lead-monitoring'
     | '/admin/lead-ownership'
     | '/admin/leads'
+    | '/admin/live'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
     | '/admin/partner-brands'
@@ -3689,6 +3722,7 @@ export interface FileRouteTypes {
     | '/learn/paths'
     | '/learn/topics'
     | '/learning-paths/$slug'
+    | '/live/$classId'
     | '/my/achievements'
     | '/my/activity'
     | '/my/bookmarks'
@@ -3712,6 +3746,7 @@ export interface FileRouteTypes {
     | '/workspace/flashcards'
     | '/workspace/highlights'
     | '/workspace/library'
+    | '/workspace/live'
     | '/workspace/mentor'
     | '/workspace/revision'
     | '/workspace/search'
@@ -3744,6 +3779,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/lead-monitoring'
     | '/_authenticated/admin/lead-ownership'
     | '/_authenticated/admin/leads'
+    | '/_authenticated/admin/live'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
     | '/_authenticated/admin/partner-brands'
@@ -3968,7 +4004,7 @@ export interface RootRouteChildren {
   KnowledgeGraphRoute: typeof KnowledgeGraphRoute
   LearnRoute: typeof LearnRouteWithChildren
   LearningPathsRoute: typeof LearningPathsRouteWithChildren
-  LiveRoute: typeof LiveRoute
+  LiveRoute: typeof LiveRouteWithChildren
   LmsRoute: typeof LmsRoute
   MarketingSupportRoute: typeof MarketingSupportRoute
   MyRoute: typeof MyRouteWithChildren
@@ -4387,6 +4423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceMentorRouteImport
       parentRoute: typeof WorkspaceRoute
     }
+    '/workspace/live': {
+      id: '/workspace/live'
+      path: '/live'
+      fullPath: '/workspace/live'
+      preLoaderRoute: typeof WorkspaceLiveRouteImport
+      parentRoute: typeof WorkspaceRoute
+    }
     '/workspace/library': {
       id: '/workspace/library'
       path: '/library'
@@ -4547,6 +4590,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/my/achievements'
       preLoaderRoute: typeof MyAchievementsRouteImport
       parentRoute: typeof MyRoute
+    }
+    '/live/$classId': {
+      id: '/live/$classId'
+      path: '/$classId'
+      fullPath: '/live/$classId'
+      preLoaderRoute: typeof LiveClassIdRouteImport
+      parentRoute: typeof LiveRoute
     }
     '/learning-paths/$slug': {
       id: '/learning-paths/$slug'
@@ -5309,6 +5359,13 @@ declare module '@tanstack/react-router' {
       path: '/model-approvals'
       fullPath: '/admin/model-approvals'
       preLoaderRoute: typeof AuthenticatedAdminModelApprovalsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/live': {
+      id: '/_authenticated/admin/live'
+      path: '/live'
+      fullPath: '/admin/live'
+      preLoaderRoute: typeof AuthenticatedAdminLiveRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/leads': {
@@ -6444,6 +6501,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminLeadMonitoringRoute: typeof AuthenticatedAdminLeadMonitoringRoute
   AuthenticatedAdminLeadOwnershipRoute: typeof AuthenticatedAdminLeadOwnershipRoute
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
+  AuthenticatedAdminLiveRoute: typeof AuthenticatedAdminLiveRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
   AuthenticatedAdminPartnerBrandsRoute: typeof AuthenticatedAdminPartnerBrandsRoute
@@ -6502,6 +6560,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminLeadMonitoringRoute: AuthenticatedAdminLeadMonitoringRoute,
   AuthenticatedAdminLeadOwnershipRoute: AuthenticatedAdminLeadOwnershipRoute,
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
+  AuthenticatedAdminLiveRoute: AuthenticatedAdminLiveRoute,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
     AuthenticatedAdminPartnerApplicationsRoute,
@@ -7034,6 +7093,16 @@ const LearningPathsRouteWithChildren = LearningPathsRoute._addFileChildren(
   LearningPathsRouteChildren,
 )
 
+interface LiveRouteChildren {
+  LiveClassIdRoute: typeof LiveClassIdRoute
+}
+
+const LiveRouteChildren: LiveRouteChildren = {
+  LiveClassIdRoute: LiveClassIdRoute,
+}
+
+const LiveRouteWithChildren = LiveRoute._addFileChildren(LiveRouteChildren)
+
 interface MyRouteChildren {
   MyAchievementsRoute: typeof MyAchievementsRoute
   MyActivityRoute: typeof MyActivityRoute
@@ -7151,6 +7220,7 @@ interface WorkspaceRouteChildren {
   WorkspaceFlashcardsRoute: typeof WorkspaceFlashcardsRoute
   WorkspaceHighlightsRoute: typeof WorkspaceHighlightsRoute
   WorkspaceLibraryRoute: typeof WorkspaceLibraryRoute
+  WorkspaceLiveRoute: typeof WorkspaceLiveRoute
   WorkspaceMentorRoute: typeof WorkspaceMentorRoute
   WorkspaceRevisionRoute: typeof WorkspaceRevisionRoute
   WorkspaceSearchRoute: typeof WorkspaceSearchRoute
@@ -7168,6 +7238,7 @@ const WorkspaceRouteChildren: WorkspaceRouteChildren = {
   WorkspaceFlashcardsRoute: WorkspaceFlashcardsRoute,
   WorkspaceHighlightsRoute: WorkspaceHighlightsRoute,
   WorkspaceLibraryRoute: WorkspaceLibraryRoute,
+  WorkspaceLiveRoute: WorkspaceLiveRoute,
   WorkspaceMentorRoute: WorkspaceMentorRoute,
   WorkspaceRevisionRoute: WorkspaceRevisionRoute,
   WorkspaceSearchRoute: WorkspaceSearchRoute,
@@ -7207,7 +7278,7 @@ const rootRouteChildren: RootRouteChildren = {
   KnowledgeGraphRoute: KnowledgeGraphRoute,
   LearnRoute: LearnRouteWithChildren,
   LearningPathsRoute: LearningPathsRouteWithChildren,
-  LiveRoute: LiveRoute,
+  LiveRoute: LiveRouteWithChildren,
   LmsRoute: LmsRoute,
   MarketingSupportRoute: MarketingSupportRoute,
   MyRoute: MyRouteWithChildren,
