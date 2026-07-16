@@ -26,6 +26,7 @@ import { Route as MarketingSupportRouteImport } from './routes/marketing-support
 import { Route as LmsRouteImport } from './routes/lms'
 import { Route as JoinRouteImport } from './routes/join'
 import { Route as IncomeCalculatorRouteImport } from './routes/income-calculator'
+import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as EarnRouteImport } from './routes/earn'
 import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
@@ -268,6 +269,11 @@ const JoinRoute = JoinRouteImport.update({
 const IncomeCalculatorRoute = IncomeCalculatorRouteImport.update({
   id: '/income-calculator',
   path: '/income-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossaryRoute = GlossaryRouteImport.update({
+  id: '/glossary',
+  path: '/glossary',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqsRoute = FaqsRouteImport.update({
@@ -1196,6 +1202,7 @@ export interface FileRoutesByFullPath {
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/glossary': typeof GlossaryRoute
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/lms': typeof LmsRoute
@@ -1372,6 +1379,7 @@ export interface FileRoutesByTo {
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/glossary': typeof GlossaryRoute
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/lms': typeof LmsRoute
@@ -1547,6 +1555,7 @@ export interface FileRoutesById {
   '/cookie-policy': typeof CookiePolicyRoute
   '/earn': typeof EarnRoute
   '/faqs': typeof FaqsRouteWithChildren
+  '/glossary': typeof GlossaryRoute
   '/income-calculator': typeof IncomeCalculatorRoute
   '/join': typeof JoinRoute
   '/lms': typeof LmsRoute
@@ -1725,6 +1734,7 @@ export interface FileRouteTypes {
     | '/cookie-policy'
     | '/earn'
     | '/faqs'
+    | '/glossary'
     | '/income-calculator'
     | '/join'
     | '/lms'
@@ -1901,6 +1911,7 @@ export interface FileRouteTypes {
     | '/cookie-policy'
     | '/earn'
     | '/faqs'
+    | '/glossary'
     | '/income-calculator'
     | '/join'
     | '/lms'
@@ -2075,6 +2086,7 @@ export interface FileRouteTypes {
     | '/cookie-policy'
     | '/earn'
     | '/faqs'
+    | '/glossary'
     | '/income-calculator'
     | '/join'
     | '/lms'
@@ -2253,6 +2265,7 @@ export interface RootRouteChildren {
   CookiePolicyRoute: typeof CookiePolicyRoute
   EarnRoute: typeof EarnRoute
   FaqsRoute: typeof FaqsRouteWithChildren
+  GlossaryRoute: typeof GlossaryRoute
   IncomeCalculatorRoute: typeof IncomeCalculatorRoute
   JoinRoute: typeof JoinRoute
   LmsRoute: typeof LmsRoute
@@ -2403,6 +2416,13 @@ declare module '@tanstack/react-router' {
       path: '/income-calculator'
       fullPath: '/income-calculator'
       preLoaderRoute: typeof IncomeCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossary': {
+      id: '/glossary'
+      path: '/glossary'
+      fullPath: '/glossary'
+      preLoaderRoute: typeof GlossaryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faqs': {
@@ -4092,6 +4112,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiePolicyRoute: CookiePolicyRoute,
   EarnRoute: EarnRoute,
   FaqsRoute: FaqsRouteWithChildren,
+  GlossaryRoute: GlossaryRoute,
   IncomeCalculatorRoute: IncomeCalculatorRoute,
   JoinRoute: JoinRoute,
   LmsRoute: LmsRoute,
