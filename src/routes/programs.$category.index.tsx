@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
 import {
   ArrowRight, ChevronRight, Search, LayoutGrid, Rows3, X, Sparkles,
-  Compass, Users, Wrench, ChevronDown,
+  Compass, Users, Wrench, ChevronDown, BookOpen, GitCompare, Network, Layers,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
@@ -16,6 +16,8 @@ import { getCategoryBySlug, listCategories, listCourses, formatPrice } from "@/l
 import { getCategorySeo } from "@/lib/seo";
 import { CategoryVisual, slugToVariant, CATEGORY_THEME } from "@/components/programs/category-visuals";
 import { ProgramCard, type ProgramCardData } from "@/components/programs/program-card";
+import { getCategoryEditorial, type CategoryEditorial } from "@/data/category-editorial";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 const SITE_URL = "https://glintr.com";
@@ -24,10 +26,12 @@ export const Route = createFileRoute("/programs/$category/")({
   loader: async ({ params }) => ({ seo: await getCategorySeo(params.category) }),
   head: ({ params, loaderData }) => {
     const seo = loaderData?.seo;
+    const editorial = getCategoryEditorial(params.category);
     const canonical = `${SITE_URL}/programs/${params.category}`;
     const name = seo?.name ?? prettify(params.category);
-    const title = seo?.seo_title ?? `${name} Programs | Glintr`;
+    const title = editorial?.seoTitle ?? seo?.seo_title ?? `${name} Programs | Glintr`;
     const description =
+      editorial?.seoDescription ??
       seo?.seo_description ??
       seo?.short_description ??
       `Explore ${name} career programs on Glintr — practical, mentor-led courses.`;
@@ -56,10 +60,37 @@ export const Route = createFileRoute("/programs/$category/")({
         { "@type": "ListItem", position: 3, name, item: canonical },
       ],
     };
+    const scripts: Array<{ type: string; children: string }> = [
+      { type: "application/ld+json", children: JSON.stringify(breadcrumbs) },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: title,
+          description,
+          url: canonical,
+        }),
+      },
+    ];
+    if (editorial?.faqs?.length) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: editorial.faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      });
+    }
     return {
       meta,
       links: [{ rel: "canonical", href: canonical }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(breadcrumbs) }],
+      scripts,
     };
   },
   component: CategoryPage,
@@ -89,6 +120,23 @@ function CategoryPage() {
   const { data: allCategories = [] } = useQuery({
     queryKey: ["categories"],
     queryFn: listCategories,
+  });
+  const editorial = getCategoryEditorial(slug);
+  const { data: blogPosts = [] } = useQuery({
+    queryKey: ["cat-blogs", slug],
+    enabled: Boolean(editorial?.featuredBlogSlugs?.length),
+    queryFn: async () => {
+      const slugs = editorial?.featuredBlogSlugs ?? [];
+      if (!slugs.length) return [] as Array<{ slug: string; title: string; excerpt: string | null }>;
+      const { data } = await supabase
+        .from("blog_posts")
+        .select("slug,title,short_summary")
+        .in("slug", slugs)
+        .eq("is_published", true);
+      return ((data ?? []) as Array<{ slug: string; title: string; short_summary: string | null }>).map(
+        (r) => ({ slug: r.slug, title: r.title, excerpt: r.short_summary }),
+      );
+    },
   });
 
   if (category === null) return <NotFoundState />;
@@ -130,10 +178,10 @@ function CategoryPage() {
                   </span>
                 </div>
                 <h1 className="text-display-md md:text-display-lg font-display font-semibold tracking-tight text-balance">
-                  {category?.hero_title ?? category?.name ?? prettify(slug)}
+                  {editorial?.headline ?? category?.hero_title ?? category?.name ?? prettify(slug)}
                 </h1>
                 <p className="mt-5 text-body-lg text-muted-foreground max-w-xl">
-                  {category?.full_description ?? category?.short_description}
+                  {editorial?.subheadline ?? category?.full_description ?? category?.short_description}
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <Button size="lg" variant="gradient" asChild>
@@ -145,6 +193,11 @@ function CategoryPage() {
                   <Button size="lg" variant="outline" asChild>
                     <a href="#skill-path">Find my learning path</a>
                   </Button>
+                  {editorial?.featuredBlogSlugs?.length ? (
+                    <Button size="lg" variant="ghost" asChild>
+                      <a href="#insights">Read insights</a>
+                    </Button>
+                  ) : null}
                 </div>
                 <div className="mt-8 inline-flex items-center gap-2 text-caption">
                   <span
@@ -166,6 +219,78 @@ function CategoryPage() {
             </div>
           </Container>
         </Section>
+
+        {/* EDITORIAL OVERVIEW */}
+        {editorial ? (
+          <Section className="py-14 md:py-20 border-t border-border/60">
+            <Container>
+              <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr]">
+                <div>
+                  <SectionIntro
+                    eyebrow="Editorial Overview"
+                    title={`About ${category?.name ?? prettify(slug)}`}
+                  />
+                  <div className="mt-6 space-y-4 text-body text-muted-foreground max-w-xl">
+                    {editorial.overview.map((p, i) => (
+                      <p key={i}>{p}</p>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-border bg-card p-5">
+                    <p className="text-caption uppercase tracking-wider">What it covers</p>
+                    <ul className="mt-3 space-y-2 text-sm">
+                      {editorial.covers.map((c) => (
+                        <li key={c} className="flex gap-2">
+                          <span className="mt-1 size-1.5 shrink-0 rounded-full" style={{ backgroundColor: theme.ring }} />
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-card p-5">
+                    <p className="text-caption uppercase tracking-wider">Industries</p>
+                    <ul className="mt-3 space-y-2 text-sm">
+                      {editorial.industries.map((c) => (
+                        <li key={c} className="flex gap-2">
+                          <span className="mt-1 size-1.5 shrink-0 rounded-full bg-primary/60" />
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="sm:col-span-2 rounded-2xl border border-border bg-card p-5">
+                    <p className="text-caption uppercase tracking-wider">Learning pathways</p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                      {editorial.pathways.map((p) => (
+                        <div key={p.label}>
+                          <p className="font-display text-sm font-semibold">{p.label}</p>
+                          <p className="mt-1 text-caption">{p.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* SKILL MAP */}
+        {editorial?.skillMap?.length ? (
+          <Section className="py-14 md:py-20 bg-surface-2/40 border-t border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Interactive Skill Map"
+                title="How skills in this field connect"
+                copy="Tap a node to see how it links to programs and adjacent skills."
+              />
+              <SkillMap editorial={editorial} courses={list} theme={theme} />
+            </Container>
+          </Section>
+        ) : null}
+
+
 
         {/* FEATURED */}
         {featured.length > 0 ? (
@@ -242,6 +367,125 @@ function CategoryPage() {
           </Container>
         </Section>
 
+        {/* LEARNING INTENT SELECTOR */}
+        {editorial?.learningIntents?.length ? (
+          <Section className="py-14 md:py-20 border-t border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="I Want To Learn…"
+                title="Pick an intent, see a recommendation"
+                copy="A quick way to align an interest with a program in this category."
+              />
+              <LearningIntentSelector editorial={editorial} courses={list} theme={theme} />
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* RELATED SKILLS */}
+        {editorial?.relatedSkills?.length ? (
+          <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Connected Skills"
+                title="Skills that cluster in this field"
+                copy="A snapshot of the surrounding vocabulary — useful when comparing programs or reading further."
+              />
+              <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {editorial.relatedSkills.map((g) => (
+                  <div key={g.group} className="rounded-2xl border border-border bg-card p-5">
+                    <p className="font-display text-base font-semibold" style={{ color: theme.ring }}>
+                      {g.group}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {g.items.map((s) => (
+                        <span key={s} className="rounded-full border border-border px-3 py-1 text-caption">
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* INSIGHTS — RELATED BLOGS */}
+        {editorial?.featuredBlogSlugs?.length && blogPosts.length > 0 ? (
+          <Section id="insights" className="py-14 md:py-20 border-t border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Insights"
+                title="Read alongside these programs"
+                copy="Editorial articles that explain the field before you commit to a program."
+              />
+              <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {blogPosts.map((b) => (
+                  <Link
+                    key={b.slug}
+                    to="/blog/$slug"
+                    params={{ slug: b.slug }}
+                    className="group rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-[3px] hover:shadow-md hover:border-border-strong"
+                  >
+                    <div className="inline-flex items-center gap-2 text-caption">
+                      <BookOpen className="size-3.5" style={{ color: theme.ring }} />
+                      <span className="uppercase tracking-wider">Article</span>
+                    </div>
+                    <h3 className="mt-3 font-display text-base font-semibold leading-snug line-clamp-2">
+                      {b.title}
+                    </h3>
+                    {b.excerpt ? (
+                      <p className="mt-2 text-caption line-clamp-3">{b.excerpt}</p>
+                    ) : null}
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary">
+                      Read insight <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-8">
+                <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-primary">
+                  Browse all articles <ArrowRight className="size-3.5" />
+                </Link>
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
+        {/* PROGRAM COMPARISONS */}
+        {editorial?.comparisons?.length ? (
+          <Section className="py-14 md:py-20 bg-surface-2/40 border-y border-border/60">
+            <Container>
+              <SectionIntro
+                eyebrow="Program Comparisons"
+                title="How to think about the choices"
+                copy="Editorial comparisons for the most common decisions inside this category."
+              />
+              <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {editorial.comparisons.map((c) => (
+                  <div key={c.title} className="rounded-2xl border border-border bg-card p-5 flex flex-col gap-3">
+                    <div className="inline-flex items-center gap-2 text-caption">
+                      <GitCompare className="size-3.5" style={{ color: theme.ring }} />
+                      <span className="uppercase tracking-wider">Compare</span>
+                    </div>
+                    <h3 className="font-display text-lg font-semibold leading-snug">{c.title}</h3>
+                    <p className="text-caption">{c.copy}</p>
+                    {c.blogSlug ? (
+                      <Link
+                        to="/blog/$slug"
+                        params={{ slug: c.blogSlug }}
+                        className="mt-auto inline-flex items-center gap-1 text-sm text-primary"
+                      >
+                        Read the comparison <ArrowRight className="size-3.5" />
+                      </Link>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </Container>
+          </Section>
+        ) : null}
+
         {/* FAQ */}
         <Section className="py-14 md:py-20">
           <Container className="max-w-3xl">
@@ -251,9 +495,10 @@ function CategoryPage() {
               copy="Quick answers on how to explore, compare, and choose programs in this category."
               center
             />
-            <CategoryFAQ categoryName={category?.name ?? prettify(slug)} />
+            <CategoryFAQ categoryName={category?.name ?? prettify(slug)} editorial={editorial} />
           </Container>
         </Section>
+
 
         {/* EXPLORE ANOTHER FIELD */}
         <Section className="py-14 md:py-20 bg-surface-2/40 border-t border-border/60">
@@ -797,14 +1042,226 @@ function WhoItIsFor({ categoryName, courses }: { categoryName: string; courses: 
 }
 
 /* --- FAQ --- */
-function CategoryFAQ({ categoryName }: { categoryName: string }) {
-  const faqs = [
-    { q: `Which ${categoryName} program should I explore first?`, a: `Start with the featured programs above, or use the Skill Path Explorer to see a suggested direction based on what interests you.` },
-    { q: "How do I compare Glintr programs?", a: "Use the Compare Program Directions section on this page. Pick up to three programs from this category to see their level, focus, and starting price side by side." },
-    { q: "Can I view program details before starting an enrollment journey?", a: "Yes. Every program has its own detail page with modules, projects, skills, and pricing. You can also request a counsellor if you need help choosing." },
-    { q: "Do you save what I explore?", a: "The Skill Path Explorer and Comparison Explorer are entirely session-based. Nothing is stored to your account when you're just exploring." },
-    { q: "Are prices shown on Glintr accurate?", a: "Yes — the price on each program card reflects the current offer price for that program. Any EMI or scholarship information is shown on the program's detail page." },
-  ];
+/* --- Interactive Skill Map --- */
+function SkillMap({
+  editorial,
+  courses,
+  theme,
+}: {
+  editorial: CategoryEditorial;
+  courses: ProgramCardData[];
+  theme: (typeof CATEGORY_THEME)[keyof typeof CATEGORY_THEME];
+}) {
+  const nodes = editorial.skillMap;
+  const [activeId, setActiveId] = React.useState<string>(nodes[1]?.id ?? nodes[0]?.id ?? "");
+  const active = nodes.find((n) => n.id === activeId) ?? nodes[0];
+
+  const related = React.useMemo(() => {
+    if (!active?.match?.length) return courses.slice(0, 3);
+    const matched = courses.filter((c) => {
+      const hay = `${c.name} ${c.short_description ?? ""}`.toLowerCase();
+      return active.match.some((m) => hay.includes(m));
+    });
+    return matched.length ? matched.slice(0, 4) : courses.slice(0, 3);
+  }, [active, courses]);
+
+  return (
+    <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+      {/* Node graph */}
+      <div className="relative rounded-2xl border border-border bg-card p-5 md:p-6">
+        <div className="flex items-center gap-2">
+          <Network className="size-4" style={{ color: theme.ring }} />
+          <p className="text-caption uppercase tracking-wider">Skill graph</p>
+        </div>
+        <ol className="mt-5 space-y-2">
+          {nodes.map((n, i) => {
+            const isActive = n.id === activeId;
+            const isRoot = i === 0;
+            return (
+              <li key={n.id} className="relative">
+                {i > 0 ? (
+                  <span
+                    aria-hidden
+                    className="absolute left-4 -top-2 h-2 w-px"
+                    style={{ backgroundColor: `${theme.ring}55` }}
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setActiveId(n.id)}
+                  aria-pressed={isActive}
+                  className={cn(
+                    "group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all",
+                    isActive
+                      ? "border-transparent shadow-sm"
+                      : "border-border hover:border-border-strong",
+                    isRoot && "font-semibold",
+                  )}
+                  style={
+                    isActive
+                      ? { backgroundColor: `${theme.ring}12`, borderColor: theme.ring }
+                      : undefined
+                  }
+                >
+                  <span
+                    className="grid size-8 shrink-0 place-items-center rounded-full text-mono text-[11px] font-semibold"
+                    style={{ backgroundColor: theme.ring, color: "white" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium truncate">{n.label}</div>
+                    <div className="text-caption line-clamp-1 hidden sm:block">{n.note}</div>
+                  </div>
+                  <ChevronRight
+                    className={cn(
+                      "size-4 shrink-0 text-muted-foreground transition-transform",
+                      isActive && "translate-x-0.5",
+                    )}
+                  />
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      {/* Active node detail */}
+      <div
+        className="relative overflow-hidden rounded-2xl border border-border p-6 md:p-8"
+        style={{
+          background: `radial-gradient(80% 80% at 100% 0%, ${theme.from}, transparent 60%), var(--card)`,
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <Layers className="size-4" style={{ color: theme.ring }} />
+          <p className="text-caption uppercase tracking-wider">Node</p>
+        </div>
+        <h3 className="mt-2 font-display text-2xl font-semibold">{active?.label}</h3>
+        <p className="mt-2 text-body text-muted-foreground max-w-md">{active?.note}</p>
+
+        <div className="mt-6">
+          <p className="text-caption uppercase tracking-wider">Related programs</p>
+          {related.length ? (
+            <ul className="mt-3 space-y-2">
+              {related.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    to="/programs/$category/$course"
+                    params={{ category: c.category.slug, course: c.slug }}
+                    className="group flex items-center gap-3 rounded-lg border border-border bg-card p-3 transition-all hover:-translate-y-[2px] hover:shadow-sm hover:border-border-strong"
+                  >
+                    <span
+                      className="size-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: theme.ring }}
+                    />
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium">{c.name}</span>
+                    <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-caption">No programs mapped to this node yet.</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* --- Learning Intent Selector --- */
+function LearningIntentSelector({
+  editorial,
+  courses,
+  theme,
+}: {
+  editorial: CategoryEditorial;
+  courses: ProgramCardData[];
+  theme: (typeof CATEGORY_THEME)[keyof typeof CATEGORY_THEME];
+}) {
+  const [active, setActive] = React.useState(0);
+  const intent = editorial.learningIntents[active] ?? editorial.learningIntents[0];
+
+  const matches = React.useMemo(() => {
+    if (!intent) return [] as ProgramCardData[];
+    const m = courses.filter((c) => {
+      const hay = `${c.name} ${c.short_description ?? ""}`.toLowerCase();
+      return intent.match.some((k) => hay.includes(k));
+    });
+    return (m.length ? m : courses).slice(0, 3);
+  }, [intent, courses]);
+
+  return (
+    <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_1.3fr]">
+      <div className="rounded-2xl border border-border bg-card p-5 md:p-6">
+        <p className="text-caption uppercase tracking-wider">I want to learn…</p>
+        <div className="mt-4 grid gap-2">
+          {editorial.learningIntents.map((it, i) => {
+            const isActive = active === i;
+            return (
+              <button
+                key={it.label}
+                type="button"
+                onClick={() => setActive(i)}
+                aria-pressed={isActive}
+                className={cn(
+                  "text-left rounded-lg border px-4 py-3 text-sm transition-all",
+                  "hover:-translate-y-[2px] hover:shadow-sm",
+                  isActive ? "border-transparent shadow-sm" : "border-border text-muted-foreground",
+                )}
+                style={isActive ? { backgroundColor: `${theme.ring}12`, borderColor: theme.ring } : undefined}
+              >
+                <div className="font-medium text-foreground">{it.label}</div>
+                <div className="text-caption mt-0.5">{it.blurb}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div
+        className="relative overflow-hidden rounded-2xl border border-border p-6 md:p-8"
+        style={{
+          background: `radial-gradient(80% 80% at 100% 0%, ${theme.to}, transparent 60%), var(--card)`,
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <Compass className="size-4" style={{ color: theme.ring }} />
+          <p className="text-caption uppercase tracking-wider">Recommended programs</p>
+        </div>
+        <h3 className="mt-2 font-display text-xl font-semibold">{intent?.label}</h3>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          {matches.map((c) => (
+            <li key={c.id}>
+              <Link
+                to="/programs/$category/$course"
+                params={{ category: c.category.slug, course: c.slug }}
+                className="group block rounded-xl border border-border bg-card p-4 transition-all hover:-translate-y-[2px] hover:shadow-sm hover:border-border-strong"
+              >
+                <div className="font-medium truncate">{c.name}</div>
+                <div className="text-caption mt-1 line-clamp-2">{c.short_description ?? "Explore this program"}</div>
+                <span className="mt-3 inline-flex items-center gap-1 text-sm text-primary">
+                  Open program <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function CategoryFAQ({ categoryName, editorial }: { categoryName: string; editorial?: CategoryEditorial | null }) {
+  const faqs = editorial?.faqs?.length
+    ? editorial.faqs
+    : [
+        { q: `Which ${categoryName} program should I explore first?`, a: `Start with the featured programs above, or use the Skill Path Explorer to see a suggested direction based on what interests you.` },
+        { q: "How do I compare Glintr programs?", a: "Use the Compare Program Directions section on this page. Pick up to three programs from this category to see their level, focus, and starting price side by side." },
+        { q: "Can I view program details before starting an enrollment journey?", a: "Yes. Every program has its own detail page with modules, projects, skills, and pricing. You can also request a counsellor if you need help choosing." },
+        { q: "Do you save what I explore?", a: "The Skill Path Explorer and Comparison Explorer are entirely session-based. Nothing is stored to your account when you're just exploring." },
+        { q: "Are prices shown on Glintr accurate?", a: "Yes — the price on each program card reflects the current offer price for that program. Any EMI or scholarship information is shown on the program's detail page." },
+      ];
   const [open, setOpen] = React.useState<number | null>(0);
   return (
     <ul className="mt-8 space-y-3">
