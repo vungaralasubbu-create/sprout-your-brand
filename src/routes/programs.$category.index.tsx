@@ -193,6 +193,11 @@ function CategoryPage() {
                   <Button size="lg" variant="outline" asChild>
                     <a href="#skill-path">Find my learning path</a>
                   </Button>
+                  {editorial?.featuredBlogSlugs?.length ? (
+                    <Button size="lg" variant="ghost" asChild>
+                      <a href="#insights">Read insights</a>
+                    </Button>
+                  ) : null}
                 </div>
                 <div className="mt-8 inline-flex items-center gap-2 text-caption">
                   <span
