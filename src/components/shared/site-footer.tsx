@@ -71,7 +71,7 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-surface">
+    <footer data-site-footer className="border-t border-border bg-surface">
       <Container className="py-16">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_2.2fr]">
           <div className="flex flex-col gap-5 max-w-sm">
