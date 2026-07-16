@@ -1715,7 +1715,7 @@ function FinalBrandStatement() {
                   "radial-gradient(circle, oklch(0.78 0.16 175 / 0.35), transparent 70%)",
               }}
             />
-            <img src={mark.url} alt="Glintr" className="relative h-24 w-24 object-contain" />
+            <img src={mark.url} alt="Glintr" width={96} height={96} loading="lazy" decoding="async" className="relative h-24 w-24 object-contain" />
           </div>
           <h2 className="mt-8 font-display text-4xl md:text-6xl font-bold tracking-tight text-balance">
             The next skill can change your direction.
