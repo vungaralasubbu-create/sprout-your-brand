@@ -511,11 +511,12 @@ function Page() {
             </Card>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {filteredCatalog.map((c: any) => <BrowseCard key={c.id} c={c} />)}
+              {filteredCatalog.map((c: any) => <BrowseCard key={c.id} c={c} onView={setPreviewCourse} />)}
             </div>
           )}
         </>
       )}
+      <ProgramBriefSheet course={previewCourse} onOpenChange={(open) => !open && setPreviewCourse(null)} />
     </div>
   );
 }
