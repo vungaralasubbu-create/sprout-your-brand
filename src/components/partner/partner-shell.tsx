@@ -26,6 +26,11 @@ import {
   PhoneOff,
   CreditCard,
   LifeBuoy,
+  Sparkles,
+  GraduationCap,
+  Megaphone,
+  Palette,
+  Search,
 } from "lucide-react";
 import { getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
@@ -74,6 +79,14 @@ const GROW: NavItem[] = [
   { to: "/partner/analytics", label: "Analytics", icon: BarChart3 },
 ];
 
+const TOOLKIT: NavItem[] = [
+  { to: "/partner/ai-assistant", label: "AI Assistant", icon: Sparkles },
+  { to: "/partner/marketing", label: "Marketing Assets", icon: Palette },
+  { to: "/partner/academy", label: "Sales Academy", icon: GraduationCap },
+  { to: "/partner/announcements", label: "Announcements", icon: Megaphone },
+  { to: "/partner/search", label: "Search", icon: Search },
+];
+
 export function PartnerShell() {
   const fetchCtx = useServerFn(getPartnerContext);
   const { data } = useQuery({ queryKey: ["partner-context"], queryFn: () => fetchCtx() });
@@ -99,6 +112,7 @@ export function PartnerShell() {
     { label: "Leads", items: LEADS },
     { label: "Revenue", items: [...REVENUE, employmentItem] },
     { label: "Grow", items: GROW },
+    { label: "Toolkit", items: TOOLKIT },
     {
       label: "Workspace",
       items: [
