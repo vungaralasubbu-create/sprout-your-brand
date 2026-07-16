@@ -1,11 +1,20 @@
 import * as React from "react";
+import ReactMarkdown, { type Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { cn } from "@/lib/utils";
 
 /**
- * Tiny safe Markdown renderer for blog article content.
- * Supports: H2/H3 (with anchor ids), paragraphs, unordered lists,
- * ordered lists, blockquotes, inline code, code fences, bold, italic.
- * All output is React nodes — no dangerouslySetInnerHTML, no script execution.
+ * Markdown renderer for article/blog content.
+ *
+ * - Parses GFM (tables, task lists, autolinks, strikethrough).
+ * - Interprets embedded raw HTML instead of printing it as text (rehype-raw),
+ *   then sanitizes it with an allowlist so `<a id="...">` anchors, headings
+ *   with ids, tables, images, code, and lists are all safe.
+ * - Auto-generates stable heading ids (rehype-slug) so table-of-contents
+ *   links resolve without authors having to hand-write `<a id="...">`.
  */
 
 export interface Heading {
@@ -15,14 +24,21 @@ export interface Heading {
 }
 
 export function slugifyHeading(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .slice(0, 80) || "section";
+  return (
+    text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-")
+      .slice(0, 80) || "section"
+  );
 }
 
+/**
+ * Pull H2/H3 headings from raw Markdown for a TOC. Skips fenced code blocks
+ * and matches the id scheme used by rehype-slug (which uses github-slugger
+ * — same shape as our fallback slugifier for typical ASCII headings).
+ */
 export function extractHeadings(markdown: string): Heading[] {
   const lines = markdown.split(/\r?\n/);
   const out: Heading[] = [];
@@ -37,7 +53,12 @@ export function extractHeadings(markdown: string): Heading[] {
     const m = /^(#{2,3})\s+(.+)$/.exec(raw);
     if (!m) continue;
     const level = m[1].length as 2 | 3;
-    const text = m[2].trim();
+    // Strip inline markdown emphasis / code markers from the visible label.
+    const text = m[2]
+      .trim()
+      .replace(/`([^`]+)`/g, "$1")
+      .replace(/\*\*([^*]+)\*\*/g, "$1")
+      .replace(/\*([^*]+)\*/g, "$1");
     let id = slugifyHeading(text);
     const c = used.get(id) ?? 0;
     if (c > 0) id = `${id}-${c}`;
@@ -47,163 +68,160 @@ export function extractHeadings(markdown: string): Heading[] {
   return out;
 }
 
-function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
-  // order matters: code -> bold -> italic
-  const nodes: React.ReactNode[] = [];
-  let key = 0;
-  const push = (n: React.ReactNode) => nodes.push(<React.Fragment key={`${keyPrefix}-${key++}`}>{n}</React.Fragment>);
-  const regex = /(`[^`]+`)|(\*\*[^*]+\*\*)|(\*[^*]+\*)/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  while ((m = regex.exec(text))) {
-    if (m.index > last) push(text.slice(last, m.index));
-    const tok = m[0];
-    if (tok.startsWith("`")) push(<code className="rounded bg-muted px-1.5 py-0.5 text-[0.9em]">{tok.slice(1, -1)}</code>);
-    else if (tok.startsWith("**")) push(<strong>{tok.slice(2, -2)}</strong>);
-    else push(<em>{tok.slice(1, -1)}</em>);
-    last = m.index + tok.length;
-  }
-  if (last < text.length) push(text.slice(last));
-  return nodes;
-}
+// Sanitize schema: start from the safe default, then allow id on headings
+// and anchors (needed for TOC / in-page navigation), plus class on code
+// blocks (needed for syntax highlighting styles).
+const sanitizeSchema = {
+  ...defaultSchema,
+  attributes: {
+    ...defaultSchema.attributes,
+    "*": [...(defaultSchema.attributes?.["*"] ?? []), "id"],
+    a: [
+      ...(defaultSchema.attributes?.a ?? []),
+      "id",
+      "name",
+      "target",
+      "rel",
+    ],
+    code: [...(defaultSchema.attributes?.code ?? []), "className"],
+    span: [...(defaultSchema.attributes?.span ?? []), "className", "id"],
+  },
+  // Allow standalone anchor placeholders like <a id="roadmap"></a>.
+  tagNames: [...(defaultSchema.tagNames ?? [])],
+};
 
-interface Block {
-  type: "p" | "h2" | "h3" | "ul" | "ol" | "quote" | "code";
-  content?: string;
-  items?: string[];
-  lang?: string;
-}
+const components: Components = {
+  h1: ({ node, ...props }) => (
+    <h1
+      {...props}
+      className="font-display text-3xl md:text-4xl font-semibold mt-14 mb-4 scroll-mt-28"
+    />
+  ),
+  h2: ({ node, ...props }) => (
+    <h2
+      {...props}
+      className="font-display text-2xl md:text-3xl font-semibold mt-14 mb-4 scroll-mt-28"
+    />
+  ),
+  h3: ({ node, ...props }) => (
+    <h3
+      {...props}
+      className="font-display text-xl font-semibold mt-10 mb-3 scroll-mt-28"
+    />
+  ),
+  h4: ({ node, ...props }) => (
+    <h4 {...props} className="font-display text-lg font-semibold mt-8 mb-2 scroll-mt-28" />
+  ),
+  p: ({ node, ...props }) => (
+    <p {...props} className="text-body text-muted-foreground leading-relaxed my-5" />
+  ),
+  a: ({ node, href, children, id, ...props }) => {
+    // Empty anchor placeholder → render an invisible in-page target only.
+    const hasText =
+      React.Children.count(children) > 0 &&
+      React.Children.toArray(children).some((c) =>
+        typeof c === "string" ? c.trim().length > 0 : true,
+      );
+    if (!hasText && !href && id) {
+      return <span id={id} aria-hidden="true" className="block h-0 scroll-mt-28" />;
+    }
+    const external = href?.startsWith("http");
+    return (
+      <a
+        {...props}
+        id={id}
+        href={href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer noopener" : undefined}
+        className="text-primary underline underline-offset-4 hover:opacity-80"
+      >
+        {children}
+      </a>
+    );
+  },
+  ul: ({ node, ...props }) => (
+    <ul
+      {...props}
+      className="my-5 space-y-2 list-disc pl-6 text-body text-muted-foreground leading-relaxed marker:text-primary"
+    />
+  ),
+  ol: ({ node, ...props }) => (
+    <ol
+      {...props}
+      className="my-5 space-y-2 list-decimal pl-6 text-body text-muted-foreground leading-relaxed marker:text-primary"
+    />
+  ),
+  li: ({ node, ...props }) => <li {...props} className="leading-relaxed" />,
+  blockquote: ({ node, ...props }) => (
+    <blockquote
+      {...props}
+      className="my-8 border-l-4 border-primary bg-muted/30 pl-5 py-3 italic text-foreground/90"
+    />
+  ),
+  code: ({ node, className, children, ...props }) => {
+    const isBlock = /language-/.test(className ?? "");
+    if (isBlock) {
+      return (
+        <code {...props} className={className}>
+          {children}
+        </code>
+      );
+    }
+    return (
+      <code
+        {...props}
+        className="rounded bg-muted px-1.5 py-0.5 text-[0.9em] font-mono"
+      >
+        {children}
+      </code>
+    );
+  },
+  pre: ({ node, ...props }) => (
+    <pre
+      {...props}
+      className="my-6 overflow-x-auto rounded-xl bg-secondary text-secondary-foreground p-4 text-sm"
+    />
+  ),
+  table: ({ node, ...props }) => (
+    <div className="my-6 overflow-x-auto rounded-xl border">
+      <table {...props} className="w-full text-sm" />
+    </div>
+  ),
+  thead: ({ node, ...props }) => <thead {...props} className="bg-muted/40" />,
+  th: ({ node, ...props }) => (
+    <th {...props} className="border-b px-4 py-2 text-left font-semibold" />
+  ),
+  td: ({ node, ...props }) => (
+    <td {...props} className="border-b px-4 py-2 align-top" />
+  ),
+  img: ({ node, alt, ...props }) => (
+    <img
+      {...props}
+      alt={alt ?? ""}
+      loading="lazy"
+      className="my-8 w-full rounded-xl border"
+    />
+  ),
+  hr: ({ node, ...props }) => <hr {...props} className="my-10 border-border" />,
+  strong: ({ node, ...props }) => <strong {...props} className="text-foreground font-semibold" />,
+};
 
-function parse(markdown: string): { blocks: Block[]; anchors: Heading[] } {
-  const lines = markdown.replace(/\r\n/g, "\n").split("\n");
-  const blocks: Block[] = [];
-  const used = new Map<string, number>();
-  const anchors: Heading[] = [];
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-    if (!line.trim()) { i++; continue; }
-    // code fence
-    if (line.startsWith("```")) {
-      const lang = line.slice(3).trim();
-      const buf: string[] = [];
-      i++;
-      while (i < lines.length && !lines[i].startsWith("```")) { buf.push(lines[i]); i++; }
-      i++;
-      blocks.push({ type: "code", content: buf.join("\n"), lang });
-      continue;
-    }
-    // heading
-    const h = /^(#{2,3})\s+(.+)$/.exec(line);
-    if (h) {
-      const level = h[1].length as 2 | 3;
-      const text = h[2].trim();
-      let id = slugifyHeading(text);
-      const c = used.get(id) ?? 0;
-      if (c > 0) id = `${id}-${c}`;
-      used.set(id, c + 1);
-      anchors.push({ id, text, level });
-      blocks.push({ type: level === 2 ? "h2" : "h3", content: `${id}::${text}` });
-      i++;
-      continue;
-    }
-    // quote
-    if (line.startsWith("> ")) {
-      const buf: string[] = [];
-      while (i < lines.length && lines[i].startsWith("> ")) { buf.push(lines[i].slice(2)); i++; }
-      blocks.push({ type: "quote", content: buf.join(" ") });
-      continue;
-    }
-    // unordered list
-    if (/^[-*]\s+/.test(line)) {
-      const items: string[] = [];
-      while (i < lines.length && /^[-*]\s+/.test(lines[i])) {
-        items.push(lines[i].replace(/^[-*]\s+/, ""));
-        i++;
-      }
-      blocks.push({ type: "ul", items });
-      continue;
-    }
-    // ordered list
-    if (/^\d+\.\s+/.test(line)) {
-      const items: string[] = [];
-      while (i < lines.length && /^\d+\.\s+/.test(lines[i])) {
-        items.push(lines[i].replace(/^\d+\.\s+/, ""));
-        i++;
-      }
-      blocks.push({ type: "ol", items });
-      continue;
-    }
-    // paragraph (single or multi-line until blank)
-    const buf = [line];
-    i++;
-    while (i < lines.length && lines[i].trim() && !/^(#{2,3}\s|>\s|[-*]\s|\d+\.\s|```)/.test(lines[i])) {
-      buf.push(lines[i]);
-      i++;
-    }
-    blocks.push({ type: "p", content: buf.join(" ") });
-  }
-  return { blocks, anchors };
-}
-
-export function ArticleMarkdown({ markdown, className }: { markdown: string; className?: string }) {
-  const { blocks } = React.useMemo(() => parse(markdown), [markdown]);
+export function ArticleMarkdown({
+  markdown,
+  className,
+}: {
+  markdown: string;
+  className?: string;
+}) {
   return (
     <div className={cn("article-body", className)}>
-      {blocks.map((b, idx) => {
-        if (b.type === "h2") {
-          const [id, text] = (b.content ?? "").split("::");
-          return (
-            <h2 key={idx} id={id} className="font-display text-2xl md:text-3xl font-semibold mt-14 mb-4 scroll-mt-28">
-              {text}
-            </h2>
-          );
-        }
-        if (b.type === "h3") {
-          const [id, text] = (b.content ?? "").split("::");
-          return (
-            <h3 key={idx} id={id} className="font-display text-xl font-semibold mt-10 mb-3 scroll-mt-28">
-              {text}
-            </h3>
-          );
-        }
-        if (b.type === "p") {
-          return (
-            <p key={idx} className="text-body text-muted-foreground leading-relaxed my-5">
-              {renderInline(b.content ?? "", `p-${idx}`)}
-            </p>
-          );
-        }
-        if (b.type === "quote") {
-          return (
-            <blockquote key={idx} className="my-8 border-l-4 border-primary bg-muted/30 pl-5 py-3 italic text-foreground/90">
-              {renderInline(b.content ?? "", `q-${idx}`)}
-            </blockquote>
-          );
-        }
-        if (b.type === "ul") {
-          return (
-            <ul key={idx} className="my-5 space-y-2 list-disc pl-6 text-body text-muted-foreground leading-relaxed marker:text-primary">
-              {b.items!.map((it, i) => <li key={i}>{renderInline(it, `ul-${idx}-${i}`)}</li>)}
-            </ul>
-          );
-        }
-        if (b.type === "ol") {
-          return (
-            <ol key={idx} className="my-5 space-y-2 list-decimal pl-6 text-body text-muted-foreground leading-relaxed marker:text-primary">
-              {b.items!.map((it, i) => <li key={i}>{renderInline(it, `ol-${idx}-${i}`)}</li>)}
-            </ol>
-          );
-        }
-        if (b.type === "code") {
-          return (
-            <pre key={idx} className="my-6 overflow-x-auto rounded-xl bg-secondary text-secondary-foreground p-4 text-sm">
-              <code>{b.content}</code>
-            </pre>
-          );
-        }
-        return null;
-      })}
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw, rehypeSlug, [rehypeSanitize, sanitizeSchema]]}
+        components={components}
+      >
+        {markdown}
+      </ReactMarkdown>
     </div>
   );
 }
