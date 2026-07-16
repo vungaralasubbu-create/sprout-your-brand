@@ -255,6 +255,17 @@ function CoursePage() {
   const whyContent = sectionMap.get("why_this_program")?.content as
     | { headline?: string; body?: string; points?: string[] }
     | undefined;
+  const editorial = getProgramEditorial(c.slug);
+  const editorialBlogs = getRelatedBlogsForProgram(c.slug);
+  const displayAudience = audienceCards.length > 0 ? audienceCards : (editorial.audience ?? []);
+  const displayFaqs = c.faqs.length > 0 ? c.faqs : (editorial.faqs ?? []);
+  const whyPoints =
+    whyContent?.points && whyContent.points.length > 0
+      ? whyContent.points
+      : (editorial.whyPoints ?? []);
+  const whyBody = whyContent?.body ?? c.full_description ?? editorial.overview ?? null;
+  const showWhySection = Boolean(whyBody || whyPoints.length);
+
 
   return (
     <PageShell>
