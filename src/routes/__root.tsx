@@ -186,7 +186,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AnalyticsProvider />
+      <RouteTracker />
       <Outlet />
+      <StickyActionBar />
+      <FloatingAiHelp />
+      <ExitIntent />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
