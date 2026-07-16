@@ -394,6 +394,7 @@ import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
 import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport } from './routes/_authenticated/ambassador.marketing-resources.programs.$slug'
+import { Route as AuthenticatedAdminCoursesIdAiStudioRouteImport } from './routes/_authenticated/admin.courses.$id.ai-studio'
 import { Route as AuthenticatedAdminContentArticlesIdRouteImport } from './routes/_authenticated/admin.content.articles.$id'
 import { Route as AuthenticatedStudentInternshipIdTasksTaskIdRouteImport } from './routes/_authenticated/student.internship.$id.tasks.$taskId'
 import { Route as AuthenticatedStudentCareerInterviewIdReportRouteImport } from './routes/_authenticated/student.career.interview.$id.report'
@@ -2578,6 +2579,12 @@ const AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute =
     path: '/marketing-resources/programs/$slug',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAdminCoursesIdAiStudioRoute =
+  AuthenticatedAdminCoursesIdAiStudioRouteImport.update({
+    id: '/ai-studio',
+    path: '/ai-studio',
+    getParentRoute: () => AuthenticatedAdminCoursesIdRoute,
+  } as any)
 const AuthenticatedAdminContentArticlesIdRoute =
   AuthenticatedAdminContentArticlesIdRouteImport.update({
     id: '/articles/$id',
@@ -2907,7 +2914,7 @@ export interface FileRoutesByFullPath {
   '/admin/content/seo': typeof AuthenticatedAdminContentSeoRoute
   '/admin/content/settings': typeof AuthenticatedAdminContentSettingsRoute
   '/admin/content/tags': typeof AuthenticatedAdminContentTagsRoute
-  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
@@ -2977,6 +2984,7 @@ export interface FileRoutesByFullPath {
   '/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
+  '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -3282,7 +3290,7 @@ export interface FileRoutesByTo {
   '/admin/content/seo': typeof AuthenticatedAdminContentSeoRoute
   '/admin/content/settings': typeof AuthenticatedAdminContentSettingsRoute
   '/admin/content/tags': typeof AuthenticatedAdminContentTagsRoute
-  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
@@ -3352,6 +3360,7 @@ export interface FileRoutesByTo {
   '/student/support': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
+  '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -3673,7 +3682,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content/seo': typeof AuthenticatedAdminContentSeoRoute
   '/_authenticated/admin/content/settings': typeof AuthenticatedAdminContentSettingsRoute
   '/_authenticated/admin/content/tags': typeof AuthenticatedAdminContentTagsRoute
-  '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRoute
+  '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/_authenticated/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/_authenticated/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
@@ -3743,6 +3752,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
   '/_authenticated/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
+  '/_authenticated/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
   '/_authenticated/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -4134,6 +4144,7 @@ export interface FileRouteTypes {
     | '/student/support/'
     | '/programs/$category/$course/'
     | '/admin/content/articles/$id'
+    | '/admin/courses/$id/ai-studio'
     | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -4509,6 +4520,7 @@ export interface FileRouteTypes {
     | '/student/support'
     | '/programs/$category/$course'
     | '/admin/content/articles/$id'
+    | '/admin/courses/$id/ai-studio'
     | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -4899,6 +4911,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/'
     | '/programs/$category/$course/'
     | '/_authenticated/admin/content/articles/$id'
+    | '/_authenticated/admin/courses/$id/ai-studio'
     | '/_authenticated/ambassador/marketing-resources/programs/$slug'
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
@@ -7683,6 +7696,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/admin/courses/$id/ai-studio': {
+      id: '/_authenticated/admin/courses/$id/ai-studio'
+      path: '/ai-studio'
+      fullPath: '/admin/courses/$id/ai-studio'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIdAiStudioRouteImport
+      parentRoute: typeof AuthenticatedAdminCoursesIdRoute
+    }
     '/_authenticated/admin/content/articles/$id': {
       id: '/_authenticated/admin/content/articles/$id'
       path: '/articles/$id'
@@ -8043,6 +8063,21 @@ const AuthenticatedAdminSupportRouteWithChildren =
     AuthenticatedAdminSupportRouteChildren,
   )
 
+interface AuthenticatedAdminCoursesIdRouteChildren {
+  AuthenticatedAdminCoursesIdAiStudioRoute: typeof AuthenticatedAdminCoursesIdAiStudioRoute
+}
+
+const AuthenticatedAdminCoursesIdRouteChildren: AuthenticatedAdminCoursesIdRouteChildren =
+  {
+    AuthenticatedAdminCoursesIdAiStudioRoute:
+      AuthenticatedAdminCoursesIdAiStudioRoute,
+  }
+
+const AuthenticatedAdminCoursesIdRouteWithChildren =
+  AuthenticatedAdminCoursesIdRoute._addFileChildren(
+    AuthenticatedAdminCoursesIdRouteChildren,
+  )
+
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAccessRestrictedRoute: typeof AuthenticatedAdminAccessRestrictedRoute
   AuthenticatedAdminAccountRoute: typeof AuthenticatedAdminAccountRoute
@@ -8094,7 +8129,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAutomationAuditRoute: typeof AuthenticatedAdminAutomationAuditRoute
   AuthenticatedAdminAutomationHistoryRoute: typeof AuthenticatedAdminAutomationHistoryRoute
   AuthenticatedAdminBlogsIdRoute: typeof AuthenticatedAdminBlogsIdRoute
-  AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRoute
+  AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRouteWithChildren
   AuthenticatedAdminEmployeesIdRoute: typeof AuthenticatedAdminEmployeesIdRoute
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
   AuthenticatedAdminPaymentLinksIdRoute: typeof AuthenticatedAdminPaymentLinksIdRoute
@@ -8183,7 +8218,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAutomationHistoryRoute:
     AuthenticatedAdminAutomationHistoryRoute,
   AuthenticatedAdminBlogsIdRoute: AuthenticatedAdminBlogsIdRoute,
-  AuthenticatedAdminCoursesIdRoute: AuthenticatedAdminCoursesIdRoute,
+  AuthenticatedAdminCoursesIdRoute:
+    AuthenticatedAdminCoursesIdRouteWithChildren,
   AuthenticatedAdminEmployeesIdRoute: AuthenticatedAdminEmployeesIdRoute,
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
   AuthenticatedAdminPaymentLinksIdRoute: AuthenticatedAdminPaymentLinksIdRoute,
