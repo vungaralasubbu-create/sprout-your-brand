@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { listMyPrograms } from "@/lib/student/lms.functions";
-import { listCourses, listCategories, formatPrice } from "@/lib/programs";
+import { listCourses, listCategories, formatPrice, getPricingSettings, resolvePricingDisplay } from "@/lib/programs";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { BookOpen, Search, GraduationCap, Award, Clock, Layers, Sparkles, Eye, CheckCircle2, Signal, IndianRupee } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { ProgramPriceDisplay } from "@/components/student/programs/program-price-display";
+
 
 export const Route = createFileRoute("/_authenticated/student/programs/")({ component: Page });
 
@@ -122,9 +124,17 @@ function EmptyState({ onBrowse }: { onBrowse: () => void }) {
   );
 }
 
-function BrowseCard({ c, onView }: { c: any; onView: (course: any) => void }) {
-  const price = c.offer_price ?? c.base_price;
-  const hasDiscount = c.offer_price && c.base_price && c.offer_price < c.base_price;
+function BrowseCard({ c, onView, pricingSettings }: { c: any; onView: (course: any) => void; pricingSettings: any }) {
+  const pricing = resolvePricingDisplay(
+    {
+      base_price: c.base_price,
+      offer_price: c.offer_price,
+      currency: c.currency,
+      scholarship_available: c.scholarship_available ?? false,
+      pricing_notes: c.pricing_notes ?? null,
+    },
+    pricingSettings,
+  );
   return (
     <Card className="p-0 overflow-hidden group hover:shadow-md transition-shadow flex flex-col">
       <button
@@ -164,26 +174,23 @@ function BrowseCard({ c, onView }: { c: any; onView: (course: any) => void }) {
           )}
         </div>
         <div className="mt-auto pt-2 flex items-end justify-between gap-3">
-          <div>
-            {price != null ? (
-              <>
-                <div className="font-display text-lg font-semibold leading-none">{formatPrice(price, c.currency ?? "INR")}</div>
-                {hasDiscount && (
-                  <div className="text-[11px] text-muted-foreground line-through mt-0.5">{formatPrice(c.base_price, c.currency ?? "INR")}</div>
-                )}
-              </>
-            ) : (
-              <div className="text-[11px] text-muted-foreground">Contact for pricing</div>
-            )}
+          <ProgramPriceDisplay pricing={pricing} size="md" />
+          <div className="flex flex-col gap-1.5 shrink-0">
+            <Button size="sm" asChild>
+              <Link to="/student/programs/view/$slug" params={{ slug: c.slug }}>
+                View Details
+              </Link>
+            </Button>
+            <Button size="sm" variant="ghost" className="h-7 text-[11px]" onClick={() => onView(c)}>
+              <Eye className="size-3 mr-1" /> Quick View
+            </Button>
           </div>
-          <Button size="sm" variant="outline" onClick={() => onView(c)}>
-            <Eye className="size-3.5 mr-1" /> View Brief
-          </Button>
         </div>
       </div>
     </Card>
   );
 }
+
 
 function toStringList(value: unknown): string[] {
   if (!value) return [];
@@ -288,13 +295,16 @@ function ProgramBriefSheet({ course, onOpenChange }: { course: any | null; onOpe
               )}
 
               <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-border/70">
-                <Button className="flex-1" onClick={() => onOpenChange(false)}>
-                  <Sparkles className="size-4 mr-1.5" /> Request Enrollment
+                <Button asChild className="flex-1">
+                  <Link to="/student/programs/view/$slug" params={{ slug: c.slug }} onClick={() => onOpenChange(false)}>
+                    <Sparkles className="size-4 mr-1.5" /> View Full Details
+                  </Link>
                 </Button>
                 <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>
                   Close
                 </Button>
               </div>
+
               <p className="text-[11px] text-muted-foreground text-center">
                 Your Glintr advisor will confirm access and unlock this program in your workspace.
               </p>
@@ -324,8 +334,13 @@ function Page() {
     queryFn: () => listCategories(),
     enabled: tab === "browse",
   });
+  const { data: pricingSettings } = useQuery({
+    queryKey: ["pricing-settings"],
+    queryFn: () => getPricingSettings(),
+  });
   const [catFilter, setCatFilter] = useState<string>("all");
   const [browseQ, setBrowseQ] = useState("");
+
   const [previewCourse, setPreviewCourse] = useState<any | null>(null);
 
   const filtered = useMemo(() => {
@@ -511,7 +526,7 @@ function Page() {
             </Card>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {filteredCatalog.map((c: any) => <BrowseCard key={c.id} c={c} onView={setPreviewCourse} />)}
+              {filteredCatalog.map((c: any) => <BrowseCard key={c.id} c={c} onView={setPreviewCourse} pricingSettings={pricingSettings} />)}
             </div>
           )}
         </>
