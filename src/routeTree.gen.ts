@@ -26,6 +26,7 @@ import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as MyRouteImport } from './routes/my'
 import { Route as MarketingSupportRouteImport } from './routes/marketing-support'
 import { Route as LmsRouteImport } from './routes/lms'
+import { Route as LiveRouteImport } from './routes/live'
 import { Route as LearningPathsRouteImport } from './routes/learning-paths'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as KnowledgeGraphRouteImport } from './routes/knowledge-graph'
@@ -404,6 +405,11 @@ const MarketingSupportRoute = MarketingSupportRouteImport.update({
 const LmsRoute = LmsRouteImport.update({
   id: '/lms',
   path: '/lms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LiveRoute = LiveRouteImport.update({
+  id: '/live',
+  path: '/live',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearningPathsRoute = LearningPathsRouteImport.update({
@@ -2101,6 +2107,7 @@ export interface FileRoutesByFullPath {
   '/knowledge-graph': typeof KnowledgeGraphRoute
   '/learn': typeof LearnRouteWithChildren
   '/learning-paths': typeof LearningPathsRouteWithChildren
+  '/live': typeof LiveRoute
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/my': typeof MyRouteWithChildren
@@ -2412,6 +2419,7 @@ export interface FileRoutesByTo {
   '/join': typeof JoinRoute
   '/knowledge-graph': typeof KnowledgeGraphRoute
   '/learning-paths': typeof LearningPathsRouteWithChildren
+  '/live': typeof LiveRoute
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/partner-network': typeof PartnerNetworkRoute
@@ -2715,6 +2723,7 @@ export interface FileRoutesById {
   '/knowledge-graph': typeof KnowledgeGraphRoute
   '/learn': typeof LearnRouteWithChildren
   '/learning-paths': typeof LearningPathsRouteWithChildren
+  '/live': typeof LiveRoute
   '/lms': typeof LmsRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/my': typeof MyRouteWithChildren
@@ -3029,6 +3038,7 @@ export interface FileRouteTypes {
     | '/knowledge-graph'
     | '/learn'
     | '/learning-paths'
+    | '/live'
     | '/lms'
     | '/marketing-support'
     | '/my'
@@ -3340,6 +3350,7 @@ export interface FileRouteTypes {
     | '/join'
     | '/knowledge-graph'
     | '/learning-paths'
+    | '/live'
     | '/lms'
     | '/marketing-support'
     | '/partner-network'
@@ -3642,6 +3653,7 @@ export interface FileRouteTypes {
     | '/knowledge-graph'
     | '/learn'
     | '/learning-paths'
+    | '/live'
     | '/lms'
     | '/marketing-support'
     | '/my'
@@ -3956,6 +3968,7 @@ export interface RootRouteChildren {
   KnowledgeGraphRoute: typeof KnowledgeGraphRoute
   LearnRoute: typeof LearnRouteWithChildren
   LearningPathsRoute: typeof LearningPathsRouteWithChildren
+  LiveRoute: typeof LiveRoute
   LmsRoute: typeof LmsRoute
   MarketingSupportRoute: typeof MarketingSupportRoute
   MyRoute: typeof MyRouteWithChildren
@@ -4113,6 +4126,13 @@ declare module '@tanstack/react-router' {
       path: '/lms'
       fullPath: '/lms'
       preLoaderRoute: typeof LmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/live': {
+      id: '/live'
+      path: '/live'
+      fullPath: '/live'
+      preLoaderRoute: typeof LiveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learning-paths': {
@@ -7187,6 +7207,7 @@ const rootRouteChildren: RootRouteChildren = {
   KnowledgeGraphRoute: KnowledgeGraphRoute,
   LearnRoute: LearnRouteWithChildren,
   LearningPathsRoute: LearningPathsRouteWithChildren,
+  LiveRoute: LiveRoute,
   LmsRoute: LmsRoute,
   MarketingSupportRoute: MarketingSupportRoute,
   MyRoute: MyRouteWithChildren,
