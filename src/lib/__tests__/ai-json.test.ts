@@ -116,5 +116,92 @@ test("parses large markdown body (>15,000 chars) with escapes", () => {
   assert(out.body_markdown.includes("\t"), "tab preserved");
 });
 
+// --- 4,000-word article integration test with FAQs + SEO + image prompts ---
+// This reproduces the EXACT failure mode reported by the user: Gemini
+// returning a JSON envelope containing markdown with regex/LaTeX/Windows-path
+// backslashes. Before the fix, JSON.parse throws "Bad escaped character in
+// JSON" here. After the fix, parseAiJson repairs and returns the full draft.
+test("parses simulated 4,000-word AI draft (FAQs + SEO + image prompts + regex + LaTeX)", () => {
+  const paras: string[] = [];
+  let words = 0;
+  let i = 0;
+  while (words < 4000) {
+    i++;
+    const p =
+      `## Section ${i}: Deep Dive\n\n` +
+      `Paragraph ${i} discusses regex like \\d+ and \\w+, LaTeX like \\alpha and \\sum_{n=1}^{k}, ` +
+      `and Windows paths such as C:\\Users\\model\\weights.bin. It also uses tabs\there\tand newlines.\n\n` +
+      "| Metric | Value |\n|--------|-------|\n| Accuracy | 92% |\n| F1 | 0.88 |\n\n" +
+      "> **Note:** Always validate your training data.\n\n" +
+      "- Bullet with a \\backslash\n- Bullet with quotes \"inline\"\n- Bullet with a link [Glintr](/programs)\n\n";
+    paras.push(p);
+    words += p.split(/\s+/).filter(Boolean).length;
+  }
+  const body = ["{{HERO_IMAGE}}\n", ...paras, "{{SECTION_IMAGE_1}}", "{{SECTION_IMAGE_2}}"].join("\n");
+  assert(body.split(/\s+/).filter(Boolean).length >= 4000, "body should be >= 4000 words");
+
+  // Simulate the raw AI response: single JSON envelope with body_markdown,
+  // faqs (with quotes and backslashes), seo, and image_plan.prompt strings.
+  const faqs = [
+    { question: 'What does \\d+ mean?', answer: "It matches one or more digits.\nExample:\t\\d{2,4}" },
+    { question: "How do I set PYTHONPATH on Windows?", answer: "Use C:\\Users\\you\\envs on the path." },
+    { question: "What is the loss function?", answer: "We minimize \\sum_i (y_i - \\hat y_i)^2." },
+  ];
+  const draft = {
+    title: "The 4,000-Word Test Article",
+    slug: "four-thousand-word-test",
+    seo_title: "4,000-Word Test — Regex, LaTeX, Paths",
+    seo_description: "A stress test with regex \\d+, LaTeX \\alpha, and Windows paths C:\\Users.",
+    body_markdown: body,
+    faqs,
+    keywords: ["regex", "\\d+", "latex", "training"],
+    image_plan: {
+      hero: { prompt: "cyber-editorial hero, no text, C:\\Users lighting hint", alt: "Hero" },
+      sections: [
+        { key: "SECTION_IMAGE_1", prompt: "diagram of \\alpha decay", alt: "Alpha" },
+        { key: "SECTION_IMAGE_2", prompt: "matrix showing \\sum operator", alt: "Sum" },
+      ],
+    },
+  };
+
+  // Build the raw response the way the model emits it: JSON.stringify would
+  // escape correctly, but we deliberately break it — inject a single-backslash
+  // \d and \alpha and C:\Users the way Gemini sometimes does under load —
+  // to prove the parser can repair the exact defect.
+  const proper = JSON.stringify(draft);
+  const corrupted = proper
+    // Reintroduce single-backslash escapes the model tends to emit:
+    .replace(/\\\\d\+/g, "\\d+")
+    .replace(/\\\\w\+/g, "\\w+")
+    .replace(/\\\\alpha/g, "\\alpha")
+    .replace(/\\\\sum/g, "\\sum")
+    .replace(/\\\\hat/g, "\\hat")
+    .replace(/C:\\\\Users/g, "C:\\Users");
+  const raw = "```json\n" + corrupted + "\n```";
+  assert(raw.length > 15000, `raw payload should be large, got ${raw.length}`);
+
+  // Sanity: strict JSON.parse must FAIL on the corrupted payload — this is
+  // the exact "Bad escaped character in JSON" scenario.
+  let strictFailed = false;
+  try {
+    JSON.parse(corrupted);
+  } catch (e: any) {
+    strictFailed = true;
+    assert(/bad escaped|unexpected|invalid|escape/i.test(e.message), `unexpected error: ${e.message}`);
+  }
+  assert(strictFailed, "strict JSON.parse should fail on corrupted payload");
+
+  // The robust parser must recover the full draft.
+  const out = parseAiJson<any>(raw);
+  eq(out.title, "The 4,000-Word Test Article");
+  eq(out.slug, "four-thousand-word-test");
+  assert(out.faqs.length === 3, "faqs preserved");
+  assert(out.keywords.includes("regex"), "keywords preserved");
+  assert(out.body_markdown.length > 10000, `body preserved, got ${out.body_markdown.length}`);
+  assert(out.body_markdown.includes("{{HERO_IMAGE}}"), "hero token preserved");
+  assert(out.body_markdown.includes("{{SECTION_IMAGE_1}}"), "section token preserved");
+  assert(out.image_plan?.hero?.prompt, "image_plan.hero.prompt preserved");
+});
+
 console.log(`\n${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

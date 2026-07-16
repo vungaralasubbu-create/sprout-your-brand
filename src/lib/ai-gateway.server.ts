@@ -46,10 +46,26 @@ async function rawChat(opts: {
 }
 
 /**
- * Call the AI Gateway and parse its response as JSON. Uses a robust parser
- * that repairs common defects (code fences, control chars in strings, stray
- * backslashes, trailing commas). Retries ONCE on parse failure with a strict
- * reminder, then throws with the invalid payload logged for developers only.
+ * Call the AI Gateway and return the raw string content (no JSON parse).
+ * Use this when the payload is prose/markdown so no JSON escaping applies —
+ * the root fix for "Bad escaped character in JSON" when markdown contains
+ * regex-like tokens (\d, \w, \s), LaTeX (\alpha), or Windows paths.
+ */
+export async function callLovableAiText(opts: {
+  messages: ChatMessage[];
+  model?: string;
+  temperature?: number;
+}): Promise<string> {
+  return rawChat({ ...opts, jsonMode: false });
+}
+
+/**
+ * Call the AI Gateway and parse its response as JSON.
+ *
+ * Diagnostics: on parse failure the RAW response is logged (developer only,
+ * never surfaced to end users) along with the offset and offending field.
+ * A single automatic retry is issued with a strict "escape everything"
+ * reminder before failing with a friendly error.
  */
 export async function callLovableAiJson<T = unknown>(opts: {
   messages: ChatMessage[];
@@ -68,35 +84,35 @@ export async function callLovableAiJson<T = unknown>(opts: {
     return parseAiJson<T>(raw);
   } catch (err) {
     if (err instanceof AiJsonParseError) {
-      // Developer log — never surfaced to end users.
-      console.error("[callLovableAiJson] parse failed on first attempt", {
-        field: err.field,
+      // Developer log — full raw payload for diagnosis, NEVER shown to users.
+      console.error("[callLovableAiJson] JSON.parse failed (attempt 1)", {
+        parseError: err.message,
         offset: err.offset,
+        field: err.field,
         truncated: err.truncated,
-        message: err.message,
-        preview: err.raw.slice(0, 400),
+        rawResponse: err.raw,
       });
     } else {
-      console.error("[callLovableAiJson] parse failed on first attempt", err);
+      console.error("[callLovableAiJson] non-parse failure (attempt 1)", err);
     }
     // Retry once with a strict reminder.
     raw = await attempt(
       "Your previous response was not valid JSON. Return ONLY a single JSON object. " +
-        "Escape every newline, tab, and backslash inside string values. " +
+        "Escape every backslash, newline, tab, and double-quote inside string values " +
+        "(\\\\ for a literal backslash, \\n for newline, \\t for tab, \\\" for a quote). " +
         "Do not wrap the JSON in markdown code fences.",
     );
     try {
       return parseAiJson<T>(raw);
     } catch (err2) {
       if (err2 instanceof AiJsonParseError) {
-        console.error("[callLovableAiJson] parse failed on retry", {
-          field: err2.field,
+        console.error("[callLovableAiJson] JSON.parse failed (attempt 2 / final)", {
+          parseError: err2.message,
           offset: err2.offset,
+          field: err2.field,
           truncated: err2.truncated,
-          message: err2.message,
-          preview: err2.raw.slice(0, 800),
+          rawResponse: err2.raw,
         });
-        // Friendly user-facing message; developer detail stays in logs.
         throw new Error(
           `AI returned an unreadable response${err2.field ? ` (near "${err2.field}")` : ""}. Please retry.`,
         );

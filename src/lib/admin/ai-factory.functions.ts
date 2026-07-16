@@ -6,7 +6,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
-import { callLovableAiJson, isAiAvailable } from "@/lib/ai-gateway.server";
+import { callLovableAiJson, callLovableAiText, isAiAvailable } from "@/lib/ai-gateway.server";
 
 async function ensureAdmin(context: any) {
   const { data, error } = await context.supabase.rpc("is_admin", { _user_id: context.userId });
@@ -114,20 +114,41 @@ export const generateCompleteDraft = createServerFn({ method: "POST" })
       blogs: (blogs.data ?? []).map((b: any) => ({ path: `/blog/${b.slug}`, title: b.title })),
     };
 
-    // --- Generate everything in one JSON call ---
-    const sys = `You are Glintr's senior AI editor. You produce publication-ready blog articles with rigorous factual accuracy.
-NEVER invent statistics, quotes, brand partnerships, certifications, or people. Mark unverified claims with "needs_verification": true in warnings.
-Return ONLY valid JSON.`;
+    // ============================================================
+    // ROOT-CAUSE FIX for "Bad escaped character in JSON":
+    //
+    // The old pipeline asked Gemini to return ONE JSON object whose
+    // `body_markdown` field embedded the entire article. When the article
+    // contained regex tokens (\d, \w, \s), LaTeX (\alpha, \sum), Windows
+    // paths (C:\Users), or code blocks with backslashes, the model
+    // sometimes emitted them as single backslashes — invalid JSON escapes.
+    // JSON.parse then threw "Bad escaped character in JSON" and the whole
+    // draft was lost.
+    //
+    // Fix: split generation into two calls.
+    //   1. JSON call → metadata ONLY (title, slug, seo, faqs, keywords,
+    //      tags, internal links, image plan, visual blocks, cta, warnings).
+    //      Small, structured, no long markdown strings → safe to parse.
+    //   2. Plain-text call → the markdown body. Returned raw, NEVER wrapped
+    //      in JSON, so no escaping applies. This is the only durable fix:
+    //      markdown ceases to travel through JSON string escaping at all.
+    //
+    // Both calls run in parallel; either can fail independently.
+    // ============================================================
 
-    const usr = `Write a complete publication-ready article for Glintr.
+    const metaSys = `You are Glintr's senior AI editor. You produce publication-ready article metadata with rigorous factual accuracy.
+NEVER invent statistics, quotes, brand partnerships, certifications, or people.
+Return ONLY valid JSON. Do NOT include the article body — that is generated separately.`;
+
+    const metaUsr = `Produce article metadata for Glintr.
 
 Topic: "${data.topic}"
-Depth: ${data.depth} (${t.min}–${t.max} words, ~${t.sections} sections)
+Depth: ${data.depth} (~${t.sections} sections, ${t.min}–${t.max} words body)
 Audience: ${data.audience}
-${kw ? `Focus keywords (use naturally): ${kw}` : ""}
+${kw ? `Focus keywords: ${kw}` : ""}
 ${data.notes ? `Editor notes: ${data.notes}` : ""}
 
-Internal linking catalog (use real paths where relevant):
+Internal linking catalog:
 ${JSON.stringify(internalCatalog).slice(0, 5000)}
 
 Return JSON with EVERY field:
@@ -139,20 +160,19 @@ Return JSON with EVERY field:
   "subtitle": "one-line subtitle",
   "short_summary": "2–3 sentences",
   "intro": "150–250 words with a Quick Answer paragraph",
-  "body_markdown": "FULL markdown body with H2/H3 headings, at least one comparison table, 2 bulleted lists, callout blockquotes (>), and NO placeholder images. Insert marker tokens {{HERO_IMAGE}} at top and {{SECTION_IMAGE_1}}, {{SECTION_IMAGE_2}}, {{SECTION_IMAGE_3}} where illustrations belong. Include natural markdown links to real internal paths from the catalog when relevant.",
   "conclusion": "150–200 words",
   "cta_headline": "short CTA headline",
   "cta_body": "short paragraph pointing to related Glintr programs",
-  "faqs": [{"question":"...","answer":"..."}],  // 6-10 items
-  "keywords": ["..."],  // 6-12 SEO keywords
-  "tags": ["..."],  // 5-8 tags
+  "faqs": [{"question":"...","answer":"..."}],
+  "keywords": ["..."],
+  "tags": ["..."],
   "category": "AI | Programming | Business | Career | Design | Data | Cloud | Marketing | Cyber Security | Engineering",
   "difficulty": "beginner|intermediate|advanced",
-  "internal_links": [{"anchor":"...","path":"/..."}],  // 5-10 items chosen from the catalog
-  "related_course_slugs": ["..."],  // 2-4 slugs from catalog courses
-  "related_blog_slugs": ["..."],  // 2-4 slugs
+  "internal_links": [{"anchor":"...","path":"/..."}],
+  "related_course_slugs": ["..."],
+  "related_blog_slugs": ["..."],
   "image_plan": {
-    "hero": {"prompt":"specific hero visual prompt","alt":"...","caption":"..."},
+    "hero": {"prompt":"...","alt":"...","caption":"..."},
     "thumbnail": {"prompt":"...","alt":"..."},
     "social": {"prompt":"1200x630 hero-style OG image","alt":"..."},
     "sections": [
@@ -160,35 +180,85 @@ Return JSON with EVERY field:
       {"key":"SECTION_IMAGE_2","prompt":"...","alt":"...","caption":"..."},
       {"key":"SECTION_IMAGE_3","prompt":"...","alt":"...","caption":"..."}
     ],
-    "infographic": {"prompt":"vertical infographic showing key data points","alt":"..."},
-    "diagram": {"prompt":"clean architecture/workflow diagram","alt":"..."}
+    "infographic": {"prompt":"...","alt":"..."},
+    "diagram": {"prompt":"...","alt":"..."}
   },
   "visual_blocks": {
     "comparison_table": {"title":"...","columns":["A","B"],"rows":[["...","..."]]},
-    "stats_cards": [{"stat":"...","label":"...","note":"needs_verification if uncertain"}],
+    "stats_cards": [{"stat":"...","label":"...","note":"..."}],
     "callouts": [{"kind":"tip|warning|note","body":"..."}],
     "timeline": [{"year":"...","event":"..."}],
     "roadmap": [{"phase":"Week 1","items":["...","..."]}]
   },
-  "warnings": ["short editor cautions about anything to verify"]
+  "warnings": ["short editor cautions"]
 }
 
-Rules:
-- Content must be factual, well-structured, non-hyped.
-- Do NOT fabricate stats — if you include a statistic, add a warning.
-- Body must reach the target word count.
-- Return valid JSON only.`;
+IMPORTANT: All string values must be plain text — no markdown, no code blocks, no backslashes. Do NOT include an article body field.`;
 
-    const draft = await callLovableAiJson<any>({
-      messages: [{ role: "system", content: sys }, { role: "user", content: usr }],
-      temperature: 0.55,
-      model: "google/gemini-2.5-flash",
-    });
+    const bodySys = `You are Glintr's senior AI editor. Write publication-ready long-form Markdown.
+NEVER invent statistics, quotes, brand partnerships, certifications, or people.
+Return ONLY the raw Markdown body — no JSON, no code fences around the whole document, no preamble, no closing remarks.`;
 
-    // Normalize + defaults
+    const bodyUsr = `Write the article BODY (Markdown only) for Glintr.
+
+Topic: "${data.topic}"
+Depth: ${data.depth} (${t.min}–${t.max} words, ~${t.sections} sections)
+Audience: ${data.audience}
+${kw ? `Focus keywords (use naturally): ${kw}` : ""}
+${data.notes ? `Editor notes: ${data.notes}` : ""}
+
+Internal linking catalog (link to real paths where relevant):
+${JSON.stringify(internalCatalog).slice(0, 4000)}
+
+Requirements:
+- Start with a Quick Answer paragraph, then H2/H3 sections.
+- Include at least one comparison table, 2 bulleted lists, and callout blockquotes (>).
+- Insert marker tokens on their own line where illustrations belong:
+  {{HERO_IMAGE}} near the top, then {{SECTION_IMAGE_1}}, {{SECTION_IMAGE_2}}, {{SECTION_IMAGE_3}}.
+- Use natural markdown links to real internal paths from the catalog.
+- Reach the target word count.
+- Factual, well-structured, non-hyped. Do not fabricate statistics.
+
+Output: raw Markdown ONLY. No JSON wrapper, no explanations.`;
+
+    // Run metadata (JSON) and body (plain-text markdown) in parallel.
+    // A failure in one is isolated from the other for diagnostics.
+    const [metaResult, bodyResult] = await Promise.allSettled([
+      callLovableAiJson<any>({
+        messages: [{ role: "system", content: metaSys }, { role: "user", content: metaUsr }],
+        temperature: 0.55,
+        model: "google/gemini-2.5-flash",
+      }),
+      callLovableAiText({
+        messages: [{ role: "system", content: bodySys }, { role: "user", content: bodyUsr }],
+        temperature: 0.6,
+        model: "google/gemini-2.5-flash",
+      }),
+    ]);
+
+    if (metaResult.status === "rejected") {
+      console.error("[generateCompleteDraft] metadata generation failed", metaResult.reason);
+      throw new Error(
+        `Metadata generation failed: ${(metaResult.reason as any)?.message ?? "unknown error"}`,
+      );
+    }
+    if (bodyResult.status === "rejected") {
+      console.error("[generateCompleteDraft] body generation failed", bodyResult.reason);
+      throw new Error(
+        `Article body generation failed: ${(bodyResult.reason as any)?.message ?? "unknown error"}`,
+      );
+    }
+
+    const draft: any = { ...metaResult.value };
+    // Strip any code fences the model may have added around the whole body.
+    let body_markdown = String(bodyResult.value ?? "")
+      .replace(/^\s*```(?:markdown|md)?\s*\n?/i, "")
+      .replace(/\n?```\s*$/i, "")
+      .trim();
+    draft.body_markdown = body_markdown;
+
     const title = String(draft.title || data.topic).slice(0, 140);
     const slug = slugify(draft.slug || title);
-    const body_markdown = String(draft.body_markdown || "");
     const wc = wordCount(body_markdown);
 
     // --- Image generation (optional, isolated) ---
