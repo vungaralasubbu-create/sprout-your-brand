@@ -51,7 +51,7 @@ import {
 
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
-import { CourseTrustStats } from "@/components/course/trust-stats";
+
 import {
   HiringPartners,
   ToolsMaster,
