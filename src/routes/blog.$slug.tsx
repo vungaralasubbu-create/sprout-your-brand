@@ -150,7 +150,21 @@ export const Route = createFileRoute("/blog/$slug")({
             })),
           }),
         });
-      }
+      // Speakable schema — highlights the title + summary for voice assistants
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: post.title,
+          speakable: {
+            "@type": "SpeakableSpecification",
+            cssSelector: ["h1", "[data-speakable]"],
+          },
+          url: canonical,
+        }),
+      });
+    }
     }
     return {
       meta,
