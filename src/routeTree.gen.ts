@@ -180,6 +180,7 @@ import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
 import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_authenticated/admin.assigned-leads'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
+import { Route as AuthenticatedAdminAiContentRouteImport } from './routes/_authenticated/admin.ai-content'
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
 import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin.activity'
 import { Route as AuthenticatedAdminAccountRouteImport } from './routes/_authenticated/admin.account'
@@ -206,6 +207,7 @@ import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_authenticated/admin.content.index'
+import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
@@ -245,6 +247,12 @@ import { Route as AuthenticatedAdminContentCategoriesRouteImport } from './route
 import { Route as AuthenticatedAdminContentAuthorsRouteImport } from './routes/_authenticated/admin.content.authors'
 import { Route as AuthenticatedAdminContentAnalyticsRouteImport } from './routes/_authenticated/admin.content.analytics'
 import { Route as AuthenticatedAdminContentAiWriterRouteImport } from './routes/_authenticated/admin.content.ai-writer'
+import { Route as AuthenticatedAdminAiContentWizardRouteImport } from './routes/_authenticated/admin.ai-content.wizard'
+import { Route as AuthenticatedAdminAiContentSuggestionsRouteImport } from './routes/_authenticated/admin.ai-content.suggestions'
+import { Route as AuthenticatedAdminAiContentSettingsRouteImport } from './routes/_authenticated/admin.ai-content.settings'
+import { Route as AuthenticatedAdminAiContentReviewRouteImport } from './routes/_authenticated/admin.ai-content.review'
+import { Route as AuthenticatedAdminAiContentClustersRouteImport } from './routes/_authenticated/admin.ai-content.clusters'
+import { Route as AuthenticatedAdminAiContentCalendarRouteImport } from './routes/_authenticated/admin.ai-content.calendar'
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
@@ -1194,6 +1202,12 @@ const AuthenticatedAdminApplicationsRoute =
     path: '/applications',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAiContentRoute =
+  AuthenticatedAdminAiContentRouteImport.update({
+    id: '/ai-content',
+    path: '/ai-content',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAdjustmentsRoute =
   AuthenticatedAdminAdjustmentsRouteImport.update({
     id: '/adjustments',
@@ -1349,6 +1363,12 @@ const AuthenticatedAdminContentIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedAdminContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentIndexRoute =
+  AuthenticatedAdminAiContentIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
   } as any)
 const ProgramsCategoryCourseApplyRoute =
   ProgramsCategoryCourseApplyRouteImport.update({
@@ -1584,6 +1604,42 @@ const AuthenticatedAdminContentAiWriterRoute =
     path: '/ai-writer',
     getParentRoute: () => AuthenticatedAdminContentRoute,
   } as any)
+const AuthenticatedAdminAiContentWizardRoute =
+  AuthenticatedAdminAiContentWizardRouteImport.update({
+    id: '/wizard',
+    path: '/wizard',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentSuggestionsRoute =
+  AuthenticatedAdminAiContentSuggestionsRouteImport.update({
+    id: '/suggestions',
+    path: '/suggestions',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentSettingsRoute =
+  AuthenticatedAdminAiContentSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentReviewRoute =
+  AuthenticatedAdminAiContentReviewRouteImport.update({
+    id: '/review',
+    path: '/review',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentClustersRoute =
+  AuthenticatedAdminAiContentClustersRouteImport.update({
+    id: '/clusters',
+    path: '/clusters',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
+const AuthenticatedAdminAiContentCalendarRoute =
+  AuthenticatedAdminAiContentCalendarRouteImport.update({
+    id: '/calendar',
+    path: '/calendar',
+    getParentRoute: () => AuthenticatedAdminAiContentRoute,
+  } as any)
 const AuthenticatedAdminContentArticlesIndexRoute =
   AuthenticatedAdminContentArticlesIndexRouteImport.update({
     id: '/articles/',
@@ -1716,6 +1772,7 @@ export interface FileRoutesByFullPath {
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
+  '/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
@@ -1808,6 +1865,12 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
+  '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
+  '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
+  '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
+  '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
+  '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
   '/admin/content/ai-writer': typeof AuthenticatedAdminContentAiWriterRoute
   '/admin/content/analytics': typeof AuthenticatedAdminContentAnalyticsRoute
   '/admin/content/authors': typeof AuthenticatedAdminContentAuthorsRoute
@@ -1847,6 +1910,7 @@ export interface FileRoutesByFullPath {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
@@ -2047,6 +2111,12 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
+  '/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
+  '/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
+  '/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
+  '/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
+  '/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
+  '/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
   '/admin/content/ai-writer': typeof AuthenticatedAdminContentAiWriterRoute
   '/admin/content/analytics': typeof AuthenticatedAdminContentAnalyticsRoute
   '/admin/content/authors': typeof AuthenticatedAdminContentAuthorsRoute
@@ -2086,6 +2156,7 @@ export interface FileRoutesByTo {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/content': typeof AuthenticatedAdminContentIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
@@ -2202,6 +2273,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/account': typeof AuthenticatedAdminAccountRoute
   '/_authenticated/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/_authenticated/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
+  '/_authenticated/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/_authenticated/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
@@ -2294,6 +2366,12 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/_authenticated/admin/ai-content/calendar': typeof AuthenticatedAdminAiContentCalendarRoute
+  '/_authenticated/admin/ai-content/clusters': typeof AuthenticatedAdminAiContentClustersRoute
+  '/_authenticated/admin/ai-content/review': typeof AuthenticatedAdminAiContentReviewRoute
+  '/_authenticated/admin/ai-content/settings': typeof AuthenticatedAdminAiContentSettingsRoute
+  '/_authenticated/admin/ai-content/suggestions': typeof AuthenticatedAdminAiContentSuggestionsRoute
+  '/_authenticated/admin/ai-content/wizard': typeof AuthenticatedAdminAiContentWizardRoute
   '/_authenticated/admin/content/ai-writer': typeof AuthenticatedAdminContentAiWriterRoute
   '/_authenticated/admin/content/analytics': typeof AuthenticatedAdminContentAnalyticsRoute
   '/_authenticated/admin/content/authors': typeof AuthenticatedAdminContentAuthorsRoute
@@ -2333,6 +2411,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
+  '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/_authenticated/admin/content/': typeof AuthenticatedAdminContentIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
@@ -2449,6 +2528,7 @@ export interface FileRouteTypes {
     | '/admin/account'
     | '/admin/activity'
     | '/admin/adjustments'
+    | '/admin/ai-content'
     | '/admin/applications'
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
@@ -2541,6 +2621,12 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/student/'
     | '/programs/$category/'
+    | '/admin/ai-content/calendar'
+    | '/admin/ai-content/clusters'
+    | '/admin/ai-content/review'
+    | '/admin/ai-content/settings'
+    | '/admin/ai-content/suggestions'
+    | '/admin/ai-content/wizard'
     | '/admin/content/ai-writer'
     | '/admin/content/analytics'
     | '/admin/content/authors'
@@ -2580,6 +2666,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/admin/ai-content/'
     | '/admin/content/'
     | '/admin/courses/'
     | '/admin/employees/'
@@ -2780,6 +2867,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/student'
     | '/programs/$category'
+    | '/admin/ai-content/calendar'
+    | '/admin/ai-content/clusters'
+    | '/admin/ai-content/review'
+    | '/admin/ai-content/settings'
+    | '/admin/ai-content/suggestions'
+    | '/admin/ai-content/wizard'
     | '/admin/content/ai-writer'
     | '/admin/content/analytics'
     | '/admin/content/authors'
@@ -2819,6 +2912,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/admin/ai-content'
     | '/admin/content'
     | '/admin/courses'
     | '/admin/employees'
@@ -2934,6 +3028,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/account'
     | '/_authenticated/admin/activity'
     | '/_authenticated/admin/adjustments'
+    | '/_authenticated/admin/ai-content'
     | '/_authenticated/admin/applications'
     | '/_authenticated/admin/assigned-leads'
     | '/_authenticated/admin/attribution-reviews'
@@ -3026,6 +3121,12 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/student/'
     | '/programs/$category/'
+    | '/_authenticated/admin/ai-content/calendar'
+    | '/_authenticated/admin/ai-content/clusters'
+    | '/_authenticated/admin/ai-content/review'
+    | '/_authenticated/admin/ai-content/settings'
+    | '/_authenticated/admin/ai-content/suggestions'
+    | '/_authenticated/admin/ai-content/wizard'
     | '/_authenticated/admin/content/ai-writer'
     | '/_authenticated/admin/content/analytics'
     | '/_authenticated/admin/content/authors'
@@ -3065,6 +3166,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
     | '/programs/$category/$course/apply'
+    | '/_authenticated/admin/ai-content/'
     | '/_authenticated/admin/content/'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/employees/'
@@ -4352,6 +4454,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminApplicationsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ai-content': {
+      id: '/_authenticated/admin/ai-content'
+      path: '/ai-content'
+      fullPath: '/admin/ai-content'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/adjustments': {
       id: '/_authenticated/admin/adjustments'
       path: '/adjustments'
@@ -4533,6 +4642,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/content/'
       preLoaderRoute: typeof AuthenticatedAdminContentIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
+    }
+    '/_authenticated/admin/ai-content/': {
+      id: '/_authenticated/admin/ai-content/'
+      path: '/'
+      fullPath: '/admin/ai-content/'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
     }
     '/programs/$category/$course/apply': {
       id: '/programs/$category/$course/apply'
@@ -4807,6 +4923,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentAiWriterRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
     }
+    '/_authenticated/admin/ai-content/wizard': {
+      id: '/_authenticated/admin/ai-content/wizard'
+      path: '/wizard'
+      fullPath: '/admin/ai-content/wizard'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentWizardRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/suggestions': {
+      id: '/_authenticated/admin/ai-content/suggestions'
+      path: '/suggestions'
+      fullPath: '/admin/ai-content/suggestions'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentSuggestionsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/settings': {
+      id: '/_authenticated/admin/ai-content/settings'
+      path: '/settings'
+      fullPath: '/admin/ai-content/settings'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/review': {
+      id: '/_authenticated/admin/ai-content/review'
+      path: '/review'
+      fullPath: '/admin/ai-content/review'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentReviewRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/clusters': {
+      id: '/_authenticated/admin/ai-content/clusters'
+      path: '/clusters'
+      fullPath: '/admin/ai-content/clusters'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentClustersRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
+    '/_authenticated/admin/ai-content/calendar': {
+      id: '/_authenticated/admin/ai-content/calendar'
+      path: '/calendar'
+      fullPath: '/admin/ai-content/calendar'
+      preLoaderRoute: typeof AuthenticatedAdminAiContentCalendarRouteImport
+      parentRoute: typeof AuthenticatedAdminAiContentRoute
+    }
     '/_authenticated/admin/content/articles/': {
       id: '/_authenticated/admin/content/articles/'
       path: '/articles'
@@ -4865,6 +5023,39 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminAiContentRouteChildren {
+  AuthenticatedAdminAiContentCalendarRoute: typeof AuthenticatedAdminAiContentCalendarRoute
+  AuthenticatedAdminAiContentClustersRoute: typeof AuthenticatedAdminAiContentClustersRoute
+  AuthenticatedAdminAiContentReviewRoute: typeof AuthenticatedAdminAiContentReviewRoute
+  AuthenticatedAdminAiContentSettingsRoute: typeof AuthenticatedAdminAiContentSettingsRoute
+  AuthenticatedAdminAiContentSuggestionsRoute: typeof AuthenticatedAdminAiContentSuggestionsRoute
+  AuthenticatedAdminAiContentWizardRoute: typeof AuthenticatedAdminAiContentWizardRoute
+  AuthenticatedAdminAiContentIndexRoute: typeof AuthenticatedAdminAiContentIndexRoute
+}
+
+const AuthenticatedAdminAiContentRouteChildren: AuthenticatedAdminAiContentRouteChildren =
+  {
+    AuthenticatedAdminAiContentCalendarRoute:
+      AuthenticatedAdminAiContentCalendarRoute,
+    AuthenticatedAdminAiContentClustersRoute:
+      AuthenticatedAdminAiContentClustersRoute,
+    AuthenticatedAdminAiContentReviewRoute:
+      AuthenticatedAdminAiContentReviewRoute,
+    AuthenticatedAdminAiContentSettingsRoute:
+      AuthenticatedAdminAiContentSettingsRoute,
+    AuthenticatedAdminAiContentSuggestionsRoute:
+      AuthenticatedAdminAiContentSuggestionsRoute,
+    AuthenticatedAdminAiContentWizardRoute:
+      AuthenticatedAdminAiContentWizardRoute,
+    AuthenticatedAdminAiContentIndexRoute:
+      AuthenticatedAdminAiContentIndexRoute,
+  }
+
+const AuthenticatedAdminAiContentRouteWithChildren =
+  AuthenticatedAdminAiContentRoute._addFileChildren(
+    AuthenticatedAdminAiContentRouteChildren,
+  )
 
 interface AuthenticatedAdminContentRouteChildren {
   AuthenticatedAdminContentAiWriterRoute: typeof AuthenticatedAdminContentAiWriterRoute
@@ -4953,6 +5144,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAccountRoute: typeof AuthenticatedAdminAccountRoute
   AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
   AuthenticatedAdminAdjustmentsRoute: typeof AuthenticatedAdminAdjustmentsRoute
+  AuthenticatedAdminAiContentRoute: typeof AuthenticatedAdminAiContentRouteWithChildren
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
   AuthenticatedAdminAssignedLeadsRoute: typeof AuthenticatedAdminAssignedLeadsRoute
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
@@ -5001,6 +5193,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAccountRoute: AuthenticatedAdminAccountRoute,
   AuthenticatedAdminActivityRoute: AuthenticatedAdminActivityRoute,
   AuthenticatedAdminAdjustmentsRoute: AuthenticatedAdminAdjustmentsRoute,
+  AuthenticatedAdminAiContentRoute:
+    AuthenticatedAdminAiContentRouteWithChildren,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
   AuthenticatedAdminAssignedLeadsRoute: AuthenticatedAdminAssignedLeadsRoute,
   AuthenticatedAdminAttributionReviewsRoute:
