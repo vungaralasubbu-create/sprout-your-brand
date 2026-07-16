@@ -31,7 +31,7 @@ function AchievementsPage() {
           <StreakStat label="Longest" value={`${streak.longest} days`} />
           <StreakStat label="Last 30" value={`${streak.history.length} active days`} />
         </div>
-        <div className="mt-4 grid grid-cols-15 gap-1 sm:grid-cols-30" style={{ gridTemplateColumns: "repeat(30, minmax(0, 1fr))" }}>
+        <div className="mt-4 grid gap-1" style={{ gridTemplateColumns: "repeat(30, minmax(0, 1fr))" }}>
           {Array.from({ length: 30 }, (_, i) => {
             const d = new Date();
             d.setDate(d.getDate() - (29 - i));
