@@ -748,3 +748,48 @@
 }
 
 
+
+/* ==========================================================================
+   Print / PDF styles — clean, branded article printout
+   ========================================================================== */
+@media print {
+  /* Reset colors for print */
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Hide chrome and interactive layers */
+  header[data-site-header],
+  footer[data-site-footer],
+  nav[aria-label="Breadcrumb"],
+  .print\:hidden,
+  [data-blog-noprint] {
+    display: none !important;
+  }
+
+  /* Expand main content to full width */
+  main, article, .article-body {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Keep headings with their following content */
+  h1, h2, h3, h4 { page-break-after: avoid; break-after: avoid; }
+  img, table, pre, blockquote { page-break-inside: avoid; break-inside: avoid; }
+
+  /* Show link URLs after anchors for offline reading */
+  .article-body a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555;
+    word-break: break-all;
+  }
+
+  /* Branded header + footer */
+  @page {
+    margin: 18mm 14mm;
+  }
+}

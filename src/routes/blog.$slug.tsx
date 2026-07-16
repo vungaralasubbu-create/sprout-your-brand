@@ -3,14 +3,16 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ArrowRight,
-  Check,
+  BadgeCheck,
+  Bookmark,
+  BookmarkCheck,
   ChevronRight,
   Clock,
-  Copy,
+  Download,
   GraduationCap,
   List,
   MessageSquare,
-  Share2,
+  Printer,
   Sparkles,
 } from "lucide-react";
 
@@ -37,6 +39,10 @@ import {
 import { PageWorkspaceActions } from "@/components/workspace/page-workspace-actions";
 import { BlogCover } from "@/components/shared/blog-cover";
 import { useBookmark } from "@/components/shared/blog-card";
+import { ShareBar } from "@/components/blog/share-bar";
+import { AiAssistantFab } from "@/components/blog/ai-assistant-fab";
+import { ReadingMilestones } from "@/components/blog/reading-milestones";
+
 
 const SITE_URL = "https://glintr.com";
 
@@ -144,7 +150,21 @@ export const Route = createFileRoute("/blog/$slug")({
             })),
           }),
         });
-      }
+      // Speakable schema — highlights the title + summary for voice assistants
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: post.title,
+          speakable: {
+            "@type": "SpeakableSpecification",
+            cssSelector: ["h1", "[data-speakable]"],
+          },
+          url: canonical,
+        }),
+      });
+    }
     }
     return {
       meta,
@@ -195,12 +215,26 @@ function BlogDetailPage() {
   };
   const { post, related, relatedCourse } = loaderData;
   const [progress, setProgress] = React.useState(0);
-  const [copied, setCopied] = React.useState(false);
   const [subscribed, setSubscribed] = React.useState(false);
-  const [copyFailed, setCopyFailed] = React.useState(false);
   const [tocOpen, setTocOpen] = React.useState(false);
   const [activeHeading, setActiveHeading] = React.useState<string | null>(null);
   const articleRef = React.useRef<HTMLDivElement | null>(null);
+  const { bookmarked, toggle: toggleBookmark } = useBookmark(post.slug);
+
+  const shareUrl = `${SITE_URL}/blog/${post.slug}`;
+  const authorInitials = React.useMemo(() => {
+    return post.author_display_name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((p) => p[0]!.toUpperCase())
+      .join("") || "G";
+  }, [post.author_display_name]);
+
+  const onPrint = React.useCallback(() => {
+    if (typeof window !== "undefined") window.print();
+  }, []);
+
 
   // Reset transient UI state on slug change so switching articles feels fresh.
   React.useEffect(() => {
@@ -250,31 +284,8 @@ function BlogDetailPage() {
     return () => obs.disconnect();
   }, [headings]);
 
-  async function onShare() {
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: post?.title, text: post?.short_summary, url });
-        return;
-      } catch {
-        // fall through to copy
-      }
-    }
-    await copyLink();
-  }
 
-  async function copyLink() {
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setCopyFailed(false);
-      setTimeout(() => setCopied(false), 2200);
-    } catch {
-      setCopyFailed(true);
-      setTimeout(() => setCopyFailed(false), 2500);
-    }
-  }
+
 
   // post is guaranteed by the loader (throws notFound on miss).
 
@@ -286,13 +297,17 @@ function BlogDetailPage() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
 
-      {/* Reading progress */}
-      <div className="sticky top-16 z-30 h-1 bg-transparent" aria-hidden>
-        <div
-          className="h-full bg-gradient-brand transition-[width] duration-100"
-          style={{ width: `${progress}%` }}
-        />
+      {/* Reading progress + milestones */}
+      <div className="sticky top-16 z-30 print:hidden" data-blog-noprint aria-hidden>
+        <div className="h-1 bg-transparent">
+          <div
+            className="h-full bg-gradient-brand transition-[width] duration-100"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <ReadingMilestones progress={progress} />
       </div>
+
 
       {/* HERO */}
       <Section tone="surface" padding="lg">
@@ -350,9 +365,41 @@ function BlogDetailPage() {
             </div>
             <h1 className="text-hero text-balance">{post.title}</h1>
             {post.subtitle ? (
-              <p className="text-subheading text-muted-foreground text-pretty">{post.subtitle}</p>
+              <p className="text-subheading text-muted-foreground text-pretty" data-speakable>
+                {post.subtitle}
+              </p>
             ) : null}
-            <p className="text-body text-muted-foreground">{post.short_summary}</p>
+            <p className="text-body text-muted-foreground" data-speakable>
+              {post.short_summary}
+            </p>
+
+            {/* Reader actions — bookmark, print, workspace */}
+            <div className="mt-2 flex flex-wrap items-center gap-2 print:hidden" data-blog-noprint>
+              <Button
+                variant={bookmarked ? "primary" : "outline"}
+                size="sm"
+                onClick={toggleBookmark}
+                aria-pressed={bookmarked}
+                aria-label={bookmarked ? "Remove bookmark" : "Bookmark this article"}
+              >
+                {bookmarked ? (
+                  <>
+                    <BookmarkCheck className="size-4 mr-1.5" /> Saved
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="size-4 mr-1.5" /> Save
+                  </>
+                )}
+              </Button>
+              <Button variant="outline" size="sm" onClick={onPrint} aria-label="Print or save as PDF">
+                <Printer className="size-4 mr-1.5" /> Print / PDF
+              </Button>
+              <Button variant="outline" size="sm" onClick={onPrint} aria-label="Download as PDF">
+                <Download className="size-4 mr-1.5" /> Download PDF
+              </Button>
+            </div>
+
 
             {/* Meta strip */}
             <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-caption">
@@ -487,51 +534,61 @@ function BlogDetailPage() {
               />
 
               {/* SHARE */}
-              <div className="mt-14 rounded-2xl border bg-card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <div className="text-sm font-semibold">Share Insight</div>
-                  <div className="text-xs text-muted-foreground">
-                    {copied
-                      ? "Link Copied"
-                      : copyFailed
-                        ? "Copy failed. Please copy the address manually."
-                        : "Copy this insight or share via your device."}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" onClick={copyLink}>
-                    {copied ? (
-                      <>
-                        <Check className="size-4 mr-1.5" /> Link Copied
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="size-4 mr-1.5" /> Copy Link
-                      </>
-                    )}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={onShare}>
-                    <Share2 className="size-4 mr-1.5" /> Share
-                  </Button>
-                </div>
-              </div>
+              <ShareBar
+                className="mt-14"
+                url={shareUrl}
+                title={post.title}
+                summary={post.short_summary}
+              />
 
               {/* AUTHOR */}
               <div className="mt-8 rounded-2xl border bg-card p-6">
-                <div className="text-xs uppercase tracking-widest text-muted-foreground">Written By</div>
-                <div className="mt-2 flex items-start gap-4">
-                  <div className="size-12 rounded-full bg-gradient-brand shrink-0" aria-hidden />
-                  <div>
-                    <div className="font-semibold">{post.author_display_name}</div>
-                    {post.author_display_role ? (
-                      <div className="text-sm text-muted-foreground">{post.author_display_role}</div>
-                    ) : null}
-                    {post.author_bio ? (
-                      <p className="text-sm text-muted-foreground mt-2 max-w-2xl">{post.author_bio}</p>
-                    ) : null}
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex items-start gap-4">
+                    <div
+                      className="grid size-14 shrink-0 place-items-center rounded-full bg-gradient-brand text-lg font-semibold text-white"
+                      aria-hidden
+                    >
+                      {authorInitials}
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                        Written by
+                      </div>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                        <span className="font-semibold">{post.author_display_name}</span>
+                        {post.reviewer_display_name ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                            <BadgeCheck className="size-3" /> Expert Reviewed
+                          </span>
+                        ) : null}
+                      </div>
+                      {post.author_display_role ? (
+                        <div className="text-sm text-muted-foreground">{post.author_display_role}</div>
+                      ) : null}
+                      {post.author_bio ? (
+                        <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{post.author_bio}</p>
+                      ) : null}
+                      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                        {post.editorial_updated_at ? (
+                          <span>Last updated {formatPublished(post.editorial_updated_at)}</span>
+                        ) : post.published_at ? (
+                          <span>Published {formatPublished(post.published_at)}</span>
+                        ) : null}
+                        {post.reading_time_minutes ? (
+                          <span className="inline-flex items-center gap-1">
+                            <Clock className="size-3.5" /> {post.reading_time_minutes} min read
+                          </span>
+                        ) : null}
+                        {post.reviewer_display_name ? (
+                          <span>Reviewed by {post.reviewer_display_name}</span>
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
 
               {/* RELATED PROGRAM */}
               {relatedCourse ? (
@@ -709,6 +766,9 @@ function BlogDetailPage() {
       </Section>
 
       <SiteFooter />
+      <AiAssistantFab articleTitle={post.title} articleSlug={post.slug} />
+
+
     </div>
   );
 }
