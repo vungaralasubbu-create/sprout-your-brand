@@ -42,7 +42,6 @@ import { buildPageHead } from "@/lib/seo-head";
 import {
   generateBrandIdentity,
   generateLogo,
-  checkDomain,
   generateWebsiteContent,
   generateProgram,
   generateCourse,
