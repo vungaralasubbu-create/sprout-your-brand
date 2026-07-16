@@ -97,6 +97,7 @@ const NAV: NavGroup[] = [
     items: [
       { to: "/admin/team", label: "Admin Team", icon: UserCog, perms: ["admin_team.view"] },
       { to: "/admin/activity", label: "Admin Activity", icon: History, perms: ["admin_team.view"] },
+      { to: "/admin/infrastructure", label: "Infrastructure", icon: Server, perms: ["system_settings.view"] },
       { to: "/admin/settings", label: "Settings", icon: Settings, perms: ["system_settings.view"] },
     ],
   },
