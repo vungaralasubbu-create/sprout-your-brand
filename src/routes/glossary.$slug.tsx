@@ -337,7 +337,7 @@ function GlossaryDetail() {
                         Advantages
                       </div>
                       <ul className="space-y-2 text-sm text-foreground/85 leading-relaxed list-disc pl-5">
-                        {entry.advantages.map((a, i) => (
+                        {entry.advantages.map((a: string, i: number) => (
                           <li key={i}>{a}</li>
                         ))}
                       </ul>
