@@ -78,6 +78,7 @@ const SALES_TOOLKIT: NavItem[] = [
   { to: "/partner/analytics", label: "Performance Analytics", icon: BarChart3 },
   { to: "/partner/marketing", label: "Marketing Materials", icon: Palette },
   { to: "/partner/academy", label: "Sales Scripts & Academy", icon: GraduationCap },
+  { to: "/partner/sales-ai", label: "Sales AI Center", icon: Sparkles },
   { to: "/partner/ai-assistant", label: "AI Sales Assistant", icon: Sparkles },
   { to: "/partner/announcements", label: "Announcements", icon: Megaphone },
   { to: "/partner/search", label: "Search", icon: Search },
@@ -93,6 +94,7 @@ const ASSISTED_REVENUE: NavItem[] = [
 ];
 const ASSISTED_TOOLKIT: NavItem[] = [
   { to: "/partner/analytics", label: "Performance Analytics", icon: BarChart3 },
+  { to: "/partner/sales-ai", label: "Sales AI Center", icon: Sparkles },
   { to: "/partner/ai-assistant", label: "AI Call Assistant", icon: Sparkles },
   { to: "/partner/academy", label: "Sales Training", icon: GraduationCap },
   { to: "/partner/announcements", label: "Announcements", icon: Megaphone },
