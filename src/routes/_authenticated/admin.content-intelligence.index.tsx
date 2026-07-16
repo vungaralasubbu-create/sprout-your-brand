@@ -2,8 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getIntelligenceDashboard } from "@/lib/admin/content-intelligence.functions";
+import { getIntelSummary } from "@/lib/content-intelligence/intel.functions";
 import { Card } from "@/components/ui/card";
-import { Brain, FileText, Clock, ShieldCheck, AlertTriangle, Copy, LinkIcon, ImageOff } from "lucide-react";
+import { Brain, FileText, Clock, ShieldCheck, AlertTriangle, Copy, LinkIcon, ImageOff, Sparkles, Network, Search, Share2, Gauge, TrendingUp, Boxes } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/content-intelligence/")({
   component: Dashboard,
@@ -12,6 +13,9 @@ export const Route = createFileRoute("/_authenticated/admin/content-intelligence
 function Dashboard() {
   const fn = useServerFn(getIntelligenceDashboard);
   const { data, isLoading } = useQuery({ queryKey: ["ci-dashboard"], queryFn: () => fn(), staleTime: 30_000 });
+  const summaryFn = useServerFn(getIntelSummary);
+  const { data: summary } = useQuery({ queryKey: ["intel-summary"], queryFn: () => summaryFn(), staleTime: 60_000 });
+  const s = summary?.scores;
 
   const h = data?.health;
 
