@@ -59,26 +59,33 @@ function GlossaryIndex() {
   const all = React.useMemo(() => listGlossary(), []);
   const [query, setQuery] = React.useState("");
   const [activeLetter, setActiveLetter] = React.useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = React.useState<string | null>(null);
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q && !activeLetter) return all;
+    if (!q && !activeLetter && !activeCategory) return all;
     return all.filter((g) => {
       const inLetter = activeLetter ? g.term[0]!.toUpperCase() === activeLetter : true;
+      const inCategory = activeCategory ? g.category === activeCategory : true;
       const inQuery = q
         ? g.term.toLowerCase().includes(q) ||
           g.short.toLowerCase().includes(q) ||
           (g.aliases ?? []).some((a) => a.toLowerCase().includes(q)) ||
           g.category.toLowerCase().includes(q)
         : true;
-      return inLetter && inQuery;
+      return inLetter && inCategory && inQuery;
     });
-  }, [all, query, activeLetter]);
+  }, [all, query, activeLetter, activeCategory]);
 
   const letters = React.useMemo(() => glossaryByLetter(), []);
   const byCategory = React.useMemo(() => glossaryByCategory(), []);
   const popular = React.useMemo(() => popularGlossary(), []);
-  const isFiltering = query.trim().length > 0 || activeLetter !== null;
+  const categories = React.useMemo(
+    () => Array.from(new Set(all.map((g) => g.category))).sort(),
+    [all],
+  );
+  const isFiltering =
+    query.trim().length > 0 || activeLetter !== null || activeCategory !== null;
 
   return (
     <div className="min-h-screen bg-background">
