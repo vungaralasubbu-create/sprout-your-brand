@@ -203,7 +203,7 @@ export const getContentGaps = createServerFn({ method: "GET" })
     const s = context.supabase;
     const [{ data: items }, { data: courses }] = await Promise.all([
       s.from("content_items").select("id, title, slug, type, focus_topic").eq("status", "published"),
-      s.from("courses").select("id, name, slug, category_id").eq("published", true).limit(200),
+      s.from("courses").select("id, name, slug, category_id").limit(200),
     ]);
 
     const existingTitles = new Set((items ?? []).map((i: any) => String(i.title ?? "").toLowerCase()));
