@@ -470,8 +470,20 @@ function CoursePage() {
         </Container>
       </Section>
 
-      {/* ============ TRUST STATS ============ */}
-      <CourseTrustStats />
+      {/* ============ SUCCESS COUNTERS ============ */}
+      <SuccessCounters />
+
+      {/* ============ PERSONALIZATION (journey-aware) ============ */}
+      <ProgramPersonalization />
+
+      {/* ============ HIRING PARTNERS ============ */}
+      <HiringPartners />
+
+      {/* ============ TOOLS YOU'LL MASTER ============ */}
+      <ToolsMaster />
+
+      {/* ============ 8-STAGE JOURNEY ============ */}
+      <StudentLearningJourney />
 
       {/* ============ LEARNING JOURNEY ============ */}
       <Section className="py-16 lg:py-24 bg-surface-2/40 border-y">
