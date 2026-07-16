@@ -218,6 +218,7 @@ import { Route as AuthenticatedAdminPartnerBrandsRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './routes/_authenticated/admin.partner-applications'
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
+import { Route as AuthenticatedAdminMarketplaceRouteImport } from './routes/_authenticated/admin.marketplace'
 import { Route as AuthenticatedAdminLlmRouteImport } from './routes/_authenticated/admin.llm'
 import { Route as AuthenticatedAdminLiveRouteImport } from './routes/_authenticated/admin.live'
 import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authenticated/admin.leads'
@@ -1528,6 +1529,12 @@ const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
   path: '/media',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminMarketplaceRoute =
+  AuthenticatedAdminMarketplaceRouteImport.update({
+    id: '/marketplace',
+    path: '/marketplace',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminLlmRoute = AuthenticatedAdminLlmRouteImport.update({
   id: '/llm',
   path: '/llm',
@@ -2745,6 +2752,7 @@ export interface FileRoutesByFullPath {
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/live': typeof AuthenticatedAdminLiveRoute
   '/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
+  '/admin/marketplace': typeof AuthenticatedAdminMarketplaceRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -3123,6 +3131,7 @@ export interface FileRoutesByTo {
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
   '/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/admin/live': typeof AuthenticatedAdminLiveRoute
+  '/admin/marketplace': typeof AuthenticatedAdminMarketplaceRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -3515,6 +3524,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/leads': typeof AuthenticatedAdminLeadsRoute
   '/_authenticated/admin/live': typeof AuthenticatedAdminLiveRoute
   '/_authenticated/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
+  '/_authenticated/admin/marketplace': typeof AuthenticatedAdminMarketplaceRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
   '/_authenticated/admin/partner-applications': typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -3908,6 +3918,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/live'
     | '/admin/llm'
+    | '/admin/marketplace'
     | '/admin/media'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -4286,6 +4297,7 @@ export interface FileRouteTypes {
     | '/admin/lead-ownership'
     | '/admin/leads'
     | '/admin/live'
+    | '/admin/marketplace'
     | '/admin/media'
     | '/admin/model-approvals'
     | '/admin/partner-applications'
@@ -4677,6 +4689,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/leads'
     | '/_authenticated/admin/live'
     | '/_authenticated/admin/llm'
+    | '/_authenticated/admin/marketplace'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/model-approvals'
     | '/_authenticated/admin/partner-applications'
@@ -6477,6 +6490,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/marketplace': {
+      id: '/_authenticated/admin/marketplace'
+      path: '/marketplace'
+      fullPath: '/admin/marketplace'
+      preLoaderRoute: typeof AuthenticatedAdminMarketplaceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/llm': {
       id: '/_authenticated/admin/llm'
       path: '/llm'
@@ -8126,6 +8146,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminLeadsRoute: typeof AuthenticatedAdminLeadsRoute
   AuthenticatedAdminLiveRoute: typeof AuthenticatedAdminLiveRoute
   AuthenticatedAdminLlmRoute: typeof AuthenticatedAdminLlmRouteWithChildren
+  AuthenticatedAdminMarketplaceRoute: typeof AuthenticatedAdminMarketplaceRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
   AuthenticatedAdminPartnerApplicationsRoute: typeof AuthenticatedAdminPartnerApplicationsRoute
@@ -8207,6 +8228,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminLeadsRoute: AuthenticatedAdminLeadsRoute,
   AuthenticatedAdminLiveRoute: AuthenticatedAdminLiveRoute,
   AuthenticatedAdminLlmRoute: AuthenticatedAdminLlmRouteWithChildren,
+  AuthenticatedAdminMarketplaceRoute: AuthenticatedAdminMarketplaceRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,
   AuthenticatedAdminPartnerApplicationsRoute:
