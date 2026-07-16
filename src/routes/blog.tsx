@@ -824,13 +824,9 @@ function LargeCard({ post, flip }: { post: BlogPost; flip: boolean }) {
       <Link
         to="/blog/$slug"
         params={{ slug: post.slug }}
-        className="md:col-span-3 group aspect-[16/10] md:aspect-auto md:min-h-[320px] bg-gradient-brand-soft overflow-hidden [direction:ltr]"
+        className="md:col-span-3 group aspect-[16/10] md:aspect-auto md:min-h-[320px] overflow-hidden [direction:ltr]"
       >
-        {post.featured_image_url ? (
-          <img src={post.featured_image_url} alt="" loading="lazy" decoding="async" width="1200" height="750" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
-        ) : (
-          <div className="size-full flex items-center justify-center"><TopicGlyph style={post.topic?.visual_style ?? "grid"} /></div>
-        )}
+        <BlogCover post={post} variant="hero" />
       </Link>
       <div className="md:col-span-2 p-6 md:p-10 [direction:ltr]">
         <div className="text-xs text-muted-foreground uppercase tracking-wider">{post.topic?.name ?? "Insights"}</div>
@@ -861,12 +857,8 @@ function LargeCard({ post, flip }: { post: BlogPost; flip: boolean }) {
 function WideCard({ post }: { post: BlogPost }) {
   return (
     <article className="rounded-3xl border bg-card overflow-hidden">
-      <Link to="/blog/$slug" params={{ slug: post.slug }} className="group block aspect-[21/9] bg-gradient-brand-soft overflow-hidden">
-        {post.featured_image_url ? (
-          <img src={post.featured_image_url} alt="" loading="lazy" decoding="async" width="1200" height="750" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
-        ) : (
-          <div className="size-full flex items-center justify-center"><TopicGlyph style={post.topic?.visual_style ?? "grid"} /></div>
-        )}
+      <Link to="/blog/$slug" params={{ slug: post.slug }} className="group block aspect-[21/9] overflow-hidden">
+        <BlogCover post={post} variant="hero" />
       </Link>
       <div className="p-6 md:p-10">
         <div className="text-xs text-muted-foreground uppercase tracking-wider">{post.topic?.name ?? "Insights"}</div>
@@ -895,12 +887,8 @@ function CompactCard({ post }: { post: BlogPost }) {
       params={{ slug: post.slug }}
       className="group flex flex-col rounded-2xl border bg-card overflow-hidden hover:border-primary/40 transition h-full"
     >
-      <div className="aspect-[16/10] bg-gradient-brand-soft overflow-hidden">
-        {post.featured_image_url ? (
-          <img src={post.featured_image_url} alt="" loading="lazy" decoding="async" width="1200" height="750" className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none" />
-        ) : (
-          <div className="size-full flex items-center justify-center"><TopicGlyph style={post.topic?.visual_style ?? "grid"} /></div>
-        )}
+      <div className="aspect-[16/10] overflow-hidden">
+        <BlogCover post={post} variant="card" />
       </div>
       <div className="p-5 flex flex-col gap-3 flex-1">
         <div className="text-xs text-muted-foreground">{post.topic?.name ?? "Insights"}</div>
