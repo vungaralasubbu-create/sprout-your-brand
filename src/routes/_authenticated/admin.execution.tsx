@@ -390,7 +390,7 @@ function WorkflowsTab({
                 })}
               </div>
               <p className="mt-1.5 text-[11px] text-muted-foreground">
-                {EXECUTION_MODES[settings.perWorkflowMode[selected.id] ?? selected.defaultMode].description}
+                {EXECUTION_MODES[(settings.perWorkflowMode[selected.id] ?? selected.defaultMode) as ExecutionMode].description}
               </p>
             </div>
 
