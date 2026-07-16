@@ -8,6 +8,7 @@ import { listCareerMaps } from "@/data/career-maps";
 import { listTools } from "@/data/tools";
 import { articles as learnArticles, collections as learnCollections, topics as learnTopics } from "@/data/learn";
 import { AGENTS } from "@/lib/aios/agents";
+import { listPillars, listAllClusters } from "@/data/topics";
 
 const BASE_URL = "https://glintr.com";
 
@@ -55,6 +56,7 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/payout-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/refund-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/cookie-policy", changefreq: "yearly", priority: "0.3" },
+  { path: "/topics", changefreq: "weekly", priority: "0.9" },
 ];
 
 function esc(s: string) {
@@ -86,6 +88,17 @@ export const Route = createFileRoute("/sitemap.xml")({
         }
         for (const cm of listCareerMaps()) {
           entries.push({ path: `/career-maps/${cm.slug}`, changefreq: "monthly", priority: "0.5" });
+        }
+        for (const p of listPillars()) {
+          entries.push({ path: `/topics/${p.slug}`, changefreq: "weekly", priority: "0.8" });
+        }
+        for (const c of listAllClusters()) {
+          entries.push({
+            path: `/topics/${c.pillarSlug}/${c.slug}`,
+            lastmod: c.updatedAt,
+            changefreq: "monthly",
+            priority: "0.6",
+          });
         }
         for (const t of listTools()) {
           entries.push({ path: `/tools/${t.slug}`, changefreq: "monthly", priority: "0.7" });

@@ -52,6 +52,7 @@ import { Route as R50SupportedModelRouteImport } from './routes/50-supported-mod
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspaceIndexRouteImport } from './routes/workspace.index'
+import { Route as TopicsIndexRouteImport } from './routes/topics.index'
 import { Route as ToolsIndexRouteImport } from './routes/tools.index'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as MyIndexRouteImport } from './routes/my.index'
@@ -108,12 +109,14 @@ import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as WorkspaceVoiceIndexRouteImport } from './routes/workspace.voice.index'
 import { Route as WorkspaceNotebooksIndexRouteImport } from './routes/workspace.notebooks.index'
+import { Route as TopicsPillarIndexRouteImport } from './routes/topics.$pillar.index'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as WorkspaceVoiceSettingsRouteImport } from './routes/workspace.voice.settings'
 import { Route as WorkspaceVoiceHistoryRouteImport } from './routes/workspace.voice.history'
 import { Route as WorkspaceNotebooksIdRouteImport } from './routes/workspace.notebooks.$id'
+import { Route as TopicsPillarClusterRouteImport } from './routes/topics.$pillar.$cluster'
 import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
 import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collections.$slug'
@@ -546,6 +549,11 @@ const WorkspaceIndexRoute = WorkspaceIndexRouteImport.update({
   path: '/',
   getParentRoute: () => WorkspaceRoute,
 } as any)
+const TopicsIndexRoute = TopicsIndexRouteImport.update({
+  id: '/topics/',
+  path: '/topics/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsIndexRoute = ToolsIndexRouteImport.update({
   id: '/tools/',
   path: '/tools/',
@@ -827,6 +835,11 @@ const WorkspaceNotebooksIndexRoute = WorkspaceNotebooksIndexRouteImport.update({
   path: '/notebooks/',
   getParentRoute: () => WorkspaceRoute,
 } as any)
+const TopicsPillarIndexRoute = TopicsPillarIndexRouteImport.update({
+  id: '/topics/$pillar/',
+  path: '/topics/$pillar/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgramsCategoryIndexRoute = ProgramsCategoryIndexRouteImport.update({
   id: '/programs/$category/',
   path: '/programs/$category/',
@@ -857,6 +870,11 @@ const WorkspaceNotebooksIdRoute = WorkspaceNotebooksIdRouteImport.update({
   id: '/notebooks/$id',
   path: '/notebooks/$id',
   getParentRoute: () => WorkspaceRoute,
+} as any)
+const TopicsPillarClusterRoute = TopicsPillarClusterRouteImport.update({
+  id: '/topics/$pillar/$cluster',
+  path: '/topics/$pillar/$cluster',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const StudentSupportRequestsRefRoute =
   StudentSupportRequestsRefRouteImport.update({
@@ -2246,6 +2264,7 @@ export interface FileRoutesByFullPath {
   '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
+  '/topics/': typeof TopicsIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/admin/account': typeof AuthenticatedAdminAccountRoute
@@ -2351,12 +2370,14 @@ export interface FileRoutesByFullPath {
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
+  '/topics/$pillar/$cluster': typeof TopicsPillarClusterRoute
   '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/topics/$pillar/': typeof TopicsPillarIndexRoute
   '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
   '/workspace/voice/': typeof WorkspaceVoiceIndexRoute
   '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
@@ -2563,6 +2584,7 @@ export interface FileRoutesByTo {
   '/my': typeof MyIndexRoute
   '/programs': typeof ProgramsIndexRoute
   '/tools': typeof ToolsIndexRoute
+  '/topics': typeof TopicsIndexRoute
   '/workspace': typeof WorkspaceIndexRoute
   '/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/admin/account': typeof AuthenticatedAdminAccountRoute
@@ -2662,12 +2684,14 @@ export interface FileRoutesByTo {
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
+  '/topics/$pillar/$cluster': typeof TopicsPillarClusterRoute
   '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
+  '/topics/$pillar': typeof TopicsPillarIndexRoute
   '/workspace/notebooks': typeof WorkspaceNotebooksIndexRoute
   '/workspace/voice': typeof WorkspaceVoiceIndexRoute
   '/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
@@ -2882,6 +2906,7 @@ export interface FileRoutesById {
   '/my/': typeof MyIndexRoute
   '/programs/': typeof ProgramsIndexRoute
   '/tools/': typeof ToolsIndexRoute
+  '/topics/': typeof TopicsIndexRoute
   '/workspace/': typeof WorkspaceIndexRoute
   '/_authenticated/admin/access-restricted': typeof AuthenticatedAdminAccessRestrictedRoute
   '/_authenticated/admin/account': typeof AuthenticatedAdminAccountRoute
@@ -2987,12 +3012,14 @@ export interface FileRoutesById {
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
+  '/topics/$pillar/$cluster': typeof TopicsPillarClusterRoute
   '/workspace/notebooks/$id': typeof WorkspaceNotebooksIdRoute
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
+  '/topics/$pillar/': typeof TopicsPillarIndexRoute
   '/workspace/notebooks/': typeof WorkspaceNotebooksIndexRoute
   '/workspace/voice/': typeof WorkspaceVoiceIndexRoute
   '/_authenticated/admin/ai-agents/analytics': typeof AuthenticatedAdminAiAgentsAnalyticsRoute
@@ -3207,6 +3234,7 @@ export interface FileRouteTypes {
     | '/my/'
     | '/programs/'
     | '/tools/'
+    | '/topics/'
     | '/workspace/'
     | '/admin/access-restricted'
     | '/admin/account'
@@ -3312,12 +3340,14 @@ export interface FileRouteTypes {
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
+    | '/topics/$pillar/$cluster'
     | '/workspace/notebooks/$id'
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin/'
     | '/student/'
     | '/programs/$category/'
+    | '/topics/$pillar/'
     | '/workspace/notebooks/'
     | '/workspace/voice/'
     | '/admin/ai-agents/analytics'
@@ -3524,6 +3554,7 @@ export interface FileRouteTypes {
     | '/my'
     | '/programs'
     | '/tools'
+    | '/topics'
     | '/workspace'
     | '/admin/access-restricted'
     | '/admin/account'
@@ -3623,12 +3654,14 @@ export interface FileRouteTypes {
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
+    | '/topics/$pillar/$cluster'
     | '/workspace/notebooks/$id'
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin'
     | '/student'
     | '/programs/$category'
+    | '/topics/$pillar'
     | '/workspace/notebooks'
     | '/workspace/voice'
     | '/admin/ai-agents/analytics'
@@ -3842,6 +3875,7 @@ export interface FileRouteTypes {
     | '/my/'
     | '/programs/'
     | '/tools/'
+    | '/topics/'
     | '/workspace/'
     | '/_authenticated/admin/access-restricted'
     | '/_authenticated/admin/account'
@@ -3947,12 +3981,14 @@ export interface FileRouteTypes {
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
+    | '/topics/$pillar/$cluster'
     | '/workspace/notebooks/$id'
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/_authenticated/admin/'
     | '/_authenticated/student/'
     | '/programs/$category/'
+    | '/topics/$pillar/'
     | '/workspace/notebooks/'
     | '/workspace/voice/'
     | '/_authenticated/admin/ai-agents/analytics'
@@ -4124,11 +4160,14 @@ export interface RootRouteChildren {
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ToolsIndexRoute: typeof ToolsIndexRoute
+  TopicsIndexRoute: typeof TopicsIndexRoute
   ApiV1HealthRoute: typeof ApiV1HealthRoute
   ApiV1VersionRoute: typeof ApiV1VersionRoute
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
+  TopicsPillarClusterRoute: typeof TopicsPillarClusterRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
+  TopicsPillarIndexRoute: typeof TopicsPillarIndexRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
   ApiV1CertificatesVerifyCodeRoute: typeof ApiV1CertificatesVerifyCodeRoute
@@ -4436,6 +4475,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspace/'
       preLoaderRoute: typeof WorkspaceIndexRouteImport
       parentRoute: typeof WorkspaceRoute
+    }
+    '/topics/': {
+      id: '/topics/'
+      path: '/topics'
+      fullPath: '/topics/'
+      preLoaderRoute: typeof TopicsIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/tools/': {
       id: '/tools/'
@@ -4829,6 +4875,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspaceNotebooksIndexRouteImport
       parentRoute: typeof WorkspaceRoute
     }
+    '/topics/$pillar/': {
+      id: '/topics/$pillar/'
+      path: '/topics/$pillar'
+      fullPath: '/topics/$pillar/'
+      preLoaderRoute: typeof TopicsPillarIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/programs/$category/': {
       id: '/programs/$category/'
       path: '/programs/$category'
@@ -4870,6 +4923,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspace/notebooks/$id'
       preLoaderRoute: typeof WorkspaceNotebooksIdRouteImport
       parentRoute: typeof WorkspaceRoute
+    }
+    '/topics/$pillar/$cluster': {
+      id: '/topics/$pillar/$cluster'
+      path: '/topics/$pillar/$cluster'
+      fullPath: '/topics/$pillar/$cluster'
+      preLoaderRoute: typeof TopicsPillarClusterRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/student-support/requests/$ref': {
       id: '/student-support/requests/$ref'
@@ -7465,11 +7525,14 @@ const rootRouteChildren: RootRouteChildren = {
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   ToolsIndexRoute: ToolsIndexRoute,
+  TopicsIndexRoute: TopicsIndexRoute,
   ApiV1HealthRoute: ApiV1HealthRoute,
   ApiV1VersionRoute: ApiV1VersionRoute,
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
+  TopicsPillarClusterRoute: TopicsPillarClusterRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
+  TopicsPillarIndexRoute: TopicsPillarIndexRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
   ApiV1CertificatesVerifyCodeRoute: ApiV1CertificatesVerifyCodeRoute,
