@@ -7,7 +7,8 @@ import { useState } from "react";
 import {
   Sparkles, Brain, Target, Megaphone, Search, BookOpen, Globe, FileText,
   Wallet, GraduationCap, LifeBuoy, Bell, Zap, TrendingUp, AlertTriangle,
-  CheckCircle2, ArrowRight, Loader2, RefreshCw,
+  CheckCircle2, ArrowRight, Loader2, RefreshCw, Home, ClipboardList,
+  FolderOpen, Settings2, Building2,
 } from "lucide-react";
 import {
   getBusinessBriefing, getSalesCoach, getMarketingIdeas, getPartnerKpis,
@@ -18,6 +19,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import {
+  BrandSwitcher, BusinessHome, TaskCenter, DocumentCenter, SettingsCenter, MultiBrandCenter,
+} from "@/components/business-os/hub-extras";
 
 export const Route = createFileRoute("/_authenticated/partner/business-os")({
   component: () => (<AcademyGate><BusinessOS /></AcademyGate>),
@@ -25,23 +29,29 @@ export const Route = createFileRoute("/_authenticated/partner/business-os")({
 });
 
 const MODULES = [
+  { id: "home", label: "Business Home", icon: Home },
   { id: "advisor", label: "AI Advisor", icon: Brain },
-  { id: "sales", label: "Sales Coach", icon: Target },
+  { id: "tasks", label: "Tasks", icon: ClipboardList },
+  { id: "sales", label: "Sales", icon: Target },
   { id: "marketing", label: "Marketing", icon: Megaphone },
   { id: "seo", label: "SEO", icon: Search },
-  { id: "course", label: "Course Optimizer", icon: BookOpen },
+  { id: "course", label: "Courses", icon: BookOpen },
   { id: "website", label: "Website", icon: Globe },
   { id: "content", label: "Content", icon: FileText },
   { id: "finance", label: "Finance", icon: Wallet },
-  { id: "students", label: "Student Success", icon: GraduationCap },
+  { id: "students", label: "Students", icon: GraduationCap },
   { id: "support", label: "Support", icon: LifeBuoy },
   { id: "insights", label: "Insights", icon: Sparkles },
   { id: "notifications", label: "Inbox", icon: Bell },
   { id: "automation", label: "Automation", icon: Zap },
+  { id: "documents", label: "Documents", icon: FolderOpen },
+  { id: "brands", label: "Brands", icon: Building2 },
+  { id: "settings", label: "Settings", icon: Settings2 },
 ];
 
+
 function BusinessOS() {
-  const [tab, setTab] = useState("advisor");
+  const [tab, setTab] = useState("home");
   const fetchKpis = useServerFn(getPartnerKpis);
   const { data: kpis } = useQuery({ queryKey: ["partner-kpis-os"], queryFn: () => fetchKpis() });
 
@@ -49,17 +59,20 @@ function BusinessOS() {
     <div className="min-h-screen bg-[#050915] text-slate-100">
       <div className="border-b border-white/5 bg-gradient-to-b from-cyan-500/5 to-transparent">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <div className="flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/30">
-              <Brain className="h-6 w-6 text-white" />
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/30">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <div className="text-xs uppercase tracking-widest text-cyan-300/80">Glintr</div>
+                <h1 className="text-3xl font-semibold">Business Operating System</h1>
+              </div>
             </div>
-            <div>
-              <div className="text-xs uppercase tracking-widest text-cyan-300/80">Glintr</div>
-              <h1 className="text-3xl font-semibold">AI Business Operating System</h1>
-            </div>
+            <BrandSwitcher />
           </div>
           <p className="mt-2 max-w-3xl text-sm text-slate-400">
-            Your AI CEO, Marketing Head, Sales Manager, SEO Expert and Operations Manager — working with you inside Glintr.
+            Shopify + HubSpot + Notion + Salesforce — built for education. Launch, operate, grow, and scale an entire academy from one dashboard.
           </p>
 
           <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -86,8 +99,14 @@ function BusinessOS() {
           </TabsList>
 
           <div className="mt-6">
+            <TabsContent value="home"><BusinessHome /></TabsContent>
+            <TabsContent value="tasks"><TaskCenter /></TabsContent>
+            <TabsContent value="documents"><DocumentCenter /></TabsContent>
+            <TabsContent value="brands"><MultiBrandCenter /></TabsContent>
+            <TabsContent value="settings"><SettingsCenter /></TabsContent>
             <TabsContent value="advisor"><AdvisorPanel /></TabsContent>
             <TabsContent value="sales"><SalesPanel /></TabsContent>
+
             <TabsContent value="marketing"><MarketingPanel /></TabsContent>
             <TabsContent value="seo"><SimplePanel title="AI SEO Manager" items={[
               "Scan for missing keywords across your top pages",
