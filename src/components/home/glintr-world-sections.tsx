@@ -541,8 +541,10 @@ const CATEGORY_LABELS: Array<{ key: Category; label: string }> = [
 export function CertificationEcosystem() {
   const [expanded, setExpanded] = React.useState(false);
   const [cat, setCat] = React.useState<Category>("all");
-  const rail1 = BRANDS;
-  const rail2 = [...BRANDS].reverse();
+  const mid = Math.ceil(BRANDS.length / 2);
+  const rail1 = BRANDS.slice(0, mid);
+  const rail2 = BRANDS.slice(mid);
+
 
   const isHighlighted = (b: typeof BRANDS[number]) => cat === "all" || b.cats.includes(cat);
 
