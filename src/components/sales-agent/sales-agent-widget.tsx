@@ -395,14 +395,14 @@ export function SalesAgentWidget() {
       try {
         const { submitLead } = await import("@/lib/leads/client");
         await submitLead({
-          name: rawPhone ? "GlintrAI Visitor" : "",
-          email: `ai+${conversationId.slice(0, 8)}@glintr.local`,
+          name: "GlintrAI Visitor",
           phone: rawPhone,
           interested_course: courseMatch ? courseMatch[1] : undefined,
           source: "ai",
           source_detail: verified ? "otp_verified" : "phone_captured",
           metadata: { firstQuestion, conversationId, path },
         });
+
       } catch {
         /* mirroring is best-effort */
       }
