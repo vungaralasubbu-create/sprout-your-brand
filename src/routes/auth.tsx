@@ -166,6 +166,8 @@ function AuthPage() {
     if (!res.ok) return toast.error(res.error);
     toast.success("OTP sent to your mobile.");
     setStage("otp");
+  }
+
 
   async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
