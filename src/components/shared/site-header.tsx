@@ -363,7 +363,7 @@ export function SiteHeader() {
         scrolled ? "surface-glass-strong shadow-sm border-b border-border/60" : "bg-transparent",
       )}
     >
-      <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 md:px-8 h-16">
+      <div className={cn("mx-auto flex max-w-[1440px] items-center gap-4 px-4 md:px-8 transition-[height] duration-300", scrolled ? "h-14" : "h-16")}>
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <GlintrLogo className="h-8" />
         </Link>
