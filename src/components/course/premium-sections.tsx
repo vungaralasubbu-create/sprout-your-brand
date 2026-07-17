@@ -220,28 +220,53 @@ function MobileToolsCarousel({ list }: { list: ToolItem[] }) {
     >
       {list.map((t, i) => {
         const Icon = t.icon;
+        const logoUrl = toolLogoUrl(t.name);
         return (
           <div
             key={t.name}
-            className="group shrink-0 basis-[calc((100%-1.5rem)/3)] snap-start rounded-2xl border border-border/60 bg-surface-1 p-3 flex flex-col items-center text-center shadow-sm"
+            className="group shrink-0 basis-[calc((100%-1.5rem)/3)] snap-start rounded-xl border border-border/60 bg-surface-1 px-2 py-2.5 flex flex-col items-center justify-center text-center shadow-sm"
             aria-label={t.name}
           >
-            <span
-              className={cn(
-                "inline-flex size-8 items-center justify-center rounded-lg bg-gradient-to-br text-white shadow-sm",
-                TOOL_TONES[i % TOOL_TONES.length],
-              )}
-            >
-              <Icon className="size-4" />
-            </span>
-            <div className="mt-2 text-[12px] font-semibold tracking-tight leading-tight line-clamp-1">
+            {logoUrl ? (
+              <span className="inline-flex size-8 items-center justify-center rounded-md bg-white">
+                <img
+                  src={logoUrl}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  width={24}
+                  height={24}
+                  className="size-6 object-contain"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                    const fb = (e.currentTarget.nextSibling as HTMLElement) || null;
+                    if (fb) fb.style.display = "inline-flex";
+                  }}
+                />
+                <span
+                  aria-hidden
+                  style={{ display: "none" }}
+                  className={cn(
+                    "size-6 items-center justify-center rounded-md bg-gradient-to-br text-white",
+                    TOOL_TONES[i % TOOL_TONES.length],
+                  )}
+                >
+                  <Icon className="size-3.5" />
+                </span>
+              </span>
+            ) : (
+              <span
+                className={cn(
+                  "inline-flex size-8 items-center justify-center rounded-md bg-gradient-to-br text-white shadow-sm",
+                  TOOL_TONES[i % TOOL_TONES.length],
+                )}
+              >
+                <Icon className="size-4" />
+              </span>
+            )}
+            <div className="mt-1.5 text-[11.5px] font-semibold tracking-tight leading-tight line-clamp-1">
               {t.name}
             </div>
-            {t.subtitle ? (
-              <div className="mt-0.5 text-[10px] text-muted-foreground line-clamp-1">
-                {t.subtitle}
-              </div>
-            ) : null}
           </div>
         );
       })}
