@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck } from "lucide-react";
+import {
+  Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck,
+  RefreshCw, ArrowLeft, LifeBuoy,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -13,8 +16,15 @@ import {
   type SalesCard,
   type SalesReply,
 } from "@/lib/sales-agent/chat.functions";
+import { getSalesOtpConfig } from "@/lib/sales-agent/otp.functions";
+import { requestLoginOtp, verifyLoginOtp } from "@/lib/auth/otp.functions";
 import { GLINTR_AI_OPEN_EVENT, type OpenGlintrAIDetail } from "@/lib/glintr-ai";
 import { supabase } from "@/integrations/supabase/client";
+
+type PhoneStep = "collect" | "otp" | "recovery";
+const RESEND_SECONDS = 30;
+const MAX_OTP_ATTEMPTS = 5;
+const MAX_RESENDS = 3;
 
 type UiMessage = {
   role: "user" | "assistant";
@@ -66,6 +76,17 @@ export function SalesAgentWidget() {
   const [firstQuestion, setFirstQuestion] = useState<string | null>(null);
   const [phoneInput, setPhoneInput] = useState("");
   const [submittingPhone, setSubmittingPhone] = useState(false);
+
+  // OTP flow state
+  const [otpEnabled, setOtpEnabled] = useState(false);
+  const [phoneStep, setPhoneStep] = useState<PhoneStep>("collect");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [otpAttempts, setOtpAttempts] = useState(0);
+  const [otpResends, setOtpResends] = useState(0);
+  const [resendIn, setResendIn] = useState(0);
+  const [verifying, setVerifying] = useState(false);
+  const [pendingLead, setPendingLead] = useState<null | (() => Promise<void>)>(null);
   const routerState = useRouterState();
   const path = routerState.location.pathname;
 
@@ -105,7 +126,18 @@ export function SalesAgentWidget() {
         try { window.localStorage.setItem(PHONE_KEY, "1"); } catch { /* ignore */ }
       }
     });
+    // Load OTP feature flag once — falls back to disabled on any failure.
+    void getSalesOtpConfig()
+      .then((cfg) => setOtpEnabled(Boolean(cfg?.enabled)))
+      .catch(() => setOtpEnabled(false));
   }, []);
+
+  // Resend cooldown timer for the OTP step.
+  useEffect(() => {
+    if (resendIn <= 0) return;
+    const id = window.setInterval(() => setResendIn((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => window.clearInterval(id);
+  }, [resendIn]);
 
 
   useEffect(() => {
@@ -200,16 +232,9 @@ export function SalesAgentWidget() {
     [conversationId, path, sending, firstQuestion],
   );
 
-  const submitPhone = useCallback(async () => {
-    const raw = phoneInput.trim();
-    const digits = raw.replace(/\D/g, "");
-    if (digits.length < 6 || digits.length > 15) {
-      toast.error("Please enter a valid mobile number.");
-      return;
-    }
-    if (!conversationId) return;
-    setSubmittingPhone(true);
-    try {
+  const persistLead = useCallback(
+    async (rawPhone: string, verified: boolean) => {
+      if (!conversationId) return;
       const device =
         typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
           ? "mobile"
@@ -227,33 +252,156 @@ export function SalesAgentWidget() {
           if (v) utm[k] = v.slice(0, 120);
         }
       }
-      // Detect course slug when the user is on a programs/courses page.
       const courseMatch = path.match(/^\/(?:programs|courses)\/[^/]+\/([^/?#]+)/);
       await capturePhoneLead({
         data: {
           conversationId,
-          phone: raw,
+          phone: rawPhone,
           firstQuestion: firstQuestion ?? undefined,
           pagePath: path,
           courseSlug: courseMatch ? courseMatch[1] : undefined,
           referralSource: referralSource ?? undefined,
           sourceUrl: sourceUrl ?? undefined,
           browser: browser ?? undefined,
-          utm: Object.keys(utm).length ? utm : undefined,
+          utm: Object.keys(utm).length
+            ? { ...utm, otp_verified: verified ? "true" : "false" }
+            : { otp_verified: verified ? "true" : "false" },
           device,
         },
       });
-
       setPhoneCaptured(true);
-      if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
-      toast.success("Thanks! Continuing your conversation…");
-      setTimeout(() => inputRef.current?.focus(), 60);
+      if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, verified ? "verified" : "1");
+    },
+    [conversationId, firstQuestion, path],
+  );
+
+  const submitPhone = useCallback(async () => {
+    const raw = phoneInput.trim();
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length < 6 || digits.length > 15) {
+      toast.error("Please enter a valid mobile number.");
+      return;
+    }
+    if (!conversationId) return;
+    setSubmittingPhone(true);
+    try {
+      if (!otpEnabled) {
+        await persistLead(raw, false);
+        toast.success("Thanks! Continuing your conversation…");
+        setTimeout(() => inputRef.current?.focus(), 60);
+        return;
+      }
+      // OTP path: request code, move to verify step. Keep lead unpersisted
+      // until verification succeeds so we don't count unverified numbers.
+      const res = await requestLoginOtp({ data: { mobile: raw, purpose: "login" } });
+      if (!res.ok) {
+        toast.error(res.error || "Couldn't send the OTP. Please try again.");
+        return;
+      }
+      setPendingLead(() => async () => persistLead(raw, true));
+      setOtpCode("");
+      setOtpError(null);
+      setOtpAttempts(0);
+      setOtpResends(0);
+      setResendIn(RESEND_SECONDS);
+      setPhoneStep("otp");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Couldn't save your number. Please try again.");
     } finally {
       setSubmittingPhone(false);
     }
-  }, [phoneInput, conversationId, firstQuestion, path]);
+  }, [phoneInput, conversationId, otpEnabled, persistLead]);
+
+  const resendOtp = useCallback(async () => {
+    if (resendIn > 0 || otpResends >= MAX_RESENDS) return;
+    const raw = phoneInput.trim();
+    try {
+      const res = await requestLoginOtp({ data: { mobile: raw, purpose: "login" } });
+      if (!res.ok) {
+        setOtpError(res.error || "Couldn't resend the OTP. Try again in a minute.");
+        return;
+      }
+      setOtpResends((c) => c + 1);
+      setResendIn(RESEND_SECONDS);
+      setOtpError(null);
+      setOtpCode("");
+      toast.success("New OTP sent.");
+    } catch (err) {
+      setOtpError(err instanceof Error ? err.message : "Network issue. Please try again.");
+    }
+  }, [phoneInput, resendIn, otpResends]);
+
+  const submitOtp = useCallback(async () => {
+    if (verifying) return;
+    const code = otpCode.replace(/\D/g, "");
+    if (code.length !== 6) {
+      setOtpError("Enter the 6-digit code sent to your mobile.");
+      return;
+    }
+    setVerifying(true);
+    setOtpError(null);
+    try {
+      const res = await verifyLoginOtp({ data: { mobile: phoneInput.trim(), code } });
+      if (!res.ok) {
+        const nextAttempts = otpAttempts + 1;
+        setOtpAttempts(nextAttempts);
+        setOtpCode("");
+        if (nextAttempts >= MAX_OTP_ATTEMPTS) {
+          setPhoneStep("recovery");
+          setOtpError("Too many incorrect attempts. Pick a recovery option below.");
+        } else {
+          const remaining = MAX_OTP_ATTEMPTS - nextAttempts;
+          setOtpError(`${res.error || "Incorrect OTP."} ${remaining} attempt${remaining === 1 ? "" : "s"} left.`);
+        }
+        return;
+      }
+      // Verified — persist the lead as verified and resume the conversation.
+      if (pendingLead) await pendingLead();
+      toast.success("Verified. Continuing your conversation…");
+      setPhoneStep("collect");
+      setPendingLead(null);
+      setTimeout(() => inputRef.current?.focus(), 60);
+    } catch (err) {
+      setOtpError(err instanceof Error ? err.message : "Verification failed. Please try again.");
+    } finally {
+      setVerifying(false);
+    }
+  }, [otpCode, otpAttempts, phoneInput, verifying, pendingLead]);
+
+  const changeNumber = useCallback(() => {
+    setPhoneStep("collect");
+    setOtpCode("");
+    setOtpError(null);
+    setOtpAttempts(0);
+    setOtpResends(0);
+    setResendIn(0);
+    setPendingLead(null);
+  }, []);
+
+  const skipToHuman = useCallback(async () => {
+    // Recovery path: capture the number as unverified so a counsellor can call back,
+    // reveal handover options immediately, and unblock the chat.
+    const raw = phoneInput.trim();
+    try {
+      if (raw.replace(/\D/g, "").length >= 6) {
+        await persistLead(raw, false);
+      } else {
+        setPhoneCaptured(true);
+        if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
+      }
+      setHandover({
+        email: "admissions@glintr.com",
+        phone: "+91 90000 00000",
+        whatsapp: "919000000000",
+        reason: "otp_failure",
+      });
+      setPhoneStep("collect");
+      setPendingLead(null);
+      toast.message("A counsellor will reach out shortly.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't hand you over. Please try again.");
+    }
+  }, [phoneInput, persistLead]);
 
   if (!ready || hidden) return null;
 
@@ -342,7 +490,7 @@ export function SalesAgentWidget() {
               </div>
             )}
 
-            {showPhoneCard && (
+            {showPhoneCard && phoneStep === "collect" && (
               <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-lime-400/5 p-4 shadow-sm">
                 <div className="flex items-start gap-2.5">
                   <div className="grid place-items-center w-8 h-8 rounded-full bg-primary/15 text-primary shrink-0">
@@ -353,8 +501,9 @@ export function SalesAgentWidget() {
                       Let's personalize your learning journey.
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                      Enter your mobile number to continue chatting with GlintrAI and receive personalized
-                      program recommendations, counselling support and exclusive updates.
+                      {otpEnabled
+                        ? "Enter your mobile number — we'll send a 6-digit OTP to verify and continue your conversation."
+                        : "Enter your mobile number to continue chatting with GlintrAI and receive personalized program recommendations."}
                     </p>
                   </div>
                 </div>
@@ -388,14 +537,146 @@ export function SalesAgentWidget() {
                     >
                       {submittingPhone ? (
                         <>
-                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Saving…
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                          {otpEnabled ? "Sending OTP…" : "Saving…"}
                         </>
                       ) : (
-                        "Continue"
+                        otpEnabled ? "Send OTP" : "Continue"
                       )}
                     </Button>
                   </div>
                 </form>
+              </div>
+            )}
+
+            {showPhoneCard && phoneStep === "otp" && (
+              <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-lime-400/5 p-4 shadow-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start gap-2.5 min-w-0">
+                    <div className="grid place-items-center w-8 h-8 rounded-full bg-primary/15 text-primary shrink-0">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-foreground">Verify your mobile</div>
+                      <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                        Enter the 6-digit code we sent to <span className="font-medium text-foreground">{phoneInput.trim()}</span>.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={changeNumber}
+                    className="text-[11px] text-muted-foreground hover:text-foreground inline-flex items-center gap-1 shrink-0"
+                    aria-label="Change number"
+                  >
+                    <ArrowLeft className="w-3 h-3" /> Change
+                  </button>
+                </div>
+                <form
+                  className="mt-3 flex flex-col gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void submitOtp();
+                  }}
+                >
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    autoFocus
+                    value={otpCode}
+                    onChange={(e) => {
+                      setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6));
+                      if (otpError) setOtpError(null);
+                    }}
+                    placeholder="6-digit code"
+                    className={cn(
+                      "w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none tracking-[0.4em] text-center font-mono",
+                      otpError ? "border-destructive focus:border-destructive" : "border-border focus:border-primary",
+                    )}
+                    aria-label="One-time password"
+                    aria-invalid={otpError ? true : false}
+                    maxLength={6}
+                  />
+                  {otpError && (
+                    <div role="alert" className="text-[11px] text-destructive leading-snug">
+                      {otpError}
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => void resendOtp()}
+                      disabled={resendIn > 0 || otpResends >= MAX_RESENDS}
+                      className="text-[11px] text-muted-foreground hover:text-foreground inline-flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      {resendIn > 0
+                        ? `Resend in ${resendIn}s`
+                        : otpResends >= MAX_RESENDS
+                          ? "Resend limit reached"
+                          : "Resend code"}
+                    </button>
+                    <Button type="submit" size="sm" disabled={verifying || otpCode.length !== 6}>
+                      {verifying ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Verifying…
+                        </>
+                      ) : (
+                        "Verify & continue"
+                      )}
+                    </Button>
+                  </div>
+                  {otpResends >= MAX_RESENDS && (
+                    <button
+                      type="button"
+                      onClick={() => setPhoneStep("recovery")}
+                      className="mt-1 text-[11px] text-primary hover:underline inline-flex items-center gap-1 self-start"
+                    >
+                      <LifeBuoy className="w-3 h-3" /> Not receiving the OTP? Get help
+                    </button>
+                  )}
+                </form>
+              </div>
+            )}
+
+            {showPhoneCard && phoneStep === "recovery" && (
+              <div className="rounded-2xl border border-destructive/30 bg-gradient-to-br from-destructive/5 via-background to-primary/5 p-4 shadow-sm">
+                <div className="flex items-start gap-2.5">
+                  <div className="grid place-items-center w-8 h-8 rounded-full bg-destructive/15 text-destructive shrink-0">
+                    <LifeBuoy className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-foreground">Trouble verifying?</div>
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                      No worries — your progress is saved. Pick what works best for you and a counsellor will pick up where GlintrAI left off.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 flex flex-col gap-2">
+                  <Button type="button" size="sm" onClick={() => void skipToHuman()}>
+                    <MessageCircle className="w-3.5 h-3.5 mr-1.5" /> Connect me with a counsellor
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button type="button" size="sm" variant="outline" className="flex-1" onClick={changeNumber}>
+                      <ArrowLeft className="w-3.5 h-3.5 mr-1.5" /> Use a different number
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      className="flex-1"
+                      onClick={() => {
+                        setPhoneStep("otp");
+                        setOtpError(null);
+                        setOtpAttempts(0);
+                        setResendIn(0);
+                      }}
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Try again
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
