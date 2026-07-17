@@ -313,14 +313,14 @@ const JOURNEY: Array<{ title: string; description: string; icon: React.Component
 
 export function StudentLearningJourney() {
   return (
-    <Section data-reveal className="py-14 lg:py-20 bg-surface-2/40 border-y">
+    <Section data-reveal className="py-8 lg:py-20 bg-surface-2/40 border-y">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">The Path</span>
-          <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+          <h2 className="mt-2 lg:mt-3 text-heading-lg lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             Your Learning Journey
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-3 lg:mt-4 text-sm lg:text-base text-muted-foreground">
             Eight guided milestones — from enrolment to career growth. Structured, mentor-led, outcomes-focused.
           </p>
         </div>
