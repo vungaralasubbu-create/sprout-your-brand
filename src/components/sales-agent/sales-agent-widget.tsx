@@ -907,11 +907,43 @@ export function SalesAgentWidget() {
             </Button>
           </form>
 
+
+          {/* Resize handles — desktop floating only */}
+          {!isMobile && !expanded && (
+            <>
+              <div
+                onPointerDown={startResize("e")}
+                onPointerMove={onResizeMove}
+                onPointerUp={endResize}
+                onPointerCancel={endResize}
+                className="absolute top-0 right-0 h-full w-1.5 cursor-ew-resize hover:bg-primary/20"
+                aria-hidden="true"
+              />
+              <div
+                onPointerDown={startResize("s")}
+                onPointerMove={onResizeMove}
+                onPointerUp={endResize}
+                onPointerCancel={endResize}
+                className="absolute bottom-0 left-0 w-full h-1.5 cursor-ns-resize hover:bg-primary/20"
+                aria-hidden="true"
+              />
+              <div
+                onPointerDown={startResize("se")}
+                onPointerMove={onResizeMove}
+                onPointerUp={endResize}
+                onPointerCancel={endResize}
+                className="absolute bottom-0 right-0 w-3.5 h-3.5 cursor-nwse-resize"
+                aria-hidden="true"
+              />
+            </>
+          )}
         </div>
-      )}
+        );
+      })()}
     </>
   );
 }
+
 
 function MessageBubble({ m, onQuick }: { m: UiMessage; onQuick: (s: string) => void }) {
   const isUser = m.role === "user";
