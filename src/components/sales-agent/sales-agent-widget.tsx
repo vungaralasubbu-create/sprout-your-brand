@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck,
   RefreshCw, ArrowLeft, LifeBuoy,
