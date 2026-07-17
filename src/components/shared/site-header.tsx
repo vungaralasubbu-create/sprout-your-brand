@@ -1,6 +1,8 @@
 import * as React from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
+  Award,
+  Bell,
   BookOpen,
   Briefcase,
   Building2,
@@ -9,12 +11,20 @@ import {
   Clock,
   Cpu,
   Cog,
+  FolderKanban,
   GraduationCap,
   Handshake,
+  LayoutDashboard,
   Layers,
+  LifeBuoy,
+  LogOut,
   Menu,
+  MessageSquare,
   Rocket,
+  Search,
+  Settings,
   Sparkles,
+  User as UserIcon,
   Users,
   Wallet,
   X,
@@ -22,7 +32,22 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { GlintrLogo } from "@/components/shared/logo";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { HeaderSearchDialog } from "@/components/shared/header-search-dialog";
+import { openGlintrAI } from "@/lib/glintr-ai";
+import { supabase } from "@/integrations/supabase/client";
+import { dashboardPathForRole, fetchUserRoles, primaryRole, type AppRole } from "@/lib/auth/role-redirect";
 import { cn } from "@/lib/utils";
+
 
 type MegaItem = {
   label: string;
