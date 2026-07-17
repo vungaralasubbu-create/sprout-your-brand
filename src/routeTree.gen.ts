@@ -246,6 +246,7 @@ import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_
 import { Route as AuthenticatedAdminLeadIntelligenceRouteImport } from './routes/_authenticated/admin.lead-intelligence'
 import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
+import { Route as AuthenticatedAdminExecutiveRouteImport } from './routes/_authenticated/admin.executive'
 import { Route as AuthenticatedAdminExecutionRouteImport } from './routes/_authenticated/admin.execution'
 import { Route as AuthenticatedAdminEnrollmentBrainRouteImport } from './routes/_authenticated/admin.enrollment-brain'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
@@ -1717,6 +1718,12 @@ const AuthenticatedAdminInfrastructureRoute =
     path: '/infrastructure',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminExecutiveRoute =
+  AuthenticatedAdminExecutiveRouteImport.update({
+    id: '/executive',
+    path: '/executive',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminExecutionRoute =
   AuthenticatedAdminExecutionRouteImport.update({
     id: '/execution',
@@ -2956,6 +2963,7 @@ export interface FileRoutesByFullPath {
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
+  '/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -3366,6 +3374,7 @@ export interface FileRoutesByTo {
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
+  '/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -3789,6 +3798,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/_authenticated/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/_authenticated/admin/execution': typeof AuthenticatedAdminExecutionRoute
+  '/_authenticated/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/_authenticated/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -4213,6 +4223,7 @@ export interface FileRouteTypes {
     | '/admin/employment-settings'
     | '/admin/enrollment-brain'
     | '/admin/execution'
+    | '/admin/executive'
     | '/admin/infrastructure'
     | '/admin/integrations'
     | '/admin/lead-intelligence'
@@ -4623,6 +4634,7 @@ export interface FileRouteTypes {
     | '/admin/employment-settings'
     | '/admin/enrollment-brain'
     | '/admin/execution'
+    | '/admin/executive'
     | '/admin/infrastructure'
     | '/admin/integrations'
     | '/admin/lead-intelligence'
@@ -5045,6 +5057,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/employment-settings'
     | '/_authenticated/admin/enrollment-brain'
     | '/_authenticated/admin/execution'
+    | '/_authenticated/admin/executive'
     | '/_authenticated/admin/infrastructure'
     | '/_authenticated/admin/integrations'
     | '/_authenticated/admin/lead-intelligence'
@@ -7078,6 +7091,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminInfrastructureRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/executive': {
+      id: '/_authenticated/admin/executive'
+      path: '/executive'
+      fullPath: '/admin/executive'
+      preLoaderRoute: typeof AuthenticatedAdminExecutiveRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/execution': {
       id: '/_authenticated/admin/execution'
       path: '/execution'
@@ -8744,6 +8764,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
   AuthenticatedAdminEnrollmentBrainRoute: typeof AuthenticatedAdminEnrollmentBrainRoute
   AuthenticatedAdminExecutionRoute: typeof AuthenticatedAdminExecutionRoute
+  AuthenticatedAdminExecutiveRoute: typeof AuthenticatedAdminExecutiveRoute
   AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
   AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
   AuthenticatedAdminLeadIntelligenceRoute: typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -8840,6 +8861,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminEnrollmentBrainRoute:
     AuthenticatedAdminEnrollmentBrainRoute,
   AuthenticatedAdminExecutionRoute: AuthenticatedAdminExecutionRoute,
+  AuthenticatedAdminExecutiveRoute: AuthenticatedAdminExecutiveRoute,
   AuthenticatedAdminInfrastructureRoute: AuthenticatedAdminInfrastructureRoute,
   AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
   AuthenticatedAdminLeadIntelligenceRoute:
