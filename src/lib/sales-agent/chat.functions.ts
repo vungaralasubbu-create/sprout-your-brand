@@ -121,7 +121,9 @@ const SendInput = z.object({
   conversationId: z.string().uuid(),
   message: z.string().min(1).max(4000),
   pagePath: z.string().max(300).optional(),
+  phoneCaptured: z.boolean().optional(),
 });
+
 
 export const sendSalesMessage = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => SendInput.parse(input))
