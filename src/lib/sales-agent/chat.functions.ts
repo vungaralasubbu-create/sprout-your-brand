@@ -316,7 +316,11 @@ export const sendSalesMessage = createServerFn({ method: "POST" })
       patch.handover_requested = true;
       patch.handover_reason = handover.reason;
     }
-    await supabaseAdmin.from("ai_sales_conversations").update(patch).eq("id", data.conversationId);
+    await supabaseAdmin
+      .from("ai_sales_conversations")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(patch as any)
+      .eq("id", data.conversationId);
 
     // Upsert lead if we have contact info + qualification
     if (captured.email || captured.phone || captured.name) {
