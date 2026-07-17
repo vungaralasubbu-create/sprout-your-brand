@@ -13,6 +13,7 @@ import { BLOG_TITLES } from "@/data/program-editorial";
 import { articles as learnArticles, topics as learnTopics } from "@/data/learn";
 import { PeopleAlsoAsk } from "@/components/shared/geo";
 import { EntityCard } from "@/components/shared/entity-card";
+import { openGlintrAI } from "@/lib/glintr-ai";
 import { BookmarkToggle } from "@/components/mentor/ai-mentor";
 import {
   ChevronLeft,
