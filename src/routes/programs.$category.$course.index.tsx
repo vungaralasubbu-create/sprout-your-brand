@@ -482,7 +482,7 @@ function CoursePage() {
       <ProgramPersonalization />
 
       {/* ============ HIRING PARTNERS ============ */}
-      <HiringPartners partners={contentPack.hiringPartners} />
+      <HiringPartners partners={contentPack.hiringPartners} categorySlug={category} />
 
       {/* ============ TOOLS YOU'LL MASTER ============ */}
       <ToolsMaster tools={contentPack.tools} />

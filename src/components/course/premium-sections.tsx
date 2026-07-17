@@ -45,6 +45,8 @@ import {
 
 import { Section, Container } from "@/components/shared/section";
 import { AnimatedCounter } from "@/components/shared/animated-counter";
+import { BrandLogo } from "@/components/shared/brand-logo";
+import { getHiringPartnersForCategory, type HiringPartner } from "@/data/hiring-partners";
 import { cn } from "@/lib/utils";
 import { getJourney, type JourneyId } from "@/lib/visitor-journey";
 
@@ -52,31 +54,30 @@ import { getJourney, type JourneyId } from "@/lib/visitor-journey";
 // SECTION 1 — INDUSTRY HIRING PARTNERS
 // =====================================================================
 
-const HIRING_PARTNERS: Array<{ name: string; letter?: string }> = [
-  { name: "Google" },
-  { name: "Microsoft" },
-  { name: "Amazon" },
-  { name: "Adobe" },
-  { name: "IBM" },
-  { name: "Oracle" },
-  { name: "Infosys" },
-  { name: "Accenture" },
-  { name: "TCS" },
-  { name: "Capgemini" },
-  { name: "Deloitte" },
-  { name: "Intel" },
-  { name: "NVIDIA" },
-  { name: "Wipro" },
-  { name: "Cognizant" },
-  { name: "Meta" },
-];
+export function HiringPartners({
+  partners,
+  categorySlug,
+}: {
+  partners?: string[];
+  categorySlug?: string;
+} = {}) {
+  const list: HiringPartner[] = React.useMemo(() => {
+    if (partners && partners.length > 0) {
+      // Merge CMS-provided names with category-resolved brand metadata.
+      const resolved = getHiringPartnersForCategory(categorySlug);
+      const byName = new Map(resolved.map((p) => [p.name.toLowerCase(), p]));
+      return partners.map(
+        (name) =>
+          byName.get(name.toLowerCase()) ?? { name },
+      );
+    }
+    return getHiringPartnersForCategory(categorySlug);
+  }, [partners, categorySlug]);
 
-export function HiringPartners({ partners }: { partners?: string[] } = {}) {
-  const list = partners && partners.length > 0 ? partners : HIRING_PARTNERS.map((p) => p.name);
   return (
     <Section data-reveal className="py-14 lg:py-20 border-y bg-surface-1/40">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-8 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">
             Industry Hiring Partners
           </span>
@@ -88,20 +89,44 @@ export function HiringPartners({ partners }: { partners?: string[] } = {}) {
           </p>
         </div>
 
-        <div data-stagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3">
-          {list.map((name) => (
+        {/* Mobile: horizontal snap carousel. Desktop/tablet: responsive grid. */}
+        <div
+          data-stagger
+          className="flex md:hidden flex-nowrap overflow-x-auto snap-x snap-mandatory gap-3 -mx-4 px-4 pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {list.map((p) => (
             <div
-              key={name}
-              className="group flex items-center justify-center rounded-xl border border-border/60 bg-white px-3 py-4 shadow-sm hover:border-primary/40 hover:shadow-md transition-all card-premium"
+              key={p.name}
+              className="group shrink-0 basis-[22%] min-w-[22%] snap-center flex flex-col items-center justify-center rounded-xl border border-border/60 bg-white dark:bg-white/95 px-2 py-3 shadow-sm"
+              aria-label={p.name}
             >
-              <span className="font-display font-semibold text-sm lg:text-[15px] tracking-tight text-foreground/85 group-hover:text-primary transition-colors text-center">
-                {name}
-              </span>
+              <div className="h-8 flex items-center justify-center">
+                <BrandLogo partner={p} />
+              </div>
             </div>
           ))}
         </div>
+
+        <div
+          data-stagger
+          className="hidden md:grid grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3"
+        >
+          {list.map((p) => (
+            <div
+              key={p.name}
+              className="group flex flex-col items-center justify-center rounded-xl border border-border/60 bg-white dark:bg-white/95 px-3 py-5 shadow-sm hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 card-premium"
+              aria-label={p.name}
+              title={p.name}
+            >
+              <div className="h-10 flex items-center justify-center">
+                <BrandLogo partner={p} />
+              </div>
+            </div>
+          ))}
+        </div>
+
         <p className="mt-6 text-caption text-muted-foreground">
-          Hiring outcomes depend on individual performance, program terms, role availability and eligibility.
+          Hiring outcomes depend on individual performance, program terms, role availability and eligibility. Logos are property of their respective owners; shown for illustrative purposes.
         </p>
       </Container>
     </Section>
