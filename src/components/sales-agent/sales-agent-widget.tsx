@@ -160,13 +160,14 @@ export function SalesAgentWidget() {
             "bg-gradient-to-r from-primary via-primary to-lime-400 text-primary-foreground",
             "hover:-translate-y-0.5 transition-transform ring-1 ring-white/10",
           )}
-          aria-label="Talk to a Glintr counsellor"
+          aria-label="Ask GlintrAI"
         >
           <span className="grid place-items-center w-8 h-8 rounded-full bg-white/15">
             <Bot className="w-4 h-4" />
           </span>
-          <span className="text-sm font-semibold">Talk to a counsellor</span>
+          <span className="text-sm font-semibold">Ask GlintrAI</span>
         </button>
+
       )}
 
       {open && (
