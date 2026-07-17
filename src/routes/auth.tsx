@@ -314,21 +314,7 @@ function AuthPage() {
                     </div>
                   )}
 
-                  <div>
-                    <Label htmlFor="password">
-                      {mode === "recovery" ? "New password" : "Password"}
-                    </Label>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      required
-                      minLength={6}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="mt-2 h-11"
-                    />
-                  </div>
+
                   <Button
                     type="submit"
                     size="lg"
