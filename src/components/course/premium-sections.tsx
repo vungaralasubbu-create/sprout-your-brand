@@ -620,6 +620,7 @@ const SUCCESS_STATS = [
     label: "Average Rating",
     format: (n: number) => (n / 10).toFixed(1),
     scale: 10 as const,
+    desktopOnly: true,
   },
 ];
 
@@ -632,19 +633,22 @@ function StatCard({
 }) {
   const Icon = stat.icon;
   const [counting, setCounting] = React.useState(false);
+  const desktopOnly = "desktopOnly" in stat && stat.desktopOnly;
   return (
     <div
-      className="group flex flex-col items-center justify-center text-center px-3 lg:px-4 py-2 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/60 opacity-0 animate-fade-in"
+      className={`group flex flex-col items-center justify-center text-center px-2 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/60 opacity-0 animate-fade-in snap-center shrink-0 basis-1/4 lg:basis-auto ${
+        desktopOnly ? "hidden lg:flex" : ""
+      }`}
       style={{ animationDelay: `${index * 100}ms`, animationFillMode: "forwards" }}
     >
       <span
-        className="inline-flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-[oklch(0.75_0.15_200)]/10 text-primary mb-3 opacity-0 animate-fade-in transition-transform duration-300 group-hover:scale-110"
+        className="inline-flex size-7 lg:size-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-[oklch(0.75_0.15_200)]/10 text-primary mb-1 lg:mb-3 opacity-0 animate-fade-in transition-transform duration-300 group-hover:scale-110"
         style={{ animationDelay: `${index * 100 + 120}ms`, animationFillMode: "forwards" }}
       >
-        <Icon className="size-5" strokeWidth={1.75} />
+        <Icon className="size-3.5 lg:size-5" strokeWidth={1.75} />
       </span>
       <div
-        className="font-display font-semibold tracking-tight text-[clamp(1.75rem,3.4vw,2.75rem)] leading-none bg-gradient-to-r from-primary to-[oklch(0.6_0.16_200)] bg-clip-text text-transparent transition-transform duration-300 will-change-transform"
+        className="font-display font-semibold tracking-tight text-[clamp(1.25rem,5vw,2.75rem)] lg:text-[clamp(1.75rem,3.4vw,2.75rem)] leading-none bg-gradient-to-r from-primary to-[oklch(0.6_0.16_200)] bg-clip-text text-transparent transition-transform duration-300 will-change-transform"
         style={{ transform: counting ? "scale(1.04)" : "scale(1)" }}
       >
         <AnimatedCounter
@@ -655,23 +659,26 @@ function StatCard({
           onCountingChange={setCounting}
         />
       </div>
-      <div className="mt-2 text-sm font-medium text-muted-foreground">{stat.label}</div>
+      <div className="mt-0.5 lg:mt-2 text-[11px] sm:text-xs lg:text-sm font-medium text-muted-foreground whitespace-nowrap">{stat.label}</div>
     </div>
   );
 }
 
 export function SuccessCounters() {
   return (
-    <Section data-reveal className="py-14 lg:py-20 border-y bg-gradient-to-b from-white to-surface-1/50">
+    <Section data-reveal className="py-6 lg:py-20 border-y bg-gradient-to-b from-white to-surface-1/50">
       <Container>
-        <div className="max-w-2xl mx-auto text-center mb-10 lg:mb-12">
+        <div className="max-w-2xl mx-auto text-center mb-4 lg:mb-12">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Student Success</span>
-          <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+          <h2 className="mt-2 lg:mt-3 text-base sm:text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             A learning community that shows up — and ships.
           </h2>
         </div>
 
-        <div data-stagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-0 lg:divide-x lg:divide-border/70 items-stretch">
+        <div
+          data-stagger
+          className="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-2 -mx-4 px-4 lg:mx-0 lg:px-0 lg:grid lg:grid-cols-5 lg:gap-0 lg:divide-x lg:divide-border/70 items-stretch [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
           {SUCCESS_STATS.map((s, i) => (
             <StatCard key={s.label} stat={s} index={i} />
           ))}
@@ -680,6 +687,7 @@ export function SuccessCounters() {
     </Section>
   );
 }
+
 
 // =====================================================================
 // SECTION 11 — AI TOOLS USAGE
