@@ -1,145 +1,125 @@
 /**
- * Partner Earnings — Marketing Copy CMS
+ * Partner Earnings — Marketing Copy CMS (client surface)
  *
  * SINGLE SOURCE OF TRUTH for every partner-earning marketing string on the
- * public site. UI components MUST import from here rather than hardcoding
- * "70%", "Start Earning", "Earn 70%", etc. inline.
+ * public site. Editors update strings from `/admin/marketing-copy`; the
+ * change propagates to every consumer via the exported `partnerEarningsCopy`
+ * live mirror below.
  *
- * When Lovable Cloud (Supabase) is wired for marketing copy, swap the body
- * of `getPartnerEarningsCopy()` for a query against the `marketing_copy`
- * table — every consumer keeps working because they read through this loader.
+ * How the "live mirror" works:
+ *   - `partnerEarningsCopy` is a real object whose fields are mutated in
+ *     place when the CMS fetch resolves.
+ *   - `<PartnerEarningsCopyProvider>` fetches the DB value once per session,
+ *     mutates the mirror, and bumps an internal key so the whole app subtree
+ *     re-renders with the fresh values.
+ *   - Existing consumers that `import { partnerEarningsCopy }` DO NOT need
+ *     to change — they will read the mutated fields on the next render.
  *
- * Editorial rules enforced by this module:
- *   1. The primary revenue share number is one value (currently 70).
- *   2. Every earning CTA is one of two variants: primary or secondary.
- *   3. "Up to 50%" only appears in comparison contexts, never as a CTA.
- *   4. Copy tokens interpolate `{share}` so a percentage change ripples
- *      through headlines, buttons, meta tags and structured data at once.
+ * Editorial rules:
+ *   1. The primary revenue share number is one value (default 70).
+ *   2. Every earning CTA is one of: cta.primary, cta.short, cta.apply.
+ *   3. "Supported model" (50%) copy only appears in comparison contexts.
+ *   4. Copy tokens interpolate `{share}` and `{supported}` so a percentage
+ *      change ripples through every surface at once.
  */
 
-// ---------- Types ----------
+import * as React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 
-export interface PartnerEarningsCopy {
-  /** Primary partner revenue share percentage (integer, e.g. 70). */
-  primarySharePct: number;
-  /** Supported model share percentage (integer, e.g. 50). */
-  supportedSharePct: number;
+import {
+  DEFAULT_PARTNER_EARNINGS_COPY,
+  resolvePartnerEarningsCopy,
+  type PartnerEarningsCopy,
+} from "./partner-earnings-copy-schema";
+import { fetchPartnerEarningsCopy } from "@/lib/partner-earnings-copy.functions";
 
-  cta: {
-    /** Primary earn CTA — always the highest-intent button. */
-    primary: string;
-    /** Shorter variant for tight spaces (nav pills, cards, mobile chips). */
-    short: string;
-    /** Applies-to-partner CTA on onboarding surfaces. */
-    apply: string;
-  };
+export type { PartnerEarningsCopy } from "./partner-earnings-copy-schema";
+export {
+  DEFAULT_PARTNER_EARNINGS_COPY,
+  PARTNER_EARNINGS_COPY_KEY,
+  partnerEarningsCopySchema,
+  interpolatePartnerEarningsCopy,
+  resolvePartnerEarningsCopy,
+} from "./partner-earnings-copy-schema";
 
-  labels: {
-    /** Nav / footer label linking to /earn. */
-    partnerNav: string;
-    /** Card / rate tile headline for own-leads model. */
-    revenueShare: string;
-    /** Rate value used in comparison tables and pricing tiles. */
-    revenueShareValue: string;
-    /** Model page anchor label. */
-    revenueModel: string;
-    /** Supported model label (comparison-only). */
-    supportedModel: string;
-  };
+// ---------- Live mirror ----------
+// A single object whose fields are overwritten in place when the CMS fetch
+// resolves. Consumers keep their existing `import { partnerEarningsCopy }`
+// and pick up new values on the next render (provider forces a subtree
+// re-render via `key` so this happens for the whole app after fetch).
 
-  taglines: {
-    /** Homepage / earn hero tagline. */
-    hero: string;
-    /** One-liner used under hero and in featured cards. */
-    subtitle: string;
-    /** SEO meta description default. */
-    meta: string;
-    /** OG title default. */
-    ogTitle: string;
-  };
-}
+const initial = resolvePartnerEarningsCopy(DEFAULT_PARTNER_EARNINGS_COPY);
 
-// ---------- Data (edit here — this is the CMS surface) ----------
-
-const DEFAULT_COPY: PartnerEarningsCopy = {
-  primarySharePct: 70,
-  supportedSharePct: 50,
-
-  cta: {
-    primary: "Start Earning {share}%",
-    short: "Earn {share}%",
-    apply: "Become a {share}% Partner",
-  },
-
-  labels: {
-    partnerNav: "Earn {share}%",
-    revenueShare: "{share}% Revenue Share",
-    revenueShareValue: "Flat {share}%",
-    revenueModel: "{share}% Revenue Model",
-    supportedModel: "{supported}% Supported Model",
-  },
-
-  taglines: {
-    hero: "Earn {share}% Revenue Share",
-    subtitle:
-      "Turn your sales skill into predictable income. Earn {share}% revenue share on every eligible enrolment.",
-    meta:
-      "Earn {share}% revenue share as a Glintr Partner. Weekly payouts, no cap, transparent attribution.",
-    ogTitle: "Earn With Glintr — {share}% Revenue Share",
-  },
+export const partnerEarningsCopy: PartnerEarningsCopy = {
+  primarySharePct: initial.primarySharePct,
+  supportedSharePct: initial.supportedSharePct,
+  cta: { ...initial.cta },
+  labels: { ...initial.labels },
+  taglines: { ...initial.taglines },
 };
 
-// ---------- Interpolation ----------
-
-function interpolate(template: string, copy: PartnerEarningsCopy): string {
-  return template
-    .replace(/\{share\}/g, String(copy.primarySharePct))
-    .replace(/\{supported\}/g, String(copy.supportedSharePct));
-}
-
-/** Deep-resolve `{share}`/`{supported}` tokens across every string. */
-function resolve(copy: PartnerEarningsCopy): PartnerEarningsCopy {
-  return {
-    ...copy,
-    cta: {
-      primary: interpolate(copy.cta.primary, copy),
-      short: interpolate(copy.cta.short, copy),
-      apply: interpolate(copy.cta.apply, copy),
-    },
-    labels: {
-      partnerNav: interpolate(copy.labels.partnerNav, copy),
-      revenueShare: interpolate(copy.labels.revenueShare, copy),
-      revenueShareValue: interpolate(copy.labels.revenueShareValue, copy),
-      revenueModel: interpolate(copy.labels.revenueModel, copy),
-      supportedModel: interpolate(copy.labels.supportedModel, copy),
-    },
-    taglines: {
-      hero: interpolate(copy.taglines.hero, copy),
-      subtitle: interpolate(copy.taglines.subtitle, copy),
-      meta: interpolate(copy.taglines.meta, copy),
-      ogTitle: interpolate(copy.taglines.ogTitle, copy),
-    },
-  };
-}
-
-// ---------- Public API ----------
-
-/**
- * Sync accessor. Prefer this in components — copy is static per build until
- * the CMS-backed loader below is wired.
- */
-export const partnerEarningsCopy: PartnerEarningsCopy = resolve(DEFAULT_COPY);
-
-/**
- * Async loader — swap the body for a Supabase query without touching
- * consumers. Consumers using this via TanStack Query get automatic
- * invalidation when the CMS row updates.
- */
-export async function getPartnerEarningsCopy(): Promise<PartnerEarningsCopy> {
-  return partnerEarningsCopy;
+function applyToMirror(next: PartnerEarningsCopy) {
+  const resolved = resolvePartnerEarningsCopy(next);
+  partnerEarningsCopy.primarySharePct = resolved.primarySharePct;
+  partnerEarningsCopy.supportedSharePct = resolved.supportedSharePct;
+  Object.assign(partnerEarningsCopy.cta, resolved.cta);
+  Object.assign(partnerEarningsCopy.labels, resolved.labels);
+  Object.assign(partnerEarningsCopy.taglines, resolved.taglines);
 }
 
 /** Convenience: interpolate any template string using the active copy. */
 export function formatEarningsCopy(template: string): string {
-  return interpolate(template, partnerEarningsCopy);
+  return template
+    .replace(/\{share\}/g, String(partnerEarningsCopy.primarySharePct))
+    .replace(/\{supported\}/g, String(partnerEarningsCopy.supportedSharePct));
+}
+
+// ---------- Provider + hook ----------
+
+const PartnerEarningsCopyContext = React.createContext<PartnerEarningsCopy>(
+  partnerEarningsCopy,
+);
+
+export function usePartnerEarningsCopy(): PartnerEarningsCopy {
+  return React.useContext(PartnerEarningsCopyContext);
+}
+
+/**
+ * Loads the DB-backed copy once and mirrors it into the exported singleton.
+ * Wrap the app once in `__root.tsx`.
+ */
+export function PartnerEarningsCopyProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const fetcher = useServerFn(fetchPartnerEarningsCopy);
+  const query = useQuery({
+    queryKey: ["marketing", "partner_earnings_copy"],
+    queryFn: () => fetcher(),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  const [, force] = React.useReducer((n: number) => n + 1, 0);
+
+  React.useEffect(() => {
+    if (query.data) {
+      applyToMirror(query.data);
+      force();
+    }
+  }, [query.data]);
+
+  const value = React.useMemo(() => {
+    const source = query.data ?? DEFAULT_PARTNER_EARNINGS_COPY;
+    return resolvePartnerEarningsCopy(source);
+  }, [query.data]);
+
+  return (
+    <PartnerEarningsCopyContext.Provider value={value}>
+      {children}
+    </PartnerEarningsCopyContext.Provider>
+  );
 }
