@@ -81,6 +81,12 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
   const [code, setCode] = useState("");
+  const [trustedEmail, setTrustedEmail] = useState(false);
+
+  useEffect(() => {
+    setTrustedEmail(isTrustedEmail(email));
+  }, [email]);
+
 
   useEffect(() => {
     const isRecovery =
@@ -294,7 +300,7 @@ function AuthPage() {
                       className="mt-2 h-11"
                     />
                   </div>
-                  {mode !== "recovery" && !(mode === "signin" && isTrustedEmail(email)) && (
+                  {mode !== "recovery" && !(mode === "signin" && trustedEmail) && (
                     <div>
                       <Label htmlFor="mobile">Mobile number</Label>
                       <Input
@@ -327,7 +333,7 @@ function AuthPage() {
                       : mode === "recovery"
                       ? "Update password"
                       : mode === "signin"
-                      ? isTrustedEmail(email)
+                      ? trustedEmail
                         ? "Sign in"
                         : "Send OTP & Sign In"
                       : "Send OTP & Create account"}
