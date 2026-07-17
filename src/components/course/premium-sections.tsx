@@ -449,12 +449,139 @@ function projectGradient(i: number) {
   return palette[i % palette.length];
 }
 
+const PROJECT_TAG_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+  ML: Brain,
+  AI: Sparkles,
+  Vision: Search,
+  Voice: Mic,
+  Data: LineChart,
+  BI: BarChart3,
+  Analytics: TrendingUp,
+  Fullstack: Code2,
+  Web: Globe,
+  IoT: Cpu,
+  Embedded: Cpu,
+  Robotics: Rocket,
+  Hardware: Cpu,
+  Cloud: Cloud,
+  Security: ShieldCheck,
+  DevOps: Wrench,
+};
+
+function ProjectIcon({ tag, className }: { tag: string; className?: string }) {
+  const Icon = PROJECT_TAG_ICON[tag] ?? Layers;
+  return <Icon className={className} />;
+}
+
 type PortfolioItem = { name: string; blurb: string; tag: string };
 
 export function PortfolioProjects({ projects }: { projects?: PortfolioItem[] } = {}) {
   const list = projects && projects.length > 0 ? projects : PORTFOLIO;
   return (
     <PortfolioProjectsInner list={list} />
+  );
+}
+
+function MobileProjectsCarousel({ list }: { list: PortfolioItem[] }) {
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const [page, setPage] = useState(0);
+  const pausedRef = useRef(false);
+  const perPage = 3;
+  const pageCount = Math.max(1, Math.ceil(list.length / perPage));
+
+  // Track active page from scroll position.
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const cardW = el.scrollWidth / list.length;
+      const idx = Math.round(el.scrollLeft / cardW / perPage);
+      setPage(Math.min(pageCount - 1, Math.max(0, idx)));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [list.length, pageCount]);
+
+  // Auto-scroll every 5s, pause on user interaction.
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const pause = () => {
+      pausedRef.current = true;
+      window.clearTimeout((pause as unknown as { t?: number }).t);
+      (pause as unknown as { t?: number }).t = window.setTimeout(() => {
+        pausedRef.current = false;
+      }, 6000);
+    };
+    el.addEventListener("pointerdown", pause);
+    el.addEventListener("touchstart", pause, { passive: true });
+    const id = window.setInterval(() => {
+      if (pausedRef.current) return;
+      const next = (page + 1) % pageCount;
+      const cardW = el.scrollWidth / list.length;
+      el.scrollTo({ left: cardW * perPage * next, behavior: "smooth" });
+    }, 5000);
+    return () => {
+      window.clearInterval(id);
+      el.removeEventListener("pointerdown", pause);
+      el.removeEventListener("touchstart", pause);
+    };
+  }, [page, pageCount, list.length]);
+
+  const goTo = (p: number) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const cardW = el.scrollWidth / list.length;
+    el.scrollTo({ left: cardW * perPage * p, behavior: "smooth" });
+  };
+
+  return (
+    <div className="md:hidden -mx-4">
+      <div
+        ref={scrollerRef}
+        className="flex gap-3 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 pb-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {list.map((p, i) => (
+          <div
+            key={p.name}
+            className="snap-start shrink-0 basis-[calc((100%-16px)/3)] rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-3 shadow-[0_6px_20px_-12px_rgba(0,0,0,0.6)] active:scale-[0.98] transition-transform"
+          >
+            <div
+              className={cn(
+                "inline-flex size-8 items-center justify-center rounded-lg bg-gradient-to-br shadow-sm mb-2",
+                projectGradient(i),
+              )}
+            >
+              <ProjectIcon tag={p.tag} className="size-4 text-white" />
+            </div>
+            <div className="text-[9px] font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
+              {p.tag}
+            </div>
+            <h3 className="mt-0.5 font-display font-semibold text-[12.5px] leading-tight line-clamp-2">
+              {p.name}
+            </h3>
+            <p className="mt-1 text-[10.5px] text-white/55 leading-snug line-clamp-2">{p.blurb}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 flex justify-center gap-1.5" role="tablist" aria-label="Projects pagination">
+        {Array.from({ length: pageCount }).map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to projects page ${i + 1}`}
+            aria-selected={page === i}
+            onClick={() => goTo(i)}
+            className={cn(
+              "h-1.5 rounded-full transition-all",
+              page === i
+                ? "w-5 bg-[oklch(0.85_0.15_200)]"
+                : "w-1.5 bg-white/25 hover:bg-white/40",
+            )}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -478,7 +605,11 @@ function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
           </p>
         </div>
 
-        <div data-stagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+        {/* Mobile: 3-card horizontal carousel */}
+        <MobileProjectsCarousel list={list} />
+
+        {/* Tablet + Desktop: existing grid (unchanged) */}
+        <div data-stagger className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {list.map((p, i) => (
             <div
               key={p.name}
@@ -490,7 +621,7 @@ function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
                   projectGradient(i),
                 )}
               >
-                <Sparkles className="size-4 text-white" />
+                <ProjectIcon tag={p.tag} className="size-4 text-white" />
               </div>
               <div className="text-[10.5px] font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
                 {p.tag}
@@ -504,6 +635,7 @@ function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
     </Section>
   );
 }
+
 
 // =====================================================================
 // SECTION 5 — CAREER ROADMAP
