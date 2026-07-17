@@ -319,16 +319,17 @@ function JourneyTile({
       </div>
 
 
-      <div className="mt-auto inline-flex items-center gap-1.5 text-sm font-medium">
+      <div className="mt-auto inline-flex items-center gap-1 text-xs font-medium">
         <span style={{ color: card.accent }}>{card.cta}</span>
         <ArrowRight
           className={cn(
-            "size-4 transition-transform duration-300",
+            "size-3.5 transition-transform duration-300",
             active ? "translate-x-1" : "group-hover:translate-x-1",
           )}
           style={{ color: card.accent }}
         />
       </div>
+
     </button>
   );
 }
