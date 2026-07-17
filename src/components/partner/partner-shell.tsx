@@ -108,6 +108,7 @@ const ACADEMY_NAV: NavItem[] = [
   { to: "/partner/academy/workspace", label: "Academy Workspace", icon: LayoutDashboard },
   { to: "/partner/ai-employees", label: "AI Employees", icon: Sparkles },
   { to: "/partner/business-os", label: "AI Business OS", icon: Sparkles },
+  { to: "/partner/brand-launch", label: "Brand Launch", icon: Rocket },
   { to: "/partner/brand-studio", label: "Brand Launch Studio", icon: Rocket },
   { to: "/partner/academy-builder", label: "Academy Builder", icon: GraduationCap },
   { to: "/partner/brand-profile", label: "Brand Profile", icon: Building2 },
