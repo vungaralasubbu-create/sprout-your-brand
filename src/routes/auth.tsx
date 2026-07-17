@@ -87,7 +87,10 @@ function AuthPage() {
   const sendOtp = useServerFn(requestLoginOtp);
   const verifyOtp = useServerFn(verifyLoginOtp);
 
-  const [mode, setMode] = useState<Mode>("signin");
+  const [mode, setMode] = useState<Mode>(() => {
+    if (typeof window === "undefined") return "signin";
+    return new URLSearchParams(window.location.search).get("mode") === "signup" ? "signup" : "signin";
+  });
   const [stage, setStage] = useState<Stage>("creds");
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
