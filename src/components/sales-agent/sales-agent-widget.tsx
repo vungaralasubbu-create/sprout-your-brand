@@ -490,7 +490,7 @@ export function SalesAgentWidget() {
               </div>
             )}
 
-            {showPhoneCard && (
+            {showPhoneCard && phoneStep === "collect" && (
               <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-lime-400/5 p-4 shadow-sm">
                 <div className="flex items-start gap-2.5">
                   <div className="grid place-items-center w-8 h-8 rounded-full bg-primary/15 text-primary shrink-0">
@@ -501,8 +501,9 @@ export function SalesAgentWidget() {
                       Let's personalize your learning journey.
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                      Enter your mobile number to continue chatting with GlintrAI and receive personalized
-                      program recommendations, counselling support and exclusive updates.
+                      {otpEnabled
+                        ? "Enter your mobile number — we'll send a 6-digit OTP to verify and continue your conversation."
+                        : "Enter your mobile number to continue chatting with GlintrAI and receive personalized program recommendations."}
                     </p>
                   </div>
                 </div>
@@ -536,14 +537,146 @@ export function SalesAgentWidget() {
                     >
                       {submittingPhone ? (
                         <>
-                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Saving…
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                          {otpEnabled ? "Sending OTP…" : "Saving…"}
                         </>
                       ) : (
-                        "Continue"
+                        otpEnabled ? "Send OTP" : "Continue"
                       )}
                     </Button>
                   </div>
                 </form>
+              </div>
+            )}
+
+            {showPhoneCard && phoneStep === "otp" && (
+              <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-lime-400/5 p-4 shadow-sm">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start gap-2.5 min-w-0">
+                    <div className="grid place-items-center w-8 h-8 rounded-full bg-primary/15 text-primary shrink-0">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-foreground">Verify your mobile</div>
+                      <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                        Enter the 6-digit code we sent to <span className="font-medium text-foreground">{phoneInput.trim()}</span>.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={changeNumber}
+                    className="text-[11px] text-muted-foreground hover:text-foreground inline-flex items-center gap-1 shrink-0"
+                    aria-label="Change number"
+                  >
+                    <ArrowLeft className="w-3 h-3" /> Change
+                  </button>
+                </div>
+                <form
+                  className="mt-3 flex flex-col gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void submitOtp();
+                  }}
+                >
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    autoFocus
+                    value={otpCode}
+                    onChange={(e) => {
+                      setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6));
+                      if (otpError) setOtpError(null);
+                    }}
+                    placeholder="6-digit code"
+                    className={cn(
+                      "w-full rounded-lg border bg-background px-3 py-2 text-sm outline-none tracking-[0.4em] text-center font-mono",
+                      otpError ? "border-destructive focus:border-destructive" : "border-border focus:border-primary",
+                    )}
+                    aria-label="One-time password"
+                    aria-invalid={otpError ? true : false}
+                    maxLength={6}
+                  />
+                  {otpError && (
+                    <div role="alert" className="text-[11px] text-destructive leading-snug">
+                      {otpError}
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => void resendOtp()}
+                      disabled={resendIn > 0 || otpResends >= MAX_RESENDS}
+                      className="text-[11px] text-muted-foreground hover:text-foreground inline-flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      {resendIn > 0
+                        ? `Resend in ${resendIn}s`
+                        : otpResends >= MAX_RESENDS
+                          ? "Resend limit reached"
+                          : "Resend code"}
+                    </button>
+                    <Button type="submit" size="sm" disabled={verifying || otpCode.length !== 6}>
+                      {verifying ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Verifying…
+                        </>
+                      ) : (
+                        "Verify & continue"
+                      )}
+                    </Button>
+                  </div>
+                  {otpResends >= MAX_RESENDS && (
+                    <button
+                      type="button"
+                      onClick={() => setPhoneStep("recovery")}
+                      className="mt-1 text-[11px] text-primary hover:underline inline-flex items-center gap-1 self-start"
+                    >
+                      <LifeBuoy className="w-3 h-3" /> Not receiving the OTP? Get help
+                    </button>
+                  )}
+                </form>
+              </div>
+            )}
+
+            {showPhoneCard && phoneStep === "recovery" && (
+              <div className="rounded-2xl border border-destructive/30 bg-gradient-to-br from-destructive/5 via-background to-primary/5 p-4 shadow-sm">
+                <div className="flex items-start gap-2.5">
+                  <div className="grid place-items-center w-8 h-8 rounded-full bg-destructive/15 text-destructive shrink-0">
+                    <LifeBuoy className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-foreground">Trouble verifying?</div>
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                      No worries — your progress is saved. Pick what works best for you and a counsellor will pick up where GlintrAI left off.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-3 flex flex-col gap-2">
+                  <Button type="button" size="sm" onClick={() => void skipToHuman()}>
+                    <MessageCircle className="w-3.5 h-3.5 mr-1.5" /> Connect me with a counsellor
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button type="button" size="sm" variant="outline" className="flex-1" onClick={changeNumber}>
+                      <ArrowLeft className="w-3.5 h-3.5 mr-1.5" /> Use a different number
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      className="flex-1"
+                      onClick={() => {
+                        setPhoneStep("otp");
+                        setOtpError(null);
+                        setOtpAttempts(0);
+                        setResendIn(0);
+                      }}
+                    >
+                      <RefreshCw className="w-3.5 h-3.5 mr-1.5" /> Try again
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
