@@ -300,7 +300,7 @@ function AuthPage() {
                       className="mt-2 h-11"
                     />
                   </div>
-                  {mode !== "recovery" && !(mode === "signin" && isTrustedEmail(email)) && (
+                  {mode !== "recovery" && !(mode === "signin" && trustedEmail) && (
                     <div>
                       <Label htmlFor="mobile">Mobile number</Label>
                       <Input
