@@ -41,13 +41,14 @@ function ensureSessionToken(): string {
 const GREETING: UiMessage = {
   role: "assistant",
   content:
-    "Hi 👋 I'm **GlintrAI**, your admissions & career counsellor. Before I suggest anything, tell me a little about you — **what brings you to Glintr today?** Are you looking for an internship, placement, a career switch, or just exploring AI? If you'd rather speak to a human counsellor, just say so.",
+    "Hi 👋 I'm **GlintrAI**, your AI Career Advisor.\n\nI can help you choose the right program, compare courses, and answer your questions on internships, placements and career outcomes.\n\n**How can I help you today?**",
   quickReplies: [
-    "I need an internship certificate",
-    "I want placement support",
     "I want to learn AI",
-    "Talk to a human counsellor",
+    "Suggest a course",
+    "I need an internship",
+    "I need placement support",
   ],
+
 };
 
 
