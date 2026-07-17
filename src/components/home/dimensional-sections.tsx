@@ -180,7 +180,8 @@ export function ThreeJourneys() {
               "linear-gradient(180deg, oklch(0.99 0.01 240 / 0.7), oklch(0.98 0.01 240 / 0.4))",
           }}
         >
-          <div className="grid gap-4 lg:grid-cols-3">
+          {/* Desktop / tablet: full grid (unchanged) */}
+          <div className="hidden md:grid gap-4 lg:grid-cols-3">
             {JOURNEYS.map((j, i) => {
               const isActive = active === j.key;
               return (
@@ -196,9 +197,112 @@ export function ThreeJourneys() {
               );
             })}
           </div>
+
+          {/* Mobile: single active card with swipe + fade/slide */}
+          <MobileJourneyStage
+            active={active}
+            setActive={setActive}
+            visible={visible}
+            reduced={reduced}
+          />
         </div>
       </Container>
     </Section>
+  );
+}
+
+function MobileJourneyStage({
+  active,
+  setActive,
+  visible,
+  reduced,
+}: {
+  active: JourneyKey;
+  setActive: (k: JourneyKey) => void;
+  visible: boolean;
+  reduced: boolean;
+}) {
+  const activeIndex = JOURNEYS.findIndex((j) => j.key === active);
+  const journey = JOURNEYS[activeIndex];
+  const touchStart = React.useRef<{ x: number; y: number } | null>(null);
+  const [phase, setPhase] = React.useState<"in" | "out">("in");
+  const [pendingKey, setPendingKey] = React.useState<JourneyKey | null>(null);
+
+  const go = React.useCallback(
+    (next: JourneyKey) => {
+      if (next === active) return;
+      if (reduced) {
+        setActive(next);
+        return;
+      }
+      setPendingKey(next);
+      setPhase("out");
+    },
+    [active, reduced, setActive],
+  );
+
+  React.useEffect(() => {
+    if (phase !== "out" || !pendingKey) return;
+    const t = setTimeout(() => {
+      setActive(pendingKey);
+      setPendingKey(null);
+      setPhase("in");
+    }, 180);
+    return () => clearTimeout(t);
+  }, [phase, pendingKey, setActive]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const s = touchStart.current;
+    touchStart.current = null;
+    if (!s) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - s.x;
+    const dy = t.clientY - s.y;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    const idx = JOURNEYS.findIndex((j) => j.key === active);
+    if (dx < 0 && idx < JOURNEYS.length - 1) go(JOURNEYS[idx + 1].key);
+    if (dx > 0 && idx > 0) go(JOURNEYS[idx - 1].key);
+  };
+
+  return (
+    <div
+      className="md:hidden"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <div
+        key={journey.key}
+        className="transition-all duration-300 ease-out"
+        style={{
+          opacity: phase === "in" ? 1 : 0,
+          transform: phase === "in" ? "translateX(0)" : "translateX(-12px)",
+        }}
+      >
+        <JourneyCard
+          journey={journey}
+          index={0}
+          active
+          visible={visible}
+          reduced={reduced}
+          onActivate={() => {}}
+        />
+      </div>
+      <div className="mt-4 flex justify-center gap-1.5" aria-hidden>
+        {JOURNEYS.map((j) => (
+          <span
+            key={j.key}
+            className={cn(
+              "h-1.5 rounded-full transition-all",
+              j.key === active ? "w-6 bg-primary" : "w-1.5 bg-border",
+            )}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
