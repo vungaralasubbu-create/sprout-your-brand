@@ -131,18 +131,31 @@ const nav: NavEntry[] = [
       },
     ],
   },
+  {
+    label: "Enterprise",
+    width: "md",
+    groups: [
+      {
+        title: "For Organizations",
+        items: [
+          { label: "White-Label EdTech", description: "Full-stack platform for enterprises", href: "/launch-your-brand", icon: Building2 },
+          { label: "Partner Network", description: "Channel & sales partnerships", href: "/partner-network", icon: Handshake },
+          { label: "Book a Consultation", description: "Talk to our enterprise team", href: "/launch-your-brand/consultation", icon: Briefcase },
+        ],
+      },
+    ],
+  },
   { label: "About", href: "/about" },
   {
-    label: "More",
+    label: "Resources",
     width: "sm",
     groups: [
       {
         items: [
           { label: "Topics", href: "/topics", description: "Pillar guides across AI, tech, engineering, business" },
-          { label: "Partner Network", href: "/partner-network" },
+          { label: "Blog", href: "/blog" },
           { label: "Success Stories", href: "/success-stories" },
           { label: "Careers", href: "/careers" },
-          { label: "Blog", href: "/blog" },
           { label: "FAQs", href: "/faq" },
           { label: "Contact", href: "/contact" },
           { label: "Support", href: "/support" },
@@ -151,6 +164,7 @@ const nav: NavEntry[] = [
     ],
   },
 ];
+
 
 
 function MegaPanel({ entry }: { entry: NavEntry }) {
@@ -291,11 +305,12 @@ export function SiteHeader() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
 
   React.useEffect(() => {
     let mounted = true;
@@ -348,7 +363,7 @@ export function SiteHeader() {
         scrolled ? "surface-glass-strong shadow-sm border-b border-border/60" : "bg-transparent",
       )}
     >
-      <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 md:px-8 h-16">
+      <div className={cn("mx-auto flex max-w-[1440px] items-center gap-4 px-4 md:px-8 transition-[height] duration-300", scrolled ? "h-14" : "h-16")}>
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <GlintrLogo className="h-8" />
         </Link>
@@ -429,7 +444,9 @@ export function SiteHeader() {
                   <DropdownMenuItem asChild><a href="/student/projects"><FolderKanban className="size-4 mr-2" />Projects</a></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild><a href="/student/profile"><Settings className="size-4 mr-2" />Settings</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><a href="/student/billing"><Wallet className="size-4 mr-2" />Billing</a></DropdownMenuItem>
                   <DropdownMenuItem asChild><a href="/student/support"><LifeBuoy className="size-4 mr-2" />Support</a></DropdownMenuItem>
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
                     <LogOut className="size-4 mr-2" />Logout
@@ -463,17 +480,50 @@ export function SiteHeader() {
                       </span>
                     </a>
                   ))}
-                  <div className="border-t border-border mt-2 pt-2 px-1">
-                    <a href="/auth?mode=forgot" className="text-xs text-muted-foreground hover:text-foreground">Forgot password?</a>
+                  <div className="border-t border-border mt-2 pt-2 px-1 flex items-center justify-between text-xs">
+                    <label className="inline-flex items-center gap-1.5 text-muted-foreground">
+                      <input type="checkbox" defaultChecked className="rounded border-border" /> Remember me
+                    </label>
+                    <a href="/auth?mode=forgot" className="text-muted-foreground hover:text-foreground">Forgot password?</a>
+                  </div>
+                  <div className="px-1 pt-1 text-[11px] text-muted-foreground">
+                    Sign in with OTP or Email — your account works across all Glintr apps.
                   </div>
                 </PopoverContent>
               </Popover>
 
-              <Button variant="outline" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
-                <a href="/auth?mode=signup" aria-label="Sign up with mobile OTP">Sign up</a>
-              </Button>
+              {/* Sign up — role selection popover */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="hidden md:inline-flex rounded-full px-4 gap-1">
+                    Sign up <ChevronDown className="size-3.5 opacity-70" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-[320px] p-2">
+                  <p className="text-label px-3 pt-1 pb-2">Sign up as</p>
+                  {LOGIN_ROLES.slice(0, 3).map((r) => (
+                    <a
+                      key={r.label}
+                      href={`/auth?mode=signup&role=${r.label.toLowerCase().replace(" ", "-")}`}
+                      className="flex items-start gap-3 rounded-lg p-2.5 hover:bg-accent transition-colors"
+                    >
+                      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                        <r.icon className="size-4" />
+                      </span>
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-sm font-semibold">{r.label}</span>
+                        <span className="block text-caption">{r.sub}</span>
+                      </span>
+                    </a>
+                  ))}
+                  <div className="border-t border-border mt-2 pt-2 px-1 text-[11px] text-muted-foreground">
+                    Sign up with Mobile OTP, Email, Google or LinkedIn on the next screen.
+                  </div>
+                </PopoverContent>
+              </Popover>
             </>
           )}
+
 
           {/* Start Earning — primary CTA */}
           <Button
