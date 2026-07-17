@@ -58,7 +58,7 @@ export function HeaderSearchDialog({ open, onOpenChange }: { open: boolean; onOp
       try {
         const [courses, posts] = await Promise.all([
           listCourses({ search: term }).catch(() => []),
-          listPosts({ search: term, status: "published" }).catch(() => []),
+          listPosts({ search: term }).catch(() => []),
         ]);
         if (cancelled) return;
         const out: Hit[] = [];
