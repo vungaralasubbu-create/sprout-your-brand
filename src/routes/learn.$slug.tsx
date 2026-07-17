@@ -266,7 +266,7 @@ function AiMentorCard({ title }: { title: string }) {
   return (
     <div className="mt-12 rounded-2xl border bg-gradient-to-br from-primary/8 via-background to-background p-6">
       <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-        <Sparkles className="size-3.5" /> Ask Glintr AI
+        <Sparkles className="size-3.5" /> Ask GlintrAI
       </div>
       <p className="text-sm text-muted-foreground">
         The GlintrAI is aware of this page. Ask it to explain a concept, summarise this guide, or recommend what to learn next.

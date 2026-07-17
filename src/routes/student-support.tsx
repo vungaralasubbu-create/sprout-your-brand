@@ -391,7 +391,7 @@ function StudentSupportPage() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" onClick={() => inputRef.current?.focus()}>
-                Ask Glintr AI Student Support <MessageCircle className="ml-2 size-4" />
+                Ask GlintrAI Student Support <MessageCircle className="ml-2 size-4" />
               </Button>
               <Button
                 size="lg"

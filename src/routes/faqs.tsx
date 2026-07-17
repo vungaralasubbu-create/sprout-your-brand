@@ -237,16 +237,16 @@ const JOURNEY_BRANCHES: Record<string, { title: string; options: Array<{ label: 
     ],
   },
   other: {
-    title: "Continue with Glintr AI Support",
-    options: [{ label: "Ask Glintr AI Support", intent: "general" }],
+    title: "Continue with GlintrAI Support",
+    options: [{ label: "Ask GlintrAI Support", intent: "general" }],
   },
 };
 
-// Intents that should show "Continue With Glintr AI Support" prominently
+// Intents that should show "Continue With GlintrAI Support" prominently
 function intentActionLabel(intent: string | null | undefined): string {
   switch (intent) {
     case "program_discovery":
-      return "Find A Program With Glintr AI";
+      return "Find a program with GlintrAI";
     case "payment_support":
     case "account_specific_payment":
       return "Get Help With This Payment";
@@ -256,9 +256,9 @@ function intentActionLabel(intent: string | null | undefined): string {
       return "Ask About My Payout";
     case "account_specific":
     case "status_lookup":
-      return "Continue With Glintr AI Support";
+      return "Continue With GlintrAI Support";
     default:
-      return "Continue With Glintr AI Support";
+      return "Continue With GlintrAI Support";
   }
 }
 
@@ -487,7 +487,7 @@ function FaqsPage() {
                   Smart Answer Search Is Temporarily Unavailable
                 </h2>
                 <p className="mt-2 text-muted-foreground">
-                  You can try your question again or continue with Glintr AI Support.
+                  You can try your question again or continue with GlintrAI Support.
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-2">
                   <Button variant="gradient" onClick={() => runQuery(inputValue)}>
@@ -495,7 +495,7 @@ function FaqsPage() {
                   </Button>
                   <Button asChild variant="outline">
                     <Link to="/contact" search={{ intent: "general", q: inputValue, source: "faqs_error" }}>
-                      Ask Glintr AI Support
+                      Ask GlintrAI Support
                     </Link>
                   </Button>
                 </div>
@@ -701,7 +701,7 @@ function FaqsPage() {
                     )}
                     <Button asChild size="sm" variant="ghost">
                       <Link to="/contact" search={{ intent: t.intent, source: `topic_${t.key}` }}>
-                        Ask Glintr AI
+                        Ask GlintrAI
                       </Link>
                     </Button>
                   </div>
@@ -733,7 +733,7 @@ function FaqsPage() {
               { title: "Find", body: "Smart FAQ discovery checks approved Glintr information." },
               { title: "Understand", body: "Review a concise answer and the source FAQs." },
               { title: "Explore", body: "Open related questions, policies or Glintr pages." },
-              { title: "Continue", body: "Move to Glintr AI Support when more context is needed." },
+              { title: "Continue", body: "Move to GlintrAI Support when more context is needed." },
             ].map((s, i) => (
               <li key={s.title} className="rounded-xl border border-border bg-card p-5">
                 <div className="flex items-center gap-2 text-primary text-xs font-medium">
@@ -754,16 +754,16 @@ function FaqsPage() {
             <div>
               <p className="text-label mb-2">Need More Than An FAQ?</p>
               <h2 className="font-display text-3xl md:text-4xl font-semibold tracking-tight text-balance">
-                Continue The Conversation With Glintr AI Support
+                Continue The Conversation With GlintrAI Support
               </h2>
               <p className="mt-4 text-muted-foreground text-pretty">
-                Some questions need context. Glintr AI Support can continue from your FAQ question,
+                Some questions need context. GlintrAI Support can continue from your FAQ question,
                 understand follow-ups and help move unresolved issues to the support team.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button asChild variant="gradient" size="lg">
                   <Link to="/contact" search={{ intent: "general", q: inputValue || undefined, source: "faqs_connect" }}>
-                    Ask Glintr AI Support
+                    Ask GlintrAI Support
                   </Link>
                 </Button>
                 <Button variant="outline" size="lg" onClick={focusInput}>
@@ -821,7 +821,7 @@ function FaqsPage() {
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link to="/contact" search={{ intent: "general", source: "faqs_final_cta" }}>
-                  Glintr AI Support
+                  GlintrAI Support
                 </Link>
               </Button>
             </div>
@@ -873,7 +873,7 @@ function SmartAnswer({
         <div className="mt-6">
           <Button asChild variant="outline" size="sm">
             <Link to="/contact" search={handoffSearch}>
-              Continue With Glintr AI Support
+              Continue With GlintrAI Support
             </Link>
           </Button>
         </div>
@@ -900,7 +900,7 @@ function SmartAnswer({
           </Button>
           <Button asChild variant="ghost">
             <Link to="/contact" search={handoffSearch}>
-              Continue With Glintr AI Support
+              Continue With GlintrAI Support
             </Link>
           </Button>
         </div>
@@ -1093,7 +1093,7 @@ function SmartAnswerFeedback({
           <span className="text-muted-foreground">Would you like to continue?</span>
           <Button asChild size="sm" variant="gradient">
             <Link to="/contact" search={handoffSearch}>
-              Continue With Glintr AI Support
+              Continue With GlintrAI Support
             </Link>
           </Button>
           <Button size="sm" variant="ghost" onClick={() => onRunQuery("")}>
@@ -1202,7 +1202,7 @@ function BrowseAllSection({
               </Button>
               <Button asChild variant="gradient">
                 <Link to="/contact" search={{ intent: "general", source: "browse_error" }}>
-                  Ask Glintr AI Support
+                  Ask GlintrAI Support
                 </Link>
               </Button>
             </div>
@@ -1339,7 +1339,7 @@ function FaqAccordionList({ items }: { items: FaqAnswer[] }) {
                         faq: [f.slug],
                       }}
                     >
-                      Ask Glintr AI Support
+                      Ask GlintrAI Support
                     </Link>
                   </Button>
                 </div>
@@ -1395,7 +1395,7 @@ function FaqRowFeedback({
             search={{ intent: "general", source: "faq_feedback_no", faq: [faqSlug] }}
             className="text-primary underline"
           >
-            Continue With Glintr AI Support
+            Continue With GlintrAI Support
           </Link>
         </>
       )}

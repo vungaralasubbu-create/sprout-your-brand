@@ -430,7 +430,7 @@ function PartnerSupportPage() {
                 size="lg"
                 onClick={() => inputRef.current?.focus()}
               >
-                Ask Glintr AI Partner Support <MessageCircle className="ml-2 size-4" />
+                Ask GlintrAI Partner Support <MessageCircle className="ml-2 size-4" />
               </Button>
               <Button
                 size="lg"
@@ -843,7 +843,7 @@ function PartnerSupportPage() {
               From Referral To Earnings
             </h2>
             <p className="mt-3 text-muted-foreground text-pretty">
-              An overview of the approved Glintr partner journey. Ask Glintr AI Partner Support
+              An overview of the approved Glintr partner journey. Ask GlintrAI Partner Support
               about any stage.
             </p>
           </div>

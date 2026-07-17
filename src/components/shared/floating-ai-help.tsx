@@ -50,7 +50,7 @@ export function FloatingAiHelp() {
           onClick={() => track("ai_help_opened", { path: pathname })}
           className="ml-1 rounded-full bg-gradient-brand px-3 py-1 text-xs font-semibold text-primary-foreground"
         >
-          Ask Glintr AI →
+          Ask GlintrAI →
         </Link>
         <button
           type="button"
