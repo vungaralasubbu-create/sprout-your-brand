@@ -12669,6 +12669,60 @@ export type Database = {
         }
         Relationships: []
       }
+      student_profiles: {
+        Row: {
+          city: string | null
+          created_at: string
+          current_role_title: string | null
+          education: string | null
+          email: string | null
+          full_name: string | null
+          graduation_year: number | null
+          learner_type: string
+          mobile: string | null
+          onboarded_at: string | null
+          preferred_mode: string | null
+          state: string | null
+          updated_at: string
+          user_id: string
+          work_experience: string | null
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          current_role_title?: string | null
+          education?: string | null
+          email?: string | null
+          full_name?: string | null
+          graduation_year?: number | null
+          learner_type?: string
+          mobile?: string | null
+          onboarded_at?: string | null
+          preferred_mode?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id: string
+          work_experience?: string | null
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          current_role_title?: string | null
+          education?: string | null
+          email?: string | null
+          full_name?: string | null
+          graduation_year?: number | null
+          learner_type?: string
+          mobile?: string | null
+          onboarded_at?: string | null
+          preferred_mode?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id?: string
+          work_experience?: string | null
+        }
+        Relationships: []
+      }
       student_project_submissions: {
         Row: {
           attachments: Json
