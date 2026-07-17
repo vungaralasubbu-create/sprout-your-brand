@@ -93,7 +93,7 @@ function EarnHero() {
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" variant="gradient">
                 <Link to="/partner/apply">
-                  Start Earning <ArrowRight className="ml-2 h-4 w-4" />
+                  Start Earning 70% <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
@@ -403,7 +403,7 @@ function EarningsEstimator() {
 
               <Button asChild size="lg" variant="gradient" className="w-full">
                 <Link to="/partner/apply">
-                  Start Earning{" "}
+                  Start Earning 70%{" "}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

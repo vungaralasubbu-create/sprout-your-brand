@@ -41,7 +41,7 @@ export function HomeHero() {
             <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
               <Button variant="gradient" size="lg" className="w-full sm:w-auto" asChild>
                 <a href="/join">
-                  Start Earning <ArrowRight className="size-4" />
+                  Start Earning 70% <ArrowRight className="size-4" />
                 </a>
               </Button>
               <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>

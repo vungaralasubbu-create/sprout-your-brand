@@ -171,7 +171,7 @@ function HeroUniverse() {
                 className="group inline-flex items-center gap-2 rounded-full border border-[color:var(--brand-azure)]/25 bg-gradient-to-r from-white to-[oklch(0.98_0.02_220)] px-5 py-2.5 text-sm font-semibold text-foreground shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_8px_20px_-12px_rgba(15,60,120,0.35)] hover:-translate-y-0.5 hover:border-[color:var(--brand-azure)]/45 transition-all duration-200"
               >
                 <span className="size-1.5 rounded-full bg-[var(--brand-cyan)] shadow-[0_0_8px_var(--brand-cyan)]" />
-                Start Earning
+                Start Earning 70%
                 <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:translate-x-[3px] group-hover:-translate-y-[1px]" />
               </Link>
             </div>
@@ -1300,7 +1300,7 @@ function EarnWithUs() {
         <div className="grid gap-5 lg:grid-cols-3">
           {[
             {
-              title: "Become a Partner",
+              title: "Earn 70%",
               body: "Join the Glintr partner network and start representing programs.",
               cta: "See how it works",
               to: "/earn" as const,
@@ -1538,7 +1538,7 @@ const ECOSYSTEM = {
     title: "EARN",
     color: "var(--brand-lime)",
     Icon: Wallet,
-    items: ["Become a Partner", "70% Revenue Model", "50% Supported Model", "Campus Ambassador"],
+    items: ["Earn 70%", "70% Revenue Model", "50% Supported Model", "Campus Ambassador"],
   },
   build: {
     title: "BUILD",
@@ -1742,7 +1742,7 @@ function FinalBrandStatement() {
             </Button>
             <Button variant="ghost" size="lg" asChild>
               <Link to="/earn">
-                Start Earning <ArrowUpRight className="size-4" />
+                Start Earning 70% <ArrowUpRight className="size-4" />
               </Link>
             </Button>
           </div>

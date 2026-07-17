@@ -525,7 +525,7 @@ export function SiteHeader() {
           )}
 
 
-          {/* Start Earning — primary CTA */}
+          {/* Start Earning 70% — primary CTA */}
           <Button
             variant="gradient"
             size="sm"
@@ -534,7 +534,7 @@ export function SiteHeader() {
           >
             <a href="/join" aria-label="Start Earning with Glintr">
               <Sparkles className="size-4" />
-              <span className="relative z-10">Start Earning</span>
+              <span className="relative z-10">Start Earning 70%</span>
             </a>
           </Button>
 
@@ -660,7 +660,7 @@ export function SiteHeader() {
               <Button variant="gradient" size="sm" className="cta-earn rounded-full" asChild>
                 <a href="/join">
                   <Sparkles className="size-4" />
-                  <span className="relative z-10">Start Earning</span>
+                  <span className="relative z-10">Start Earning 70%</span>
                 </a>
               </Button>
               {session ? (

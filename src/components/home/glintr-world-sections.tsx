@@ -102,7 +102,7 @@ export function GlintrWorld() {
             onFocus={hoverFocus}
             title="EARN"
             tagline="Sell programs and earn revenue share."
-            cta="Start Earning"
+            cta="Start Earning 70%"
             href="/earn"
             hero
           >

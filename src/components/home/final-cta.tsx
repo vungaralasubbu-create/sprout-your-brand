@@ -43,7 +43,7 @@ export function FinalCtaSection() {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Button variant="gradient" size="lg" asChild>
               <a href="/join">
-                Start Earning <ArrowRight className="size-4" />
+                Start Earning 70% <ArrowRight className="size-4" />
               </a>
             </Button>
             <Button
