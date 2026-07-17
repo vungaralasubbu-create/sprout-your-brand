@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck,
-  RefreshCw, ArrowLeft, LifeBuoy,
+  RefreshCw, ArrowLeft, LifeBuoy, Minimize2, Maximize2, Minus,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
