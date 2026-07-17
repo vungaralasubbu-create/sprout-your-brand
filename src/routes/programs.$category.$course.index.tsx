@@ -74,6 +74,7 @@ import { cn } from "@/lib/utils";
 import { ProgramScrollProgress } from "@/components/programs/program-scroll-progress";
 import { ProgramHeroGraphic } from "@/components/programs/program-hero-graphic";
 import { QuickAnswer, KeyTakeaways } from "@/components/shared/geo";
+import { useAutoReveal } from "@/hooks/use-auto-reveal";
 
 
 const SITE_URL = "https://glintr.com";
@@ -192,6 +193,7 @@ function CoursePage() {
   const { category, course } = Route.useParams();
   const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const ref = search?.get("ref") ?? null;
+  useAutoReveal(true);
 
   const { data, isLoading } = useQuery({
     queryKey: ["course", category, course],
@@ -411,7 +413,7 @@ function CoursePage() {
       </Section>
 
       {/* ============ GEO: QUICK ANSWER + KEY TAKEAWAYS ============ */}
-      <Section className="py-10 lg:py-14 border-t bg-surface-1/40">
+      <Section data-reveal className="py-10 lg:py-14 border-t bg-surface-1/40">
         <Container>
           <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 lg:gap-8">
             <QuickAnswer
@@ -425,7 +427,7 @@ function CoursePage() {
       </Section>
 
 
-      <Section className="relative overflow-hidden py-20 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
+      <Section data-reveal className="relative overflow-hidden py-20 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
         <div
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,oklch(0.7_0.15_180/0.22),transparent_60%)]"
@@ -489,7 +491,7 @@ function CoursePage() {
       <StudentLearningJourney />
 
       {/* ============ LEARNING JOURNEY ============ */}
-      <Section className="py-16 lg:py-24 bg-surface-2/40 border-y">
+      <Section data-reveal className="py-16 lg:py-24 bg-surface-2/40 border-y">
         <Container>
           <Reveal>
             <div className="max-w-2xl mb-12">
@@ -516,7 +518,7 @@ function CoursePage() {
 
       {/* ============ WHY THIS PROGRAM ============ */}
       {showWhySection ? (
-        <Section className="py-14 lg:py-20">
+        <Section data-reveal className="py-14 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-16">
               <div>
@@ -570,7 +572,7 @@ function CoursePage() {
 
       {/* ============ SKILLS MARQUEE ============ */}
       {c.skills.length > 0 ? (
-        <Section className="py-14 lg:py-20 border-y bg-surface-1">
+        <Section data-reveal className="py-14 lg:py-20 border-y bg-surface-1">
           <Container>
             <Reveal>
               <div className="max-w-2xl mb-8">
@@ -599,11 +601,11 @@ function CoursePage() {
                 Tools You'll Work With
               </h2>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div data-stagger className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {c.tools.map((t) => (
                 <div
                   key={t.name}
-                  className="rounded-xl border border-border/60 bg-surface-1 p-5 flex items-center gap-4 hover:border-primary/50 transition-colors"
+                  className="rounded-xl border border-border/60 bg-surface-1 p-5 flex items-center gap-4 hover:border-primary/50 transition-colors card-premium"
                 >
                   <span className="inline-flex size-11 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-accent/15 text-primary">
                     {t.logo_url ? (
@@ -626,7 +628,7 @@ function CoursePage() {
 
       {/* ============ PROJECTS SLIDER (dark) ============ */}
       {c.projects.length > 0 ? (
-        <Section className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
+        <Section data-reveal className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
           <div
             aria-hidden
             className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.28),transparent_55%)]"
@@ -656,7 +658,7 @@ function CoursePage() {
       <CourseReviewsSection courseId={c.id} />
 
       {/* ============ VISUAL BREAK ============ */}
-      <Section className="relative overflow-hidden py-20 lg:py-28 text-white">
+      <Section data-reveal className="relative overflow-hidden py-20 lg:py-28 text-white">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.28_0.14_255),oklch(0.42_0.16_220),oklch(0.55_0.15_195))] bg-[length:200%_200%] animate-[gradient-shift_14s_ease-in-out_infinite]"
@@ -684,7 +686,7 @@ function CoursePage() {
 
 
       {/* ============ CERTIFICATION (dynamic, course-specific) ============ */}
-      <Section className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
+      <Section data-reveal className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
         <div
           aria-hidden
           className="absolute -top-32 -right-32 size-[420px] rounded-full bg-primary/10 blur-[110px]"
@@ -718,11 +720,11 @@ function CoursePage() {
       {/* ============ CAREER OPPORTUNITIES ============ */}
       {c.career_roles.length > 0 ? (
         <SectionBlock eyebrow="Career Paths" title="Where These Skills Can Take You." tone="soft">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div data-stagger className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {c.career_roles.map((r, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 transition-colors"
+                className="rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 transition-colors card-premium"
               >
                 <span className="inline-flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Briefcase className="size-5" />
@@ -752,7 +754,7 @@ function CoursePage() {
       {/* ============ PLACEMENT / CAREER SUPPORT ============ */}
       {c.placement.length > 0 ? (
         <SectionBlock eyebrow="Career Support" title="Build Skills. Prepare For Opportunities." className="!pb-6 lg:!pb-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div data-stagger className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {c.placement.map((p, i) => (
               <div
                 key={i}
@@ -779,7 +781,7 @@ function CoursePage() {
       {/* ============ WHO CAN LEARN ============ */}
       {displayAudience.length > 0 ? (
         <SectionBlock eyebrow="Who Can Learn This" title="Is This Program For You?" tone="soft">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div data-stagger className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {displayAudience.slice(0, 6).map((a, i) => (
               <div key={i} className="rounded-2xl border border-border/60 bg-surface-1 p-6">
                 <span className="inline-flex size-10 items-center justify-center rounded-lg bg-accent/15 text-accent">
@@ -842,13 +844,13 @@ function CoursePage() {
       {/* ============ RELATED PROGRAMS ============ */}
       {related.length > 0 ? (
         <SectionBlock eyebrow="Explore More" title="Related Programs" className="!pb-8 lg:!pb-10">
-          <div className="grid md:grid-cols-3 gap-6">
+          <div data-stagger className="grid md:grid-cols-3 gap-6">
             {related.slice(0, 3).map((r: any) => (
               <Link
                 key={r.id}
                 to="/programs/$category/$course"
                 params={{ category: r.category.slug, course: r.slug }}
-                className="group rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 hover:shadow-lg transition-all"
+                className="group rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 hover:shadow-lg transition-all card-premium"
               >
                 <div className="text-caption font-mono uppercase tracking-widest text-primary">
                   {r.category.name}
@@ -879,13 +881,13 @@ function CoursePage() {
       {/* ============ RELATED BLOG ARTICLES ============ */}
       {editorialBlogs.length > 0 ? (
         <SectionBlock eyebrow="Read More" title="Related Articles" tone="soft" className="!pb-8 lg:!pb-10">
-          <div className="grid md:grid-cols-3 gap-6">
+          <div data-stagger className="grid md:grid-cols-3 gap-6">
             {editorialBlogs.map((b) => (
               <Link
                 key={b.slug}
                 to="/blog/$slug"
                 params={{ slug: b.slug }}
-                className="group rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
+                className="group rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 hover:shadow-lg transition-all flex flex-col card-premium"
               >
                 <div className="text-caption font-mono uppercase tracking-widest text-primary">
                   Article
@@ -910,7 +912,7 @@ function CoursePage() {
 
 
       {/* ============ FINAL CTA ============ */}
-      <Section className="relative overflow-hidden py-10 lg:py-14">
+      <Section data-reveal className="relative overflow-hidden py-10 lg:py-14">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.32_0.14_255),oklch(0.48_0.16_220),oklch(0.6_0.14_195))] bg-[length:200%_200%] animate-[gradient-shift_18s_ease-in-out_infinite]"
@@ -1033,7 +1035,7 @@ function Curriculum({
   return (
     <>
       {/* Desktop: split view */}
-      <div className="hidden lg:grid grid-cols-[340px_1fr] gap-8">
+      <div data-stagger className="hidden lg:grid grid-cols-[340px_1fr] gap-8">
         <div className="space-y-2">
           {modules.map((m, i) => {
             const isActive = i === active;
@@ -1164,7 +1166,7 @@ function ProjectCard({
   };
 }) {
   return (
-    <div className="group rounded-2xl border border-border/60 bg-surface-1 overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all">
+    <div className="group rounded-2xl border border-border/60 bg-surface-1 overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all card-premium">
       {project.image_url ? (
         <div className="aspect-video overflow-hidden">
           <img
@@ -1207,7 +1209,7 @@ function ExperienceCard({
   icon: React.ComponentType<{ className?: string }>;
 }) {
   return (
-    <div className="rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 transition-colors">
+    <div className="rounded-2xl border border-border/60 bg-surface-1 p-6 hover:border-primary/50 transition-colors card-premium">
       <span className="inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-accent/15 text-primary">
         <Icon className="size-5" />
       </span>
@@ -1663,7 +1665,7 @@ function CourseReviewsSection({ courseId }: { courseId: string }) {
             type="button"
             aria-label="Previous review"
             onClick={() => nudge(-1)}
-            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors card-premium"
           >
             <ChevronLeft className="size-5" />
           </button>
@@ -1671,7 +1673,7 @@ function CourseReviewsSection({ courseId }: { courseId: string }) {
             type="button"
             aria-label="Next review"
             onClick={() => nudge(1)}
-            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border bg-surface-1 hover:text-primary hover:border-primary/50 transition-colors card-premium"
           >
             <ChevronRight className="size-5" />
           </button>

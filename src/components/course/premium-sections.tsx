@@ -74,7 +74,7 @@ const HIRING_PARTNERS: Array<{ name: string; letter?: string }> = [
 export function HiringPartners({ partners }: { partners?: string[] } = {}) {
   const list = partners && partners.length > 0 ? partners : HIRING_PARTNERS.map((p) => p.name);
   return (
-    <Section className="py-14 lg:py-20 border-y bg-surface-1/40">
+    <Section data-reveal className="py-14 lg:py-20 border-y bg-surface-1/40">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -88,11 +88,11 @@ export function HiringPartners({ partners }: { partners?: string[] } = {}) {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3">
+        <div data-stagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3">
           {list.map((name) => (
             <div
               key={name}
-              className="group flex items-center justify-center rounded-xl border border-border/60 bg-white px-3 py-4 shadow-sm hover:border-primary/40 hover:shadow-md transition-all"
+              className="group flex items-center justify-center rounded-xl border border-border/60 bg-white px-3 py-4 shadow-sm hover:border-primary/40 hover:shadow-md transition-all card-premium"
             >
               <span className="font-display font-semibold text-sm lg:text-[15px] tracking-tight text-foreground/85 group-hover:text-primary transition-colors text-center">
                 {name}
@@ -149,7 +149,7 @@ export function ToolsMaster({ tools }: { tools?: ToolItem[] } = {}) {
     tools && tools.length > 0 ? tools : TOOL_CARDS.map((t) => ({ name: t.name, icon: t.icon }));
 
   return (
-    <Section className="py-14 lg:py-20">
+    <Section data-reveal className="py-14 lg:py-20">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Your Toolkit</span>
@@ -161,13 +161,13 @@ export function ToolsMaster({ tools }: { tools?: ToolItem[] } = {}) {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
+        <div data-stagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
           {list.map((t, i) => {
             const Icon = t.icon;
             return (
               <div
                 key={t.name}
-                className="group relative rounded-2xl border border-border/60 bg-surface-1 p-4 flex flex-col items-center text-center hover:border-primary/40 hover:shadow-md transition-all"
+                className="group relative rounded-2xl border border-border/60 bg-surface-1 p-4 flex flex-col items-center text-center hover:border-primary/40 hover:shadow-md transition-all card-premium"
               >
                 <span
                   className={cn(
@@ -204,7 +204,7 @@ const JOURNEY: Array<{ title: string; description: string; icon: React.Component
 
 export function StudentLearningJourney() {
   return (
-    <Section className="py-14 lg:py-20 bg-surface-2/40 border-y">
+    <Section data-reveal className="py-14 lg:py-20 bg-surface-2/40 border-y">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">The Path</span>
@@ -320,7 +320,7 @@ export function PortfolioProjects({ projects }: { projects?: PortfolioItem[] } =
 
 function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
   return (
-    <Section className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
+    <Section data-reveal className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
       <div
         aria-hidden
         className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.28),transparent_55%)]"
@@ -338,11 +338,11 @@ function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div data-stagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
           {list.map((p, i) => (
             <div
               key={p.name}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 lg:p-5 hover:border-[oklch(0.85_0.15_200)]/40 hover:bg-white/[0.06] transition-all"
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 lg:p-5 hover:border-[oklch(0.85_0.15_200)]/40 hover:bg-white/[0.06] transition-all card-premium"
             >
               <div
                 className={cn(
@@ -386,7 +386,7 @@ export function CareerRoadmap({ stages }: { stages?: RoadmapStage[] } = {}) {
   const list = stages && stages.length > 0 ? stages : CAREER_ROADMAP;
   const cols = list.length >= 6 ? "lg:grid-cols-4" : "lg:grid-cols-4";
   return (
-    <Section className="py-14 lg:py-20">
+    <Section data-reveal className="py-14 lg:py-20">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Career Roadmap</span>
@@ -402,7 +402,7 @@ export function CareerRoadmap({ stages }: { stages?: RoadmapStage[] } = {}) {
           {list.map((r, i) => (
             <li
               key={r.title + i}
-              className="relative rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 transition-all"
+              className="relative rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 transition-all card-premium"
             >
               <div className="flex items-center gap-3">
                 <span className="inline-flex size-8 items-center justify-center rounded-full bg-primary/10 font-mono text-xs font-semibold text-primary">
@@ -443,7 +443,7 @@ export function SalaryGrowth({ stages }: { stages?: SalaryStage[] } = {}) {
   const list = stages && stages.length > 0 ? stages : SALARY_STAGES;
   const max = Math.max(...list.map((s) => s.high), 40);
   return (
-    <Section className="py-14 lg:py-20 bg-surface-1/50 border-y">
+    <Section data-reveal className="py-14 lg:py-20 bg-surface-1/50 border-y">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Salary Growth</span>
@@ -507,7 +507,7 @@ const CAREER_SERVICES = [
 
 export function CareerServices() {
   return (
-    <Section className="py-14 lg:py-20">
+    <Section data-reveal className="py-14 lg:py-20">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Career Services</span>
@@ -519,13 +519,13 @@ export function CareerServices() {
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div data-stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {CAREER_SERVICES.map((s) => {
             const Icon = s.icon;
             return (
               <div
                 key={s.title}
-                className="group flex gap-4 rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 hover:shadow-md transition-all"
+                className="group flex gap-4 rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 hover:shadow-md transition-all card-premium"
               >
                 <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-[oklch(0.75_0.15_200)]/15 text-primary">
                   <Icon className="size-5" />
@@ -558,7 +558,7 @@ const CERT_ITEMS: Array<{ title: string; note: string; icon: React.ComponentType
 
 export function CertificationBadges() {
   return (
-    <Section className="py-14 lg:py-20 bg-surface-2/40 border-y">
+    <Section data-reveal className="py-14 lg:py-20 bg-surface-2/40 border-y">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Certifications</span>
@@ -570,13 +570,13 @@ export function CertificationBadges() {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div data-stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CERT_ITEMS.map((c) => {
             const Icon = c.icon;
             return (
               <div
                 key={c.title}
-                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-white p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all"
+                className="group relative overflow-hidden rounded-2xl border border-border/60 bg-white p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all card-premium"
               >
                 <div className={cn("inline-flex size-11 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm", c.tone)}>
                   <Icon className="size-5" />
@@ -662,7 +662,7 @@ function StatCard({
 
 export function SuccessCounters() {
   return (
-    <Section className="py-14 lg:py-20 border-y bg-gradient-to-b from-white to-surface-1/50">
+    <Section data-reveal className="py-14 lg:py-20 border-y bg-gradient-to-b from-white to-surface-1/50">
       <Container>
         <div className="max-w-2xl mx-auto text-center mb-10 lg:mb-12">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Student Success</span>
@@ -671,7 +671,7 @@ export function SuccessCounters() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-0 lg:divide-x lg:divide-border/70 items-stretch">
+        <div data-stagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-0 lg:divide-x lg:divide-border/70 items-stretch">
           {SUCCESS_STATS.map((s, i) => (
             <StatCard key={s.label} stat={s} index={i} />
           ))}
@@ -701,7 +701,7 @@ type AIToolItem = { name: string; use: string; icon: React.ComponentType<{ class
 export function AIToolsUsage({ items, title, description }: { items?: AIToolItem[]; title?: string; description?: string } = {}) {
   const list = items && items.length > 0 ? items : AI_TOOLS_USAGE;
   return (
-    <Section className="py-14 lg:py-20">
+    <Section data-reveal className="py-14 lg:py-20">
       <Container>
         <div className="max-w-2xl mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Productivity in Your Workflow</span>
@@ -713,13 +713,13 @@ export function AIToolsUsage({ items, title, description }: { items?: AIToolItem
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div data-stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {list.map((t) => {
             const Icon = t.icon;
             return (
               <div
                 key={t.name}
-                className="rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 transition-all"
+                className="rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 transition-all card-premium"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="inline-flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary/15 to-[oklch(0.75_0.15_200)]/15 text-primary">
@@ -822,7 +822,7 @@ export function ProgramPersonalization() {
   if (!content) return null;
 
   return (
-    <Section className="py-14 lg:py-20 bg-gradient-to-b from-primary/[0.03] to-transparent">
+    <Section data-reveal className="py-14 lg:py-20 bg-gradient-to-b from-primary/[0.03] to-transparent">
       <Container>
         <div className="rounded-3xl border border-primary/25 bg-white shadow-sm overflow-hidden">
           <div className="grid gap-6 lg:gap-10 p-6 lg:p-10 lg:grid-cols-[1fr_1.4fr] items-start">
@@ -848,7 +848,7 @@ export function ProgramPersonalization() {
               </Link>
             </div>
 
-            <div className="grid gap-2.5 sm:grid-cols-2">
+            <div data-stagger className="grid gap-2.5 sm:grid-cols-2">
               {content.points.map((p) => {
                 const Icon = p.icon;
                 return (
