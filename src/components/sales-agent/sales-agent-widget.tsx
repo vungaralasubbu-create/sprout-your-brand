@@ -153,7 +153,7 @@ export function SalesAgentWidget() {
       setInput("");
       setSending(true);
       try {
-        const reply = await sendSalesMessage({ data: { conversationId: convId, message: value, pagePath: path } });
+        const reply = await sendSalesMessage({ data: { conversationId: convId, message: value, pagePath: path, phoneCaptured } });
         setMessages((prev) => [
           ...prev,
           {
