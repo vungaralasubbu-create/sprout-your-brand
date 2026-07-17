@@ -62,7 +62,7 @@ export const upsertMyStudentProfile = createServerFn({ method: "POST" })
     if (data.mark_onboarded) patch.onboarded_at = new Date().toISOString();
     const { data: saved, error } = await supabase
       .from("student_profiles")
-      .upsert(patch, { onConflict: "user_id" })
+      .upsert(patch as any, { onConflict: "user_id" })
       .select()
       .maybeSingle();
     if (error) throw new Error(error.message);
