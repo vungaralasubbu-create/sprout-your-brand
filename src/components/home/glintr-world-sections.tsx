@@ -479,14 +479,54 @@ const BRANDS: Array<{
   { name: "Microsoft", short: "Microsoft", color: "oklch(0.55 0.18 255)", relationship: "Technology & Certification Ecosystem", cats: ["technology", "cloud", "ai", "enterprise"] },
   { name: "Google", short: "Google", color: "oklch(0.65 0.19 30)", relationship: "Technology Learning Ecosystem", cats: ["technology", "cloud", "ai"] },
   { name: "Meta", short: "Meta", color: "oklch(0.55 0.22 255)", relationship: "Digital & Marketing Ecosystem", cats: ["marketing", "technology"] },
+  { name: "Amazon Web Services", short: "AWS", color: "oklch(0.55 0.17 55)", relationship: "Cloud Learning Ecosystem", cats: ["cloud", "technology"] },
   { name: "Adobe", short: "Adobe", color: "oklch(0.55 0.24 25)", relationship: "Creative Technology Ecosystem", cats: ["creative"] },
-  { name: "AWS", short: "AWS", color: "oklch(0.55 0.17 55)", relationship: "Cloud Learning Ecosystem", cats: ["cloud", "technology"] },
-  { name: "IBM", short: "IBM", color: "oklch(0.5 0.17 260)", relationship: "Enterprise Technology Ecosystem", cats: ["enterprise", "cloud", "ai"] },
   { name: "Oracle", short: "Oracle", color: "oklch(0.55 0.24 25)", relationship: "Enterprise Data Ecosystem", cats: ["cloud", "enterprise"] },
+  { name: "IBM", short: "IBM", color: "oklch(0.5 0.17 260)", relationship: "Enterprise Technology Ecosystem", cats: ["enterprise", "cloud", "ai"] },
   { name: "Cisco", short: "Cisco", color: "oklch(0.55 0.16 235)", relationship: "Networking Ecosystem", cats: ["technology", "enterprise"] },
+  { name: "Intel", short: "Intel", color: "oklch(0.55 0.17 245)", relationship: "Silicon & Compute Ecosystem", cats: ["technology"] },
   { name: "NVIDIA", short: "NVIDIA", color: "oklch(0.7 0.22 140)", relationship: "AI Compute Ecosystem", cats: ["ai", "technology"] },
   { name: "Salesforce", short: "Salesforce", color: "oklch(0.6 0.18 240)", relationship: "CRM & Growth Ecosystem", cats: ["marketing", "enterprise"] },
+  { name: "ServiceNow", short: "ServiceNow", color: "oklch(0.55 0.17 165)", relationship: "Digital Workflow Ecosystem", cats: ["enterprise"] },
+  { name: "Accenture", short: "Accenture", color: "oklch(0.55 0.22 320)", relationship: "Consulting & Delivery Ecosystem", cats: ["enterprise"] },
+  { name: "Docker", short: "Docker", color: "oklch(0.6 0.16 235)", relationship: "Containers & DevOps Ecosystem", cats: ["technology", "cloud"] },
+  { name: "VMware", short: "VMware", color: "oklch(0.55 0.13 235)", relationship: "Virtualization Ecosystem", cats: ["cloud", "enterprise"] },
+  { name: "Red Hat", short: "Red Hat", color: "oklch(0.55 0.24 25)", relationship: "Open Source Enterprise Ecosystem", cats: ["enterprise", "cloud"] },
+  { name: "Autodesk", short: "Autodesk", color: "oklch(0.55 0.14 240)", relationship: "Design & Engineering Ecosystem", cats: ["creative", "technology"] },
+  { name: "Dell Technologies", short: "Dell", color: "oklch(0.5 0.16 245)", relationship: "Enterprise Infrastructure Ecosystem", cats: ["enterprise"] },
+  { name: "Hewlett Packard Enterprise", short: "HPE", color: "oklch(0.6 0.15 170)", relationship: "Hybrid Infrastructure Ecosystem", cats: ["enterprise", "cloud"] },
+  { name: "Fortinet", short: "Fortinet", color: "oklch(0.55 0.22 25)", relationship: "Cybersecurity Ecosystem", cats: ["technology", "enterprise"] },
+  { name: "Cloudflare", short: "Cloudflare", color: "oklch(0.7 0.19 55)", relationship: "Edge & Network Ecosystem", cats: ["cloud", "technology"] },
+  { name: "MongoDB", short: "MongoDB", color: "oklch(0.6 0.17 145)", relationship: "Modern Data Ecosystem", cats: ["technology", "cloud"] },
+  { name: "Databricks", short: "Databricks", color: "oklch(0.55 0.22 25)", relationship: "Data & AI Ecosystem", cats: ["ai", "cloud"] },
+  { name: "Snowflake", short: "Snowflake", color: "oklch(0.7 0.15 220)", relationship: "Data Cloud Ecosystem", cats: ["cloud", "enterprise"] },
+  { name: "Atlassian", short: "Atlassian", color: "oklch(0.55 0.18 245)", relationship: "Team Collaboration Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "GitHub", short: "GitHub", color: "oklch(0.35 0.02 260)", relationship: "Developer Ecosystem", cats: ["technology"] },
+  { name: "GitLab", short: "GitLab", color: "oklch(0.6 0.2 40)", relationship: "DevSecOps Ecosystem", cats: ["technology"] },
+  { name: "HashiCorp", short: "HashiCorp", color: "oklch(0.5 0.2 300)", relationship: "Cloud Infrastructure Ecosystem", cats: ["cloud", "technology"] },
+  { name: "Palo Alto Networks", short: "Palo Alto", color: "oklch(0.55 0.22 30)", relationship: "Cybersecurity Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "CrowdStrike", short: "CrowdStrike", color: "oklch(0.55 0.2 25)", relationship: "Threat Intelligence Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Synopsys", short: "Synopsys", color: "oklch(0.5 0.16 255)", relationship: "Semiconductor Design Ecosystem", cats: ["technology"] },
+  { name: "Cadence", short: "Cadence", color: "oklch(0.5 0.2 20)", relationship: "EDA & VLSI Ecosystem", cats: ["technology"] },
+  { name: "Siemens", short: "Siemens", color: "oklch(0.6 0.13 200)", relationship: "Industrial Technology Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Ansys", short: "Ansys", color: "oklch(0.55 0.22 25)", relationship: "Simulation Ecosystem", cats: ["technology"] },
+  { name: "PTC", short: "PTC", color: "oklch(0.55 0.16 250)", relationship: "Digital Engineering Ecosystem", cats: ["technology"] },
+  { name: "SAP", short: "SAP", color: "oklch(0.65 0.17 235)", relationship: "Enterprise Applications Ecosystem", cats: ["enterprise"] },
+  { name: "Zoho", short: "Zoho", color: "oklch(0.55 0.2 25)", relationship: "Business Software Ecosystem", cats: ["enterprise", "marketing"] },
+  { name: "Freshworks", short: "Freshworks", color: "oklch(0.6 0.18 155)", relationship: "Customer Experience Ecosystem", cats: ["marketing", "enterprise"] },
+  { name: "MuleSoft", short: "MuleSoft", color: "oklch(0.55 0.18 305)", relationship: "Integration Ecosystem", cats: ["enterprise"] },
+  { name: "UiPath", short: "UiPath", color: "oklch(0.55 0.2 25)", relationship: "Automation Ecosystem", cats: ["enterprise", "ai"] },
+  { name: "Automation Anywhere", short: "AutoAnywhere", color: "oklch(0.55 0.18 250)", relationship: "Intelligent Automation Ecosystem", cats: ["enterprise", "ai"] },
+  { name: "Blue Prism", short: "Blue Prism", color: "oklch(0.5 0.18 245)", relationship: "RPA Ecosystem", cats: ["enterprise"] },
+  { name: "Unity", short: "Unity", color: "oklch(0.4 0.02 260)", relationship: "Real-Time 3D Ecosystem", cats: ["creative", "technology"] },
+  { name: "Unreal Engine", short: "Unreal", color: "oklch(0.45 0.03 260)", relationship: "Realtime Graphics Ecosystem", cats: ["creative", "technology"] },
+  { name: "Flutter", short: "Flutter", color: "oklch(0.65 0.16 220)", relationship: "Cross-Platform App Ecosystem", cats: ["technology"] },
+  { name: "Android", short: "Android", color: "oklch(0.75 0.16 145)", relationship: "Mobile Platform Ecosystem", cats: ["technology"] },
+  { name: "Kubernetes", short: "Kubernetes", color: "oklch(0.55 0.16 250)", relationship: "Container Orchestration Ecosystem", cats: ["cloud", "technology"] },
+  { name: "TensorFlow", short: "TensorFlow", color: "oklch(0.65 0.19 55)", relationship: "Machine Learning Ecosystem", cats: ["ai"] },
+  { name: "PyTorch", short: "PyTorch", color: "oklch(0.6 0.22 25)", relationship: "Deep Learning Ecosystem", cats: ["ai"] },
 ];
+
 
 const CATEGORY_LABELS: Array<{ key: Category; label: string }> = [
   { key: "all", label: "ALL" },
@@ -501,8 +541,10 @@ const CATEGORY_LABELS: Array<{ key: Category; label: string }> = [
 export function CertificationEcosystem() {
   const [expanded, setExpanded] = React.useState(false);
   const [cat, setCat] = React.useState<Category>("all");
-  const rail1 = BRANDS;
-  const rail2 = [...BRANDS].reverse();
+  const mid = Math.ceil(BRANDS.length / 2);
+  const rail1 = BRANDS.slice(0, mid);
+  const rail2 = BRANDS.slice(mid);
+
 
   const isHighlighted = (b: typeof BRANDS[number]) => cat === "all" || b.cats.includes(cat);
 
@@ -647,17 +689,28 @@ const INSTITUTIONS: Array<{ mono: string; sub: string; full: string }> = [
   { mono: "IIT", sub: "MADRAS", full: "IIT Madras" },
   { mono: "IIT", sub: "KHARAGPUR", full: "IIT Kharagpur" },
   { mono: "IIT", sub: "KANPUR", full: "IIT Kanpur" },
-  { mono: "IIT", sub: "HYDERABAD", full: "IIT Hyderabad" },
+  { mono: "IIT", sub: "ROORKEE", full: "IIT Roorkee" },
   { mono: "NIT", sub: "TRICHY", full: "NIT Trichy" },
   { mono: "NIT", sub: "WARANGAL", full: "NIT Warangal" },
   { mono: "NIT", sub: "SURATHKAL", full: "NIT Surathkal" },
-  { mono: "NIT", sub: "CALICUT", full: "NIT Calicut" },
   { mono: "BITS", sub: "PILANI", full: "BITS Pilani" },
-  { mono: "VIT", sub: "VELLORE", full: "VIT" },
-  { mono: "SRM", sub: "INSTITUTE", full: "SRM Institute of Science and Technology" },
-  { mono: "MAHE", sub: "MANIPAL", full: "Manipal Academy of Higher Education" },
-  { mono: "AMITY", sub: "UNIVERSITY", full: "Amity University" },
+  { mono: "VIT", sub: "VELLORE", full: "VIT Vellore" },
+  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University" },
+  { mono: "SRM", sub: "CHENNAI", full: "SRM University" },
+  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University" },
+  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University" },
+  { mono: "VTU", sub: "BELAGAVI", full: "VTU Belagavi" },
+  { mono: "DTU", sub: "DELHI", full: "DTU Delhi" },
+  { mono: "JU", sub: "KOLKATA", full: "Jadavpur University" },
+  { mono: "AU", sub: "CHENNAI", full: "Anna University" },
+  { mono: "AVV", sub: "COIMBATORE", full: "Amrita Vishwa Vidyapeetham" },
+  { mono: "PES", sub: "BENGALURU", full: "PES University" },
+  { mono: "RVCE", sub: "BENGALURU", full: "RV College of Engineering" },
+  { mono: "MSRIT", sub: "BENGALURU", full: "MS Ramaiah Institute" },
+  { mono: "OU", sub: "HYDERABAD", full: "Osmania University" },
+  { mono: "JNTU", sub: "HYDERABAD", full: "JNTU Hyderabad" },
 ];
+
 
 const BG_WORDS = ["IIT", "NIT", "BITS", "ENGINEERING", "TECHNOLOGY", "MANAGEMENT", "AI"];
 
