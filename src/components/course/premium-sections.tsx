@@ -167,26 +167,110 @@ const TOOL_TONES = [
   "from-[oklch(0.68_0.17_320)] to-[oklch(0.55_0.16_280)]",
 ];
 
-type ToolItem = { name: string; icon: React.ComponentType<{ className?: string }> };
+type ToolItem = { name: string; icon: React.ComponentType<{ className?: string }>; subtitle?: string };
+
+function MobileToolsCarousel({ list }: { list: ToolItem[] }) {
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const pausedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    // Pause auto-scroll while user is touching / scrolling
+    const pause = () => {
+      pausedRef.current = true;
+    };
+    const resume = () => {
+      // small delay so momentum scroll settles
+      window.setTimeout(() => (pausedRef.current = false), 1500);
+    };
+    el.addEventListener("touchstart", pause, { passive: true });
+    el.addEventListener("touchend", resume, { passive: true });
+    el.addEventListener("pointerdown", pause);
+    el.addEventListener("pointerup", resume);
+
+    const id = window.setInterval(() => {
+      if (pausedRef.current || !el) return;
+      const cardWidth = el.firstElementChild
+        ? (el.firstElementChild as HTMLElement).offsetWidth + 12 // gap-3
+        : 0;
+      if (!cardWidth) return;
+      const nearEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+      if (nearEnd) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: cardWidth, behavior: "smooth" });
+      }
+    }, 4000);
+
+    return () => {
+      window.clearInterval(id);
+      el.removeEventListener("touchstart", pause);
+      el.removeEventListener("touchend", resume);
+      el.removeEventListener("pointerdown", pause);
+      el.removeEventListener("pointerup", resume);
+    };
+  }, [list.length]);
+
+  return (
+    <div
+      ref={scrollerRef}
+      data-stagger
+      className="md:hidden flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-3 -mx-4 px-4 pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {list.map((t, i) => {
+        const Icon = t.icon;
+        return (
+          <div
+            key={t.name}
+            className="group shrink-0 basis-[calc((100%-1.5rem)/3)] snap-start rounded-2xl border border-border/60 bg-surface-1 p-3 flex flex-col items-center text-center shadow-sm"
+            aria-label={t.name}
+          >
+            <span
+              className={cn(
+                "inline-flex size-8 items-center justify-center rounded-lg bg-gradient-to-br text-white shadow-sm",
+                TOOL_TONES[i % TOOL_TONES.length],
+              )}
+            >
+              <Icon className="size-4" />
+            </span>
+            <div className="mt-2 text-[12px] font-semibold tracking-tight leading-tight line-clamp-1">
+              {t.name}
+            </div>
+            {t.subtitle ? (
+              <div className="mt-0.5 text-[10px] text-muted-foreground line-clamp-1">
+                {t.subtitle}
+              </div>
+            ) : null}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export function ToolsMaster({ tools }: { tools?: ToolItem[] } = {}) {
   const list: ToolItem[] =
     tools && tools.length > 0 ? tools : TOOL_CARDS.map((t) => ({ name: t.name, icon: t.icon }));
 
   return (
-    <Section data-reveal className="py-14 lg:py-20">
+    <Section data-reveal className="py-8 lg:py-20">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Your Toolkit</span>
-          <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
+          <h2 className="mt-2 lg:mt-3 text-heading-lg lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             Tools You'll Master
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-3 lg:mt-4 text-sm lg:text-base text-muted-foreground">
             Hands-on with the exact stack today's teams ship with — every tool below is used in real projects.
           </p>
         </div>
 
-        <div data-stagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
+        {/* Mobile: 3-up horizontal carousel with auto-scroll */}
+        <MobileToolsCarousel list={list} />
+
+        {/* Tablet + Desktop: existing responsive grid, unchanged */}
+        <div data-stagger className="hidden md:grid grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
           {list.map((t, i) => {
             const Icon = t.icon;
             return (
