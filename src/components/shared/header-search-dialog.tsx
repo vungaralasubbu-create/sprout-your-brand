@@ -75,7 +75,7 @@ export function HeaderSearchDialog({ open, onOpenChange }: { open: boolean; onOp
           out.push({ group: "Blogs", title: p.title, subtitle: p.excerpt ?? undefined, href: `/blog/${p.slug}`, icon: FileText });
         }
         for (const t of searchTools(term).slice(0, 4)) {
-          out.push({ group: "AI Tools", title: t.name, subtitle: t.tagline, href: `/tools/${t.slug}`, icon: Wrench });
+          out.push({ group: "AI Tools", title: t.title, subtitle: t.short, href: `/tools/${t.slug}`, icon: Wrench });
         }
         for (const cp of CAREER_PATHS.filter((r) => matches(r.title, term)).slice(0, 4)) {
           out.push({ group: "Career Paths", title: cp.title, subtitle: cp.subtitle, href: cp.href, icon: Compass });
