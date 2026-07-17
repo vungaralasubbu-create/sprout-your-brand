@@ -294,7 +294,7 @@ function LeadIntelligencePage() {
                       </span>
                     </TableCell>
                     <TableCell className="text-xs">
-                      <Badge variant="secondary" className="whitespace-nowrap">
+                      <Badge variant="outline" className="whitespace-nowrap">
                         <Flame className="h-3 w-3 mr-1 text-primary" />
                         {l.ai_next_action || "Assess"}
                       </Badge>
