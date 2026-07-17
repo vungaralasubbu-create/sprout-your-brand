@@ -87,11 +87,11 @@ export function SalesAgentWidget() {
         const hist = await getSalesHistory({ data: { conversationId: res.conversationId, sessionToken } });
         if (hist.messages.length) {
           setMessages(
-            hist.messages.map((m: { role: string; content: string; quick_replies?: string[]; cards?: SalesCard[] }) => ({
-              role: m.role === "user" ? "user" : "assistant",
-              content: m.content,
-              quickReplies: (m.quick_replies as string[] | undefined) ?? undefined,
-              cards: (m.cards as SalesCard[] | undefined) ?? undefined,
+            hist.messages.map((m) => ({
+              role: (m.role as string) === "user" ? ("user" as const) : ("assistant" as const),
+              content: m.content as string,
+              quickReplies: Array.isArray(m.quick_replies) ? (m.quick_replies as string[]) : undefined,
+              cards: Array.isArray(m.cards) ? (m.cards as unknown as SalesCard[]) : undefined,
             })),
           );
         }
