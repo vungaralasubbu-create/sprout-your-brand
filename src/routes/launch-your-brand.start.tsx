@@ -267,7 +267,7 @@ function BrandBuilderWizard() {
   const captureLead = React.useCallback(() => {
     if (draft.leadCaptured) return;
     update({ leadCaptured: true });
-    trackEvent("brand_builder_lead", {
+    trackEvent("lead_capture", {
       source: "ai_brand_builder",
       email: draft.email,
       dedupe_key: `bb:${draft.email || draft.phone}`,
