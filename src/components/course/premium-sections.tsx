@@ -771,13 +771,61 @@ const CAREER_SERVICES = [
   { title: "Interview Preparation", icon: MessageCircle, note: "Structured DSA + system design tracks." },
   { title: "Mock Interviews", icon: Mic, note: "1:1 mocks with detailed rubric feedback." },
   { title: "Portfolio Review", icon: BookOpenCheck, note: "Curated projects, cleaned repos." },
+  { title: "Resume Review", icon: FileText, note: "Line-by-line audit with mentor notes." },
+  { title: "GitHub Review", icon: Github, note: "Repo hygiene, READMEs & pinned work." },
+  { title: "LinkedIn Review", icon: Linkedin, note: "Positioning, keywords & content plan." },
+  { title: "HR Mock", icon: Users, note: "Behavioural + situational HR rounds." },
+  { title: "Technical Mock", icon: Code2, note: "DSA, system design & role-fit drills." },
+  { title: "Behavioral Interview", icon: MessageCircle, note: "STAR-format storytelling coaching." },
   { title: "Career Counselling", icon: Users, note: "Role fit, salary bands, city choices." },
-  { title: "Referral Network", icon: Handshake, note: "Warm introductions where possible." },
-  { title: "Offer Negotiation", icon: TrendingUp, note: "Frameworks for comp & levelling." },
+  { title: "Career Mentoring", icon: GraduationCap, note: "1:1 mentor pairing across your journey." },
+  { title: "Salary Negotiation", icon: TrendingUp, note: "Frameworks for comp & levelling." },
+  { title: "Offer Evaluation", icon: BadgeIcon, note: "Compare offers on levels, comp & growth." },
+  { title: "Placement Assistance", icon: Briefcase, note: "Active placement drive support." },
+  { title: "Referral Support", icon: Handshake, note: "Warm introductions where possible." },
   { title: "AI Career Coach", icon: Sparkles, note: "24×7 guidance on your goals." },
 ];
 
+type CareerService = (typeof CAREER_SERVICES)[number];
+
+function CareerServiceCard({ s, compact = false }: { s: CareerService; compact?: boolean }) {
+  const Icon = s.icon;
+  return (
+    <div
+      className={cn(
+        "group flex gap-3 rounded-2xl border border-border/60 bg-surface-1 hover:border-primary/40 hover:shadow-md transition-all card-premium",
+        compact ? "p-3" : "gap-4 p-5",
+      )}
+    >
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-[oklch(0.75_0.15_200)]/15 text-primary",
+          compact ? "size-9" : "size-10",
+        )}
+      >
+        <Icon className={compact ? "size-4" : "size-5"} />
+      </span>
+      <div className="min-w-0">
+        <div className={cn("font-display font-semibold tracking-tight", compact ? "text-[13.5px]" : "text-[15px]")}>
+          {s.title}
+        </div>
+        <p
+          className={cn(
+            "text-muted-foreground",
+            compact ? "mt-0.5 text-[11.5px] leading-snug line-clamp-1" : "mt-1 text-sm",
+          )}
+        >
+          {s.note}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function CareerServices() {
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const mobilePreview = CAREER_SERVICES.slice(0, 3);
+
   return (
     <Section data-reveal className="py-8 lg:py-20">
       <Container>
@@ -791,29 +839,67 @@ export function CareerServices() {
           </p>
         </div>
 
-        <div data-stagger className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {CAREER_SERVICES.map((s) => {
-            const Icon = s.icon;
-            return (
-              <div
-                key={s.title}
-                className="group flex gap-4 rounded-2xl border border-border/60 bg-surface-1 p-5 hover:border-primary/40 hover:shadow-md transition-all card-premium"
-              >
-                <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-[oklch(0.75_0.15_200)]/15 text-primary">
-                  <Icon className="size-5" />
-                </span>
-                <div className="min-w-0">
-                  <div className="font-display font-semibold text-[15px] tracking-tight">{s.title}</div>
-                  <p className="mt-1 text-sm text-muted-foreground">{s.note}</p>
-                </div>
-              </div>
-            );
-          })}
+        {/* Mobile: 3 preview cards + View All button */}
+        <div className="sm:hidden">
+          <div className="grid gap-3">
+            {mobilePreview.map((s) => (
+              <CareerServiceCard key={s.title} s={s} compact />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setSheetOpen(true)}
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 to-[oklch(0.75_0.15_200)]/10 px-5 py-3 text-sm font-semibold text-primary hover:from-primary/15 hover:to-[oklch(0.75_0.15_200)]/15 active:scale-[0.99] transition-all"
+            aria-haspopup="dialog"
+            aria-expanded={sheetOpen}
+          >
+            View All Career Services
+            <ArrowRight className="size-4" />
+          </button>
+          <CareerServicesSheet open={sheetOpen} onOpenChange={setSheetOpen} />
+        </div>
+
+        {/* Tablet + Desktop: unchanged grid */}
+        <div data-stagger className="hidden sm:grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {CAREER_SERVICES.map((s) => (
+            <CareerServiceCard key={s.title} s={s} />
+          ))}
         </div>
       </Container>
     </Section>
   );
 }
+
+function CareerServicesSheet({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+}) {
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="bottom"
+        className="rounded-t-2xl max-h-[85dvh] p-0 flex flex-col"
+      >
+        <SheetHeader className="px-5 pt-4 pb-2 text-left">
+          <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-border" aria-hidden />
+          <SheetTitle className="font-display text-lg">Career Services</SheetTitle>
+          <SheetDescription>All services included with your program.</SheetDescription>
+        </SheetHeader>
+        <div className="flex-1 overflow-y-auto px-5 pb-6">
+          <div className="grid gap-2.5">
+            {CAREER_SERVICES.map((s) => (
+              <CareerServiceCard key={s.title} s={s} compact />
+            ))}
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 
 // =====================================================================
 // SECTION 8 — CERTIFICATION BADGES
