@@ -276,7 +276,7 @@ export function SalesAgentWidget() {
                 <Loader2 className="w-3.5 h-3.5 animate-spin" /> GlintrAI is typing…
               </div>
             )}
-            {handover && (
+            {handover && phoneCaptured && (
               <div className="rounded-xl border border-border bg-card p-3 text-xs space-y-1.5">
                 <div className="font-semibold text-foreground">Talk to a human counsellor</div>
                 <div className="flex items-center gap-2 text-muted-foreground">
