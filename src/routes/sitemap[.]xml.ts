@@ -9,6 +9,8 @@ import { listTools } from "@/data/tools";
 import { articles as learnArticles, collections as learnCollections, topics as learnTopics } from "@/data/learn";
 import { AGENTS } from "@/lib/aios/agents";
 import { listPillars, listAllClusters } from "@/data/topics";
+import { listAuthors } from "@/data/authors";
+
 
 const BASE_URL = "https://glintr.com";
 
