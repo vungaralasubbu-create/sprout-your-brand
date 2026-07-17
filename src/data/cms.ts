@@ -291,7 +291,7 @@ const STATS: PlatformStat[] = [
   { key: "live_workshops", label: "Live Workshops", value: 500, suffix: "+", verified: true },
 ];
 
-];
+
 
 // No approved success stories yet — the homepage section stays hidden until
 // admins publish and verify real stories via the CMS.
