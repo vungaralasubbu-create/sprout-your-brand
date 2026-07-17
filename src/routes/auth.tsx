@@ -266,40 +266,54 @@ function AuthPage() {
               {stage === "creds" ? (
                 <form onSubmit={handleCredsSubmit} className="mt-6 space-y-4">
                   {mode !== "recovery" && (
-                    <>
-                      <div>
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="mt-2 h-11"
-                        />
-                      </div>
-                      {!(mode === "signin" && isTrustedEmail(email)) && (
-                        <div>
-                          <Label htmlFor="mobile">Mobile number</Label>
-                          <Input
-                            id="mobile"
-                            name="mobile"
-                            type="tel"
-                            inputMode="numeric"
-                            placeholder="10-digit mobile"
-                            required
-                            value={mobile}
-                            onChange={(e) => setMobile(e.target.value)}
-                            className="mt-2 h-11"
-                          />
-                          <p className="text-caption mt-1 text-muted-foreground">
-                            We'll text you a one-time code to verify.
-                          </p>
-                        </div>
-                      )}
-                    </>
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="mt-2 h-11"
+                      />
+                    </div>
                   )}
+                  <div>
+                    <Label htmlFor="password">
+                      {mode === "recovery" ? "New password" : "Password"}
+                    </Label>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="mt-2 h-11"
+                    />
+                  </div>
+                  {mode !== "recovery" && !(mode === "signin" && isTrustedEmail(email)) && (
+                    <div>
+                      <Label htmlFor="mobile">Mobile number</Label>
+                      <Input
+                        id="mobile"
+                        name="mobile"
+                        type="tel"
+                        inputMode="numeric"
+                        placeholder="10-digit mobile"
+                        required
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
+                        className="mt-2 h-11"
+                      />
+                      <p className="text-caption mt-1 text-muted-foreground">
+                        We'll text you a one-time code to verify.
+                      </p>
+                    </div>
+                  )}
+
                   <div>
                     <Label htmlFor="password">
                       {mode === "recovery" ? "New password" : "Password"}
