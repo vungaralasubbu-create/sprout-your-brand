@@ -135,6 +135,10 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const ag of AGENTS) {
           entries.push({ path: `/ai-agents/${ag.id}`, changefreq: "monthly", priority: "0.5" });
         }
+        for (const a of listAuthors()) {
+          entries.push({ path: `/authors/${a.slug}`, changefreq: "monthly", priority: "0.4" });
+        }
+
 
         if (url && key) {
           try {
