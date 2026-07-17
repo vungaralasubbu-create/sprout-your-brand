@@ -255,7 +255,7 @@ function MarketingCopyPage() {
             <div className="mb-4 flex items-center gap-2">
               <Eye className="size-4" />
               <h2 className="text-sm font-semibold">Live preview</h2>
-              <Badge variant="secondary" className="ml-auto text-[10px]">
+              <Badge variant="muted" className="ml-auto text-[10px]">
                 {preview.primarySharePct}%
               </Badge>
             </div>
