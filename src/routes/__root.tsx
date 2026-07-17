@@ -21,6 +21,7 @@ import { GlobalPalette } from "@/components/command-center/global-palette";
 import { SalesAgentWidget } from "@/components/sales-agent/sales-agent-widget";
 import { PreviewProvider } from "@/lib/preview/preview-context";
 import { PreviewBanner } from "@/components/admin/preview-banner";
+import { PartnerEarningsCopyProvider } from "@/data/partner-earnings-copy";
 
 function NotFoundComponent() {
   return (
@@ -205,17 +206,19 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PreviewProvider>
-        <PreviewBanner />
-        <AnalyticsProvider />
-        <RouteTracker />
-        <Outlet />
-        <StickyActionBar />
-        <SmartPopup />
-        <GlobalPalette />
-        <SalesAgentWidget />
-        <Toaster richColors position="top-right" />
-      </PreviewProvider>
+      <PartnerEarningsCopyProvider>
+        <PreviewProvider>
+          <PreviewBanner />
+          <AnalyticsProvider />
+          <RouteTracker />
+          <Outlet />
+          <StickyActionBar />
+          <SmartPopup />
+          <GlobalPalette />
+          <SalesAgentWidget />
+          <Toaster richColors position="top-right" />
+        </PreviewProvider>
+      </PartnerEarningsCopyProvider>
     </QueryClientProvider>
   );
 }
