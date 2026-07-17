@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { CheckCircle2, ArrowRight, Sparkles, Minus, Check } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CheckCircle2, ArrowRight, Sparkles, Minus, Check, X, Star, Maximize2, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Section, Container } from "@/components/shared/section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CounsellorForm } from "@/components/shared/counsellor-form";
 import { cn } from "@/lib/utils";
 
