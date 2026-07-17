@@ -169,6 +169,7 @@ import { Route as AuthenticatedPartnerComingSoonRouteImport } from './routes/_au
 import { Route as AuthenticatedPartnerBusinessOsRouteImport } from './routes/_authenticated/partner.business-os'
 import { Route as AuthenticatedPartnerBrandStudioRouteImport } from './routes/_authenticated/partner.brand-studio'
 import { Route as AuthenticatedPartnerBrandProfileRouteImport } from './routes/_authenticated/partner.brand-profile'
+import { Route as AuthenticatedPartnerBrandLaunchRouteImport } from './routes/_authenticated/partner.brand-launch'
 import { Route as AuthenticatedPartnerApplicationStatusRouteImport } from './routes/_authenticated/partner.application-status'
 import { Route as AuthenticatedPartnerAnnouncementsRouteImport } from './routes/_authenticated/partner.announcements'
 import { Route as AuthenticatedPartnerAnalyticsRouteImport } from './routes/_authenticated/partner.analytics'
@@ -1249,6 +1250,12 @@ const AuthenticatedPartnerBrandProfileRoute =
   AuthenticatedPartnerBrandProfileRouteImport.update({
     id: '/brand-profile',
     path: '/brand-profile',
+    getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedPartnerBrandLaunchRoute =
+  AuthenticatedPartnerBrandLaunchRouteImport.update({
+    id: '/brand-launch',
+    path: '/brand-launch',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
 const AuthenticatedPartnerApplicationStatusRoute =
@@ -2940,6 +2947,7 @@ export interface FileRoutesByFullPath {
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
   '/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
+  '/partner/brand-launch': typeof AuthenticatedPartnerBrandLaunchRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/brand-studio': typeof AuthenticatedPartnerBrandStudioRoute
   '/partner/business-os': typeof AuthenticatedPartnerBusinessOsRoute
@@ -3337,6 +3345,7 @@ export interface FileRoutesByTo {
   '/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
   '/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
+  '/partner/brand-launch': typeof AuthenticatedPartnerBrandLaunchRoute
   '/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/partner/brand-studio': typeof AuthenticatedPartnerBrandStudioRoute
   '/partner/business-os': typeof AuthenticatedPartnerBusinessOsRoute
@@ -3749,6 +3758,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/analytics': typeof AuthenticatedPartnerAnalyticsRoute
   '/_authenticated/partner/announcements': typeof AuthenticatedPartnerAnnouncementsRoute
   '/_authenticated/partner/application-status': typeof AuthenticatedPartnerApplicationStatusRoute
+  '/_authenticated/partner/brand-launch': typeof AuthenticatedPartnerBrandLaunchRoute
   '/_authenticated/partner/brand-profile': typeof AuthenticatedPartnerBrandProfileRoute
   '/_authenticated/partner/brand-studio': typeof AuthenticatedPartnerBrandStudioRoute
   '/_authenticated/partner/business-os': typeof AuthenticatedPartnerBusinessOsRoute
@@ -4161,6 +4171,7 @@ export interface FileRouteTypes {
     | '/partner/analytics'
     | '/partner/announcements'
     | '/partner/application-status'
+    | '/partner/brand-launch'
     | '/partner/brand-profile'
     | '/partner/brand-studio'
     | '/partner/business-os'
@@ -4558,6 +4569,7 @@ export interface FileRouteTypes {
     | '/partner/analytics'
     | '/partner/announcements'
     | '/partner/application-status'
+    | '/partner/brand-launch'
     | '/partner/brand-profile'
     | '/partner/brand-studio'
     | '/partner/business-os'
@@ -4969,6 +4981,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/analytics'
     | '/_authenticated/partner/announcements'
     | '/_authenticated/partner/application-status'
+    | '/_authenticated/partner/brand-launch'
     | '/_authenticated/partner/brand-profile'
     | '/_authenticated/partner/brand-studio'
     | '/_authenticated/partner/business-os'
@@ -6381,6 +6394,13 @@ declare module '@tanstack/react-router' {
       path: '/brand-profile'
       fullPath: '/partner/brand-profile'
       preLoaderRoute: typeof AuthenticatedPartnerBrandProfileRouteImport
+      parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/partner/brand-launch': {
+      id: '/_authenticated/partner/brand-launch'
+      path: '/brand-launch'
+      fullPath: '/partner/brand-launch'
+      preLoaderRoute: typeof AuthenticatedPartnerBrandLaunchRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
     '/_authenticated/partner/application-status': {
@@ -8844,6 +8864,7 @@ interface AuthenticatedPartnerRouteChildren {
   AuthenticatedPartnerAnalyticsRoute: typeof AuthenticatedPartnerAnalyticsRoute
   AuthenticatedPartnerAnnouncementsRoute: typeof AuthenticatedPartnerAnnouncementsRoute
   AuthenticatedPartnerApplicationStatusRoute: typeof AuthenticatedPartnerApplicationStatusRoute
+  AuthenticatedPartnerBrandLaunchRoute: typeof AuthenticatedPartnerBrandLaunchRoute
   AuthenticatedPartnerBrandProfileRoute: typeof AuthenticatedPartnerBrandProfileRoute
   AuthenticatedPartnerBrandStudioRoute: typeof AuthenticatedPartnerBrandStudioRoute
   AuthenticatedPartnerBusinessOsRoute: typeof AuthenticatedPartnerBusinessOsRoute
@@ -8887,6 +8908,7 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
     AuthenticatedPartnerAnnouncementsRoute,
   AuthenticatedPartnerApplicationStatusRoute:
     AuthenticatedPartnerApplicationStatusRoute,
+  AuthenticatedPartnerBrandLaunchRoute: AuthenticatedPartnerBrandLaunchRoute,
   AuthenticatedPartnerBrandProfileRoute: AuthenticatedPartnerBrandProfileRoute,
   AuthenticatedPartnerBrandStudioRoute: AuthenticatedPartnerBrandStudioRoute,
   AuthenticatedPartnerBusinessOsRoute: AuthenticatedPartnerBusinessOsRoute,

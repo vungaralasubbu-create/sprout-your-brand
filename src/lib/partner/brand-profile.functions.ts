@@ -211,3 +211,27 @@ export const listSellingBrands = createServerFn({ method: "GET" })
       brands: brands ?? [],
     };
   });
+
+/**
+ * Partner-scoped fetch of the caller's most-recent brand application.
+ * Powers the Brand Launch Command Center — the "never empty" partner view
+ * shown while their academy is being built by Glintr AI.
+ */
+export const getMyBrandApplication = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data } = await supabase
+      .from("brand_applications")
+      .select(
+        "id, status, preferred_brand_name, tagline, business_type, business_email, business_mobile, brand_vision, logo_url, has_domain, domain_name, social_profiles, admin_notes, setup_type, submitted_at, reviewed_at, created_at, updated_at",
+      )
+      .eq("user_id", userId)
+      .neq("status", "draft")
+      .order("submitted_at", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    return data ?? null;
+  });
+
