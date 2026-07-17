@@ -137,7 +137,7 @@ function AIOSPage() {
   };
 
   return (
-    <PartnerShell>
+    
       <div className="space-y-8 pb-16">
         {/* Hero */}
         <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 p-8 text-white">
@@ -341,7 +341,7 @@ function AIOSPage() {
           </Card>
         </section>
       </div>
-    </PartnerShell>
+    
   );
 }
 
