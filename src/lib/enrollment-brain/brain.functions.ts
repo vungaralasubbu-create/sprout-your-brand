@@ -487,6 +487,49 @@ export async function runBrainTick(
     }
   }
 
+  // Auto-escalation: score >90 AND no follow-up within 4 hours
+  const fourHrsAgo = Date.now() - 4 * 3600_000;
+  for (const l of candidates) {
+    if (Number(l.score ?? 0) < 90) continue;
+    const { data: recentCall } = (await (client.from("counsellor_call_logs") as unknown as {
+      select: (c: string) => {
+        eq: (c: string, v: string) => {
+          order: (c: string, o: { ascending: boolean }) => { limit: (n: number) => Promise<{ data: unknown }> };
+        };
+      };
+    })
+      .select("id,created_at")
+      .eq("lead_id", l.id as string)
+      .order("created_at", { ascending: false })
+      .limit(1)) as { data: Array<{ created_at: string }> | null };
+    const lastFollowUp = recentCall?.[0]?.created_at ? new Date(recentCall[0].created_at).getTime() : 0;
+    if (lastFollowUp > fourHrsAgo) continue;
+
+    // Reassign to senior counsellor
+    const { data: seniors } = (await (client.from("counsellor_profiles") as unknown as {
+      select: (c: string) => { eq: (c: string, v: string) => Promise<{ data: unknown }> };
+    })
+      .select("user_id,display_name")
+      .eq("is_senior", "true")) as { data: Array<{ user_id: string; display_name: string }> | null };
+    const senior = seniors?.[0];
+
+    if (senior) {
+      await (client.from("brain_decisions") as unknown as {
+        update: (r: unknown) => { eq: (c: string, v: string) => Promise<unknown> };
+      })
+        .update({ assigned_counsellor_id: senior.user_id, assignment_reason: "Auto-escalation: score>90, no follow-up 4h" })
+        .eq("lead_id", l.id as string);
+    }
+    await client.from("brain_alerts").insert!({
+      lead_id: l.id,
+      type: "escalation",
+      severity: "critical",
+      title: "⚠️ Escalated to senior counsellor",
+      message: `Hot lead (score ${l.score}) had no follow-up in 4h. ${senior ? `Reassigned to ${senior.display_name}.` : "No senior counsellor available — team lead attention required."}`,
+    });
+    alerts++;
+  }
+
   return {
     scanned: candidates.length,
     decided,
