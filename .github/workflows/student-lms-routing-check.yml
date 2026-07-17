@@ -1,0 +1,23 @@
+name: Student LMS routing check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "src/routes/auth.tsx"
+      - "src/routes/_authenticated/**"
+      - "src/lib/auth/**"
+      - "scripts/student-lms-routing-check.mjs"
+      - ".github/workflows/student-lms-routing-check.yml"
+
+jobs:
+  routing-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Verify Student LMS routes, redirects and auth guards
+        run: node scripts/student-lms-routing-check.mjs
