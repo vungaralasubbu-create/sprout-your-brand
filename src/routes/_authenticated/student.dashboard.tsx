@@ -50,9 +50,34 @@ function Page() {
             </Link>
           </Button>
         ) : (
-          <Button asChild size="lg" variant="outline"><Link to="/student/programs">Browse Programs</Link></Button>
+          <Button asChild size="lg" variant="outline"><Link to="/student/programs">Explore Programs</Link></Button>
         )}
       </div>
+
+      {(data?.enrollments ?? []).length === 0 && (
+        <Card className="p-6 md:p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-primary/20">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <div className="flex-1">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-mono uppercase tracking-widest">
+                <BookOpen className="size-3.5" /> Start here
+              </div>
+              <h2 className="mt-3 text-2xl md:text-3xl font-display font-semibold tracking-tight">Explore Programs</h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-lg">
+                Browse every course, career path, and live cohort available on Glintr. Enroll in seconds — your details are already saved.
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row gap-2">
+              <Button asChild size="lg">
+                <Link to="/student/programs">Browse catalog <ArrowRight className="size-4 ml-1" /></Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link to="/student/career/os">Career OS</Link>
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
 
       <div className="grid gap-4 md:grid-cols-4">
         <Kpi icon={BookOpen} label="Active Courses" value={k.active} />

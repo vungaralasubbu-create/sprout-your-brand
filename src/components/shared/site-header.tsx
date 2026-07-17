@@ -183,12 +183,27 @@ export function SiteHeader() {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const [openMobile, setOpenMobile] = React.useState<string | null>(null);
+  const [session, setSession] = React.useState<{ email: string | null } | null>(null);
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  React.useEffect(() => {
+    let mounted = true;
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase.auth.getSession().then(({ data }) => {
+        if (mounted) setSession(data.session ? { email: data.session.user.email ?? null } : null);
+      });
+      const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+        if (mounted) setSession(s ? { email: s.user.email ?? null } : null);
+      });
+      return () => sub.subscription.unsubscribe();
+    });
+    return () => { mounted = false; };
   }, []);
 
   return (
@@ -225,6 +240,20 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2 ml-auto">
+          {session ? (
+            <Button variant="ghost" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
+              <a href="/student/dashboard">My Dashboard</a>
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
+                <a href="/auth">Log in</a>
+              </Button>
+              <Button variant="outline" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
+                <a href="/auth?mode=signup">Sign up</a>
+              </Button>
+            </>
+          )}
           <Button
             variant="gradient"
             size="sm"
@@ -250,6 +279,14 @@ export function SiteHeader() {
       {open ? (
         <div className="lg:hidden border-t border-border bg-background max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="p-4 flex flex-col gap-1">
+            {session ? (
+              <a href="/student/dashboard" className="px-3 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium text-center" onClick={() => setOpen(false)}>My Dashboard</a>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 pb-2">
+                <a href="/auth" className="px-3 py-3 rounded-lg border text-sm font-medium text-center" onClick={() => setOpen(false)}>Log in</a>
+                <a href="/auth?mode=signup" className="px-3 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium text-center" onClick={() => setOpen(false)}>Sign up</a>
+              </div>
+            )}
             {nav.map((n) => {
               const isOpen = openMobile === n.label;
               if (n.href && !n.groups) {

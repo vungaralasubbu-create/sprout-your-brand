@@ -52,6 +52,15 @@ const credsSchema = z.object({
 type Mode = "signin" | "signup" | "recovery";
 type Stage = "creds" | "otp";
 
+function safeNextPath(raw: string | null): string | null {
+  if (!raw) return null;
+  try {
+    const decoded = decodeURIComponent(raw);
+    if (decoded.startsWith("/") && !decoded.startsWith("//")) return decoded;
+  } catch {}
+  return null;
+}
+
 async function routeAfterAuth(
   userId: string,
   navigate: ReturnType<typeof useNavigate>,
@@ -61,6 +70,11 @@ async function routeAfterAuth(
     await reconcile();
   } catch (e) {
     console.warn("[auth] reconcile failed", e);
+  }
+  const next = typeof window !== "undefined" ? safeNextPath(new URLSearchParams(window.location.search).get("next")) : null;
+  if (next) {
+    navigate({ to: next as any });
+    return;
   }
   const { path, role } = await resolveRedirectForUser(userId);
   if (!role) toast.message("Your account workspace is not configured yet.");
@@ -73,7 +87,10 @@ function AuthPage() {
   const sendOtp = useServerFn(requestLoginOtp);
   const verifyOtp = useServerFn(verifyLoginOtp);
 
-  const [mode, setMode] = useState<Mode>("signin");
+  const [mode, setMode] = useState<Mode>(() => {
+    if (typeof window === "undefined") return "signin";
+    return new URLSearchParams(window.location.search).get("mode") === "signup" ? "signup" : "signin";
+  });
   const [stage, setStage] = useState<Stage>("creds");
   const [loading, setLoading] = useState(false);
   const [resetting, setResetting] = useState(false);
