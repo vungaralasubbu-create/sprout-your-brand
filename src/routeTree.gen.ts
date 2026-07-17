@@ -253,6 +253,7 @@ import { Route as AuthenticatedAdminArticlesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminAiosRouteImport } from './routes/_authenticated/admin.aios'
 import { Route as AuthenticatedAdminAiSearchRouteImport } from './routes/_authenticated/admin.ai-search'
+import { Route as AuthenticatedAdminAiSalesRouteImport } from './routes/_authenticated/admin.ai-sales'
 import { Route as AuthenticatedAdminAiContentRouteImport } from './routes/_authenticated/admin.ai-content'
 import { Route as AuthenticatedAdminAiAgentsRouteImport } from './routes/_authenticated/admin.ai-agents'
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
@@ -1746,6 +1747,12 @@ const AuthenticatedAdminAiSearchRoute =
     path: '/ai-search',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAiSalesRoute =
+  AuthenticatedAdminAiSalesRouteImport.update({
+    id: '/ai-sales',
+    path: '/ai-sales',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAiContentRoute =
   AuthenticatedAdminAiContentRouteImport.update({
     id: '/ai-content',
@@ -2856,6 +2863,7 @@ export interface FileRoutesByFullPath {
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/admin/ai-sales': typeof AuthenticatedAdminAiSalesRoute
   '/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
@@ -3258,6 +3266,7 @@ export interface FileRoutesByTo {
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
+  '/admin/ai-sales': typeof AuthenticatedAdminAiSalesRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
@@ -3664,6 +3673,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/_authenticated/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/_authenticated/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/_authenticated/admin/ai-sales': typeof AuthenticatedAdminAiSalesRoute
   '/_authenticated/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/_authenticated/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
@@ -4076,6 +4086,7 @@ export interface FileRouteTypes {
     | '/admin/adjustments'
     | '/admin/ai-agents'
     | '/admin/ai-content'
+    | '/admin/ai-sales'
     | '/admin/ai-search'
     | '/admin/aios'
     | '/admin/applications'
@@ -4478,6 +4489,7 @@ export interface FileRouteTypes {
     | '/admin/account'
     | '/admin/activity'
     | '/admin/adjustments'
+    | '/admin/ai-sales'
     | '/admin/applications'
     | '/admin/articles'
     | '/admin/assigned-leads'
@@ -4883,6 +4895,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/adjustments'
     | '/_authenticated/admin/ai-agents'
     | '/_authenticated/admin/ai-content'
+    | '/_authenticated/admin/ai-sales'
     | '/_authenticated/admin/ai-search'
     | '/_authenticated/admin/aios'
     | '/_authenticated/admin/applications'
@@ -6969,6 +6982,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiSearchRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ai-sales': {
+      id: '/_authenticated/admin/ai-sales'
+      path: '/ai-sales'
+      fullPath: '/admin/ai-sales'
+      preLoaderRoute: typeof AuthenticatedAdminAiSalesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ai-content': {
       id: '/_authenticated/admin/ai-content'
       path: '/ai-content'
@@ -8485,6 +8505,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdjustmentsRoute: typeof AuthenticatedAdminAdjustmentsRoute
   AuthenticatedAdminAiAgentsRoute: typeof AuthenticatedAdminAiAgentsRouteWithChildren
   AuthenticatedAdminAiContentRoute: typeof AuthenticatedAdminAiContentRouteWithChildren
+  AuthenticatedAdminAiSalesRoute: typeof AuthenticatedAdminAiSalesRoute
   AuthenticatedAdminAiSearchRoute: typeof AuthenticatedAdminAiSearchRouteWithChildren
   AuthenticatedAdminAiosRoute: typeof AuthenticatedAdminAiosRouteWithChildren
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
@@ -8567,6 +8588,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAiAgentsRoute: AuthenticatedAdminAiAgentsRouteWithChildren,
   AuthenticatedAdminAiContentRoute:
     AuthenticatedAdminAiContentRouteWithChildren,
+  AuthenticatedAdminAiSalesRoute: AuthenticatedAdminAiSalesRoute,
   AuthenticatedAdminAiSearchRoute: AuthenticatedAdminAiSearchRouteWithChildren,
   AuthenticatedAdminAiosRoute: AuthenticatedAdminAiosRouteWithChildren,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
