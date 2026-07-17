@@ -75,9 +75,9 @@ for (const r of REQUIRED) {
   const src = readFileSync(full, "utf8");
   contents.set(r.file, src);
 
-  const idRe = new RegExp(
-    `createFileRoute\\(["']${r.id.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\$&")}["']\\)`,
-  );
+  const escaped = r.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const idRe = new RegExp(`createFileRoute\\(["']${escaped}["']\\)`);
+
   if (!idRe.test(src)) {
     fail(`${r.step}: ${full} does not register createFileRoute("${r.id}")`);
   } else {
