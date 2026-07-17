@@ -824,7 +824,8 @@ function CoursePage() {
       />
 
       {/* ============ SUCCESS STORIES ============ */}
-      <SuccessStoriesSection />
+      <SuccessStoriesShowcase courseCategory={c.category.slug} />
+
 
       {/* ============ FAQ ============ */}
       {displayFaqs.length > 0 ? (
