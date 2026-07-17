@@ -1,26 +1,8 @@
 /**
  * Partner Earnings — Marketing Copy CMS (client surface)
  *
- * SINGLE SOURCE OF TRUTH for every partner-earning marketing string on the
- * public site. Editors update strings from `/admin/marketing-copy`; the
- * change propagates to every consumer via the exported `partnerEarningsCopy`
- * live mirror below.
- *
- * How the "live mirror" works:
- *   - `partnerEarningsCopy` is a real object whose fields are mutated in
- *     place when the CMS fetch resolves.
- *   - `<PartnerEarningsCopyProvider>` fetches the DB value once per session,
- *     mutates the mirror, and bumps an internal key so the whole app subtree
- *     re-renders with the fresh values.
- *   - Existing consumers that `import { partnerEarningsCopy }` DO NOT need
- *     to change — they will read the mutated fields on the next render.
- *
- * Editorial rules:
- *   1. The primary revenue share number is one value (default 70).
- *   2. Every earning CTA is one of: cta.primary, cta.short, cta.apply.
- *   3. "Supported model" (50%) copy only appears in comparison contexts.
- *   4. Copy tokens interpolate `{share}` and `{supported}` so a percentage
- *      change ripples through every surface at once.
+ * This .ts entrypoint intentionally contains no JSX so Vite/TanStack can
+ * resolve imports from both SSR and client graphs consistently.
  */
 
 import * as React from "react";
@@ -43,12 +25,6 @@ export {
   resolvePartnerEarningsCopy,
 } from "./partner-earnings-copy-schema";
 
-// ---------- Live mirror ----------
-// A single object whose fields are overwritten in place when the CMS fetch
-// resolves. Consumers keep their existing `import { partnerEarningsCopy }`
-// and pick up new values on the next render (provider forces a subtree
-// re-render via `key` so this happens for the whole app after fetch).
-
 const initial = resolvePartnerEarningsCopy(DEFAULT_PARTNER_EARNINGS_COPY);
 
 export const partnerEarningsCopy: PartnerEarningsCopy = {
@@ -68,14 +44,11 @@ function applyToMirror(next: PartnerEarningsCopy) {
   Object.assign(partnerEarningsCopy.taglines, resolved.taglines);
 }
 
-/** Convenience: interpolate any template string using the active copy. */
 export function formatEarningsCopy(template: string): string {
   return template
     .replace(/\{share\}/g, String(partnerEarningsCopy.primarySharePct))
     .replace(/\{supported\}/g, String(partnerEarningsCopy.supportedSharePct));
 }
-
-// ---------- Provider + hook ----------
 
 const PartnerEarningsCopyContext = React.createContext<PartnerEarningsCopy>(
   partnerEarningsCopy,
@@ -85,10 +58,6 @@ export function usePartnerEarningsCopy(): PartnerEarningsCopy {
   return React.useContext(PartnerEarningsCopyContext);
 }
 
-/**
- * Loads the DB-backed copy once and mirrors it into the exported singleton.
- * Wrap the app once in `__root.tsx`.
- */
 export function PartnerEarningsCopyProvider({
   children,
 }: {
@@ -117,9 +86,9 @@ export function PartnerEarningsCopyProvider({
     return resolvePartnerEarningsCopy(source);
   }, [query.data]);
 
-  return (
-    <PartnerEarningsCopyContext.Provider value={value}>
-      {children}
-    </PartnerEarningsCopyContext.Provider>
+  return React.createElement(
+    PartnerEarningsCopyContext.Provider,
+    { value },
+    children,
   );
 }
