@@ -232,16 +232,9 @@ export function SalesAgentWidget() {
     [conversationId, path, sending, firstQuestion],
   );
 
-  const submitPhone = useCallback(async () => {
-    const raw = phoneInput.trim();
-    const digits = raw.replace(/\D/g, "");
-    if (digits.length < 6 || digits.length > 15) {
-      toast.error("Please enter a valid mobile number.");
-      return;
-    }
-    if (!conversationId) return;
-    setSubmittingPhone(true);
-    try {
+  const persistLead = useCallback(
+    async (rawPhone: string, verified: boolean) => {
+      if (!conversationId) return;
       const device =
         typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
           ? "mobile"
@@ -259,33 +252,156 @@ export function SalesAgentWidget() {
           if (v) utm[k] = v.slice(0, 120);
         }
       }
-      // Detect course slug when the user is on a programs/courses page.
       const courseMatch = path.match(/^\/(?:programs|courses)\/[^/]+\/([^/?#]+)/);
       await capturePhoneLead({
         data: {
           conversationId,
-          phone: raw,
+          phone: rawPhone,
           firstQuestion: firstQuestion ?? undefined,
           pagePath: path,
           courseSlug: courseMatch ? courseMatch[1] : undefined,
           referralSource: referralSource ?? undefined,
           sourceUrl: sourceUrl ?? undefined,
           browser: browser ?? undefined,
-          utm: Object.keys(utm).length ? utm : undefined,
+          utm: Object.keys(utm).length
+            ? { ...utm, otp_verified: verified ? "true" : "false" }
+            : { otp_verified: verified ? "true" : "false" },
           device,
         },
       });
-
       setPhoneCaptured(true);
-      if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
-      toast.success("Thanks! Continuing your conversation…");
-      setTimeout(() => inputRef.current?.focus(), 60);
+      if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, verified ? "verified" : "1");
+    },
+    [conversationId, firstQuestion, path],
+  );
+
+  const submitPhone = useCallback(async () => {
+    const raw = phoneInput.trim();
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length < 6 || digits.length > 15) {
+      toast.error("Please enter a valid mobile number.");
+      return;
+    }
+    if (!conversationId) return;
+    setSubmittingPhone(true);
+    try {
+      if (!otpEnabled) {
+        await persistLead(raw, false);
+        toast.success("Thanks! Continuing your conversation…");
+        setTimeout(() => inputRef.current?.focus(), 60);
+        return;
+      }
+      // OTP path: request code, move to verify step. Keep lead unpersisted
+      // until verification succeeds so we don't count unverified numbers.
+      const res = await requestLoginOtp({ data: { mobile: raw, purpose: "login" } });
+      if (!res.ok) {
+        toast.error(res.error || "Couldn't send the OTP. Please try again.");
+        return;
+      }
+      setPendingLead(() => async () => persistLead(raw, true));
+      setOtpCode("");
+      setOtpError(null);
+      setOtpAttempts(0);
+      setOtpResends(0);
+      setResendIn(RESEND_SECONDS);
+      setPhoneStep("otp");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Couldn't save your number. Please try again.");
     } finally {
       setSubmittingPhone(false);
     }
-  }, [phoneInput, conversationId, firstQuestion, path]);
+  }, [phoneInput, conversationId, otpEnabled, persistLead]);
+
+  const resendOtp = useCallback(async () => {
+    if (resendIn > 0 || otpResends >= MAX_RESENDS) return;
+    const raw = phoneInput.trim();
+    try {
+      const res = await requestLoginOtp({ data: { mobile: raw, purpose: "login" } });
+      if (!res.ok) {
+        setOtpError(res.error || "Couldn't resend the OTP. Try again in a minute.");
+        return;
+      }
+      setOtpResends((c) => c + 1);
+      setResendIn(RESEND_SECONDS);
+      setOtpError(null);
+      setOtpCode("");
+      toast.success("New OTP sent.");
+    } catch (err) {
+      setOtpError(err instanceof Error ? err.message : "Network issue. Please try again.");
+    }
+  }, [phoneInput, resendIn, otpResends]);
+
+  const submitOtp = useCallback(async () => {
+    if (verifying) return;
+    const code = otpCode.replace(/\D/g, "");
+    if (code.length !== 6) {
+      setOtpError("Enter the 6-digit code sent to your mobile.");
+      return;
+    }
+    setVerifying(true);
+    setOtpError(null);
+    try {
+      const res = await verifyLoginOtp({ data: { mobile: phoneInput.trim(), code } });
+      if (!res.ok) {
+        const nextAttempts = otpAttempts + 1;
+        setOtpAttempts(nextAttempts);
+        setOtpCode("");
+        if (nextAttempts >= MAX_OTP_ATTEMPTS) {
+          setPhoneStep("recovery");
+          setOtpError("Too many incorrect attempts. Pick a recovery option below.");
+        } else {
+          const remaining = MAX_OTP_ATTEMPTS - nextAttempts;
+          setOtpError(`${res.error || "Incorrect OTP."} ${remaining} attempt${remaining === 1 ? "" : "s"} left.`);
+        }
+        return;
+      }
+      // Verified — persist the lead as verified and resume the conversation.
+      if (pendingLead) await pendingLead();
+      toast.success("Verified. Continuing your conversation…");
+      setPhoneStep("collect");
+      setPendingLead(null);
+      setTimeout(() => inputRef.current?.focus(), 60);
+    } catch (err) {
+      setOtpError(err instanceof Error ? err.message : "Verification failed. Please try again.");
+    } finally {
+      setVerifying(false);
+    }
+  }, [otpCode, otpAttempts, phoneInput, verifying, pendingLead]);
+
+  const changeNumber = useCallback(() => {
+    setPhoneStep("collect");
+    setOtpCode("");
+    setOtpError(null);
+    setOtpAttempts(0);
+    setOtpResends(0);
+    setResendIn(0);
+    setPendingLead(null);
+  }, []);
+
+  const skipToHuman = useCallback(async () => {
+    // Recovery path: capture the number as unverified so a counsellor can call back,
+    // reveal handover options immediately, and unblock the chat.
+    const raw = phoneInput.trim();
+    try {
+      if (raw.replace(/\D/g, "").length >= 6) {
+        await persistLead(raw, false);
+      } else {
+        setPhoneCaptured(true);
+        if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
+      }
+      setHandover({
+        email: "admissions@glintr.com",
+        phone: "+91 90000 00000",
+        whatsapp: "919000000000",
+        reason: "otp_failure",
+      });
+      setPhoneStep("collect");
+      setPendingLead(null);
+      toast.message("A counsellor will reach out shortly.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't hand you over. Please try again.");
+    }
+  }, [phoneInput, persistLead]);
 
   if (!ready || hidden) return null;
 
