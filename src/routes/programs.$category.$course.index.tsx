@@ -823,6 +823,8 @@ function CoursePage() {
         counsellorCtx={counsellorCtx}
       />
 
+      {/* ============ SUCCESS STORIES ============ */}
+      <SuccessStoriesSection />
 
       {/* ============ FAQ ============ */}
       {displayFaqs.length > 0 ? (
