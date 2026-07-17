@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Container, Section, SectionHeader } from "@/components/shared/section";
 import { cn } from "@/lib/utils";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 type LeadSource = "own" | "company";
 
@@ -164,7 +165,7 @@ export function IncomeCalculator() {
 
             <div className="mt-6 flex flex-col gap-2 sm:flex-row">
               <Button variant="gradient" size="md" className="flex-1" asChild>
-                <a href="/join">Start Earning 70%</a>
+                <a href="/join">{partnerEarningsCopy.cta.primary}</a>
               </Button>
               <Button variant="outline" size="md" className="flex-1" asChild>
                 <a href="/#programs">Explore Programs</a>

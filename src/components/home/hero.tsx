@@ -13,6 +13,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Container, Section } from "@/components/shared/section";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 export function HomeHero() {
   return (
@@ -41,7 +42,7 @@ export function HomeHero() {
             <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
               <Button variant="gradient" size="lg" className="w-full sm:w-auto" asChild>
                 <a href="/join">
-                  Start Earning 70% <ArrowRight className="size-4" />
+                  {partnerEarningsCopy.cta.primary} <ArrowRight className="size-4" />
                 </a>
               </Button>
               <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>

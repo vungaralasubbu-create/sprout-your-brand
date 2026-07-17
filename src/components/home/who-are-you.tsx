@@ -19,6 +19,7 @@ import {
   type JourneyProfile,
 } from "@/lib/visitor-journey";
 import { track } from "@/lib/intent";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 /* ------------------------------------------------------------------ */
 /* Card definitions                                                    */
@@ -821,7 +822,7 @@ function PartnerFlow({ card }: { card: CardDef }) {
               { label: "Weekly Payout Process", to: "/payout-system" },
               { label: "AI Sales Assistant", to: "/earn" },
               { label: model === "70" ? "70% Revenue Model" : "50% Supported Model", to: model === "70" ? "/revenue-70" : "/revenue-50" },
-              { label: "Earn 70%", to: "/earn" },
+              { label: partnerEarningsCopy.labels.partnerNav, to: "/earn" },
             ]}
           />
           <HubCta card={card} />

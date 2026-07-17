@@ -2,6 +2,7 @@ import { ArrowRight, Rocket } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/shared/section";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 export function FinalCtaSection() {
   return (
@@ -43,7 +44,7 @@ export function FinalCtaSection() {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Button variant="gradient" size="lg" asChild>
               <a href="/join">
-                Start Earning 70% <ArrowRight className="size-4" />
+                {partnerEarningsCopy.cta.primary} <ArrowRight className="size-4" />
               </a>
             </Button>
             <Button

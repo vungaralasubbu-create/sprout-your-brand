@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 export const Route = createFileRoute("/earn")({
   head: () => ({
@@ -93,7 +94,7 @@ function EarnHero() {
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" variant="gradient">
                 <Link to="/partner/apply">
-                  Start Earning 70% <ArrowRight className="ml-2 h-4 w-4" />
+                  {partnerEarningsCopy.cta.primary} <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
@@ -403,7 +404,7 @@ function EarningsEstimator() {
 
               <Button asChild size="lg" variant="gradient" className="w-full">
                 <Link to="/partner/apply">
-                  Start Earning 70%{" "}
+                  {partnerEarningsCopy.cta.primary}{" "}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

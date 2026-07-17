@@ -40,6 +40,7 @@ import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai
 import { GlintrDimension } from "@/components/home/glintr-dimension";
 import { HeroMobileCarousel } from "@/components/home/hero-mobile-carousel";
 import { WhoAreYou } from "@/components/home/who-are-you";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 import {
   GlintrWorld,
   CertificationEcosystem,
@@ -1300,7 +1301,7 @@ function EarnWithUs() {
         <div className="grid gap-5 lg:grid-cols-3">
           {[
             {
-              title: "Earn 70%",
+              title: partnerEarningsCopy.labels.partnerNav,
               body: "Join the Glintr partner network and start representing programs.",
               cta: "See how it works",
               to: "/earn" as const,
@@ -1538,7 +1539,7 @@ const ECOSYSTEM = {
     title: "EARN",
     color: "var(--brand-lime)",
     Icon: Wallet,
-    items: ["Earn 70%", "70% Revenue Model", "50% Supported Model", "Campus Ambassador"],
+    items: [partnerEarningsCopy.labels.partnerNav, "70% Revenue Model", "50% Supported Model", "Campus Ambassador"],
   },
   build: {
     title: "BUILD",
@@ -1742,7 +1743,7 @@ function FinalBrandStatement() {
             </Button>
             <Button variant="ghost" size="lg" asChild>
               <Link to="/earn">
-                Start Earning 70% <ArrowUpRight className="size-4" />
+                {partnerEarningsCopy.cta.primary} <ArrowUpRight className="size-4" />
               </Link>
             </Button>
           </div>

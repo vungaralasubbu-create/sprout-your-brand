@@ -27,6 +27,7 @@ import { Container, Section } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "@/hooks/use-motion";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 /* --------------------------------------------------------------------- *
  * Shared: reveal-on-scroll helper (kept local to avoid a circular import)
@@ -86,7 +87,7 @@ const JOURNEYS: JourneyDef[] = [
     title: "Turn your network and sales ability into a revenue channel.",
     body:
       "Represent eligible programs as a Partner. Choose the 70% model or the 50% Supported model.",
-    cta: "Start Earning 70%",
+    cta: partnerEarningsCopy.cta.primary,
     to: "/earn",
     Icon: Wallet,
     accent: "var(--brand-lime)",
@@ -513,7 +514,7 @@ export function EarnSpotlight() {
               <Button variant="gradient" size="lg" className="cta-earn rounded-full" asChild>
                 <Link to="/earn">
                   <Sparkles className="size-4" />
-                  <span className="relative z-10">Start Earning 70%</span>
+                  <span className="relative z-10">{partnerEarningsCopy.cta.primary}</span>
                   <ArrowUpRight className="size-4" />
                 </Link>
               </Button>
