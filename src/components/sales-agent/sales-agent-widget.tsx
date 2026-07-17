@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck } from "lucide-react";
+import { useRouterState } from "@tanstack/react-router";
+import {
+  Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck,
+  RefreshCw, ArrowLeft, LifeBuoy,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -13,8 +16,15 @@ import {
   type SalesCard,
   type SalesReply,
 } from "@/lib/sales-agent/chat.functions";
+import { getSalesOtpConfig } from "@/lib/sales-agent/otp.functions";
+import { requestLoginOtp, verifyLoginOtp } from "@/lib/auth/otp.functions";
 import { GLINTR_AI_OPEN_EVENT, type OpenGlintrAIDetail } from "@/lib/glintr-ai";
 import { supabase } from "@/integrations/supabase/client";
+
+type PhoneStep = "collect" | "otp" | "recovery";
+const RESEND_SECONDS = 30;
+const MAX_OTP_ATTEMPTS = 5;
+const MAX_RESENDS = 3;
 
 type UiMessage = {
   role: "user" | "assistant";
