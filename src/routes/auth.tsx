@@ -156,6 +156,18 @@ function AuthPage() {
     return () => sub.subscription.unsubscribe();
   }, [navigate, reconcile]);
 
+  function friendlyAuthError(msg: string | undefined): string {
+    const m = (msg || "").toLowerCase();
+    if (m.includes("invalid login") || m.includes("invalid_credentials"))
+      return "Email or password doesn't match. If you signed up with Google, use “Continue with Google”. Otherwise tap “Forgot password”.";
+    if (m.includes("email not confirmed")) return "Please confirm your email, then sign in again.";
+    if (m.includes("already registered") || m.includes("already been registered"))
+      return "This email is already registered. Try signing in instead.";
+    if (m.includes("network") || m.includes("failed to fetch"))
+      return "Network error. Check your connection and retry.";
+    return msg || "Authentication failed. Please try again.";
+  }
+
   async function completePasswordAuth() {
     if (mode === "signup") {
       const redirectTo = `${window.location.origin}/auth`;
@@ -164,22 +176,36 @@ function AuthPage() {
         password,
         options: { emailRedirectTo: redirectTo, data: { mobile } },
       });
-      if (error) return toast.error(error.message);
+      if (error) {
+        const m = error.message.toLowerCase();
+        if (m.includes("already registered") || m.includes("already been registered")) {
+          // Existing account — attempt sign-in with the provided password.
+          const { data, error: siErr } = await supabase.auth.signInWithPassword({ email, password });
+          if (siErr) {
+            setMode("signin");
+            setStage("creds");
+            return toast.error(friendlyAuthError(siErr.message));
+          }
+          if (data.user) {
+            toast.success("Signed in");
+            return routeAfterAuth(data.user.id, navigate, reconcile);
+          }
+        }
+        return toast.error(friendlyAuthError(error.message));
+      }
       trackEvent("student_signup", { dedupe_key: email });
-      // With auto-confirm on, signUp signs the user in immediately.
       const { data: sess } = await supabase.auth.getSession();
       if (sess.session?.user) {
         toast.success("Account created");
         await routeAfterAuth(sess.session.user.id, navigate, reconcile);
       } else {
-        // Fallback: try signing in with the just-created credentials.
         const { data, error: siErr } = await supabase.auth.signInWithPassword({ email, password });
-        if (siErr) return toast.error(siErr.message);
+        if (siErr) return toast.error(friendlyAuthError(siErr.message));
         if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
       }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) return toast.error(error.message);
+      if (error) return toast.error(friendlyAuthError(error.message));
       toast.success("Signed in");
       if (data.user) await routeAfterAuth(data.user.id, navigate, reconcile);
     }
