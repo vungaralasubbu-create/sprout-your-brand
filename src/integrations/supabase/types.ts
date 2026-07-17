@@ -13106,6 +13106,84 @@ export type Database = {
           },
         ]
       }
+      success_stories: {
+        Row: {
+          avatar_url: string | null
+          batch: string | null
+          company: string
+          company_domain: string | null
+          company_slug: string | null
+          course: string
+          course_category: string | null
+          created_at: string
+          featured: boolean
+          graduation_year: number | null
+          id: string
+          linkedin_url: string | null
+          location: string | null
+          name: string
+          package_label: string | null
+          package_lpa: number | null
+          published: boolean
+          quote: string
+          rating: number
+          role: string
+          sort_order: number
+          story_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          batch?: string | null
+          company: string
+          company_domain?: string | null
+          company_slug?: string | null
+          course: string
+          course_category?: string | null
+          created_at?: string
+          featured?: boolean
+          graduation_year?: number | null
+          id?: string
+          linkedin_url?: string | null
+          location?: string | null
+          name: string
+          package_label?: string | null
+          package_lpa?: number | null
+          published?: boolean
+          quote: string
+          rating?: number
+          role: string
+          sort_order?: number
+          story_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          batch?: string | null
+          company?: string
+          company_domain?: string | null
+          company_slug?: string | null
+          course?: string
+          course_category?: string | null
+          created_at?: string
+          featured?: boolean
+          graduation_year?: number | null
+          id?: string
+          linkedin_url?: string | null
+          location?: string | null
+          name?: string
+          package_label?: string | null
+          package_lpa?: number | null
+          published?: boolean
+          quote?: string
+          rating?: number
+          role?: string
+          sort_order?: number
+          story_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tools: {
         Row: {
           category: string | null
