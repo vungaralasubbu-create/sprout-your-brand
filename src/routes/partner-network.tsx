@@ -287,7 +287,7 @@ const MODELS = [
     points: [
       "Owned lead flow",
       "Partner-led outreach",
-      "Applicable revenue share up to 70%",
+      "70% revenue share on eligible enrolments",
       "Governed by published terms",
     ],
     accent: "from-primary/10 to-primary/0",
