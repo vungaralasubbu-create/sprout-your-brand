@@ -258,11 +258,7 @@ function MobileJourneyStage({
     >
       <div
         key={journey.key}
-        className="transition-all duration-300 ease-out"
-        style={{
-          opacity: phase === "in" ? 1 : 0,
-          transform: phase === "in" ? "translateX(0)" : "translateX(-12px)",
-        }}
+        className={cn("animate-fade-in", reduced && "animate-none")}
       >
         <JourneyCard
           journey={journey}
