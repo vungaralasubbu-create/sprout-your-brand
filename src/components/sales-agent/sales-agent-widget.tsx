@@ -534,7 +534,7 @@ export function SalesAgentWidget() {
           type="button"
           onClick={openAndInit}
           className={cn(
-            "fixed z-40 bottom-5 left-5 md:bottom-6 md:left-6",
+            "fixed z-40 bottom-5 right-5 md:bottom-6 md:right-6",
             "flex items-center gap-2 rounded-full pl-3 pr-4 py-2.5 shadow-xl",
             "bg-gradient-to-r from-primary via-primary to-lime-400 text-primary-foreground",
             "hover:-translate-y-0.5 transition-transform ring-1 ring-white/10",
