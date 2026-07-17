@@ -277,12 +277,15 @@ function AiMentorCard({ title }: { title: string }) {
           "Summarise this page in 5 bullets",
           "What should I learn next?",
         ].map((q) => (
-          <span
+          <button
             key={q}
-            className="inline-flex items-center rounded-full border bg-background/70 px-3 py-1 text-xs text-foreground/80"
+            type="button"
+            onClick={() => openGlintrAI({ prompt: q, source: "learn" })}
+            className="inline-flex items-center rounded-full border bg-background/70 px-3 py-1 text-xs text-foreground/80 hover:border-primary/40 hover:bg-primary/5"
           >
             {q}
-          </span>
+          </button>
+
         ))}
       </div>
     </div>
