@@ -15,7 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { RouteTracker } from "@/components/shared/route-tracker";
 import { StickyActionBar } from "@/components/shared/sticky-action-bar";
-import { AiMentor } from "@/components/mentor/ai-mentor";
+
 import { SmartPopup } from "@/components/shared/smart-popup";
 import { GlobalPalette } from "@/components/command-center/global-palette";
 import { SalesAgentWidget } from "@/components/sales-agent/sales-agent-widget";
@@ -211,7 +211,6 @@ function RootComponent() {
         <RouteTracker />
         <Outlet />
         <StickyActionBar />
-        <AiMentor />
         <SmartPopup />
         <GlobalPalette />
         <SalesAgentWidget />
