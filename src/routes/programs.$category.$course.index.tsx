@@ -965,11 +965,7 @@ function CoursePage() {
               <span className="font-display font-semibold truncate">{c.name}</span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
-              {price != null ? (
-                <span className="text-sm font-mono">
-                  {formatPrice(price, c.currency ?? "INR")}
-                </span>
-              ) : null}
+
               <CounsellorForm size="sm" variant="outline" context={counsellorCtx} />
               <Button asChild size="sm" variant="gradient">
                 <Link to="/programs/$category/$course/apply" params={applyTo} onClick={onApplyClick}>
