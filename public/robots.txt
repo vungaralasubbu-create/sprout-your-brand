@@ -4,6 +4,10 @@ Allow: /
 # Authentication
 Disallow: /auth
 Disallow: /auth/
+Disallow: /login
+Disallow: /login/
+Disallow: /signup
+Disallow: /signup/
 
 # Admin surfaces
 Disallow: /admin
@@ -25,15 +29,24 @@ Disallow: /workspace
 Disallow: /workspace/
 Disallow: /hq
 Disallow: /hq/
+Disallow: /dashboard
+Disallow: /dashboard/
 
 # APIs and internal
 Disallow: /api/
 Disallow: /lovable/
 Disallow: /private/
-Disallow: /dashboard
+Disallow: /private
 
 # Referral / verification (per-user tokens)
 Disallow: /ref/
 Disallow: /verify-certificate/
 
+Sitemap: https://glintr.com/sitemap-index.xml
 Sitemap: https://glintr.com/sitemap.xml
+Sitemap: https://glintr.com/sitemap-courses.xml
+Sitemap: https://glintr.com/sitemap-categories.xml
+Sitemap: https://glintr.com/sitemap-blog.xml
+Sitemap: https://glintr.com/sitemap-learning-paths.xml
+Sitemap: https://glintr.com/sitemap-careers.xml
+Sitemap: https://glintr.com/sitemap-images.xml

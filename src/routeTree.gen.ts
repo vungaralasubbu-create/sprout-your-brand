@@ -16,6 +16,13 @@ import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-condi
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SitemapLearningPathsDotxmlRouteImport } from './routes/sitemap-learning-paths[.]xml'
+import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml'
+import { Route as SitemapImagesDotxmlRouteImport } from './routes/sitemap-images[.]xml'
+import { Route as SitemapCoursesDotxmlRouteImport } from './routes/sitemap-courses[.]xml'
+import { Route as SitemapCategoriesDotxmlRouteImport } from './routes/sitemap-categories[.]xml'
+import { Route as SitemapCareersDotxmlRouteImport } from './routes/sitemap-careers[.]xml'
+import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
 import { Route as RevenueShareTermsRouteImport } from './routes/revenue-share-terms'
 import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
@@ -286,6 +293,7 @@ import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
+import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
 import { Route as AuthenticatedStudentProjectsIdRouteImport } from './routes/_authenticated/student.projects.$id'
@@ -312,6 +320,7 @@ import { Route as AuthenticatedAdminWorkflowsNewRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminWorkflowsIdRouteImport } from './routes/_authenticated/admin.workflows.$id'
 import { Route as AuthenticatedAdminTeamIdRouteImport } from './routes/_authenticated/admin.team.$id'
 import { Route as AuthenticatedAdminSupportIdRouteImport } from './routes/_authenticated/admin.support.$id'
+import { Route as AuthenticatedAdminSeoHealthRouteImport } from './routes/_authenticated/admin.seo.health'
 import { Route as AuthenticatedAdminRiskReviewIdRouteImport } from './routes/_authenticated/admin.risk-review.$id'
 import { Route as AuthenticatedAdminProgrammaticSeoNewRouteImport } from './routes/_authenticated/admin.programmatic-seo.new'
 import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './routes/_authenticated/admin.programmatic-seo.$id'
@@ -442,6 +451,42 @@ const StudentSupportRoute = StudentSupportRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapLearningPathsDotxmlRoute =
+  SitemapLearningPathsDotxmlRouteImport.update({
+    id: '/sitemap-learning-paths.xml',
+    path: '/sitemap-learning-paths.xml',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SitemapIndexDotxmlRoute = SitemapIndexDotxmlRouteImport.update({
+  id: '/sitemap-index.xml',
+  path: '/sitemap-index.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapImagesDotxmlRoute = SitemapImagesDotxmlRouteImport.update({
+  id: '/sitemap-images.xml',
+  path: '/sitemap-images.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapCoursesDotxmlRoute = SitemapCoursesDotxmlRouteImport.update({
+  id: '/sitemap-courses.xml',
+  path: '/sitemap-courses.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapCategoriesDotxmlRoute = SitemapCategoriesDotxmlRouteImport.update({
+  id: '/sitemap-categories.xml',
+  path: '/sitemap-categories.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapCareersDotxmlRoute = SitemapCareersDotxmlRouteImport.update({
+  id: '/sitemap-careers.xml',
+  path: '/sitemap-careers.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapBlogDotxmlRoute = SitemapBlogDotxmlRouteImport.update({
+  id: '/sitemap-blog.xml',
+  path: '/sitemap-blog.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SalesOpportunityRoute = SalesOpportunityRouteImport.update({
@@ -1940,6 +1985,11 @@ const ProgramsCategoryCourseApplyRoute =
     path: '/programs/$category/$course/apply',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
+  id: '/api/public/hooks/seo-ping',
+  path: '/api/public/hooks/seo-ping',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedStudentSupportNewRoute =
   AuthenticatedStudentSupportNewRouteImport.update({
     id: '/new',
@@ -2095,6 +2145,12 @@ const AuthenticatedAdminSupportIdRoute =
     id: '/$id',
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminSupportRoute,
+  } as any)
+const AuthenticatedAdminSeoHealthRoute =
+  AuthenticatedAdminSeoHealthRouteImport.update({
+    id: '/seo/health',
+    path: '/seo/health',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminRiskReviewIdRoute =
   AuthenticatedAdminRiskReviewIdRouteImport.update({
@@ -2712,6 +2768,13 @@ export interface FileRoutesByFullPath {
   '/refund-policy': typeof RefundPolicyRoute
   '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
+  '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
+  '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -3001,6 +3064,7 @@ export interface FileRoutesByFullPath {
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
+  '/admin/seo/health': typeof AuthenticatedAdminSeoHealthRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
@@ -3027,6 +3091,7 @@ export interface FileRoutesByFullPath {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -3110,6 +3175,13 @@ export interface FileRoutesByTo {
   '/refund-policy': typeof RefundPolicyRoute
   '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
+  '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
+  '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -3387,6 +3459,7 @@ export interface FileRoutesByTo {
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
+  '/admin/seo/health': typeof AuthenticatedAdminSeoHealthRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
@@ -3413,6 +3486,7 @@ export interface FileRoutesByTo {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -3500,6 +3574,13 @@ export interface FileRoutesById {
   '/refund-policy': typeof RefundPolicyRoute
   '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
+  '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
+  '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
+  '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -3789,6 +3870,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/_authenticated/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/_authenticated/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
+  '/_authenticated/admin/seo/health': typeof AuthenticatedAdminSeoHealthRoute
   '/_authenticated/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/_authenticated/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/_authenticated/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
@@ -3815,6 +3897,7 @@ export interface FileRoutesById {
   '/_authenticated/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -3902,6 +3985,13 @@ export interface FileRouteTypes {
     | '/refund-policy'
     | '/revenue-share-terms'
     | '/sales-opportunity'
+    | '/sitemap-blog.xml'
+    | '/sitemap-careers.xml'
+    | '/sitemap-categories.xml'
+    | '/sitemap-courses.xml'
+    | '/sitemap-images.xml'
+    | '/sitemap-index.xml'
+    | '/sitemap-learning-paths.xml'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
@@ -4191,6 +4281,7 @@ export interface FileRouteTypes {
     | '/admin/programmatic-seo/$id'
     | '/admin/programmatic-seo/new'
     | '/admin/risk-review/$id'
+    | '/admin/seo/health'
     | '/admin/support/$id'
     | '/admin/team/$id'
     | '/admin/workflows/$id'
@@ -4217,6 +4308,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents/'
@@ -4300,6 +4392,13 @@ export interface FileRouteTypes {
     | '/refund-policy'
     | '/revenue-share-terms'
     | '/sales-opportunity'
+    | '/sitemap-blog.xml'
+    | '/sitemap-careers.xml'
+    | '/sitemap-categories.xml'
+    | '/sitemap-courses.xml'
+    | '/sitemap-images.xml'
+    | '/sitemap-index.xml'
+    | '/sitemap-learning-paths.xml'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
@@ -4577,6 +4676,7 @@ export interface FileRouteTypes {
     | '/admin/programmatic-seo/$id'
     | '/admin/programmatic-seo/new'
     | '/admin/risk-review/$id'
+    | '/admin/seo/health'
     | '/admin/support/$id'
     | '/admin/team/$id'
     | '/admin/workflows/$id'
@@ -4603,6 +4703,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents'
@@ -4689,6 +4790,13 @@ export interface FileRouteTypes {
     | '/refund-policy'
     | '/revenue-share-terms'
     | '/sales-opportunity'
+    | '/sitemap-blog.xml'
+    | '/sitemap-careers.xml'
+    | '/sitemap-categories.xml'
+    | '/sitemap-courses.xml'
+    | '/sitemap-images.xml'
+    | '/sitemap-index.xml'
+    | '/sitemap-learning-paths.xml'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
@@ -4978,6 +5086,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/programmatic-seo/$id'
     | '/_authenticated/admin/programmatic-seo/new'
     | '/_authenticated/admin/risk-review/$id'
+    | '/_authenticated/admin/seo/health'
     | '/_authenticated/admin/support/$id'
     | '/_authenticated/admin/team/$id'
     | '/_authenticated/admin/workflows/$id'
@@ -5004,6 +5113,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/projects/$id'
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
+    | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/_authenticated/admin/ai-agents/'
@@ -5091,6 +5201,13 @@ export interface RootRouteChildren {
   RefundPolicyRoute: typeof RefundPolicyRoute
   RevenueShareTermsRoute: typeof RevenueShareTermsRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
+  SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
+  SitemapCareersDotxmlRoute: typeof SitemapCareersDotxmlRoute
+  SitemapCategoriesDotxmlRoute: typeof SitemapCategoriesDotxmlRoute
+  SitemapCoursesDotxmlRoute: typeof SitemapCoursesDotxmlRoute
+  SitemapImagesDotxmlRoute: typeof SitemapImagesDotxmlRoute
+  SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute
+  SitemapLearningPathsDotxmlRoute: typeof SitemapLearningPathsDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
@@ -5123,6 +5240,7 @@ export interface RootRouteChildren {
   TopicsPillarClusterRoute: typeof TopicsPillarClusterRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   TopicsPillarIndexRoute: typeof TopicsPillarIndexRoute
+  ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
   ApiV1CertificatesVerifyCodeRoute: typeof ApiV1CertificatesVerifyCodeRoute
@@ -5177,6 +5295,55 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-learning-paths.xml': {
+      id: '/sitemap-learning-paths.xml'
+      path: '/sitemap-learning-paths.xml'
+      fullPath: '/sitemap-learning-paths.xml'
+      preLoaderRoute: typeof SitemapLearningPathsDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-index.xml': {
+      id: '/sitemap-index.xml'
+      path: '/sitemap-index.xml'
+      fullPath: '/sitemap-index.xml'
+      preLoaderRoute: typeof SitemapIndexDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-images.xml': {
+      id: '/sitemap-images.xml'
+      path: '/sitemap-images.xml'
+      fullPath: '/sitemap-images.xml'
+      preLoaderRoute: typeof SitemapImagesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-courses.xml': {
+      id: '/sitemap-courses.xml'
+      path: '/sitemap-courses.xml'
+      fullPath: '/sitemap-courses.xml'
+      preLoaderRoute: typeof SitemapCoursesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-categories.xml': {
+      id: '/sitemap-categories.xml'
+      path: '/sitemap-categories.xml'
+      fullPath: '/sitemap-categories.xml'
+      preLoaderRoute: typeof SitemapCategoriesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-careers.xml': {
+      id: '/sitemap-careers.xml'
+      path: '/sitemap-careers.xml'
+      fullPath: '/sitemap-careers.xml'
+      preLoaderRoute: typeof SitemapCareersDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-blog.xml': {
+      id: '/sitemap-blog.xml'
+      path: '/sitemap-blog.xml'
+      fullPath: '/sitemap-blog.xml'
+      preLoaderRoute: typeof SitemapBlogDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sales-opportunity': {
@@ -7069,6 +7236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/seo-ping': {
+      id: '/api/public/hooks/seo-ping'
+      path: '/api/public/hooks/seo-ping'
+      fullPath: '/api/public/hooks/seo-ping'
+      preLoaderRoute: typeof ApiPublicHooksSeoPingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/student/support/new': {
       id: '/_authenticated/student/support/new'
       path: '/new'
@@ -7250,6 +7424,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/support/$id'
       preLoaderRoute: typeof AuthenticatedAdminSupportIdRouteImport
       parentRoute: typeof AuthenticatedAdminSupportRoute
+    }
+    '/_authenticated/admin/seo/health': {
+      id: '/_authenticated/admin/seo/health'
+      path: '/seo/health'
+      fullPath: '/admin/seo/health'
+      preLoaderRoute: typeof AuthenticatedAdminSeoHealthRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/risk-review/$id': {
       id: '/_authenticated/admin/risk-review/$id'
@@ -8340,6 +8521,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPayoutsIdRoute: typeof AuthenticatedAdminPayoutsIdRoute
   AuthenticatedAdminProgrammaticSeoIdRoute: typeof AuthenticatedAdminProgrammaticSeoIdRoute
   AuthenticatedAdminProgrammaticSeoNewRoute: typeof AuthenticatedAdminProgrammaticSeoNewRoute
+  AuthenticatedAdminSeoHealthRoute: typeof AuthenticatedAdminSeoHealthRoute
   AuthenticatedAdminTeamIdRoute: typeof AuthenticatedAdminTeamIdRoute
   AuthenticatedAdminWorkflowsIdRoute: typeof AuthenticatedAdminWorkflowsIdRoute
   AuthenticatedAdminWorkflowsNewRoute: typeof AuthenticatedAdminWorkflowsNewRoute
@@ -8439,6 +8621,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminProgrammaticSeoIdRoute,
   AuthenticatedAdminProgrammaticSeoNewRoute:
     AuthenticatedAdminProgrammaticSeoNewRoute,
+  AuthenticatedAdminSeoHealthRoute: AuthenticatedAdminSeoHealthRoute,
   AuthenticatedAdminTeamIdRoute: AuthenticatedAdminTeamIdRoute,
   AuthenticatedAdminWorkflowsIdRoute: AuthenticatedAdminWorkflowsIdRoute,
   AuthenticatedAdminWorkflowsNewRoute: AuthenticatedAdminWorkflowsNewRoute,
@@ -9189,6 +9372,13 @@ const rootRouteChildren: RootRouteChildren = {
   RefundPolicyRoute: RefundPolicyRoute,
   RevenueShareTermsRoute: RevenueShareTermsRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
+  SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
+  SitemapCareersDotxmlRoute: SitemapCareersDotxmlRoute,
+  SitemapCategoriesDotxmlRoute: SitemapCategoriesDotxmlRoute,
+  SitemapCoursesDotxmlRoute: SitemapCoursesDotxmlRoute,
+  SitemapImagesDotxmlRoute: SitemapImagesDotxmlRoute,
+  SitemapIndexDotxmlRoute: SitemapIndexDotxmlRoute,
+  SitemapLearningPathsDotxmlRoute: SitemapLearningPathsDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudentSupportRoute: StudentSupportRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
@@ -9221,6 +9411,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopicsPillarClusterRoute: TopicsPillarClusterRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   TopicsPillarIndexRoute: TopicsPillarIndexRoute,
+  ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
   ApiV1CertificatesVerifyCodeRoute: ApiV1CertificatesVerifyCodeRoute,
