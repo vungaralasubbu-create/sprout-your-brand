@@ -568,7 +568,7 @@ function StepModel({ partner, onBack, onNext }: { partner: Partner; onBack: () =
           selected={selected === "own_leads"}
           onSelect={() => setSelected("own_leads")}
           headline="I have my own leads"
-          highlight="UP TO 70%"
+          highlight="FLAT 70%"
           highlightLabel="Revenue Share"
           tone="own"
           description="Bring your own eligible leads, professional network or independently sourced enquiries and sell eligible Glintr career programs."
@@ -609,7 +609,7 @@ function StepModel({ partner, onBack, onNext }: { partner: Partner; onBack: () =
             onSelect={() => setSelected("dual_model")}
             headline="I want to use both"
             highlight="OWN · SUPPORTED"
-            highlightLabel="Up to 70% / Up to 50%"
+            highlightLabel="70% / 50%"
             tone="dual"
             description="Manage your own leads while also working on eligible Glintr-supported sales opportunities where available."
             benefits={[

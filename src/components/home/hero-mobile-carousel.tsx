@@ -218,7 +218,7 @@ const SLIDES: Slide[] = [
   {
     key: "revenue",
     eyebrow: "REVENUE MODEL",
-    title: "Earn up to 70%",
+    title: "Earn 70% Revenue Share",
     subtitle: "Sell programs. Get paid within 48 hours.",
     href: "/earn",
     accent: "var(--brand-azure)",

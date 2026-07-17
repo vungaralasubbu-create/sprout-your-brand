@@ -96,7 +96,7 @@ const nav: NavEntry[] = [
         items: [
           { label: "Become a Sales Partner", description: "Overview of the partner program", href: "/earn", icon: Handshake },
           { label: "Sales Opportunity", description: "For sales professionals — flexible earning", href: "/sales-opportunity", icon: Users, meta: "New" },
-          { label: "Own Leads Model", description: "Up to 70% revenue share", href: "/earn#own-leads", icon: Users, meta: "70%" },
+          { label: "Own Leads Model", description: "Flat 70% revenue share", href: "/earn#own-leads", icon: Users, meta: "70%" },
           { label: "Supported Sales Model", description: "Company-supported, up to 50%", href: "/earn#supported", icon: Briefcase, meta: "50%" },
         ],
       },

@@ -13,7 +13,7 @@ import {
 import { Container, Section, SectionHeader } from "@/components/shared/section";
 
 const features = [
-  { icon: TrendingUp, title: "High Revenue Share", desc: "Up to 70% on eligible verified enrollments." },
+  { icon: TrendingUp, title: "High Revenue Share", desc: "Flat 70% on eligible verified enrollments." },
   { icon: Wallet, title: "Fast Payout Processing", desc: "48-hour payout SLA for eligible earnings." },
   { icon: BookOpen, title: "Career-Focused Programs", desc: "Programs designed for outcomes, not vanity." },
   { icon: LayoutDashboard, title: "Partner Dashboard", desc: "Live sales, verification and payouts in one view." },

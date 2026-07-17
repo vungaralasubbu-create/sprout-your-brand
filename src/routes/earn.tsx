@@ -40,7 +40,7 @@ export const Route = createFileRoute("/earn")({
       {
         property: "og:description",
         content:
-          "Two proven models: sell using your own leads (up to 70%) or with company-supplied leads (up to 50%). Transparent payouts every week.",
+          "Two proven models: sell your own leads at 70% revenue share or with company-supplied leads at 50%. Transparent payouts every week.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://glintr.com/earn" },
@@ -122,7 +122,7 @@ function ModelHighlightCards() {
             <div className="mt-1 font-display text-xl font-semibold">Own Leads</div>
           </div>
           <div className="text-right shrink-0">
-            <div className="font-display text-2xl sm:text-4xl font-semibold text-primary whitespace-nowrap">Up to 70%</div>
+            <div className="font-display text-2xl sm:text-4xl font-semibold text-primary whitespace-nowrap">Flat 70%</div>
             <div className="text-caption text-muted-foreground">Revenue Share</div>
           </div>
         </div>
@@ -182,7 +182,7 @@ function TwoModels() {
             variant="primary"
             eyebrow="Model 01 · Own Leads"
             title="Sell With Your Own Leads"
-            share="Up to 70%"
+            share="Flat 70%"
             description="You own the customer relationship. We deliver the program."
             perfectFor="Sales pros with a network, freelancers, ex-consultants."
             benefits={modelBenefits.own}
