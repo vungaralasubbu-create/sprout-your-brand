@@ -250,7 +250,7 @@ export function SalesAgentWidget() {
                   void submit(input);
                 }
               }}
-              placeholder="Ask about programs, EMI, placements…"
+              placeholder="Ask GlintrAI about programs, pricing, placements, internships…"
               rows={1}
               className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary max-h-28"
             />
