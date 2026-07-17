@@ -508,7 +508,7 @@ function PayoutTimeline() {
 
 function TransparencySection() {
   const rows = [
-    { k: "Revenue share (own leads)", v: "Up to 70%" },
+    { k: "Revenue share (own leads)", v: "Flat 70%" },
     { k: "Revenue share (company leads)", v: "Up to 50%" },
     { k: "Payout cycle", v: "Weekly, every Monday" },
     { k: "Verification window", v: "3 business days" },
