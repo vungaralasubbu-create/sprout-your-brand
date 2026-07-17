@@ -294,6 +294,7 @@ import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_a
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
+import { Route as ApiPublicAiSalesWebhookRouteImport } from './routes/api/public/ai-sales/webhook'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
 import { Route as AuthenticatedStudentProjectsIdRouteImport } from './routes/_authenticated/student.projects.$id'
@@ -1990,6 +1991,11 @@ const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   path: '/api/public/hooks/seo-ping',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAiSalesWebhookRoute = ApiPublicAiSalesWebhookRouteImport.update({
+  id: '/api/public/ai-sales/webhook',
+  path: '/api/public/ai-sales/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedStudentSupportNewRoute =
   AuthenticatedStudentSupportNewRouteImport.update({
     id: '/new',
@@ -3091,6 +3097,7 @@ export interface FileRoutesByFullPath {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -3486,6 +3493,7 @@ export interface FileRoutesByTo {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -3897,6 +3905,7 @@ export interface FileRoutesById {
   '/_authenticated/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -4308,6 +4317,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -4703,6 +4713,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -5113,6 +5124,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/projects/$id'
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
+    | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -5240,6 +5252,7 @@ export interface RootRouteChildren {
   TopicsPillarClusterRoute: typeof TopicsPillarClusterRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   TopicsPillarIndexRoute: typeof TopicsPillarIndexRoute
+  ApiPublicAiSalesWebhookRoute: typeof ApiPublicAiSalesWebhookRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
@@ -7241,6 +7254,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/seo-ping'
       fullPath: '/api/public/hooks/seo-ping'
       preLoaderRoute: typeof ApiPublicHooksSeoPingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ai-sales/webhook': {
+      id: '/api/public/ai-sales/webhook'
+      path: '/api/public/ai-sales/webhook'
+      fullPath: '/api/public/ai-sales/webhook'
+      preLoaderRoute: typeof ApiPublicAiSalesWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/student/support/new': {
@@ -9411,6 +9431,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopicsPillarClusterRoute: TopicsPillarClusterRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   TopicsPillarIndexRoute: TopicsPillarIndexRoute,
+  ApiPublicAiSalesWebhookRoute: ApiPublicAiSalesWebhookRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,

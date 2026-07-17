@@ -442,6 +442,386 @@ export type Database = {
           },
         ]
       }
+      ai_sales_conversations: {
+        Row: {
+          channel: string
+          contact_city: string | null
+          contact_country: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          external_id: string | null
+          handover_reason: string | null
+          handover_requested: boolean | null
+          id: string
+          intent_summary: string | null
+          language: string | null
+          last_message_at: string | null
+          lead_score: string | null
+          metadata: Json | null
+          provider: string | null
+          qualification: Json | null
+          recommended_course_ids: string[] | null
+          session_token: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          channel?: string
+          contact_city?: string | null
+          contact_country?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          external_id?: string | null
+          handover_reason?: string | null
+          handover_requested?: boolean | null
+          id?: string
+          intent_summary?: string | null
+          language?: string | null
+          last_message_at?: string | null
+          lead_score?: string | null
+          metadata?: Json | null
+          provider?: string | null
+          qualification?: Json | null
+          recommended_course_ids?: string[] | null
+          session_token: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          channel?: string
+          contact_city?: string | null
+          contact_country?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          external_id?: string | null
+          handover_reason?: string | null
+          handover_requested?: boolean | null
+          id?: string
+          intent_summary?: string | null
+          language?: string | null
+          last_message_at?: string | null
+          lead_score?: string | null
+          metadata?: Json | null
+          provider?: string | null
+          qualification?: Json | null
+          recommended_course_ids?: string[] | null
+          session_token?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ai_sales_events: {
+        Row: {
+          conversation_id: string | null
+          created_at: string
+          data: Json | null
+          event_type: string
+          id: string
+        }
+        Insert: {
+          conversation_id?: string | null
+          created_at?: string
+          data?: Json | null
+          event_type: string
+          id?: string
+        }
+        Update: {
+          conversation_id?: string | null
+          created_at?: string
+          data?: Json | null
+          event_type?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_sales_events_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_sales_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_sales_followups: {
+        Row: {
+          channel: string
+          conversation_id: string | null
+          created_at: string
+          id: string
+          lead_id: string | null
+          message_template: string | null
+          metadata: Json | null
+          scheduled_for: string
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          channel?: string
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          message_template?: string | null
+          metadata?: Json | null
+          scheduled_for: string
+          sent_at?: string | null
+          status?: string
+        }
+        Update: {
+          channel?: string
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          message_template?: string | null
+          metadata?: Json | null
+          scheduled_for?: string
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_sales_followups_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_sales_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_sales_followups_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "ai_sales_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_sales_knowledge: {
+        Row: {
+          active: boolean
+          answer: string
+          created_at: string
+          created_by: string | null
+          id: string
+          keywords: string[] | null
+          language: string | null
+          priority: number
+          question: string
+          topic: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          answer: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          keywords?: string[] | null
+          language?: string | null
+          priority?: number
+          question: string
+          topic: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          answer?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          keywords?: string[] | null
+          language?: string | null
+          priority?: number
+          question?: string
+          topic?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_sales_leads: {
+        Row: {
+          assigned_partner_id: string | null
+          availability: string | null
+          branch: string | null
+          budget: string | null
+          career_goal: string | null
+          city: string | null
+          conversation_id: string
+          country: string | null
+          created_at: string
+          email: string | null
+          expected_joining: string | null
+          experience: string | null
+          graduation_year: string | null
+          id: string
+          interest_level: string | null
+          learning_mode: string | null
+          metadata: Json | null
+          name: string | null
+          phone: string | null
+          preferred_tech: string | null
+          qualification: string | null
+          score: string | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_partner_id?: string | null
+          availability?: string | null
+          branch?: string | null
+          budget?: string | null
+          career_goal?: string | null
+          city?: string | null
+          conversation_id: string
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          expected_joining?: string | null
+          experience?: string | null
+          graduation_year?: string | null
+          id?: string
+          interest_level?: string | null
+          learning_mode?: string | null
+          metadata?: Json | null
+          name?: string | null
+          phone?: string | null
+          preferred_tech?: string | null
+          qualification?: string | null
+          score?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_partner_id?: string | null
+          availability?: string | null
+          branch?: string | null
+          budget?: string | null
+          career_goal?: string | null
+          city?: string | null
+          conversation_id?: string
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          expected_joining?: string | null
+          experience?: string | null
+          graduation_year?: string | null
+          id?: string
+          interest_level?: string | null
+          learning_mode?: string | null
+          metadata?: Json | null
+          name?: string | null
+          phone?: string | null
+          preferred_tech?: string | null
+          qualification?: string | null
+          score?: string | null
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_sales_leads_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_sales_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_sales_messages: {
+        Row: {
+          cards: Json | null
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          quick_replies: Json | null
+          role: string
+        }
+        Insert: {
+          cards?: Json | null
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          quick_replies?: Json | null
+          role: string
+        }
+        Update: {
+          cards?: Json | null
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          quick_replies?: Json | null
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_sales_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_sales_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_sales_unanswered: {
+        Row: {
+          admin_answer: string | null
+          ai_response: string | null
+          answered_at: string | null
+          answered_by: string | null
+          conversation_id: string | null
+          created_at: string
+          id: string
+          question: string
+          status: string
+        }
+        Insert: {
+          admin_answer?: string | null
+          ai_response?: string | null
+          answered_at?: string | null
+          answered_by?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          question: string
+          status?: string
+        }
+        Update: {
+          admin_answer?: string | null
+          ai_response?: string | null
+          answered_at?: string | null
+          answered_by?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          question?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_sales_unanswered_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_sales_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ambassador_badge_achievements: {
         Row: {
           achieved_at: string
