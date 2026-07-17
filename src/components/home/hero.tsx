@@ -50,7 +50,7 @@ export function HomeHero() {
             </div>
 
             <ul className="flex flex-wrap gap-x-8 gap-y-2 pt-1 text-sm text-muted-foreground">
-              <TrustPoint>Own Leads · Up to 70% Revenue Share</TrustPoint>
+              <TrustPoint>Own Leads · 70% Revenue Share</TrustPoint>
               <TrustPoint>Supported Sales · Up to 50% Revenue Share</TrustPoint>
               <TrustPoint>No Joining Fee</TrustPoint>
             </ul>

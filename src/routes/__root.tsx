@@ -109,7 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Glintr helps sales professionals become entrepreneurs. Earn up to 70% revenue share as a partner, or launch your own EdTech brand in 24 hours — LMS, payments, CRM, and full backend included.",
+          "Glintr helps sales professionals become entrepreneurs. Earn 70% revenue share as a partner, or launch your own EdTech brand in 24 hours — LMS, payments, CRM, and full backend included.",
       },
       { name: "author", content: "Glintr" },
       { name: "theme-color", content: "#05070E" },

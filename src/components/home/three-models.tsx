@@ -14,7 +14,7 @@ interface Model {
 
 const MODELS: Model[] = [
   {
-    eyebrow: "OWN LEADS · UP TO 70%",
+    eyebrow: "OWN LEADS · 70%",
     title: "Sell With Your Own Leads",
     description:
       "Use your own network to sell eligible career programs and earn revenue share on every successful sale.",

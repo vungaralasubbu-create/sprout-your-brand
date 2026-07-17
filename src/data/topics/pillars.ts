@@ -844,7 +844,7 @@ export const PILLARS: Pillar[] = [
     ],
     trends: ["AI-augmented outbound", "Partner-led sales", "Product-led growth"],
     tools: ["Salesforce", "HubSpot", "LinkedIn Sales Navigator", "Apollo"],
-    faqs: [{ q: "Can I earn like a founder in sales?", a: "Yes — top AEs in SaaS/EdTech routinely earn ₹40L+ and Glintr partners earn up to 70% revenue share." }],
+    faqs: [{ q: "Can I earn like a founder in sales?", a: "Yes — top AEs in SaaS/EdTech routinely earn ₹40L+ and Glintr partners earn 70% revenue share." }],
     relatedPillarSlugs: ["entrepreneurship", "leadership", "digital-marketing"],
   }),
   P({

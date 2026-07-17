@@ -17,7 +17,7 @@ const traditional = [
 ];
 
 const ours = [
-  "Up to 70% Revenue Share",
+  "70% Revenue Share",
   "Income Based on Sales",
   "Payout Within 48 Hours",
   "Work On Your Own Time",

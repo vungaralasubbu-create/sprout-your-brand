@@ -41,7 +41,7 @@ export const Route = createFileRoute("/partner/apply")({
       {
         name: "description",
         content:
-          "Apply to become a Glintr Sales Partner. Earn up to 70% revenue share, get weekly payouts, and sell career programs full-time or part-time.",
+          "Apply to become a Glintr Sales Partner. Earn 70% revenue share, get weekly payouts, and sell career programs full-time or part-time.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -686,7 +686,7 @@ function Step4({ data, update }: StepProps) {
     {
       v: "own_leads",
       icon: Handshake,
-      title: "Own Leads · Up to 70%",
+      title: "Own Leads · 70%",
       desc: "I have a network. I'll bring the leads and close them.",
     },
     {

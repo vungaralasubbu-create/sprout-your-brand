@@ -12,7 +12,7 @@ export const Route = createFileRoute("/sales-opportunity")({
   head: () => ({
     meta: [
       { title: "Sales Opportunity — Use Your Sales Skill Differently | Glintr" },
-      { name: "description", content: "Sell eligible Glintr career programs on flexible terms. Earn revenue share from verified successful sales — up to 70% (Own Leads) or up to 50% (Supported Sales)." },
+      { name: "description", content: "Sell eligible Glintr career programs on flexible terms. Earn revenue share from verified successful sales — 70% (Own Leads) or 50% (Supported Sales)." },
       { property: "og:title", content: "Your Sales Skills Should Create More Opportunities — Glintr" },
       { property: "og:description", content: "Choose eligible career programs, work flexibly, and earn revenue share from verified successful sales." },
       { property: "og:type", content: "website" },
@@ -71,7 +71,7 @@ function Hero() {
           </div>
 
           <div className="mt-10 grid gap-3 sm:grid-cols-2 max-w-xl">
-            <RateCard tone="cyan" title="Own Leads" rate="Up to 70%" sub="Revenue share" />
+            <RateCard tone="cyan" title="Own Leads" rate="Flat 70%" sub="Revenue share" />
             <RateCard tone="blue" title="Supported Sales" rate="Up to 50%" sub="Revenue share" />
           </div>
         </div>
@@ -127,7 +127,7 @@ function Calculator() {
             <div className="space-y-2">
               <Label>Sales Model</Label>
               <RadioGroup value={model} onValueChange={(v) => setModel(v as any)} className="grid grid-cols-2 gap-2">
-                <ModelRadio value="own" label="Own Leads" hint="Up to 70%" active={model === "own"} />
+                <ModelRadio value="own" label="Own Leads" hint="Flat 70%" active={model === "own"} />
                 <ModelRadio value="supported" label="Supported Sales" hint="Up to 50%" active={model === "supported"} />
               </RadioGroup>
             </div>
@@ -252,7 +252,7 @@ function Example() {
             <div className="mt-4 space-y-3">
               <Row label="Sell Eligible Programs" value="Yes" />
               <Row label="Work Schedule" value="Flexible" />
-              <Row label="Potential Revenue Share" value={<span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent font-semibold">Up to 70%</span>} />
+              <Row label="Potential Revenue Share" value={<span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent font-semibold">Flat 70%</span>} />
             </div>
           </Card>
         </div>
@@ -378,7 +378,7 @@ function Flexible() {
 function HowItWorks() {
   const steps = [
     { n: "01", title: "Join Glintr", desc: "Create your account and apply as a Sales Partner." },
-    { n: "02", title: "Choose Your Sales Model", desc: "Own Leads (up to 70%) or Supported Sales (up to 50%)." },
+    { n: "02", title: "Choose Your Sales Model", desc: "Own Leads (70%) or Supported Sales (50%)." },
     { n: "03", title: "Select Programs", desc: "Pick eligible career programs that match your network." },
     { n: "04", title: "Make Eligible Sales And Track Revenue Share", desc: "Verified successful sales become eligible revenue share." },
   ];
