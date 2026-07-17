@@ -518,7 +518,7 @@ export function SiteHeader() {
                     </a>
                   ))}
                   <div className="border-t border-border mt-2 pt-2 px-1 text-[11px] text-muted-foreground">
-                    Sign up with Mobile OTP, Email, Google or LinkedIn on the next screen.
+                    Sign up with Mobile OTP or Email on the next screen.
                   </div>
                 </PopoverContent>
               </Popover>
