@@ -3,7 +3,8 @@ import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertAdmin(ctx: { supabase: { rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown }> } }, userId: string) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function assertAdmin(ctx: any, userId: string) {
   const [a, b] = await Promise.all([
     ctx.supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
     ctx.supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
