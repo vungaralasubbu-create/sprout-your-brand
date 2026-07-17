@@ -19,6 +19,8 @@ import { AiMentor } from "@/components/mentor/ai-mentor";
 import { SmartPopup } from "@/components/shared/smart-popup";
 import { GlobalPalette } from "@/components/command-center/global-palette";
 import { SalesAgentWidget } from "@/components/sales-agent/sales-agent-widget";
+import { PreviewProvider } from "@/lib/preview/preview-context";
+import { PreviewBanner } from "@/components/admin/preview-banner";
 
 function NotFoundComponent() {
   return (
