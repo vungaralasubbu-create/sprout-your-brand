@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bot, Send, X, Loader2, Phone, Mail, MessageCircle } from "lucide-react";
+import { Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import {
   startSalesConversation,
   sendSalesMessage,
   getSalesHistory,
+  capturePhoneLead,
   type SalesCard,
   type SalesReply,
 } from "@/lib/sales-agent/chat.functions";
@@ -23,6 +24,9 @@ type UiMessage = {
 
 const SESSION_KEY = "glintr_sales_session_v1";
 const CONV_KEY = "glintr_sales_conv_v1";
+const PHONE_KEY = "glintr_sales_phone_v1";
+const FIRSTQ_KEY = "glintr_sales_firstq_v1";
+
 
 function ensureSessionToken(): string {
   if (typeof window === "undefined") return "";
