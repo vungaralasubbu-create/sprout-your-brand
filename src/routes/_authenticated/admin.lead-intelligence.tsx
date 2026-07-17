@@ -582,7 +582,7 @@ function ScoringConfigDialog({
     queryFn: () => getFn(),
   });
 
-  const [weights, setWeights] = React.useState<Record<string, number>>(DEFAULT_WEIGHTS);
+  const [weights, setWeights] = React.useState<Record<string, number>>({ ...DEFAULT_WEIGHTS });
   const [thresholds, setThresholds] = React.useState(DEFAULT_THRESHOLDS);
 
   React.useEffect(() => {
