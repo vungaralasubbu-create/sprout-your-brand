@@ -414,10 +414,10 @@ export const adminActOnBrandProfile = createServerFn({ method: "POST" })
         entity_type: "brand_application",
         entity_id: data.id,
         actor_user_id: userId,
-        actor_role: "admin",
+        actor_label: "admin",
         title: `Brand ${existing.preferred_brand_name ?? ""} ${nextDbStatus}`,
         summary: data.message ?? null,
-      });
+      } as any);
     } catch {
       // ignore
     }
