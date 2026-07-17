@@ -97,6 +97,7 @@ const NAV: NavGroup[] = [
     collapsible: true,
     items: [
       { to: "/admin/team", label: "Admin Team", icon: UserCog, perms: ["admin_team.view"] },
+      { to: "/admin/preview", label: "Preview as User", icon: Eye },
       { to: "/admin/activity", label: "Admin Activity", icon: History, perms: ["admin_team.view"] },
       { to: "/admin/infrastructure", label: "Infrastructure", icon: Server, perms: ["system_settings.view"] },
       { to: "/admin/aios", label: "AIOS", icon: Sparkles, perms: ["system_settings.view"] },
