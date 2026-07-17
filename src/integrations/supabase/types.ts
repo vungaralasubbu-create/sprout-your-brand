@@ -5487,6 +5487,182 @@ export type Database = {
         }
         Relationships: []
       }
+      counsellor_ai_analyses: {
+        Row: {
+          analysis: Json
+          created_at: string
+          generated_by: string | null
+          id: string
+          lead_id: string
+          model: string | null
+          updated_at: string
+        }
+        Insert: {
+          analysis?: Json
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          lead_id: string
+          model?: string | null
+          updated_at?: string
+        }
+        Update: {
+          analysis?: Json
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          lead_id?: string
+          model?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counsellor_ai_analyses_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: true
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      counsellor_call_logs: {
+        Row: {
+          ai_summary: string | null
+          ai_tasks: Json | null
+          channel: string
+          counsellor_id: string
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          lead_id: string
+          outcome: string | null
+          raw_notes: string | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          ai_tasks?: Json | null
+          channel?: string
+          counsellor_id: string
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          lead_id: string
+          outcome?: string | null
+          raw_notes?: string | null
+        }
+        Update: {
+          ai_summary?: string | null
+          ai_tasks?: Json | null
+          channel?: string
+          counsellor_id?: string
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          lead_id?: string
+          outcome?: string | null
+          raw_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counsellor_call_logs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      counsellor_generated_messages: {
+        Row: {
+          body: string
+          channel: string
+          counsellor_id: string
+          created_at: string
+          id: string
+          lead_id: string
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          body: string
+          channel: string
+          counsellor_id: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          status?: string
+          subject?: string | null
+        }
+        Update: {
+          body?: string
+          channel?: string
+          counsellor_id?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          status?: string
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counsellor_generated_messages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      counsellor_tasks: {
+        Row: {
+          completed_at: string | null
+          counsellor_id: string
+          created_at: string
+          description: string | null
+          due_at: string | null
+          id: string
+          lead_id: string | null
+          priority: string
+          source: string | null
+          status: string
+          title: string
+        }
+        Insert: {
+          completed_at?: string | null
+          counsellor_id: string
+          created_at?: string
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          lead_id?: string | null
+          priority?: string
+          source?: string | null
+          status?: string
+          title: string
+        }
+        Update: {
+          completed_at?: string | null
+          counsellor_id?: string
+          created_at?: string
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          lead_id?: string | null
+          priority?: string
+          source?: string | null
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counsellor_tasks_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_ai_generations: {
         Row: {
           course_id: string
@@ -13906,6 +14082,7 @@ export type Database = {
         Args: { _brand_id: string; _user_id: string }
         Returns: boolean
       }
+      is_copilot_user: { Args: { _uid: string }; Returns: boolean }
       is_partner: { Args: { _user_id: string }; Returns: boolean }
       is_student: { Args: { _user_id: string }; Returns: boolean }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
@@ -14076,6 +14253,8 @@ export type Database = {
         | "wl_owner"
         | "student"
         | "campus_ambassador"
+        | "counsellor"
+        | "brand_owner"
       application_status:
         | "draft"
         | "submitted"
@@ -14818,6 +14997,8 @@ export const Constants = {
         "wl_owner",
         "student",
         "campus_ambassador",
+        "counsellor",
+        "brand_owner",
       ],
       application_status: [
         "draft",

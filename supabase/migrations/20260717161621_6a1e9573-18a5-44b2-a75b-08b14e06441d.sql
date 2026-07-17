@@ -1,0 +1,3 @@
+
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'counsellor';
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'brand_owner';
