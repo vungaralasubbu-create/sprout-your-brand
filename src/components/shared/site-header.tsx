@@ -275,9 +275,10 @@ function NotificationsBell() {
 
 const LOGIN_ROLES: Array<{ label: string; sub: string; href: string; icon: React.ComponentType<{ className?: string }> }> = [
   { label: "Student", sub: "Learners & aspirants", href: "/auth?role=student", icon: GraduationCap },
-  { label: "Working Professional", sub: "Upskilling for career growth", href: "/auth?role=working-professional", icon: Briefcase },
   { label: "Partner", sub: "Sales & channel partners", href: "/auth?role=partner", icon: Handshake },
   { label: "Brand Owner", sub: "White-label EdTech operators", href: "/auth?role=brand", icon: Building2 },
+  { label: "Instructor", sub: "Teach & manage cohorts", href: "/auth?role=instructor", icon: Briefcase },
+  { label: "Admin", sub: "Platform administration", href: "/auth?role=admin", icon: Cog },
 ];
 
 export function SiteHeader() {
