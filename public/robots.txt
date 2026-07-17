@@ -1,10 +1,39 @@
 User-agent: *
 Allow: /
 
-Disallow: /admin
-Disallow: /dashboard
-Disallow: /api
+# Authentication
 Disallow: /auth
-Disallow: /private
+Disallow: /auth/
+
+# Admin surfaces
+Disallow: /admin
+Disallow: /admin/
+
+# Partner dashboard (private, authenticated)
+Disallow: /partner/
+Disallow: /partner-support/
+Disallow: /partner.apply
+Disallow: /partner.signup
+
+# Student dashboard & personal workspaces (private, authenticated)
+Disallow: /student
+Disallow: /student/
+Disallow: /student-support/
+Disallow: /my
+Disallow: /my/
+Disallow: /workspace
+Disallow: /workspace/
+Disallow: /hq
+Disallow: /hq/
+
+# APIs and internal
+Disallow: /api/
+Disallow: /lovable/
+Disallow: /private/
+Disallow: /dashboard
+
+# Referral / verification (per-user tokens)
+Disallow: /ref/
+Disallow: /verify-certificate/
 
 Sitemap: https://glintr.com/sitemap.xml

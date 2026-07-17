@@ -9,6 +9,8 @@ import { listTools } from "@/data/tools";
 import { articles as learnArticles, collections as learnCollections, topics as learnTopics } from "@/data/learn";
 import { AGENTS } from "@/lib/aios/agents";
 import { listPillars, listAllClusters } from "@/data/topics";
+import { listAuthors } from "@/data/authors";
+
 
 const BASE_URL = "https://glintr.com";
 
@@ -50,6 +52,13 @@ const STATIC_PATHS: Array<{ path: string; changefreq?: string; priority?: string
   { path: "/knowledge-graph", changefreq: "monthly", priority: "0.5" },
   { path: "/tools", changefreq: "weekly", priority: "0.8" },
   { path: "/find-your-program", changefreq: "monthly", priority: "0.7" },
+  { path: "/for-companies", changefreq: "monthly", priority: "0.7" },
+  { path: "/for-professionals", changefreq: "monthly", priority: "0.7" },
+  { path: "/for-students", changefreq: "monthly", priority: "0.7" },
+  { path: "/editorial", changefreq: "monthly", priority: "0.5" },
+  { path: "/authors", changefreq: "monthly", priority: "0.5" },
+  { path: "/trust-center", changefreq: "monthly", priority: "0.5" },
+  { path: "/campus-ambassador", changefreq: "monthly", priority: "0.6" },
   { path: "/privacy-policy", changefreq: "yearly", priority: "0.3" },
   { path: "/terms-and-conditions", changefreq: "yearly", priority: "0.3" },
   { path: "/revenue-share-terms", changefreq: "yearly", priority: "0.3" },
@@ -126,6 +135,10 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const ag of AGENTS) {
           entries.push({ path: `/ai-agents/${ag.id}`, changefreq: "monthly", priority: "0.5" });
         }
+        for (const a of listAuthors()) {
+          entries.push({ path: `/authors/${a.slug}`, changefreq: "monthly", priority: "0.4" });
+        }
+
 
         if (url && key) {
           try {
