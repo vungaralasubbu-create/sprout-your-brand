@@ -300,9 +300,36 @@ function AuthPage() {
                       : mode === "recovery"
                       ? "Update password"
                       : mode === "signin"
-                      ? "Send OTP & Sign In"
+                      ? isTrustedEmail(email)
+                        ? "Sign in"
+                        : "Send OTP & Sign In"
                       : "Send OTP & Create account"}
                   </Button>
+                  {mode !== "recovery" && (
+                    <>
+                      <div className="relative py-1">
+                        <div className="absolute inset-0 flex items-center">
+                          <span className="w-full border-t border-border" />
+                        </div>
+                        <div className="relative flex justify-center text-caption">
+                          <span className="bg-background px-2 text-muted-foreground">or</span>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="lg"
+                        className="w-full"
+                        onClick={handleGoogle}
+                        disabled={loading}
+                      >
+                        <svg viewBox="0 0 24 24" className="mr-2 h-5 w-5" aria-hidden="true">
+                          <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.68 4.1-5.5 4.1-3.32 0-6.03-2.74-6.03-6.12S8.68 5.96 12 5.96c1.9 0 3.16.8 3.88 1.5l2.64-2.55C16.86 3.4 14.66 2.4 12 2.4 6.87 2.4 2.7 6.57 2.7 11.7S6.87 21 12 21c6.93 0 9.3-4.87 9.3-7.4 0-.5-.05-.86-.12-1.4H12z"/>
+                        </svg>
+                        Continue with Google
+                      </Button>
+                    </>
+                  )}
                   {mode === "signin" && (
                     <Button
                       type="button"
