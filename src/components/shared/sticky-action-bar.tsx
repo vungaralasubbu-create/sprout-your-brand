@@ -77,27 +77,46 @@ export function StickyActionBar() {
         </Link>
       </div>
 
-      {/* Mobile bottom bar */}
+      {/* Mobile bottom action bar — always visible on mobile with 2 equal buttons */}
       <div
         aria-hidden={hidden}
         className={cn(
           "fixed inset-x-0 bottom-0 z-40 lg:hidden",
           "transition-transform duration-300",
-          hidden ? "translate-y-full" : "translate-y-0",
+          hidden ? "translate-y-[calc(100%-8px)]" : "translate-y-0",
         )}
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0)" }}
       >
-        <div className="mx-3 mb-3 rounded-2xl border border-border/70 bg-card/95 p-2 shadow-lg backdrop-blur">
-          <Link
-            to={cta.to}
-            onClick={() => track("sticky_cta_clicked", { where: "mobile", to: cta.to })}
-            className="flex items-center justify-between gap-3 rounded-xl bg-gradient-brand px-4 py-3 text-sm font-semibold text-primary-foreground"
+        <div className="mx-3 mb-3 flex items-stretch gap-2 rounded-2xl border border-border/70 bg-card/95 p-2 shadow-lg backdrop-blur">
+          <CounsellorForm
+            label="Talk To Counsellor"
+            trigger={
+              <button
+                type="button"
+                onClick={() => track("sticky_cta_clicked", { where: "mobile", to: "counsellor" })}
+                className="flex-1 basis-0 min-w-0 inline-flex items-center justify-center gap-2 rounded-xl border border-border/70 bg-background/80 px-3 py-3 text-sm font-semibold text-foreground"
+              >
+                <Phone className="size-4 shrink-0 text-primary" />
+                <span className="truncate">Talk To Counsellor</span>
+              </button>
+            }
+          />
+          <button
+            type="button"
+            onClick={() => {
+              track("sticky_cta_clicked", { where: "mobile", to: "glintr-ai" });
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent(GLINTR_AI_OPEN_EVENT));
+              }
+            }}
+            className="flex-1 basis-0 min-w-0 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-brand px-3 py-3 text-sm font-semibold text-primary-foreground shadow-md"
           >
-            <span className="truncate">{cta.label}</span>
-            <ArrowRight className="size-4 shrink-0" />
-          </Link>
+            <Bot className="size-4 shrink-0" />
+            <span className="truncate">Ask GlintrAI</span>
+          </button>
         </div>
       </div>
     </>
   );
 }
+
