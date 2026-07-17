@@ -223,6 +223,7 @@ import { Route as AuthenticatedAdminProgramSalesContentRouteImport } from './rou
 import { Route as AuthenticatedAdminPricingSettingsRouteImport } from './routes/_authenticated/admin.pricing-settings'
 import { Route as AuthenticatedAdminPreviewRouteImport } from './routes/_authenticated/admin.preview'
 import { Route as AuthenticatedAdminPopupSettingsRouteImport } from './routes/_authenticated/admin.popup-settings'
+import { Route as AuthenticatedAdminPlatformLeadsRouteImport } from './routes/_authenticated/admin.platform-leads'
 import { Route as AuthenticatedAdminPayrollRouteImport } from './routes/_authenticated/admin.payroll'
 import { Route as AuthenticatedAdminPaymentVerificationRouteImport } from './routes/_authenticated/admin.payment-verification'
 import { Route as AuthenticatedAdminPartnerReviewsRouteImport } from './routes/_authenticated/admin.partner-reviews'
@@ -1575,6 +1576,12 @@ const AuthenticatedAdminPopupSettingsRoute =
   AuthenticatedAdminPopupSettingsRouteImport.update({
     id: '/popup-settings',
     path: '/popup-settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPlatformLeadsRoute =
+  AuthenticatedAdminPlatformLeadsRouteImport.update({
+    id: '/platform-leads',
+    path: '/platform-leads',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminPayrollRoute =
@@ -2934,6 +2941,7 @@ export interface FileRoutesByFullPath {
   '/admin/partner-reviews': typeof AuthenticatedAdminPartnerReviewsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
   '/admin/payroll': typeof AuthenticatedAdminPayrollRoute
+  '/admin/platform-leads': typeof AuthenticatedAdminPlatformLeadsRoute
   '/admin/popup-settings': typeof AuthenticatedAdminPopupSettingsRoute
   '/admin/preview': typeof AuthenticatedAdminPreviewRoute
   '/admin/pricing-settings': typeof AuthenticatedAdminPricingSettingsRoute
@@ -3337,6 +3345,7 @@ export interface FileRoutesByTo {
   '/admin/partner-reviews': typeof AuthenticatedAdminPartnerReviewsRoute
   '/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
   '/admin/payroll': typeof AuthenticatedAdminPayrollRoute
+  '/admin/platform-leads': typeof AuthenticatedAdminPlatformLeadsRoute
   '/admin/popup-settings': typeof AuthenticatedAdminPopupSettingsRoute
   '/admin/preview': typeof AuthenticatedAdminPreviewRoute
   '/admin/pricing-settings': typeof AuthenticatedAdminPricingSettingsRoute
@@ -3755,6 +3764,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partner-reviews': typeof AuthenticatedAdminPartnerReviewsRoute
   '/_authenticated/admin/payment-verification': typeof AuthenticatedAdminPaymentVerificationRoute
   '/_authenticated/admin/payroll': typeof AuthenticatedAdminPayrollRoute
+  '/_authenticated/admin/platform-leads': typeof AuthenticatedAdminPlatformLeadsRoute
   '/_authenticated/admin/popup-settings': typeof AuthenticatedAdminPopupSettingsRoute
   '/_authenticated/admin/preview': typeof AuthenticatedAdminPreviewRoute
   '/_authenticated/admin/pricing-settings': typeof AuthenticatedAdminPricingSettingsRoute
@@ -4173,6 +4183,7 @@ export interface FileRouteTypes {
     | '/admin/partner-reviews'
     | '/admin/payment-verification'
     | '/admin/payroll'
+    | '/admin/platform-leads'
     | '/admin/popup-settings'
     | '/admin/preview'
     | '/admin/pricing-settings'
@@ -4576,6 +4587,7 @@ export interface FileRouteTypes {
     | '/admin/partner-reviews'
     | '/admin/payment-verification'
     | '/admin/payroll'
+    | '/admin/platform-leads'
     | '/admin/popup-settings'
     | '/admin/preview'
     | '/admin/pricing-settings'
@@ -4993,6 +5005,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partner-reviews'
     | '/_authenticated/admin/payment-verification'
     | '/_authenticated/admin/payroll'
+    | '/_authenticated/admin/platform-leads'
     | '/_authenticated/admin/popup-settings'
     | '/_authenticated/admin/preview'
     | '/_authenticated/admin/pricing-settings'
@@ -6839,6 +6852,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPopupSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/platform-leads': {
+      id: '/_authenticated/admin/platform-leads'
+      path: '/platform-leads'
+      fullPath: '/admin/platform-leads'
+      preLoaderRoute: typeof AuthenticatedAdminPlatformLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/payroll': {
       id: '/_authenticated/admin/payroll'
       path: '/payroll'
@@ -8643,6 +8663,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnerReviewsRoute: typeof AuthenticatedAdminPartnerReviewsRoute
   AuthenticatedAdminPaymentVerificationRoute: typeof AuthenticatedAdminPaymentVerificationRoute
   AuthenticatedAdminPayrollRoute: typeof AuthenticatedAdminPayrollRoute
+  AuthenticatedAdminPlatformLeadsRoute: typeof AuthenticatedAdminPlatformLeadsRoute
   AuthenticatedAdminPopupSettingsRoute: typeof AuthenticatedAdminPopupSettingsRoute
   AuthenticatedAdminPreviewRoute: typeof AuthenticatedAdminPreviewRoute
   AuthenticatedAdminPricingSettingsRoute: typeof AuthenticatedAdminPricingSettingsRoute
@@ -8738,6 +8759,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPaymentVerificationRoute:
     AuthenticatedAdminPaymentVerificationRoute,
   AuthenticatedAdminPayrollRoute: AuthenticatedAdminPayrollRoute,
+  AuthenticatedAdminPlatformLeadsRoute: AuthenticatedAdminPlatformLeadsRoute,
   AuthenticatedAdminPopupSettingsRoute: AuthenticatedAdminPopupSettingsRoute,
   AuthenticatedAdminPreviewRoute: AuthenticatedAdminPreviewRoute,
   AuthenticatedAdminPricingSettingsRoute:

@@ -16,9 +16,11 @@ import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { RouteTracker } from "@/components/shared/route-tracker";
 import { StickyActionBar } from "@/components/shared/sticky-action-bar";
 
-import { SmartPopup } from "@/components/shared/smart-popup";
+import { SmartLeadCard } from "@/components/leads/smart-lead-card";
+import { LeadFormDialog } from "@/components/leads/lead-form-dialog";
 import { GlobalPalette } from "@/components/command-center/global-palette";
 import { SalesAgentWidget } from "@/components/sales-agent/sales-agent-widget";
+
 import { PreviewProvider } from "@/lib/preview/preview-context";
 import { PreviewBanner } from "@/components/admin/preview-banner";
 import { PartnerEarningsCopyProvider } from "@/data/partner-earnings-copy";
@@ -213,7 +215,9 @@ function RootComponent() {
           <RouteTracker />
           <Outlet />
           <StickyActionBar />
-          <SmartPopup />
+          <SmartLeadCard />
+          <LeadFormDialog />
+
           <GlobalPalette />
           <SalesAgentWidget />
           <Toaster richColors position="top-right" />

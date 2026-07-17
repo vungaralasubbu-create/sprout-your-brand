@@ -390,8 +390,25 @@ export function SalesAgentWidget() {
           device,
         },
       });
+      // Also mirror into the unified platform_leads table so the AI shows
+      // up alongside other lead sources in Super Admin > Lead Management.
+      try {
+        const { submitLead } = await import("@/lib/leads/client");
+        await submitLead({
+          name: rawPhone ? "GlintrAI Visitor" : "",
+          email: `ai+${conversationId.slice(0, 8)}@glintr.local`,
+          phone: rawPhone,
+          interested_course: courseMatch ? courseMatch[1] : undefined,
+          source: "ai",
+          source_detail: verified ? "otp_verified" : "phone_captured",
+          metadata: { firstQuestion, conversationId, path },
+        });
+      } catch {
+        /* mirroring is best-effort */
+      }
       setPhoneCaptured(true);
       if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, verified ? "verified" : "1");
+
     },
     [conversationId, firstQuestion, path],
   );
