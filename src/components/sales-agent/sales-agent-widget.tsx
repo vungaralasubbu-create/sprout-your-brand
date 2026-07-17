@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bot, Send, X, Loader2, Phone, Mail, MessageCircle } from "lucide-react";
+import { Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import {
   startSalesConversation,
   sendSalesMessage,
   getSalesHistory,
+  capturePhoneLead,
   type SalesCard,
   type SalesReply,
 } from "@/lib/sales-agent/chat.functions";
@@ -23,6 +24,9 @@ type UiMessage = {
 
 const SESSION_KEY = "glintr_sales_session_v1";
 const CONV_KEY = "glintr_sales_conv_v1";
+const PHONE_KEY = "glintr_sales_phone_v1";
+const FIRSTQ_KEY = "glintr_sales_firstq_v1";
+
 
 function ensureSessionToken(): string {
   if (typeof window === "undefined") return "";
@@ -55,28 +59,46 @@ export function SalesAgentWidget() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [handover, setHandover] = useState<SalesReply["handover"]>(null);
+  const [phoneCaptured, setPhoneCaptured] = useState(false);
+  const [firstQuestion, setFirstQuestion] = useState<string | null>(null);
+  const [phoneInput, setPhoneInput] = useState("");
+  const [submittingPhone, setSubmittingPhone] = useState(false);
   const routerState = useRouterState();
   const path = routerState.location.pathname;
 
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Don't render on admin/partner authenticated shells that already own their own AI surface
   const hidden = useMemo(
     () => path.startsWith("/admin/") || path.startsWith("/hq") || path.startsWith("/workspace"),
     [path],
   );
 
+  // Show phone card only after the user has asked their first question AND the
+  // assistant has replied at least once. Never re-prompt for verified users.
+  const showPhoneCard = useMemo(() => {
+    if (phoneCaptured) return false;
+    const userTurns = messages.filter((m) => m.role === "user").length;
+    const assistantTurns = messages.filter((m) => m.role === "assistant").length;
+    // GREETING is the first assistant message. Wait for at least 2 assistant messages
+    // (greeting + first real reply) once the user has spoken.
+    return userTurns >= 1 && assistantTurns >= 2 && !sending;
+  }, [messages, phoneCaptured, sending]);
+
   useEffect(() => {
     setReady(true);
-    const existing = typeof window !== "undefined" ? window.localStorage.getItem(CONV_KEY) : null;
+    if (typeof window === "undefined") return;
+    const existing = window.localStorage.getItem(CONV_KEY);
     if (existing) setConversationId(existing);
+    if (window.localStorage.getItem(PHONE_KEY)) setPhoneCaptured(true);
+    const savedFirstQ = window.localStorage.getItem(FIRSTQ_KEY);
+    if (savedFirstQ) setFirstQuestion(savedFirstQ);
   }, []);
 
   useEffect(() => {
     if (!open || !listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
-  }, [messages, open, sending]);
+  }, [messages, open, sending, showPhoneCard]);
 
   const openAndInit = useCallback(async () => {
     setOpen(true);
@@ -121,6 +143,11 @@ export function SalesAgentWidget() {
         setConversationId(convId);
         if (typeof window !== "undefined") window.localStorage.setItem(CONV_KEY, convId);
       }
+      // Remember the very first question so we can store it with the phone lead.
+      if (!firstQuestion) {
+        setFirstQuestion(value);
+        if (typeof window !== "undefined") window.localStorage.setItem(FIRSTQ_KEY, value);
+      }
       setMessages((prev) => [...prev, { role: "user", content: value }]);
       setInput("");
       setSending(true);
@@ -143,10 +170,51 @@ export function SalesAgentWidget() {
         setSending(false);
       }
     },
-    [conversationId, path, sending],
+    [conversationId, path, sending, firstQuestion],
   );
 
+  const submitPhone = useCallback(async () => {
+    const raw = phoneInput.trim();
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length < 6 || digits.length > 15) {
+      toast.error("Please enter a valid mobile number.");
+      return;
+    }
+    if (!conversationId) return;
+    setSubmittingPhone(true);
+    try {
+      const device =
+        typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+          ? "mobile"
+          : "desktop";
+      const referralSource =
+        typeof document !== "undefined" && document.referrer ? document.referrer.slice(0, 400) : null;
+      // Detect course slug when the user is on a programs/courses page.
+      const courseMatch = path.match(/^\/(?:programs|courses)\/[^/]+\/([^/?#]+)/);
+      await capturePhoneLead({
+        data: {
+          conversationId,
+          phone: raw,
+          firstQuestion: firstQuestion ?? undefined,
+          pagePath: path,
+          courseSlug: courseMatch ? courseMatch[1] : undefined,
+          referralSource: referralSource ?? undefined,
+          device,
+        },
+      });
+      setPhoneCaptured(true);
+      if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
+      toast.success("Thanks! Continuing your conversation…");
+      setTimeout(() => inputRef.current?.focus(), 60);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't save your number. Please try again.");
+    } finally {
+      setSubmittingPhone(false);
+    }
+  }, [phoneInput, conversationId, firstQuestion, path]);
+
   if (!ready || hidden) return null;
+
 
   return (
     <>
@@ -231,6 +299,63 @@ export function SalesAgentWidget() {
                 </div>
               </div>
             )}
+
+            {showPhoneCard && (
+              <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-lime-400/5 p-4 shadow-sm">
+                <div className="flex items-start gap-2.5">
+                  <div className="grid place-items-center w-8 h-8 rounded-full bg-primary/15 text-primary shrink-0">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-foreground">
+                      Let's personalize your learning journey.
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                      Enter your mobile number to continue chatting with GlintrAI and receive personalized
+                      program recommendations, counselling support and exclusive updates.
+                    </p>
+                  </div>
+                </div>
+                <form
+                  className="mt-3 flex flex-col gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void submitPhone();
+                  }}
+                >
+                  <input
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    autoFocus
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                    aria-label="Mobile number"
+                    maxLength={24}
+                  />
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                      <ShieldCheck className="w-3 h-3" /> Private. Never shared.
+                    </div>
+                    <Button
+                      type="submit"
+                      size="sm"
+                      disabled={submittingPhone || phoneInput.trim().replace(/\D/g, "").length < 6}
+                    >
+                      {submittingPhone ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Saving…
+                        </>
+                      ) : (
+                        "Continue"
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
 
           <form
@@ -247,17 +372,23 @@ export function SalesAgentWidget() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  void submit(input);
+                  if (!showPhoneCard) void submit(input);
                 }
               }}
-              placeholder="Ask GlintrAI about programs, pricing, placements, internships…"
+              placeholder={
+                showPhoneCard
+                  ? "Enter your mobile number above to continue…"
+                  : "Ask GlintrAI about programs, pricing, placements, internships…"
+              }
               rows={1}
-              className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary max-h-28"
+              disabled={showPhoneCard}
+              className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary max-h-28 disabled:opacity-60 disabled:cursor-not-allowed"
             />
-            <Button type="submit" size="sm" disabled={sending || !input.trim()}>
+            <Button type="submit" size="sm" disabled={sending || !input.trim() || showPhoneCard}>
               <Send className="w-4 h-4" />
             </Button>
           </form>
+
         </div>
       )}
     </>
