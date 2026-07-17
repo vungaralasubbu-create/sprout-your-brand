@@ -144,6 +144,17 @@ function AuthPage() {
       return;
     }
 
+    // Trusted device: skip OTP for returning sign-ins from this browser.
+    if (mode === "signin" && isTrustedEmail(email)) {
+      const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
+      if (!emailOk) return toast.error("Enter a valid email.");
+      if (password.length < 6) return toast.error("Enter your password.");
+      setLoading(true);
+      await completePasswordAuth();
+      setLoading(false);
+      return;
+    }
+
     const parsed = credsSchema.safeParse({ email, password, mobile });
     if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
 
@@ -155,7 +166,6 @@ function AuthPage() {
     if (!res.ok) return toast.error(res.error);
     toast.success("OTP sent to your mobile.");
     setStage("otp");
-  }
 
   async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
