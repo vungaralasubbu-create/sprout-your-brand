@@ -385,7 +385,7 @@ function GlossaryDetail() {
                 Go deeper on {entry.term}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Open the mentor from the floating button in the corner and pick a shortcut:
+                Open GlintrAI and pick a shortcut to go deeper:
               </p>
               <div className="mt-4 grid sm:grid-cols-2 gap-2">
                 <MentorHint icon={<Wand2 className="size-4" />} label={`Explain ${entry.term} simpler`} />
@@ -393,6 +393,7 @@ function GlossaryDetail() {
                 <MentorHint icon={<GitCompareArrows className="size-4" />} label={`Compare ${entry.term} with related concepts`} />
                 <MentorHint icon={<ArrowRight className="size-4" />} label={`Recommend the next topic after ${entry.term}`} />
               </div>
+
             </div>
           </Container>
         </Section>
