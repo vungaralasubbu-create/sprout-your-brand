@@ -41,13 +41,14 @@ function ensureSessionToken(): string {
 const GREETING: UiMessage = {
   role: "assistant",
   content:
-    "Hi 👋 I'm **GlintrAI**, your admissions & career counsellor. Before I suggest anything, tell me a little about you — **what brings you to Glintr today?** Are you looking for an internship, placement, a career switch, or just exploring AI? If you'd rather speak to a human counsellor, just say so.",
+    "Hi 👋 I'm **GlintrAI**, your AI Career Advisor.\n\nI can help you choose the right program, compare courses, and answer your questions on internships, placements and career outcomes.\n\n**How can I help you today?**",
   quickReplies: [
-    "I need an internship certificate",
-    "I want placement support",
     "I want to learn AI",
-    "Talk to a human counsellor",
+    "Suggest a course",
+    "I need an internship",
+    "I need placement support",
   ],
+
 };
 
 
@@ -152,7 +153,7 @@ export function SalesAgentWidget() {
       setInput("");
       setSending(true);
       try {
-        const reply = await sendSalesMessage({ data: { conversationId: convId, message: value, pagePath: path } });
+        const reply = await sendSalesMessage({ data: { conversationId: convId, message: value, pagePath: path, phoneCaptured } });
         setMessages((prev) => [
           ...prev,
           {
@@ -189,6 +190,17 @@ export function SalesAgentWidget() {
           : "desktop";
       const referralSource =
         typeof document !== "undefined" && document.referrer ? document.referrer.slice(0, 400) : null;
+      const sourceUrl =
+        typeof window !== "undefined" ? window.location.href.slice(0, 500) : null;
+      const browser = typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 240) : null;
+      const utm: Record<string, string> = {};
+      if (typeof window !== "undefined") {
+        const sp = new URLSearchParams(window.location.search);
+        for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
+          const v = sp.get(k);
+          if (v) utm[k] = v.slice(0, 120);
+        }
+      }
       // Detect course slug when the user is on a programs/courses page.
       const courseMatch = path.match(/^\/(?:programs|courses)\/[^/]+\/([^/?#]+)/);
       await capturePhoneLead({
@@ -199,9 +211,13 @@ export function SalesAgentWidget() {
           pagePath: path,
           courseSlug: courseMatch ? courseMatch[1] : undefined,
           referralSource: referralSource ?? undefined,
+          sourceUrl: sourceUrl ?? undefined,
+          browser: browser ?? undefined,
+          utm: Object.keys(utm).length ? utm : undefined,
           device,
         },
       });
+
       setPhoneCaptured(true);
       if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
       toast.success("Thanks! Continuing your conversation…");
@@ -275,7 +291,7 @@ export function SalesAgentWidget() {
                 <Loader2 className="w-3.5 h-3.5 animate-spin" /> GlintrAI is typing…
               </div>
             )}
-            {handover && (
+            {handover && phoneCaptured && (
               <div className="rounded-xl border border-border bg-card p-3 text-xs space-y-1.5">
                 <div className="font-semibold text-foreground">Talk to a human counsellor</div>
                 <div className="flex items-center gap-2 text-muted-foreground">
