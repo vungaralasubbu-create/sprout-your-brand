@@ -291,7 +291,11 @@ export const autoAssignCounsellor = createServerFn({ method: "POST" })
       .update({ current_workload: (best.current_workload as number) + 1 })
       .eq("user_id", best.user_id as string);
 
-    return { assigned: best.user_id, name: best.display_name, reason: bestReason };
+    return {
+      assigned: String(best.user_id ?? ""),
+      name: String(best.display_name ?? ""),
+      reason: bestReason,
+    };
   });
 
 // ============================================================
