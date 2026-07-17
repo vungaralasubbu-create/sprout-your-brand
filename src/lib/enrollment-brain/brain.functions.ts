@@ -507,10 +507,11 @@ export async function runBrainTick(
 
     // Reassign to senior counsellor
     const { data: seniors } = (await (client.from("counsellor_profiles") as unknown as {
-      select: (c: string) => { eq: (c: string, v: string) => Promise<{ data: unknown }> };
+      select: (c: string) => { eq: (c: string, v: boolean) => { limit: (n: number) => Promise<{ data: unknown }> } };
     })
       .select("user_id,display_name")
-      .eq("is_senior", "true")) as { data: Array<{ user_id: string; display_name: string }> | null };
+      .eq("is_senior", true)
+      .limit(1)) as { data: Array<{ user_id: string; display_name: string }> | null };
     const senior = seniors?.[0];
 
     if (senior) {
