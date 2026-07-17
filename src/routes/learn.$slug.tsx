@@ -1,3 +1,4 @@
+import { openGlintrAI } from "@/lib/glintr-ai";
 import * as React from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Bookmark, BookmarkCheck, Clock, Sparkles } from "lucide-react";
@@ -266,7 +267,7 @@ function AiMentorCard({ title }: { title: string }) {
   return (
     <div className="mt-12 rounded-2xl border bg-gradient-to-br from-primary/8 via-background to-background p-6">
       <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-        <Sparkles className="size-3.5" /> Ask Glintr AI
+        <Sparkles className="size-3.5" /> Ask GlintrAI
       </div>
       <p className="text-sm text-muted-foreground">
         The GlintrAI is aware of this page. Ask it to explain a concept, summarise this guide, or recommend what to learn next.
@@ -277,12 +278,15 @@ function AiMentorCard({ title }: { title: string }) {
           "Summarise this page in 5 bullets",
           "What should I learn next?",
         ].map((q) => (
-          <span
+          <button
             key={q}
-            className="inline-flex items-center rounded-full border bg-background/70 px-3 py-1 text-xs text-foreground/80"
+            type="button"
+            onClick={() => openGlintrAI({ prompt: q, source: "learn" })}
+            className="inline-flex items-center rounded-full border bg-background/70 px-3 py-1 text-xs text-foreground/80 hover:border-primary/40 hover:bg-primary/5"
           >
             {q}
-          </span>
+          </button>
+
         ))}
       </div>
     </div>

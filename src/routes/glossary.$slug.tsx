@@ -13,6 +13,7 @@ import { BLOG_TITLES } from "@/data/program-editorial";
 import { articles as learnArticles, topics as learnTopics } from "@/data/learn";
 import { PeopleAlsoAsk } from "@/components/shared/geo";
 import { EntityCard } from "@/components/shared/entity-card";
+import { openGlintrAI } from "@/lib/glintr-ai";
 import { BookmarkToggle } from "@/components/mentor/ai-mentor";
 import {
   ChevronLeft,
@@ -385,7 +386,7 @@ function GlossaryDetail() {
                 Go deeper on {entry.term}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Open the mentor from the floating button in the corner and pick a shortcut:
+                Open GlintrAI and pick a shortcut to go deeper:
               </p>
               <div className="mt-4 grid sm:grid-cols-2 gap-2">
                 <MentorHint icon={<Wand2 className="size-4" />} label={`Explain ${entry.term} simpler`} />
@@ -393,6 +394,7 @@ function GlossaryDetail() {
                 <MentorHint icon={<GitCompareArrows className="size-4" />} label={`Compare ${entry.term} with related concepts`} />
                 <MentorHint icon={<ArrowRight className="size-4" />} label={`Recommend the next topic after ${entry.term}`} />
               </div>
+
             </div>
           </Container>
         </Section>
@@ -526,9 +528,14 @@ function GlossaryDetail() {
 
 function MentorHint({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border bg-card px-3 py-2 text-sm text-foreground/85">
+    <button
+      type="button"
+      onClick={() => openGlintrAI({ prompt: label, source: "glossary" })}
+      className="flex items-center gap-2 rounded-xl border bg-card px-3 py-2 text-left text-sm text-foreground/85 hover:border-primary/40 hover:bg-primary/5"
+    >
       <span className="text-primary">{icon}</span>
       <span className="truncate">{label}</span>
-    </div>
+    </button>
   );
 }
+

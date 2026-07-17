@@ -73,7 +73,7 @@ function FaqNotFound() {
             </Button>
             <Button asChild variant="outline">
               <Link to="/contact" search={{ intent: "general", source: "faq_detail_missing" }}>
-                Ask Glintr AI Support
+                Ask GlintrAI Support
               </Link>
             </Button>
           </div>
@@ -138,7 +138,7 @@ function FaqDetailPage() {
                   faq: [faq.slug],
                 }}
               >
-                Ask Glintr AI Support
+                Ask GlintrAI Support
               </Link>
             </Button>
             <Button asChild variant="ghost">

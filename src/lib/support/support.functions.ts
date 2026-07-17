@@ -49,7 +49,7 @@ export const sendSupportMessage = createServerFn({ method: "POST" })
     const intentLabel = supportIntentLabel(handoff?.supportIntent);
 
     const systemLines = [
-      "You are Glintr AI Support, a careful and warm support agent for the Glintr platform.",
+      "You are GlintrAI Support, a careful and warm support agent for the Glintr platform.",
       "You help with programs, learning, payments, refunds, partnerships, Campus Ambassador, payouts, careers and platform questions.",
       "Rules you must follow:",
       "- Never invent policies, prices, dates, guarantees, or commercial terms.",
@@ -91,13 +91,13 @@ export const sendSupportMessage = createServerFn({ method: "POST" })
       }),
     });
 
-    if (res.status === 429) throw new Error("Glintr AI Support is busy — please retry shortly.");
-    if (res.status === 402) throw new Error("Glintr AI Support is temporarily unavailable.");
+    if (res.status === 429) throw new Error("GlintrAI Support is busy — please retry shortly.");
+    if (res.status === 402) throw new Error("GlintrAI Support is temporarily unavailable.");
     if (!res.ok) {
-      throw new Error("Glintr AI Support is temporarily unavailable.");
+      throw new Error("GlintrAI Support is temporarily unavailable.");
     }
     const json = await res.json();
     const reply = json?.choices?.[0]?.message?.content?.trim();
-    if (!reply) throw new Error("Glintr AI Support did not return a response.");
+    if (!reply) throw new Error("GlintrAI Support did not return a response.");
     return { reply };
   });

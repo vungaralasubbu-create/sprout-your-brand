@@ -13,6 +13,8 @@ import {
   type SalesCard,
   type SalesReply,
 } from "@/lib/sales-agent/chat.functions";
+import { GLINTR_AI_OPEN_EVENT, type OpenGlintrAIDetail } from "@/lib/glintr-ai";
+import { supabase } from "@/integrations/supabase/client";
 
 type UiMessage = {
   role: "user" | "assistant";
@@ -94,7 +96,17 @@ export function SalesAgentWidget() {
     if (window.localStorage.getItem(PHONE_KEY)) setPhoneCaptured(true);
     const savedFirstQ = window.localStorage.getItem(FIRSTQ_KEY);
     if (savedFirstQ) setFirstQuestion(savedFirstQ);
+    // Logged-in users: trust their registered phone and skip lead capture.
+    void supabase.auth.getUser().then(({ data }) => {
+      const meta = data.user?.user_metadata as { phone?: string } | undefined;
+      const phone = data.user?.phone || meta?.phone;
+      if (phone) {
+        setPhoneCaptured(true);
+        try { window.localStorage.setItem(PHONE_KEY, "1"); } catch { /* ignore */ }
+      }
+    });
   }, []);
+
 
   useEffect(() => {
     if (!open || !listRef.current) return;
@@ -129,6 +141,20 @@ export function SalesAgentWidget() {
       console.error(err);
     }
   }, [conversationId, path]);
+
+  // Unified entry point: any "Ask GlintrAI" button on the site dispatches
+  // `glintr:open-ai` and lands the user in this single conversation.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onOpen = (e: Event) => {
+      const detail = (e as CustomEvent<OpenGlintrAIDetail>).detail ?? {};
+      void openAndInit();
+      if (detail.prompt) setInput((prev) => (prev ? prev : detail.prompt!));
+    };
+    window.addEventListener(GLINTR_AI_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(GLINTR_AI_OPEN_EVENT, onOpen);
+  }, [openAndInit]);
+
 
   const submit = useCallback(
     async (text: string) => {
