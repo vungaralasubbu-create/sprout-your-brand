@@ -1,8 +1,10 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Bot, Phone } from "lucide-react";
 
 import { ctaForPath, useIntent, track } from "@/lib/intent";
+import { CounsellorForm } from "@/components/shared/counsellor-form";
+import { GLINTR_AI_OPEN_EVENT } from "@/lib/glintr-ai";
 import { cn } from "@/lib/utils";
 
 /**
