@@ -665,3 +665,145 @@ export const queueWinBack = createServerFn({ method: "POST" })
     if (rows.length) await supabase.from("brain_nurture_deliveries").insert(rows);
     return { queued: rows.length };
   });
+
+// ============================================================
+// Executive Dashboard (CEO view)
+// ============================================================
+export const getExecutiveDashboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertBrainAccess(context as never);
+    const sb = context.supabase as never as {
+      from: (t: string) => {
+        select: (c: string, opts?: unknown) => {
+          gte?: (col: string, v: string) => Promise<{ data: unknown; count?: number | null }>;
+          order?: (col: string, opts: { ascending: boolean }) => { limit: (n: number) => Promise<{ data: unknown }> };
+        };
+      };
+    };
+
+    const now = Date.now();
+    const day = 86400_000;
+    const dISO = (offset: number) => new Date(now - offset * day).toISOString();
+
+    const [enrolls30, enrolls90, decisionsRes, forecastRes, sourcesRes, leadsAll, counsellorsRes] = await Promise.all([
+      (sb.from("enrollments") as never as { select: (c: string, o?: unknown) => { gte: (c: string, v: string) => Promise<{ data: unknown; count: number | null }> } })
+        .select("id,course_id,enrolled_at,status", { count: "exact" } as never)
+        .gte("enrolled_at", dISO(30)),
+      (sb.from("enrollments") as never as { select: (c: string, o?: unknown) => { gte: (c: string, v: string) => Promise<{ data: unknown; count: number | null }> } })
+        .select("id,enrolled_at", { count: "exact" } as never)
+        .gte("enrolled_at", dISO(90)),
+      (sb.from("brain_decisions") as never as { select: (c: string) => { order: (c: string, o: { ascending: boolean }) => { limit: (n: number) => Promise<{ data: unknown }> } } })
+        .select("recommended_course,expected_revenue,probability_pct,scholarship_pct,assigned_counsellor_id,priority")
+        .order("computed_at", { ascending: false })
+        .limit(500),
+      (sb.from("brain_forecasts") as never as { select: (c: string) => { order: (c: string, o: { ascending: boolean }) => { limit: (n: number) => Promise<{ data: unknown }> } } })
+        .select("*")
+        .order("generated_at", { ascending: false })
+        .limit(1),
+      (sb.from("platform_leads") as never as { select: (c: string, o?: unknown) => { gte: (c: string, v: string) => Promise<{ data: unknown }> } })
+        .select("source,status,score,created_at")
+        .gte("created_at", dISO(30)),
+      (sb.from("platform_leads") as never as { select: (c: string, o?: unknown) => { gte: (c: string, v: string) => Promise<{ data: unknown; count: number | null }> } })
+        .select("status", { count: "exact" } as never)
+        .gte("created_at", dISO(30)),
+      (sb.from("counsellor_profiles") as never as { select: (c: string) => { order: (c: string, o: { ascending: boolean }) => { limit: (n: number) => Promise<{ data: unknown }> } } })
+        .select("user_id,display_name,conversion_rate,avg_response_seconds,current_workload")
+        .order("conversion_rate", { ascending: false })
+        .limit(10),
+    ]);
+
+    const decisions = (decisionsRes?.data ?? []) as Array<Record<string, unknown>>;
+    const forecast = ((forecastRes?.data ?? []) as Array<Record<string, unknown>>)[0] ?? null;
+
+    // Best-performing courses (from decisions weighted by revenue*probability)
+    const courseMap = new Map<string, { revenue: number; count: number }>();
+    for (const d of decisions) {
+      const c = String(d.recommended_course ?? "");
+      if (!c) continue;
+      const ev = Number(d.expected_revenue ?? 0) * (Number(d.probability_pct ?? 0) / 100);
+      const cur = courseMap.get(c) ?? { revenue: 0, count: 0 };
+      cur.revenue += ev;
+      cur.count += 1;
+      courseMap.set(c, cur);
+    }
+    const bestCourses = [...courseMap.entries()]
+      .map(([course, v]) => ({ course, expected_revenue: Math.round(v.revenue), pipeline_count: v.count }))
+      .sort((a, b) => b.expected_revenue - a.expected_revenue)
+      .slice(0, 8);
+
+    // Lead sources breakdown
+    const sourceMap = new Map<string, { total: number; converted: number }>();
+    for (const l of (sourcesRes?.data ?? []) as Array<Record<string, unknown>>) {
+      const s = String(l.source ?? "direct");
+      const cur = sourceMap.get(s) ?? { total: 0, converted: 0 };
+      cur.total++;
+      if (l.status === "enrolled") cur.converted++;
+      sourceMap.set(s, cur);
+    }
+    const leadSources = [...sourceMap.entries()]
+      .map(([source, v]) => ({ source, leads: v.total, converted: v.converted, conversion_pct: v.total ? Math.round((v.converted / v.total) * 1000) / 10 : 0 }))
+      .sort((a, b) => b.leads - a.leads);
+
+    // Conversion funnel
+    const funnelBuckets = { visitor: 0, lead: 0, qualified: 0, consultation: 0, enrolled: 0 };
+    for (const l of (leadsAll?.data ?? []) as Array<Record<string, unknown>>) {
+      funnelBuckets.lead++;
+      const status = String(l.status ?? "");
+      if (["qualified", "consultation", "demo", "enrolled"].includes(status)) funnelBuckets.qualified++;
+      if (["consultation", "demo", "enrolled"].includes(status)) funnelBuckets.consultation++;
+      if (status === "enrolled") funnelBuckets.enrolled++;
+    }
+
+    // Scholarship impact
+    let scholarshipGiven = 0;
+    let scholarshipPipelineRevenue = 0;
+    let scholarshipCount = 0;
+    for (const d of decisions) {
+      const sp = Number(d.scholarship_pct ?? 0);
+      if (sp > 0) {
+        scholarshipCount++;
+        scholarshipGiven += sp;
+        scholarshipPipelineRevenue += Number(d.expected_revenue ?? 0) * (Number(d.probability_pct ?? 0) / 100);
+      }
+    }
+    const avgScholarship = scholarshipCount ? Math.round((scholarshipGiven / scholarshipCount) * 10) / 10 : 0;
+
+    // Best counsellors
+    const bestCounsellors = ((counsellorsRes?.data ?? []) as Array<Record<string, unknown>>).map((c) => ({
+      user_id: c.user_id,
+      name: c.display_name,
+      conversion_rate: Number(c.conversion_rate ?? 0),
+      avg_response_seconds: Number(c.avg_response_seconds ?? 0),
+      workload: Number(c.current_workload ?? 0),
+    }));
+
+    const admissions30 = (enrolls30 as unknown as { count: number | null })?.count ?? 0;
+    const admissions90 = (enrolls90 as unknown as { count: number | null })?.count ?? 0;
+
+    return {
+      revenue: {
+        forecast_today: forecast ? Number((forecast.breakdown as Record<string, unknown> | null)?.today ?? 0) : 0,
+        forecast_week: forecast ? Number((forecast.breakdown as Record<string, unknown> | null)?.week ?? 0) : 0,
+        forecast_month: forecast ? Number(forecast.expected_revenue ?? 0) : 0,
+        forecast_quarter: forecast ? Number((forecast.breakdown as Record<string, unknown> | null)?.quarter ?? 0) : 0,
+        avg_ticket: forecast ? Number(forecast.avg_ticket_size ?? 0) : 0,
+      },
+      admissions: {
+        last_30_days: admissions30,
+        last_90_days: admissions90,
+        predicted_month: forecast ? Number(forecast.expected_admissions ?? 0) : 0,
+        avg_enrollment_days: admissions90 > 0 ? Math.round((90 / Math.max(admissions90, 1)) * 10) / 10 : null,
+      },
+      lead_sources: leadSources,
+      best_courses: bestCourses,
+      best_counsellors: bestCounsellors,
+      funnel: funnelBuckets,
+      conversion_rate: forecast ? Number(forecast.conversion_rate ?? 0) : 0,
+      scholarship_impact: {
+        leads_with_scholarship: scholarshipCount,
+        avg_scholarship_pct: avgScholarship,
+        pipeline_revenue: Math.round(scholarshipPipelineRevenue),
+      },
+    };
+  });
