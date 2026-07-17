@@ -126,7 +126,18 @@ export function SalesAgentWidget() {
         try { window.localStorage.setItem(PHONE_KEY, "1"); } catch { /* ignore */ }
       }
     });
+    // Load OTP feature flag once — falls back to disabled on any failure.
+    void getSalesOtpConfig()
+      .then((cfg) => setOtpEnabled(Boolean(cfg?.enabled)))
+      .catch(() => setOtpEnabled(false));
   }, []);
+
+  // Resend cooldown timer for the OTP step.
+  useEffect(() => {
+    if (resendIn <= 0) return;
+    const id = window.setInterval(() => setResendIn((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => window.clearInterval(id);
+  }, [resendIn]);
 
 
   useEffect(() => {
