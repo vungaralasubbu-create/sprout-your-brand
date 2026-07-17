@@ -59,29 +59,32 @@ export function StickyActionBar() {
   return (
     <>
       {/* Desktop compact rail */}
-      <div
-        aria-hidden={!visible || hidden}
-        className={cn(
-          "pointer-events-none fixed right-6 top-24 z-40 hidden lg:block",
-          "transition-all duration-300",
-          visible && !hidden ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0",
-        )}
-      >
-        <Link
-          to={cta.to}
-          onClick={() => track("sticky_cta_clicked", { where: "desktop", to: cta.to })}
+      {!suppressDesktop && desktopCtaValid && (
+        <div
+          aria-hidden={!visible || hidden}
           className={cn(
-            "pointer-events-auto inline-flex items-center gap-2 rounded-full",
-            "border border-border/70 bg-card/95 px-4 py-2 text-xs font-semibold shadow-lg backdrop-blur",
-            "hover:-translate-y-0.5 transition-transform",
+            "pointer-events-none fixed right-6 top-24 z-40 hidden lg:block",
+            "transition-all duration-300",
+            visible && !hidden ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0",
           )}
         >
-          <span className="text-foreground">{cta.label}</span>
-          <ArrowRight className="size-3.5 text-primary" />
-        </Link>
-      </div>
+          <Link
+            to={cta.to}
+            onClick={() => track("sticky_cta_clicked", { where: "desktop", to: cta.to })}
+            className={cn(
+              "pointer-events-auto inline-flex items-center gap-2 rounded-full",
+              "border border-border/70 bg-card/95 px-4 py-2 text-xs font-semibold shadow-lg backdrop-blur",
+              "hover:-translate-y-0.5 transition-transform",
+            )}
+          >
+            <span className="text-foreground">{cta.label}</span>
+            <ArrowRight className="size-3.5 text-primary" />
+          </Link>
+        </div>
+      )}
 
       {/* Mobile bottom action bar — always visible on mobile with 2 equal buttons */}
+      {!suppressMobile && (
       <div
         aria-hidden={hidden}
         className={cn(
