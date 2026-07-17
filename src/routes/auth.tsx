@@ -11,10 +11,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
 import { reconcileRolesForCurrentUser } from "@/lib/auth/reconcile.functions";
 import { requestLoginOtp, verifyLoginOtp } from "@/lib/auth/otp.functions";
 import { trackEvent } from "@/lib/analytics/client";
+
+const TRUSTED_KEY = "glintr_trusted_emails_v1";
+function isTrustedEmail(email: string): boolean {
+  try {
+    const raw = localStorage.getItem(TRUSTED_KEY);
+    if (!raw) return false;
+    const list = JSON.parse(raw) as string[];
+    return Array.isArray(list) && list.includes(email.trim().toLowerCase());
+  } catch {
+    return false;
+  }
+}
+function markEmailTrusted(email: string) {
+  try {
+    const raw = localStorage.getItem(TRUSTED_KEY);
+    const list = raw ? (JSON.parse(raw) as string[]) : [];
+    const norm = email.trim().toLowerCase();
+    if (!list.includes(norm)) list.push(norm);
+    localStorage.setItem(TRUSTED_KEY, JSON.stringify(list));
+  } catch {}
+}
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — Glintr" }, { name: "robots", content: "noindex" }] }),
