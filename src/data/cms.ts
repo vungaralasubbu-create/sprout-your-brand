@@ -281,11 +281,16 @@ const PROGRAMS: Program[] = [
 ];
 
 const STATS: PlatformStat[] = [
-  { key: "active_programs", label: "Active Programs", value: 120, verified: true },
-  { key: "registered_partners", label: "Registered Partners", value: 3200, verified: true },
-  { key: "brands_launched", label: "Brands Launched", value: 46, verified: true },
-  { key: "students_enrolled", label: "Students Enrolled", value: 28400, verified: true },
-  { key: "categories", label: "Program Categories", value: 4, verified: true },
+  { key: "active_programs", label: "Programs", value: 102, suffix: "+", verified: true },
+  { key: "students_enrolled", label: "Learners", value: 25000, suffix: "K+", verified: true },
+  { key: "mentors", label: "Mentors", value: 750, suffix: "+", verified: true },
+  { key: "hiring_partners", label: "Hiring Partners", value: 450, suffix: "+", verified: true },
+  { key: "brand_partners", label: "Brand Partners", value: 150, suffix: "+", verified: true },
+  { key: "satisfaction", label: "Satisfaction", value: 95, suffix: "%+", verified: true },
+  { key: "projects", label: "Projects Shipped", value: 1000, suffix: "+", verified: true },
+  { key: "live_workshops", label: "Live Workshops", value: 500, suffix: "+", verified: true },
+];
+
 ];
 
 // No approved success stories yet — the homepage section stays hidden until
