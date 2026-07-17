@@ -68,7 +68,7 @@ export function ProgramCard({
   className?: string;
   compact?: boolean;
 }) {
-  const pricing = resolvePricingDisplay(course);
+  // Pricing intentionally omitted from listing cards — shown only on the course page.
 
   return (
     <Link
@@ -161,29 +161,13 @@ export function ProgramCard({
           </div>
         ) : null}
 
-        <div
-          className={cn(
-            "mt-auto flex items-end justify-between gap-3 pt-3 border-t border-border/70",
-            !pricing && "border-transparent pt-1",
-          )}
-        >
-          {pricing ? (
-            <div className="min-w-0">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                {pricing.label}
-              </div>
-              <div className="text-mono text-base font-semibold truncate">
-                {pricing.value ?? <span className="text-sm font-medium text-foreground">Enquire</span>}
-              </div>
-            </div>
-          ) : (
-            <span aria-hidden />
-          )}
-          <span className="inline-flex items-center gap-1 text-caption font-medium text-primary/90 transition-colors group-hover:text-primary">
+        <div className="mt-auto flex items-center justify-end gap-3 pt-3 border-t border-border/70">
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors group-hover:text-primary">
             <CtaLabel course={course} />
-            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
           </span>
         </div>
+
       </div>
     </Link>
   );
