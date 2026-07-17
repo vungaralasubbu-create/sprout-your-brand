@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
 import { reconcileRolesForCurrentUser } from "@/lib/auth/reconcile.functions";
-import { requestLoginOtp, verifyLoginOtp } from "@/lib/auth/otp.functions";
+import { completeOtpPasswordAuth, requestLoginOtp } from "@/lib/auth/otp.functions";
 import { trackEvent } from "@/lib/analytics/client";
 
 const TRUSTED_KEY = "glintr_trusted_emails_v1";
@@ -85,7 +85,7 @@ function AuthPage() {
   const navigate = useNavigate();
   const reconcile = useServerFn(reconcileRolesForCurrentUser);
   const sendOtp = useServerFn(requestLoginOtp);
-  const verifyOtp = useServerFn(verifyLoginOtp);
+  const completeOtpAuth = useServerFn(completeOtpPasswordAuth);
 
   const [mode, setMode] = useState<Mode>(() => {
     if (typeof window === "undefined") return "signin";
@@ -158,6 +158,15 @@ function AuthPage() {
 
   function friendlyAuthError(msg: string | undefined): string {
     const m = (msg || "").toLowerCase();
+    if (m.includes("invalid otp")) return "Invalid OTP. Check the 6-digit code and try again.";
+    if (m.includes("otp expired")) return "OTP expired. Request a new code.";
+    if (m.includes("no active otp")) return "No active OTP. Request a new code.";
+    if (m.includes("session could not be created") || m.includes("session creation")) {
+      return "OTP verified, but your session could not be created. Try Forgot password or Continue with Google if this email uses Google sign-in.";
+    }
+    if (m.includes("profile setup failed") || m.includes("profile creation")) {
+      return "You signed in, but profile setup failed. Please retry or contact support.";
+    }
     if (m.includes("invalid login") || m.includes("invalid_credentials"))
       return "Email or password doesn't match. If you signed up with Google, use “Continue with Google”. Otherwise tap “Forgot password”.";
     if (m.includes("email not confirmed")) return "Please confirm your email, then sign in again.";
@@ -290,14 +299,31 @@ function AuthPage() {
     }
     setErrors((p) => ({ ...p, code: undefined }));
     setLoading(true);
-    const v = await verifyOtp({ data: { mobile, code } });
-    if (!v.ok) {
+    const result = await completeOtpAuth({
+      data: { mobile, code, email, password, mode: mode === "signup" ? "signup" : "signin" },
+    });
+    if (!result.ok) {
       setLoading(false);
-      setErrors((p) => ({ ...p, code: v.error || "Invalid or expired code." }));
+      const message = friendlyAuthError(result.error);
+      if (result.step === "otp") {
+        setErrors((p) => ({ ...p, code: message }));
+      } else {
+        toast.error(message);
+      }
+      return;
+    }
+    const { error: setSessionError } = await supabase.auth.setSession({
+      access_token: result.session.access_token,
+      refresh_token: result.session.refresh_token,
+    });
+    if (setSessionError) {
+      setLoading(false);
+      toast.error("Session persistence failed. Please retry, or clear browser storage and sign in again.");
       return;
     }
     if (email) markEmailTrusted(email);
-    await completePasswordAuth();
+    toast.success(mode === "signup" ? "Account created" : "Signed in");
+    await routeAfterAuth(result.userId, navigate, reconcile);
     setLoading(false);
   }
 
