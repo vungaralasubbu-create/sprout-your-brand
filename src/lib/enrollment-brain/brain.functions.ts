@@ -771,8 +771,8 @@ export const getExecutiveDashboard = createServerFn({ method: "GET" })
 
     // Best counsellors
     const bestCounsellors = ((counsellorsRes?.data ?? []) as Array<Record<string, unknown>>).map((c) => ({
-      user_id: c.user_id,
-      name: c.display_name,
+      user_id: String(c.user_id ?? ""),
+      name: String(c.display_name ?? "Unnamed"),
       conversion_rate: Number(c.conversion_rate ?? 0),
       avg_response_seconds: Number(c.avg_response_seconds ?? 0),
       workload: Number(c.current_workload ?? 0),
