@@ -53,19 +53,26 @@ export function ToolShell({ tool, children, aside, aiPrompt }: ToolShellProps) {
               {aside}
               <div className="rounded-2xl border border-border bg-surface p-5">
                 <div className="flex items-center gap-2 text-caption font-semibold uppercase tracking-wide text-muted-foreground">
-                  <Sparkles className="h-4 w-4 text-primary" /> Ask Glintr AI
+                  <Sparkles className="h-4 w-4 text-primary" /> Ask GlintrAI
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Not sure how to use these results? Open the AI helper on the
-                  bottom right for a plain-language walkthrough and next-step
-                  program suggestions.
+                  Not sure how to use these results? Ask GlintrAI for a
+                  plain-language walkthrough and next-step program suggestions.
                 </p>
                 {aiPrompt ? (
                   <p className="mt-3 rounded-lg bg-background p-3 text-xs text-muted-foreground">
                     <span className="font-semibold text-foreground">Try:</span> {aiPrompt}
                   </p>
                 ) : null}
+                <button
+                  type="button"
+                  onClick={() => openGlintrAI({ prompt: aiPrompt, source: `tool:${tool.slug}` })}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-brand px-3 py-1.5 text-xs font-semibold text-primary-foreground"
+                >
+                  <Sparkles className="h-3.5 w-3.5" /> Ask GlintrAI
+                </button>
               </div>
+
 
               {(tool.relatedGlossary?.length || tool.relatedPrograms?.length || tool.relatedPaths?.length) ? (
                 <RelatedContent
