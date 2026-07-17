@@ -661,7 +661,7 @@ export function SiteHeader() {
               <Button variant="gradient" size="sm" className="cta-earn rounded-full" asChild>
                 <a href="/join">
                   <Sparkles className="size-4" />
-                  <span className="relative z-10">Start Earning 70%</span>
+                  <span className="relative z-10">{partnerEarningsCopy.cta.primary}</span>
                 </a>
               </Button>
               {session ? (
