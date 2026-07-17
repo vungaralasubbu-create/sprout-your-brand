@@ -1839,7 +1839,6 @@ export function PremiumHomepage() {
   return (
     <>
       <HeroUniverse />
-      <WhoAreYou />
       <ThreeJourneys />
       <MotionStatement />
       <EarnSpotlight />
@@ -1855,7 +1854,9 @@ export function PremiumHomepage() {
       <LearningJourney />
       <SkillsNetwork />
       <WhyGlintr />
+      <WhoAreYou />
       <MotionDivider variant="line" />
+
       <EarnWithUs />
       <RevenueStory />
       <LaunchYourBrand />
