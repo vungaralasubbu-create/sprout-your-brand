@@ -173,7 +173,10 @@ function AuthPage() {
     if (loading) return;
 
     if (mode === "recovery") {
-      if (password.length < 6) return toast.error("Password must be at least 6 characters.");
+      if (password.length < 6) {
+        setErrors({ password: "Password must be at least 6 characters." });
+        return;
+      }
       setLoading(true);
       const { error } = await supabase.auth.updateUser({ password });
       setLoading(false);
@@ -184,19 +187,34 @@ function AuthPage() {
       return;
     }
 
-    // Trusted device: skip OTP for returning sign-ins from this browser.
+    // Per-field validation (client-side, inline errors).
+    const nextErrors: typeof errors = {};
+    const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
+    if (!email.trim()) nextErrors.email = "Email is required.";
+    else if (!emailOk) nextErrors.email = "Enter a valid email address.";
+    if (!password) nextErrors.password = "Password is required.";
+    else if (password.length < 6) nextErrors.password = "Password must be at least 6 characters.";
+
+    const needsMobile = !(mode === "signin" && isTrustedEmail(email));
+    if (needsMobile) {
+      if (!mobile.trim()) nextErrors.mobile = "Mobile number is required.";
+      else if (!/^\d{10}$|^\+?\d{10,15}$/.test(mobile.trim()))
+        nextErrors.mobile = "Enter a valid 10-digit mobile number.";
+    }
+
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
+      return;
+    }
+    setErrors({});
+
+    // Trusted device: skip OTP.
     if (mode === "signin" && isTrustedEmail(email)) {
-      const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
-      if (!emailOk) return toast.error("Enter a valid email.");
-      if (password.length < 6) return toast.error("Enter your password.");
       setLoading(true);
       await completePasswordAuth();
       setLoading(false);
       return;
     }
-
-    const parsed = credsSchema.safeParse({ email, password, mobile });
-    if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
 
     setLoading(true);
     const res = await sendOtp({
@@ -205,6 +223,9 @@ function AuthPage() {
     setLoading(false);
     if (!res.ok) return toast.error(res.error);
     toast.success("OTP sent to your mobile.");
+    setOtpSentAt(Date.now());
+    setNow(Date.now());
+    setCode("");
     setStage("otp");
   }
 
@@ -212,12 +233,25 @@ function AuthPage() {
   async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (loading) return;
-    if (!/^\d{6}$/.test(code)) return toast.error("Enter the 6-digit OTP.");
+    if (!code.trim()) {
+      setErrors((p) => ({ ...p, code: "Enter the 6-digit code sent to your mobile." }));
+      return;
+    }
+    if (!/^\d{6}$/.test(code)) {
+      setErrors((p) => ({ ...p, code: "OTP must be exactly 6 digits." }));
+      return;
+    }
+    if (otpExpired) {
+      setErrors((p) => ({ ...p, code: "This code has expired. Tap Resend OTP to get a new one." }));
+      return;
+    }
+    setErrors((p) => ({ ...p, code: undefined }));
     setLoading(true);
     const v = await verifyOtp({ data: { mobile, code } });
     if (!v.ok) {
       setLoading(false);
-      return toast.error(v.error);
+      setErrors((p) => ({ ...p, code: v.error || "Invalid or expired code." }));
+      return;
     }
     if (email) markEmailTrusted(email);
     await completePasswordAuth();
@@ -233,7 +267,12 @@ function AuthPage() {
     setLoading(false);
     if (!res.ok) return toast.error(res.error);
     toast.success("New OTP sent.");
+    setOtpSentAt(Date.now());
+    setNow(Date.now());
+    setCode("");
+    setErrors((p) => ({ ...p, code: undefined }));
   }
+
 
   async function handleForgot() {
     if (!email) return toast.error("Enter your email above, then click Forgot Password.");
