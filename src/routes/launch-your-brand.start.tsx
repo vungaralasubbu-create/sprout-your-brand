@@ -383,7 +383,7 @@ function BrandBuilderWizard() {
             </div>
             <Progress value={progress} className="h-1.5" />
           </div>
-          <Badge variant="secondary" className="hidden md:inline-flex gap-1">
+          <Badge variant="muted" className="hidden md:inline-flex gap-1">
             <Sparkles className="size-3" /> AI-Powered
           </Badge>
         </div>
@@ -579,7 +579,7 @@ function Step2({
               <div className="flex items-start justify-between gap-2">
                 <span className="font-display text-lg font-bold group-hover:text-primary">{n.name}</span>
                 <Badge
-                  variant="secondary"
+                  variant="muted"
                   className={cn(
                     "text-[10px]",
                     n.tag === "Recommended" && "bg-primary/15 text-primary",
@@ -902,7 +902,7 @@ function Step8({ draft, loading, onNext }: { draft: Draft; loading: boolean; onN
           <CopyTile title="Website Menu">
             <div className="flex flex-wrap gap-2">
               {kit.menu.map((m) => (
-                <Badge key={m} variant="secondary">{m}</Badge>
+                <Badge key={m} variant="muted">{m}</Badge>
               ))}
             </div>
           </CopyTile>
