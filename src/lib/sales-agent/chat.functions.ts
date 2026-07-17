@@ -483,3 +483,89 @@ export const getSalesHistory = createServerFn({ method: "POST" })
       .limit(60);
     return { messages: msgs ?? [] };
   });
+
+// -------- Capture phone lead early (after first AI response) --------
+const CapturePhoneInput = z.object({
+  conversationId: z.string().uuid(),
+  phone: z.string().trim().min(6).max(24),
+  firstQuestion: z.string().max(2000).optional(),
+  pagePath: z.string().max(300).optional(),
+  courseSlug: z.string().max(200).optional(),
+  referralSource: z.string().max(400).optional(),
+  device: z.string().max(80).optional(),
+});
+
+export const capturePhoneLead = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => CapturePhoneInput.parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Normalize: keep leading '+' if present, strip other non-digits
+    const raw = data.phone.trim();
+    const hasPlus = raw.startsWith("+");
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length < 6 || digits.length > 15) {
+      throw new Error("Please enter a valid mobile number.");
+    }
+    const normalized = hasPlus ? `+${digits}` : digits;
+
+    const { data: conv } = await supabaseAdmin
+      .from("ai_sales_conversations")
+      .select("id,channel,contact_phone,qualification,metadata")
+      .eq("id", data.conversationId)
+      .maybeSingle();
+    if (!conv) throw new Error("Conversation not found");
+
+    const meta = ((conv.metadata as Record<string, unknown>) ?? {}) as Record<string, unknown>;
+    const nextMeta: Record<string, unknown> = {
+      ...meta,
+      phone_captured_at: new Date().toISOString(),
+      first_question: data.firstQuestion ?? meta.first_question ?? null,
+      pagePath: data.pagePath ?? meta.pagePath ?? null,
+      course_slug: data.courseSlug ?? meta.course_slug ?? null,
+      referral_source: data.referralSource ?? meta.referral_source ?? null,
+      device: data.device ?? meta.device ?? null,
+    };
+
+    await supabaseAdmin
+      .from("ai_sales_conversations")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update({ contact_phone: normalized, metadata: nextMeta } as any)
+      .eq("id", data.conversationId);
+
+    const qual = ((conv.qualification as Record<string, unknown>) ?? {}) as Record<string, unknown>;
+
+    // Upsert lead row so it appears in the CRM immediately.
+    const { data: existingLead } = await supabaseAdmin
+      .from("ai_sales_leads")
+      .select("id")
+      .eq("conversation_id", data.conversationId)
+      .maybeSingle();
+
+    const leadPatch = {
+      conversation_id: data.conversationId,
+      phone: normalized,
+      career_goal: (qual.career_goal as string) ?? data.firstQuestion ?? null,
+      score: "warm" as const,
+    };
+
+    if (existingLead?.id) {
+      await supabaseAdmin.from("ai_sales_leads").update(leadPatch).eq("id", existingLead.id);
+    } else {
+      await supabaseAdmin.from("ai_sales_leads").insert(leadPatch);
+    }
+
+    await supabaseAdmin.from("ai_sales_events").insert({
+      conversation_id: data.conversationId,
+      event_type: "phone_captured",
+      data: {
+        pagePath: data.pagePath ?? null,
+        courseSlug: data.courseSlug ?? null,
+        referralSource: data.referralSource ?? null,
+        device: data.device ?? null,
+      },
+    });
+
+    return { ok: true, phone: normalized };
+  });
+
