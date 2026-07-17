@@ -225,31 +225,13 @@ function MobileJourneyStage({
   const activeIndex = JOURNEYS.findIndex((j) => j.key === active);
   const journey = JOURNEYS[activeIndex];
   const touchStart = React.useRef<{ x: number; y: number } | null>(null);
-  const [phase, setPhase] = React.useState<"in" | "out">("in");
-  const [pendingKey, setPendingKey] = React.useState<JourneyKey | null>(null);
 
   const go = React.useCallback(
     (next: JourneyKey) => {
-      if (next === active) return;
-      if (reduced) {
-        setActive(next);
-        return;
-      }
-      setPendingKey(next);
-      setPhase("out");
+      if (next !== active) setActive(next);
     },
-    [active, reduced, setActive],
+    [active, setActive],
   );
-
-  React.useEffect(() => {
-    if (phase !== "out" || !pendingKey) return;
-    const t = setTimeout(() => {
-      setActive(pendingKey);
-      setPendingKey(null);
-      setPhase("in");
-    }, 180);
-    return () => clearTimeout(t);
-  }, [phase, pendingKey, setActive]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
