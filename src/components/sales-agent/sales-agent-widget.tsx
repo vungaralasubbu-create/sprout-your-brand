@@ -299,6 +299,63 @@ export function SalesAgentWidget() {
                 </div>
               </div>
             )}
+
+            {showPhoneCard && (
+              <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/5 via-background to-lime-400/5 p-4 shadow-sm">
+                <div className="flex items-start gap-2.5">
+                  <div className="grid place-items-center w-8 h-8 rounded-full bg-primary/15 text-primary shrink-0">
+                    <Phone className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-foreground">
+                      Let's personalize your learning journey.
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                      Enter your mobile number to continue chatting with GlintrAI and receive personalized
+                      program recommendations, counselling support and exclusive updates.
+                    </p>
+                  </div>
+                </div>
+                <form
+                  className="mt-3 flex flex-col gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void submitPhone();
+                  }}
+                >
+                  <input
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    autoFocus
+                    value={phoneInput}
+                    onChange={(e) => setPhoneInput(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                    aria-label="Mobile number"
+                    maxLength={24}
+                  />
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                      <ShieldCheck className="w-3 h-3" /> Private. Never shared.
+                    </div>
+                    <Button
+                      type="submit"
+                      size="sm"
+                      disabled={submittingPhone || phoneInput.trim().replace(/\D/g, "").length < 6}
+                    >
+                      {submittingPhone ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> Saving…
+                        </>
+                      ) : (
+                        "Continue"
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
 
           <form
@@ -315,17 +372,23 @@ export function SalesAgentWidget() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  void submit(input);
+                  if (!showPhoneCard) void submit(input);
                 }
               }}
-              placeholder="Ask GlintrAI about programs, pricing, placements, internships…"
+              placeholder={
+                showPhoneCard
+                  ? "Enter your mobile number above to continue…"
+                  : "Ask GlintrAI about programs, pricing, placements, internships…"
+              }
               rows={1}
-              className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary max-h-28"
+              disabled={showPhoneCard}
+              className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary max-h-28 disabled:opacity-60 disabled:cursor-not-allowed"
             />
-            <Button type="submit" size="sm" disabled={sending || !input.trim()}>
+            <Button type="submit" size="sm" disabled={sending || !input.trim() || showPhoneCard}>
               <Send className="w-4 h-4" />
             </Button>
           </form>
+
         </div>
       )}
     </>
