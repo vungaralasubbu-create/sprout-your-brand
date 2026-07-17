@@ -81,6 +81,21 @@ export interface SuccessStory {
   quote: string;
   verified: boolean;
   published: boolean;
+  /** Optional profile photo. When absent, the UI renders professional initials. */
+  avatar?: string;
+  /** Company name shown next to the logo. */
+  company?: string;
+  /** Company for logo resolution (SimpleIcons slug + domain fallback). */
+  companySlug?: string;
+  companyDomain?: string;
+  /** Program the learner completed. */
+  course?: string;
+  /** Star rating 1-5. Defaults to 5 when omitted. */
+  rating?: number;
+  /** Optional placement package label, e.g. "₹18 LPA". */
+  packageLabel?: string;
+  /** Optional LinkedIn profile URL. */
+  linkedin?: string;
 }
 
 export interface PartnerNetworkItem {
