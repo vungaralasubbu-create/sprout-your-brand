@@ -37,14 +37,15 @@ function ensureSessionToken(): string {
 const GREETING: UiMessage = {
   role: "assistant",
   content:
-    "Hi 👋 I'm your Glintr admissions counsellor. Before I suggest anything, tell me a little about you — **what brings you to Glintr today?** Are you looking for an internship, placement, a career switch, or just exploring AI?",
+    "Hi 👋 I'm **GlintrAI**, your admissions & career counsellor. Before I suggest anything, tell me a little about you — **what brings you to Glintr today?** Are you looking for an internship, placement, a career switch, or just exploring AI? If you'd rather speak to a human counsellor, just say so.",
   quickReplies: [
     "I need an internship certificate",
     "I want placement support",
     "I want to learn AI",
-    "I'm not sure yet",
+    "Talk to a human counsellor",
   ],
 };
+
 
 export function SalesAgentWidget() {
   const [open, setOpen] = useState(false);
@@ -159,13 +160,14 @@ export function SalesAgentWidget() {
             "bg-gradient-to-r from-primary via-primary to-lime-400 text-primary-foreground",
             "hover:-translate-y-0.5 transition-transform ring-1 ring-white/10",
           )}
-          aria-label="Talk to a Glintr counsellor"
+          aria-label="Ask GlintrAI"
         >
           <span className="grid place-items-center w-8 h-8 rounded-full bg-white/15">
             <Bot className="w-4 h-4" />
           </span>
-          <span className="text-sm font-semibold">Talk to a counsellor</span>
+          <span className="text-sm font-semibold">Ask GlintrAI</span>
         </button>
+
       )}
 
       {open && (
@@ -176,16 +178,17 @@ export function SalesAgentWidget() {
             "rounded-2xl border border-border bg-background shadow-2xl overflow-hidden flex flex-col",
           )}
           role="dialog"
-          aria-label="Glintr AI Counsellor"
+          aria-label="Ask GlintrAI"
         >
           <header className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary/90 to-lime-500/80 text-primary-foreground">
             <div className="grid place-items-center w-9 h-9 rounded-full bg-white/15">
               <Bot className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold">Glintr Counsellor</div>
-              <div className="text-[11px] opacity-80">Powered by AI · replies instantly</div>
+              <div className="text-sm font-semibold">GlintrAI · Admissions & Career Counsellor</div>
+              <div className="text-[11px] opacity-80">Instant answers · human handover anytime</div>
             </div>
+
             <button
               onClick={() => setOpen(false)}
               className="p-1.5 rounded-md hover:bg-white/10"
@@ -201,7 +204,7 @@ export function SalesAgentWidget() {
             ))}
             {sending && (
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Counsellor is typing…
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> GlintrAI is typing…
               </div>
             )}
             {handover && (
@@ -247,7 +250,7 @@ export function SalesAgentWidget() {
                   void submit(input);
                 }
               }}
-              placeholder="Ask about programs, EMI, placements…"
+              placeholder="Ask GlintrAI about programs, pricing, placements, internships…"
               rows={1}
               className="flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary max-h-28"
             />
