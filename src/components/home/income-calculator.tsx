@@ -164,7 +164,7 @@ export function IncomeCalculator() {
 
             <div className="mt-6 flex flex-col gap-2 sm:flex-row">
               <Button variant="gradient" size="md" className="flex-1" asChild>
-                <a href="/join">Start Earning</a>
+                <a href="/join">Start Earning 70%</a>
               </Button>
               <Button variant="outline" size="md" className="flex-1" asChild>
                 <a href="/#programs">Explore Programs</a>

@@ -821,7 +821,7 @@ function PartnerFlow({ card }: { card: CardDef }) {
               { label: "Weekly Payout Process", to: "/payout-system" },
               { label: "AI Sales Assistant", to: "/earn" },
               { label: model === "70" ? "70% Revenue Model" : "50% Supported Model", to: model === "70" ? "/revenue-70" : "/revenue-50" },
-              { label: "Become a Partner", to: "/earn" },
+              { label: "Earn 70%", to: "/earn" },
             ]}
           />
           <HubCta card={card} />
