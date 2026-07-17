@@ -544,8 +544,12 @@ export const capturePhoneLead = createServerFn({ method: "POST" })
       pagePath: data.pagePath ?? meta.pagePath ?? null,
       course_slug: data.courseSlug ?? meta.course_slug ?? null,
       referral_source: data.referralSource ?? meta.referral_source ?? null,
+      source_url: data.sourceUrl ?? meta.source_url ?? null,
+      browser: data.browser ?? meta.browser ?? null,
+      utm: data.utm ?? meta.utm ?? null,
       device: data.device ?? meta.device ?? null,
     };
+
 
     await supabaseAdmin
       .from("ai_sales_conversations")
