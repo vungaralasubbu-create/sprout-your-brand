@@ -47,6 +47,7 @@ import { Section, Container } from "@/components/shared/section";
 import { AnimatedCounter } from "@/components/shared/animated-counter";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { getHiringPartnersForCategory, type HiringPartner } from "@/data/hiring-partners";
+import { toolLogoUrl } from "@/data/tool-logos";
 import { cn } from "@/lib/utils";
 import { getJourney, type JourneyId } from "@/lib/visitor-journey";
 
