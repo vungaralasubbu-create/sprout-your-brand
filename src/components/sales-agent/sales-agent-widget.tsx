@@ -88,6 +88,126 @@ export function SalesAgentWidget() {
   const [resendIn, setResendIn] = useState(0);
   const [verifying, setVerifying] = useState(false);
   const [pendingLead, setPendingLead] = useState<null | (() => Promise<void>)>(null);
+
+  // Floating shell state (desktop): expanded overlay, drag position, resize size.
+  const SHELL_KEY = "glintr_ai_shell_v2";
+  const DEFAULT_SIZE = { w: 440, h: 700 };
+  const MIN_W = 380, MAX_W = 700, MIN_H = 500, MAX_H = 900;
+  const [expanded, setExpanded] = useState(false);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const [size, setSize] = useState<{ w: number; h: number }>(DEFAULT_SIZE);
+  const [isMobile, setIsMobile] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+  const resizeRef = useRef<{ sx: number; sy: number; ow: number; oh: number; mode: "e" | "s" | "se" } | null>(null);
+
+  // Hydrate persisted shell state
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+    const mq = window.matchMedia("(max-width: 767px)");
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener?.("change", onChange);
+    try {
+      const raw = window.localStorage.getItem(SHELL_KEY);
+      if (raw) {
+        const s = JSON.parse(raw) as { pos?: { x: number; y: number }; size?: { w: number; h: number }; expanded?: boolean };
+        if (s.pos) setPos(s.pos);
+        if (s.size) setSize({
+          w: Math.min(MAX_W, Math.max(MIN_W, s.size.w)),
+          h: Math.min(MAX_H, Math.max(MIN_H, s.size.h)),
+        });
+        if (typeof s.expanded === "boolean") setExpanded(s.expanded);
+      }
+    } catch { /* ignore */ }
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(SHELL_KEY, JSON.stringify({ pos, size, expanded }));
+    } catch { /* ignore */ }
+  }, [pos, size, expanded]);
+
+  // ESC closes when expanded, otherwise minimizes.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        if (expanded) setExpanded(false);
+        else setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, expanded]);
+
+  const clampPos = useCallback((x: number, y: number, w: number, h: number) => {
+    if (typeof window === "undefined") return { x, y };
+    const maxX = Math.max(0, window.innerWidth - w - 8);
+    const maxY = Math.max(0, window.innerHeight - h - 8);
+    return { x: Math.min(Math.max(8, x), maxX), y: Math.min(Math.max(8, y), maxY) };
+  }, []);
+
+  const onDragPointerDown = useCallback((e: React.PointerEvent) => {
+    if (expanded || isMobile) return;
+    if ((e.target as HTMLElement).closest("button")) return;
+    const rect = shellRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    dragRef.current = { sx: e.clientX, sy: e.clientY, ox: rect.left, oy: rect.top };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }, [expanded, isMobile]);
+
+  const onDragPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    const { sx, sy, ox, oy } = dragRef.current;
+    const nx = ox + (e.clientX - sx);
+    const ny = oy + (e.clientY - sy);
+    setPos(clampPos(nx, ny, size.w, size.h));
+  }, [clampPos, size.w, size.h]);
+
+  const onDragPointerUp = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    dragRef.current = null;
+    try { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); } catch { /* ignore */ }
+    // Snap to edges when close
+    setPos((p) => {
+      if (!p || typeof window === "undefined") return p;
+      const snap = 40;
+      let { x, y } = p;
+      if (x < snap) x = 16;
+      else if (x + size.w > window.innerWidth - snap) x = window.innerWidth - size.w - 16;
+      if (y < snap) y = 16;
+      else if (y + size.h > window.innerHeight - snap) y = window.innerHeight - size.h - 16;
+      return { x, y };
+    });
+  }, [size.w, size.h]);
+
+  const startResize = useCallback((mode: "e" | "s" | "se") => (e: React.PointerEvent) => {
+    if (expanded || isMobile) return;
+    e.stopPropagation();
+    resizeRef.current = { sx: e.clientX, sy: e.clientY, ow: size.w, oh: size.h, mode };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }, [expanded, isMobile, size.w, size.h]);
+
+  const onResizeMove = useCallback((e: React.PointerEvent) => {
+    if (!resizeRef.current) return;
+    const { sx, sy, ow, oh, mode } = resizeRef.current;
+    let nw = ow, nh = oh;
+    if (mode === "e" || mode === "se") nw = ow + (e.clientX - sx);
+    if (mode === "s" || mode === "se") nh = oh + (e.clientY - sy);
+    nw = Math.min(MAX_W, Math.max(MIN_W, nw));
+    nh = Math.min(MAX_H, Math.max(MIN_H, nh));
+    setSize({ w: nw, h: nh });
+  }, []);
+
+  const endResize = useCallback((e: React.PointerEvent) => {
+    if (!resizeRef.current) return;
+    resizeRef.current = null;
+    try { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); } catch { /* ignore */ }
+  }, []);
+
   const routerState = useRouterState();
   const path = routerState.location.pathname;
 
