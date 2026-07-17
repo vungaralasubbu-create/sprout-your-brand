@@ -528,7 +528,7 @@ export function SiteHeader() {
                   <a href="/student/programs" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><BookOpen className="size-4"/>My Courses</a>
                   <a href="/student/certificates" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><Award className="size-4"/>Certificates</a>
                   <a href="/student/projects" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><FolderKanban className="size-4"/>Projects</a>
-                  <a href="/student/settings" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><Settings className="size-4"/>Settings</a>
+                  <a href="/student/profile" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><Settings className="size-4"/>Settings</a>
                 </div>
               </>
             ) : (
