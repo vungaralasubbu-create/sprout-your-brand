@@ -247,6 +247,7 @@ import { Route as AuthenticatedAdminLeadIntelligenceRouteImport } from './routes
 import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
 import { Route as AuthenticatedAdminExecutionRouteImport } from './routes/_authenticated/admin.execution'
+import { Route as AuthenticatedAdminEnrollmentBrainRouteImport } from './routes/_authenticated/admin.enrollment-brain'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/_authenticated/admin.content-pipeline'
@@ -303,6 +304,7 @@ import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_a
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
+import { Route as ApiPublicHooksBrainTickRouteImport } from './routes/api/public/hooks/brain-tick'
 import { Route as ApiPublicAiSalesWebhookRouteImport } from './routes/api/public/ai-sales/webhook'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
@@ -1721,6 +1723,12 @@ const AuthenticatedAdminExecutionRoute =
     path: '/execution',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminEnrollmentBrainRoute =
+  AuthenticatedAdminEnrollmentBrainRouteImport.update({
+    id: '/enrollment-brain',
+    path: '/enrollment-brain',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminEmploymentSettingsRoute =
   AuthenticatedAdminEmploymentSettingsRouteImport.update({
     id: '/employment-settings',
@@ -2053,6 +2061,11 @@ const ProgramsCategoryCourseApplyRoute =
 const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   id: '/api/public/hooks/seo-ping',
   path: '/api/public/hooks/seo-ping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHooksBrainTickRoute = ApiPublicHooksBrainTickRouteImport.update({
+  id: '/api/public/hooks/brain-tick',
+  path: '/api/public/hooks/brain-tick',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicAiSalesWebhookRoute = ApiPublicAiSalesWebhookRouteImport.update({
@@ -2941,6 +2954,7 @@ export interface FileRoutesByFullPath {
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
@@ -3178,6 +3192,7 @@ export interface FileRoutesByFullPath {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
+  '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -3349,6 +3364,7 @@ export interface FileRoutesByTo {
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
@@ -3585,6 +3601,7 @@ export interface FileRoutesByTo {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
+  '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -3770,6 +3787,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
+  '/_authenticated/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/_authenticated/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
@@ -4007,6 +4025,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
+  '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -4192,6 +4211,7 @@ export interface FileRouteTypes {
     | '/admin/content-pipeline'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/enrollment-brain'
     | '/admin/execution'
     | '/admin/infrastructure'
     | '/admin/integrations'
@@ -4429,6 +4449,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/api/public/ai-sales/webhook'
+    | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -4600,6 +4621,7 @@ export interface FileRouteTypes {
     | '/admin/content-pipeline'
     | '/admin/dashboard'
     | '/admin/employment-settings'
+    | '/admin/enrollment-brain'
     | '/admin/execution'
     | '/admin/infrastructure'
     | '/admin/integrations'
@@ -4836,6 +4858,7 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/api/public/ai-sales/webhook'
+    | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -5020,6 +5043,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content-pipeline'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/employment-settings'
+    | '/_authenticated/admin/enrollment-brain'
     | '/_authenticated/admin/execution'
     | '/_authenticated/admin/infrastructure'
     | '/_authenticated/admin/integrations'
@@ -5257,6 +5281,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
     | '/api/public/ai-sales/webhook'
+    | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -5385,6 +5410,7 @@ export interface RootRouteChildren {
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   TopicsPillarIndexRoute: typeof TopicsPillarIndexRoute
   ApiPublicAiSalesWebhookRoute: typeof ApiPublicAiSalesWebhookRoute
+  ApiPublicHooksBrainTickRoute: typeof ApiPublicHooksBrainTickRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
@@ -7059,6 +7085,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminExecutionRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/enrollment-brain': {
+      id: '/_authenticated/admin/enrollment-brain'
+      path: '/enrollment-brain'
+      fullPath: '/admin/enrollment-brain'
+      preLoaderRoute: typeof AuthenticatedAdminEnrollmentBrainRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/employment-settings': {
       id: '/_authenticated/admin/employment-settings'
       path: '/employment-settings'
@@ -7449,6 +7482,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/seo-ping'
       fullPath: '/api/public/hooks/seo-ping'
       preLoaderRoute: typeof ApiPublicHooksSeoPingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/brain-tick': {
+      id: '/api/public/hooks/brain-tick'
+      path: '/api/public/hooks/brain-tick'
+      fullPath: '/api/public/hooks/brain-tick'
+      preLoaderRoute: typeof ApiPublicHooksBrainTickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/ai-sales/webhook': {
@@ -8702,6 +8742,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContentPipelineRoute: typeof AuthenticatedAdminContentPipelineRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
+  AuthenticatedAdminEnrollmentBrainRoute: typeof AuthenticatedAdminEnrollmentBrainRoute
   AuthenticatedAdminExecutionRoute: typeof AuthenticatedAdminExecutionRoute
   AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
   AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
@@ -8796,6 +8837,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
+  AuthenticatedAdminEnrollmentBrainRoute:
+    AuthenticatedAdminEnrollmentBrainRoute,
   AuthenticatedAdminExecutionRoute: AuthenticatedAdminExecutionRoute,
   AuthenticatedAdminInfrastructureRoute: AuthenticatedAdminInfrastructureRoute,
   AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
@@ -9655,6 +9698,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   TopicsPillarIndexRoute: TopicsPillarIndexRoute,
   ApiPublicAiSalesWebhookRoute: ApiPublicAiSalesWebhookRoute,
+  ApiPublicHooksBrainTickRoute: ApiPublicHooksBrainTickRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
