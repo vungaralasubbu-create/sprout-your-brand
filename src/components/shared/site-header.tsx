@@ -47,6 +47,7 @@ import { openGlintrAI } from "@/lib/glintr-ai";
 import { supabase } from "@/integrations/supabase/client";
 import { dashboardPathForRole, fetchUserRoles, primaryRole, type AppRole } from "@/lib/auth/role-redirect";
 import { cn } from "@/lib/utils";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 
 type MegaItem = {
@@ -525,16 +526,16 @@ export function SiteHeader() {
           )}
 
 
-          {/* Start Earning 70% — primary CTA */}
+          {/* Primary earn CTA (CMS-driven) */}
           <Button
             variant="gradient"
             size="sm"
             className="cta-earn hidden md:inline-flex rounded-full px-4 shadow-[0_10px_30px_-10px_oklch(0.62_0.19_245/0.55)] hover:-translate-y-px"
             asChild
           >
-            <a href="/join" aria-label="Start Earning with Glintr">
+            <a href="/join" aria-label={`${partnerEarningsCopy.cta.primary} with Glintr`}>
               <Sparkles className="size-4" />
-              <span className="relative z-10">Start Earning 70%</span>
+              <span className="relative z-10">{partnerEarningsCopy.cta.primary}</span>
             </a>
           </Button>
 
@@ -660,7 +661,7 @@ export function SiteHeader() {
               <Button variant="gradient" size="sm" className="cta-earn rounded-full" asChild>
                 <a href="/join">
                   <Sparkles className="size-4" />
-                  <span className="relative z-10">Start Earning 70%</span>
+                  <span className="relative z-10">{partnerEarningsCopy.cta.primary}</span>
                 </a>
               </Button>
               {session ? (

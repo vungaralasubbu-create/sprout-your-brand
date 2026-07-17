@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, ShoppingBag, Rocket, BookOpen } from "lucide-
 import { cn } from "@/lib/utils";
 import { Container, Section } from "@/components/shared/section";
 import { usePrefersReducedMotion } from "@/hooks/use-motion";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 /* ================================================================
  * 1. GLINTR WORLD — three dimensional environments (LEARN / EARN / LAUNCH)
@@ -102,7 +103,7 @@ export function GlintrWorld() {
             onFocus={hoverFocus}
             title="EARN"
             tagline="Sell programs and earn revenue share."
-            cta="Start Earning 70%"
+            cta={partnerEarningsCopy.cta.primary}
             href="/earn"
             hero
           >

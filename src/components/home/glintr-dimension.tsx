@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, Cpu, Code2, Wrench, Radio, Briefcase, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "@/hooks/use-motion";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 /**
  * Glintr Dimension — three spatial planes (LEARN / EARN / BUILD)
@@ -629,7 +630,7 @@ function EarnContent({ active }: { active: boolean }) {
         to="/earn"
         className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-semibold text-foreground hover:text-[color:var(--brand-azure)] transition-colors self-start"
       >
-        Start Earning 70% <ArrowUpRight className="size-3.5" />
+        {partnerEarningsCopy.cta.primary} <ArrowUpRight className="size-3.5" />
       </Link>
     </div>
   );

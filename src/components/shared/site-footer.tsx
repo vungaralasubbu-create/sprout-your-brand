@@ -5,6 +5,7 @@ import { GlintrLogo } from "@/components/shared/logo";
 import { Container } from "@/components/shared/section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 const columns: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -20,7 +21,7 @@ const columns: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Earn With Us",
     links: [
-      { label: "Earn 70%", href: "/earn" },
+      { label: partnerEarningsCopy.labels.partnerNav, href: "/earn" },
       { label: "70% Revenue Model", href: "/70-revenue-model" },
       { label: "50% Supported Model", href: "/50-supported-model" },
       { label: "Income Calculator", href: "/income-calculator" },
