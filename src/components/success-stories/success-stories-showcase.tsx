@@ -392,7 +392,7 @@ export function PremiumStoryCard({
       {/* Course badge */}
       {story.course ? (
         <div className="relative z-10 mb-4 flex flex-wrap items-center gap-1.5">
-          <Badge variant="secondary" className="rounded-full bg-primary/10 text-[10.5px] font-medium uppercase tracking-wider text-primary hover:bg-primary/15">
+          <Badge variant="info" className="rounded-full bg-primary/10 text-[10.5px] font-medium uppercase tracking-wider text-primary hover:bg-primary/15">
             {story.course}
           </Badge>
           {story.batch ? (
