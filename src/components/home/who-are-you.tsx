@@ -286,13 +286,13 @@ function JourneyTile({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border bg-card/70 backdrop-blur-md text-left",
-        "p-6 md:p-7 flex flex-col gap-4 min-h-[220px]",
+        "group relative overflow-hidden rounded-xl border bg-card/70 backdrop-blur-md text-left",
+        "p-4 md:p-4 flex flex-col gap-2 min-h-[140px] h-full",
         "transition-[transform,box-shadow,border-color,opacity] duration-300 ease-out",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         active
-          ? "border-primary shadow-xl -translate-y-[3px]"
-          : "border-border hover:-translate-y-[3px] hover:shadow-xl hover:border-border-strong",
+          ? "border-primary shadow-lg -translate-y-[2px]"
+          : "border-border hover:-translate-y-[2px] hover:shadow-lg hover:border-border-strong",
         anyActive && !active ? "opacity-70" : "opacity-100",
         col,
       )}
@@ -301,22 +301,23 @@ function JourneyTile({
       }}
     >
       <div className="flex items-center justify-between">
-        <span className="text-3xl" aria-hidden>
+        <span className="text-xl" aria-hidden>
           {card.emoji}
         </span>
-        <span className="text-mono text-[11px] text-muted-foreground">
+        <span className="text-mono text-[10px] text-muted-foreground">
           {String(index + 1).padStart(2, "0")}
         </span>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <h3 className="font-display text-xl md:text-2xl font-semibold tracking-tight">
+      <div className="flex flex-col gap-1">
+        <h3 className="font-display text-sm md:text-base font-semibold tracking-tight leading-tight">
           {card.title}
         </h3>
-        <p className="text-body text-muted-foreground line-clamp-3">
+        <p className="text-xs text-muted-foreground line-clamp-2">
           {card.description}
         </p>
       </div>
+
 
       <div className="mt-auto inline-flex items-center gap-1.5 text-sm font-medium">
         <span style={{ color: card.accent }}>{card.cta}</span>
