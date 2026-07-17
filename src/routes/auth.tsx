@@ -16,6 +16,7 @@ import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
 import { reconcileRolesForCurrentUser } from "@/lib/auth/reconcile.functions";
 import { completeOtpPasswordAuth, requestLoginOtp } from "@/lib/auth/otp.functions";
 import { trackEvent } from "@/lib/analytics/client";
+import { ENABLE_GOOGLE_AUTH } from "@/config/auth-features";
 
 const TRUSTED_KEY = "glintr_trusted_emails_v1";
 function isTrustedEmail(email: string): boolean {
