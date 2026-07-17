@@ -142,6 +142,20 @@ export function SalesAgentWidget() {
     }
   }, [conversationId, path]);
 
+  // Unified entry point: any "Ask GlintrAI" button on the site dispatches
+  // `glintr:open-ai` and lands the user in this single conversation.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onOpen = (e: Event) => {
+      const detail = (e as CustomEvent<OpenGlintrAIDetail>).detail ?? {};
+      void openAndInit();
+      if (detail.prompt) setInput((prev) => (prev ? prev : detail.prompt!));
+    };
+    window.addEventListener(GLINTR_AI_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(GLINTR_AI_OPEN_EVENT, onOpen);
+  }, [openAndInit]);
+
+
   const submit = useCallback(
     async (text: string) => {
       const value = text.trim();
