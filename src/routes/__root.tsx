@@ -18,6 +18,7 @@ import { StickyActionBar } from "@/components/shared/sticky-action-bar";
 import { AiMentor } from "@/components/mentor/ai-mentor";
 import { SmartPopup } from "@/components/shared/smart-popup";
 import { GlobalPalette } from "@/components/command-center/global-palette";
+import { SalesAgentWidget } from "@/components/sales-agent/sales-agent-widget";
 
 function NotFoundComponent() {
   return (
@@ -209,6 +210,7 @@ function RootComponent() {
       <AiMentor />
       <SmartPopup />
       <GlobalPalette />
+      <SalesAgentWidget />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );

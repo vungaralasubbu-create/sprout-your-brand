@@ -253,6 +253,7 @@ import { Route as AuthenticatedAdminArticlesRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated/admin.applications'
 import { Route as AuthenticatedAdminAiosRouteImport } from './routes/_authenticated/admin.aios'
 import { Route as AuthenticatedAdminAiSearchRouteImport } from './routes/_authenticated/admin.ai-search'
+import { Route as AuthenticatedAdminAiSalesRouteImport } from './routes/_authenticated/admin.ai-sales'
 import { Route as AuthenticatedAdminAiContentRouteImport } from './routes/_authenticated/admin.ai-content'
 import { Route as AuthenticatedAdminAiAgentsRouteImport } from './routes/_authenticated/admin.ai-agents'
 import { Route as AuthenticatedAdminAdjustmentsRouteImport } from './routes/_authenticated/admin.adjustments'
@@ -294,6 +295,7 @@ import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_a
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
+import { Route as ApiPublicAiSalesWebhookRouteImport } from './routes/api/public/ai-sales/webhook'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
 import { Route as AuthenticatedStudentProjectsIdRouteImport } from './routes/_authenticated/student.projects.$id'
@@ -1745,6 +1747,12 @@ const AuthenticatedAdminAiSearchRoute =
     path: '/ai-search',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAiSalesRoute =
+  AuthenticatedAdminAiSalesRouteImport.update({
+    id: '/ai-sales',
+    path: '/ai-sales',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAiContentRoute =
   AuthenticatedAdminAiContentRouteImport.update({
     id: '/ai-content',
@@ -1988,6 +1996,11 @@ const ProgramsCategoryCourseApplyRoute =
 const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   id: '/api/public/hooks/seo-ping',
   path: '/api/public/hooks/seo-ping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAiSalesWebhookRoute = ApiPublicAiSalesWebhookRouteImport.update({
+  id: '/api/public/ai-sales/webhook',
+  path: '/api/public/ai-sales/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedStudentSupportNewRoute =
@@ -2850,6 +2863,7 @@ export interface FileRoutesByFullPath {
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/admin/ai-sales': typeof AuthenticatedAdminAiSalesRoute
   '/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
@@ -3091,6 +3105,7 @@ export interface FileRoutesByFullPath {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -3251,6 +3266,7 @@ export interface FileRoutesByTo {
   '/admin/account': typeof AuthenticatedAdminAccountRoute
   '/admin/activity': typeof AuthenticatedAdminActivityRoute
   '/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
+  '/admin/ai-sales': typeof AuthenticatedAdminAiSalesRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
   '/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
@@ -3486,6 +3502,7 @@ export interface FileRoutesByTo {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -3656,6 +3673,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/adjustments': typeof AuthenticatedAdminAdjustmentsRoute
   '/_authenticated/admin/ai-agents': typeof AuthenticatedAdminAiAgentsRouteWithChildren
   '/_authenticated/admin/ai-content': typeof AuthenticatedAdminAiContentRouteWithChildren
+  '/_authenticated/admin/ai-sales': typeof AuthenticatedAdminAiSalesRoute
   '/_authenticated/admin/ai-search': typeof AuthenticatedAdminAiSearchRouteWithChildren
   '/_authenticated/admin/aios': typeof AuthenticatedAdminAiosRouteWithChildren
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
@@ -3897,6 +3915,7 @@ export interface FileRoutesById {
   '/_authenticated/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -4067,6 +4086,7 @@ export interface FileRouteTypes {
     | '/admin/adjustments'
     | '/admin/ai-agents'
     | '/admin/ai-content'
+    | '/admin/ai-sales'
     | '/admin/ai-search'
     | '/admin/aios'
     | '/admin/applications'
@@ -4308,6 +4328,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -4468,6 +4489,7 @@ export interface FileRouteTypes {
     | '/admin/account'
     | '/admin/activity'
     | '/admin/adjustments'
+    | '/admin/ai-sales'
     | '/admin/applications'
     | '/admin/articles'
     | '/admin/assigned-leads'
@@ -4703,6 +4725,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -4872,6 +4895,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/adjustments'
     | '/_authenticated/admin/ai-agents'
     | '/_authenticated/admin/ai-content'
+    | '/_authenticated/admin/ai-sales'
     | '/_authenticated/admin/ai-search'
     | '/_authenticated/admin/aios'
     | '/_authenticated/admin/applications'
@@ -5113,6 +5137,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/projects/$id'
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
+    | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/seo-ping'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -5240,6 +5265,7 @@ export interface RootRouteChildren {
   TopicsPillarClusterRoute: typeof TopicsPillarClusterRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   TopicsPillarIndexRoute: typeof TopicsPillarIndexRoute
+  ApiPublicAiSalesWebhookRoute: typeof ApiPublicAiSalesWebhookRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
@@ -6956,6 +6982,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAiSearchRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/ai-sales': {
+      id: '/_authenticated/admin/ai-sales'
+      path: '/ai-sales'
+      fullPath: '/admin/ai-sales'
+      preLoaderRoute: typeof AuthenticatedAdminAiSalesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/ai-content': {
       id: '/_authenticated/admin/ai-content'
       path: '/ai-content'
@@ -7241,6 +7274,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/seo-ping'
       fullPath: '/api/public/hooks/seo-ping'
       preLoaderRoute: typeof ApiPublicHooksSeoPingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/ai-sales/webhook': {
+      id: '/api/public/ai-sales/webhook'
+      path: '/api/public/ai-sales/webhook'
+      fullPath: '/api/public/ai-sales/webhook'
+      preLoaderRoute: typeof ApiPublicAiSalesWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/student/support/new': {
@@ -8465,6 +8505,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAdjustmentsRoute: typeof AuthenticatedAdminAdjustmentsRoute
   AuthenticatedAdminAiAgentsRoute: typeof AuthenticatedAdminAiAgentsRouteWithChildren
   AuthenticatedAdminAiContentRoute: typeof AuthenticatedAdminAiContentRouteWithChildren
+  AuthenticatedAdminAiSalesRoute: typeof AuthenticatedAdminAiSalesRoute
   AuthenticatedAdminAiSearchRoute: typeof AuthenticatedAdminAiSearchRouteWithChildren
   AuthenticatedAdminAiosRoute: typeof AuthenticatedAdminAiosRouteWithChildren
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
@@ -8547,6 +8588,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAiAgentsRoute: AuthenticatedAdminAiAgentsRouteWithChildren,
   AuthenticatedAdminAiContentRoute:
     AuthenticatedAdminAiContentRouteWithChildren,
+  AuthenticatedAdminAiSalesRoute: AuthenticatedAdminAiSalesRoute,
   AuthenticatedAdminAiSearchRoute: AuthenticatedAdminAiSearchRouteWithChildren,
   AuthenticatedAdminAiosRoute: AuthenticatedAdminAiosRouteWithChildren,
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
@@ -9411,6 +9453,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopicsPillarClusterRoute: TopicsPillarClusterRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   TopicsPillarIndexRoute: TopicsPillarIndexRoute,
+  ApiPublicAiSalesWebhookRoute: ApiPublicAiSalesWebhookRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
