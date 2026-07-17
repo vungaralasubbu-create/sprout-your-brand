@@ -444,7 +444,9 @@ export function SiteHeader() {
                   <DropdownMenuItem asChild><a href="/student/projects"><FolderKanban className="size-4 mr-2" />Projects</a></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild><a href="/student/profile"><Settings className="size-4 mr-2" />Settings</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><a href="/student/billing"><Wallet className="size-4 mr-2" />Billing</a></DropdownMenuItem>
                   <DropdownMenuItem asChild><a href="/student/support"><LifeBuoy className="size-4 mr-2" />Support</a></DropdownMenuItem>
+
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
                     <LogOut className="size-4 mr-2" />Logout
