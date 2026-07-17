@@ -333,7 +333,7 @@ function AuthPage() {
                       : mode === "recovery"
                       ? "Update password"
                       : mode === "signin"
-                      ? isTrustedEmail(email)
+                      ? trustedEmail
                         ? "Sign in"
                         : "Send OTP & Sign In"
                       : "Send OTP & Create account"}
