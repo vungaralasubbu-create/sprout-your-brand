@@ -123,7 +123,9 @@ export function StickyActionBar() {
           </button>
         </div>
       </div>
+      )}
     </>
+
   );
 }
 
