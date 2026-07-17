@@ -195,7 +195,7 @@ function ExecutiveDashboardPage() {
                   <div className="text-sm font-medium capitalize">{s.source.replaceAll("_", " ")}</div>
                   <div className="text-xs text-muted-foreground">{s.leads} leads · {s.converted} converted</div>
                 </div>
-                <Badge variant={s.conversion_pct > 5 ? "default" : "secondary"}>{s.conversion_pct}%</Badge>
+                <Badge variant={s.conversion_pct > 5 ? "success" : "muted"}>{s.conversion_pct}%</Badge>
               </div>
             ))}
           </div>
@@ -263,7 +263,7 @@ function ExecutiveDashboardPage() {
                         : "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant={c.workload > 20 ? "destructive" : "secondary"}>{c.workload} active</Badge>
+                      <Badge variant={c.workload > 20 ? "danger" : "muted"}>{c.workload} active</Badge>
                     </td>
                   </tr>
                 ))}
