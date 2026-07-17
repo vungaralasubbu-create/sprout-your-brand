@@ -66,6 +66,7 @@ export function StoryCard({ story }: { story: SuccessStory }) {
   const rating = story.rating ?? 5;
   const displayName = story.name?.trim() || "Glintr Learner";
   const initials = initialsFor(displayName);
+  const [imgOk, setImgOk] = React.useState<boolean>(Boolean(story.avatar));
   const brandPartner = story.company
     ? { name: story.company, slug: story.companySlug, domain: story.companyDomain }
     : null;
@@ -107,11 +108,18 @@ export function StoryCard({ story }: { story: SuccessStory }) {
       {/* Footer: avatar + identity + company logo */}
       <footer className="mt-5 flex items-center gap-3 border-t border-border/60 pt-4">
         <Avatar className="size-11 ring-2 ring-primary/10">
-          {story.avatar ? <AvatarImage src={story.avatar} alt={displayName} /> : null}
-          <AvatarFallback className="bg-gradient-to-br from-primary/15 to-accent/15 text-[13px] font-semibold text-foreground">
+          {story.avatar && imgOk ? (
+            <AvatarImage
+              src={story.avatar}
+              alt={displayName}
+              onError={() => setImgOk(false)}
+            />
+          ) : null}
+          <AvatarFallback className="bg-gradient-to-br from-primary/20 to-accent/20 text-[13px] font-semibold text-foreground">
             {initials}
           </AvatarFallback>
         </Avatar>
+
 
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-1.5 truncate font-display text-[14.5px] font-semibold">

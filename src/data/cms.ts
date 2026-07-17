@@ -310,6 +310,9 @@ const STATS: PlatformStat[] = [
 
 // Professional demo stories rendered when no live approved stories exist yet.
 // Replace via CMS once real learner stories are collected.
+const dicebear = (seed: string, bg: string) =>
+  `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(seed)}&backgroundType=gradientLinear&backgroundColor=${bg}&fontFamily=Inter&fontWeight=600&radius=50`;
+
 const STORIES: SuccessStory[] = [
   {
     id: "s-aarav",
@@ -322,6 +325,7 @@ const STORIES: SuccessStory[] = [
       "The mentors pushed me to build real projects from day one. By the time I interviewed, my portfolio was doing the talking.",
     verified: true,
     published: true,
+    avatar: dicebear("Aarav Sharma", "0284c7,0ea5e9"),
     company: "Microsoft",
     companySlug: "microsoft",
     companyDomain: "microsoft.com",
@@ -340,6 +344,7 @@ const STORIES: SuccessStory[] = [
       "Weekly design critiques and 1:1 mentor sessions changed how I think about products. I landed my first design role in 4 months.",
     verified: true,
     published: true,
+    avatar: dicebear("Priya Reddy", "db2777,f472b6"),
     company: "Swiggy",
     companySlug: "swiggy",
     companyDomain: "swiggy.com",
@@ -358,6 +363,7 @@ const STORIES: SuccessStory[] = [
       "Career coaching helped me package 3 years of hidden experience into a story that recruiters actually wanted to hear.",
     verified: true,
     published: true,
+    avatar: dicebear("Rahul Kumar", "1d4ed8,3b82f6"),
     company: "Razorpay",
     companySlug: "razorpay",
     companyDomain: "razorpay.com",
@@ -376,6 +382,7 @@ const STORIES: SuccessStory[] = [
       "The capstone project got me my first offer. I shipped a recommendation system that mirrored real production constraints.",
     verified: true,
     published: true,
+    avatar: dicebear("Sneha Patel", "7c3aed,a78bfa"),
     company: "Flipkart",
     companySlug: "flipkart",
     companyDomain: "flipkart.com",
@@ -394,6 +401,7 @@ const STORIES: SuccessStory[] = [
       "Live labs on AWS, GCP and Kubernetes gave me the muscle memory to walk into a DevOps role without hesitation.",
     verified: true,
     published: true,
+    avatar: dicebear("Akash Verma", "ea580c,fb923c"),
     company: "Amazon",
     companySlug: "amazon",
     companyDomain: "amazon.com",
@@ -412,6 +420,7 @@ const STORIES: SuccessStory[] = [
       "I ran real campaigns during the program and shipped my first attribution dashboard. That's what got me hired.",
     verified: true,
     published: true,
+    avatar: dicebear("Neha Gupta", "059669,10b981"),
     company: "Zomato",
     companySlug: "zomato",
     companyDomain: "zomato.com",
@@ -420,6 +429,7 @@ const STORIES: SuccessStory[] = [
     packageLabel: "₹12 LPA",
   },
 ];
+
 
 
 const PARTNER_NETWORK: PartnerNetworkItem[] = [

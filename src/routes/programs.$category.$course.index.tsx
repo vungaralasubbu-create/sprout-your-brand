@@ -51,6 +51,7 @@ import {
 
 import { ProjectVisual } from "@/components/course/project-visual";
 import { CoursePricingPlans } from "@/components/course/pricing-plans";
+import { SuccessStoriesSection } from "@/components/home/success-stories-section";
 
 import {
   HiringPartners,
@@ -822,6 +823,8 @@ function CoursePage() {
         counsellorCtx={counsellorCtx}
       />
 
+      {/* ============ SUCCESS STORIES ============ */}
+      <SuccessStoriesSection />
 
       {/* ============ FAQ ============ */}
       {displayFaqs.length > 0 ? (
