@@ -239,6 +239,7 @@ import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './rou
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminAuthorsRouteImport } from './routes/_authenticated/admin.authors'
+import { Route as AuthenticatedAdminAuthDiagnosticsRouteImport } from './routes/_authenticated/admin.auth-diagnostics'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
 import { Route as AuthenticatedAdminAssignedLeadsRouteImport } from './routes/_authenticated/admin.assigned-leads'
 import { Route as AuthenticatedAdminArticlesRouteImport } from './routes/_authenticated/admin.articles'
@@ -1658,6 +1659,12 @@ const AuthenticatedAdminAuthorsRoute =
     path: '/authors',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAuthDiagnosticsRoute =
+  AuthenticatedAdminAuthDiagnosticsRouteImport.update({
+    id: '/auth-diagnostics',
+    path: '/auth-diagnostics',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAttributionReviewsRoute =
   AuthenticatedAdminAttributionReviewsRouteImport.update({
     id: '/attribution-reviews',
@@ -2786,6 +2793,7 @@ export interface FileRoutesByFullPath {
   '/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
+  '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
@@ -3175,6 +3183,7 @@ export interface FileRoutesByTo {
   '/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
+  '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
@@ -3572,6 +3581,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/articles': typeof AuthenticatedAdminArticlesRoute
   '/_authenticated/admin/assigned-leads': typeof AuthenticatedAdminAssignedLeadsRoute
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
+  '/_authenticated/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/_authenticated/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
@@ -3973,6 +3983,7 @@ export interface FileRouteTypes {
     | '/admin/articles'
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
+    | '/admin/auth-diagnostics'
     | '/admin/authors'
     | '/admin/categories'
     | '/admin/content'
@@ -4362,6 +4373,7 @@ export interface FileRouteTypes {
     | '/admin/articles'
     | '/admin/assigned-leads'
     | '/admin/attribution-reviews'
+    | '/admin/auth-diagnostics'
     | '/admin/authors'
     | '/admin/categories'
     | '/admin/content-pipeline'
@@ -4758,6 +4770,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/articles'
     | '/_authenticated/admin/assigned-leads'
     | '/_authenticated/admin/attribution-reviews'
+    | '/_authenticated/admin/auth-diagnostics'
     | '/_authenticated/admin/authors'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/content'
@@ -6727,6 +6740,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAuthorsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/auth-diagnostics': {
+      id: '/_authenticated/admin/auth-diagnostics'
+      path: '/auth-diagnostics'
+      fullPath: '/admin/auth-diagnostics'
+      preLoaderRoute: typeof AuthenticatedAdminAuthDiagnosticsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/attribution-reviews': {
       id: '/_authenticated/admin/attribution-reviews'
       path: '/attribution-reviews'
@@ -8270,6 +8290,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminArticlesRoute: typeof AuthenticatedAdminArticlesRoute
   AuthenticatedAdminAssignedLeadsRoute: typeof AuthenticatedAdminAssignedLeadsRoute
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
+  AuthenticatedAdminAuthDiagnosticsRoute: typeof AuthenticatedAdminAuthDiagnosticsRoute
   AuthenticatedAdminAuthorsRoute: typeof AuthenticatedAdminAuthorsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
@@ -8351,6 +8372,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAssignedLeadsRoute: AuthenticatedAdminAssignedLeadsRoute,
   AuthenticatedAdminAttributionReviewsRoute:
     AuthenticatedAdminAttributionReviewsRoute,
+  AuthenticatedAdminAuthDiagnosticsRoute:
+    AuthenticatedAdminAuthDiagnosticsRoute,
   AuthenticatedAdminAuthorsRoute: AuthenticatedAdminAuthorsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
@@ -9205,13 +9228,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -287,7 +287,7 @@ function Metric({ label, value, icon: Icon, tone }: { label: string; value: numb
 }
 
 function StatusBadge({ status }: { status: string }) {
-  if (status === "verified") return <Badge className="bg-emerald-600 hover:bg-emerald-600">Verified</Badge>;
-  if (status === "expired") return <Badge variant="destructive">Expired</Badge>;
-  return <Badge variant="secondary">Pending</Badge>;
+  if (status === "verified") return <Badge variant="success">Verified</Badge>;
+  if (status === "expired") return <Badge variant="danger">Expired</Badge>;
+  return <Badge variant="muted">Pending</Badge>;
 }
