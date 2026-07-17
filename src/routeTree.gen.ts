@@ -242,6 +242,7 @@ import { Route as AuthenticatedAdminLeadsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminLeadOwnershipRouteImport } from './routes/_authenticated/admin.lead-ownership'
 import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_authenticated/admin.lead-monitoring'
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
+import { Route as AuthenticatedAdminLeadIntelligenceRouteImport } from './routes/_authenticated/admin.lead-intelligence'
 import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
 import { Route as AuthenticatedAdminExecutionRouteImport } from './routes/_authenticated/admin.execution'
@@ -1688,6 +1689,12 @@ const AuthenticatedAdminLeadManagementRoute =
     path: '/lead-management',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminLeadIntelligenceRoute =
+  AuthenticatedAdminLeadIntelligenceRouteImport.update({
+    id: '/lead-intelligence',
+    path: '/lead-intelligence',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminIntegrationsRoute =
   AuthenticatedAdminIntegrationsRouteImport.update({
     id: '/integrations',
@@ -2923,6 +2930,7 @@ export interface FileRoutesByFullPath {
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
+  '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
@@ -3328,6 +3336,7 @@ export interface FileRoutesByTo {
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
+  '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
@@ -3746,6 +3755,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
+  '/_authenticated/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/_authenticated/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
   '/_authenticated/admin/lead-ownership': typeof AuthenticatedAdminLeadOwnershipRoute
@@ -4165,6 +4175,7 @@ export interface FileRouteTypes {
     | '/admin/execution'
     | '/admin/infrastructure'
     | '/admin/integrations'
+    | '/admin/lead-intelligence'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
     | '/admin/lead-ownership'
@@ -4570,6 +4581,7 @@ export interface FileRouteTypes {
     | '/admin/execution'
     | '/admin/infrastructure'
     | '/admin/integrations'
+    | '/admin/lead-intelligence'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
     | '/admin/lead-ownership'
@@ -4987,6 +4999,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/execution'
     | '/_authenticated/admin/infrastructure'
     | '/_authenticated/admin/integrations'
+    | '/_authenticated/admin/lead-intelligence'
     | '/_authenticated/admin/lead-management'
     | '/_authenticated/admin/lead-monitoring'
     | '/_authenticated/admin/lead-ownership'
@@ -6985,6 +6998,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLeadManagementRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/lead-intelligence': {
+      id: '/_authenticated/admin/lead-intelligence'
+      path: '/lead-intelligence'
+      fullPath: '/admin/lead-intelligence'
+      preLoaderRoute: typeof AuthenticatedAdminLeadIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/integrations': {
       id: '/_authenticated/admin/integrations'
       path: '/integrations'
@@ -8645,6 +8665,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminExecutionRoute: typeof AuthenticatedAdminExecutionRoute
   AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
   AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
+  AuthenticatedAdminLeadIntelligenceRoute: typeof AuthenticatedAdminLeadIntelligenceRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
   AuthenticatedAdminLeadMonitoringRoute: typeof AuthenticatedAdminLeadMonitoringRoute
   AuthenticatedAdminLeadOwnershipRoute: typeof AuthenticatedAdminLeadOwnershipRoute
@@ -8738,6 +8759,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminExecutionRoute: AuthenticatedAdminExecutionRoute,
   AuthenticatedAdminInfrastructureRoute: AuthenticatedAdminInfrastructureRoute,
   AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
+  AuthenticatedAdminLeadIntelligenceRoute:
+    AuthenticatedAdminLeadIntelligenceRoute,
   AuthenticatedAdminLeadManagementRoute: AuthenticatedAdminLeadManagementRoute,
   AuthenticatedAdminLeadMonitoringRoute: AuthenticatedAdminLeadMonitoringRoute,
   AuthenticatedAdminLeadOwnershipRoute: AuthenticatedAdminLeadOwnershipRoute,

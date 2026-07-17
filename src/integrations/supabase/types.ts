@@ -8278,6 +8278,80 @@ export type Database = {
           },
         ]
       }
+      lead_score_snapshots: {
+        Row: {
+          breakdown: Json
+          category: string
+          created_at: string
+          id: string
+          lead_id: string
+          probability: number
+          reason: string | null
+          score: number
+        }
+        Insert: {
+          breakdown?: Json
+          category: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          probability?: number
+          reason?: string | null
+          score: number
+        }
+        Update: {
+          breakdown?: Json
+          category?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          probability?: number
+          reason?: string | null
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_score_snapshots_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_scoring_config: {
+        Row: {
+          automation: Json
+          created_at: string
+          id: string
+          is_active: boolean
+          thresholds: Json
+          updated_at: string
+          updated_by: string | null
+          weights: Json
+        }
+        Insert: {
+          automation?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          thresholds?: Json
+          updated_at?: string
+          updated_by?: string | null
+          weights?: Json
+        }
+        Update: {
+          automation?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          thresholds?: Json
+          updated_at?: string
+          updated_by?: string | null
+          weights?: Json
+        }
+        Relationships: []
+      }
       lesson_notes: {
         Row: {
           course_id: string
@@ -11310,33 +11384,42 @@ export type Database = {
       platform_lead_events: {
         Row: {
           created_at: string
+          duration_seconds: number | null
           event_type: string
           id: string
           lead_id: string | null
           metadata: Json
           page_path: string | null
+          session_id: string | null
           source: string | null
           variant: string | null
+          weight: number
         }
         Insert: {
           created_at?: string
+          duration_seconds?: number | null
           event_type: string
           id?: string
           lead_id?: string | null
           metadata?: Json
           page_path?: string | null
+          session_id?: string | null
           source?: string | null
           variant?: string | null
+          weight?: number
         }
         Update: {
           created_at?: string
+          duration_seconds?: number | null
           event_type?: string
           id?: string
           lead_id?: string | null
           metadata?: Json
           page_path?: string | null
+          session_id?: string | null
           source?: string | null
           variant?: string | null
+          weight?: number
         }
         Relationships: [
           {
@@ -11350,21 +11433,42 @@ export type Database = {
       }
       platform_leads: {
         Row: {
+          ai_next_action: string | null
+          ai_summary: string | null
           assigned_to: string | null
+          budget_range: string | null
+          buying_intent: string | null
           campaign: string | null
+          career_interest: string | null
+          city: string | null
+          country: string | null
           created_at: string
           current_status: string | null
+          device: string | null
           email: string | null
+          event_count: number
+          first_seen_at: string | null
           id: string
           interested_course: string | null
           ip_hash: string | null
+          last_activity_at: string | null
           metadata: Json
           name: string | null
           notes: string | null
           page_path: string | null
           phone: string | null
+          predicted_course: string | null
+          predicted_enrollment_date: string | null
+          predicted_revenue: number | null
+          preferred_timing: string | null
+          probability: number
           qualification: string | null
           referrer: string | null
+          region: string | null
+          score: number
+          score_category: string
+          score_updated_at: string | null
+          skill_level: string | null
           source: string
           source_detail: string | null
           status: string
@@ -11375,23 +11479,45 @@ export type Database = {
           utm_medium: string | null
           utm_source: string | null
           utm_term: string | null
+          visit_count: number
         }
         Insert: {
+          ai_next_action?: string | null
+          ai_summary?: string | null
           assigned_to?: string | null
+          budget_range?: string | null
+          buying_intent?: string | null
           campaign?: string | null
+          career_interest?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           current_status?: string | null
+          device?: string | null
           email?: string | null
+          event_count?: number
+          first_seen_at?: string | null
           id?: string
           interested_course?: string | null
           ip_hash?: string | null
+          last_activity_at?: string | null
           metadata?: Json
           name?: string | null
           notes?: string | null
           page_path?: string | null
           phone?: string | null
+          predicted_course?: string | null
+          predicted_enrollment_date?: string | null
+          predicted_revenue?: number | null
+          preferred_timing?: string | null
+          probability?: number
           qualification?: string | null
           referrer?: string | null
+          region?: string | null
+          score?: number
+          score_category?: string
+          score_updated_at?: string | null
+          skill_level?: string | null
           source?: string
           source_detail?: string | null
           status?: string
@@ -11402,23 +11528,45 @@ export type Database = {
           utm_medium?: string | null
           utm_source?: string | null
           utm_term?: string | null
+          visit_count?: number
         }
         Update: {
+          ai_next_action?: string | null
+          ai_summary?: string | null
           assigned_to?: string | null
+          budget_range?: string | null
+          buying_intent?: string | null
           campaign?: string | null
+          career_interest?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           current_status?: string | null
+          device?: string | null
           email?: string | null
+          event_count?: number
+          first_seen_at?: string | null
           id?: string
           interested_course?: string | null
           ip_hash?: string | null
+          last_activity_at?: string | null
           metadata?: Json
           name?: string | null
           notes?: string | null
           page_path?: string | null
           phone?: string | null
+          predicted_course?: string | null
+          predicted_enrollment_date?: string | null
+          predicted_revenue?: number | null
+          preferred_timing?: string | null
+          probability?: number
           qualification?: string | null
           referrer?: string | null
+          region?: string | null
+          score?: number
+          score_category?: string
+          score_updated_at?: string | null
+          skill_level?: string | null
           source?: string
           source_detail?: string | null
           status?: string
@@ -11429,6 +11577,7 @@ export type Database = {
           utm_medium?: string | null
           utm_source?: string | null
           utm_term?: string | null
+          visit_count?: number
         }
         Relationships: []
       }
