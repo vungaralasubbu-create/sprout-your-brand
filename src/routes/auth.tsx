@@ -499,7 +499,7 @@ function AuthPage() {
                         : "Send OTP & Sign In"
                       : "Send OTP & Create account"}
                   </Button>
-                  {mode !== "recovery" && (
+                  {mode !== "recovery" && ENABLE_GOOGLE_AUTH && (
                     <>
                       <div className="relative py-1">
                         <div className="absolute inset-0 flex items-center">
