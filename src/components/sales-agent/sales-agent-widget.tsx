@@ -549,33 +549,107 @@ export function SalesAgentWidget() {
 
       )}
 
-      {open && (
+      {open && expanded && !isMobile && (
         <div
-          className={cn(
-            "fixed z-50 bottom-4 left-4 md:bottom-6 md:left-6",
-            "w-[calc(100vw-2rem)] sm:w-[380px] max-h-[80vh]",
-            "rounded-2xl border border-border bg-background shadow-2xl overflow-hidden flex flex-col",
-          )}
+          className="fixed inset-0 z-40 bg-background/40 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setExpanded(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {open && (() => {
+        // Compute shell style per mode.
+        let style: React.CSSProperties = {};
+        let containerClass = "";
+        if (isMobile) {
+          containerClass = cn(
+            "fixed z-50 inset-x-0 bottom-0",
+            "h-[88dvh] rounded-t-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl",
+            "overflow-hidden flex flex-col animate-in slide-in-from-bottom-4 fade-in duration-200",
+          );
+        } else if (expanded) {
+          containerClass = cn(
+            "fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+            "w-[78vw] h-[82vh] max-w-[1280px]",
+            "rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl",
+            "overflow-hidden flex flex-col animate-in zoom-in-95 fade-in duration-200",
+          );
+        } else {
+          const defaultRight = 24, defaultBottom = 24;
+          if (pos) {
+            style = { left: pos.x, top: pos.y, width: size.w, height: size.h };
+          } else {
+            style = { right: defaultRight, bottom: defaultBottom, width: size.w, height: size.h };
+          }
+          containerClass = cn(
+            "fixed z-50",
+            "rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl",
+            "overflow-hidden flex flex-col animate-in zoom-in-95 fade-in duration-150",
+          );
+        }
+        return (
+        <div
+          ref={shellRef}
+          className={containerClass}
+          style={style}
           role="dialog"
           aria-label="Ask GlintrAI"
+          aria-modal={expanded ? "true" : "false"}
         >
-          <header className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary/90 to-lime-500/80 text-primary-foreground">
-            <div className="grid place-items-center w-9 h-9 rounded-full bg-white/15">
+          <header
+            onPointerDown={onDragPointerDown}
+            onPointerMove={onDragPointerMove}
+            onPointerUp={onDragPointerUp}
+            onPointerCancel={onDragPointerUp}
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary/90 to-lime-500/80 text-primary-foreground select-none",
+              !expanded && !isMobile && "cursor-grab active:cursor-grabbing",
+            )}
+          >
+            <div className="grid place-items-center w-9 h-9 rounded-full bg-white/15 shrink-0">
               <Bot className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold">GlintrAI · Admissions & Career Counsellor</div>
-              <div className="text-[11px] opacity-80">Instant answers · human handover anytime</div>
+              <div className="text-sm font-semibold truncate">GlintrAI · Admissions & Career Counsellor</div>
+              <div className="text-[11px] opacity-80 flex items-center gap-1.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-lime-300 shadow-[0_0_6px_currentColor]" />
+                Online · Instant answers
+              </div>
             </div>
 
-            <button
-              onClick={() => setOpen(false)}
-              className="p-1.5 rounded-md hover:bg-white/10"
-              aria-label="Close"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-0.5 shrink-0">
+              {!isMobile && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded((v) => !v)}
+                  className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
+                  aria-label={expanded ? "Restore size" : "Expand"}
+                  title={expanded ? "Restore" : "Expand"}
+                >
+                  {expanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => { setExpanded(false); setOpen(false); }}
+                className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
+                aria-label="Minimize"
+                title="Minimize"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => { setExpanded(false); setOpen(false); }}
+                className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
+                aria-label="Close"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </header>
+
 
           <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/30">
             {messages.map((m, i) => (
