@@ -343,7 +343,7 @@ function AuthPage() {
               <p className="text-caption mt-2">{subtitleText}</p>
 
               {stage === "creds" ? (
-                <form onSubmit={handleCredsSubmit} className="mt-6 space-y-4">
+                <form onSubmit={handleCredsSubmit} className="mt-6 space-y-4" noValidate>
                   {mode !== "recovery" && (
                     <div>
                       <Label htmlFor="email">Email</Label>
@@ -351,11 +351,17 @@ function AuthPage() {
                         id="email"
                         name="email"
                         type="email"
-                        required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="mt-2 h-11"
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? "email-error" : undefined}
+                        className={`mt-2 h-11 ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
                       />
+                      {errors.email && (
+                        <p id="email-error" role="alert" className="text-caption mt-1 text-destructive">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
                   )}
                   <div>
@@ -366,12 +372,17 @@ function AuthPage() {
                       id="password"
                       name="password"
                       type="password"
-                      required
-                      minLength={6}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="mt-2 h-11"
+                      aria-invalid={!!errors.password}
+                      aria-describedby={errors.password ? "password-error" : undefined}
+                      className={`mt-2 h-11 ${errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
                     />
+                    {errors.password && (
+                      <p id="password-error" role="alert" className="text-caption mt-1 text-destructive">
+                        {errors.password}
+                      </p>
+                    )}
                   </div>
                   {mode !== "recovery" && !(mode === "signin" && trustedEmail) && (
                     <div>
@@ -382,16 +393,24 @@ function AuthPage() {
                         type="tel"
                         inputMode="numeric"
                         placeholder="10-digit mobile"
-                        required
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
-                        className="mt-2 h-11"
+                        aria-invalid={!!errors.mobile}
+                        aria-describedby={errors.mobile ? "mobile-error" : "mobile-help"}
+                        className={`mt-2 h-11 ${errors.mobile ? "border-destructive focus-visible:ring-destructive" : ""}`}
                       />
-                      <p className="text-caption mt-1 text-muted-foreground">
-                        We'll text you a one-time code to verify.
-                      </p>
+                      {errors.mobile ? (
+                        <p id="mobile-error" role="alert" className="text-caption mt-1 text-destructive">
+                          {errors.mobile}
+                        </p>
+                      ) : (
+                        <p id="mobile-help" className="text-caption mt-1 text-muted-foreground">
+                          We'll text you a one-time code to verify.
+                        </p>
+                      )}
                     </div>
                   )}
+
 
 
                   <Button
