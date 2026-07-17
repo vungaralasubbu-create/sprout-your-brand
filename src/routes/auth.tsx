@@ -82,10 +82,44 @@ function AuthPage() {
   const [mobile, setMobile] = useState("");
   const [code, setCode] = useState("");
   const [trustedEmail, setTrustedEmail] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string; mobile?: string; code?: string }>({});
+  const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+
+  const OTP_TTL_MS = 5 * 60 * 1000;
+  const otpRemainingMs = otpSentAt ? Math.max(0, otpSentAt + OTP_TTL_MS - now) : 0;
+  const otpExpired = otpSentAt !== null && otpRemainingMs === 0;
+  const otpMMSS = (() => {
+    const s = Math.ceil(otpRemainingMs / 1000);
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}:${r.toString().padStart(2, "0")}`;
+  })();
 
   useEffect(() => {
     setTrustedEmail(isTrustedEmail(email));
+    setErrors((p) => (p.email ? { ...p, email: undefined } : p));
   }, [email]);
+
+  useEffect(() => {
+    setErrors((p) => (p.password && password.length >= 6 ? { ...p, password: undefined } : p));
+  }, [password]);
+
+  useEffect(() => {
+    setErrors((p) => (p.mobile ? { ...p, mobile: undefined } : p));
+  }, [mobile]);
+
+  useEffect(() => {
+    setErrors((p) => (p.code ? { ...p, code: undefined } : p));
+  }, [code]);
+
+  useEffect(() => {
+    if (stage !== "otp" || otpSentAt === null) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [stage, otpSentAt]);
+
+
 
 
   useEffect(() => {
@@ -139,7 +173,10 @@ function AuthPage() {
     if (loading) return;
 
     if (mode === "recovery") {
-      if (password.length < 6) return toast.error("Password must be at least 6 characters.");
+      if (password.length < 6) {
+        setErrors({ password: "Password must be at least 6 characters." });
+        return;
+      }
       setLoading(true);
       const { error } = await supabase.auth.updateUser({ password });
       setLoading(false);
@@ -150,19 +187,34 @@ function AuthPage() {
       return;
     }
 
-    // Trusted device: skip OTP for returning sign-ins from this browser.
+    // Per-field validation (client-side, inline errors).
+    const nextErrors: typeof errors = {};
+    const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
+    if (!email.trim()) nextErrors.email = "Email is required.";
+    else if (!emailOk) nextErrors.email = "Enter a valid email address.";
+    if (!password) nextErrors.password = "Password is required.";
+    else if (password.length < 6) nextErrors.password = "Password must be at least 6 characters.";
+
+    const needsMobile = !(mode === "signin" && isTrustedEmail(email));
+    if (needsMobile) {
+      if (!mobile.trim()) nextErrors.mobile = "Mobile number is required.";
+      else if (!/^\d{10}$|^\+?\d{10,15}$/.test(mobile.trim()))
+        nextErrors.mobile = "Enter a valid 10-digit mobile number.";
+    }
+
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
+      return;
+    }
+    setErrors({});
+
+    // Trusted device: skip OTP.
     if (mode === "signin" && isTrustedEmail(email)) {
-      const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
-      if (!emailOk) return toast.error("Enter a valid email.");
-      if (password.length < 6) return toast.error("Enter your password.");
       setLoading(true);
       await completePasswordAuth();
       setLoading(false);
       return;
     }
-
-    const parsed = credsSchema.safeParse({ email, password, mobile });
-    if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
 
     setLoading(true);
     const res = await sendOtp({
@@ -171,6 +223,9 @@ function AuthPage() {
     setLoading(false);
     if (!res.ok) return toast.error(res.error);
     toast.success("OTP sent to your mobile.");
+    setOtpSentAt(Date.now());
+    setNow(Date.now());
+    setCode("");
     setStage("otp");
   }
 
@@ -178,12 +233,25 @@ function AuthPage() {
   async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (loading) return;
-    if (!/^\d{6}$/.test(code)) return toast.error("Enter the 6-digit OTP.");
+    if (!code.trim()) {
+      setErrors((p) => ({ ...p, code: "Enter the 6-digit code sent to your mobile." }));
+      return;
+    }
+    if (!/^\d{6}$/.test(code)) {
+      setErrors((p) => ({ ...p, code: "OTP must be exactly 6 digits." }));
+      return;
+    }
+    if (otpExpired) {
+      setErrors((p) => ({ ...p, code: "This code has expired. Tap Resend OTP to get a new one." }));
+      return;
+    }
+    setErrors((p) => ({ ...p, code: undefined }));
     setLoading(true);
     const v = await verifyOtp({ data: { mobile, code } });
     if (!v.ok) {
       setLoading(false);
-      return toast.error(v.error);
+      setErrors((p) => ({ ...p, code: v.error || "Invalid or expired code." }));
+      return;
     }
     if (email) markEmailTrusted(email);
     await completePasswordAuth();
@@ -199,7 +267,12 @@ function AuthPage() {
     setLoading(false);
     if (!res.ok) return toast.error(res.error);
     toast.success("New OTP sent.");
+    setOtpSentAt(Date.now());
+    setNow(Date.now());
+    setCode("");
+    setErrors((p) => ({ ...p, code: undefined }));
   }
+
 
   async function handleForgot() {
     if (!email) return toast.error("Enter your email above, then click Forgot Password.");
@@ -270,7 +343,7 @@ function AuthPage() {
               <p className="text-caption mt-2">{subtitleText}</p>
 
               {stage === "creds" ? (
-                <form onSubmit={handleCredsSubmit} className="mt-6 space-y-4">
+                <form onSubmit={handleCredsSubmit} className="mt-6 space-y-4" noValidate>
                   {mode !== "recovery" && (
                     <div>
                       <Label htmlFor="email">Email</Label>
@@ -278,11 +351,17 @@ function AuthPage() {
                         id="email"
                         name="email"
                         type="email"
-                        required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="mt-2 h-11"
+                        aria-invalid={!!errors.email}
+                        aria-describedby={errors.email ? "email-error" : undefined}
+                        className={`mt-2 h-11 ${errors.email ? "border-destructive focus-visible:ring-destructive" : ""}`}
                       />
+                      {errors.email && (
+                        <p id="email-error" role="alert" className="text-caption mt-1 text-destructive">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
                   )}
                   <div>
@@ -293,12 +372,17 @@ function AuthPage() {
                       id="password"
                       name="password"
                       type="password"
-                      required
-                      minLength={6}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="mt-2 h-11"
+                      aria-invalid={!!errors.password}
+                      aria-describedby={errors.password ? "password-error" : undefined}
+                      className={`mt-2 h-11 ${errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
                     />
+                    {errors.password && (
+                      <p id="password-error" role="alert" className="text-caption mt-1 text-destructive">
+                        {errors.password}
+                      </p>
+                    )}
                   </div>
                   {mode !== "recovery" && !(mode === "signin" && trustedEmail) && (
                     <div>
@@ -309,16 +393,24 @@ function AuthPage() {
                         type="tel"
                         inputMode="numeric"
                         placeholder="10-digit mobile"
-                        required
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
-                        className="mt-2 h-11"
+                        aria-invalid={!!errors.mobile}
+                        aria-describedby={errors.mobile ? "mobile-error" : "mobile-help"}
+                        className={`mt-2 h-11 ${errors.mobile ? "border-destructive focus-visible:ring-destructive" : ""}`}
                       />
-                      <p className="text-caption mt-1 text-muted-foreground">
-                        We'll text you a one-time code to verify.
-                      </p>
+                      {errors.mobile ? (
+                        <p id="mobile-error" role="alert" className="text-caption mt-1 text-destructive">
+                          {errors.mobile}
+                        </p>
+                      ) : (
+                        <p id="mobile-help" className="text-caption mt-1 text-muted-foreground">
+                          We'll text you a one-time code to verify.
+                        </p>
+                      )}
                     </div>
                   )}
+
 
 
                   <Button
@@ -376,9 +468,19 @@ function AuthPage() {
                   )}
                 </form>
               ) : (
-                <form onSubmit={handleOtpSubmit} className="mt-6 space-y-4">
+                <form onSubmit={handleOtpSubmit} className="mt-6 space-y-4" noValidate>
                   <div>
-                    <Label htmlFor="code">6-digit OTP</Label>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="code">6-digit OTP</Label>
+                      {otpSentAt !== null && (
+                        <span
+                          className={`text-caption ${otpExpired ? "text-destructive" : "text-muted-foreground"}`}
+                          aria-live="polite"
+                        >
+                          {otpExpired ? "Code expired" : `Expires in ${otpMMSS}`}
+                        </span>
+                      )}
+                    </div>
                     <Input
                       id="code"
                       name="code"
@@ -386,18 +488,26 @@ function AuthPage() {
                       inputMode="numeric"
                       autoComplete="one-time-code"
                       maxLength={6}
-                      required
                       value={code}
                       onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                      className="mt-2 h-11 tracking-[0.5em] text-center text-lg"
+                      aria-invalid={!!errors.code}
+                      aria-describedby={errors.code ? "code-error" : undefined}
+                      className={`mt-2 h-11 tracking-[0.5em] text-center text-lg ${
+                        errors.code || otpExpired ? "border-destructive focus-visible:ring-destructive" : ""
+                      }`}
                     />
+                    {errors.code && (
+                      <p id="code-error" role="alert" className="text-caption mt-1 text-destructive">
+                        {errors.code}
+                      </p>
+                    )}
                   </div>
                   <Button
                     type="submit"
                     size="lg"
                     variant="gradient"
                     className="w-full"
-                    disabled={loading}
+                    disabled={loading || otpExpired}
                   >
                     {loading ? "Verifying…" : mode === "signup" ? "Verify & Create account" : "Verify & Sign In"}
                   </Button>
@@ -416,12 +526,14 @@ function AuthPage() {
                       onClick={() => {
                         setStage("creds");
                         setCode("");
+                        setErrors((p) => ({ ...p, code: undefined }));
                       }}
                     >
                       ← Change details
                     </button>
                   </div>
                 </form>
+
               )}
 
               {stage === "creds" && mode !== "recovery" && (
