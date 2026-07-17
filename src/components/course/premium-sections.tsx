@@ -75,7 +75,7 @@ export function HiringPartners({
   }, [partners, categorySlug]);
 
   return (
-    <Section data-reveal className="py-14 lg:py-20 border-y bg-surface-1/40">
+    <Section data-reveal className="py-8 lg:py-20 border-y bg-surface-1/40">
       <Container>
         <div className="max-w-2xl mb-8 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">
@@ -434,13 +434,13 @@ export function PortfolioProjects({ projects }: { projects?: PortfolioItem[] } =
 
 function PortfolioProjectsInner({ list }: { list: PortfolioItem[] }) {
   return (
-    <Section data-reveal className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
+    <Section data-reveal className="relative overflow-hidden py-10 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
       <div
         aria-hidden
         className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.28),transparent_55%)]"
       />
       <Container className="relative">
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
             Portfolio Projects
           </span>
@@ -500,9 +500,9 @@ export function CareerRoadmap({ stages }: { stages?: RoadmapStage[] } = {}) {
   const list = stages && stages.length > 0 ? stages : CAREER_ROADMAP;
   const cols = list.length >= 6 ? "lg:grid-cols-4" : "lg:grid-cols-4";
   return (
-    <Section data-reveal className="py-14 lg:py-20">
+    <Section data-reveal className="py-8 lg:py-20">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Career Roadmap</span>
           <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             Where this program can take you.
@@ -557,9 +557,9 @@ export function SalaryGrowth({ stages }: { stages?: SalaryStage[] } = {}) {
   const list = stages && stages.length > 0 ? stages : SALARY_STAGES;
   const max = Math.max(...list.map((s) => s.high), 40);
   return (
-    <Section data-reveal className="py-14 lg:py-20 bg-surface-1/50 border-y">
+    <Section data-reveal className="py-8 lg:py-20 bg-surface-1/50 border-y">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Salary Growth</span>
           <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             How compensation grows over your career.
@@ -621,9 +621,9 @@ const CAREER_SERVICES = [
 
 export function CareerServices() {
   return (
-    <Section data-reveal className="py-14 lg:py-20">
+    <Section data-reveal className="py-8 lg:py-20">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Career Services</span>
           <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             Full-stack career support.
@@ -672,9 +672,9 @@ const CERT_ITEMS: Array<{ title: string; note: string; icon: React.ComponentType
 
 export function CertificationBadges() {
   return (
-    <Section data-reveal className="py-14 lg:py-20 bg-surface-2/40 border-y">
+    <Section data-reveal className="py-8 lg:py-20 bg-surface-2/40 border-y">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Certifications</span>
           <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             Six credentials, one career-ready profile.
@@ -823,9 +823,9 @@ type AIToolItem = { name: string; use: string; icon: React.ComponentType<{ class
 export function AIToolsUsage({ items, title, description }: { items?: AIToolItem[]; title?: string; description?: string } = {}) {
   const list = items && items.length > 0 ? items : AI_TOOLS_USAGE;
   return (
-    <Section data-reveal className="py-14 lg:py-20">
+    <Section data-reveal className="py-8 lg:py-20">
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           <span className="text-caption font-mono uppercase tracking-widest text-primary">Productivity in Your Workflow</span>
           <h2 className="mt-3 text-heading-xl lg:text-display-sm font-display font-semibold tracking-tight text-balance">
             {title ?? "How students use these tools every week."}
@@ -944,7 +944,7 @@ export function ProgramPersonalization() {
   if (!content) return null;
 
   return (
-    <Section data-reveal className="py-14 lg:py-20 bg-gradient-to-b from-primary/[0.03] to-transparent">
+    <Section data-reveal className="py-8 lg:py-20 bg-gradient-to-b from-primary/[0.03] to-transparent">
       <Container>
         <div className="rounded-3xl border border-primary/25 bg-white shadow-sm overflow-hidden">
           <div className="grid gap-6 lg:gap-10 p-6 lg:p-10 lg:grid-cols-[1fr_1.4fr] items-start">

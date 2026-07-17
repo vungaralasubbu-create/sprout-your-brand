@@ -295,7 +295,7 @@ function CoursePage() {
   return (
     <PageShell>
       {/* ============ HERO ============ */}
-      <Section className="pt-10 pb-16 lg:pt-14 lg:pb-24 relative overflow-hidden">
+      <Section className="pt-6 pb-10 lg:pt-14 lg:pb-24 relative overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/[0.05] via-transparent to-transparent"
@@ -427,7 +427,7 @@ function CoursePage() {
       </Section>
 
 
-      <Section data-reveal className="relative overflow-hidden py-20 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
+      <Section data-reveal className="relative overflow-hidden py-12 lg:py-28 bg-[oklch(0.16_0.04_255)] text-white">
         <div
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.35),transparent_55%),radial-gradient(ellipse_at_bottom_right,oklch(0.7_0.15_180/0.22),transparent_60%)]"
@@ -491,7 +491,7 @@ function CoursePage() {
       <StudentLearningJourney />
 
       {/* ============ LEARNING JOURNEY ============ */}
-      <Section data-reveal className="py-16 lg:py-24 bg-surface-2/40 border-y">
+      <Section data-reveal className="py-10 lg:py-24 bg-surface-2/40 border-y">
         <Container>
           <Reveal>
             <div className="max-w-2xl mb-12">
@@ -518,7 +518,7 @@ function CoursePage() {
 
       {/* ============ WHY THIS PROGRAM ============ */}
       {showWhySection ? (
-        <Section data-reveal className="py-14 lg:py-20">
+        <Section data-reveal className="py-8 lg:py-20">
           <Container>
             <div className="grid lg:grid-cols-[0.4fr_1fr] gap-10 lg:gap-16">
               <div>
@@ -572,7 +572,7 @@ function CoursePage() {
 
       {/* ============ SKILLS MARQUEE ============ */}
       {c.skills.length > 0 ? (
-        <Section data-reveal className="py-14 lg:py-20 border-y bg-surface-1">
+        <Section data-reveal className="py-8 lg:py-20 border-y bg-surface-1">
           <Container>
             <Reveal>
               <div className="max-w-2xl mb-8">
@@ -591,9 +591,9 @@ function CoursePage() {
 
       {/* ============ TOOLS ============ */}
       {c.tools.length > 0 ? (
-        <Section className="pt-14 pb-6 lg:pt-20 lg:pb-10">
+        <Section className="pt-8 pb-4 lg:pt-20 lg:pb-10">
           <Container>
-            <div className="max-w-2xl mb-10">
+            <div className="max-w-2xl mb-6 lg:mb-10">
               <span className="text-caption font-mono uppercase tracking-widest text-primary">
                 Toolkit
               </span>
@@ -628,14 +628,14 @@ function CoursePage() {
 
       {/* ============ PROJECTS SLIDER (dark) ============ */}
       {c.projects.length > 0 ? (
-        <Section data-reveal className="relative overflow-hidden py-16 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
+        <Section data-reveal className="relative overflow-hidden py-10 lg:py-24 bg-[oklch(0.14_0.04_255)] text-white">
           <div
             aria-hidden
             className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,oklch(0.55_0.18_220/0.28),transparent_55%)]"
           />
           <Container className="relative">
             <Reveal>
-              <div className="max-w-2xl mb-10">
+              <div className="max-w-2xl mb-6 lg:mb-10">
                 <span className="text-caption font-mono uppercase tracking-widest text-[oklch(0.85_0.15_200)]">
                   Projects
                 </span>
@@ -658,7 +658,7 @@ function CoursePage() {
       <CourseReviewsSection courseId={c.id} />
 
       {/* ============ VISUAL BREAK ============ */}
-      <Section data-reveal className="relative overflow-hidden py-20 lg:py-28 text-white">
+      <Section data-reveal className="relative overflow-hidden py-12 lg:py-28 text-white">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[linear-gradient(120deg,oklch(0.28_0.14_255),oklch(0.42_0.16_220),oklch(0.55_0.15_195))] bg-[length:200%_200%] animate-[gradient-shift_14s_ease-in-out_infinite]"
@@ -686,7 +686,7 @@ function CoursePage() {
 
 
       {/* ============ CERTIFICATION (dynamic, course-specific) ============ */}
-      <Section data-reveal className="relative overflow-hidden py-20 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
+      <Section data-reveal className="relative overflow-hidden py-12 lg:py-28 bg-gradient-to-br from-[oklch(0.97_0.02_220)] via-white to-[oklch(0.98_0.015_200)]">
         <div
           aria-hidden
           className="absolute -top-32 -right-32 size-[420px] rounded-full bg-primary/10 blur-[110px]"
@@ -1283,10 +1283,10 @@ function SectionBlock({
 }) {
   return (
     <Section
-      className={cn("py-14 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "", className)}
+      className={cn("py-8 lg:py-20", tone === "soft" ? "bg-surface-2/40 border-y" : "", className)}
     >
       <Container>
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-6 lg:mb-10">
           {eyebrow ? (
             <span className="text-caption font-mono uppercase tracking-widest text-primary">
               {eyebrow}
