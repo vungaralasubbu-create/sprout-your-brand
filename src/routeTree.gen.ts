@@ -180,6 +180,7 @@ import { Route as AuthenticatedPartnerAiAssistantRouteImport } from './routes/_a
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
 import { Route as AuthenticatedPartnerAcademyBuilderRouteImport } from './routes/_authenticated/partner.academy-builder'
+import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
 import { Route as AuthenticatedBrandWebsiteRouteImport } from './routes/_authenticated/brand.website'
@@ -1324,6 +1325,12 @@ const AuthenticatedPartnerAcademyBuilderRoute =
     id: '/academy-builder',
     path: '/academy-builder',
     getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedCounsellorCopilotRoute =
+  AuthenticatedCounsellorCopilotRouteImport.update({
+    id: '/counsellor/copilot',
+    path: '/counsellor/copilot',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCampusAmbassadorStatusRoute =
   AuthenticatedCampusAmbassadorStatusRouteImport.update({
@@ -2993,6 +3000,7 @@ export interface FileRoutesByFullPath {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3398,6 +3406,7 @@ export interface FileRoutesByTo {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3818,6 +3827,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRoute
   '/_authenticated/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -4238,6 +4248,7 @@ export interface FileRouteTypes {
     | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
+    | '/counsellor/copilot'
     | '/partner/academy-builder'
     | '/partner/account'
     | '/partner/add-leads'
@@ -4643,6 +4654,7 @@ export interface FileRouteTypes {
     | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
+    | '/counsellor/copilot'
     | '/partner/academy-builder'
     | '/partner/account'
     | '/partner/add-leads'
@@ -5062,6 +5074,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/website'
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
+    | '/_authenticated/counsellor/copilot'
     | '/_authenticated/partner/academy-builder'
     | '/_authenticated/partner/account'
     | '/_authenticated/partner/add-leads'
@@ -6563,6 +6576,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner/academy-builder'
       preLoaderRoute: typeof AuthenticatedPartnerAcademyBuilderRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/counsellor/copilot': {
+      id: '/_authenticated/counsellor/copilot'
+      path: '/counsellor/copilot'
+      fullPath: '/counsellor/copilot'
+      preLoaderRoute: typeof AuthenticatedCounsellorCopilotRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/campus-ambassador/status': {
       id: '/_authenticated/campus-ambassador/status'
@@ -9241,6 +9261,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
   AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
+  AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -9254,6 +9275,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCampusAmbassadorApplyRoute,
   AuthenticatedCampusAmbassadorStatusRoute:
     AuthenticatedCampusAmbassadorStatusRoute,
+  AuthenticatedCounsellorCopilotRoute: AuthenticatedCounsellorCopilotRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
