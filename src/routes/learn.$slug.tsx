@@ -1,3 +1,4 @@
+import { openGlintrAI } from "@/lib/glintr-ai";
 import * as React from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Bookmark, BookmarkCheck, Clock, Sparkles } from "lucide-react";
