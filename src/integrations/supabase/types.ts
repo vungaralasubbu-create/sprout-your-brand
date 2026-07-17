@@ -3382,6 +3382,97 @@ export type Database = {
         }
         Relationships: []
       }
+      batch_enrollments: {
+        Row: {
+          active: boolean
+          batch_id: string
+          enrolled_at: string
+          id: string
+          student_user_id: string
+        }
+        Insert: {
+          active?: boolean
+          batch_id: string
+          enrolled_at?: string
+          id?: string
+          student_user_id: string
+        }
+        Update: {
+          active?: boolean
+          batch_id?: string
+          enrolled_at?: string
+          id?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_enrollments_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      batches: {
+        Row: {
+          capacity: number | null
+          cohort_end_date: string | null
+          cohort_start_date: string | null
+          course_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          metadata: Json
+          name: string
+          schedule_summary: string | null
+          slug: string
+          status: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number | null
+          cohort_end_date?: string | null
+          cohort_start_date?: string | null
+          course_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          name: string
+          schedule_summary?: string | null
+          slug: string
+          status?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number | null
+          cohort_end_date?: string | null
+          cohort_start_date?: string | null
+          course_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metadata?: Json
+          name?: string
+          schedule_summary?: string | null
+          slug?: string
+          status?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batches_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       benefit_types: {
         Row: {
           code: string
@@ -8302,71 +8393,280 @@ export type Database = {
           },
         ]
       }
+      live_class_ai_outputs: {
+        Row: {
+          assignments: Json | null
+          generated_at: string
+          generated_by: string | null
+          id: string
+          important_topics: Json | null
+          interview_questions: Json | null
+          key_notes: Json | null
+          next_module_recommendation: Json | null
+          quiz: Json | null
+          session_id: string
+          summary: string | null
+          transcript: string | null
+        }
+        Insert: {
+          assignments?: Json | null
+          generated_at?: string
+          generated_by?: string | null
+          id?: string
+          important_topics?: Json | null
+          interview_questions?: Json | null
+          key_notes?: Json | null
+          next_module_recommendation?: Json | null
+          quiz?: Json | null
+          session_id: string
+          summary?: string | null
+          transcript?: string | null
+        }
+        Update: {
+          assignments?: Json | null
+          generated_at?: string
+          generated_by?: string | null
+          id?: string
+          important_topics?: Json | null
+          interview_questions?: Json | null
+          key_notes?: Json | null
+          next_module_recommendation?: Json | null
+          quiz?: Json | null
+          session_id?: string
+          summary?: string | null
+          transcript?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_class_ai_outputs_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: true
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_class_notifications: {
+        Row: {
+          channel: string
+          created_at: string
+          delivered_at: string | null
+          event: string
+          id: string
+          payload: Json
+          scheduled_for: string
+          session_id: string
+          status: string
+          student_user_id: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          delivered_at?: string | null
+          event: string
+          id?: string
+          payload?: Json
+          scheduled_for: string
+          session_id: string
+          status?: string
+          student_user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          delivered_at?: string | null
+          event?: string
+          id?: string
+          payload?: Json
+          scheduled_for?: string
+          session_id?: string
+          status?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_class_notifications_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      live_class_providers: {
+        Row: {
+          account_email: string | null
+          account_id: string | null
+          account_name: string | null
+          connected_at: string | null
+          connected_by: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_connected: boolean
+          last_error: string | null
+          metadata: Json
+          provider: string
+          scopes: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          account_email?: string | null
+          account_id?: string | null
+          account_name?: string | null
+          connected_at?: string | null
+          connected_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_connected?: boolean
+          last_error?: string | null
+          metadata?: Json
+          provider: string
+          scopes?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          account_email?: string | null
+          account_id?: string | null
+          account_name?: string | null
+          connected_at?: string | null
+          connected_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_connected?: boolean
+          last_error?: string | null
+          metadata?: Json
+          provider?: string
+          scopes?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       live_sessions: {
         Row: {
+          agenda: string | null
+          batch_id: string | null
+          breakout_rooms: boolean
           cancellation_note: string | null
-          course_id: string
+          chat_enabled: boolean
+          course_id: string | null
           created_at: string
           created_by: string | null
           description: string | null
           duration_minutes: number
+          host_url: string | null
           id: string
+          instructor_notes: string | null
           is_published: boolean
+          is_recurring: boolean
+          is_webinar: boolean
           join_window_minutes: number
           learning_topics: string[]
+          max_participants: number | null
           meeting_url: string | null
           mentor_id: string | null
           module_id: string | null
+          passcode: string | null
           previous_scheduled_at: string | null
+          provider: string
+          provider_meeting_id: string | null
+          recording_enabled: boolean
           recording_url: string | null
+          recurrence: Json | null
+          require_registration: boolean
           scheduled_at: string
           status: Database["public"]["Enums"]["live_session_status"]
+          timezone: string
           title: string
           updated_at: string
+          waiting_room: boolean
         }
         Insert: {
+          agenda?: string | null
+          batch_id?: string | null
+          breakout_rooms?: boolean
           cancellation_note?: string | null
-          course_id: string
+          chat_enabled?: boolean
+          course_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           duration_minutes?: number
+          host_url?: string | null
           id?: string
+          instructor_notes?: string | null
           is_published?: boolean
+          is_recurring?: boolean
+          is_webinar?: boolean
           join_window_minutes?: number
           learning_topics?: string[]
+          max_participants?: number | null
           meeting_url?: string | null
           mentor_id?: string | null
           module_id?: string | null
+          passcode?: string | null
           previous_scheduled_at?: string | null
+          provider?: string
+          provider_meeting_id?: string | null
+          recording_enabled?: boolean
           recording_url?: string | null
+          recurrence?: Json | null
+          require_registration?: boolean
           scheduled_at: string
           status?: Database["public"]["Enums"]["live_session_status"]
+          timezone?: string
           title: string
           updated_at?: string
+          waiting_room?: boolean
         }
         Update: {
+          agenda?: string | null
+          batch_id?: string | null
+          breakout_rooms?: boolean
           cancellation_note?: string | null
-          course_id?: string
+          chat_enabled?: boolean
+          course_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           duration_minutes?: number
+          host_url?: string | null
           id?: string
+          instructor_notes?: string | null
           is_published?: boolean
+          is_recurring?: boolean
+          is_webinar?: boolean
           join_window_minutes?: number
           learning_topics?: string[]
+          max_participants?: number | null
           meeting_url?: string | null
           mentor_id?: string | null
           module_id?: string | null
+          passcode?: string | null
           previous_scheduled_at?: string | null
+          provider?: string
+          provider_meeting_id?: string | null
+          recording_enabled?: boolean
           recording_url?: string | null
+          recurrence?: Json | null
+          require_registration?: boolean
           scheduled_at?: string
           status?: Database["public"]["Enums"]["live_session_status"]
+          timezone?: string
           title?: string
           updated_at?: string
+          waiting_room?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "live_sessions_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "live_sessions_course_id_fkey"
             columns: ["course_id"]
