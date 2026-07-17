@@ -34,9 +34,9 @@ export const Route = createFileRoute("/earn")({
       {
         name: "description",
         content:
-          "Turn your sales skill into predictable income. Earn up to 70% revenue share as a Sales Partner or up to 50% selling with company leads. Weekly payouts, no cap.",
+          "Turn your sales skill into predictable income. Earn 70% revenue share as a Sales Partner or up to 50% selling with company leads. Weekly payouts, no cap.",
       },
-      { property: "og:title", content: "Earn With Glintr — Up to 70% Revenue Share" },
+      { property: "og:title", content: "Earn With Glintr — 70% Revenue Share" },
       {
         property: "og:description",
         content:
@@ -87,7 +87,7 @@ function EarnHero() {
               </span>
             </h1>
             <p className="text-subheading text-muted-foreground max-w-xl">
-              Two clear ways to earn — sell with your Own Leads (up to 70% revenue share)
+              Two clear ways to earn — sell with your Own Leads (70% revenue share)
               or work on Supported Sales opportunities (up to 50% revenue share).
             </p>
             <div className="flex flex-wrap gap-3">
@@ -155,7 +155,7 @@ function ModelHighlightCards() {
 
 const modelBenefits = {
   own: [
-    { icon: Banknote, title: "Up to 70% Revenue Share", copy: "Highest share tier for owned leads." },
+    { icon: Banknote, title: "70% Revenue Share", copy: "Highest share tier for owned leads." },
     { icon: ShieldCheck, title: "No inventory risk", copy: "We deliver the program — you don't touch content or ops." },
     { icon: Clock, title: "Flexible hours", copy: "Sell part-time or full-time. Your schedule, your pace." },
     { icon: LineChart, title: "Live dashboard", copy: "Track leads, conversions, and revenue share in real time." },
@@ -345,7 +345,7 @@ function EarningsEstimator() {
             <CardContent className="p-6 space-y-6">
               <Tabs value={mode} onValueChange={(v) => setMode(v as "own" | "supported")}>
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="own">Own Leads · Up to 70%</TabsTrigger>
+                  <TabsTrigger value="own">Own Leads · 70%</TabsTrigger>
                   <TabsTrigger value="supported">Supported Sales · Up to 50%</TabsTrigger>
                 </TabsList>
                 <TabsContent value="own" className="text-caption text-muted-foreground pt-3">

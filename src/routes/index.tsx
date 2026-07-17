@@ -11,14 +11,14 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Glintr is the AI, technology and career platform to learn in-demand skills, earn as a sales partner with up to 70% revenue share, and launch your own EdTech brand.",
+          "Glintr is the AI, technology and career platform to learn in-demand skills, earn as a sales partner with 70% revenue share, and launch your own EdTech brand.",
       },
       { name: "robots", content: "index, follow" },
       { property: "og:title", content: "Glintr | Learn. Earn. Build. AI, Technology & Career Platform" },
       {
         property: "og:description",
         content:
-          "Learn AI and technology, earn as a sales partner with up to 70% revenue share, or launch your own white-label EdTech brand with Glintr.",
+          "Learn AI and technology, earn as a sales partner with 70% revenue share, or launch your own white-label EdTech brand with Glintr.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://glintr.com" },

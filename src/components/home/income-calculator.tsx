@@ -84,7 +84,7 @@ export function IncomeCalculator() {
                   active={state.leadSource === "own"}
                   onClick={() => set("leadSource", "own")}
                   title="Own Leads"
-                  meta="Up to 70% Revenue Share"
+                  meta="70% Revenue Share"
                 />
                 <LeadOption
                   active={state.leadSource === "company"}

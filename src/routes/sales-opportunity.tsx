@@ -378,7 +378,7 @@ function Flexible() {
 function HowItWorks() {
   const steps = [
     { n: "01", title: "Join Glintr", desc: "Create your account and apply as a Sales Partner." },
-    { n: "02", title: "Choose Your Sales Model", desc: "Own Leads (up to 70%) or Supported Sales (up to 50%)." },
+    { n: "02", title: "Choose Your Sales Model", desc: "Own Leads (70%) or Supported Sales (50%)." },
     { n: "03", title: "Select Programs", desc: "Pick eligible career programs that match your network." },
     { n: "04", title: "Make Eligible Sales And Track Revenue Share", desc: "Verified successful sales become eligible revenue share." },
   ];

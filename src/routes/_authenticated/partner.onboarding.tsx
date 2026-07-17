@@ -613,7 +613,7 @@ function StepModel({ partner, onBack, onNext }: { partner: Partner; onBack: () =
             tone="dual"
             description="Manage your own leads while also working on eligible Glintr-supported sales opportunities where available."
             benefits={[
-              "Own Leads — up to 70% revenue share",
+              "Own Leads — 70% revenue share",
               "Supported Opportunities — up to 50% revenue share",
               "Unified CRM and follow-up workspace",
               "Combined earnings visibility",
@@ -1206,7 +1206,7 @@ function StepComplete({
 
   const modelLabel =
     partner.sales_model_selection === "own_leads"
-      ? "Own Leads (Up to 70%)"
+      ? "Own Leads (70%)"
       : partner.sales_model_selection === "supported_sales"
       ? "Supported Sales (Up to 50%)"
       : partner.sales_model_selection === "dual_model"
