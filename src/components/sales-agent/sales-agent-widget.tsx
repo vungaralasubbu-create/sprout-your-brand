@@ -59,28 +59,46 @@ export function SalesAgentWidget() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [handover, setHandover] = useState<SalesReply["handover"]>(null);
+  const [phoneCaptured, setPhoneCaptured] = useState(false);
+  const [firstQuestion, setFirstQuestion] = useState<string | null>(null);
+  const [phoneInput, setPhoneInput] = useState("");
+  const [submittingPhone, setSubmittingPhone] = useState(false);
   const routerState = useRouterState();
   const path = routerState.location.pathname;
 
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Don't render on admin/partner authenticated shells that already own their own AI surface
   const hidden = useMemo(
     () => path.startsWith("/admin/") || path.startsWith("/hq") || path.startsWith("/workspace"),
     [path],
   );
 
+  // Show phone card only after the user has asked their first question AND the
+  // assistant has replied at least once. Never re-prompt for verified users.
+  const showPhoneCard = useMemo(() => {
+    if (phoneCaptured) return false;
+    const userTurns = messages.filter((m) => m.role === "user").length;
+    const assistantTurns = messages.filter((m) => m.role === "assistant").length;
+    // GREETING is the first assistant message. Wait for at least 2 assistant messages
+    // (greeting + first real reply) once the user has spoken.
+    return userTurns >= 1 && assistantTurns >= 2 && !sending;
+  }, [messages, phoneCaptured, sending]);
+
   useEffect(() => {
     setReady(true);
-    const existing = typeof window !== "undefined" ? window.localStorage.getItem(CONV_KEY) : null;
+    if (typeof window === "undefined") return;
+    const existing = window.localStorage.getItem(CONV_KEY);
     if (existing) setConversationId(existing);
+    if (window.localStorage.getItem(PHONE_KEY)) setPhoneCaptured(true);
+    const savedFirstQ = window.localStorage.getItem(FIRSTQ_KEY);
+    if (savedFirstQ) setFirstQuestion(savedFirstQ);
   }, []);
 
   useEffect(() => {
     if (!open || !listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
-  }, [messages, open, sending]);
+  }, [messages, open, sending, showPhoneCard]);
 
   const openAndInit = useCallback(async () => {
     setOpen(true);
@@ -125,6 +143,11 @@ export function SalesAgentWidget() {
         setConversationId(convId);
         if (typeof window !== "undefined") window.localStorage.setItem(CONV_KEY, convId);
       }
+      // Remember the very first question so we can store it with the phone lead.
+      if (!firstQuestion) {
+        setFirstQuestion(value);
+        if (typeof window !== "undefined") window.localStorage.setItem(FIRSTQ_KEY, value);
+      }
       setMessages((prev) => [...prev, { role: "user", content: value }]);
       setInput("");
       setSending(true);
@@ -147,10 +170,51 @@ export function SalesAgentWidget() {
         setSending(false);
       }
     },
-    [conversationId, path, sending],
+    [conversationId, path, sending, firstQuestion],
   );
 
+  const submitPhone = useCallback(async () => {
+    const raw = phoneInput.trim();
+    const digits = raw.replace(/\D/g, "");
+    if (digits.length < 6 || digits.length > 15) {
+      toast.error("Please enter a valid mobile number.");
+      return;
+    }
+    if (!conversationId) return;
+    setSubmittingPhone(true);
+    try {
+      const device =
+        typeof navigator !== "undefined" && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)
+          ? "mobile"
+          : "desktop";
+      const referralSource =
+        typeof document !== "undefined" && document.referrer ? document.referrer.slice(0, 400) : null;
+      // Detect course slug when the user is on a programs/courses page.
+      const courseMatch = path.match(/^\/(?:programs|courses)\/[^/]+\/([^/?#]+)/);
+      await capturePhoneLead({
+        data: {
+          conversationId,
+          phone: raw,
+          firstQuestion: firstQuestion ?? undefined,
+          pagePath: path,
+          courseSlug: courseMatch ? courseMatch[1] : undefined,
+          referralSource: referralSource ?? undefined,
+          device,
+        },
+      });
+      setPhoneCaptured(true);
+      if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
+      toast.success("Thanks! Continuing your conversation…");
+      setTimeout(() => inputRef.current?.focus(), 60);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't save your number. Please try again.");
+    } finally {
+      setSubmittingPhone(false);
+    }
+  }, [phoneInput, conversationId, firstQuestion, path]);
+
   if (!ready || hidden) return null;
+
 
   return (
     <>
