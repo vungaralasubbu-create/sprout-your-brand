@@ -81,6 +81,12 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
   const [code, setCode] = useState("");
+  const [trustedEmail, setTrustedEmail] = useState(false);
+
+  useEffect(() => {
+    setTrustedEmail(isTrustedEmail(email));
+  }, [email]);
+
 
   useEffect(() => {
     const isRecovery =
