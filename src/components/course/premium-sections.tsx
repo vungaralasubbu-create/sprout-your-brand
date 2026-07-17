@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 
 import { Section, Container } from "@/components/shared/section";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { AnimatedCounter } from "@/components/shared/animated-counter";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import { getHiringPartnersForCategory, type HiringPartner } from "@/data/hiring-partners";
