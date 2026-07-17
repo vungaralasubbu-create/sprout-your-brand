@@ -206,6 +206,33 @@ function AuthPage() {
     toast.success("Password reset email sent.");
   }
 
+  async function handleGoogle() {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin + "/auth",
+      });
+      if (result.error) {
+        setLoading(false);
+        return toast.error(result.error.message || "Google sign-in failed.");
+      }
+      if (result.redirected) return; // browser navigates away
+      // Session set — route based on role.
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        if (data.user.email) markEmailTrusted(data.user.email);
+        await routeAfterAuth(data.user.id, navigate, reconcile);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Google sign-in failed.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+
   const titleText =
     mode === "recovery"
       ? "Set a new password"
