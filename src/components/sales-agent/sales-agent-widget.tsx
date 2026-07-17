@@ -96,7 +96,17 @@ export function SalesAgentWidget() {
     if (window.localStorage.getItem(PHONE_KEY)) setPhoneCaptured(true);
     const savedFirstQ = window.localStorage.getItem(FIRSTQ_KEY);
     if (savedFirstQ) setFirstQuestion(savedFirstQ);
+    // Logged-in users: trust their registered phone and skip lead capture.
+    void supabase.auth.getUser().then(({ data }) => {
+      const meta = data.user?.user_metadata as { phone?: string } | undefined;
+      const phone = data.user?.phone || meta?.phone;
+      if (phone) {
+        setPhoneCaptured(true);
+        try { window.localStorage.setItem(PHONE_KEY, "1"); } catch { /* ignore */ }
+      }
+    });
   }, []);
+
 
   useEffect(() => {
     if (!open || !listRef.current) return;
