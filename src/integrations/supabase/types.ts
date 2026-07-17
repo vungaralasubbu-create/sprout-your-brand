@@ -11307,6 +11307,131 @@ export type Database = {
           },
         ]
       }
+      platform_lead_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          lead_id: string | null
+          metadata: Json
+          page_path: string | null
+          source: string | null
+          variant: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          lead_id?: string | null
+          metadata?: Json
+          page_path?: string | null
+          source?: string | null
+          variant?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          lead_id?: string | null
+          metadata?: Json
+          page_path?: string | null
+          source?: string | null
+          variant?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_lead_events_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      platform_leads: {
+        Row: {
+          assigned_to: string | null
+          campaign: string | null
+          created_at: string
+          current_status: string | null
+          email: string | null
+          id: string
+          interested_course: string | null
+          ip_hash: string | null
+          metadata: Json
+          name: string | null
+          notes: string | null
+          page_path: string | null
+          phone: string | null
+          qualification: string | null
+          referrer: string | null
+          source: string
+          source_detail: string | null
+          status: string
+          updated_at: string
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          campaign?: string | null
+          created_at?: string
+          current_status?: string | null
+          email?: string | null
+          id?: string
+          interested_course?: string | null
+          ip_hash?: string | null
+          metadata?: Json
+          name?: string | null
+          notes?: string | null
+          page_path?: string | null
+          phone?: string | null
+          qualification?: string | null
+          referrer?: string | null
+          source?: string
+          source_detail?: string | null
+          status?: string
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          campaign?: string | null
+          created_at?: string
+          current_status?: string | null
+          email?: string | null
+          id?: string
+          interested_course?: string | null
+          ip_hash?: string | null
+          metadata?: Json
+          name?: string | null
+          notes?: string | null
+          page_path?: string | null
+          phone?: string | null
+          qualification?: string | null
+          referrer?: string | null
+          source?: string
+          source_detail?: string | null
+          status?: string
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: []
+      }
       platform_settings: {
         Row: {
           key: string
