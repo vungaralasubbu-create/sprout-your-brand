@@ -211,7 +211,6 @@ function RootComponent() {
         <RouteTracker />
         <Outlet />
         <StickyActionBar />
-        <AiMentor />
         <SmartPopup />
         <GlobalPalette />
         <SalesAgentWidget />
