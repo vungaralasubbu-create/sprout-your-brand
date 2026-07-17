@@ -112,16 +112,16 @@ export function WhoAreYou() {
     : null;
 
   return (
-    <Section className="relative py-16 md:py-24 border-t border-border/60">
+    <Section className="relative py-10 md:py-14 border-t border-border/60">
       <Container>
         <div className="max-w-2xl">
-          <p className="text-[11px] uppercase tracking-[0.22em] font-medium text-primary mb-3 inline-flex items-center gap-2">
+          <p className="text-[11px] uppercase tracking-[0.22em] font-medium text-primary mb-2 inline-flex items-center gap-2">
             <Sparkles className="size-3.5" /> Personalize your experience
           </p>
-          <h2 className="text-display-sm md:text-display-md font-display font-semibold tracking-tight text-balance">
+          <h2 className="text-2xl md:text-3xl font-display font-semibold tracking-tight text-balance">
             What brings you to Glintr today?
           </h2>
-          <p className="mt-4 text-body-lg text-muted-foreground">
+          <p className="mt-2 text-sm md:text-base text-muted-foreground">
             Choose your journey and we'll personalize your experience.
           </p>
         </div>
@@ -140,7 +140,8 @@ export function WhoAreYou() {
           />
         ) : null}
 
-        <div className="mt-8 grid gap-4 md:gap-5 grid-cols-1 md:grid-cols-6">
+        <div className="mt-5 grid gap-3 md:gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-6">
+
           {CARDS.map((card, i) => (
             <JourneyTile
               key={card.id}
