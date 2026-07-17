@@ -283,7 +283,7 @@ export const adminGetBrandProfile = createServerFn({ method: "POST" })
     // History: best-effort from admin_activity_log tagged with this app id.
     const { data: logs } = await supabase
       .from("admin_activity_log")
-      .select("id, event_type, title, summary, actor_role, created_at, entity_id")
+      .select("id, event_type, title, summary, actor_label, created_at, entity_id")
       .eq("entity_type", "brand_application")
       .eq("entity_id", data.id)
       .order("created_at", { ascending: false })
@@ -292,7 +292,7 @@ export const adminGetBrandProfile = createServerFn({ method: "POST" })
     const history = (logs ?? []).map((l: any) => ({
       id: l.id,
       action: l.event_type ?? "updated",
-      actor_role: l.actor_role ?? "admin",
+      actor_role: l.actor_label ?? "admin",
       message: l.summary ?? l.title ?? null,
       created_at: l.created_at,
     }));
