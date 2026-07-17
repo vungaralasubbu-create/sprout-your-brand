@@ -82,10 +82,44 @@ function AuthPage() {
   const [mobile, setMobile] = useState("");
   const [code, setCode] = useState("");
   const [trustedEmail, setTrustedEmail] = useState(false);
+  const [errors, setErrors] = useState<{ email?: string; password?: string; mobile?: string; code?: string }>({});
+  const [otpSentAt, setOtpSentAt] = useState<number | null>(null);
+  const [now, setNow] = useState(() => Date.now());
+
+  const OTP_TTL_MS = 5 * 60 * 1000;
+  const otpRemainingMs = otpSentAt ? Math.max(0, otpSentAt + OTP_TTL_MS - now) : 0;
+  const otpExpired = otpSentAt !== null && otpRemainingMs === 0;
+  const otpMMSS = (() => {
+    const s = Math.ceil(otpRemainingMs / 1000);
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}:${r.toString().padStart(2, "0")}`;
+  })();
 
   useEffect(() => {
     setTrustedEmail(isTrustedEmail(email));
+    setErrors((p) => (p.email ? { ...p, email: undefined } : p));
   }, [email]);
+
+  useEffect(() => {
+    setErrors((p) => (p.password && password.length >= 6 ? { ...p, password: undefined } : p));
+  }, [password]);
+
+  useEffect(() => {
+    setErrors((p) => (p.mobile ? { ...p, mobile: undefined } : p));
+  }, [mobile]);
+
+  useEffect(() => {
+    setErrors((p) => (p.code ? { ...p, code: undefined } : p));
+  }, [code]);
+
+  useEffect(() => {
+    if (stage !== "otp" || otpSentAt === null) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [stage, otpSentAt]);
+
+
 
 
   useEffect(() => {
