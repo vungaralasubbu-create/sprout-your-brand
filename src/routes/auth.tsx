@@ -252,23 +252,25 @@ function AuthPage() {
                           className="mt-2 h-11"
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="mobile">Mobile number</Label>
-                        <Input
-                          id="mobile"
-                          name="mobile"
-                          type="tel"
-                          inputMode="numeric"
-                          placeholder="10-digit mobile"
-                          required
-                          value={mobile}
-                          onChange={(e) => setMobile(e.target.value)}
-                          className="mt-2 h-11"
-                        />
-                        <p className="text-caption mt-1 text-muted-foreground">
-                          We'll text you a one-time code to verify.
-                        </p>
-                      </div>
+                      {!(mode === "signin" && isTrustedEmail(email)) && (
+                        <div>
+                          <Label htmlFor="mobile">Mobile number</Label>
+                          <Input
+                            id="mobile"
+                            name="mobile"
+                            type="tel"
+                            inputMode="numeric"
+                            placeholder="10-digit mobile"
+                            required
+                            value={mobile}
+                            onChange={(e) => setMobile(e.target.value)}
+                            className="mt-2 h-11"
+                          />
+                          <p className="text-caption mt-1 text-muted-foreground">
+                            We'll text you a one-time code to verify.
+                          </p>
+                        </div>
+                      )}
                     </>
                   )}
                   <div>
