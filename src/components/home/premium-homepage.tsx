@@ -195,6 +195,12 @@ function HeroUniverse() {
             <GlintrDimension />
           </div>
 
+          {/* Mobile-only: swipeable carousel replacing the desktop 3D dimension */}
+          <div className="relative w-full md:hidden">
+            <HeroMobileCarousel />
+          </div>
+
+
 
         </div>
       </Container>
