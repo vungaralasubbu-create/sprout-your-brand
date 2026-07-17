@@ -7,6 +7,7 @@ import { Section, Container } from "@/components/shared/section";
 import { RelatedContent } from "@/components/shared/related-content";
 import type { ToolEntry } from "@/data/tools";
 import { cn } from "@/lib/utils";
+import { openGlintrAI } from "@/lib/glintr-ai";
 
 interface ToolShellProps {
   tool: ToolEntry;
