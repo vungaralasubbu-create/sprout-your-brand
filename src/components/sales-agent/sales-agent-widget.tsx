@@ -13,6 +13,8 @@ import {
   type SalesCard,
   type SalesReply,
 } from "@/lib/sales-agent/chat.functions";
+import { GLINTR_AI_OPEN_EVENT, type OpenGlintrAIDetail } from "@/lib/glintr-ai";
+import { supabase } from "@/integrations/supabase/client";
 
 type UiMessage = {
   role: "user" | "assistant";
