@@ -282,7 +282,7 @@ const PROGRAMS: Program[] = [
 
 const STATS: PlatformStat[] = [
   { key: "active_programs", label: "Programs", value: 102, suffix: "+", verified: true },
-  { key: "students_enrolled", label: "Learners", value: 25000, suffix: "K+", verified: true },
+  { key: "students_enrolled", label: "Learners", value: 25, suffix: "K+", verified: true },
   { key: "mentors", label: "Mentors", value: 750, suffix: "+", verified: true },
   { key: "hiring_partners", label: "Hiring Partners", value: 450, suffix: "+", verified: true },
   { key: "brand_partners", label: "Brand Partners", value: 150, suffix: "+", verified: true },
