@@ -38,6 +38,7 @@ import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
 import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
 import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
 import { GlintrDimension } from "@/components/home/glintr-dimension";
+import { HeroMobileCarousel } from "@/components/home/hero-mobile-carousel";
 import { WhoAreYou } from "@/components/home/who-are-you";
 import {
   GlintrWorld,
@@ -193,6 +194,12 @@ function HeroUniverse() {
           <div className="relative w-full justify-self-end lg:pl-4 hidden md:block">
             <GlintrDimension />
           </div>
+
+          {/* Mobile-only: swipeable carousel replacing the desktop 3D dimension */}
+          <div className="relative w-full md:hidden">
+            <HeroMobileCarousel />
+          </div>
+
 
 
         </div>
