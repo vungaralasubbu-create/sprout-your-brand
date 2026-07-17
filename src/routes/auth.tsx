@@ -16,6 +16,7 @@ import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
 import { reconcileRolesForCurrentUser } from "@/lib/auth/reconcile.functions";
 import { completeOtpPasswordAuth, requestLoginOtp } from "@/lib/auth/otp.functions";
 import { trackEvent } from "@/lib/analytics/client";
+import { ENABLE_GOOGLE_AUTH } from "@/config/auth-features";
 
 const TRUSTED_KEY = "glintr_trusted_emails_v1";
 function isTrustedEmail(email: string): boolean {
@@ -499,7 +500,7 @@ function AuthPage() {
                         : "Send OTP & Sign In"
                       : "Send OTP & Create account"}
                   </Button>
-                  {mode !== "recovery" && (
+                  {mode !== "recovery" && ENABLE_GOOGLE_AUTH && (
                     <>
                       <div className="relative py-1">
                         <div className="absolute inset-0 flex items-center">
