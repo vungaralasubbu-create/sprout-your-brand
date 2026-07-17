@@ -141,7 +141,6 @@ import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/trans
 import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
-import { Route as AuthenticatedStudentSupportRouteImport } from './routes/_authenticated/student.support'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
 import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
 import { Route as AuthenticatedStudentMentorRouteImport } from './routes/_authenticated/student.mentor'
@@ -1084,12 +1083,6 @@ const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
   path: '/api/v1/health',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedStudentSupportRoute =
-  AuthenticatedStudentSupportRouteImport.update({
-    id: '/support',
-    path: '/support',
-    getParentRoute: () => AuthenticatedStudentRoute,
-  } as any)
 const AuthenticatedStudentProfileRoute =
   AuthenticatedStudentProfileRouteImport.update({
     id: '/profile',
@@ -1797,9 +1790,9 @@ const ProgramsCategoryCourseIndexRoute =
   } as any)
 const AuthenticatedStudentSupportIndexRoute =
   AuthenticatedStudentSupportIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedStudentSupportRoute,
+    id: '/support/',
+    path: '/support/',
+    getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
 const AuthenticatedStudentProjectsIndexRoute =
   AuthenticatedStudentProjectsIndexRouteImport.update({
@@ -2005,15 +1998,15 @@ const ApiPublicAiSalesWebhookRoute = ApiPublicAiSalesWebhookRouteImport.update({
 } as any)
 const AuthenticatedStudentSupportNewRoute =
   AuthenticatedStudentSupportNewRouteImport.update({
-    id: '/new',
-    path: '/new',
-    getParentRoute: () => AuthenticatedStudentSupportRoute,
+    id: '/support/new',
+    path: '/support/new',
+    getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
 const AuthenticatedStudentSupportIdRoute =
   AuthenticatedStudentSupportIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => AuthenticatedStudentSupportRoute,
+    id: '/support/$id',
+    path: '/support/$id',
+    getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
 const AuthenticatedStudentProjectsIdRoute =
   AuthenticatedStudentProjectsIdRouteImport.update({
@@ -2975,7 +2968,6 @@ export interface FileRoutesByFullPath {
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
-  '/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -3785,7 +3777,6 @@ export interface FileRoutesById {
   '/_authenticated/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
-  '/_authenticated/student/support': typeof AuthenticatedStudentSupportRouteWithChildren
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -4198,7 +4189,6 @@ export interface FileRouteTypes {
     | '/student/mentor'
     | '/student/notifications'
     | '/student/profile'
-    | '/student/support'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -5007,7 +4997,6 @@ export interface FileRouteTypes {
     | '/_authenticated/student/mentor'
     | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
-    | '/_authenticated/student/support'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -6198,13 +6187,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/student/support': {
-      id: '/_authenticated/student/support'
-      path: '/support'
-      fullPath: '/student/support'
-      preLoaderRoute: typeof AuthenticatedStudentSupportRouteImport
-      parentRoute: typeof AuthenticatedStudentRoute
-    }
     '/_authenticated/student/profile': {
       id: '/_authenticated/student/profile'
       path: '/profile'
@@ -7040,10 +7022,10 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/student/support/': {
       id: '/_authenticated/student/support/'
-      path: '/'
+      path: '/support'
       fullPath: '/student/support/'
       preLoaderRoute: typeof AuthenticatedStudentSupportIndexRouteImport
-      parentRoute: typeof AuthenticatedStudentSupportRoute
+      parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/student/projects/': {
       id: '/_authenticated/student/projects/'
@@ -7285,17 +7267,17 @@ declare module '@tanstack/react-router' {
     }
     '/_authenticated/student/support/new': {
       id: '/_authenticated/student/support/new'
-      path: '/new'
+      path: '/support/new'
       fullPath: '/student/support/new'
       preLoaderRoute: typeof AuthenticatedStudentSupportNewRouteImport
-      parentRoute: typeof AuthenticatedStudentSupportRoute
+      parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/student/support/$id': {
       id: '/_authenticated/student/support/$id'
-      path: '/$id'
+      path: '/support/$id'
       fullPath: '/student/support/$id'
       preLoaderRoute: typeof AuthenticatedStudentSupportIdRouteImport
-      parentRoute: typeof AuthenticatedStudentSupportRoute
+      parentRoute: typeof AuthenticatedStudentRoute
     }
     '/_authenticated/student/projects/$id': {
       id: '/_authenticated/student/projects/$id'
@@ -8949,25 +8931,6 @@ const AuthenticatedPartnerRouteChildren: AuthenticatedPartnerRouteChildren = {
 const AuthenticatedPartnerRouteWithChildren =
   AuthenticatedPartnerRoute._addFileChildren(AuthenticatedPartnerRouteChildren)
 
-interface AuthenticatedStudentSupportRouteChildren {
-  AuthenticatedStudentSupportIdRoute: typeof AuthenticatedStudentSupportIdRoute
-  AuthenticatedStudentSupportNewRoute: typeof AuthenticatedStudentSupportNewRoute
-  AuthenticatedStudentSupportIndexRoute: typeof AuthenticatedStudentSupportIndexRoute
-}
-
-const AuthenticatedStudentSupportRouteChildren: AuthenticatedStudentSupportRouteChildren =
-  {
-    AuthenticatedStudentSupportIdRoute: AuthenticatedStudentSupportIdRoute,
-    AuthenticatedStudentSupportNewRoute: AuthenticatedStudentSupportNewRoute,
-    AuthenticatedStudentSupportIndexRoute:
-      AuthenticatedStudentSupportIndexRoute,
-  }
-
-const AuthenticatedStudentSupportRouteWithChildren =
-  AuthenticatedStudentSupportRoute._addFileChildren(
-    AuthenticatedStudentSupportRouteChildren,
-  )
-
 interface AuthenticatedStudentCareerInterviewIdRouteChildren {
   AuthenticatedStudentCareerInterviewIdReportRoute: typeof AuthenticatedStudentCareerInterviewIdReportRoute
 }
@@ -9024,7 +8987,6 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentMentorRoute: typeof AuthenticatedStudentMentorRoute
   AuthenticatedStudentNotificationsRoute: typeof AuthenticatedStudentNotificationsRoute
   AuthenticatedStudentProfileRoute: typeof AuthenticatedStudentProfileRoute
-  AuthenticatedStudentSupportRoute: typeof AuthenticatedStudentSupportRouteWithChildren
   AuthenticatedStudentIndexRoute: typeof AuthenticatedStudentIndexRoute
   AuthenticatedStudentAssignmentsIdRoute: typeof AuthenticatedStudentAssignmentsIdRoute
   AuthenticatedStudentCareerInterviewRoute: typeof AuthenticatedStudentCareerInterviewRouteWithChildren
@@ -9035,6 +8997,8 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentLiveSessionsIdRoute: typeof AuthenticatedStudentLiveSessionsIdRoute
   AuthenticatedStudentProgramsSlugRoute: typeof AuthenticatedStudentProgramsSlugRoute
   AuthenticatedStudentProjectsIdRoute: typeof AuthenticatedStudentProjectsIdRoute
+  AuthenticatedStudentSupportIdRoute: typeof AuthenticatedStudentSupportIdRoute
+  AuthenticatedStudentSupportNewRoute: typeof AuthenticatedStudentSupportNewRoute
   AuthenticatedStudentAssignmentsIndexRoute: typeof AuthenticatedStudentAssignmentsIndexRoute
   AuthenticatedStudentCareerIndexRoute: typeof AuthenticatedStudentCareerIndexRoute
   AuthenticatedStudentInternshipIndexRoute: typeof AuthenticatedStudentInternshipIndexRoute
@@ -9042,6 +9006,7 @@ interface AuthenticatedStudentRouteChildren {
   AuthenticatedStudentLiveSessionsIndexRoute: typeof AuthenticatedStudentLiveSessionsIndexRoute
   AuthenticatedStudentProgramsIndexRoute: typeof AuthenticatedStudentProgramsIndexRoute
   AuthenticatedStudentProjectsIndexRoute: typeof AuthenticatedStudentProjectsIndexRoute
+  AuthenticatedStudentSupportIndexRoute: typeof AuthenticatedStudentSupportIndexRoute
   AuthenticatedStudentProgramsViewSlugRoute: typeof AuthenticatedStudentProgramsViewSlugRoute
 }
 
@@ -9054,8 +9019,6 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
   AuthenticatedStudentNotificationsRoute:
     AuthenticatedStudentNotificationsRoute,
   AuthenticatedStudentProfileRoute: AuthenticatedStudentProfileRoute,
-  AuthenticatedStudentSupportRoute:
-    AuthenticatedStudentSupportRouteWithChildren,
   AuthenticatedStudentIndexRoute: AuthenticatedStudentIndexRoute,
   AuthenticatedStudentAssignmentsIdRoute:
     AuthenticatedStudentAssignmentsIdRoute,
@@ -9070,6 +9033,8 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
     AuthenticatedStudentLiveSessionsIdRoute,
   AuthenticatedStudentProgramsSlugRoute: AuthenticatedStudentProgramsSlugRoute,
   AuthenticatedStudentProjectsIdRoute: AuthenticatedStudentProjectsIdRoute,
+  AuthenticatedStudentSupportIdRoute: AuthenticatedStudentSupportIdRoute,
+  AuthenticatedStudentSupportNewRoute: AuthenticatedStudentSupportNewRoute,
   AuthenticatedStudentAssignmentsIndexRoute:
     AuthenticatedStudentAssignmentsIndexRoute,
   AuthenticatedStudentCareerIndexRoute: AuthenticatedStudentCareerIndexRoute,
@@ -9082,6 +9047,7 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
     AuthenticatedStudentProgramsIndexRoute,
   AuthenticatedStudentProjectsIndexRoute:
     AuthenticatedStudentProjectsIndexRoute,
+  AuthenticatedStudentSupportIndexRoute: AuthenticatedStudentSupportIndexRoute,
   AuthenticatedStudentProgramsViewSlugRoute:
     AuthenticatedStudentProgramsViewSlugRoute,
 }
