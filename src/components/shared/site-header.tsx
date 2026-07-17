@@ -131,18 +131,31 @@ const nav: NavEntry[] = [
       },
     ],
   },
+  {
+    label: "Enterprise",
+    width: "md",
+    groups: [
+      {
+        title: "For Organizations",
+        items: [
+          { label: "White-Label EdTech", description: "Full-stack platform for enterprises", href: "/launch-your-brand", icon: Building2 },
+          { label: "Partner Network", description: "Channel & sales partnerships", href: "/partner-network", icon: Handshake },
+          { label: "Book a Consultation", description: "Talk to our enterprise team", href: "/launch-your-brand/consultation", icon: Briefcase },
+        ],
+      },
+    ],
+  },
   { label: "About", href: "/about" },
   {
-    label: "More",
+    label: "Resources",
     width: "sm",
     groups: [
       {
         items: [
           { label: "Topics", href: "/topics", description: "Pillar guides across AI, tech, engineering, business" },
-          { label: "Partner Network", href: "/partner-network" },
+          { label: "Blog", href: "/blog" },
           { label: "Success Stories", href: "/success-stories" },
           { label: "Careers", href: "/careers" },
-          { label: "Blog", href: "/blog" },
           { label: "FAQs", href: "/faq" },
           { label: "Contact", href: "/contact" },
           { label: "Support", href: "/support" },
@@ -151,6 +164,7 @@ const nav: NavEntry[] = [
     ],
   },
 ];
+
 
 
 function MegaPanel({ entry }: { entry: NavEntry }) {
