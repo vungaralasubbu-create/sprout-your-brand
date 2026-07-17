@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bot, Send, X, Loader2, Phone, Mail, MessageCircle, ShieldCheck,
-  RefreshCw, ArrowLeft, LifeBuoy,
+  RefreshCw, ArrowLeft, LifeBuoy, Minimize2, Maximize2, Minus,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -87,6 +88,126 @@ export function SalesAgentWidget() {
   const [resendIn, setResendIn] = useState(0);
   const [verifying, setVerifying] = useState(false);
   const [pendingLead, setPendingLead] = useState<null | (() => Promise<void>)>(null);
+
+  // Floating shell state (desktop): expanded overlay, drag position, resize size.
+  const SHELL_KEY = "glintr_ai_shell_v2";
+  const DEFAULT_SIZE = { w: 440, h: 700 };
+  const MIN_W = 380, MAX_W = 700, MIN_H = 500, MAX_H = 900;
+  const [expanded, setExpanded] = useState(false);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const [size, setSize] = useState<{ w: number; h: number }>(DEFAULT_SIZE);
+  const [isMobile, setIsMobile] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ sx: number; sy: number; ox: number; oy: number } | null>(null);
+  const resizeRef = useRef<{ sx: number; sy: number; ow: number; oh: number; mode: "e" | "s" | "se" } | null>(null);
+
+  // Hydrate persisted shell state
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+    const mq = window.matchMedia("(max-width: 767px)");
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener?.("change", onChange);
+    try {
+      const raw = window.localStorage.getItem(SHELL_KEY);
+      if (raw) {
+        const s = JSON.parse(raw) as { pos?: { x: number; y: number }; size?: { w: number; h: number }; expanded?: boolean };
+        if (s.pos) setPos(s.pos);
+        if (s.size) setSize({
+          w: Math.min(MAX_W, Math.max(MIN_W, s.size.w)),
+          h: Math.min(MAX_H, Math.max(MIN_H, s.size.h)),
+        });
+        if (typeof s.expanded === "boolean") setExpanded(s.expanded);
+      }
+    } catch { /* ignore */ }
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(SHELL_KEY, JSON.stringify({ pos, size, expanded }));
+    } catch { /* ignore */ }
+  }, [pos, size, expanded]);
+
+  // ESC closes when expanded, otherwise minimizes.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        if (expanded) setExpanded(false);
+        else setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, expanded]);
+
+  const clampPos = useCallback((x: number, y: number, w: number, h: number) => {
+    if (typeof window === "undefined") return { x, y };
+    const maxX = Math.max(0, window.innerWidth - w - 8);
+    const maxY = Math.max(0, window.innerHeight - h - 8);
+    return { x: Math.min(Math.max(8, x), maxX), y: Math.min(Math.max(8, y), maxY) };
+  }, []);
+
+  const onDragPointerDown = useCallback((e: React.PointerEvent) => {
+    if (expanded || isMobile) return;
+    if ((e.target as HTMLElement).closest("button")) return;
+    const rect = shellRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    dragRef.current = { sx: e.clientX, sy: e.clientY, ox: rect.left, oy: rect.top };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }, [expanded, isMobile]);
+
+  const onDragPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    const { sx, sy, ox, oy } = dragRef.current;
+    const nx = ox + (e.clientX - sx);
+    const ny = oy + (e.clientY - sy);
+    setPos(clampPos(nx, ny, size.w, size.h));
+  }, [clampPos, size.w, size.h]);
+
+  const onDragPointerUp = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    dragRef.current = null;
+    try { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); } catch { /* ignore */ }
+    // Snap to edges when close
+    setPos((p) => {
+      if (!p || typeof window === "undefined") return p;
+      const snap = 40;
+      let { x, y } = p;
+      if (x < snap) x = 16;
+      else if (x + size.w > window.innerWidth - snap) x = window.innerWidth - size.w - 16;
+      if (y < snap) y = 16;
+      else if (y + size.h > window.innerHeight - snap) y = window.innerHeight - size.h - 16;
+      return { x, y };
+    });
+  }, [size.w, size.h]);
+
+  const startResize = useCallback((mode: "e" | "s" | "se") => (e: React.PointerEvent) => {
+    if (expanded || isMobile) return;
+    e.stopPropagation();
+    resizeRef.current = { sx: e.clientX, sy: e.clientY, ow: size.w, oh: size.h, mode };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }, [expanded, isMobile, size.w, size.h]);
+
+  const onResizeMove = useCallback((e: React.PointerEvent) => {
+    if (!resizeRef.current) return;
+    const { sx, sy, ow, oh, mode } = resizeRef.current;
+    let nw = ow, nh = oh;
+    if (mode === "e" || mode === "se") nw = ow + (e.clientX - sx);
+    if (mode === "s" || mode === "se") nh = oh + (e.clientY - sy);
+    nw = Math.min(MAX_W, Math.max(MIN_W, nw));
+    nh = Math.min(MAX_H, Math.max(MIN_H, nh));
+    setSize({ w: nw, h: nh });
+  }, []);
+
+  const endResize = useCallback((e: React.PointerEvent) => {
+    if (!resizeRef.current) return;
+    resizeRef.current = null;
+    try { (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId); } catch { /* ignore */ }
+  }, []);
+
   const routerState = useRouterState();
   const path = routerState.location.pathname;
 
@@ -428,33 +549,107 @@ export function SalesAgentWidget() {
 
       )}
 
-      {open && (
+      {open && expanded && !isMobile && (
         <div
-          className={cn(
-            "fixed z-50 bottom-4 left-4 md:bottom-6 md:left-6",
-            "w-[calc(100vw-2rem)] sm:w-[380px] max-h-[80vh]",
-            "rounded-2xl border border-border bg-background shadow-2xl overflow-hidden flex flex-col",
-          )}
+          className="fixed inset-0 z-40 bg-background/40 backdrop-blur-sm animate-in fade-in duration-200"
+          onClick={() => setExpanded(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {open && (() => {
+        // Compute shell style per mode.
+        let style: React.CSSProperties = {};
+        let containerClass = "";
+        if (isMobile) {
+          containerClass = cn(
+            "fixed z-50 inset-x-0 bottom-0",
+            "h-[88dvh] rounded-t-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl",
+            "overflow-hidden flex flex-col animate-in slide-in-from-bottom-4 fade-in duration-200",
+          );
+        } else if (expanded) {
+          containerClass = cn(
+            "fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+            "w-[78vw] h-[82vh] max-w-[1280px]",
+            "rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl",
+            "overflow-hidden flex flex-col animate-in zoom-in-95 fade-in duration-200",
+          );
+        } else {
+          const defaultRight = 24, defaultBottom = 24;
+          if (pos) {
+            style = { left: pos.x, top: pos.y, width: size.w, height: size.h };
+          } else {
+            style = { right: defaultRight, bottom: defaultBottom, width: size.w, height: size.h };
+          }
+          containerClass = cn(
+            "fixed z-50",
+            "rounded-2xl border border-border bg-background/95 backdrop-blur-xl shadow-2xl",
+            "overflow-hidden flex flex-col animate-in zoom-in-95 fade-in duration-150",
+          );
+        }
+        return (
+        <div
+          ref={shellRef}
+          className={containerClass}
+          style={style}
           role="dialog"
           aria-label="Ask GlintrAI"
+          aria-modal={expanded ? "true" : "false"}
         >
-          <header className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary/90 to-lime-500/80 text-primary-foreground">
-            <div className="grid place-items-center w-9 h-9 rounded-full bg-white/15">
+          <header
+            onPointerDown={onDragPointerDown}
+            onPointerMove={onDragPointerMove}
+            onPointerUp={onDragPointerUp}
+            onPointerCancel={onDragPointerUp}
+            className={cn(
+              "flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary/90 to-lime-500/80 text-primary-foreground select-none",
+              !expanded && !isMobile && "cursor-grab active:cursor-grabbing",
+            )}
+          >
+            <div className="grid place-items-center w-9 h-9 rounded-full bg-white/15 shrink-0">
               <Bot className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold">GlintrAI · Admissions & Career Counsellor</div>
-              <div className="text-[11px] opacity-80">Instant answers · human handover anytime</div>
+              <div className="text-sm font-semibold truncate">GlintrAI · Admissions & Career Counsellor</div>
+              <div className="text-[11px] opacity-80 flex items-center gap-1.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-lime-300 shadow-[0_0_6px_currentColor]" />
+                Online · Instant answers
+              </div>
             </div>
 
-            <button
-              onClick={() => setOpen(false)}
-              className="p-1.5 rounded-md hover:bg-white/10"
-              aria-label="Close"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-0.5 shrink-0">
+              {!isMobile && (
+                <button
+                  type="button"
+                  onClick={() => setExpanded((v) => !v)}
+                  className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
+                  aria-label={expanded ? "Restore size" : "Expand"}
+                  title={expanded ? "Restore" : "Expand"}
+                >
+                  {expanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => { setExpanded(false); setOpen(false); }}
+                className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
+                aria-label="Minimize"
+                title="Minimize"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => { setExpanded(false); setOpen(false); }}
+                className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
+                aria-label="Close"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </header>
+
 
           <div ref={listRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/30">
             {messages.map((m, i) => (
@@ -712,11 +907,43 @@ export function SalesAgentWidget() {
             </Button>
           </form>
 
+
+          {/* Resize handles — desktop floating only */}
+          {!isMobile && !expanded && (
+            <>
+              <div
+                onPointerDown={startResize("e")}
+                onPointerMove={onResizeMove}
+                onPointerUp={endResize}
+                onPointerCancel={endResize}
+                className="absolute top-0 right-0 h-full w-1.5 cursor-ew-resize hover:bg-primary/20"
+                aria-hidden="true"
+              />
+              <div
+                onPointerDown={startResize("s")}
+                onPointerMove={onResizeMove}
+                onPointerUp={endResize}
+                onPointerCancel={endResize}
+                className="absolute bottom-0 left-0 w-full h-1.5 cursor-ns-resize hover:bg-primary/20"
+                aria-hidden="true"
+              />
+              <div
+                onPointerDown={startResize("se")}
+                onPointerMove={onResizeMove}
+                onPointerUp={endResize}
+                onPointerCancel={endResize}
+                className="absolute bottom-0 right-0 w-3.5 h-3.5 cursor-nwse-resize"
+                aria-hidden="true"
+              />
+            </>
+          )}
         </div>
-      )}
+        );
+      })()}
     </>
   );
 }
+
 
 function MessageBubble({ m, onQuick }: { m: UiMessage; onQuick: (s: string) => void }) {
   const isUser = m.role === "user";
