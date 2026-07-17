@@ -36,7 +36,7 @@ export function StickyActionBar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const suppress =
+  const suppressDesktop =
     pathname === "/find-your-program" ||
     pathname === "/auth" ||
     pathname.startsWith("/dashboard") ||
@@ -47,10 +47,14 @@ export function StickyActionBar() {
     pathname.startsWith("/partner.apply") ||
     pathname.startsWith("/partner.signup");
 
-  if (suppress) return null;
+  // Mobile bar shows globally except on auth screens.
+  const suppressMobile = pathname === "/auth";
+
+  if (suppressDesktop && suppressMobile) return null;
 
   const cta = ctaForPath(pathname, intent);
-  if (cta.to.startsWith("#")) return null; // anchor CTAs handled in-page
+  const desktopCtaValid = !cta.to.startsWith("#");
+
 
   return (
     <>
