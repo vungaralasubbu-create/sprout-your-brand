@@ -179,6 +179,7 @@ function AuthPage() {
       setLoading(false);
       return toast.error(v.error);
     }
+    if (email) markEmailTrusted(email);
     await completePasswordAuth();
     setLoading(false);
   }
