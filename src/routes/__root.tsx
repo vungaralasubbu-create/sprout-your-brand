@@ -205,15 +205,18 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AnalyticsProvider />
-      <RouteTracker />
-      <Outlet />
-      <StickyActionBar />
-      <AiMentor />
-      <SmartPopup />
-      <GlobalPalette />
-      <SalesAgentWidget />
-      <Toaster richColors position="top-right" />
+      <PreviewProvider>
+        <PreviewBanner />
+        <AnalyticsProvider />
+        <RouteTracker />
+        <Outlet />
+        <StickyActionBar />
+        <AiMentor />
+        <SmartPopup />
+        <GlobalPalette />
+        <SalesAgentWidget />
+        <Toaster richColors position="top-right" />
+      </PreviewProvider>
     </QueryClientProvider>
   );
 }
