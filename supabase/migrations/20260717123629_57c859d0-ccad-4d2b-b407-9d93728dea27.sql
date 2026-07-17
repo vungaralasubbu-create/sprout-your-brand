@@ -1,0 +1,1 @@
+ALTER TABLE public.live_sessions ALTER COLUMN course_id DROP NOT NULL;

@@ -8551,7 +8551,7 @@ export type Database = {
           breakout_rooms: boolean
           cancellation_note: string | null
           chat_enabled: boolean
-          course_id: string
+          course_id: string | null
           created_at: string
           created_by: string | null
           description: string | null
@@ -8589,7 +8589,7 @@ export type Database = {
           breakout_rooms?: boolean
           cancellation_note?: string | null
           chat_enabled?: boolean
-          course_id: string
+          course_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -8627,7 +8627,7 @@ export type Database = {
           breakout_rooms?: boolean
           cancellation_note?: string | null
           chat_enabled?: boolean
-          course_id?: string
+          course_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
