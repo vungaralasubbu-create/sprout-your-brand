@@ -47,6 +47,7 @@ import { openGlintrAI } from "@/lib/glintr-ai";
 import { supabase } from "@/integrations/supabase/client";
 import { dashboardPathForRole, fetchUserRoles, primaryRole, type AppRole } from "@/lib/auth/role-redirect";
 import { cn } from "@/lib/utils";
+import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
 
 
 type MegaItem = {
