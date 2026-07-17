@@ -3710,6 +3710,266 @@ export type Database = {
         }
         Relationships: []
       }
+      brain_alerts: {
+        Row: {
+          acknowledged: boolean | null
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          created_at: string
+          id: string
+          lead_id: string | null
+          message: string | null
+          metadata: Json | null
+          severity: string
+          title: string
+          type: string
+        }
+        Insert: {
+          acknowledged?: boolean | null
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          message?: string | null
+          metadata?: Json | null
+          severity?: string
+          title: string
+          type: string
+        }
+        Update: {
+          acknowledged?: boolean | null
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          message?: string | null
+          metadata?: Json | null
+          severity?: string
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_alerts_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_decisions: {
+        Row: {
+          assigned_counsellor_id: string | null
+          assignment_reason: string | null
+          best_channel: string | null
+          best_time_reason: string | null
+          best_time_window: string | null
+          buying_intent: string | null
+          computed_at: string
+          drop_off_reason: string | null
+          engagement_score: number | null
+          expected_close_date: string | null
+          expected_revenue: number | null
+          health_score: number | null
+          lead_id: string
+          model: string | null
+          needs_parent_mode: boolean | null
+          priority: string
+          probability_pct: number | null
+          reasoning: string | null
+          recommended_course: string | null
+          scholarship_pct: number | null
+          scholarship_reason: string | null
+          scholarship_type: string | null
+          secondary_course: string | null
+          updated_at: string
+          urgency: string
+        }
+        Insert: {
+          assigned_counsellor_id?: string | null
+          assignment_reason?: string | null
+          best_channel?: string | null
+          best_time_reason?: string | null
+          best_time_window?: string | null
+          buying_intent?: string | null
+          computed_at?: string
+          drop_off_reason?: string | null
+          engagement_score?: number | null
+          expected_close_date?: string | null
+          expected_revenue?: number | null
+          health_score?: number | null
+          lead_id: string
+          model?: string | null
+          needs_parent_mode?: boolean | null
+          priority?: string
+          probability_pct?: number | null
+          reasoning?: string | null
+          recommended_course?: string | null
+          scholarship_pct?: number | null
+          scholarship_reason?: string | null
+          scholarship_type?: string | null
+          secondary_course?: string | null
+          updated_at?: string
+          urgency?: string
+        }
+        Update: {
+          assigned_counsellor_id?: string | null
+          assignment_reason?: string | null
+          best_channel?: string | null
+          best_time_reason?: string | null
+          best_time_window?: string | null
+          buying_intent?: string | null
+          computed_at?: string
+          drop_off_reason?: string | null
+          engagement_score?: number | null
+          expected_close_date?: string | null
+          expected_revenue?: number | null
+          health_score?: number | null
+          lead_id?: string
+          model?: string | null
+          needs_parent_mode?: boolean | null
+          priority?: string
+          probability_pct?: number | null
+          reasoning?: string | null
+          recommended_course?: string | null
+          scholarship_pct?: number | null
+          scholarship_reason?: string | null
+          scholarship_type?: string | null
+          secondary_course?: string | null
+          updated_at?: string
+          urgency?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_decisions_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: true
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_dropoffs: {
+        Row: {
+          detected_at: string
+          evidence: string | null
+          id: string
+          lead_id: string | null
+          page_path: string | null
+          reason: string
+        }
+        Insert: {
+          detected_at?: string
+          evidence?: string | null
+          id?: string
+          lead_id?: string | null
+          page_path?: string | null
+          reason: string
+        }
+        Update: {
+          detected_at?: string
+          evidence?: string | null
+          id?: string
+          lead_id?: string | null
+          page_path?: string | null
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_dropoffs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      brain_forecasts: {
+        Row: {
+          avg_ticket_size: number | null
+          breakdown: Json | null
+          conversion_rate: number | null
+          expected_admissions: number | null
+          expected_revenue: number | null
+          generated_at: string
+          hot_leads: number | null
+          id: string
+          scope: string
+          warm_leads: number | null
+        }
+        Insert: {
+          avg_ticket_size?: number | null
+          breakdown?: Json | null
+          conversion_rate?: number | null
+          expected_admissions?: number | null
+          expected_revenue?: number | null
+          generated_at?: string
+          hot_leads?: number | null
+          id?: string
+          scope: string
+          warm_leads?: number | null
+        }
+        Update: {
+          avg_ticket_size?: number | null
+          breakdown?: Json | null
+          conversion_rate?: number | null
+          expected_admissions?: number | null
+          expected_revenue?: number | null
+          generated_at?: string
+          hot_leads?: number | null
+          id?: string
+          scope?: string
+          warm_leads?: number | null
+        }
+        Relationships: []
+      }
+      brain_nurture_deliveries: {
+        Row: {
+          body: string | null
+          campaign: string
+          channel: string
+          created_at: string
+          id: string
+          lead_id: string | null
+          sent_at: string | null
+          status: string | null
+          subject: string | null
+        }
+        Insert: {
+          body?: string | null
+          campaign: string
+          channel: string
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string | null
+        }
+        Update: {
+          body?: string | null
+          campaign?: string
+          channel?: string
+          created_at?: string
+          id?: string
+          lead_id?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brain_nurture_deliveries_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "platform_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_applications: {
         Row: {
           admin_notes: string | null
@@ -5612,6 +5872,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      counsellor_profiles: {
+        Row: {
+          active: boolean | null
+          avg_response_seconds: number | null
+          capacity: number | null
+          conversion_rate: number | null
+          current_workload: number | null
+          display_name: string | null
+          is_senior: boolean | null
+          languages: string[] | null
+          region: string | null
+          specialties: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean | null
+          avg_response_seconds?: number | null
+          capacity?: number | null
+          conversion_rate?: number | null
+          current_workload?: number | null
+          display_name?: string | null
+          is_senior?: boolean | null
+          languages?: string[] | null
+          region?: string | null
+          specialties?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean | null
+          avg_response_seconds?: number | null
+          capacity?: number | null
+          conversion_rate?: number | null
+          current_workload?: number | null
+          display_name?: string | null
+          is_senior?: boolean | null
+          languages?: string[] | null
+          region?: string | null
+          specialties?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       counsellor_tasks: {
         Row: {
