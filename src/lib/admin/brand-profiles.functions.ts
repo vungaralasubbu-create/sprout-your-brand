@@ -167,9 +167,9 @@ export const adminListBrandProfiles = createServerFn({ method: "POST" })
       // exclude drafts on the default view (matches dashboard counter intent)
       query = query.neq("status", "draft");
     } else {
-      const dbStatuses = UI_TO_DB[data.status] ?? [];
+      const dbStatuses = (UI_TO_DB[data.status] ?? []) as any[];
       if (dbStatuses.length === 1) query = query.eq("status", dbStatuses[0]);
-      else if (dbStatuses.length > 1) query = query.in("status", dbStatuses);
+      else if (dbStatuses.length > 1) query = query.in("status", dbStatuses as any);
     }
 
     const s = data.search?.trim();
