@@ -508,8 +508,12 @@ const CapturePhoneInput = z.object({
   pagePath: z.string().max(300).optional(),
   courseSlug: z.string().max(200).optional(),
   referralSource: z.string().max(400).optional(),
+  sourceUrl: z.string().max(500).optional(),
+  browser: z.string().max(240).optional(),
+  utm: z.record(z.string(), z.string().max(120)).optional(),
   device: z.string().max(80).optional(),
 });
+
 
 export const capturePhoneLead = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => CapturePhoneInput.parse(input))
