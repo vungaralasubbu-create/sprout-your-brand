@@ -468,9 +468,19 @@ function AuthPage() {
                   )}
                 </form>
               ) : (
-                <form onSubmit={handleOtpSubmit} className="mt-6 space-y-4">
+                <form onSubmit={handleOtpSubmit} className="mt-6 space-y-4" noValidate>
                   <div>
-                    <Label htmlFor="code">6-digit OTP</Label>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="code">6-digit OTP</Label>
+                      {otpSentAt !== null && (
+                        <span
+                          className={`text-caption ${otpExpired ? "text-destructive" : "text-muted-foreground"}`}
+                          aria-live="polite"
+                        >
+                          {otpExpired ? "Code expired" : `Expires in ${otpMMSS}`}
+                        </span>
+                      )}
+                    </div>
                     <Input
                       id="code"
                       name="code"
@@ -478,18 +488,26 @@ function AuthPage() {
                       inputMode="numeric"
                       autoComplete="one-time-code"
                       maxLength={6}
-                      required
                       value={code}
                       onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                      className="mt-2 h-11 tracking-[0.5em] text-center text-lg"
+                      aria-invalid={!!errors.code}
+                      aria-describedby={errors.code ? "code-error" : undefined}
+                      className={`mt-2 h-11 tracking-[0.5em] text-center text-lg ${
+                        errors.code || otpExpired ? "border-destructive focus-visible:ring-destructive" : ""
+                      }`}
                     />
+                    {errors.code && (
+                      <p id="code-error" role="alert" className="text-caption mt-1 text-destructive">
+                        {errors.code}
+                      </p>
+                    )}
                   </div>
                   <Button
                     type="submit"
                     size="lg"
                     variant="gradient"
                     className="w-full"
-                    disabled={loading}
+                    disabled={loading || otpExpired}
                   >
                     {loading ? "Verifying…" : mode === "signup" ? "Verify & Create account" : "Verify & Sign In"}
                   </Button>
@@ -508,12 +526,14 @@ function AuthPage() {
                       onClick={() => {
                         setStage("creds");
                         setCode("");
+                        setErrors((p) => ({ ...p, code: undefined }));
                       }}
                     >
                       ← Change details
                     </button>
                   </div>
                 </form>
+
               )}
 
               {stage === "creds" && mode !== "recovery" && (
