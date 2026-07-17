@@ -1,6 +1,8 @@
 import * as React from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
+  Award,
+  Bell,
   BookOpen,
   Briefcase,
   Building2,
@@ -9,12 +11,20 @@ import {
   Clock,
   Cpu,
   Cog,
+  FolderKanban,
   GraduationCap,
   Handshake,
+  LayoutDashboard,
   Layers,
+  LifeBuoy,
+  LogOut,
   Menu,
+  MessageSquare,
   Rocket,
+  Search,
+  Settings,
   Sparkles,
+  User as UserIcon,
   Users,
   Wallet,
   X,
@@ -22,7 +32,22 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { GlintrLogo } from "@/components/shared/logo";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { HeaderSearchDialog } from "@/components/shared/header-search-dialog";
+import { openGlintrAI } from "@/lib/glintr-ai";
+import { supabase } from "@/integrations/supabase/client";
+import { dashboardPathForRole, fetchUserRoles, primaryRole, type AppRole } from "@/lib/auth/role-redirect";
 import { cn } from "@/lib/utils";
+
 
 type MegaItem = {
   label: string;
@@ -179,11 +204,90 @@ function MegaPanel({ entry }: { entry: NavEntry }) {
   );
 }
 
+type Session = { userId: string; email: string | null } | null;
+
+function initialsFromEmail(email: string | null | undefined): string {
+  if (!email) return "G";
+  const local = email.split("@")[0] ?? "";
+  const parts = local.split(/[._-]+/).filter(Boolean);
+  const chars = (parts[0]?.[0] ?? "G") + (parts[1]?.[0] ?? "");
+  return chars.toUpperCase().slice(0, 2);
+}
+
+function NotificationsBell() {
+  const [items, setItems] = React.useState<Array<{ id: string; title: string; message: string | null; read_at: string | null; action_route: string | null; created_at: string }>>([]);
+  const [unread, setUnread] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+
+  const load = React.useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const { data, count } = await supabase
+      .from("student_notifications" as any)
+      .select("id, title, message, read_at, action_route, created_at", { count: "exact" })
+      .is("read_at", null)
+      .order("created_at", { ascending: false })
+      .limit(8);
+    setItems((data ?? []) as any);
+    setUnread(count ?? 0);
+  }, []);
+
+  React.useEffect(() => { void load(); }, [load]);
+  React.useEffect(() => {
+    if (open) void load();
+  }, [open, load]);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" size="icon" className="relative rounded-full" aria-label="Notifications">
+          <Bell className="size-5" />
+          {unread > 0 ? (
+            <span className="absolute top-1.5 right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold grid place-items-center">
+              {unread > 9 ? "9+" : unread}
+            </span>
+          ) : null}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-[360px] p-0">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+          <p className="text-sm font-semibold">Notifications</p>
+          <a href="/student/notifications" className="text-xs text-primary hover:underline">View all</a>
+        </div>
+        <div className="max-h-[380px] overflow-y-auto">
+          {items.length === 0 ? (
+            <p className="text-xs text-muted-foreground p-6 text-center">You're all caught up.</p>
+          ) : items.map((n) => (
+            <a
+              key={n.id}
+              href={n.action_route ?? "/student/notifications"}
+              className="block px-4 py-3 hover:bg-accent border-b border-border/60 last:border-0"
+            >
+              <p className="text-sm font-medium truncate">{n.title}</p>
+              {n.message ? <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{n.message}</p> : null}
+            </a>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+const LOGIN_ROLES: Array<{ label: string; sub: string; href: string; icon: React.ComponentType<{ className?: string }> }> = [
+  { label: "Student", sub: "Learners & aspirants", href: "/auth?role=student", icon: GraduationCap },
+  { label: "Working Professional", sub: "Upskilling for career growth", href: "/auth?role=working-professional", icon: Briefcase },
+  { label: "Partner", sub: "Sales & channel partners", href: "/auth?role=partner", icon: Handshake },
+  { label: "Brand Owner", sub: "White-label EdTech operators", href: "/auth?role=brand", icon: Building2 },
+];
+
 export function SiteHeader() {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const [openMobile, setOpenMobile] = React.useState<string | null>(null);
-  const [session, setSession] = React.useState<{ email: string | null } | null>(null);
+  const [session, setSession] = React.useState<Session>(null);
+  const [role, setRole] = React.useState<AppRole | null>(null);
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -194,17 +298,46 @@ export function SiteHeader() {
 
   React.useEffect(() => {
     let mounted = true;
-    import("@/integrations/supabase/client").then(({ supabase }) => {
-      supabase.auth.getSession().then(({ data }) => {
-        if (mounted) setSession(data.session ? { email: data.session.user.email ?? null } : null);
-      });
-      const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-        if (mounted) setSession(s ? { email: s.user.email ?? null } : null);
-      });
-      return () => sub.subscription.unsubscribe();
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return;
+      setSession(data.session ? { userId: data.session.user.id, email: data.session.user.email ?? null } : null);
     });
-    return () => { mounted = false; };
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      if (!mounted) return;
+      setSession(s ? { userId: s.user.id, email: s.user.email ?? null } : null);
+    });
+    return () => { mounted = false; sub.subscription.unsubscribe(); };
   }, []);
+
+  React.useEffect(() => {
+    let mounted = true;
+    if (!session) { setRole(null); return; }
+    fetchUserRoles(session.userId).then((roles) => {
+      if (mounted) setRole(primaryRole(roles));
+    }).catch(() => { if (mounted) setRole("student"); });
+    return () => { mounted = false; };
+  }, [session]);
+
+  // ⌘K / Ctrl-K opens search
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setSearchOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const dashboardHref = dashboardPathForRole(role);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate({ to: "/" });
+  };
+
+  const handleOpenAI = () => openGlintrAI({ source: "site-header" });
 
   return (
     <header
@@ -214,7 +347,6 @@ export function SiteHeader() {
         scrolled ? "surface-glass-strong shadow-sm border-b border-border/60" : "bg-transparent",
       )}
     >
-
       <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 md:px-8 h-16">
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <GlintrLogo className="h-8" />
@@ -239,21 +371,110 @@ export function SiteHeader() {
             </div>
           ))}
         </nav>
-        <div className="flex items-center gap-2 ml-auto">
+
+        <div className="flex items-center gap-1 ml-auto">
+          {/* Search — always visible */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Search Glintr"
+            title="Search  (⌘K)"
+          >
+            <Search className="size-5" />
+          </Button>
+
+          {/* GlintrAI — always visible */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-primary hover:text-primary"
+            onClick={handleOpenAI}
+            aria-label="Ask GlintrAI"
+            title="Ask GlintrAI"
+          >
+            <Sparkles className="size-5" />
+          </Button>
+
           {session ? (
-            <Button variant="ghost" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
-              <a href="/student/dashboard">My Dashboard</a>
-            </Button>
+            <>
+              <div className="hidden md:block"><NotificationsBell /></div>
+              <Button variant="ghost" size="sm" className="hidden lg:inline-flex rounded-full px-3 gap-1.5" asChild>
+                <a href={dashboardHref}>
+                  <LayoutDashboard className="size-4" />
+                  Dashboard
+                </a>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="ml-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary/60" aria-label="Profile menu">
+                    <Avatar className="size-9 border border-border/60">
+                      <AvatarFallback className="bg-gradient-brand text-primary-foreground text-xs font-bold">
+                        {initialsFromEmail(session.email)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64">
+                  <DropdownMenuLabel className="flex flex-col gap-0.5 py-2">
+                    <span className="text-sm font-semibold truncate">{session.email ?? "My account"}</span>
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{role ?? "member"}</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><a href={dashboardHref}><LayoutDashboard className="size-4 mr-2" />Dashboard</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><a href="/student/programs"><BookOpen className="size-4 mr-2" />My Courses</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><a href="/student/certificates"><Award className="size-4 mr-2" />Certificates</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><a href="/student/projects"><FolderKanban className="size-4 mr-2" />Projects</a></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><a href="/student/settings"><Settings className="size-4 mr-2" />Settings</a></DropdownMenuItem>
+                  <DropdownMenuItem asChild><a href="/student/support"><LifeBuoy className="size-4 mr-2" />Support</a></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
+                    <LogOut className="size-4 mr-2" />Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
-                <a href="/auth">Log in</a>
-              </Button>
+              {/* Login menu */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="hidden md:inline-flex rounded-full px-3 gap-1">
+                    Log in <ChevronDown className="size-3.5 opacity-70" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-[320px] p-2">
+                  <p className="text-label px-3 pt-1 pb-2">Continue as</p>
+                  {LOGIN_ROLES.map((r) => (
+                    <a
+                      key={r.label}
+                      href={r.href}
+                      className="flex items-start gap-3 rounded-lg p-2.5 hover:bg-accent transition-colors"
+                    >
+                      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                        <r.icon className="size-4" />
+                      </span>
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-sm font-semibold">{r.label}</span>
+                        <span className="block text-caption">{r.sub}</span>
+                      </span>
+                    </a>
+                  ))}
+                  <div className="border-t border-border mt-2 pt-2 px-1">
+                    <a href="/auth?mode=forgot" className="text-xs text-muted-foreground hover:text-foreground">Forgot password?</a>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <Button variant="outline" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
-                <a href="/auth?mode=signup">Sign up</a>
+                <a href="/auth?mode=signup" aria-label="Sign up with mobile OTP">Sign up</a>
               </Button>
             </>
           )}
+
+          {/* Start Earning — primary CTA */}
           <Button
             variant="gradient"
             size="sm"
@@ -265,6 +486,8 @@ export function SiteHeader() {
               <span className="relative z-10">Start Earning</span>
             </a>
           </Button>
+
+          {/* Mobile menu toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -276,17 +499,60 @@ export function SiteHeader() {
           </Button>
         </div>
       </div>
+
       {open ? (
         <div className="lg:hidden border-t border-border bg-background max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="p-4 flex flex-col gap-1">
             {session ? (
-              <a href="/student/dashboard" className="px-3 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium text-center" onClick={() => setOpen(false)}>My Dashboard</a>
+              <>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-accent/50 mb-2">
+                  <Avatar className="size-10 border border-border/60">
+                    <AvatarFallback className="bg-gradient-brand text-primary-foreground text-xs font-bold">
+                      {initialsFromEmail(session.email)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">{session.email ?? "My account"}</p>
+                    <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{role ?? "member"}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pb-2">
+                  <a href={dashboardHref} className="px-3 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium text-center inline-flex items-center justify-center gap-2" onClick={() => setOpen(false)}>
+                    <LayoutDashboard className="size-4" /> Dashboard
+                  </a>
+                  <a href="/student/notifications" className="px-3 py-3 rounded-lg border text-sm font-medium text-center inline-flex items-center justify-center gap-2" onClick={() => setOpen(false)}>
+                    <Bell className="size-4" /> Notifications
+                  </a>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pb-2 text-sm">
+                  <a href="/student/programs" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><BookOpen className="size-4"/>My Courses</a>
+                  <a href="/student/certificates" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><Award className="size-4"/>Certificates</a>
+                  <a href="/student/projects" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><FolderKanban className="size-4"/>Projects</a>
+                  <a href="/student/settings" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg border text-center inline-flex items-center justify-center gap-2"><Settings className="size-4"/>Settings</a>
+                </div>
+              </>
             ) : (
               <div className="grid grid-cols-2 gap-2 pb-2">
                 <a href="/auth" className="px-3 py-3 rounded-lg border text-sm font-medium text-center" onClick={() => setOpen(false)}>Log in</a>
                 <a href="/auth?mode=signup" className="px-3 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-medium text-center" onClick={() => setOpen(false)}>Sign up</a>
               </div>
             )}
+
+            <div className="grid grid-cols-2 gap-2 pb-2">
+              <button
+                onClick={() => { setOpen(false); setSearchOpen(true); }}
+                className="px-3 py-2.5 rounded-lg border text-sm font-medium inline-flex items-center justify-center gap-2"
+              >
+                <Search className="size-4" /> Search
+              </button>
+              <button
+                onClick={() => { setOpen(false); handleOpenAI(); }}
+                className="px-3 py-2.5 rounded-lg border text-sm font-medium inline-flex items-center justify-center gap-2 text-primary"
+              >
+                <Sparkles className="size-4" /> Ask GlintrAI
+              </button>
+            </div>
+
             {nav.map((n) => {
               const isOpen = openMobile === n.label;
               if (n.href && !n.groups) {
@@ -346,10 +612,18 @@ export function SiteHeader() {
                   <span className="relative z-10">Start Earning</span>
                 </a>
               </Button>
+              {session ? (
+                <Button variant="outline" size="sm" className="rounded-full" onClick={handleSignOut}>
+                  <LogOut className="size-4" /> Logout
+                </Button>
+              ) : null}
             </div>
           </div>
         </div>
       ) : null}
+
+      <HeaderSearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 }
+
