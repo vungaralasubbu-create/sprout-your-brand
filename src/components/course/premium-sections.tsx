@@ -354,26 +354,31 @@ export function StudentLearningJourney() {
           </div>
         </div>
 
-        {/* Mobile vertical */}
-        <ol className="lg:hidden relative pl-10">
-          <span
-            aria-hidden
-            className="absolute left-[22px] top-2 bottom-2 w-px bg-gradient-to-b from-primary/50 via-primary/30 to-transparent"
-          />
-          {JOURNEY.map((s, i) => {
+        {/* Mobile: compact process cards — no numbers, no connector line */}
+        <ul className="lg:hidden flex flex-col gap-2.5">
+          {JOURNEY.map((s) => {
             const Icon = s.icon;
             return (
-              <li key={s.title} className="relative pb-6 last:pb-0">
-                <span className="absolute -left-10 top-0 inline-flex size-11 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-white shadow-sm">
-                  <Icon className="size-5" />
+              <li
+                key={s.title}
+                data-reveal
+                className="flex items-center gap-3 rounded-2xl border border-border/60 bg-surface-1 p-3 shadow-sm"
+              >
+                <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-white shadow-sm">
+                  <Icon className="size-4.5" />
                 </span>
-                <div className="text-caption font-mono text-primary">{String(i + 1).padStart(2, "0")}</div>
-                <h3 className="mt-1 font-display font-semibold text-base tracking-tight">{s.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{s.description}</p>
+                <div className="min-w-0">
+                  <h3 className="font-display font-semibold text-[15px] tracking-tight leading-tight truncate">
+                    {s.title}
+                  </h3>
+                  <p className="mt-0.5 text-[12.5px] text-muted-foreground leading-snug line-clamp-2">
+                    {s.description}
+                  </p>
+                </div>
               </li>
             );
           })}
-        </ol>
+        </ul>
       </Container>
     </Section>
   );
