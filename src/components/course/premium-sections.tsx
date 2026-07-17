@@ -5,6 +5,7 @@
  */
 
 import { Link } from "@tanstack/react-router";
+import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
