@@ -37,8 +37,13 @@ function ensureSessionToken(): string {
 const GREETING: UiMessage = {
   role: "assistant",
   content:
-    "Hi 👋 I'm Glintr's counsellor. Tell me a bit about you — are you a student or working professional, and what would you like to learn next?",
-  quickReplies: ["I'm a student", "Working professional", "Show top programs", "How does EMI work?"],
+    "Hi 👋 I'm your Glintr admissions counsellor. Before I suggest anything, tell me a little about you — **what brings you to Glintr today?** Are you looking for an internship, placement, a career switch, or just exploring AI?",
+  quickReplies: [
+    "I need an internship certificate",
+    "I want placement support",
+    "I want to learn AI",
+    "I'm not sure yet",
+  ],
 };
 
 export function SalesAgentWidget() {
