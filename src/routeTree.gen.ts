@@ -321,6 +321,7 @@ import { Route as AuthenticatedPartnerAiEmployeesSlugRouteImport } from './route
 import { Route as AuthenticatedPartnerAcademyWorkspaceRouteImport } from './routes/_authenticated/partner.academy.workspace'
 import { Route as AuthenticatedPartnerAcademyOnboardingRouteImport } from './routes/_authenticated/partner.academy.onboarding'
 import { Route as AuthenticatedPartnerAcademySlugRouteImport } from './routes/_authenticated/partner.academy.$slug'
+import { Route as AuthenticatedCounsellorCopilotLeadIdRouteImport } from './routes/_authenticated/counsellor.copilot.$leadId'
 import { Route as AuthenticatedAmbassadorReferralsIdRouteImport } from './routes/_authenticated/ambassador.referrals.$id'
 import { Route as AuthenticatedAmbassadorPayoutsIdRouteImport } from './routes/_authenticated/ambassador.payouts.$id'
 import { Route as AuthenticatedAmbassadorEnrollmentsIdRouteImport } from './routes/_authenticated/ambassador.enrollments.$id'
@@ -2161,6 +2162,12 @@ const AuthenticatedPartnerAcademySlugRoute =
     path: '/academy/$slug',
     getParentRoute: () => AuthenticatedPartnerRoute,
   } as any)
+const AuthenticatedCounsellorCopilotLeadIdRoute =
+  AuthenticatedCounsellorCopilotLeadIdRouteImport.update({
+    id: '/$leadId',
+    path: '/$leadId',
+    getParentRoute: () => AuthenticatedCounsellorCopilotRoute,
+  } as any)
 const AuthenticatedAmbassadorReferralsIdRoute =
   AuthenticatedAmbassadorReferralsIdRouteImport.update({
     id: '/referrals/$id',
@@ -3000,7 +3007,7 @@ export interface FileRoutesByFullPath {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
-  '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRoute
+  '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3152,6 +3159,7 @@ export interface FileRoutesByFullPath {
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/counsellor/copilot/$leadId': typeof AuthenticatedCounsellorCopilotLeadIdRoute
   '/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/partner/academy/onboarding': typeof AuthenticatedPartnerAcademyOnboardingRoute
   '/partner/academy/workspace': typeof AuthenticatedPartnerAcademyWorkspaceRoute
@@ -3406,7 +3414,7 @@ export interface FileRoutesByTo {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
-  '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRoute
+  '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3558,6 +3566,7 @@ export interface FileRoutesByTo {
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/counsellor/copilot/$leadId': typeof AuthenticatedCounsellorCopilotLeadIdRoute
   '/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/partner/academy/onboarding': typeof AuthenticatedPartnerAcademyOnboardingRoute
   '/partner/academy/workspace': typeof AuthenticatedPartnerAcademyWorkspaceRoute
@@ -3827,7 +3836,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
-  '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRoute
+  '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/_authenticated/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3979,6 +3988,7 @@ export interface FileRoutesById {
   '/_authenticated/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/_authenticated/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/_authenticated/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/_authenticated/counsellor/copilot/$leadId': typeof AuthenticatedCounsellorCopilotLeadIdRoute
   '/_authenticated/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/_authenticated/partner/academy/onboarding': typeof AuthenticatedPartnerAcademyOnboardingRoute
   '/_authenticated/partner/academy/workspace': typeof AuthenticatedPartnerAcademyWorkspaceRoute
@@ -4400,6 +4410,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
     | '/ambassador/referrals/$id'
+    | '/counsellor/copilot/$leadId'
     | '/partner/academy/$slug'
     | '/partner/academy/onboarding'
     | '/partner/academy/workspace'
@@ -4806,6 +4817,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
     | '/ambassador/referrals/$id'
+    | '/counsellor/copilot/$leadId'
     | '/partner/academy/$slug'
     | '/partner/academy/onboarding'
     | '/partner/academy/workspace'
@@ -5226,6 +5238,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador/enrollments/$id'
     | '/_authenticated/ambassador/payouts/$id'
     | '/_authenticated/ambassador/referrals/$id'
+    | '/_authenticated/counsellor/copilot/$leadId'
     | '/_authenticated/partner/academy/$slug'
     | '/_authenticated/partner/academy/onboarding'
     | '/_authenticated/partner/academy/workspace'
@@ -7564,6 +7577,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerAcademySlugRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
     }
+    '/_authenticated/counsellor/copilot/$leadId': {
+      id: '/_authenticated/counsellor/copilot/$leadId'
+      path: '/$leadId'
+      fullPath: '/counsellor/copilot/$leadId'
+      preLoaderRoute: typeof AuthenticatedCounsellorCopilotLeadIdRouteImport
+      parentRoute: typeof AuthenticatedCounsellorCopilotRoute
+    }
     '/_authenticated/ambassador/referrals/$id': {
       id: '/_authenticated/ambassador/referrals/$id'
       path: '/referrals/$id'
@@ -9252,6 +9272,21 @@ const AuthenticatedStudentRouteChildren: AuthenticatedStudentRouteChildren = {
 const AuthenticatedStudentRouteWithChildren =
   AuthenticatedStudentRoute._addFileChildren(AuthenticatedStudentRouteChildren)
 
+interface AuthenticatedCounsellorCopilotRouteChildren {
+  AuthenticatedCounsellorCopilotLeadIdRoute: typeof AuthenticatedCounsellorCopilotLeadIdRoute
+}
+
+const AuthenticatedCounsellorCopilotRouteChildren: AuthenticatedCounsellorCopilotRouteChildren =
+  {
+    AuthenticatedCounsellorCopilotLeadIdRoute:
+      AuthenticatedCounsellorCopilotLeadIdRoute,
+  }
+
+const AuthenticatedCounsellorCopilotRouteWithChildren =
+  AuthenticatedCounsellorCopilotRoute._addFileChildren(
+    AuthenticatedCounsellorCopilotRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
@@ -9261,7 +9296,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
   AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
-  AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRoute
+  AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -9275,7 +9310,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCampusAmbassadorApplyRoute,
   AuthenticatedCampusAmbassadorStatusRoute:
     AuthenticatedCampusAmbassadorStatusRoute,
-  AuthenticatedCounsellorCopilotRoute: AuthenticatedCounsellorCopilotRoute,
+  AuthenticatedCounsellorCopilotRoute:
+    AuthenticatedCounsellorCopilotRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
