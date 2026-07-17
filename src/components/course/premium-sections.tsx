@@ -5,6 +5,7 @@
  */
 
 import { Link } from "@tanstack/react-router";
+import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
@@ -601,10 +602,13 @@ export function CertificationBadges() {
 const SUCCESS_STATS = [
   {
     icon: Users,
-    value: 1000000,
+    value: 100000,
     suffix: "+",
     label: "Paid Learners",
-    format: (n: number) => (n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n.toLocaleString()),
+    format: (n: number) => {
+      const v = Math.round(n);
+      return v >= 1000 ? `${Math.round(v / 1000)}K` : v.toLocaleString();
+    },
   },
   { icon: Building2, value: 5000, suffix: "+", label: "Hiring Partners" },
   { icon: GraduationCap, value: 120, suffix: "+", label: "Programs" },
@@ -619,6 +623,43 @@ const SUCCESS_STATS = [
   },
 ];
 
+function StatCard({
+  stat,
+  index,
+}: {
+  stat: (typeof SUCCESS_STATS)[number];
+  index: number;
+}) {
+  const Icon = stat.icon;
+  const [counting, setCounting] = React.useState(false);
+  return (
+    <div
+      className="group flex flex-col items-center justify-center text-center px-3 lg:px-4 py-2 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/60 opacity-0 animate-fade-in"
+      style={{ animationDelay: `${index * 100}ms`, animationFillMode: "forwards" }}
+    >
+      <span
+        className="inline-flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-[oklch(0.75_0.15_200)]/10 text-primary mb-3 opacity-0 animate-fade-in transition-transform duration-300 group-hover:scale-110"
+        style={{ animationDelay: `${index * 100 + 120}ms`, animationFillMode: "forwards" }}
+      >
+        <Icon className="size-5" strokeWidth={1.75} />
+      </span>
+      <div
+        className="font-display font-semibold tracking-tight text-[clamp(1.75rem,3.4vw,2.75rem)] leading-none bg-gradient-to-r from-primary to-[oklch(0.6_0.16_200)] bg-clip-text text-transparent transition-transform duration-300 will-change-transform"
+        style={{ transform: counting ? "scale(1.04)" : "scale(1)" }}
+      >
+        <AnimatedCounter
+          value={"scale" in stat && stat.scale ? stat.value * stat.scale : stat.value}
+          suffix={stat.suffix}
+          duration={2000}
+          format={"format" in stat ? stat.format : undefined}
+          onCountingChange={setCounting}
+        />
+      </div>
+      <div className="mt-2 text-sm font-medium text-muted-foreground">{stat.label}</div>
+    </div>
+  );
+}
+
 export function SuccessCounters() {
   return (
     <Section className="py-14 lg:py-20 border-y bg-gradient-to-b from-white to-surface-1/50">
@@ -630,25 +671,10 @@ export function SuccessCounters() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-8 lg:gap-y-0 lg:divide-x lg:divide-border/70">
-          {SUCCESS_STATS.map((s) => {
-            const Icon = s.icon;
-            return (
-              <div key={s.label} className="flex flex-col items-center text-center px-3 lg:px-4">
-                <span className="inline-flex size-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/10 to-[oklch(0.75_0.15_200)]/10 text-primary mb-3">
-                  <Icon className="size-5" strokeWidth={1.75} />
-                </span>
-                <div className="font-display font-semibold tracking-tight text-[clamp(1.6rem,3.2vw,2.5rem)] leading-none bg-gradient-to-r from-primary to-[oklch(0.6_0.16_200)] bg-clip-text text-transparent">
-                  <AnimatedCounter
-                    value={"scale" in s && s.scale ? s.value * s.scale : s.value}
-                    suffix={s.suffix}
-                    format={"format" in s ? s.format : undefined}
-                  />
-                </div>
-                <div className="mt-2 text-sm font-medium text-muted-foreground">{s.label}</div>
-              </div>
-            );
-          })}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-0 lg:divide-x lg:divide-border/70 items-stretch">
+          {SUCCESS_STATS.map((s, i) => (
+            <StatCard key={s.label} stat={s} index={i} />
+          ))}
         </div>
       </Container>
     </Section>
