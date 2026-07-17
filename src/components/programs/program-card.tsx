@@ -68,7 +68,7 @@ export function ProgramCard({
   className?: string;
   compact?: boolean;
 }) {
-  const pricing = resolvePricingDisplay(course);
+  // Pricing intentionally omitted from listing cards — shown only on the course page.
 
   return (
     <Link
