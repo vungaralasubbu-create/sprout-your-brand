@@ -178,16 +178,17 @@ export function SalesAgentWidget() {
             "rounded-2xl border border-border bg-background shadow-2xl overflow-hidden flex flex-col",
           )}
           role="dialog"
-          aria-label="Glintr AI Counsellor"
+          aria-label="Ask GlintrAI"
         >
           <header className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-primary/90 to-lime-500/80 text-primary-foreground">
             <div className="grid place-items-center w-9 h-9 rounded-full bg-white/15">
               <Bot className="w-5 h-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold">Glintr Counsellor</div>
-              <div className="text-[11px] opacity-80">Powered by AI · replies instantly</div>
+              <div className="text-sm font-semibold">GlintrAI · Admissions & Career Counsellor</div>
+              <div className="text-[11px] opacity-80">Instant answers · human handover anytime</div>
             </div>
+
             <button
               onClick={() => setOpen(false)}
               className="p-1.5 rounded-md hover:bg-white/10"
