@@ -527,9 +527,14 @@ function GlossaryDetail() {
 
 function MentorHint({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border bg-card px-3 py-2 text-sm text-foreground/85">
+    <button
+      type="button"
+      onClick={() => openGlintrAI({ prompt: label, source: "glossary" })}
+      className="flex items-center gap-2 rounded-xl border bg-card px-3 py-2 text-left text-sm text-foreground/85 hover:border-primary/40 hover:bg-primary/5"
+    >
       <span className="text-primary">{icon}</span>
       <span className="truncate">{label}</span>
-    </div>
+    </button>
   );
 }
+
