@@ -76,6 +76,17 @@ export function SalesAgentWidget() {
   const [firstQuestion, setFirstQuestion] = useState<string | null>(null);
   const [phoneInput, setPhoneInput] = useState("");
   const [submittingPhone, setSubmittingPhone] = useState(false);
+
+  // OTP flow state
+  const [otpEnabled, setOtpEnabled] = useState(false);
+  const [phoneStep, setPhoneStep] = useState<PhoneStep>("collect");
+  const [otpCode, setOtpCode] = useState("");
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [otpAttempts, setOtpAttempts] = useState(0);
+  const [otpResends, setOtpResends] = useState(0);
+  const [resendIn, setResendIn] = useState(0);
+  const [verifying, setVerifying] = useState(false);
+  const [pendingLead, setPendingLead] = useState<null | (() => Promise<void>)>(null);
   const routerState = useRouterState();
   const path = routerState.location.pathname;
 
