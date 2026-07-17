@@ -190,6 +190,17 @@ export function SalesAgentWidget() {
           : "desktop";
       const referralSource =
         typeof document !== "undefined" && document.referrer ? document.referrer.slice(0, 400) : null;
+      const sourceUrl =
+        typeof window !== "undefined" ? window.location.href.slice(0, 500) : null;
+      const browser = typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 240) : null;
+      const utm: Record<string, string> = {};
+      if (typeof window !== "undefined") {
+        const sp = new URLSearchParams(window.location.search);
+        for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
+          const v = sp.get(k);
+          if (v) utm[k] = v.slice(0, 120);
+        }
+      }
       // Detect course slug when the user is on a programs/courses page.
       const courseMatch = path.match(/^\/(?:programs|courses)\/[^/]+\/([^/?#]+)/);
       await capturePhoneLead({
@@ -200,9 +211,13 @@ export function SalesAgentWidget() {
           pagePath: path,
           courseSlug: courseMatch ? courseMatch[1] : undefined,
           referralSource: referralSource ?? undefined,
+          sourceUrl: sourceUrl ?? undefined,
+          browser: browser ?? undefined,
+          utm: Object.keys(utm).length ? utm : undefined,
           device,
         },
       });
+
       setPhoneCaptured(true);
       if (typeof window !== "undefined") window.localStorage.setItem(PHONE_KEY, "1");
       toast.success("Thanks! Continuing your conversation…");
