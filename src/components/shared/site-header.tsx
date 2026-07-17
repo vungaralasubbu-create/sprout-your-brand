@@ -480,17 +480,50 @@ export function SiteHeader() {
                       </span>
                     </a>
                   ))}
-                  <div className="border-t border-border mt-2 pt-2 px-1">
-                    <a href="/auth?mode=forgot" className="text-xs text-muted-foreground hover:text-foreground">Forgot password?</a>
+                  <div className="border-t border-border mt-2 pt-2 px-1 flex items-center justify-between text-xs">
+                    <label className="inline-flex items-center gap-1.5 text-muted-foreground">
+                      <input type="checkbox" defaultChecked className="rounded border-border" /> Remember me
+                    </label>
+                    <a href="/auth?mode=forgot" className="text-muted-foreground hover:text-foreground">Forgot password?</a>
+                  </div>
+                  <div className="px-1 pt-1 text-[11px] text-muted-foreground">
+                    Sign in with OTP or Email — your account works across all Glintr apps.
                   </div>
                 </PopoverContent>
               </Popover>
 
-              <Button variant="outline" size="sm" className="hidden md:inline-flex rounded-full px-4" asChild>
-                <a href="/auth?mode=signup" aria-label="Sign up with mobile OTP">Sign up</a>
-              </Button>
+              {/* Sign up — role selection popover */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="hidden md:inline-flex rounded-full px-4 gap-1">
+                    Sign up <ChevronDown className="size-3.5 opacity-70" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-[320px] p-2">
+                  <p className="text-label px-3 pt-1 pb-2">Sign up as</p>
+                  {LOGIN_ROLES.slice(0, 3).map((r) => (
+                    <a
+                      key={r.label}
+                      href={`/auth?mode=signup&role=${r.label.toLowerCase().replace(" ", "-")}`}
+                      className="flex items-start gap-3 rounded-lg p-2.5 hover:bg-accent transition-colors"
+                    >
+                      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
+                        <r.icon className="size-4" />
+                      </span>
+                      <span className="flex-1 min-w-0">
+                        <span className="block text-sm font-semibold">{r.label}</span>
+                        <span className="block text-caption">{r.sub}</span>
+                      </span>
+                    </a>
+                  ))}
+                  <div className="border-t border-border mt-2 pt-2 px-1 text-[11px] text-muted-foreground">
+                    Sign up with Mobile OTP, Email, Google or LinkedIn on the next screen.
+                  </div>
+                </PopoverContent>
+              </Popover>
             </>
           )}
+
 
           {/* Start Earning — primary CTA */}
           <Button
