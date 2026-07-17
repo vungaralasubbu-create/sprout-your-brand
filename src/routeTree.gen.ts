@@ -212,6 +212,7 @@ import { Route as AuthenticatedAmbassadorCommissionStructureRouteImport } from '
 import { Route as AuthenticatedAdminVoiceAiRouteImport } from './routes/_authenticated/admin.voice-ai'
 import { Route as AuthenticatedAdminTagsRouteImport } from './routes/_authenticated/admin.tags'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
+import { Route as AuthenticatedAdminSuccessStoriesRouteImport } from './routes/_authenticated/admin.success-stories'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
 import { Route as AuthenticatedAdminRiskReviewRouteImport } from './routes/_authenticated/admin.risk-review'
@@ -1508,6 +1509,12 @@ const AuthenticatedAdminSupportRoute =
   AuthenticatedAdminSupportRouteImport.update({
     id: '/support',
     path: '/support',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSuccessStoriesRoute =
+  AuthenticatedAdminSuccessStoriesRouteImport.update({
+    id: '/success-stories',
+    path: '/success-stories',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminSettingsRoute =
@@ -2937,6 +2944,7 @@ export interface FileRoutesByFullPath {
   '/admin/risk-review': typeof AuthenticatedAdminRiskReviewRouteWithChildren
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/success-stories': typeof AuthenticatedAdminSuccessStoriesRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
@@ -3339,6 +3347,7 @@ export interface FileRoutesByTo {
   '/admin/risk-review': typeof AuthenticatedAdminRiskReviewRouteWithChildren
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/success-stories': typeof AuthenticatedAdminSuccessStoriesRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
@@ -3756,6 +3765,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/risk-review': typeof AuthenticatedAdminRiskReviewRouteWithChildren
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/success-stories': typeof AuthenticatedAdminSuccessStoriesRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/_authenticated/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/_authenticated/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
@@ -4173,6 +4183,7 @@ export interface FileRouteTypes {
     | '/admin/risk-review'
     | '/admin/sales-command'
     | '/admin/settings'
+    | '/admin/success-stories'
     | '/admin/support'
     | '/admin/tags'
     | '/admin/voice-ai'
@@ -4575,6 +4586,7 @@ export interface FileRouteTypes {
     | '/admin/risk-review'
     | '/admin/sales-command'
     | '/admin/settings'
+    | '/admin/success-stories'
     | '/admin/support'
     | '/admin/tags'
     | '/admin/voice-ai'
@@ -4991,6 +5003,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/risk-review'
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/success-stories'
     | '/_authenticated/admin/support'
     | '/_authenticated/admin/tags'
     | '/_authenticated/admin/voice-ai'
@@ -6747,6 +6760,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/admin/support'
       preLoaderRoute: typeof AuthenticatedAdminSupportRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/success-stories': {
+      id: '/_authenticated/admin/success-stories'
+      path: '/success-stories'
+      fullPath: '/admin/success-stories'
+      preLoaderRoute: typeof AuthenticatedAdminSuccessStoriesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/settings': {
@@ -8633,6 +8653,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminRiskReviewRoute: typeof AuthenticatedAdminRiskReviewRouteWithChildren
   AuthenticatedAdminSalesCommandRoute: typeof AuthenticatedAdminSalesCommandRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminSuccessStoriesRoute: typeof AuthenticatedAdminSuccessStoriesRoute
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRouteWithChildren
   AuthenticatedAdminTagsRoute: typeof AuthenticatedAdminTagsRoute
   AuthenticatedAdminVoiceAiRoute: typeof AuthenticatedAdminVoiceAiRoute
@@ -8732,6 +8753,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminRiskReviewRouteWithChildren,
   AuthenticatedAdminSalesCommandRoute: AuthenticatedAdminSalesCommandRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminSuccessStoriesRoute: AuthenticatedAdminSuccessStoriesRoute,
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRouteWithChildren,
   AuthenticatedAdminTagsRoute: AuthenticatedAdminTagsRoute,
   AuthenticatedAdminVoiceAiRoute: AuthenticatedAdminVoiceAiRoute,
