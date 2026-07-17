@@ -11,10 +11,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { resolveRedirectForUser } from "@/lib/auth/role-redirect";
 import { reconcileRolesForCurrentUser } from "@/lib/auth/reconcile.functions";
 import { requestLoginOtp, verifyLoginOtp } from "@/lib/auth/otp.functions";
 import { trackEvent } from "@/lib/analytics/client";
+
+const TRUSTED_KEY = "glintr_trusted_emails_v1";
+function isTrustedEmail(email: string): boolean {
+  try {
+    const raw = localStorage.getItem(TRUSTED_KEY);
+    if (!raw) return false;
+    const list = JSON.parse(raw) as string[];
+    return Array.isArray(list) && list.includes(email.trim().toLowerCase());
+  } catch {
+    return false;
+  }
+}
+function markEmailTrusted(email: string) {
+  try {
+    const raw = localStorage.getItem(TRUSTED_KEY);
+    const list = raw ? (JSON.parse(raw) as string[]) : [];
+    const norm = email.trim().toLowerCase();
+    if (!list.includes(norm)) list.push(norm);
+    localStorage.setItem(TRUSTED_KEY, JSON.stringify(list));
+  } catch {}
+}
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — Glintr" }, { name: "robots", content: "noindex" }] }),
@@ -122,6 +144,17 @@ function AuthPage() {
       return;
     }
 
+    // Trusted device: skip OTP for returning sign-ins from this browser.
+    if (mode === "signin" && isTrustedEmail(email)) {
+      const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
+      if (!emailOk) return toast.error("Enter a valid email.");
+      if (password.length < 6) return toast.error("Enter your password.");
+      setLoading(true);
+      await completePasswordAuth();
+      setLoading(false);
+      return;
+    }
+
     const parsed = credsSchema.safeParse({ email, password, mobile });
     if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
 
@@ -135,6 +168,7 @@ function AuthPage() {
     setStage("otp");
   }
 
+
   async function handleOtpSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (loading) return;
@@ -145,6 +179,7 @@ function AuthPage() {
       setLoading(false);
       return toast.error(v.error);
     }
+    if (email) markEmailTrusted(email);
     await completePasswordAuth();
     setLoading(false);
   }
@@ -170,6 +205,33 @@ function AuthPage() {
     if (error) return toast.error(error.message);
     toast.success("Password reset email sent.");
   }
+
+  async function handleGoogle() {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin + "/auth",
+      });
+      if (result.error) {
+        setLoading(false);
+        return toast.error(result.error.message || "Google sign-in failed.");
+      }
+      if (result.redirected) return; // browser navigates away
+      // Session set — route based on role.
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        if (data.user.email) markEmailTrusted(data.user.email);
+        await routeAfterAuth(data.user.id, navigate, reconcile);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Google sign-in failed.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
 
   const titleText =
     mode === "recovery"
@@ -217,23 +279,25 @@ function AuthPage() {
                           className="mt-2 h-11"
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="mobile">Mobile number</Label>
-                        <Input
-                          id="mobile"
-                          name="mobile"
-                          type="tel"
-                          inputMode="numeric"
-                          placeholder="10-digit mobile"
-                          required
-                          value={mobile}
-                          onChange={(e) => setMobile(e.target.value)}
-                          className="mt-2 h-11"
-                        />
-                        <p className="text-caption mt-1 text-muted-foreground">
-                          We'll text you a one-time code to verify.
-                        </p>
-                      </div>
+                      {!(mode === "signin" && isTrustedEmail(email)) && (
+                        <div>
+                          <Label htmlFor="mobile">Mobile number</Label>
+                          <Input
+                            id="mobile"
+                            name="mobile"
+                            type="tel"
+                            inputMode="numeric"
+                            placeholder="10-digit mobile"
+                            required
+                            value={mobile}
+                            onChange={(e) => setMobile(e.target.value)}
+                            className="mt-2 h-11"
+                          />
+                          <p className="text-caption mt-1 text-muted-foreground">
+                            We'll text you a one-time code to verify.
+                          </p>
+                        </div>
+                      )}
                     </>
                   )}
                   <div>
@@ -263,9 +327,36 @@ function AuthPage() {
                       : mode === "recovery"
                       ? "Update password"
                       : mode === "signin"
-                      ? "Send OTP & Sign In"
+                      ? isTrustedEmail(email)
+                        ? "Sign in"
+                        : "Send OTP & Sign In"
                       : "Send OTP & Create account"}
                   </Button>
+                  {mode !== "recovery" && (
+                    <>
+                      <div className="relative py-1">
+                        <div className="absolute inset-0 flex items-center">
+                          <span className="w-full border-t border-border" />
+                        </div>
+                        <div className="relative flex justify-center text-caption">
+                          <span className="bg-background px-2 text-muted-foreground">or</span>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="lg"
+                        className="w-full"
+                        onClick={handleGoogle}
+                        disabled={loading}
+                      >
+                        <svg viewBox="0 0 24 24" className="mr-2 h-5 w-5" aria-hidden="true">
+                          <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.68 4.1-5.5 4.1-3.32 0-6.03-2.74-6.03-6.12S8.68 5.96 12 5.96c1.9 0 3.16.8 3.88 1.5l2.64-2.55C16.86 3.4 14.66 2.4 12 2.4 6.87 2.4 2.7 6.57 2.7 11.7S6.87 21 12 21c6.93 0 9.3-4.87 9.3-7.4 0-.5-.05-.86-.12-1.4H12z"/>
+                        </svg>
+                        Continue with Google
+                      </Button>
+                    </>
+                  )}
                   {mode === "signin" && (
                     <Button
                       type="button"
