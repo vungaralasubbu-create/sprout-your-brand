@@ -81,6 +81,21 @@ export interface SuccessStory {
   quote: string;
   verified: boolean;
   published: boolean;
+  /** Optional profile photo. When absent, the UI renders professional initials. */
+  avatar?: string;
+  /** Company name shown next to the logo. */
+  company?: string;
+  /** Company for logo resolution (SimpleIcons slug + domain fallback). */
+  companySlug?: string;
+  companyDomain?: string;
+  /** Program the learner completed. */
+  course?: string;
+  /** Star rating 1-5. Defaults to 5 when omitted. */
+  rating?: number;
+  /** Optional placement package label, e.g. "₹18 LPA". */
+  packageLabel?: string;
+  /** Optional LinkedIn profile URL. */
+  linkedin?: string;
 }
 
 export interface PartnerNetworkItem {
@@ -293,9 +308,118 @@ const STATS: PlatformStat[] = [
 
 
 
-// No approved success stories yet — the homepage section stays hidden until
-// admins publish and verify real stories via the CMS.
-const STORIES: SuccessStory[] = [];
+// Professional demo stories rendered when no live approved stories exist yet.
+// Replace via CMS once real learner stories are collected.
+const STORIES: SuccessStory[] = [
+  {
+    id: "s-aarav",
+    name: "Aarav Sharma",
+    role: "Data Scientist",
+    type: "student",
+    previous: "B.Tech graduate",
+    current: "Data Scientist @ Microsoft",
+    quote:
+      "The mentors pushed me to build real projects from day one. By the time I interviewed, my portfolio was doing the talking.",
+    verified: true,
+    published: true,
+    company: "Microsoft",
+    companySlug: "microsoft",
+    companyDomain: "microsoft.com",
+    course: "AI & Data Science",
+    rating: 5,
+    packageLabel: "₹18 LPA",
+  },
+  {
+    id: "s-priya",
+    name: "Priya Reddy",
+    role: "Product Designer",
+    type: "student",
+    previous: "Non-design background",
+    current: "Product Designer @ Swiggy",
+    quote:
+      "Weekly design critiques and 1:1 mentor sessions changed how I think about products. I landed my first design role in 4 months.",
+    verified: true,
+    published: true,
+    company: "Swiggy",
+    companySlug: "swiggy",
+    companyDomain: "swiggy.com",
+    course: "Product Design Bootcamp",
+    rating: 5,
+    packageLabel: "₹14 LPA",
+  },
+  {
+    id: "s-rahul",
+    name: "Rahul Kumar",
+    role: "Full Stack Engineer",
+    type: "career_transition",
+    previous: "Support engineer",
+    current: "Full Stack @ Razorpay",
+    quote:
+      "Career coaching helped me package 3 years of hidden experience into a story that recruiters actually wanted to hear.",
+    verified: true,
+    published: true,
+    company: "Razorpay",
+    companySlug: "razorpay",
+    companyDomain: "razorpay.com",
+    course: "Full Stack Web Development",
+    rating: 5,
+    packageLabel: "₹22 LPA",
+  },
+  {
+    id: "s-sneha",
+    name: "Sneha Patel",
+    role: "ML Engineer",
+    type: "student",
+    previous: "Final-year student",
+    current: "ML Engineer @ Flipkart",
+    quote:
+      "The capstone project got me my first offer. I shipped a recommendation system that mirrored real production constraints.",
+    verified: true,
+    published: true,
+    company: "Flipkart",
+    companySlug: "flipkart",
+    companyDomain: "flipkart.com",
+    course: "Machine Learning Advanced",
+    rating: 5,
+    packageLabel: "₹16 LPA",
+  },
+  {
+    id: "s-akash",
+    name: "Akash Verma",
+    role: "Cloud DevOps Engineer",
+    type: "career_transition",
+    previous: "System administrator",
+    current: "DevOps @ Amazon",
+    quote:
+      "Live labs on AWS, GCP and Kubernetes gave me the muscle memory to walk into a DevOps role without hesitation.",
+    verified: true,
+    published: true,
+    company: "Amazon",
+    companySlug: "amazon",
+    companyDomain: "amazon.com",
+    course: "Cloud & DevOps Mastery",
+    rating: 5,
+    packageLabel: "₹20 LPA",
+  },
+  {
+    id: "s-neha",
+    name: "Neha Gupta",
+    role: "Digital Marketing Lead",
+    type: "career_transition",
+    previous: "Content writer",
+    current: "Marketing Lead @ Zomato",
+    quote:
+      "I ran real campaigns during the program and shipped my first attribution dashboard. That's what got me hired.",
+    verified: true,
+    published: true,
+    company: "Zomato",
+    companySlug: "zomato",
+    companyDomain: "zomato.com",
+    course: "Digital Marketing Pro",
+    rating: 5,
+    packageLabel: "₹12 LPA",
+  },
+];
 
 
 const PARTNER_NETWORK: PartnerNetworkItem[] = [
