@@ -57,6 +57,7 @@ import { Route as BrandSetupRouteImport } from './routes/brand-setup'
 import { Route as BookConsultationRouteImport } from './routes/book-consultation'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AiAgentsRouteImport } from './routes/ai-agents'
+import { Route as AccessDeniedRouteImport } from './routes/access-denied'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as R70RevenueModelRouteImport } from './routes/70-revenue-model'
 import { Route as R50SupportedModelRouteImport } from './routes/50-supported-model'
@@ -120,6 +121,7 @@ import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 import { Route as AiAgentsIdRouteImport } from './routes/ai-agents.$id'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
+import { Route as AuthenticatedInstructorRouteImport } from './routes/_authenticated/instructor'
 import { Route as AuthenticatedHqRouteImport } from './routes/_authenticated/hq'
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
 import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
@@ -129,6 +131,7 @@ import { Route as WorkspaceNotebooksIndexRouteImport } from './routes/workspace.
 import { Route as TopicsPillarIndexRouteImport } from './routes/topics.$pillar.index'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
+import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as WorkspaceVoiceSettingsRouteImport } from './routes/workspace.voice.settings'
 import { Route as WorkspaceVoiceHistoryRouteImport } from './routes/workspace.voice.history'
@@ -180,6 +183,7 @@ import { Route as AuthenticatedPartnerAiAssistantRouteImport } from './routes/_a
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
 import { Route as AuthenticatedPartnerAcademyBuilderRouteImport } from './routes/_authenticated/partner.academy-builder'
+import { Route as AuthenticatedInstructorDashboardRouteImport } from './routes/_authenticated/instructor.dashboard'
 import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
@@ -674,6 +678,11 @@ const AiAgentsRoute = AiAgentsRouteImport.update({
   path: '/ai-agents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccessDeniedRoute = AccessDeniedRouteImport.update({
+  id: '/access-denied',
+  path: '/access-denied',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -989,6 +998,11 @@ const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
   path: '/partner',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInstructorRoute = AuthenticatedInstructorRouteImport.update({
+  id: '/instructor',
+  path: '/instructor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedHqRoute = AuthenticatedHqRouteImport.update({
   id: '/hq',
   path: '/hq',
@@ -1034,6 +1048,12 @@ const AuthenticatedStudentIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedStudentRoute,
+  } as any)
+const AuthenticatedInstructorIndexRoute =
+  AuthenticatedInstructorIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedInstructorRoute,
   } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
@@ -1330,6 +1350,12 @@ const AuthenticatedPartnerAcademyBuilderRoute =
     id: '/academy-builder',
     path: '/academy-builder',
     getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedInstructorDashboardRoute =
+  AuthenticatedInstructorDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedInstructorRoute,
   } as any)
 const AuthenticatedCounsellorCopilotRoute =
   AuthenticatedCounsellorCopilotRouteImport.update({
@@ -2837,6 +2863,7 @@ export interface FileRoutesByFullPath {
   '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
+  '/access-denied': typeof AccessDeniedRoute
   '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
   '/book-consultation': typeof BookConsultationRoute
@@ -2889,6 +2916,7 @@ export interface FileRoutesByFullPath {
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/hq': typeof AuthenticatedHqRoute
+  '/instructor': typeof AuthenticatedInstructorRouteWithChildren
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
@@ -3037,6 +3065,7 @@ export interface FileRoutesByFullPath {
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3088,6 +3117,7 @@ export interface FileRoutesByFullPath {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar/': typeof TopicsPillarIndexRoute
@@ -3261,6 +3291,7 @@ export interface FileRoutesByTo {
   '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
+  '/access-denied': typeof AccessDeniedRoute
   '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
   '/book-consultation': typeof BookConsultationRoute
@@ -3448,6 +3479,7 @@ export interface FileRoutesByTo {
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3499,6 +3531,7 @@ export interface FileRoutesByTo {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/instructor': typeof AuthenticatedInstructorIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar': typeof TopicsPillarIndexRoute
@@ -3674,6 +3707,7 @@ export interface FileRoutesById {
   '/50-supported-model': typeof R50SupportedModelRoute
   '/70-revenue-model': typeof R70RevenueModelRoute
   '/about': typeof AboutRoute
+  '/access-denied': typeof AccessDeniedRoute
   '/ai-agents': typeof AiAgentsRouteWithChildren
   '/auth': typeof AuthRoute
   '/book-consultation': typeof BookConsultationRoute
@@ -3726,6 +3760,7 @@ export interface FileRoutesById {
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
   '/_authenticated/hq': typeof AuthenticatedHqRoute
+  '/_authenticated/instructor': typeof AuthenticatedInstructorRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
@@ -3874,6 +3909,7 @@ export interface FileRoutesById {
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
   '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  '/_authenticated/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/_authenticated/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -3925,6 +3961,7 @@ export interface FileRoutesById {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar/': typeof TopicsPillarIndexRoute
@@ -4100,6 +4137,7 @@ export interface FileRouteTypes {
     | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
+    | '/access-denied'
     | '/ai-agents'
     | '/auth'
     | '/book-consultation'
@@ -4152,6 +4190,7 @@ export interface FileRouteTypes {
     | '/ambassador'
     | '/brand'
     | '/hq'
+    | '/instructor'
     | '/partner'
     | '/student'
     | '/ai-agents/$id'
@@ -4300,6 +4339,7 @@ export interface FileRouteTypes {
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
     | '/counsellor/copilot'
+    | '/instructor/dashboard'
     | '/partner/academy-builder'
     | '/partner/account'
     | '/partner/add-leads'
@@ -4351,6 +4391,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin/'
+    | '/instructor/'
     | '/student/'
     | '/programs/$category/'
     | '/topics/$pillar/'
@@ -4524,6 +4565,7 @@ export interface FileRouteTypes {
     | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
+    | '/access-denied'
     | '/ai-agents'
     | '/auth'
     | '/book-consultation'
@@ -4711,6 +4753,7 @@ export interface FileRouteTypes {
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
     | '/counsellor/copilot'
+    | '/instructor/dashboard'
     | '/partner/academy-builder'
     | '/partner/account'
     | '/partner/add-leads'
@@ -4762,6 +4805,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin'
+    | '/instructor'
     | '/student'
     | '/programs/$category'
     | '/topics/$pillar'
@@ -4936,6 +4980,7 @@ export interface FileRouteTypes {
     | '/50-supported-model'
     | '/70-revenue-model'
     | '/about'
+    | '/access-denied'
     | '/ai-agents'
     | '/auth'
     | '/book-consultation'
@@ -4988,6 +5033,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador'
     | '/_authenticated/brand'
     | '/_authenticated/hq'
+    | '/_authenticated/instructor'
     | '/_authenticated/partner'
     | '/_authenticated/student'
     | '/ai-agents/$id'
@@ -5136,6 +5182,7 @@ export interface FileRouteTypes {
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
     | '/_authenticated/counsellor/copilot'
+    | '/_authenticated/instructor/dashboard'
     | '/_authenticated/partner/academy-builder'
     | '/_authenticated/partner/account'
     | '/_authenticated/partner/add-leads'
@@ -5187,6 +5234,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/_authenticated/admin/'
+    | '/_authenticated/instructor/'
     | '/_authenticated/student/'
     | '/programs/$category/'
     | '/topics/$pillar/'
@@ -5362,6 +5410,7 @@ export interface RootRouteChildren {
   R50SupportedModelRoute: typeof R50SupportedModelRoute
   R70RevenueModelRoute: typeof R70RevenueModelRoute
   AboutRoute: typeof AboutRoute
+  AccessDeniedRoute: typeof AccessDeniedRoute
   AiAgentsRoute: typeof AiAgentsRouteWithChildren
   AuthRoute: typeof AuthRoute
   BookConsultationRoute: typeof BookConsultationRoute
@@ -5780,6 +5829,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-agents'
       fullPath: '/ai-agents'
       preLoaderRoute: typeof AiAgentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/access-denied': {
+      id: '/access-denied'
+      path: '/access-denied'
+      fullPath: '/access-denied'
+      preLoaderRoute: typeof AccessDeniedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -6223,6 +6279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPartnerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/instructor': {
+      id: '/_authenticated/instructor'
+      path: '/instructor'
+      fullPath: '/instructor'
+      preLoaderRoute: typeof AuthenticatedInstructorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/hq': {
       id: '/_authenticated/hq'
       path: '/hq'
@@ -6285,6 +6348,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/student/'
       preLoaderRoute: typeof AuthenticatedStudentIndexRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
+    }
+    '/_authenticated/instructor/': {
+      id: '/_authenticated/instructor/'
+      path: '/'
+      fullPath: '/instructor/'
+      preLoaderRoute: typeof AuthenticatedInstructorIndexRouteImport
+      parentRoute: typeof AuthenticatedInstructorRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -6642,6 +6712,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner/academy-builder'
       preLoaderRoute: typeof AuthenticatedPartnerAcademyBuilderRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/instructor/dashboard': {
+      id: '/_authenticated/instructor/dashboard'
+      path: '/dashboard'
+      fullPath: '/instructor/dashboard'
+      preLoaderRoute: typeof AuthenticatedInstructorDashboardRouteImport
+      parentRoute: typeof AuthenticatedInstructorRoute
     }
     '/_authenticated/counsellor/copilot': {
       id: '/_authenticated/counsellor/copilot'
@@ -9089,6 +9166,23 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
 const AuthenticatedBrandRouteWithChildren =
   AuthenticatedBrandRoute._addFileChildren(AuthenticatedBrandRouteChildren)
 
+interface AuthenticatedInstructorRouteChildren {
+  AuthenticatedInstructorDashboardRoute: typeof AuthenticatedInstructorDashboardRoute
+  AuthenticatedInstructorIndexRoute: typeof AuthenticatedInstructorIndexRoute
+}
+
+const AuthenticatedInstructorRouteChildren: AuthenticatedInstructorRouteChildren =
+  {
+    AuthenticatedInstructorDashboardRoute:
+      AuthenticatedInstructorDashboardRoute,
+    AuthenticatedInstructorIndexRoute: AuthenticatedInstructorIndexRoute,
+  }
+
+const AuthenticatedInstructorRouteWithChildren =
+  AuthenticatedInstructorRoute._addFileChildren(
+    AuthenticatedInstructorRouteChildren,
+  )
+
 interface AuthenticatedPartnerAiEmployeesRouteChildren {
   AuthenticatedPartnerAiEmployeesSlugRoute: typeof AuthenticatedPartnerAiEmployeesSlugRoute
 }
@@ -9378,6 +9472,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
   AuthenticatedHqRoute: typeof AuthenticatedHqRoute
+  AuthenticatedInstructorRoute: typeof AuthenticatedInstructorRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
@@ -9390,6 +9485,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
   AuthenticatedHqRoute: AuthenticatedHqRoute,
+  AuthenticatedInstructorRoute: AuthenticatedInstructorRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
   AuthenticatedCampusAmbassadorApplyRoute:
@@ -9667,6 +9763,7 @@ const rootRouteChildren: RootRouteChildren = {
   R50SupportedModelRoute: R50SupportedModelRoute,
   R70RevenueModelRoute: R70RevenueModelRoute,
   AboutRoute: AboutRoute,
+  AccessDeniedRoute: AccessDeniedRoute,
   AiAgentsRoute: AiAgentsRouteWithChildren,
   AuthRoute: AuthRoute,
   BookConsultationRoute: BookConsultationRoute,
