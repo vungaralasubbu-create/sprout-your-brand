@@ -304,6 +304,7 @@ import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
+import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/public/webhooks/cashfree'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
 import { Route as ApiPublicHooksBrainTickRouteImport } from './routes/api/public/hooks/brain-tick'
 import { Route as ApiPublicAiSalesWebhookRouteImport } from './routes/api/public/ai-sales/webhook'
@@ -2065,6 +2066,12 @@ const ProgramsCategoryCourseApplyRoute =
     path: '/programs/$category/$course/apply',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWebhooksCashfreeRoute =
+  ApiPublicWebhooksCashfreeRouteImport.update({
+    id: '/api/public/webhooks/cashfree',
+    path: '/api/public/webhooks/cashfree',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   id: '/api/public/hooks/seo-ping',
   path: '/api/public/hooks/seo-ping',
@@ -3202,6 +3209,7 @@ export interface FileRoutesByFullPath {
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -3612,6 +3620,7 @@ export interface FileRoutesByTo {
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -4037,6 +4046,7 @@ export interface FileRoutesById {
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -4462,6 +4472,7 @@ export interface FileRouteTypes {
     | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents/'
@@ -4872,6 +4883,7 @@ export interface FileRouteTypes {
     | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents'
@@ -5296,6 +5308,7 @@ export interface FileRouteTypes {
     | '/api/public/ai-sales/webhook'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/_authenticated/admin/ai-agents/'
@@ -5425,6 +5438,7 @@ export interface RootRouteChildren {
   ApiPublicAiSalesWebhookRoute: typeof ApiPublicAiSalesWebhookRoute
   ApiPublicHooksBrainTickRoute: typeof ApiPublicHooksBrainTickRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
+  ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
   ApiV1CertificatesVerifyCodeRoute: typeof ApiV1CertificatesVerifyCodeRoute
@@ -7495,6 +7509,13 @@ declare module '@tanstack/react-router' {
       path: '/programs/$category/$course/apply'
       fullPath: '/programs/$category/$course/apply'
       preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/webhooks/cashfree': {
+      id: '/api/public/webhooks/cashfree'
+      path: '/api/public/webhooks/cashfree'
+      fullPath: '/api/public/webhooks/cashfree'
+      preLoaderRoute: typeof ApiPublicWebhooksCashfreeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/seo-ping': {
@@ -9722,6 +9743,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicAiSalesWebhookRoute: ApiPublicAiSalesWebhookRoute,
   ApiPublicHooksBrainTickRoute: ApiPublicHooksBrainTickRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
+  ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
   ApiV1CertificatesVerifyCodeRoute: ApiV1CertificatesVerifyCodeRoute,
