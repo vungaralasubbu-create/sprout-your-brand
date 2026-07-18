@@ -728,11 +728,14 @@ function BrandRail({
               )}
               style={{ minWidth: 180 }}
             >
-              <div
-                className="font-display text-xl md:text-2xl font-bold tracking-tight leading-none"
-                style={{ color: b.color }}
-              >
-                {b.short}
+              <div className="flex items-center gap-3">
+                <BrandLogoImg name={b.name} className="h-7 md:h-8" />
+                <div
+                  className="font-display text-base md:text-lg font-bold tracking-tight leading-none"
+                  style={{ color: b.color }}
+                >
+                  {b.short}
+                </div>
               </div>
               <div className="mt-1 text-[10px] tracking-wider font-semibold text-muted-foreground uppercase">
                 {b.relationship}
