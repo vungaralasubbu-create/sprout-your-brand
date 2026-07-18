@@ -528,6 +528,77 @@ const BRANDS: Array<{
   { name: "PyTorch", short: "PyTorch", color: "oklch(0.6 0.22 25)", relationship: "Deep Learning Ecosystem", cats: ["ai"] },
 ];
 
+/** Map brand `name` -> SimpleIcons slug (https://simpleicons.org). */
+const BRAND_SLUG: Record<string, string> = {
+  Microsoft: "microsoft",
+  Google: "google",
+  Meta: "meta",
+  "Amazon Web Services": "amazonwebservices",
+  Adobe: "adobe",
+  Oracle: "oracle",
+  IBM: "ibm",
+  Cisco: "cisco",
+  Intel: "intel",
+  NVIDIA: "nvidia",
+  Salesforce: "salesforce",
+  ServiceNow: "servicenow",
+  Accenture: "accenture",
+  Docker: "docker",
+  VMware: "vmware",
+  "Red Hat": "redhat",
+  Autodesk: "autodesk",
+  "Dell Technologies": "dell",
+  "Hewlett Packard Enterprise": "hp",
+  Fortinet: "fortinet",
+  Cloudflare: "cloudflare",
+  MongoDB: "mongodb",
+  Databricks: "databricks",
+  Snowflake: "snowflake",
+  Atlassian: "atlassian",
+  GitHub: "github",
+  GitLab: "gitlab",
+  HashiCorp: "hashicorp",
+  "Palo Alto Networks": "paloaltonetworks",
+  CrowdStrike: "crowdstrike",
+  Synopsys: "synopsys",
+  Cadence: "cadence",
+  Siemens: "siemens",
+  Ansys: "ansys",
+  PTC: "ptc",
+  SAP: "sap",
+  Zoho: "zoho",
+  Freshworks: "freshworks",
+  MuleSoft: "mulesoft",
+  UiPath: "uipath",
+  "Automation Anywhere": "automationanywhere",
+  "Blue Prism": "blueprism",
+  Unity: "unity",
+  "Unreal Engine": "unrealengine",
+  Flutter: "flutter",
+  Android: "android",
+  Kubernetes: "kubernetes",
+  TensorFlow: "tensorflow",
+  PyTorch: "pytorch",
+};
+
+function BrandLogoImg({ name, className }: { name: string; className?: string }) {
+  const slug = BRAND_SLUG[name];
+  const [errored, setErrored] = React.useState(false);
+  if (!slug || errored) {
+    return <span className={cn("font-display font-bold tracking-tight", className)}>{name}</span>;
+  }
+  return (
+    <img
+      src={`https://cdn.simpleicons.org/${slug}`}
+      alt={`${name} logo`}
+      loading="lazy"
+      decoding="async"
+      onError={() => setErrored(true)}
+      className={cn("h-6 md:h-7 w-auto object-contain dark:brightness-110", className)}
+    />
+  );
+}
+
 
 const CATEGORY_LABELS: Array<{ key: Category; label: string }> = [
   { key: "all", label: "ALL" },
