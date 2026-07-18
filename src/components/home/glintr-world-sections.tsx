@@ -528,6 +528,77 @@ const BRANDS: Array<{
   { name: "PyTorch", short: "PyTorch", color: "oklch(0.6 0.22 25)", relationship: "Deep Learning Ecosystem", cats: ["ai"] },
 ];
 
+/** Map brand `name` -> SimpleIcons slug (https://simpleicons.org). */
+const BRAND_SLUG: Record<string, string> = {
+  Microsoft: "microsoft",
+  Google: "google",
+  Meta: "meta",
+  "Amazon Web Services": "amazonwebservices",
+  Adobe: "adobe",
+  Oracle: "oracle",
+  IBM: "ibm",
+  Cisco: "cisco",
+  Intel: "intel",
+  NVIDIA: "nvidia",
+  Salesforce: "salesforce",
+  ServiceNow: "servicenow",
+  Accenture: "accenture",
+  Docker: "docker",
+  VMware: "vmware",
+  "Red Hat": "redhat",
+  Autodesk: "autodesk",
+  "Dell Technologies": "dell",
+  "Hewlett Packard Enterprise": "hp",
+  Fortinet: "fortinet",
+  Cloudflare: "cloudflare",
+  MongoDB: "mongodb",
+  Databricks: "databricks",
+  Snowflake: "snowflake",
+  Atlassian: "atlassian",
+  GitHub: "github",
+  GitLab: "gitlab",
+  HashiCorp: "hashicorp",
+  "Palo Alto Networks": "paloaltonetworks",
+  CrowdStrike: "crowdstrike",
+  Synopsys: "synopsys",
+  Cadence: "cadence",
+  Siemens: "siemens",
+  Ansys: "ansys",
+  PTC: "ptc",
+  SAP: "sap",
+  Zoho: "zoho",
+  Freshworks: "freshworks",
+  MuleSoft: "mulesoft",
+  UiPath: "uipath",
+  "Automation Anywhere": "automationanywhere",
+  "Blue Prism": "blueprism",
+  Unity: "unity",
+  "Unreal Engine": "unrealengine",
+  Flutter: "flutter",
+  Android: "android",
+  Kubernetes: "kubernetes",
+  TensorFlow: "tensorflow",
+  PyTorch: "pytorch",
+};
+
+function BrandLogoImg({ name, className }: { name: string; className?: string }) {
+  const slug = BRAND_SLUG[name];
+  const [errored, setErrored] = React.useState(false);
+  if (!slug || errored) {
+    return <span className={cn("font-display font-bold tracking-tight", className)}>{name}</span>;
+  }
+  return (
+    <img
+      src={`https://cdn.simpleicons.org/${slug}`}
+      alt={`${name} logo`}
+      loading="lazy"
+      decoding="async"
+      onError={() => setErrored(true)}
+      className={cn("h-6 md:h-7 w-auto object-contain dark:brightness-110", className)}
+    />
+  );
+}
+
 
 const CATEGORY_LABELS: Array<{ key: Category; label: string }> = [
   { key: "all", label: "ALL" },
@@ -607,10 +678,11 @@ export function CertificationEcosystem() {
                 {BRANDS.filter((b) => cat === "all" || b.cats.includes(cat)).map((b) => (
                   <div
                     key={b.name}
-                    className="rounded-xl border border-border/60 bg-background px-3 py-1.5 text-sm font-bold tracking-tight"
-                    style={{ color: b.color }}
+                    className="flex items-center gap-2 rounded-xl border border-border/60 bg-background px-3 py-1.5"
+                    title={b.name}
                   >
-                    {b.short}
+                    <BrandLogoImg name={b.name} className="h-5 md:h-5" />
+                    <span className="text-xs font-semibold tracking-tight text-foreground/80">{b.short}</span>
                   </div>
                 ))}
               </div>
@@ -656,11 +728,14 @@ function BrandRail({
               )}
               style={{ minWidth: 180 }}
             >
-              <div
-                className="font-display text-xl md:text-2xl font-bold tracking-tight leading-none"
-                style={{ color: b.color }}
-              >
-                {b.short}
+              <div className="flex items-center gap-3">
+                <BrandLogoImg name={b.name} className="h-7 md:h-8" />
+                <div
+                  className="font-display text-base md:text-lg font-bold tracking-tight leading-none"
+                  style={{ color: b.color }}
+                >
+                  {b.short}
+                </div>
               </div>
               <div className="mt-1 text-[10px] tracking-wider font-semibold text-muted-foreground uppercase">
                 {b.relationship}
@@ -684,33 +759,61 @@ function BrandRail({
  * 3. LEARNER INSTITUTIONS — monogram marquee
  * ================================================================ */
 
-const INSTITUTIONS: Array<{ mono: string; sub: string; full: string }> = [
-  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay" },
-  { mono: "IIT", sub: "DELHI", full: "IIT Delhi" },
-  { mono: "IIT", sub: "MADRAS", full: "IIT Madras" },
-  { mono: "IIT", sub: "KHARAGPUR", full: "IIT Kharagpur" },
-  { mono: "IIT", sub: "KANPUR", full: "IIT Kanpur" },
-  { mono: "IIT", sub: "ROORKEE", full: "IIT Roorkee" },
-  { mono: "NIT", sub: "TRICHY", full: "NIT Trichy" },
-  { mono: "NIT", sub: "WARANGAL", full: "NIT Warangal" },
-  { mono: "NIT", sub: "SURATHKAL", full: "NIT Surathkal" },
-  { mono: "BITS", sub: "PILANI", full: "BITS Pilani" },
-  { mono: "VIT", sub: "VELLORE", full: "VIT Vellore" },
-  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University" },
-  { mono: "SRM", sub: "CHENNAI", full: "SRM University" },
-  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University" },
-  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University" },
-  { mono: "VTU", sub: "BELAGAVI", full: "VTU Belagavi" },
-  { mono: "DTU", sub: "DELHI", full: "DTU Delhi" },
-  { mono: "JU", sub: "KOLKATA", full: "Jadavpur University" },
-  { mono: "AU", sub: "CHENNAI", full: "Anna University" },
-  { mono: "AVV", sub: "COIMBATORE", full: "Amrita Vishwa Vidyapeetham" },
-  { mono: "PES", sub: "BENGALURU", full: "PES University" },
-  { mono: "RVCE", sub: "BENGALURU", full: "RV College of Engineering" },
-  { mono: "MSRIT", sub: "BENGALURU", full: "MS Ramaiah Institute" },
-  { mono: "OU", sub: "HYDERABAD", full: "Osmania University" },
-  { mono: "JNTU", sub: "HYDERABAD", full: "JNTU Hyderabad" },
+const INSTITUTIONS: Array<{ mono: string; sub: string; full: string; domain: string }> = [
+  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay", domain: "iitb.ac.in" },
+  { mono: "IIT", sub: "DELHI", full: "IIT Delhi", domain: "iitd.ac.in" },
+  { mono: "IIT", sub: "MADRAS", full: "IIT Madras", domain: "iitm.ac.in" },
+  { mono: "IIT", sub: "KHARAGPUR", full: "IIT Kharagpur", domain: "iitkgp.ac.in" },
+  { mono: "IIT", sub: "KANPUR", full: "IIT Kanpur", domain: "iitk.ac.in" },
+  { mono: "IIT", sub: "ROORKEE", full: "IIT Roorkee", domain: "iitr.ac.in" },
+  { mono: "NIT", sub: "TRICHY", full: "NIT Trichy", domain: "nitt.edu" },
+  { mono: "NIT", sub: "WARANGAL", full: "NIT Warangal", domain: "nitw.ac.in" },
+  { mono: "NIT", sub: "SURATHKAL", full: "NIT Surathkal", domain: "nitk.ac.in" },
+  { mono: "BITS", sub: "PILANI", full: "BITS Pilani", domain: "bits-pilani.ac.in" },
+  { mono: "VIT", sub: "VELLORE", full: "VIT Vellore", domain: "vit.ac.in" },
+  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University", domain: "manipal.edu" },
+  { mono: "SRM", sub: "CHENNAI", full: "SRM University", domain: "srmist.edu.in" },
+  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University", domain: "lpu.in" },
+  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University", domain: "kiit.ac.in" },
+  { mono: "VTU", sub: "BELAGAVI", full: "VTU Belagavi", domain: "vtu.ac.in" },
+  { mono: "DTU", sub: "DELHI", full: "DTU Delhi", domain: "dtu.ac.in" },
+  { mono: "JU", sub: "KOLKATA", full: "Jadavpur University", domain: "jaduniv.edu.in" },
+  { mono: "AU", sub: "CHENNAI", full: "Anna University", domain: "annauniv.edu" },
+  { mono: "AVV", sub: "COIMBATORE", full: "Amrita Vishwa Vidyapeetham", domain: "amrita.edu" },
+  { mono: "PES", sub: "BENGALURU", full: "PES University", domain: "pes.edu" },
+  { mono: "RVCE", sub: "BENGALURU", full: "RV College of Engineering", domain: "rvce.edu.in" },
+  { mono: "MSRIT", sub: "BENGALURU", full: "MS Ramaiah Institute", domain: "msrit.edu" },
+  { mono: "OU", sub: "HYDERABAD", full: "Osmania University", domain: "osmania.ac.in" },
+  { mono: "JNTU", sub: "HYDERABAD", full: "JNTU Hyderabad", domain: "jntuh.ac.in" },
 ];
+
+function InstitutionLogo({ inst }: { inst: (typeof INSTITUTIONS)[number] }) {
+  const [errored, setErrored] = React.useState(false);
+  if (errored) {
+    return (
+      <>
+        <div className="font-display font-black tracking-tight text-[color:var(--brand-azure)] leading-none text-base">
+          {inst.mono}
+        </div>
+        <div className="mt-0.5 text-[8px] tracking-widest font-bold text-foreground/60">
+          {inst.sub}
+        </div>
+      </>
+    );
+  }
+  return (
+    <img
+      src={`https://icons.duckduckgo.com/ip3/${inst.domain}.ico`}
+      alt={`${inst.full} logo`}
+      loading="lazy"
+      decoding="async"
+      width={40}
+      height={40}
+      className="h-10 w-10 object-contain"
+      onError={() => setErrored(true)}
+    />
+  );
+}
 
 
 const BG_WORDS = ["IIT", "NIT", "BITS", "ENGINEERING", "TECHNOLOGY", "MANAGEMENT", "AI"];
@@ -765,18 +868,13 @@ export function LearnerInstitutions() {
               style={{ minWidth: 260 }}
             >
               <div
-                className="grid place-items-center rounded-xl border border-[color:var(--brand-azure)]/30 px-3 py-2 text-center"
+                className="grid place-items-center rounded-xl border border-[color:var(--brand-azure)]/30 p-2"
                 style={{
                   minWidth: 56,
                   background: "linear-gradient(135deg, oklch(0.97 0.02 240), oklch(1 0 0))",
                 }}
               >
-                <div className="font-display font-black tracking-tight text-[color:var(--brand-azure)] leading-none text-base">
-                  {inst.mono}
-                </div>
-                <div className="mt-0.5 text-[8px] tracking-widest font-bold text-foreground/60">
-                  {inst.sub}
-                </div>
+                <InstitutionLogo inst={inst} />
               </div>
               <div>
                 <div className="text-sm font-bold tracking-tight text-foreground leading-tight">
