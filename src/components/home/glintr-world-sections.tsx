@@ -868,18 +868,13 @@ export function LearnerInstitutions() {
               style={{ minWidth: 260 }}
             >
               <div
-                className="grid place-items-center rounded-xl border border-[color:var(--brand-azure)]/30 px-3 py-2 text-center"
+                className="grid place-items-center rounded-xl border border-[color:var(--brand-azure)]/30 p-2"
                 style={{
                   minWidth: 56,
                   background: "linear-gradient(135deg, oklch(0.97 0.02 240), oklch(1 0 0))",
                 }}
               >
-                <div className="font-display font-black tracking-tight text-[color:var(--brand-azure)] leading-none text-base">
-                  {inst.mono}
-                </div>
-                <div className="mt-0.5 text-[8px] tracking-widest font-bold text-foreground/60">
-                  {inst.sub}
-                </div>
+                <InstitutionLogo inst={inst} />
               </div>
               <div>
                 <div className="text-sm font-bold tracking-tight text-foreground leading-tight">
