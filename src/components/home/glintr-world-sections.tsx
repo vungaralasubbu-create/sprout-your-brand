@@ -759,33 +759,61 @@ function BrandRail({
  * 3. LEARNER INSTITUTIONS — monogram marquee
  * ================================================================ */
 
-const INSTITUTIONS: Array<{ mono: string; sub: string; full: string }> = [
-  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay" },
-  { mono: "IIT", sub: "DELHI", full: "IIT Delhi" },
-  { mono: "IIT", sub: "MADRAS", full: "IIT Madras" },
-  { mono: "IIT", sub: "KHARAGPUR", full: "IIT Kharagpur" },
-  { mono: "IIT", sub: "KANPUR", full: "IIT Kanpur" },
-  { mono: "IIT", sub: "ROORKEE", full: "IIT Roorkee" },
-  { mono: "NIT", sub: "TRICHY", full: "NIT Trichy" },
-  { mono: "NIT", sub: "WARANGAL", full: "NIT Warangal" },
-  { mono: "NIT", sub: "SURATHKAL", full: "NIT Surathkal" },
-  { mono: "BITS", sub: "PILANI", full: "BITS Pilani" },
-  { mono: "VIT", sub: "VELLORE", full: "VIT Vellore" },
-  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University" },
-  { mono: "SRM", sub: "CHENNAI", full: "SRM University" },
-  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University" },
-  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University" },
-  { mono: "VTU", sub: "BELAGAVI", full: "VTU Belagavi" },
-  { mono: "DTU", sub: "DELHI", full: "DTU Delhi" },
-  { mono: "JU", sub: "KOLKATA", full: "Jadavpur University" },
-  { mono: "AU", sub: "CHENNAI", full: "Anna University" },
-  { mono: "AVV", sub: "COIMBATORE", full: "Amrita Vishwa Vidyapeetham" },
-  { mono: "PES", sub: "BENGALURU", full: "PES University" },
-  { mono: "RVCE", sub: "BENGALURU", full: "RV College of Engineering" },
-  { mono: "MSRIT", sub: "BENGALURU", full: "MS Ramaiah Institute" },
-  { mono: "OU", sub: "HYDERABAD", full: "Osmania University" },
-  { mono: "JNTU", sub: "HYDERABAD", full: "JNTU Hyderabad" },
+const INSTITUTIONS: Array<{ mono: string; sub: string; full: string; domain: string }> = [
+  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay", domain: "iitb.ac.in" },
+  { mono: "IIT", sub: "DELHI", full: "IIT Delhi", domain: "iitd.ac.in" },
+  { mono: "IIT", sub: "MADRAS", full: "IIT Madras", domain: "iitm.ac.in" },
+  { mono: "IIT", sub: "KHARAGPUR", full: "IIT Kharagpur", domain: "iitkgp.ac.in" },
+  { mono: "IIT", sub: "KANPUR", full: "IIT Kanpur", domain: "iitk.ac.in" },
+  { mono: "IIT", sub: "ROORKEE", full: "IIT Roorkee", domain: "iitr.ac.in" },
+  { mono: "NIT", sub: "TRICHY", full: "NIT Trichy", domain: "nitt.edu" },
+  { mono: "NIT", sub: "WARANGAL", full: "NIT Warangal", domain: "nitw.ac.in" },
+  { mono: "NIT", sub: "SURATHKAL", full: "NIT Surathkal", domain: "nitk.ac.in" },
+  { mono: "BITS", sub: "PILANI", full: "BITS Pilani", domain: "bits-pilani.ac.in" },
+  { mono: "VIT", sub: "VELLORE", full: "VIT Vellore", domain: "vit.ac.in" },
+  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University", domain: "manipal.edu" },
+  { mono: "SRM", sub: "CHENNAI", full: "SRM University", domain: "srmist.edu.in" },
+  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University", domain: "lpu.in" },
+  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University", domain: "kiit.ac.in" },
+  { mono: "VTU", sub: "BELAGAVI", full: "VTU Belagavi", domain: "vtu.ac.in" },
+  { mono: "DTU", sub: "DELHI", full: "DTU Delhi", domain: "dtu.ac.in" },
+  { mono: "JU", sub: "KOLKATA", full: "Jadavpur University", domain: "jaduniv.edu.in" },
+  { mono: "AU", sub: "CHENNAI", full: "Anna University", domain: "annauniv.edu" },
+  { mono: "AVV", sub: "COIMBATORE", full: "Amrita Vishwa Vidyapeetham", domain: "amrita.edu" },
+  { mono: "PES", sub: "BENGALURU", full: "PES University", domain: "pes.edu" },
+  { mono: "RVCE", sub: "BENGALURU", full: "RV College of Engineering", domain: "rvce.edu.in" },
+  { mono: "MSRIT", sub: "BENGALURU", full: "MS Ramaiah Institute", domain: "msrit.edu" },
+  { mono: "OU", sub: "HYDERABAD", full: "Osmania University", domain: "osmania.ac.in" },
+  { mono: "JNTU", sub: "HYDERABAD", full: "JNTU Hyderabad", domain: "jntuh.ac.in" },
 ];
+
+function InstitutionLogo({ inst }: { inst: (typeof INSTITUTIONS)[number] }) {
+  const [errored, setErrored] = React.useState(false);
+  if (errored) {
+    return (
+      <>
+        <div className="font-display font-black tracking-tight text-[color:var(--brand-azure)] leading-none text-base">
+          {inst.mono}
+        </div>
+        <div className="mt-0.5 text-[8px] tracking-widest font-bold text-foreground/60">
+          {inst.sub}
+        </div>
+      </>
+    );
+  }
+  return (
+    <img
+      src={`https://icons.duckduckgo.com/ip3/${inst.domain}.ico`}
+      alt={`${inst.full} logo`}
+      loading="lazy"
+      decoding="async"
+      width={40}
+      height={40}
+      className="h-10 w-10 object-contain"
+      onError={() => setErrored(true)}
+    />
+  );
+}
 
 
 const BG_WORDS = ["IIT", "NIT", "BITS", "ENGINEERING", "TECHNOLOGY", "MANAGEMENT", "AI"];
