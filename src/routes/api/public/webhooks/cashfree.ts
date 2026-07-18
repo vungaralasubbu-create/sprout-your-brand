@@ -97,16 +97,18 @@ export const Route = createFileRoute("/api/public/webhooks/cashfree")({
           const { supabaseAdmin } = await import(
             "@/integrations/supabase/client.server"
           );
-          await supabaseAdmin.from("payment_webhook_events").upsert(
-            {
-              provider: "cashfree",
-              event_id: eventId,
-              event_type: eventType,
-              payload,
-              received_at: new Date().toISOString(),
-            },
-            { onConflict: "provider,event_id", ignoreDuplicates: true },
-          );
+          await (supabaseAdmin as any)
+            .from("payment_webhook_events")
+            .upsert(
+              {
+                provider: "cashfree",
+                event_id: eventId,
+                event_type: eventType,
+                payload,
+                received_at: new Date().toISOString(),
+              },
+              { onConflict: "provider,event_id", ignoreDuplicates: true },
+            );
         } catch (err) {
           // Table may not exist yet — log and still ack so Cashfree doesn't retry storm.
           console.warn(
