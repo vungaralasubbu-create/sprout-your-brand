@@ -1,102 +1,117 @@
-# CMS-Driven Course Platform
+# Razorpay Payment Infrastructure — Platform-Wide
 
-Convert the course ecosystem into a fully CMS-driven engine so admins never hand-build a course page again. This is a scaffolding + AI orchestration task spread across 5 phases. The public Program Detail template already exists (`programs.$category.$course.index.tsx`) and is data-driven via the content pack — we keep that UI unchanged and swap the data source from static packs to Supabase-backed CMS records enriched by AI.
+A single, reusable payment engine used by every current and future paid surface on Glintr (courses, workshops, internships, certifications, white-label brands, partner links, upgrades, brand launch fees, etc.).
 
----
+## 1. Architecture
 
-## Phase 1 — CMS schema consolidation
+```text
+Client "Pay" button (any page)
+        │
+        ▼
+  <PayButton product={...} />  ── shared component
+        │
+        ▼
+  createOrder() server fn ──► Razorpay Orders API
+        │                       (uses admin-configured keys)
+        ▼
+  Razorpay Checkout (modal)
+        │
+        ▼
+  /api/public/webhooks/razorpay  (signature verified)
+        │
+        ▼
+  payments table  →  post_payment_actions()
+                      • enroll student / create LMS account
+                      • generate invoice + receipt
+                      • email + WhatsApp + notify partner/brand/admin
+                      • attribute revenue share (70% / 50%)
+                      • update analytics
+```
 
-Most tables already exist (`courses`, `course_categories`, `course_modules`, `course_lessons`, `course_projects`, `course_tools`, `course_skills`, `course_faqs`, `course_topics`, `course_related`, `course_certifications`, `course_placement_support`, `course_career_roles`, `course_sales_content`). Additive migration only — no destructive changes:
+One service. Every payment surface calls it. New pages inherit automatically.
 
-- Add nullable columns to `courses`: `subcategory`, `promo_video_url`, `gallery_urls jsonb`, `og_image_url`, `hero_image_url`, `mode`, `language`, `difficulty` (already exists → verify), `career_launch_price`, `career_pro_price`, `self_paced_price`, `keywords text[]`, `internal_links jsonb`, `structured_data jsonb`, `learning_outcomes jsonb`, `prerequisites jsonb`, `who_should_join jsonb`, `highlights jsonb`, `capstone jsonb`, `case_studies jsonb`, `internship_details jsonb`, `ai_generated_at timestamptz`, `ai_generation_status text`.
-- New table `course_hiring_partners` (id, course_id, company_name, logo_url, sort_order).
-- New table `course_learning_path_stages` (id, course_id, stage, position, note).
-- New table `course_salary_stages` (id, course_id, stage, range, low, high, note, position).
-- New table `course_ai_generations` (id, course_id, kind, prompt, output jsonb, model, tokens, created_by, status, created_at) — audit log.
-- Row-level security: extend existing course policies (public SELECT for published, admin write).
-- Add `is_published`, `published_at`, `seo_title`, `seo_description` if missing.
+## 2. Database (single migration)
 
-## Phase 2 — Data layer & content resolver
+- `payment_settings` — singleton row: mode (test/live), key_id, key_secret, webhook_secret, gst %, invoice prefix, company details.
+- `payment_products` — canonical priced item: `type` (course|workshop|internship|certification|bootcamp|brand_launch|upgrade|donation|custom), `ref_id`, brand_id, title, description, amount, currency, gst_included.
+- `payment_links` — extended: brand_id, partner_id, product_id, campaign, expiry, short_code, clicks, unique_visitors, conversions, revenue. (Existing `payment_links` already exists — additive alter.)
+- `payment_link_visits` — click + unique visitor tracking, UA, referrer, city, device.
+- `payments` — transaction of record: razorpay_order_id, razorpay_payment_id, signature, amount, gst, coupon, status, method, utr, student_id, partner_id, brand_id, product_id, link_id, campaign, attribution snapshot, invoice_no, receipt_url.
+- `payment_webhook_events` — raw payload, event id (unique), status, retries, last_error — for idempotency + replay protection.
+- `payment_refunds` — refund_id, payment_id, amount, reason, status.
+- `invoices` — invoice_no (sequence), payment_id, pdf_url, gst breakdown, buyer + seller (brand) snapshot.
+- Revenue share view: `v_payment_attribution` computing 70/50 based on `is_own_lead`.
+- RLS: admins full; brand owners see their brand; partners see own attributions; students see own payments.
 
-- `src/lib/course-cms.functions.ts` — `getCourseFull(slug, category)` server fn: single query hydrating course + all related tables into a `CoursePayload` DTO.
-- `src/lib/course-content-resolver.ts` — merges: (a) DB record if present, (b) `course-content-pack.ts` fallback (existing), (c) generic default. Public route reads only from the resolver; static pack becomes the fallback layer, not the primary source.
-- Refactor `programs.$category.$course.index.tsx` loader to consume the resolver. UI untouched.
+## 3. Server functions (`src/lib/payments/*.functions.ts`)
 
-## Phase 3 — AI generation pipeline
+- `getPaymentSettings`, `updatePaymentSettings` (admin).
+- `createOrder({ product_id | link_code, buyer, coupon })` — issues Razorpay order, records pending `payments` row.
+- `verifyPayment({ order_id, payment_id, signature })` — client-side fallback verification.
+- `handleWebhook` — server route `/api/public/webhooks/razorpay` (HMAC verified, idempotent by event id).
+- `postPaymentActions(payment_id)` — enroll, invoice, notify.
+- Link generator: `createPaymentLink`, `listPaymentLinks`, `updatePaymentLink`, `disable/archive/delete`, `duplicatePaymentLink`, `getLinkAnalytics`, `trackLinkVisit`.
+- Admin analytics: `getPaymentCenterOverview`, `revenueByBrand/Partner/Course`, `topPrograms`, `recentTransactions`, `refundsList`.
 
-Server functions under `src/lib/admin/course-ai.functions.ts` — each idempotent, callable individually or via "Generate All":
+## 4. Shared UI
 
-- `generateCourseOverview` → hero title/subtitle, short + full description, highlights, who-should-join, prerequisites.
-- `generateCurriculum` → modules + lessons + duration.
-- `generateProjects` → 5–8 projects sized to category.
-- `generateLearningOutcomes` + `generateSkills`.
-- `generateCareerData` → job titles, salary_stages, learning_path_stages, hiring_partners.
-- `generateTools` → mapped via existing `toolIcon` lookup.
-- `generateFAQs` → 8–10 category-unique FAQs (prompt enforces uniqueness against category).
-- `generateSEO` → title, description, keywords, canonical, JSON-LD Course schema, OG/Twitter meta.
-- `generateBlogSuggestions` → 6–10 titles + slugs, queued into existing AI Content Factory (`content_items` with `status='draft'`).
-- `generateRelatedCourses` → picks from existing categories by embedding-lite similarity (name + skills tokens).
+- `<PayButton />` — universal. Props: `productId` or `linkCode`. Handles checkout modal, loading, success/error, redirect.
+- `<PaymentCheckoutPage />` — hosted checkout at `/pay/$code` showing brand logo, product, price, coupon, GST, student details form → Razorpay modal.
+- `<PaymentLinkGenerator />` — used by brand + admin dashboards (product type picker, price, expiry, campaign; outputs short URL + QR + copy/share).
+- `<PaymentAnalyticsCards />`, `<TransactionsTable />`, `<RefundsPanel />` — reused in admin, brand, partner dashboards.
 
-Uses existing `src/lib/ai-json.ts` hardened parser and `src/lib/admin/ai-factory.functions.ts` patterns. Model: `google/gemini-3.1-flash` for structured JSON, split into parallel scoped calls to avoid schema-size failures (per `ai-sdk-agent-patterns` rules — no bounded `Output` schemas; prompt-driven, parse + clamp in code).
+## 5. Routes
 
-## Phase 4 — AI image pipeline
+- Admin: `/admin/payments` (overview + transactions + refunds + settings tabs).
+- Admin: `/admin/payments/settings` — Razorpay keys, mode toggle, webhook secret, GST, invoice.
+- Brand owner: `/brand/payments` — links generator + brand-scoped analytics.
+- Partner: `/partner/payment-links` (already exists) — wire to new engine; partner-created links attribute to Glintr Razorpay, revenue share auto-computed.
+- Student: `/student/payments` — history + invoices.
+- Public: `/pay/$code` — hosted checkout. `/r/$short` — short-URL resolver + click tracking.
+- Webhook: `/api/public/webhooks/razorpay`.
 
-Server route `src/routes/api/admin/generate-course-image.ts` (streaming) + `createServerFn` orchestrator `generateCourseAssetSet`:
+## 6. Existing surfaces wired to `<PayButton />`
 
-- Hero banner (1600×900), thumbnail (1200×800), OG image (1200×630), certificate preview, 3 section illustrations.
-- Model: `google/gemini-3.1-flash-image` (fast + edit-capable); prompts derived from category + course theme.
-- Upload output to Supabase Storage bucket `course-assets/{course_id}/…`; store URLs on the course record.
-- Non-blocking: images generated async, admin sees progress in the CMS.
+Course apply, Program enroll, Workshop register, Internship apply, Certification purchase, Brand launch fee, Premium upgrade, Partner dashboard "Generate Link", White-label brand storefronts. Every existing "Enroll / Pay / Apply / Register" CTA swaps to the shared component so future pages inherit.
 
-## Phase 5 — Admin CMS UI at `/admin/courses`
+## 7. Post-payment automation
 
-Keeps existing admin design tokens. Routes:
+Triggered from webhook (idempotent):
+1. Insert enrollment in `enrollments`, create student profile if missing.
+2. Generate invoice (sequential per brand), store PDF in Supabase storage.
+3. Email receipt (existing email pipeline), WhatsApp via Pearl SMS gateway.
+4. Notify partner + brand owner + admin (existing notification tables).
+5. Update `platform_leads` → status=enrolled, attach payment.
+6. Update analytics + revenue dashboards.
 
-- `/admin/courses` — list with search, filter (category, status, published), bulk publish.
-- `/admin/courses/new` — 3-field form (Name, Category, Slug) → Save → redirect to editor.
-- `/admin/courses/$id/edit` — tabbed editor:
-  - **Overview**: basic info + hero fields + pricing + CTAs.
-  - **Curriculum**: drag-and-drop modules/lessons (using `@dnd-kit`, already in tree — verify).
-  - **Learning**: outcomes, skills, prerequisites, projects, assignments, capstone.
-  - **Career**: hiring partners, roadmap stages, salary stages, career roles.
-  - **FAQs**: list editor.
-  - **Media**: image generation panel with previews + regenerate per asset.
-  - **SEO**: fields + live JSON-LD preview.
-  - **AI Studio**: single "Generate with AI" button + per-section regenerate; shows `course_ai_generations` history.
-  - **Publish**: preview link, publish toggle, status badge.
+## 8. Security
 
-Every save writes to CMS; the public route re-fetches on the next request (staleTime honored).
+- Signature verification on both client callback and webhook.
+- Webhook idempotency via `payment_webhook_events.event_id UNIQUE`.
+- Replay protection: reject events older than 5 min.
+- Retries with exponential backoff for post-payment actions (queue table).
+- Secrets stored via `add_secret` (`RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `RAZORPAY_WEBHOOK_SECRET`); admin UI can override per environment.
+- Signed short URLs; expiry enforced server-side; disabled links reject at order-create.
 
-## Phase 6 — Automation on course create
+## 9. Rollout order
 
-`onCourseCreated` server fn triggered from `/admin/courses/new`:
+1. Migration (settings, products, payments, webhook_events, refunds, invoices, link extensions, visits) + RLS + GRANTs.
+2. Secrets + `payments.server.ts` (Razorpay SDK wrapper) + webhook route.
+3. Server functions (order, verify, post-actions, links, analytics).
+4. Shared `<PayButton />` and `/pay/$code` hosted checkout.
+5. Admin `/admin/payments` (overview, transactions, refunds, settings).
+6. Brand `/brand/payments` link generator.
+7. Wire existing CTAs (course apply, program enroll, partner link generator, brand launch).
+8. Student payment history + invoice download.
 
-1. Insert course row (draft).
-2. Fire `generateCourseOverview` → `generateCurriculum` → `generateLearningOutcomes` → `generateSkills` → `generateProjects` → `generateCareerData` → `generateTools` → `generateFAQs` → `generateSEO` in parallel groups.
-3. Queue image generation.
-4. Queue 6 blog suggestions into `content_items` as drafts.
-5. Mark `ai_generation_status='ready_for_review'`.
+## Technical notes
 
-Admin flow becomes: **Create → Wait ~60s → Review → Publish**.
+- Razorpay Node SDK is not Worker-safe for all calls; use `fetch` against Razorpay REST API directly from server functions (Basic Auth with key_id:key_secret). This runs cleanly on the TSS Worker runtime.
+- Webhook uses raw body + HMAC-SHA256 with `RAZORPAY_WEBHOOK_SECRET`; verify with `timingSafeEqual`.
+- Invoice PDF rendering via HTML → `@react-pdf/renderer` at request time, cached in Supabase storage bucket `invoices`.
+- Client-side Razorpay checkout script loaded lazily on `<PayButton />` mount (`https://checkout.razorpay.com/v1/checkout.js`).
+- Short URLs: `/r/:code` route logs visit → 302 to `/pay/:code`.
+- All amounts stored as integer paise; UI formats INR.
+- Feature-flagged: if `payment_settings.mode = 'test'`, badge shown on hosted checkout.
 
-## Out of scope for this turn
-
-- Blog auto-publish (drafts only — human review remains).
-- Certificate PDF renderer (existing `certificates` table already handles storage; UI generation deferred).
-- Real-time collaborative editing.
-
----
-
-## Technical section
-
-- **DB**: additive migration; existing static pack code (`course-content-pack.ts`) becomes fallback for un-migrated courses. No breaking change to `programs.$category.$course.index.tsx` shape — resolver returns the same DTO the template consumes today.
-- **AI budget**: each course full-generation ≈ 8 parallel Gemini Flash calls + 6 image calls. Rate-limit via existing gateway; surface 402/429 errors in admin UI per `connecting-to-ai-models-tanstack`.
-- **Storage**: bucket `course-assets` (public read, admin write). RLS via existing pattern.
-- **Types**: extend `src/lib/programs.ts` `Course` type via `CoursePayload` in resolver; keep `programs.ts` legacy path untouched for compatibility.
-- **Rollout**: ship phases 1+2 first (schema + resolver) → existing courses unchanged. Then 3+4+5+6 in sequence. Each phase independently deployable.
-
-## Delivery order this turn
-
-Given the size, this turn implements **Phase 1 (schema)** + **Phase 2 (resolver + loader wiring)** + **skeleton of Phase 5 admin routes** so the platform is unblocked for content teams. Phases 3, 4, 6 land in a follow-up turn to keep the change reviewable.
-
-Confirm to proceed, or narrow the scope (e.g. "AI generation first, admin UI later").
+Given the scope, I'll implement in the order above across multiple turns, verifying each layer (migration → engine → UI → wiring) before moving on.
