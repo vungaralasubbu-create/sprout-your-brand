@@ -678,10 +678,11 @@ export function CertificationEcosystem() {
                 {BRANDS.filter((b) => cat === "all" || b.cats.includes(cat)).map((b) => (
                   <div
                     key={b.name}
-                    className="rounded-xl border border-border/60 bg-background px-3 py-1.5 text-sm font-bold tracking-tight"
-                    style={{ color: b.color }}
+                    className="flex items-center gap-2 rounded-xl border border-border/60 bg-background px-3 py-1.5"
+                    title={b.name}
                   >
-                    {b.short}
+                    <BrandLogoImg name={b.name} className="h-5 md:h-5" />
+                    <span className="text-xs font-semibold tracking-tight text-foreground/80">{b.short}</span>
                   </div>
                 ))}
               </div>
