@@ -12,7 +12,8 @@ export const Route = createFileRoute("/_authenticated/partner")({
       (r) => r === "super_admin" || r === "admin" || r === "partner_manager",
     );
     if (!roles.includes("partner") && !isPrivileged) {
-      throw redirect({ to: dashboardPathForRole(primaryRole(roles)) as any });
+      const target = dashboardPathForRole(primaryRole(roles));
+      throw redirect({ to: "/access-denied" as any, search: { from: "partner", to: target } as any });
     }
 
     // Privileged admins can inspect the partner workspace unrestricted.

@@ -2,10 +2,19 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 /**
- * After sign-in, ensure the user has the correct workspace role.
- * Currently handles: partner applicants whose application was approved
- * BEFORE they signed up (or without user_id linked) — links their auth
- * user, creates the partners record, and grants the 'partner' role.
+ * After sign-in, ensure the user has the correct workspace role(s).
+ *
+ * Detection order (a user can hold multiple roles):
+ *  1. Partner    — partner_applications (any non-rejected) OR partners row
+ *  2. Brand owner — brands.owner_user_id OR partner_brand_profiles.user_id
+ *  3. Counsellor — counsellor_profiles.user_id
+ *  4. Student (fallback) — only if the user has no other workspace role AND
+ *     no evidence of any partner/brand/counsellor relationship.
+ *
+ * This is the SINGLE source of truth for role provisioning after login.
+ * Never grant `student` as a blanket fallback when the user is actually a
+ * sales partner / brand owner / counsellor — that mis-routes them into the
+ * Student LMS on every login.
  */
 export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -20,9 +29,14 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
 
     const granted: string[] = [];
 
-    // Find the most recent partner application for this email (any status
-    // except rejected). Sales partners should land on the sales dashboard
-    // whether their application is approved, pending, or under review.
+    async function grant(role: string) {
+      await supabaseAdmin
+        .from("user_roles")
+        .upsert({ user_id: userId, role: role as any }, { onConflict: "user_id,role" });
+      if (!granted.includes(role)) granted.push(role);
+    }
+
+    // -------- Partner detection --------
     const { data: app } = await supabaseAdmin
       .from("partner_applications")
       .select("id, full_name, mobile, city, state, user_id, status")
@@ -32,17 +46,12 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
       .limit(1)
       .maybeSingle();
 
+    let hasPartner = false;
     if (app) {
+      hasPartner = true;
       if (!app.user_id) {
-        await supabaseAdmin
-          .from("partner_applications")
-          .update({ user_id: userId })
-          .eq("id", app.id);
+        await supabaseAdmin.from("partner_applications").update({ user_id: userId }).eq("id", app.id);
       }
-      // Only auto-provision a partners row once the application is approved.
-      // Pending / under-review applicants still get the 'partner' role so they
-      // land on the Sales Workspace, but their partners record is created
-      // upon approval by the admin flow.
       if (app.status === "approved") {
         const { data: existingPartner } = await supabaseAdmin
           .from("partners")
@@ -50,18 +59,21 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
           .eq("user_id", userId)
           .maybeSingle();
         if (!existingPartner) {
-          const { data: inserted } = await supabaseAdmin.from("partners").insert({
-            user_id: userId,
-            application_id: app.id,
-            display_name: app.full_name,
-            email,
-            mobile: app.mobile,
-            city: app.city,
-            state: app.state,
-            status: "active",
-          }).select("id").maybeSingle();
+          const { data: inserted } = await supabaseAdmin
+            .from("partners")
+            .insert({
+              user_id: userId,
+              application_id: app.id,
+              display_name: app.full_name,
+              email,
+              mobile: app.mobile,
+              city: app.city,
+              state: app.state,
+              status: "active",
+            })
+            .select("id")
+            .maybeSingle();
 
-          // Link partner referral if application had a referred_by_code
           const { data: appFull } = await supabaseAdmin
             .from("partner_applications")
             .select("referred_by_code")
@@ -94,38 +106,68 @@ export const reconcileRolesForCurrentUser = createServerFn({ method: "POST" })
           }
         }
       }
-
-      await supabaseAdmin
-        .from("user_roles")
-        .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
-      granted.push("partner");
+      await grant("partner");
+    } else {
+      const { data: partnerRow } = await supabaseAdmin
+        .from("partners")
+        .select("id")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (partnerRow) {
+        hasPartner = true;
+        await grant("partner");
+      }
     }
 
-    // If the user already has a partners row (e.g. via onboarding), ensure partner role.
-    const { data: partnerRow } = await supabaseAdmin
-      .from("partners")
+    // -------- Brand owner detection --------
+    let hasBrand = false;
+    const { data: ownedBrand } = await supabaseAdmin
+      .from("brands")
+      .select("id")
+      .eq("owner_user_id", userId)
+      .limit(1)
+      .maybeSingle();
+    if (ownedBrand) {
+      hasBrand = true;
+      await grant("wl_owner");
+    } else {
+      const { data: brandProfile } = await supabaseAdmin
+        .from("partner_brand_profiles")
+        .select("id")
+        .eq("user_id", userId)
+        .limit(1)
+        .maybeSingle();
+      if (brandProfile) {
+        hasBrand = true;
+        await grant("brand_owner");
+      }
+    }
+
+    // -------- Counsellor detection --------
+    let hasCounsellor = false;
+    const { data: counsellor } = await supabaseAdmin
+      .from("counsellor_profiles")
       .select("id")
       .eq("user_id", userId)
+      .limit(1)
       .maybeSingle();
-    if (partnerRow) {
-      await supabaseAdmin
-        .from("user_roles")
-        .upsert({ user_id: userId, role: "partner" as any }, { onConflict: "user_id,role" });
-      if (!granted.includes("partner")) granted.push("partner");
+    if (counsellor) {
+      hasCounsellor = true;
+      await grant("counsellor");
     }
 
-
-    // Default fallback: every signed-in user gets at least the student role
-    // so they always land on a workspace dashboard instead of the homepage.
-    const { data: existingRoles } = await supabaseAdmin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
-    if (!existingRoles || existingRoles.length === 0) {
-      await supabaseAdmin
+    // -------- Student fallback --------
+    // Only grant `student` when the user has NO existing role AND no evidence
+    // of being a partner / brand owner / counsellor. This prevents sales
+    // partners from being mis-routed into the Student LMS.
+    if (!hasPartner && !hasBrand && !hasCounsellor) {
+      const { data: existingRoles } = await supabaseAdmin
         .from("user_roles")
-        .upsert({ user_id: userId, role: "student" as any }, { onConflict: "user_id,role" });
-      granted.push("student");
+        .select("role")
+        .eq("user_id", userId);
+      if (!existingRoles || existingRoles.length === 0) {
+        await grant("student");
+      }
     }
 
     return { granted };

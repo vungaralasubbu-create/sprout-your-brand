@@ -8,8 +8,15 @@ export const Route = createFileRoute("/_authenticated/brand")({
     const user = (context as any).user;
     if (!user) throw redirect({ to: "/auth" });
     const roles = await fetchUserRoles(user.id);
-    if (roles.includes("wl_owner") || roles.includes("super_admin") || roles.includes("admin")) return;
-    throw redirect({ to: dashboardPathForRole(primaryRole(roles)) as any });
+    if (
+      roles.includes("wl_owner") ||
+      roles.includes("brand_owner") ||
+      roles.includes("super_admin") ||
+      roles.includes("admin")
+    )
+      return;
+    const target = dashboardPathForRole(primaryRole(roles));
+    throw redirect({ to: "/access-denied" as any, search: { from: "brand", to: target } as any });
   },
   component: BrandShell,
 });

@@ -14560,6 +14560,7 @@ export type Database = {
         | "campus_ambassador"
         | "counsellor"
         | "brand_owner"
+        | "instructor"
       application_status:
         | "draft"
         | "submitted"
@@ -15304,6 +15305,7 @@ export const Constants = {
         "campus_ambassador",
         "counsellor",
         "brand_owner",
+        "instructor",
       ],
       application_status: [
         "draft",
