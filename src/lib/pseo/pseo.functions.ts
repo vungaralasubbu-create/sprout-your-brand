@@ -18,7 +18,7 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { buildPseoContent } from "./content-builder";
-import type { PseoPageType, PseoPageWithRelations, PseoLocation } from "./types";
+import type { PseoPageType, PseoDbPageWithRelations, PseoLocation } from "./types";
 
 function publicClient() {
   const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL!;
@@ -33,7 +33,7 @@ const slugSchema = z.object({ slug: z.string().min(1).max(200) });
 
 export const getPseoPageBySlug = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => slugSchema.parse(d))
-  .handler(async ({ data }): Promise<PseoPageWithRelations | null> => {
+  .handler(async ({ data }): Promise<PseoDbPageWithRelations | null> => {
     const sb = publicClient();
     const { data: row } = await sb
       .from("pseo_pages")
@@ -80,8 +80,8 @@ export const getPseoPageBySlug = createServerFn({ method: "GET" })
       }));
 
     return {
-      ...(row as unknown as PseoPageWithRelations),
-      course: (courseRes.data ?? null) as PseoPageWithRelations["course"],
+      ...(row as unknown as PseoDbPageWithRelations),
+      course: (courseRes.data ?? null) as PseoDbPageWithRelations["course"],
       location: (locRes.data ?? null) as PseoLocation | null,
       interlinks,
     };

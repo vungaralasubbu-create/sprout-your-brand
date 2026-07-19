@@ -64,7 +64,7 @@ export interface PseoPage {
   variables: Record<string, string>;
   sections: PseoSection[];
   faqs: PseoFaq[];
-  related: Array<{ slug: string; title: string }>;
+  related: Array<{ label: string; href: string }>;
   readingTimeMin: number;
   createdAt: string;
   updatedAt: string;

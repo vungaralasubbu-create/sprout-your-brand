@@ -13,7 +13,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getPseoPageBySlug } from "@/lib/pseo/pseo.functions";
 import { buildSeo, SITE_ORIGIN } from "@/lib/seo/engine";
 import { withHome } from "@/lib/seo/breadcrumbs";
-import type { PseoPageWithRelations } from "@/lib/pseo/types";
+import type { PseoDbPageWithRelations } from "@/lib/pseo/types";
 
 export const Route = createFileRoute("/p/$slug")({
   loader: async ({ params }) => {
@@ -85,7 +85,7 @@ export const Route = createFileRoute("/p/$slug")({
 });
 
 function PseoPageView() {
-  const { page } = Route.useLoaderData() as { page: PseoPageWithRelations };
+  const { page } = Route.useLoaderData() as { page: PseoDbPageWithRelations };
   const c = page.content ?? {};
   return (
     <main className="mx-auto max-w-4xl px-6 py-16">
