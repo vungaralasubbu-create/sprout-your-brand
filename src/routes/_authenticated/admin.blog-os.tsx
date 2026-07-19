@@ -335,7 +335,7 @@ function ProgrammaticPanel() {
                 </div>
               </div>
               {j.status !== "completed" && j.status !== "cancelled" && (
-                <Button size="sm" variant="muted" onClick={() => runM.mutate(j.id)} disabled={runM.isPending}>
+                <Button size="sm" variant="outline" onClick={() => runM.mutate(j.id)} disabled={runM.isPending}>
                   <Play className="mr-1 h-3 w-3" />Run batch
                 </Button>
               )}
@@ -497,7 +497,7 @@ function AuditPanel() {
     <Card className="border-white/10 bg-white/[0.03] p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="text-sm font-semibold">Blog System Audit Report</div>
-        <Button size="sm" variant="muted" onClick={() => refetch()}><RefreshCw className="mr-1 h-3 w-3" />Regenerate</Button>
+        <Button size="sm" variant="outline" onClick={() => refetch()}><RefreshCw className="mr-1 h-3 w-3" />Regenerate</Button>
       </div>
       <div className="grid gap-3 sm:grid-cols-4">
         <Metric icon={FileText} label="Total" value={data.totals.total} />
