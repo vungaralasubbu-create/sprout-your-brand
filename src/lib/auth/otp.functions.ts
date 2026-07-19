@@ -116,7 +116,7 @@ const completeSchema = z.object({
   mobile: z.string().trim().min(6).max(20),
   code: z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code."),
   email: z.string().trim().email().max(255),
-  password: z.string().min(6).max(72),
+  password: z.string().min(6).max(72).optional().nullable(),
   mode: z.enum(["signin", "signup"]).default("signin"),
 });
 
