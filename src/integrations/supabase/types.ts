@@ -14282,6 +14282,89 @@ export type Database = {
           },
         ]
       }
+      review_requests: {
+        Row: {
+          channel: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          last_reminder_at: string | null
+          metadata: Json | null
+          opened_at: string | null
+          reminders_sent: number | null
+          review_id: string | null
+          sent_at: string | null
+          status: string
+          submitted_at: string | null
+          target_id: string | null
+          target_label: string | null
+          target_slug: string | null
+          target_type: string
+          token: string
+          trigger_event: string
+          updated_at: string
+          user_email: string | null
+          user_id: string
+          user_name: string | null
+        }
+        Insert: {
+          channel?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_reminder_at?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          reminders_sent?: number | null
+          review_id?: string | null
+          sent_at?: string | null
+          status?: string
+          submitted_at?: string | null
+          target_id?: string | null
+          target_label?: string | null
+          target_slug?: string | null
+          target_type: string
+          token?: string
+          trigger_event: string
+          updated_at?: string
+          user_email?: string | null
+          user_id: string
+          user_name?: string | null
+        }
+        Update: {
+          channel?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_reminder_at?: string | null
+          metadata?: Json | null
+          opened_at?: string | null
+          reminders_sent?: number | null
+          review_id?: string | null
+          sent_at?: string | null
+          status?: string
+          submitted_at?: string | null
+          target_id?: string | null
+          target_label?: string | null
+          target_slug?: string | null
+          target_type?: string
+          token?: string
+          trigger_event?: string
+          updated_at?: string
+          user_email?: string | null
+          user_id?: string
+          user_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_requests_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "student_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       risk_flag_activity: {
         Row: {
           action: string
@@ -15566,6 +15649,137 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "course_project_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      student_reviews: {
+        Row: {
+          after_snapshot: Json | null
+          before_snapshot: Json | null
+          career_growth_notes: string | null
+          company_logo_url: string | null
+          company_name: string | null
+          created_at: string
+          display_locations: string[] | null
+          featured: boolean | null
+          id: string
+          ip_address: unknown
+          moderated_at: string | null
+          moderated_by: string | null
+          moderation_notes: string | null
+          published_at: string | null
+          rating: number
+          review_text: string
+          reviewer_avatar_url: string | null
+          reviewer_email: string | null
+          reviewer_linkedin_url: string | null
+          reviewer_name: string
+          salary_after_lpa: number | null
+          salary_before_lpa: number | null
+          salary_growth_pct: number | null
+          seo_slug: string | null
+          source: string | null
+          spam_score: number | null
+          status: string
+          success_story_id: string | null
+          target_id: string | null
+          target_label: string | null
+          target_slug: string | null
+          target_type: string
+          title: string | null
+          trigger_event: string
+          updated_at: string
+          user_id: string | null
+          video_thumbnail_url: string | null
+          video_url: string | null
+        }
+        Insert: {
+          after_snapshot?: Json | null
+          before_snapshot?: Json | null
+          career_growth_notes?: string | null
+          company_logo_url?: string | null
+          company_name?: string | null
+          created_at?: string
+          display_locations?: string[] | null
+          featured?: boolean | null
+          id?: string
+          ip_address?: unknown
+          moderated_at?: string | null
+          moderated_by?: string | null
+          moderation_notes?: string | null
+          published_at?: string | null
+          rating: number
+          review_text: string
+          reviewer_avatar_url?: string | null
+          reviewer_email?: string | null
+          reviewer_linkedin_url?: string | null
+          reviewer_name: string
+          salary_after_lpa?: number | null
+          salary_before_lpa?: number | null
+          salary_growth_pct?: number | null
+          seo_slug?: string | null
+          source?: string | null
+          spam_score?: number | null
+          status?: string
+          success_story_id?: string | null
+          target_id?: string | null
+          target_label?: string | null
+          target_slug?: string | null
+          target_type: string
+          title?: string | null
+          trigger_event: string
+          updated_at?: string
+          user_id?: string | null
+          video_thumbnail_url?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          after_snapshot?: Json | null
+          before_snapshot?: Json | null
+          career_growth_notes?: string | null
+          company_logo_url?: string | null
+          company_name?: string | null
+          created_at?: string
+          display_locations?: string[] | null
+          featured?: boolean | null
+          id?: string
+          ip_address?: unknown
+          moderated_at?: string | null
+          moderated_by?: string | null
+          moderation_notes?: string | null
+          published_at?: string | null
+          rating?: number
+          review_text?: string
+          reviewer_avatar_url?: string | null
+          reviewer_email?: string | null
+          reviewer_linkedin_url?: string | null
+          reviewer_name?: string
+          salary_after_lpa?: number | null
+          salary_before_lpa?: number | null
+          salary_growth_pct?: number | null
+          seo_slug?: string | null
+          source?: string | null
+          spam_score?: number | null
+          status?: string
+          success_story_id?: string | null
+          target_id?: string | null
+          target_label?: string | null
+          target_slug?: string | null
+          target_type?: string
+          title?: string | null
+          trigger_event?: string
+          updated_at?: string
+          user_id?: string | null
+          video_thumbnail_url?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_reviews_success_story_id_fkey"
+            columns: ["success_story_id"]
+            isOneToOne: false
+            referencedRelation: "success_stories"
             referencedColumns: ["id"]
           },
         ]

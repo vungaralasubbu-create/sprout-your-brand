@@ -146,6 +146,7 @@ import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/trans
 import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
+import { Route as AuthenticatedSubmitReviewTokenRouteImport } from './routes/_authenticated/submit-review.$token'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
 import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
 import { Route as AuthenticatedStudentMentorRouteImport } from './routes/_authenticated/student.mentor'
@@ -226,6 +227,7 @@ import { Route as AuthenticatedAdminSuccessStoriesRouteImport } from './routes/_
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
 import { Route as AuthenticatedAdminRiskReviewRouteImport } from './routes/_authenticated/admin.risk-review'
+import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authenticated/admin.reviews'
 import { Route as AuthenticatedAdminRevenueVerificationRouteImport } from './routes/_authenticated/admin.revenue-verification'
 import { Route as AuthenticatedAdminRevenueRouteImport } from './routes/_authenticated/admin.revenue'
 import { Route as AuthenticatedAdminReferralManagementRouteImport } from './routes/_authenticated/admin.referral-management'
@@ -1146,6 +1148,12 @@ const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
   path: '/api/v1/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSubmitReviewTokenRoute =
+  AuthenticatedSubmitReviewTokenRouteImport.update({
+    id: '/submit-review/$token',
+    path: '/submit-review/$token',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudentProfileRoute =
   AuthenticatedStudentProfileRouteImport.update({
     id: '/profile',
@@ -1620,6 +1628,12 @@ const AuthenticatedAdminRiskReviewRoute =
   AuthenticatedAdminRiskReviewRouteImport.update({
     id: '/risk-review',
     path: '/risk-review',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminReviewsRoute =
+  AuthenticatedAdminReviewsRouteImport.update({
+    id: '/reviews',
+    path: '/reviews',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminRevenueVerificationRoute =
@@ -3150,6 +3164,7 @@ export interface FileRoutesByFullPath {
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
   '/admin/risk-review': typeof AuthenticatedAdminRiskReviewRouteWithChildren
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -3230,6 +3245,7 @@ export interface FileRoutesByFullPath {
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -3581,6 +3597,7 @@ export interface FileRoutesByTo {
   '/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
   '/admin/risk-review': typeof AuthenticatedAdminRiskReviewRouteWithChildren
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -3661,6 +3678,7 @@ export interface FileRoutesByTo {
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -4028,6 +4046,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/referral-management': typeof AuthenticatedAdminReferralManagementRoute
   '/_authenticated/admin/revenue': typeof AuthenticatedAdminRevenueRoute
   '/_authenticated/admin/revenue-verification': typeof AuthenticatedAdminRevenueVerificationRoute
+  '/_authenticated/admin/reviews': typeof AuthenticatedAdminReviewsRoute
   '/_authenticated/admin/risk-review': typeof AuthenticatedAdminRiskReviewRouteWithChildren
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
@@ -4108,6 +4127,7 @@ export interface FileRoutesById {
   '/_authenticated/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/_authenticated/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -4475,6 +4495,7 @@ export interface FileRouteTypes {
     | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
+    | '/admin/reviews'
     | '/admin/risk-review'
     | '/admin/sales-command'
     | '/admin/settings'
@@ -4555,6 +4576,7 @@ export interface FileRouteTypes {
     | '/student/mentor'
     | '/student/notifications'
     | '/student/profile'
+    | '/submit-review/$token'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -4906,6 +4928,7 @@ export interface FileRouteTypes {
     | '/admin/referral-management'
     | '/admin/revenue'
     | '/admin/revenue-verification'
+    | '/admin/reviews'
     | '/admin/risk-review'
     | '/admin/sales-command'
     | '/admin/settings'
@@ -4986,6 +5009,7 @@ export interface FileRouteTypes {
     | '/student/mentor'
     | '/student/notifications'
     | '/student/profile'
+    | '/submit-review/$token'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -5352,6 +5376,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/referral-management'
     | '/_authenticated/admin/revenue'
     | '/_authenticated/admin/revenue-verification'
+    | '/_authenticated/admin/reviews'
     | '/_authenticated/admin/risk-review'
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/settings'
@@ -5432,6 +5457,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/mentor'
     | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
+    | '/_authenticated/submit-review/$token'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -6680,6 +6706,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1HealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/submit-review/$token': {
+      id: '/_authenticated/submit-review/$token'
+      path: '/submit-review/$token'
+      fullPath: '/submit-review/$token'
+      preLoaderRoute: typeof AuthenticatedSubmitReviewTokenRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/student/profile': {
       id: '/_authenticated/student/profile'
       path: '/profile'
@@ -7238,6 +7271,13 @@ declare module '@tanstack/react-router' {
       path: '/risk-review'
       fullPath: '/admin/risk-review'
       preLoaderRoute: typeof AuthenticatedAdminRiskReviewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/reviews': {
+      id: '/_authenticated/admin/reviews'
+      path: '/reviews'
+      fullPath: '/admin/reviews'
+      preLoaderRoute: typeof AuthenticatedAdminReviewsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/revenue-verification': {
@@ -9240,6 +9280,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminReferralManagementRoute: typeof AuthenticatedAdminReferralManagementRoute
   AuthenticatedAdminRevenueRoute: typeof AuthenticatedAdminRevenueRoute
   AuthenticatedAdminRevenueVerificationRoute: typeof AuthenticatedAdminRevenueVerificationRoute
+  AuthenticatedAdminReviewsRoute: typeof AuthenticatedAdminReviewsRoute
   AuthenticatedAdminRiskReviewRoute: typeof AuthenticatedAdminRiskReviewRouteWithChildren
   AuthenticatedAdminSalesCommandRoute: typeof AuthenticatedAdminSalesCommandRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
@@ -9353,6 +9394,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminRevenueRoute: AuthenticatedAdminRevenueRoute,
   AuthenticatedAdminRevenueVerificationRoute:
     AuthenticatedAdminRevenueVerificationRoute,
+  AuthenticatedAdminReviewsRoute: AuthenticatedAdminReviewsRoute,
   AuthenticatedAdminRiskReviewRoute:
     AuthenticatedAdminRiskReviewRouteWithChildren,
   AuthenticatedAdminSalesCommandRoute: AuthenticatedAdminSalesCommandRoute,
@@ -9848,6 +9890,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
   AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
   AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
 }
 
@@ -9865,6 +9908,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCampusAmbassadorStatusRoute,
   AuthenticatedCounsellorCopilotRoute:
     AuthenticatedCounsellorCopilotRouteWithChildren,
+  AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
 }
 
