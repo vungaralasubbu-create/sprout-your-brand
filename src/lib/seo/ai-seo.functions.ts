@@ -108,11 +108,13 @@ export const generateSeoSuggestion = createServerFn({ method: "POST" })
     });
 
     if (!chat.ok || !chat.result) {
-      throw new Error(chat.error ?? "AI generation failed");
+      const errMsg = typeof chat.error === "string" ? chat.error : chat.error?.message ?? "AI generation failed";
+      throw new Error(errMsg);
     }
 
     // Prefer structured payload, fall back to parsing JSON from content.
-    let suggestion: unknown = null;
+    let suggestion: Record<string, unknown> = {};
+
     if (chat.result.structuredJson) {
       try {
         suggestion = JSON.parse(chat.result.structuredJson);
