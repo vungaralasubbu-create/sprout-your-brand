@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Activity, Users, UserCheck, Target, Scale, ShieldCheck, FileSignature, Wallet,
   Handshake, Building2, Bell, Shield, GraduationCap, FolderTree, BookOpen, ClipboardList,
   History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown, Sparkles, Server, Eye, Rocket,
+  MessageSquare,
 } from "lucide-react";
 
 
