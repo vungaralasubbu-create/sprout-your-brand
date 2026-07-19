@@ -344,14 +344,14 @@ function KeywordsTable({ keywords }: { keywords: any[] }) {
   return (
     <Card className="p-3 space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <Button size="sm" variant={filter === "all" ? "default" : "outline"} onClick={() => setFilter("all")}>
+        <Button size="sm" variant={filter === "all" ? "primary" : "outline"} onClick={() => setFilter("all")}>
           All ({keywords.length})
         </Button>
         {cats.map((c) => {
           const n = keywords.filter((k) => k.category === c).length;
           if (!n) return null;
           return (
-            <Button key={c} size="sm" variant={filter === c ? "default" : "outline"} onClick={() => setFilter(c)}>
+            <Button key={c} size="sm" variant={filter === c ? "primary" : "outline"} onClick={() => setFilter(c)}>
               {CATEGORY_LABEL[c]} ({n})
             </Button>
           );
