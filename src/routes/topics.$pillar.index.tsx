@@ -167,6 +167,49 @@ function PillarPage() {
           </div>
         </section>
 
+        {/* Topic Hub — 8 spokes linking to existing content surfaces */}
+        <section aria-labelledby="topic-hub" className="border-b border-border bg-card/40">
+          <div className="mx-auto max-w-6xl px-4 py-10">
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-label flex items-center gap-2"><Compass className="h-4 w-4" /> Topic hub</p>
+                <h2 id="topic-hub" className="text-heading mt-1">Everything on {pillar.name}</h2>
+              </div>
+              <p className="hidden max-w-sm text-xs text-muted-foreground sm:block">
+                Nine curated surfaces — courses, internships, projects, career prep and more — pulling from the live catalog.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {[
+                { icon: GraduationCap, label: `${pillar.name} Courses`, sub: "Full curriculum & cohorts", href: `/programs/${pillar.slug}` },
+                { icon: Rocket, label: `${pillar.name} Internship`, sub: "Hands-on real projects", href: `/programs/${pillar.slug}?track=internship` },
+                { icon: Hammer, label: `${pillar.name} Projects`, sub: "Portfolio-ready builds", href: `/programs/${pillar.slug}?tab=projects` },
+                { icon: MessageSquare, label: `${pillar.name} Interview Questions`, sub: "Curated Q&A bank", href: `/career-hub/interview?topic=${pillar.slug}` },
+                { icon: IndianRupee, label: `${pillar.name} Salary`, sub: "India pay benchmarks", href: `/career-hub/salary?topic=${pillar.slug}` },
+                { icon: Award, label: `${pillar.name} Certifications`, sub: "Industry-recognised", href: `/programs/${pillar.slug}?tab=certifications` },
+                { icon: MapIcon, label: `${pillar.name} Career Roadmap`, sub: "Beginner → expert path", href: `/career-hub/roadmap?topic=${pillar.slug}` },
+                { icon: Newspaper, label: `${pillar.name} Blogs`, sub: "Guides & deep dives", href: `/blog?topic=${pillar.slug}` },
+                { icon: HelpCircle, label: `${pillar.name} FAQs`, sub: "Fast answers", href: "#faqs" },
+              ].map(({ icon: Icon, label, sub, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="group flex flex-col rounded-2xl border border-border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:bg-accent/40"
+                >
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <span className="mt-3 text-sm font-semibold leading-tight text-foreground group-hover:text-primary">
+                    {label}
+                  </span>
+                  <span className="mt-1 text-xs text-muted-foreground">{sub}</span>
+                  <ArrowRight className="mt-3 h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 lg:grid-cols-[1fr_260px]">
           <article className="min-w-0 space-y-16">
             {/* QuickAnswer / TL;DR — optimized for AI extractive answers */}
