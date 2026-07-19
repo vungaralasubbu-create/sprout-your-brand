@@ -24,7 +24,7 @@ export async function auditLog(entry: AuditEntry): Promise<void> {
       ip: entry.ip ?? null,
       user_agent: entry.userAgent ?? null,
       request_id: entry.requestId ?? null,
-      metadata: entry.metadata ?? {},
+      metadata: (entry.metadata ?? {}) as any,
       risk_level: entry.riskLevel ?? "low",
     });
   } catch (e) {
