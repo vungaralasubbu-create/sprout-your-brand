@@ -11500,6 +11500,48 @@ export type Database = {
           },
         ]
       }
+      internal_links: {
+        Row: {
+          auto_generated: boolean
+          created_at: string
+          from_id: string
+          from_type: Database["public"]["Enums"]["internal_link_entity"]
+          id: string
+          reason: string | null
+          relation: string
+          score: number
+          to_id: string
+          to_type: Database["public"]["Enums"]["internal_link_entity"]
+          updated_at: string
+        }
+        Insert: {
+          auto_generated?: boolean
+          created_at?: string
+          from_id: string
+          from_type: Database["public"]["Enums"]["internal_link_entity"]
+          id?: string
+          reason?: string | null
+          relation: string
+          score?: number
+          to_id: string
+          to_type: Database["public"]["Enums"]["internal_link_entity"]
+          updated_at?: string
+        }
+        Update: {
+          auto_generated?: boolean
+          created_at?: string
+          from_id?: string
+          from_type?: Database["public"]["Enums"]["internal_link_entity"]
+          id?: string
+          reason?: string | null
+          relation?: string
+          score?: number
+          to_id?: string
+          to_type?: Database["public"]["Enums"]["internal_link_entity"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       internship_projects: {
         Row: {
           course_project_template_id: string | null
@@ -18458,7 +18500,17 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      internal_link_orphans: {
+        Row: {
+          entity_type:
+            | Database["public"]["Enums"]["internal_link_entity"]
+            | null
+          id: string | null
+          slug: string | null
+          title: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       amb_campaign_matches_scope: {
@@ -18872,6 +18924,23 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["admin_role_type"]
       }
+      get_internal_links: {
+        Args: {
+          p_from_id: string
+          p_from_type: Database["public"]["Enums"]["internal_link_entity"]
+          p_limit?: number
+          p_relation?: string
+        }
+        Returns: {
+          reason: string
+          relation: string
+          score: number
+          slug: string
+          title: string
+          to_id: string
+          to_type: Database["public"]["Enums"]["internal_link_entity"]
+        }[]
+      }
       has_admin_permission: {
         Args: { _permission: string; _user_id: string }
         Returns: boolean
@@ -18904,6 +18973,13 @@ export type Database = {
       rate_limit_incr: {
         Args: { _bucket_key: string; _delta?: number; _window_start: string }
         Returns: number
+      }
+      rebuild_internal_links: {
+        Args: never
+        Returns: {
+          inserted: number
+          relation: string
+        }[]
       }
       recompute_pseo_interlinks: {
         Args: { p_page_id: string }
@@ -19224,6 +19300,14 @@ export type Database = {
         | "rescheduled"
         | "cancelled"
       follow_up_type: "call" | "whatsapp" | "email" | "meeting" | "other"
+      internal_link_entity:
+        | "course"
+        | "blog"
+        | "career_path"
+        | "skill"
+        | "certification"
+        | "job"
+        | "faq"
       internship_project_type:
         | "practice"
         | "industry_inspired"
@@ -20001,6 +20085,15 @@ export const Constants = {
         "cancelled",
       ],
       follow_up_type: ["call", "whatsapp", "email", "meeting", "other"],
+      internal_link_entity: [
+        "course",
+        "blog",
+        "career_path",
+        "skill",
+        "certification",
+        "job",
+        "faq",
+      ],
       internship_project_type: [
         "practice",
         "industry_inspired",
