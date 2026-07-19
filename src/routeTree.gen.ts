@@ -71,6 +71,7 @@ import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as MyIndexRouteImport } from './routes/my.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
+import { Route as HelpIndexRouteImport } from './routes/help.index'
 import { Route as EntitiesIndexRouteImport } from './routes/entities.index'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
 import { Route as CareerHubIndexRouteImport } from './routes/career-hub.index'
@@ -774,6 +775,11 @@ const LearnIndexRoute = LearnIndexRouteImport.update({
 const LaunchYourBrandIndexRoute = LaunchYourBrandIndexRouteImport.update({
   id: '/launch-your-brand/',
   path: '/launch-your-brand/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpIndexRoute = HelpIndexRouteImport.update({
+  id: '/help/',
+  path: '/help/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EntitiesIndexRoute = EntitiesIndexRouteImport.update({
@@ -3161,6 +3167,7 @@ export interface FileRoutesByFullPath {
   '/career-hub/': typeof CareerHubIndexRoute
   '/community/': typeof CommunityIndexRoute
   '/entities/': typeof EntitiesIndexRoute
+  '/help/': typeof HelpIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
@@ -3610,6 +3617,7 @@ export interface FileRoutesByTo {
   '/career-hub': typeof CareerHubIndexRoute
   '/community': typeof CommunityIndexRoute
   '/entities': typeof EntitiesIndexRoute
+  '/help': typeof HelpIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/learn': typeof LearnIndexRoute
   '/my': typeof MyIndexRoute
@@ -4061,6 +4069,7 @@ export interface FileRoutesById {
   '/career-hub/': typeof CareerHubIndexRoute
   '/community/': typeof CommunityIndexRoute
   '/entities/': typeof EntitiesIndexRoute
+  '/help/': typeof HelpIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/my/': typeof MyIndexRoute
@@ -4519,6 +4528,7 @@ export interface FileRouteTypes {
     | '/career-hub/'
     | '/community/'
     | '/entities/'
+    | '/help/'
     | '/launch-your-brand/'
     | '/learn/'
     | '/my/'
@@ -4968,6 +4978,7 @@ export interface FileRouteTypes {
     | '/career-hub'
     | '/community'
     | '/entities'
+    | '/help'
     | '/launch-your-brand'
     | '/learn'
     | '/my'
@@ -5418,6 +5429,7 @@ export interface FileRouteTypes {
     | '/career-hub/'
     | '/community/'
     | '/entities/'
+    | '/help/'
     | '/launch-your-brand/'
     | '/learn/'
     | '/my/'
@@ -5834,6 +5846,7 @@ export interface RootRouteChildren {
   CareerHubIndexRoute: typeof CareerHubIndexRoute
   CommunityIndexRoute: typeof CommunityIndexRoute
   EntitiesIndexRoute: typeof EntitiesIndexRoute
+  HelpIndexRoute: typeof HelpIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ToolsIndexRoute: typeof ToolsIndexRoute
@@ -6295,6 +6308,13 @@ declare module '@tanstack/react-router' {
       path: '/launch-your-brand'
       fullPath: '/launch-your-brand/'
       preLoaderRoute: typeof LaunchYourBrandIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help/': {
+      id: '/help/'
+      path: '/help'
+      fullPath: '/help/'
+      preLoaderRoute: typeof HelpIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/entities/': {
@@ -10442,6 +10462,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareerHubIndexRoute: CareerHubIndexRoute,
   CommunityIndexRoute: CommunityIndexRoute,
   EntitiesIndexRoute: EntitiesIndexRoute,
+  HelpIndexRoute: HelpIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
   ToolsIndexRoute: ToolsIndexRoute,

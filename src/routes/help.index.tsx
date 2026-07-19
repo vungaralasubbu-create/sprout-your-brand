@@ -22,7 +22,7 @@ const KIND_ICON: Record<string, any> = {
   guide: BookOpen, walkthrough: Sparkles, video: Play,
 };
 
-export const Route = createFileRoute("/help")({
+export const Route = createFileRoute("/help/")({
   loader: async ({ context }) => {
     const [categories, featured] = await Promise.all([
       context.queryClient.ensureQueryData({
