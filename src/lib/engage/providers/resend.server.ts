@@ -21,17 +21,21 @@ export const resendAdapter: EngageProviderAdapter = {
   },
 
   async send(config: ProviderConfig, message: RenderedMessage): Promise<SendResult> {
-    if (!config.secret) {
-      return { ok: false, error_code: "missing_key", error_message: "Resend API key not set" };
+    // Prefer env-based Resend config so every engage send goes through the
+    // same centralized credentials as sendEmail().
+    const apiKey = config.secret ?? process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      return { ok: false, error_code: "missing_key", error_message: "RESEND_API_KEY not set" };
     }
-    const fromEmail = message.from_email ?? config.from_email ?? "onboarding@resend.dev";
-    const fromName = message.from_name ?? config.from_name ?? "Glintr";
+    const fromEmail = message.from_email ?? config.from_email ?? process.env.FROM_EMAIL ?? "onboarding@resend.dev";
+    const fromName = message.from_name ?? config.from_name ?? process.env.FROM_NAME ?? "Glintr";
+    const replyTo = message.reply_to ?? config.reply_to ?? process.env.REPLY_TO ?? process.env.SUPPORT_EMAIL;
     try {
       const res = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${config.secret}`,
+          Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           from: `${fromName} <${fromEmail}>`,
@@ -39,7 +43,7 @@ export const resendAdapter: EngageProviderAdapter = {
           subject: message.subject ?? "",
           html: message.html ?? "",
           text: message.text ?? "",
-          reply_to: message.reply_to ?? config.reply_to,
+          reply_to: replyTo,
         }),
       });
       if (!res.ok) {

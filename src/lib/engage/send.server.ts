@@ -136,7 +136,7 @@ export async function sendViaEngage(opts: SendOptions): Promise<SendPipelineResu
     .limit(1)
     .maybeSingle();
 
-  const providerKind = (providerRow?.kind as EngageProviderKind) ?? "lovable";
+  const providerKind = (providerRow?.kind as EngageProviderKind) ?? "resend";
   const adapter = getProvider(providerKind);
 
   // 5) Sender identity.
