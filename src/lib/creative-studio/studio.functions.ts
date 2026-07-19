@@ -204,7 +204,7 @@ export const createBrandKit = createServerFn({ method: "POST" })
 export const listBrandKits = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const { data, error } = await (context.supabase as any)
       .from("cs_brand_kits").select("*")
       .eq("owner_id", context.userId)
       .order("is_default", { ascending: false })
@@ -218,7 +218,7 @@ export const updateBrandKit = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => BrandKitInput.extend({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { id, ...rest } = data;
-    const { data: row, error } = await context.supabase
+    const { data: row, error } = await (context.supabase as any)
       .from("cs_brand_kits").update(rest).eq("id", id).eq("owner_id", context.userId).select("*").single();
     if (error) throw error;
     return row;
@@ -228,7 +228,7 @@ export const deleteBrandKit = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
+    const { error } = await (context.supabase as any)
       .from("cs_brand_kits").delete().eq("id", data.id).eq("owner_id", context.userId);
     if (error) throw error;
     return { ok: true };
@@ -246,7 +246,7 @@ export const listTemplates = createServerFn({ method: "GET" })
     onlyMine: z.boolean().optional(),
   }).default({}).parse(input ?? {}))
   .handler(async ({ data, context }) => {
-    let q = (context.supabase as any).from("cs_templates").select("*");
+    let q = ((context.supabase as any) as any).from("cs_templates").select("*");
     if (data.category) q = q.eq("category", data.category);
     if (data.format) q = q.eq("format", data.format);
     if (data.onlyMine) q = q.eq("owner_id", context.userId);
@@ -271,8 +271,8 @@ export const saveTemplate = createServerFn({ method: "POST" })
     const { id, ...rest } = data;
     const payload = { ...rest, owner_id: context.userId };
     const { data: row, error } = id
-      ? await (context.supabase as any).from("cs_templates").update(payload).eq("id", id).select("*").single()
-      : await (context.supabase as any).from("cs_templates").insert(payload).select("*").single();
+      ? await ((context.supabase as any) as any).from("cs_templates").update(payload).eq("id", id).select("*").single()
+      : await ((context.supabase as any) as any).from("cs_templates").insert(payload).select("*").single();
     if (error) throw error;
     return row;
   });
@@ -284,7 +284,7 @@ export const saveTemplate = createServerFn({ method: "POST" })
 export const listFolders = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await (context.supabase as any).from("cs_folders")
+    const { data, error } = await ((context.supabase as any) as any).from("cs_folders")
       .select("*").eq("owner_id", context.userId).order("created_at", { ascending: true });
     if (error) throw error;
     return data ?? [];
@@ -297,7 +297,7 @@ export const createFolder = createServerFn({ method: "POST" })
     parent_id: z.string().uuid().nullish(),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await (context.supabase as any).from("cs_folders")
+    const { data: row, error } = await ((context.supabase as any) as any).from("cs_folders")
       .insert({ ...data, owner_id: context.userId }).select("*").single();
     if (error) throw error;
     return row;
@@ -323,7 +323,7 @@ export const generateDesign = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => GenerateDesignInput.parse(input))
   .handler(async ({ data, context }) => {
-    const brand = await loadBrandKit(context.supabase, data.brand_kit_id ?? null);
+    const brand = await loadBrandKit((context.supabase as any), data.brand_kit_id ?? null);
     const palette = paletteForStyle(data.style, brand);
     const typography = typographyForBrand(brand);
 
@@ -365,7 +365,7 @@ export const generateDesign = createServerFn({ method: "POST" })
       slidesCopy,
     });
 
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").insert({
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").insert({
       owner_id: context.userId,
       folder_id: data.folder_id ?? null,
       brand_kit_id: data.brand_kit_id ?? null,
@@ -385,7 +385,7 @@ export const generateDesign = createServerFn({ method: "POST" })
     if (error) throw error;
 
     // Seed initial version
-    await (context.supabase as any).from("cs_design_versions").insert({
+    await ((context.supabase as any) as any).from("cs_design_versions").insert({
       design_id: design.id,
       version: 1,
       layout,
@@ -412,7 +412,7 @@ export const listDesigns = createServerFn({ method: "GET" })
     limit: z.number().int().positive().max(200).default(50),
   }).default({}).parse(input ?? {}))
   .handler(async ({ data, context }) => {
-    let q = (context.supabase as any).from("cs_designs").select("id, title, format, style, status, preview_url, folder_id, brand_kit_id, updated_at").eq("owner_id", context.userId);
+    let q = ((context.supabase as any) as any).from("cs_designs").select("id, title, format, style, status, preview_url, folder_id, brand_kit_id, updated_at").eq("owner_id", context.userId);
     if (data.folder_id) q = q.eq("folder_id", data.folder_id);
     if (data.status) q = q.eq("status", data.status);
     const { data: rows, error } = await q.order("updated_at", { ascending: false }).limit(data.limit);
@@ -424,7 +424,7 @@ export const getDesign = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.id).maybeSingle();
+    const { data: row, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.id).maybeSingle();
     if (error) throw error;
     return row;
   });
@@ -439,7 +439,7 @@ export const updateDesign = createServerFn({ method: "POST" })
     const allowed = ["title","status","layout","copy","palette","typography","preview_url","export_urls","locked_elements","metadata","folder_id","brand_kit_id"];
     const patch: Record<string, unknown> = {};
     for (const k of allowed) if (k in data.patch) patch[k] = (data.patch as any)[k];
-    const { data: row, error } = await (context.supabase as any).from("cs_designs")
+    const { data: row, error } = await ((context.supabase as any) as any).from("cs_designs")
       .update(patch).eq("id", data.id).eq("owner_id", context.userId).select("*").single();
     if (error) throw error;
     return row;
@@ -449,10 +449,10 @@ export const duplicateDesign = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: src, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.id).single();
+    const { data: src, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.id).single();
     if (error) throw error;
     const { id: _drop, created_at: _c, updated_at: _u, version: _v, ...clone } = src as any;
-    const { data: dup, error: e2 } = await (context.supabase as any).from("cs_designs").insert({
+    const { data: dup, error: e2 } = await ((context.supabase as any) as any).from("cs_designs").insert({
       ...clone,
       title: `${src.title} (Copy)`,
       owner_id: context.userId,
@@ -465,7 +465,7 @@ export const deleteDesign = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await (context.supabase as any).from("cs_designs").delete()
+    const { error } = await ((context.supabase as any) as any).from("cs_designs").delete()
       .eq("id", data.id).eq("owner_id", context.userId);
     if (error) throw error;
     return { ok: true };
@@ -482,10 +482,10 @@ export const saveDesignVersion = createServerFn({ method: "POST" })
     note: z.string().optional(),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.design_id).single();
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.design_id).single();
     if (error) throw error;
     const nextVersion = (design.version ?? 1) + 1;
-    const { data: row, error: e2 } = await (context.supabase as any).from("cs_design_versions").insert({
+    const { data: row, error: e2 } = await ((context.supabase as any) as any).from("cs_design_versions").insert({
       design_id: design.id,
       version: nextVersion,
       layout: design.layout,
@@ -497,7 +497,7 @@ export const saveDesignVersion = createServerFn({ method: "POST" })
       note: data.note ?? null,
     }).select("*").single();
     if (e2) throw e2;
-    await (context.supabase as any).from("cs_designs").update({ version: nextVersion }).eq("id", design.id);
+    await ((context.supabase as any) as any).from("cs_designs").update({ version: nextVersion }).eq("id", design.id);
     return row;
   });
 
@@ -505,7 +505,7 @@ export const listDesignVersions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ design_id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: rows, error } = await (context.supabase as any).from("cs_design_versions")
+    const { data: rows, error } = await ((context.supabase as any) as any).from("cs_design_versions")
       .select("*").eq("design_id", data.design_id).order("version", { ascending: false });
     if (error) throw error;
     return rows ?? [];
@@ -518,9 +518,9 @@ export const restoreDesignVersion = createServerFn({ method: "POST" })
     version_id: z.string().uuid(),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: v, error } = await (context.supabase as any).from("cs_design_versions").select("*").eq("id", data.version_id).single();
+    const { data: v, error } = await ((context.supabase as any) as any).from("cs_design_versions").select("*").eq("id", data.version_id).single();
     if (error) throw error;
-    const { data: row, error: e2 } = await (context.supabase as any).from("cs_designs").update({
+    const { data: row, error: e2 } = await ((context.supabase as any) as any).from("cs_designs").update({
       layout: v.layout, copy: v.copy, palette: v.palette, typography: v.typography, preview_url: v.preview_url,
     }).eq("id", data.design_id).eq("owner_id", context.userId).select("*").single();
     if (e2) throw e2;
@@ -539,7 +539,7 @@ export const listAssets = createServerFn({ method: "GET" })
     limit: z.number().int().positive().max(200).default(60),
   }).default({}).parse(input ?? {}))
   .handler(async ({ data, context }) => {
-    let q = (context.supabase as any).from("cs_assets").select("*").eq("owner_id", context.userId);
+    let q = ((context.supabase as any) as any).from("cs_assets").select("*").eq("owner_id", context.userId);
     if (data.kind) q = q.eq("kind", data.kind);
     if (data.brand_kit_id) q = q.eq("brand_kit_id", data.brand_kit_id);
     const { data: rows, error } = await q.order("created_at", { ascending: false }).limit(data.limit);
@@ -563,7 +563,7 @@ export const saveAsset = createServerFn({ method: "POST" })
     tags: z.array(z.string()).default([]),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await (context.supabase as any).from("cs_assets")
+    const { data: row, error } = await ((context.supabase as any) as any).from("cs_assets")
       .insert({ ...data, owner_id: context.userId }).select("*").single();
     if (error) throw error;
     return row;
@@ -573,7 +573,7 @@ export const deleteAsset = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { error } = await (context.supabase as any).from("cs_assets").delete()
+    const { error } = await ((context.supabase as any) as any).from("cs_assets").delete()
       .eq("id", data.id).eq("owner_id", context.userId);
     if (error) throw error;
     return { ok: true };
@@ -620,12 +620,12 @@ export const generateVariations = createServerFn({ method: "POST" })
     count: z.number().int().min(1).max(5).default(3),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.design_id).single();
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.design_id).single();
     if (error) throw error;
 
     const variants = [];
     for (let i = 0; i < data.count; i++) {
-      const { data: v, error: e2 } = await (context.supabase as any).from("cs_designs").insert({
+      const { data: v, error: e2 } = await ((context.supabase as any) as any).from("cs_designs").insert({
         owner_id: context.userId,
         folder_id: design.folder_id,
         brand_kit_id: design.brand_kit_id,
@@ -651,9 +651,9 @@ export const generateVariations = createServerFn({ method: "POST" })
           prompt: design.prompt ?? design.title,
           format: design.format,
           style: design.style,
-          brand: await loadBrandKit(context.supabase, design.brand_kit_id),
+          brand: await loadBrandKit((context.supabase as any), design.brand_kit_id),
         });
-        const brand = await loadBrandKit(context.supabase, design.brand_kit_id);
+        const brand = await loadBrandKit((context.supabase as any), design.brand_kit_id);
         const layout = buildLayout({
           format: design.format,
           style: design.style,
@@ -663,11 +663,11 @@ export const generateVariations = createServerFn({ method: "POST" })
           brand,
           slidesCopy,
         });
-        await (context.supabase as any).from("cs_designs").update({
+        await ((context.supabase as any) as any).from("cs_designs").update({
           copy: base, layout, status: "ready",
         }).eq("id", v.id);
       } catch {
-        await (context.supabase as any).from("cs_designs").update({ status: "ready" }).eq("id", v.id);
+        await ((context.supabase as any) as any).from("cs_designs").update({ status: "ready" }).eq("id", v.id);
       }
     }
 
@@ -710,9 +710,9 @@ export const resizeDesign = createServerFn({ method: "POST" })
     format: FORMAT_ENUM,
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.design_id).single();
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.design_id).single();
     if (error) throw error;
-    const brand = await loadBrandKit(context.supabase, design.brand_kit_id);
+    const brand = await loadBrandKit((context.supabase as any), design.brand_kit_id);
     const slidesCopy: DesignCopy[] = Array.isArray(design.layout?.slides)
       ? design.layout.slides.map(() => design.copy as DesignCopy)
       : [design.copy as DesignCopy];
@@ -725,7 +725,7 @@ export const resizeDesign = createServerFn({ method: "POST" })
       brand,
       slidesCopy,
     });
-    const { data: dup, error: e2 } = await (context.supabase as any).from("cs_designs").insert({
+    const { data: dup, error: e2 } = await ((context.supabase as any) as any).from("cs_designs").insert({
       owner_id: context.userId,
       folder_id: design.folder_id,
       brand_kit_id: design.brand_kit_id,
@@ -751,7 +751,7 @@ export const translateDesign = createServerFn({ method: "POST" })
     target_language: z.string().min(2),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.design_id).single();
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.design_id).single();
     if (error) throw error;
 
     const parsed = await chatJSON(
@@ -759,7 +759,7 @@ export const translateDesign = createServerFn({ method: "POST" })
       `Translate the following JSON design copy into ${data.target_language}. Preserve keys and structure exactly:\n${JSON.stringify(design.copy)}`,
     );
     const nextCopy = (parsed ?? design.copy) as DesignCopy;
-    const brand = await loadBrandKit(context.supabase, design.brand_kit_id);
+    const brand = await loadBrandKit((context.supabase as any), design.brand_kit_id);
     const slidesCopy: DesignCopy[] = Array.isArray(design.layout?.slides) ? design.layout.slides.map(() => nextCopy) : [nextCopy];
     const layout = buildLayout({
       format: design.format,
@@ -770,7 +770,7 @@ export const translateDesign = createServerFn({ method: "POST" })
       brand,
       slidesCopy,
     });
-    const { data: row, error: e2 } = await (context.supabase as any).from("cs_designs")
+    const { data: row, error: e2 } = await ((context.supabase as any) as any).from("cs_designs")
       .update({ copy: nextCopy, layout, metadata: { ...(design.metadata ?? {}), language: data.target_language } })
       .eq("id", data.design_id).eq("owner_id", context.userId).select("*").single();
     if (e2) throw e2;
@@ -784,7 +784,7 @@ export const replaceBackground = createServerFn({ method: "POST" })
     prompt: z.string().min(3),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.design_id).single();
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.design_id).single();
     if (error) throw error;
     const spec = FORMAT_SPECS[design.format as DesignFormat];
     let url: string | null = null;
@@ -806,7 +806,7 @@ export const replaceBackground = createServerFn({ method: "POST" })
     if (Array.isArray(layout.slides)) {
       layout.slides = layout.slides.map((s: any) => ({ ...s, background: { kind: "image", value: url } }));
     }
-    const { data: row, error: e2 } = await (context.supabase as any).from("cs_designs").update({ layout, preview_url: url })
+    const { data: row, error: e2 } = await ((context.supabase as any) as any).from("cs_designs").update({ layout, preview_url: url })
       .eq("id", data.design_id).eq("owner_id", context.userId).select("*").single();
     if (e2) throw e2;
     return { ok: true, design: row };
@@ -816,7 +816,7 @@ export const suggestLayout = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ design_id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").select("*").eq("id", data.design_id).single();
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").select("*").eq("id", data.design_id).single();
     if (error) throw error;
     const parsed = await chatJSON(
       "You are a senior visual designer. Suggest layout improvements.",
@@ -857,7 +857,7 @@ export const generateAsset = createServerFn({ method: "POST" })
     const url = (img as any)?.url ?? (img as any)?.data?.[0]?.url ?? null;
     if (!url) return { ok: false, reason: "image_unavailable" };
 
-    const { data: asset, error } = await (context.supabase as any).from("cs_assets").insert({
+    const { data: asset, error } = await ((context.supabase as any) as any).from("cs_assets").insert({
       owner_id: context.userId,
       brand_kit_id: data.brand_kit_id ?? null,
       kind: data.kind,
@@ -883,7 +883,7 @@ export const addComment = createServerFn({ method: "POST" })
     anchor: z.record(z.string(), z.any()).optional(),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await (context.supabase as any).from("cs_design_comments").insert({
+    const { data: row, error } = await ((context.supabase as any) as any).from("cs_design_comments").insert({
       design_id: data.design_id,
       author_id: context.userId,
       body: data.body,
@@ -898,7 +898,7 @@ export const listComments = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ design_id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: rows, error } = await (context.supabase as any).from("cs_design_comments")
+    const { data: rows, error } = await ((context.supabase as any) as any).from("cs_design_comments")
       .select("*").eq("design_id", data.design_id).order("created_at", { ascending: false });
     if (error) throw error;
     return rows ?? [];
@@ -916,7 +916,7 @@ export const trackDesignEvent = createServerFn({ method: "POST" })
     payload: z.record(z.string(), z.any()).optional(),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    await (context.supabase as any).from("cs_design_analytics").insert({
+    await ((context.supabase as any) as any).from("cs_design_analytics").insert({
       design_id: data.design_id,
       event: data.event,
       actor_id: context.userId,
@@ -929,7 +929,7 @@ export const designAnalytics = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ design_id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: rows, error } = await (context.supabase as any).from("cs_design_analytics")
+    const { data: rows, error } = await ((context.supabase as any) as any).from("cs_design_analytics")
       .select("event, created_at").eq("design_id", data.design_id);
     if (error) throw error;
     const totals: Record<string, number> = {};
@@ -946,12 +946,12 @@ export const exportDesign = createServerFn({ method: "POST" })
     transparent: z.boolean().optional(),
   }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: design, error } = await (context.supabase as any).from("cs_designs").select("export_urls").eq("id", data.design_id).single();
+    const { data: design, error } = await ((context.supabase as any) as any).from("cs_designs").select("export_urls").eq("id", data.design_id).single();
     if (error) throw error;
     const next = { ...(design.export_urls ?? {}), [data.format]: data.url };
-    const { error: e2 } = await (context.supabase as any).from("cs_designs").update({ export_urls: next }).eq("id", data.design_id).eq("owner_id", context.userId);
+    const { error: e2 } = await ((context.supabase as any) as any).from("cs_designs").update({ export_urls: next }).eq("id", data.design_id).eq("owner_id", context.userId);
     if (e2) throw e2;
-    await (context.supabase as any).from("cs_design_analytics").insert({
+    await ((context.supabase as any) as any).from("cs_design_analytics").insert({
       design_id: data.design_id,
       event: "export",
       actor_id: context.userId,
