@@ -1,15 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
 import {
   Activity, ArrowRight, BadgeCheck, BadgePercent, Banknote, Building2, CalendarDays,
   ChevronRight, Clock, FileSignature, FileText, Flame, Handshake, LineChart, ListChecks,
   Radar, RefreshCw, Shield, Target, Timer, TrendingUp, Upload, UserCheck, Users, Wallet,
 } from "lucide-react";
-import {
-  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-} from "recharts";
+const SalesCommandRevenueChart = lazy(() => import("@/components/admin/sales-command-revenue-chart"));
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -260,28 +258,9 @@ function SalesCommandCenter() {
             </div>
           </div>
           <div className="lg:col-span-3 h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={a?.salesSeries ?? []}>
-                <defs>
-                  <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#0891b2" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="#0891b2" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="sal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#2563eb" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#2563eb" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="bucket" fontSize={11} stroke="hsl(var(--muted-foreground))" />
-                <YAxis yAxisId="left" fontSize={11} stroke="hsl(var(--muted-foreground))" />
-                <YAxis yAxisId="right" orientation="right" fontSize={11} stroke="hsl(var(--muted-foreground))" />
-                <Tooltip formatter={(v: any, k: any) => (k === "revenue" ? fmtInr(Number(v)) : fmtInt(Number(v)))} />
-                <Legend />
-                <Area yAxisId="right" type="monotone" dataKey="revenue" stroke="#0891b2" strokeWidth={2} fill="url(#rev)" />
-                <Area yAxisId="left" type="monotone" dataKey="sales" stroke="#2563eb" strokeWidth={2} fill="url(#sal)" />
-              </AreaChart>
-            </ResponsiveContainer>
+            <Suspense fallback={<div className="w-full h-full animate-pulse rounded-lg bg-muted/30" />}>
+              <SalesCommandRevenueChart data={a?.salesSeries ?? []} />
+            </Suspense>
           </div>
         </div>
       </Section>

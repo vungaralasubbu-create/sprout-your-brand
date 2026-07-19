@@ -2,14 +2,12 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   ArrowLeft, Ban, RotateCcw, MessageSquare, Layers, ShieldAlert,
   CreditCard, Wallet, Users2, Building2, Activity, LineChart as LineIcon,
 } from "lucide-react";
-import {
-  ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
-} from "recharts";
+const PartnerSalesTrendChart = lazy(() => import("@/components/admin/partner-sales-trend-chart"));
 import {
   getPartnerMasterProfile,
   addPartnerNote,
@@ -300,17 +298,9 @@ function PartnerMasterProfile() {
               {data.sales_trend.length === 0 ? (
                 <div className="h-full flex items-center justify-center text-sm text-muted-foreground">No verified sales yet.</div>
               ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={data.sales_trend}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-                    <XAxis dataKey="date" fontSize={11} />
-                    <YAxis yAxisId="l" fontSize={11} />
-                    <YAxis yAxisId="r" orientation="right" fontSize={11} />
-                    <Tooltip formatter={(v: any, key: any) => key === "revenue" ? fmtINR(Number(v)) : v} />
-                    <Line yAxisId="l" type="monotone" dataKey="sales" stroke="#0ea5e9" strokeWidth={2} dot={false} name="Sales" />
-                    <Line yAxisId="r" type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} dot={false} name="Revenue" />
-                  </LineChart>
-                </ResponsiveContainer>
+                <Suspense fallback={<div className="w-full h-full animate-pulse rounded-lg bg-muted/30" />}>
+                  <PartnerSalesTrendChart data={data.sales_trend} />
+                </Suspense>
               )}
             </div>
           </div>
