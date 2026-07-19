@@ -181,12 +181,13 @@ export const submitKbFeedback = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     // Bump counters via admin
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const col = data.helpful ? "helpful_count" : "unhelpful_count";
+    const col: "helpful_count" | "unhelpful_count" = data.helpful ? "helpful_count" : "unhelpful_count";
     const { data: row } = await supabaseAdmin.from("kb_articles").select(col).eq("id", data.article_id).maybeSingle();
-    await supabaseAdmin
-      .from("kb_articles")
-      .update({ [col]: ((row as any)?.[col] || 0) + 1 })
-      .eq("id", data.article_id);
+    const current = (row as any)?.[col] as number | undefined;
+    const update = col === "helpful_count"
+      ? { helpful_count: (current || 0) + 1 }
+      : { unhelpful_count: (current || 0) + 1 };
+    await supabaseAdmin.from("kb_articles").update(update).eq("id", data.article_id);
     return { ok: true };
   });
 
