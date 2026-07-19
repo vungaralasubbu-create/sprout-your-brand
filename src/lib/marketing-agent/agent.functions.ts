@@ -90,7 +90,7 @@ export const updateMarketingAgent = createServerFn({ method: "POST" })
     if (p.goals) upd.goals = p.goals as never;
     if (p.channels) upd.channels = p.channels;
     if (p.budgetMonthly !== undefined) upd.budget_monthly = p.budgetMonthly;
-    const { error } = await context.supabase.from("ma_agents").update(upd).eq("id", data.id);
+    const { error } = await context.supabase.from("ma_agents").update(upd as never).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -149,7 +149,7 @@ export const actOnDecision = createServerFn({ method: "POST" })
       state, reviewer_id: context.userId,
     };
     if (data.action === "rollback") upd.rolled_back_at = new Date().toISOString();
-    const { error } = await context.supabase.from("ma_decisions").update(upd).eq("id", data.decisionId);
+    const { error } = await context.supabase.from("ma_decisions").update(upd as never).eq("id", data.decisionId);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -166,7 +166,7 @@ export const actOnRecommendation = createServerFn({ method: "POST" })
     const state = data.action === "approve" ? "approved" : data.action === "dismiss" ? "dismissed" : "actioned";
     const patch: Record<string, unknown> = { state };
     if (data.action === "action") patch.actioned_at = new Date().toISOString();
-    const { error } = await context.supabase.from("ma_recommendations").update(patch).eq("id", data.recommendationId);
+    const { error } = await context.supabase.from("ma_recommendations").update(patch as never).eq("id", data.recommendationId);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
