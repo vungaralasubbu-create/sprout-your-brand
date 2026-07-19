@@ -208,6 +208,137 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_agent_runs: {
+        Row: {
+          agent_id: string | null
+          agent_slug: string
+          completion_tokens: number | null
+          conversation_id: string | null
+          cost_credits: number | null
+          created_at: string
+          duration_ms: number | null
+          error_code: string | null
+          error_message: string | null
+          fallback_used: boolean
+          id: string
+          message_id: string | null
+          metadata: Json
+          model: string
+          prompt_tokens: number | null
+          retry_count: number
+          status: string
+          total_tokens: number | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          agent_slug: string
+          completion_tokens?: number | null
+          conversation_id?: string | null
+          cost_credits?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          fallback_used?: boolean
+          id?: string
+          message_id?: string | null
+          metadata?: Json
+          model: string
+          prompt_tokens?: number | null
+          retry_count?: number
+          status?: string
+          total_tokens?: number | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          agent_slug?: string
+          completion_tokens?: number | null
+          conversation_id?: string | null
+          cost_credits?: number | null
+          created_at?: string
+          duration_ms?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          fallback_used?: boolean
+          id?: string
+          message_id?: string | null
+          metadata?: Json
+          model?: string
+          prompt_tokens?: number | null
+          retry_count?: number
+          status?: string
+          total_tokens?: number | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_runs_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_agents: {
+        Row: {
+          allowed_roles: string[]
+          created_at: string
+          description: string
+          fallback_model: string | null
+          id: string
+          is_active: boolean
+          max_output_tokens: number | null
+          model_preference: string
+          name: string
+          slug: string
+          system_prompt: string
+          tags: string[]
+          temperature: number | null
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          allowed_roles?: string[]
+          created_at?: string
+          description?: string
+          fallback_model?: string | null
+          id?: string
+          is_active?: boolean
+          max_output_tokens?: number | null
+          model_preference?: string
+          name: string
+          slug: string
+          system_prompt: string
+          tags?: string[]
+          temperature?: number | null
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          allowed_roles?: string[]
+          created_at?: string
+          description?: string
+          fallback_model?: string | null
+          id?: string
+          is_active?: boolean
+          max_output_tokens?: number | null
+          model_preference?: string
+          name?: string
+          slug?: string
+          system_prompt?: string
+          tags?: string[]
+          temperature?: number | null
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       ai_mentor_activity: {
         Row: {
           conversation_id: string | null
