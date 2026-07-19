@@ -7438,6 +7438,108 @@ export type Database = {
           },
         ]
       }
+      email_logs: {
+        Row: {
+          attachments: Json | null
+          attempts: number
+          bcc: string[] | null
+          brand_id: string | null
+          category: string | null
+          cc: string[] | null
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          from_email: string
+          from_name: string | null
+          headers: Json | null
+          html: string | null
+          id: string
+          idempotency_key: string | null
+          max_attempts: number
+          next_attempt_at: string | null
+          provider: string
+          provider_message_id: string | null
+          reply_to: string | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          tags: Json | null
+          template_key: string | null
+          text: string | null
+          to_email: string
+          updated_at: string
+          user_id: string | null
+          variables: Json | null
+        }
+        Insert: {
+          attachments?: Json | null
+          attempts?: number
+          bcc?: string[] | null
+          brand_id?: string | null
+          category?: string | null
+          cc?: string[] | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          from_email: string
+          from_name?: string | null
+          headers?: Json | null
+          html?: string | null
+          id?: string
+          idempotency_key?: string | null
+          max_attempts?: number
+          next_attempt_at?: string | null
+          provider?: string
+          provider_message_id?: string | null
+          reply_to?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          tags?: Json | null
+          template_key?: string | null
+          text?: string | null
+          to_email: string
+          updated_at?: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          attachments?: Json | null
+          attempts?: number
+          bcc?: string[] | null
+          brand_id?: string | null
+          category?: string | null
+          cc?: string[] | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          from_email?: string
+          from_name?: string | null
+          headers?: Json | null
+          html?: string | null
+          id?: string
+          idempotency_key?: string | null
+          max_attempts?: number
+          next_attempt_at?: string | null
+          provider?: string
+          provider_message_id?: string | null
+          reply_to?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          tags?: Json | null
+          template_key?: string | null
+          text?: string | null
+          to_email?: string
+          updated_at?: string
+          user_id?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
       employee_attendance: {
         Row: {
           admin_override: boolean
