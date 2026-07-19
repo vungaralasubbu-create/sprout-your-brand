@@ -3885,6 +3885,65 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_approvals: {
+        Row: {
+          approver_id: string | null
+          approver_role: string | null
+          created_at: string
+          decided_at: string | null
+          expires_at: string | null
+          handler: string
+          id: string
+          job_id: string | null
+          payload: Json
+          reason: string | null
+          requested_by: string | null
+          status: string
+          summary: string | null
+          updated_at: string
+        }
+        Insert: {
+          approver_id?: string | null
+          approver_role?: string | null
+          created_at?: string
+          decided_at?: string | null
+          expires_at?: string | null
+          handler: string
+          id?: string
+          job_id?: string | null
+          payload?: Json
+          reason?: string | null
+          requested_by?: string | null
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approver_id?: string | null
+          approver_role?: string | null
+          created_at?: string
+          decided_at?: string | null
+          expires_at?: string | null
+          handler?: string
+          id?: string
+          job_id?: string | null
+          payload?: Json
+          reason?: string | null
+          requested_by?: string | null
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_approvals_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "automation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_attribution: {
         Row: {
           brand_id: string | null
@@ -4047,6 +4106,279 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_events_queue: {
+        Row: {
+          created_at: string
+          error: string | null
+          event_name: string
+          id: string
+          jobs_created: number | null
+          payload: Json
+          processed_at: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          event_name: string
+          id?: string
+          jobs_created?: number | null
+          payload?: Json
+          processed_at?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          event_name?: string
+          id?: string
+          jobs_created?: number | null
+          payload?: Json
+          processed_at?: string | null
+          source?: string | null
+        }
+        Relationships: []
+      }
+      automation_handlers: {
+        Row: {
+          category: string
+          code: string
+          config: Json
+          created_at: string
+          default_max_attempts: number
+          default_priority: number
+          default_timeout_seconds: number
+          description: string | null
+          is_enabled: boolean
+          requires_approval: boolean
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          code: string
+          config?: Json
+          created_at?: string
+          default_max_attempts?: number
+          default_priority?: number
+          default_timeout_seconds?: number
+          description?: string | null
+          is_enabled?: boolean
+          requires_approval?: boolean
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          code?: string
+          config?: Json
+          created_at?: string
+          default_max_attempts?: number
+          default_priority?: number
+          default_timeout_seconds?: number
+          description?: string | null
+          is_enabled?: boolean
+          requires_approval?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      automation_jobs: {
+        Row: {
+          approval_id: string | null
+          attempts: number
+          backoff_seconds: number
+          completed_at: string | null
+          correlation_id: string | null
+          created_at: string
+          handler: string
+          id: string
+          idempotency_key: string | null
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          owner_id: string | null
+          parent_job_id: string | null
+          payload: Json
+          priority: number
+          result: Json | null
+          run_at: string
+          started_at: string | null
+          status: string
+          timeout_seconds: number
+          updated_at: string
+        }
+        Insert: {
+          approval_id?: string | null
+          attempts?: number
+          backoff_seconds?: number
+          completed_at?: string | null
+          correlation_id?: string | null
+          created_at?: string
+          handler: string
+          id?: string
+          idempotency_key?: string | null
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          owner_id?: string | null
+          parent_job_id?: string | null
+          payload?: Json
+          priority?: number
+          result?: Json | null
+          run_at?: string
+          started_at?: string | null
+          status?: string
+          timeout_seconds?: number
+          updated_at?: string
+        }
+        Update: {
+          approval_id?: string | null
+          attempts?: number
+          backoff_seconds?: number
+          completed_at?: string | null
+          correlation_id?: string | null
+          created_at?: string
+          handler?: string
+          id?: string
+          idempotency_key?: string | null
+          last_error?: string | null
+          locked_at?: string | null
+          locked_by?: string | null
+          max_attempts?: number
+          owner_id?: string | null
+          parent_job_id?: string | null
+          payload?: Json
+          priority?: number
+          result?: Json | null
+          run_at?: string
+          started_at?: string | null
+          status?: string
+          timeout_seconds?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_jobs_approval_fk"
+            columns: ["approval_id"]
+            isOneToOne: false
+            referencedRelation: "automation_approvals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_jobs_handler_fkey"
+            columns: ["handler"]
+            isOneToOne: false
+            referencedRelation: "automation_handlers"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "automation_jobs_parent_job_id_fkey"
+            columns: ["parent_job_id"]
+            isOneToOne: false
+            referencedRelation: "automation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_metrics_daily: {
+        Row: {
+          avg_duration_ms: number
+          created_at: string
+          day: string
+          handler: string
+          jobs_dead_letter: number
+          jobs_failed: number
+          jobs_succeeded: number
+          jobs_total: number
+          p95_duration_ms: number
+          retries: number
+          updated_at: string
+        }
+        Insert: {
+          avg_duration_ms?: number
+          created_at?: string
+          day: string
+          handler: string
+          jobs_dead_letter?: number
+          jobs_failed?: number
+          jobs_succeeded?: number
+          jobs_total?: number
+          p95_duration_ms?: number
+          retries?: number
+          updated_at?: string
+        }
+        Update: {
+          avg_duration_ms?: number
+          created_at?: string
+          day?: string
+          handler?: string
+          jobs_dead_letter?: number
+          jobs_failed?: number
+          jobs_succeeded?: number
+          jobs_total?: number
+          p95_duration_ms?: number
+          retries?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      automation_notifications: {
+        Row: {
+          body: string | null
+          channel: string
+          created_at: string
+          data: Json
+          delivered_at: string | null
+          id: string
+          job_id: string | null
+          read_at: string | null
+          recipient_role: string | null
+          recipient_user_id: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          channel: string
+          created_at?: string
+          data?: Json
+          delivered_at?: string | null
+          id?: string
+          job_id?: string | null
+          read_at?: string | null
+          recipient_role?: string | null
+          recipient_user_id?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          channel?: string
+          created_at?: string
+          data?: Json
+          delivered_at?: string | null
+          id?: string
+          job_id?: string | null
+          read_at?: string | null
+          recipient_role?: string | null
+          recipient_user_id?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_notifications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "automation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_recommendations: {
         Row: {
           brand_id: string | null
@@ -4091,6 +4423,71 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      automation_triggers: {
+        Row: {
+          created_at: string
+          cron_expression: string | null
+          event_name: string | null
+          handler: string
+          id: string
+          is_enabled: boolean
+          kind: string
+          last_run_at: string | null
+          last_status: string | null
+          match: Json
+          name: string
+          next_run_at: string | null
+          owner_id: string | null
+          payload_template: Json
+          priority: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cron_expression?: string | null
+          event_name?: string | null
+          handler: string
+          id?: string
+          is_enabled?: boolean
+          kind: string
+          last_run_at?: string | null
+          last_status?: string | null
+          match?: Json
+          name: string
+          next_run_at?: string | null
+          owner_id?: string | null
+          payload_template?: Json
+          priority?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cron_expression?: string | null
+          event_name?: string | null
+          handler?: string
+          id?: string
+          is_enabled?: boolean
+          kind?: string
+          last_run_at?: string | null
+          last_status?: string | null
+          match?: Json
+          name?: string
+          next_run_at?: string | null
+          owner_id?: string | null
+          payload_template?: Json
+          priority?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_triggers_handler_fkey"
+            columns: ["handler"]
+            isOneToOne: false
+            referencedRelation: "automation_handlers"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       automation_user_profiles: {
         Row: {
@@ -18191,6 +18588,44 @@ export type Database = {
           starts_at: string
           status: string
         }[]
+      }
+      automation_claim_jobs: {
+        Args: { _limit?: number; _lock_seconds?: number; _worker_id: string }
+        Returns: {
+          approval_id: string | null
+          attempts: number
+          backoff_seconds: number
+          completed_at: string | null
+          correlation_id: string | null
+          created_at: string
+          handler: string
+          id: string
+          idempotency_key: string | null
+          last_error: string | null
+          locked_at: string | null
+          locked_by: string | null
+          max_attempts: number
+          owner_id: string | null
+          parent_job_id: string | null
+          payload: Json
+          priority: number
+          result: Json | null
+          run_at: string
+          started_at: string | null
+          status: string
+          timeout_seconds: number
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "automation_jobs"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      automation_requeue_stuck: {
+        Args: { _lock_ttl_seconds?: number }
+        Returns: number
       }
       community_can_view_audience: {
         Args: {
