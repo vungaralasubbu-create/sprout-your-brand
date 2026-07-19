@@ -105,7 +105,6 @@ export async function processBatchQueue(limit = 25): Promise<{
         page_id: result.page_id, last_error: null,
       }).eq("id", job.id);
       if (job.batch_id) {
-        await admin.rpc("noop_ignore", {}).catch(() => null);
         await admin.from("pseo_batches")
           .update({ succeeded: (await sumBatchSucceeded(admin, job.batch_id)) })
           .eq("id", job.batch_id);
