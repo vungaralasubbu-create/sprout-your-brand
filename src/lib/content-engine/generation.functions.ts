@@ -228,20 +228,20 @@ export const getGenerationHistory = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const history: Array<Record<string, unknown>> = [];
+    const history: any[] = [];
     let cursor: string | null = data.id;
-    // Walk ancestors
     while (cursor) {
-      const { data: row, error } = await context.supabase
+      const res: any = await context.supabase
         .from("ce_generations")
         .select("id, content, status, model_used, provider, edited, parent_generation_id, created_at")
         .eq("id", cursor)
         .maybeSingle();
-      if (error) throw error;
+      if (res.error) throw res.error;
+      const row = res.data;
       if (!row) break;
       history.push(row);
       cursor = (row.parent_generation_id as string | null) ?? null;
       if (history.length > 50) break;
     }
-    return { history };
+    return { history } as { history: any[] };
   });
