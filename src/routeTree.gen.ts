@@ -158,6 +158,7 @@ import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/trans
 import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
+import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedSubmitReviewTokenRouteImport } from './routes/_authenticated/submit-review.$token'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
 import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
@@ -1221,6 +1222,11 @@ const ApiV1VersionRoute = ApiV1VersionRouteImport.update({
 const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
   id: '/api/v1/health',
   path: '/api/v1/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
+  id: '/api/public/health',
+  path: '/api/public/health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSubmitReviewTokenRoute =
@@ -3350,6 +3356,7 @@ export interface FileRoutesByFullPath {
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -3798,6 +3805,7 @@ export interface FileRoutesByTo {
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -4262,6 +4270,7 @@ export interface FileRoutesById {
   '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
   '/_authenticated/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
+  '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -4726,6 +4735,7 @@ export interface FileRouteTypes {
     | '/student/notifications'
     | '/student/profile'
     | '/submit-review/$token'
+    | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -5174,6 +5184,7 @@ export interface FileRouteTypes {
     | '/student/notifications'
     | '/student/profile'
     | '/submit-review/$token'
+    | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -5637,6 +5648,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
     | '/_authenticated/submit-review/$token'
+    | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -5915,6 +5927,7 @@ export interface RootRouteChildren {
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ToolsIndexRoute: typeof ToolsIndexRoute
   TopicsIndexRoute: typeof TopicsIndexRoute
+  ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiV1HealthRoute: typeof ApiV1HealthRoute
   ApiV1VersionRoute: typeof ApiV1VersionRoute
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
@@ -6982,6 +6995,13 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/health'
       fullPath: '/api/v1/health'
       preLoaderRoute: typeof ApiV1HealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/health': {
+      id: '/api/public/health'
+      path: '/api/public/health'
+      fullPath: '/api/public/health'
+      preLoaderRoute: typeof ApiPublicHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/submit-review/$token': {
@@ -10572,6 +10592,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgramsIndexRoute: ProgramsIndexRoute,
   ToolsIndexRoute: ToolsIndexRoute,
   TopicsIndexRoute: TopicsIndexRoute,
+  ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiV1HealthRoute: ApiV1HealthRoute,
   ApiV1VersionRoute: ApiV1VersionRoute,
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
