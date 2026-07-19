@@ -757,6 +757,102 @@ export type Database = {
           },
         ]
       }
+      ai_provider_events: {
+        Row: {
+          cost_credits: number | null
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          id: string
+          latency_ms: number | null
+          model: string | null
+          provider: string
+          success: boolean
+          task: string | null
+          tokens_in: number | null
+          tokens_out: number | null
+          user_id: string | null
+        }
+        Insert: {
+          cost_credits?: number | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          model?: string | null
+          provider: string
+          success: boolean
+          task?: string | null
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          cost_credits?: number | null
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          model?: string | null
+          provider?: string
+          success?: boolean
+          task?: string | null
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ai_provider_health: {
+        Row: {
+          created_at: string
+          error_rate: number | null
+          errors_today: number
+          id: string
+          last_checked_at: string
+          last_error: string | null
+          latency_ms_p50: number | null
+          latency_ms_p95: number | null
+          provider: string
+          requests_today: number
+          status: string
+          success_rate: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_rate?: number | null
+          errors_today?: number
+          id?: string
+          last_checked_at?: string
+          last_error?: string | null
+          latency_ms_p50?: number | null
+          latency_ms_p95?: number | null
+          provider: string
+          requests_today?: number
+          status?: string
+          success_rate?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_rate?: number | null
+          errors_today?: number
+          id?: string
+          last_checked_at?: string
+          last_error?: string | null
+          latency_ms_p50?: number | null
+          latency_ms_p95?: number | null
+          provider?: string
+          requests_today?: number
+          status?: string
+          success_rate?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_sales_conversations: {
         Row: {
           channel: string
