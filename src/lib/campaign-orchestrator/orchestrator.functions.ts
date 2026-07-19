@@ -58,8 +58,8 @@ export const createCampaign = createServerFn({ method: "POST" })
       priority: input.priority ?? 3,
       objective: input.objective ?? null,
       prompt: input.prompt ?? null,
-      audience: input.audience ?? {},
-      geo: input.geo ?? {},
+      audience: (input.audience ?? {}) as never,
+      geo: (input.geo ?? {}) as never,
       language: input.language ?? "en",
       budget: input.budget ?? null,
       currency: input.currency ?? "INR",
@@ -73,7 +73,7 @@ export const createCampaign = createServerFn({ method: "POST" })
       keywords: input.keywords ?? [],
       hashtags: input.hashtags ?? [],
       landing_goal: input.landingGoal ?? null,
-      offer: input.offer ?? {},
+      offer: (input.offer ?? {}) as never,
       coupon_code: input.couponCode ?? null,
     }).select("id, status").maybeSingle();
     if (error) throw new Error(error.message);
