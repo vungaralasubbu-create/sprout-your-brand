@@ -82,7 +82,7 @@ export const moderateReview = createServerFn({ method: "POST" })
       case "feature": patch.featured = true; break;
       case "unfeature": patch.featured = false; break;
     }
-    const { data: row, error } = await context.supabase.from("student_reviews").update(patch).eq("id", data.id).select().single();
+    const { data: row, error } = await context.supabase.from("student_reviews").update(patch).eq("id", data.id).select("id, status, featured, published_at, moderation_notes, display_locations").single();
     if (error) throw error;
     return row;
   });
