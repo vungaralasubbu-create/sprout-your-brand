@@ -352,6 +352,7 @@ import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/h
 import { Route as ApiPublicHooksPseoTickRouteImport } from './routes/api/public/hooks/pseo-tick'
 import { Route as ApiPublicHooksMktPublishRouteImport } from './routes/api/public/hooks/mkt-publish'
 import { Route as ApiPublicHooksMarketingAgentTickRouteImport } from './routes/api/public/hooks/marketing-agent-tick'
+import { Route as ApiPublicHooksLinkIntelligenceTickRouteImport } from './routes/api/public/hooks/link-intelligence-tick'
 import { Route as ApiPublicHooksCampaignTickRouteImport } from './routes/api/public/hooks/campaign-tick'
 import { Route as ApiPublicHooksBrainTickRouteImport } from './routes/api/public/hooks/brain-tick'
 import { Route as ApiPublicHooksAutomationTickRouteImport } from './routes/api/public/hooks/automation-tick'
@@ -2382,6 +2383,12 @@ const ApiPublicHooksMarketingAgentTickRoute =
     path: '/api/public/hooks/marketing-agent-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksLinkIntelligenceTickRoute =
+  ApiPublicHooksLinkIntelligenceTickRouteImport.update({
+    id: '/api/public/hooks/link-intelligence-tick',
+    path: '/api/public/hooks/link-intelligence-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksCampaignTickRoute =
   ApiPublicHooksCampaignTickRouteImport.update({
     id: '/api/public/hooks/campaign-tick',
@@ -3602,6 +3609,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
+  '/api/public/hooks/link-intelligence-tick': typeof ApiPublicHooksLinkIntelligenceTickRoute
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
@@ -4066,6 +4074,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
+  '/api/public/hooks/link-intelligence-tick': typeof ApiPublicHooksLinkIntelligenceTickRoute
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
@@ -4546,6 +4555,7 @@ export interface FileRoutesById {
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
+  '/api/public/hooks/link-intelligence-tick': typeof ApiPublicHooksLinkIntelligenceTickRoute
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
@@ -5026,6 +5036,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/campaign-tick'
+    | '/api/public/hooks/link-intelligence-tick'
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
@@ -5490,6 +5501,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/campaign-tick'
+    | '/api/public/hooks/link-intelligence-tick'
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
@@ -5969,6 +5981,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/campaign-tick'
+    | '/api/public/hooks/link-intelligence-tick'
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
@@ -6136,6 +6149,7 @@ export interface RootRouteChildren {
   ApiPublicHooksAutomationTickRoute: typeof ApiPublicHooksAutomationTickRoute
   ApiPublicHooksBrainTickRoute: typeof ApiPublicHooksBrainTickRoute
   ApiPublicHooksCampaignTickRoute: typeof ApiPublicHooksCampaignTickRoute
+  ApiPublicHooksLinkIntelligenceTickRoute: typeof ApiPublicHooksLinkIntelligenceTickRoute
   ApiPublicHooksMarketingAgentTickRoute: typeof ApiPublicHooksMarketingAgentTickRoute
   ApiPublicHooksMktPublishRoute: typeof ApiPublicHooksMktPublishRoute
   ApiPublicHooksPseoTickRoute: typeof ApiPublicHooksPseoTickRoute
@@ -8553,6 +8567,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksMarketingAgentTickRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/link-intelligence-tick': {
+      id: '/api/public/hooks/link-intelligence-tick'
+      path: '/api/public/hooks/link-intelligence-tick'
+      fullPath: '/api/public/hooks/link-intelligence-tick'
+      preLoaderRoute: typeof ApiPublicHooksLinkIntelligenceTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/campaign-tick': {
       id: '/api/public/hooks/campaign-tick'
       path: '/api/public/hooks/campaign-tick'
@@ -10922,6 +10943,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksAutomationTickRoute: ApiPublicHooksAutomationTickRoute,
   ApiPublicHooksBrainTickRoute: ApiPublicHooksBrainTickRoute,
   ApiPublicHooksCampaignTickRoute: ApiPublicHooksCampaignTickRoute,
+  ApiPublicHooksLinkIntelligenceTickRoute:
+    ApiPublicHooksLinkIntelligenceTickRoute,
   ApiPublicHooksMarketingAgentTickRoute: ApiPublicHooksMarketingAgentTickRoute,
   ApiPublicHooksMktPublishRoute: ApiPublicHooksMktPublishRoute,
   ApiPublicHooksPseoTickRoute: ApiPublicHooksPseoTickRoute,
