@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import {
   LayoutDashboard, Wand2, Eye, BookOpen, Settings2, Globe, Award,
   GraduationCap, Users2, Megaphone, PanelsTopLeft, BarChart3, Sparkles,
-  MessageSquare, LifeBuoy, CreditCard, ShieldCheck, Users, LogOut, Menu, X,
+  MessageSquare, LifeBuoy, CreditCard, ShieldCheck, Users, LogOut, Menu, X, Search,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
