@@ -12912,6 +12912,473 @@ export type Database = {
           },
         ]
       }
+      geo_analytics_daily: {
+        Row: {
+          avg_ai_readiness: number | null
+          avg_citation_readiness: number | null
+          avg_entity_coverage: number | null
+          avg_freshness: number | null
+          avg_question_coverage: number | null
+          day: string
+          entity_count: number | null
+          id: string
+          meta: Json
+          recommendation_accepted: number | null
+          recommendation_pending: number | null
+          relationship_count: number | null
+        }
+        Insert: {
+          avg_ai_readiness?: number | null
+          avg_citation_readiness?: number | null
+          avg_entity_coverage?: number | null
+          avg_freshness?: number | null
+          avg_question_coverage?: number | null
+          day: string
+          entity_count?: number | null
+          id?: string
+          meta?: Json
+          recommendation_accepted?: number | null
+          recommendation_pending?: number | null
+          relationship_count?: number | null
+        }
+        Update: {
+          avg_ai_readiness?: number | null
+          avg_citation_readiness?: number | null
+          avg_entity_coverage?: number | null
+          avg_freshness?: number | null
+          avg_question_coverage?: number | null
+          day?: string
+          entity_count?: number | null
+          id?: string
+          meta?: Json
+          recommendation_accepted?: number | null
+          recommendation_pending?: number | null
+          relationship_count?: number | null
+        }
+        Relationships: []
+      }
+      geo_entities: {
+        Row: {
+          aliases: string[]
+          authority: number
+          created_at: string
+          description: string | null
+          entity_type: string
+          id: string
+          mention_count: number
+          meta: Json
+          name: string
+          slug: string
+          updated_at: string
+          wikidata_id: string | null
+          wikipedia_url: string | null
+        }
+        Insert: {
+          aliases?: string[]
+          authority?: number
+          created_at?: string
+          description?: string | null
+          entity_type: string
+          id?: string
+          mention_count?: number
+          meta?: Json
+          name: string
+          slug: string
+          updated_at?: string
+          wikidata_id?: string | null
+          wikipedia_url?: string | null
+        }
+        Update: {
+          aliases?: string[]
+          authority?: number
+          created_at?: string
+          description?: string | null
+          entity_type?: string
+          id?: string
+          mention_count?: number
+          meta?: Json
+          name?: string
+          slug?: string
+          updated_at?: string
+          wikidata_id?: string | null
+          wikipedia_url?: string | null
+        }
+        Relationships: []
+      }
+      geo_entity_mentions: {
+        Row: {
+          confidence: number
+          content_id: string
+          content_type: string
+          created_at: string
+          entity_id: string
+          extracted_by: string
+          id: string
+          salience: number
+          snippet: string | null
+        }
+        Insert: {
+          confidence?: number
+          content_id: string
+          content_type: string
+          created_at?: string
+          entity_id: string
+          extracted_by?: string
+          id?: string
+          salience?: number
+          snippet?: string | null
+        }
+        Update: {
+          confidence?: number
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          entity_id?: string
+          extracted_by?: string
+          id?: string
+          salience?: number
+          snippet?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geo_entity_mentions_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "geo_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geo_freshness_signals: {
+        Row: {
+          content_id: string
+          content_type: string
+          detail: string | null
+          detected_at: string
+          id: string
+          meta: Json
+          resolved_at: string | null
+          severity: string
+          signal: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          detail?: string | null
+          detected_at?: string
+          id?: string
+          meta?: Json
+          resolved_at?: string | null
+          severity?: string
+          signal: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          detail?: string | null
+          detected_at?: string
+          id?: string
+          meta?: Json
+          resolved_at?: string | null
+          severity?: string
+          signal?: string
+        }
+        Relationships: []
+      }
+      geo_page_scores: {
+        Row: {
+          ai_readiness: number
+          answer_coverage: number | null
+          authority: number | null
+          breakdown: Json
+          citation_readiness: number | null
+          computed_at: string
+          content_id: string
+          content_type: string
+          entity_coverage: number | null
+          evidence_coverage: number | null
+          freshness: number | null
+          id: string
+          question_coverage: number | null
+          semantic_coverage: number | null
+          trust: number | null
+          url: string | null
+        }
+        Insert: {
+          ai_readiness?: number
+          answer_coverage?: number | null
+          authority?: number | null
+          breakdown?: Json
+          citation_readiness?: number | null
+          computed_at?: string
+          content_id: string
+          content_type: string
+          entity_coverage?: number | null
+          evidence_coverage?: number | null
+          freshness?: number | null
+          id?: string
+          question_coverage?: number | null
+          semantic_coverage?: number | null
+          trust?: number | null
+          url?: string | null
+        }
+        Update: {
+          ai_readiness?: number
+          answer_coverage?: number | null
+          authority?: number | null
+          breakdown?: Json
+          citation_readiness?: number | null
+          computed_at?: string
+          content_id?: string
+          content_type?: string
+          entity_coverage?: number | null
+          evidence_coverage?: number | null
+          freshness?: number | null
+          id?: string
+          question_coverage?: number | null
+          semantic_coverage?: number | null
+          trust?: number | null
+          url?: string | null
+        }
+        Relationships: []
+      }
+      geo_questions: {
+        Row: {
+          ai_model: string | null
+          ai_prompt_version: string | null
+          citations: Json | null
+          content_id: string
+          content_type: string
+          created_at: string
+          detailed_answer: string | null
+          id: string
+          intent: string | null
+          question: string
+          question_type: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          short_answer: string | null
+          standard_answer: string | null
+          status: string
+        }
+        Insert: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          citations?: Json | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          detailed_answer?: string | null
+          id?: string
+          intent?: string | null
+          question: string
+          question_type?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          short_answer?: string | null
+          standard_answer?: string | null
+          status?: string
+        }
+        Update: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          citations?: Json | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          detailed_answer?: string | null
+          id?: string
+          intent?: string | null
+          question?: string
+          question_type?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          short_answer?: string | null
+          standard_answer?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      geo_recommendations: {
+        Row: {
+          ai_model: string | null
+          ai_prompt_version: string | null
+          body: string | null
+          category: string
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          impact: number
+          kind: string
+          payload: Json
+          priority: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          body?: string | null
+          category: string
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          impact?: number
+          kind: string
+          payload?: Json
+          priority?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          body?: string | null
+          category?: string
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          impact?: number
+          kind?: string
+          payload?: Json
+          priority?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      geo_relationships: {
+        Row: {
+          created_at: string
+          from_id: string
+          from_type: string
+          id: string
+          meta: Json
+          reason: string | null
+          relation: string
+          to_id: string
+          to_type: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          from_id: string
+          from_type: string
+          id?: string
+          meta?: Json
+          reason?: string | null
+          relation: string
+          to_id: string
+          to_type: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          from_id?: string
+          from_type?: string
+          id?: string
+          meta?: Json
+          reason?: string | null
+          relation?: string
+          to_id?: string
+          to_type?: string
+          weight?: number
+        }
+        Relationships: []
+      }
+      geo_schema_suggestions: {
+        Row: {
+          ai_model: string | null
+          ai_prompt_version: string | null
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          json_ld: Json
+          reviewed_at: string | null
+          reviewed_by: string | null
+          schema_type: string
+          status: string
+        }
+        Insert: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          json_ld: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          schema_type: string
+          status?: string
+        }
+        Update: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          json_ld?: Json
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          schema_type?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      geo_settings: {
+        Row: {
+          ai_prompt_version: string
+          entity_rules: Json
+          id: string
+          quality_thresholds: Json
+          question_rules: Json
+          require_approval: boolean
+          schema_recommendations: Json
+          scoring_weights: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          ai_prompt_version?: string
+          entity_rules?: Json
+          id?: string
+          quality_thresholds?: Json
+          question_rules?: Json
+          require_approval?: boolean
+          schema_recommendations?: Json
+          scoring_weights?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          ai_prompt_version?: string
+          entity_rules?: Json
+          id?: string
+          quality_thresholds?: Json
+          question_rules?: Json
+          require_approval?: boolean
+          schema_recommendations?: Json
+          scoring_weights?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       hiring_applications: {
         Row: {
           applicant_user_id: string | null
