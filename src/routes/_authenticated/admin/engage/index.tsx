@@ -35,7 +35,7 @@ export const Route = createFileRoute("/_authenticated/admin/engage/")({
 
 function EngagePage() {
   return (
-    <AdminShell>
+    <>
       <div className="mx-auto max-w-7xl space-y-8 px-4 py-8">
         <Header />
         <Analytics />
@@ -56,7 +56,7 @@ function EngagePage() {
           <TabsContent value="ai"><AIWriterPanel /></TabsContent>
         </Tabs>
       </div>
-    </AdminShell>
+    </>
   );
 }
 
@@ -82,7 +82,7 @@ function Header() {
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="secondary" onClick={() => seed.mutate()} disabled={seed.isPending}>
+        <Button variant="muted" onClick={() => seed.mutate()} disabled={seed.isPending}>
           {seed.isPending ? "Seeding…" : "Seed default templates"}
         </Button>
       </div>
@@ -126,7 +126,7 @@ function TemplatesPanel() {
     <Card className="p-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <Input placeholder="Search templates…" value={search} onChange={(e) => setSearch(e.target.value)} className="max-w-md" />
-        <Badge variant="secondary">{rows.length} templates</Badge>
+        <Badge variant="muted">{rows.length} templates</Badge>
       </div>
       <div className="grid gap-2 md:grid-cols-2">
         {rows.map((t) => (
@@ -278,7 +278,7 @@ function SequencesPanel() {
               <div className="flex items-center gap-2">
                 <div className="font-medium">{s.name}</div>
                 {s.is_system && <Badge variant="outline" className="text-[10px]">system</Badge>}
-                {!s.is_active && <Badge variant="secondary" className="text-[10px]">off</Badge>}
+                {!s.is_active && <Badge variant="muted" className="text-[10px]">off</Badge>}
               </div>
               <div className="text-xs text-muted-foreground">Trigger: {s.trigger_event} · {(s.steps as unknown as unknown[]).length} steps</div>
             </div>
@@ -347,8 +347,8 @@ function ProvidersPanel() {
                 <div className="font-medium">{p.display_name ?? p.kind}</div>
                 <Badge variant="outline" className="text-[10px]">{p.kind}</Badge>
                 {p.is_default && <Badge className="text-[10px]">default</Badge>}
-                {p.last_test_status === "ok" && <Badge variant="secondary" className="text-[10px]">verified</Badge>}
-                {p.last_test_status === "failed" && <Badge variant="destructive" className="text-[10px]">failed</Badge>}
+                {p.last_test_status === "ok" && <Badge variant="muted" className="text-[10px]">verified</Badge>}
+                {p.last_test_status === "failed" && <Badge variant="danger" className="text-[10px]">failed</Badge>}
               </div>
               <div className="text-xs text-muted-foreground">{p.channel} · secret: {p.secret_ref ?? "—"}</div>
             </div>

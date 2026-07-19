@@ -43,7 +43,7 @@ export const markNotificationRead = createServerFn({ method: "POST" })
 
 export const markAllNotificationsRead = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(() => ({}))
+  .inputValidator((data: unknown) => (data ?? {}) as Record<string, never>)
   .handler(async ({ context }) => {
     const { error } = await context.supabase
       .from("engage_inapp_notifications")
