@@ -75,12 +75,16 @@ export async function publishScheduleEntry(entry: {
     if (ch === "email" || ch === "newsletter") {
       const { sendViaEngage } = await import("@/lib/engage/send.server");
       const result = await sendViaEngage({
-        toEmail: String(entry.content.toEmail ?? ""),
-        subject: String(entry.content.subject ?? ""),
-        html: String(entry.content.html ?? ""),
+        templateKey: String(entry.content.templateKey ?? "campaign_generic"),
+        recipient: String(entry.content.toEmail ?? entry.content.recipient ?? ""),
         category: String(entry.content.category ?? "campaign"),
-      } as Parameters<typeof sendViaEngage>[0]);
-      return { ok: !!result?.sent, externalId: (result as { messageId?: string }).messageId, error: (result as { reason?: string }).reason };
+        context: {
+          subject: String(entry.content.subject ?? ""),
+          html: String(entry.content.html ?? ""),
+          ...(entry.content.context as Record<string, unknown> | undefined),
+        } as Parameters<typeof sendViaEngage>[0]["context"],
+      });
+      return { ok: !!result.ok, externalId: result.message_id, error: result.error_message ?? result.skipped_reason };
     }
     // Web/blog/landing → served directly by app routes; nothing to push.
     if (ch === "web" || ch === "blog" || ch === "landing_page") {
