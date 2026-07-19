@@ -17,7 +17,13 @@ const DEFAULT: Weights = {
 async function getWeights(): Promise<Weights> {
   const { data } = await supabaseAdmin
     .from("link_intelligence_settings").select("scoring_weights").limit(1).maybeSingle();
-  return { ...DEFAULT, ...(data?.scoring_weights ?? {}) };
+  const raw = (data?.scoring_weights ?? {}) as Record<string, unknown>;
+  const merged = { ...DEFAULT } as Weights;
+  for (const k of Object.keys(DEFAULT) as Array<keyof Weights>) {
+    const v = raw[k as string];
+    if (typeof v === "number") merged[k] = v;
+  }
+  return merged;
 }
 
 export async function computePageScore(nodeId: string): Promise<number> {
@@ -57,7 +63,7 @@ export async function computePageScore(nodeId: string): Promise<number> {
     anchor_diversity: diversity, topical_relevance: topicalScore,
     cluster_participation: clusterScore, authority_flow: authorityScore,
     orphan_penalty: orphanPenalty, ctr: ctrScore,
-    breakdown: { weights: w, inbound, outbound },
+    breakdown: { weights: { ...w } as Record<string, number>, inbound, outbound } as unknown as Record<string, unknown>,
     computed_at: new Date().toISOString(),
   }, { onConflict: "node_id" });
 
