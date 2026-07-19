@@ -52,12 +52,25 @@ export async function handle(req: Request): Promise<Response> {
     taskLabel = input.task;
     providerLabel = input.provider ?? null;
 
-    // NOTE: Infrastructure-only milestone. This router intentionally does
-    // NOT invoke any provider yet — it validates the pipeline and returns
-    // a readiness envelope. Future prompts will call PROVIDERS[...].execute()
-    // inside withTimeout(CONFIG.requestTimeoutMs, ...) and stream results.
-    void PROVIDERS;
-    void withTimeout;
+    // Dispatch: only `generate_blog` is wired to a live provider (OpenAI) in
+    // this milestone. Other tasks resolve to the placeholder envelope so the
+    // pipeline stays exercisable without incurring costs.
+    if (input.task === "generate_blog") {
+      const provider = PROVIDERS[input.provider ?? "openai"];
+      const { data, model } = await withTimeout(CONFIG.requestTimeoutMs, (signal) =>
+        provider.execute({ task: input.task, model: input.model, prompt: input.prompt, options: input.options, signal }),
+      );
+      const executionMs = Date.now() - started;
+      logger.info({ requestId, provider: provider.id, task: input.task, status: 200, executionMs, message: "task_ok" });
+      return json(200, {
+        success: true,
+        provider: provider.id,
+        task: input.task,
+        content: (data as any)?.content,
+        data,
+        meta: { requestId, executionMs, model },
+      } as AIRouterSuccess);
+    }
 
     const response: AIRouterSuccess = {
       success: true,
@@ -77,6 +90,7 @@ export async function handle(req: Request): Promise<Response> {
     });
 
     return json(200, response);
+
   } catch (err) {
     const executionMs = Date.now() - started;
 
