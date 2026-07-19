@@ -18678,6 +18678,719 @@ export type Database = {
         }
         Relationships: []
       }
+      soc_accounts: {
+        Row: {
+          access_token_ciphertext: string | null
+          account_external_id: string | null
+          account_name: string
+          brand_id: string | null
+          can_post: boolean
+          can_read_analytics: boolean
+          connection_status: string
+          created_at: string
+          id: string
+          last_synced_at: string | null
+          metadata: Json
+          organization: string | null
+          owner_id: string
+          permissions: Json
+          platform: string
+          refresh_token_ciphertext: string | null
+          token_expires_at: string | null
+          updated_at: string
+          webhook_status: string
+        }
+        Insert: {
+          access_token_ciphertext?: string | null
+          account_external_id?: string | null
+          account_name: string
+          brand_id?: string | null
+          can_post?: boolean
+          can_read_analytics?: boolean
+          connection_status?: string
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          metadata?: Json
+          organization?: string | null
+          owner_id: string
+          permissions?: Json
+          platform: string
+          refresh_token_ciphertext?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          webhook_status?: string
+        }
+        Update: {
+          access_token_ciphertext?: string | null
+          account_external_id?: string | null
+          account_name?: string
+          brand_id?: string | null
+          can_post?: boolean
+          can_read_analytics?: boolean
+          connection_status?: string
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          metadata?: Json
+          organization?: string | null
+          owner_id?: string
+          permissions?: Json
+          platform?: string
+          refresh_token_ciphertext?: string | null
+          token_expires_at?: string | null
+          updated_at?: string
+          webhook_status?: string
+        }
+        Relationships: []
+      }
+      soc_analytics: {
+        Row: {
+          campaign_id: string | null
+          clicks: number | null
+          comments_count: number | null
+          conversions: number | null
+          created_at: string
+          ctr: number | null
+          follower_delta: number | null
+          id: string
+          impressions: number | null
+          likes: number | null
+          measured_at: string
+          owner_id: string
+          platform: string
+          post_id: string | null
+          publishing_success: boolean | null
+          raw: Json
+          reach: number | null
+          revenue: number | null
+          saves: number | null
+          shares: number | null
+          traffic: number | null
+          variant_id: string | null
+          views: number | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          clicks?: number | null
+          comments_count?: number | null
+          conversions?: number | null
+          created_at?: string
+          ctr?: number | null
+          follower_delta?: number | null
+          id?: string
+          impressions?: number | null
+          likes?: number | null
+          measured_at?: string
+          owner_id: string
+          platform: string
+          post_id?: string | null
+          publishing_success?: boolean | null
+          raw?: Json
+          reach?: number | null
+          revenue?: number | null
+          saves?: number | null
+          shares?: number | null
+          traffic?: number | null
+          variant_id?: string | null
+          views?: number | null
+        }
+        Update: {
+          campaign_id?: string | null
+          clicks?: number | null
+          comments_count?: number | null
+          conversions?: number | null
+          created_at?: string
+          ctr?: number | null
+          follower_delta?: number | null
+          id?: string
+          impressions?: number | null
+          likes?: number | null
+          measured_at?: string
+          owner_id?: string
+          platform?: string
+          post_id?: string | null
+          publishing_success?: boolean | null
+          raw?: Json
+          reach?: number | null
+          revenue?: number | null
+          saves?: number | null
+          shares?: number | null
+          traffic?: number | null
+          variant_id?: string | null
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_analytics_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "soc_post_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      soc_approvals: {
+        Row: {
+          created_at: string
+          decision: string
+          id: string
+          notes: string | null
+          owner_id: string
+          post_id: string
+          reviewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          decision: string
+          id?: string
+          notes?: string | null
+          owner_id: string
+          post_id: string
+          reviewer_id: string
+        }
+        Update: {
+          created_at?: string
+          decision?: string
+          id?: string
+          notes?: string | null
+          owner_id?: string
+          post_id?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_approvals_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "soc_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      soc_campaigns: {
+        Row: {
+          approval_mode: string
+          approval_status: string
+          audience: Json
+          brand_id: string | null
+          brand_kit_id: string | null
+          created_at: string
+          end_date: string | null
+          festival_awareness: boolean
+          frequency: string | null
+          frequency_config: Json
+          holiday_awareness: boolean
+          id: string
+          language: string
+          name: string
+          objective: string | null
+          owner_id: string
+          platforms: string[]
+          reviewers: string[]
+          settings: Json
+          start_date: string | null
+          timezone: string
+          tone: string | null
+          updated_at: string
+        }
+        Insert: {
+          approval_mode?: string
+          approval_status?: string
+          audience?: Json
+          brand_id?: string | null
+          brand_kit_id?: string | null
+          created_at?: string
+          end_date?: string | null
+          festival_awareness?: boolean
+          frequency?: string | null
+          frequency_config?: Json
+          holiday_awareness?: boolean
+          id?: string
+          language?: string
+          name: string
+          objective?: string | null
+          owner_id: string
+          platforms?: string[]
+          reviewers?: string[]
+          settings?: Json
+          start_date?: string | null
+          timezone?: string
+          tone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approval_mode?: string
+          approval_status?: string
+          audience?: Json
+          brand_id?: string | null
+          brand_kit_id?: string | null
+          created_at?: string
+          end_date?: string | null
+          festival_awareness?: boolean
+          frequency?: string | null
+          frequency_config?: Json
+          holiday_awareness?: boolean
+          id?: string
+          language?: string
+          name?: string
+          objective?: string | null
+          owner_id?: string
+          platforms?: string[]
+          reviewers?: string[]
+          settings?: Json
+          start_date?: string | null
+          timezone?: string
+          tone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      soc_comments: {
+        Row: {
+          ai_suggested_reply: string | null
+          assigned_to: string | null
+          author_external_id: string | null
+          author_name: string | null
+          content: string
+          created_at: string
+          external_comment_id: string | null
+          id: string
+          is_spam: boolean
+          metadata: Json
+          owner_id: string
+          platform: string
+          post_id: string | null
+          received_at: string
+          reply_status: string
+          reply_text: string | null
+          sentiment: string | null
+          updated_at: string
+          variant_id: string | null
+        }
+        Insert: {
+          ai_suggested_reply?: string | null
+          assigned_to?: string | null
+          author_external_id?: string | null
+          author_name?: string | null
+          content: string
+          created_at?: string
+          external_comment_id?: string | null
+          id?: string
+          is_spam?: boolean
+          metadata?: Json
+          owner_id: string
+          platform: string
+          post_id?: string | null
+          received_at?: string
+          reply_status?: string
+          reply_text?: string | null
+          sentiment?: string | null
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Update: {
+          ai_suggested_reply?: string | null
+          assigned_to?: string | null
+          author_external_id?: string | null
+          author_name?: string | null
+          content?: string
+          created_at?: string
+          external_comment_id?: string | null
+          id?: string
+          is_spam?: boolean
+          metadata?: Json
+          owner_id?: string
+          platform?: string
+          post_id?: string | null
+          received_at?: string
+          reply_status?: string
+          reply_text?: string | null
+          sentiment?: string | null
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_comments_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "soc_post_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      soc_notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          kind: string
+          metadata: Json
+          owner_id: string
+          read_at: string | null
+          ref_id: string | null
+          ref_type: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          metadata?: Json
+          owner_id: string
+          read_at?: string | null
+          ref_id?: string | null
+          ref_type?: string | null
+          severity?: string
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          metadata?: Json
+          owner_id?: string
+          read_at?: string | null
+          ref_id?: string | null
+          ref_type?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      soc_optimization_insights: {
+        Row: {
+          account_id: string | null
+          computed_at: string
+          confidence: number
+          created_at: string
+          id: string
+          insight_type: string
+          key: string | null
+          owner_id: string
+          platform: string
+          sample_size: number
+          value: Json
+        }
+        Insert: {
+          account_id?: string | null
+          computed_at?: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          insight_type: string
+          key?: string | null
+          owner_id: string
+          platform: string
+          sample_size?: number
+          value?: Json
+        }
+        Update: {
+          account_id?: string | null
+          computed_at?: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          insight_type?: string
+          key?: string | null
+          owner_id?: string
+          platform?: string
+          sample_size?: number
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_optimization_insights_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "soc_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      soc_post_variants: {
+        Row: {
+          account_id: string | null
+          best_time_at: string | null
+          caption: string | null
+          created_at: string
+          cta: string | null
+          external_post_id: string | null
+          external_url: string | null
+          hashtags: string[]
+          id: string
+          media: Json
+          metadata: Json
+          owner_id: string
+          platform: string
+          post_id: string
+          status: string
+          suggested_comments: Json
+          suggested_replies: Json
+          updated_at: string
+        }
+        Insert: {
+          account_id?: string | null
+          best_time_at?: string | null
+          caption?: string | null
+          created_at?: string
+          cta?: string | null
+          external_post_id?: string | null
+          external_url?: string | null
+          hashtags?: string[]
+          id?: string
+          media?: Json
+          metadata?: Json
+          owner_id: string
+          platform: string
+          post_id: string
+          status?: string
+          suggested_comments?: Json
+          suggested_replies?: Json
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string | null
+          best_time_at?: string | null
+          caption?: string | null
+          created_at?: string
+          cta?: string | null
+          external_post_id?: string | null
+          external_url?: string | null
+          hashtags?: string[]
+          id?: string
+          media?: Json
+          metadata?: Json
+          owner_id?: string
+          platform?: string
+          post_id?: string
+          status?: string
+          suggested_comments?: Json
+          suggested_replies?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_post_variants_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "soc_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "soc_post_variants_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "soc_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      soc_posts: {
+        Row: {
+          approval_notes: string | null
+          base_content: Json
+          base_prompt: string | null
+          brand_kit_id: string | null
+          campaign_id: string | null
+          created_at: string
+          id: string
+          language: string
+          last_error: string | null
+          metadata: Json
+          owner_id: string
+          post_type: string
+          published_at: string | null
+          retry_count: number
+          reviewed_at: string | null
+          reviewed_by: string | null
+          scheduled_at: string | null
+          source_entity_id: string | null
+          source_entity_type: string | null
+          status: string
+          target_platforms: string[]
+          timezone: string
+          tone: string | null
+          topic: string | null
+          updated_at: string
+        }
+        Insert: {
+          approval_notes?: string | null
+          base_content?: Json
+          base_prompt?: string | null
+          brand_kit_id?: string | null
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          language?: string
+          last_error?: string | null
+          metadata?: Json
+          owner_id: string
+          post_type: string
+          published_at?: string | null
+          retry_count?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scheduled_at?: string | null
+          source_entity_id?: string | null
+          source_entity_type?: string | null
+          status?: string
+          target_platforms?: string[]
+          timezone?: string
+          tone?: string | null
+          topic?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approval_notes?: string | null
+          base_content?: Json
+          base_prompt?: string | null
+          brand_kit_id?: string | null
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          language?: string
+          last_error?: string | null
+          metadata?: Json
+          owner_id?: string
+          post_type?: string
+          published_at?: string | null
+          retry_count?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scheduled_at?: string | null
+          source_entity_id?: string | null
+          source_entity_type?: string | null
+          status?: string
+          target_platforms?: string[]
+          timezone?: string
+          tone?: string | null
+          topic?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_posts_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "soc_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      soc_publish_attempts: {
+        Row: {
+          attempt_number: number
+          created_at: string
+          error_code: string | null
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          next_retry_at: string | null
+          owner_id: string
+          post_id: string
+          request_payload: Json | null
+          response_payload: Json | null
+          retry_tier: string | null
+          started_at: string | null
+          status: string
+          variant_id: string
+        }
+        Insert: {
+          attempt_number?: number
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          next_retry_at?: string | null
+          owner_id: string
+          post_id: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          retry_tier?: string | null
+          started_at?: string | null
+          status: string
+          variant_id: string
+        }
+        Update: {
+          attempt_number?: number
+          created_at?: string
+          error_code?: string | null
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          next_retry_at?: string | null
+          owner_id?: string
+          post_id?: string
+          request_payload?: Json | null
+          response_payload?: Json | null
+          retry_tier?: string | null
+          started_at?: string | null
+          status?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_publish_attempts_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "soc_post_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      soc_recycling_candidates: {
+        Row: {
+          actions_taken: Json
+          created_at: string
+          id: string
+          owner_id: string
+          reason: string | null
+          scheduled_recycle_at: string | null
+          score: number
+          source_variant_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          actions_taken?: Json
+          created_at?: string
+          id?: string
+          owner_id: string
+          reason?: string | null
+          scheduled_recycle_at?: string | null
+          score?: number
+          source_variant_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          actions_taken?: Json
+          created_at?: string
+          id?: string
+          owner_id?: string
+          reason?: string | null
+          scheduled_recycle_at?: string | null
+          score?: number
+          source_variant_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "soc_recycling_candidates_source_variant_id_fkey"
+            columns: ["source_variant_id"]
+            isOneToOne: false
+            referencedRelation: "soc_post_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       student_activity: {
         Row: {
           activity_type: string
