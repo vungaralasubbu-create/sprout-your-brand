@@ -85,9 +85,9 @@ export const runContentAssistant = createServerFn({ method: "POST" })
         maxTokens: 2000,
       });
 
-      let output: Record<string, unknown>;
+      let output: Record<string, any>;
       if (useJson) {
-        output = typeof result === "string" ? safeParseAiJson(result) as Record<string, unknown> : result;
+        output = (typeof result === "string" ? (tryParseAiJson<Record<string, any>>(result) ?? {}) : (result as Record<string, any>));
       } else {
         output = { text: typeof result === "string" ? result : "" };
       }
