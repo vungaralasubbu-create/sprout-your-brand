@@ -6006,6 +6006,554 @@ export type Database = {
           },
         ]
       }
+      community_badges: {
+        Row: {
+          created_at: string
+          criteria: Json
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          tier: string
+        }
+        Insert: {
+          created_at?: string
+          criteria?: Json
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          tier?: string
+        }
+        Update: {
+          created_at?: string
+          criteria?: Json
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          tier?: string
+        }
+        Relationships: []
+      }
+      community_event_rsvps: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+          thread_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_event_rsvps_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "community_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_events: {
+        Row: {
+          attendee_count: number
+          ends_at: string | null
+          is_online: boolean
+          join_url: string | null
+          location: string | null
+          starts_at: string
+          thread_id: string
+        }
+        Insert: {
+          attendee_count?: number
+          ends_at?: string | null
+          is_online?: boolean
+          join_url?: string | null
+          location?: string | null
+          starts_at: string
+          thread_id: string
+        }
+        Update: {
+          attendee_count?: number
+          ends_at?: string | null
+          is_online?: boolean
+          join_url?: string | null
+          location?: string | null
+          starts_at?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_events_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: true
+            referencedRelation: "community_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_follows: {
+        Row: {
+          created_at: string
+          id: string
+          target_id: string
+          target_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          target_id: string
+          target_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          target_id?: string
+          target_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_moderation_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          meta: Json | null
+          reason: string | null
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          reason?: string | null
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          reason?: string | null
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: []
+      }
+      community_poll_options: {
+        Row: {
+          id: string
+          label: string
+          sort_order: number
+          thread_id: string
+          vote_count: number
+        }
+        Insert: {
+          id?: string
+          label: string
+          sort_order?: number
+          thread_id: string
+          vote_count?: number
+        }
+        Update: {
+          id?: string
+          label?: string
+          sort_order?: number
+          thread_id?: string
+          vote_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_poll_options_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "community_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_poll_votes: {
+        Row: {
+          created_at: string
+          id: string
+          option_id: string
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_id: string
+          thread_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_id?: string
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_poll_votes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "community_poll_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_poll_votes_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "community_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts: {
+        Row: {
+          author_id: string
+          body_md: string
+          created_at: string
+          id: string
+          is_accepted: boolean
+          moderation_reason: string | null
+          moderation_score: number | null
+          parent_post_id: string | null
+          status: Database["public"]["Enums"]["community_status"]
+          thread_id: string
+          updated_at: string
+          upvote_count: number
+        }
+        Insert: {
+          author_id: string
+          body_md: string
+          created_at?: string
+          id?: string
+          is_accepted?: boolean
+          moderation_reason?: string | null
+          moderation_score?: number | null
+          parent_post_id?: string | null
+          status?: Database["public"]["Enums"]["community_status"]
+          thread_id: string
+          updated_at?: string
+          upvote_count?: number
+        }
+        Update: {
+          author_id?: string
+          body_md?: string
+          created_at?: string
+          id?: string
+          is_accepted?: boolean
+          moderation_reason?: string | null
+          moderation_score?: number | null
+          parent_post_id?: string | null
+          status?: Database["public"]["Enums"]["community_status"]
+          thread_id?: string
+          updated_at?: string
+          upvote_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_posts_parent_post_id_fkey"
+            columns: ["parent_post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_posts_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "community_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_reactions: {
+        Row: {
+          created_at: string
+          id: string
+          reaction: string
+          target_id: string
+          target_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reaction: string
+          target_id: string
+          target_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reaction?: string
+          target_id?: string
+          target_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_reputation: {
+        Row: {
+          answers_accepted: number
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          headline: string | null
+          level: number
+          points: number
+          posts_created: number
+          threads_created: number
+          updated_at: string
+          upvotes_received: number
+          user_id: string
+        }
+        Insert: {
+          answers_accepted?: number
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          headline?: string | null
+          level?: number
+          points?: number
+          posts_created?: number
+          threads_created?: number
+          updated_at?: string
+          upvotes_received?: number
+          user_id: string
+        }
+        Update: {
+          answers_accepted?: number
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          headline?: string | null
+          level?: number
+          points?: number
+          posts_created?: number
+          threads_created?: number
+          updated_at?: string
+          upvotes_received?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_spaces: {
+        Row: {
+          audience: Database["public"]["Enums"]["community_audience"]
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_archived: boolean
+          is_featured: boolean
+          member_count: number
+          name: string
+          slug: string
+          sort_order: number
+          thread_count: number
+          updated_at: string
+        }
+        Insert: {
+          audience?: Database["public"]["Enums"]["community_audience"]
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_archived?: boolean
+          is_featured?: boolean
+          member_count?: number
+          name: string
+          slug: string
+          sort_order?: number
+          thread_count?: number
+          updated_at?: string
+        }
+        Update: {
+          audience?: Database["public"]["Enums"]["community_audience"]
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_archived?: boolean
+          is_featured?: boolean
+          member_count?: number
+          name?: string
+          slug?: string
+          sort_order?: number
+          thread_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      community_threads: {
+        Row: {
+          accepted_post_id: string | null
+          author_id: string
+          body_md: string
+          created_at: string
+          excerpt: string | null
+          id: string
+          is_featured: boolean
+          is_locked: boolean
+          is_pinned: boolean
+          kind: Database["public"]["Enums"]["community_thread_kind"]
+          last_activity_at: string
+          moderation_reason: string | null
+          moderation_score: number | null
+          post_count: number
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          space_id: string
+          status: Database["public"]["Enums"]["community_status"]
+          tags: string[]
+          title: string
+          updated_at: string
+          upvote_count: number
+          view_count: number
+        }
+        Insert: {
+          accepted_post_id?: string | null
+          author_id: string
+          body_md?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_featured?: boolean
+          is_locked?: boolean
+          is_pinned?: boolean
+          kind?: Database["public"]["Enums"]["community_thread_kind"]
+          last_activity_at?: string
+          moderation_reason?: string | null
+          moderation_score?: number | null
+          post_count?: number
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          space_id: string
+          status?: Database["public"]["Enums"]["community_status"]
+          tags?: string[]
+          title: string
+          updated_at?: string
+          upvote_count?: number
+          view_count?: number
+        }
+        Update: {
+          accepted_post_id?: string | null
+          author_id?: string
+          body_md?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_featured?: boolean
+          is_locked?: boolean
+          is_pinned?: boolean
+          kind?: Database["public"]["Enums"]["community_thread_kind"]
+          last_activity_at?: string
+          moderation_reason?: string | null
+          moderation_score?: number | null
+          post_count?: number
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          space_id?: string
+          status?: Database["public"]["Enums"]["community_status"]
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          upvote_count?: number
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_threads_accepted_post_fkey"
+            columns: ["accepted_post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_threads_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "community_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_user_badges: {
+        Row: {
+          awarded_at: string
+          awarded_by: string | null
+          badge_id: string
+          id: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_id: string
+          id?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_id?: string
+          id?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "community_badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_enquiries: {
         Row: {
           created_at: string
@@ -16648,6 +17196,13 @@ export type Database = {
           status: string
         }[]
       }
+      community_can_view_audience: {
+        Args: {
+          _audience: Database["public"]["Enums"]["community_audience"]
+          _user: string
+        }
+        Returns: boolean
+      }
       evaluate_ambassador_badges: {
         Args: { _ambassador_id: string }
         Returns: number
@@ -16679,6 +17234,7 @@ export type Database = {
         Args: { _brand_id: string; _user_id: string }
         Returns: boolean
       }
+      is_community_moderator: { Args: { _user: string }; Returns: boolean }
       is_copilot_user: { Args: { _uid: string }; Returns: boolean }
       is_partner: { Args: { _user_id: string }; Returns: boolean }
       is_student: { Args: { _user_id: string }; Returns: boolean }
@@ -16932,6 +17488,20 @@ export type Database = {
         | "available_for_payout"
         | "reversed"
         | "rejected"
+      community_audience:
+        | "public"
+        | "students"
+        | "partners"
+        | "mentors"
+        | "brand_owners"
+        | "staff"
+      community_status: "pending" | "approved" | "hidden" | "deleted"
+      community_thread_kind:
+        | "discussion"
+        | "question"
+        | "poll"
+        | "announcement"
+        | "event"
       contact_enquiry_source:
         | "contact_page"
         | "ai_prepared"
@@ -17685,6 +18255,22 @@ export const Constants = {
         "available_for_payout",
         "reversed",
         "rejected",
+      ],
+      community_audience: [
+        "public",
+        "students",
+        "partners",
+        "mentors",
+        "brand_owners",
+        "staff",
+      ],
+      community_status: ["pending", "approved", "hidden", "deleted"],
+      community_thread_kind: [
+        "discussion",
+        "question",
+        "poll",
+        "announcement",
+        "event",
       ],
       contact_enquiry_source: [
         "contact_page",
