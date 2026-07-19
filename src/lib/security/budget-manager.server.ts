@@ -48,7 +48,7 @@ export async function checkBudget(ctx: Ctx, projectedCredits = 0): Promise<Budge
   if (!budget) {
     return { ok: true, limitCredits: Infinity, usedCredits: 0, remainingCredits: Infinity, hardStop: false, alertTriggered: false };
   }
-  const ps = periodStart(budget.period);
+  const ps = periodStart(budget.period as "day" | "week" | "month");
   const supabaseAdmin = await admin();
   const { data: rows } = await supabaseAdmin
     .from("budget_events")
@@ -78,7 +78,7 @@ export async function recordBudgetEvent(params: {
 }) {
   const budget = await pickBudget(params.ctx);
   if (!budget) return;
-  const ps = periodStart(budget.period);
+  const ps = periodStart(budget.period as "day" | "week" | "month");
   const supabaseAdmin = await admin();
   await supabaseAdmin.from("budget_events").insert({
     budget_id: budget.id,
