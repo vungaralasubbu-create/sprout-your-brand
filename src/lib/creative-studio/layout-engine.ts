@@ -183,7 +183,7 @@ export function buildSlide(
       role: "footer",
       ...scale(canvas, 0.06, 0.94, 0.6, 0.04),
       content: copy.footer ?? "",
-      src: brand?.watermarkUrl,
+      src: brand?.watermarkUrl ?? undefined,
       color: palette.secondary,
       font: { ...typography.body, size: Math.round(typography.body.size * 0.7) },
       z: 20,
