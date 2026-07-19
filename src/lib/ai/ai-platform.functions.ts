@@ -54,8 +54,8 @@ export const aiChat = createServerFn({ method: "POST" })
         messages: data.messages,
         temperature: data.temperature,
         maxTokens: data.maxTokens,
-        tools: data.tools,
-        responseSchema: data.responseSchema,
+        tools: data.tools?.map((t) => ({ name: t.name, description: t.description, parameters: t.parameters ?? {} })),
+        responseSchema: data.responseSchema ?? undefined,
       },
     );
     // Project to a JSON-serializable envelope for the RPC boundary.
