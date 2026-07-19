@@ -659,5 +659,6 @@ export const loadFactoryDraft = createServerFn({ method: "POST" })
     await ensureAdmin(context);
     const { data: it } = await context.supabase.from("content_items").select("*").eq("id", data.id).maybeSingle();
     if (!it) throw new Error("Not found");
-    return it;
+    const { search_tsv: _tsv, ...rest } = it as Record<string, unknown>;
+    return rest as Omit<typeof it, "search_tsv">;
   });
