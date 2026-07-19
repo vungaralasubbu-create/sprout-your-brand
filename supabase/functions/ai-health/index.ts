@@ -10,16 +10,14 @@ import {
   readOpenAiError,
 } from "../_shared/ai/openai-diagnostics.ts";
 
+// deno-lint-ignore no-explicit-any
+const envGet = (name: string): string | undefined => (globalThis as any).Deno?.env?.get?.(name) ?? undefined;
+
 interface AIHealthResponse {
-  secretExists: boolean;
-  secretLength: number;
-  startsWith: string;
-  endsWith: string;
+  configured: boolean;
   providerReachable: boolean;
   openaiError: string | null;
-  malformedReasons?: string[];
   authorizationHeaderValid: boolean;
-  authorizationHeaderShape: "Authorization: Bearer <OPENAI_API_KEY>";
 }
 
 function json(status: number, payload: unknown, extra?: HeadersInit): Response {
@@ -27,6 +25,60 @@ function json(status: number, payload: unknown, extra?: HeadersInit): Response {
     status,
     headers: withCors({ "content-type": "application/json; charset=utf-8", ...(extra ?? {}) }),
   });
+}
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let out = 0;
+  for (let i = 0; i < a.length; i++) out |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return out === 0;
+}
+
+async function isAuthorizedAdmin(req: Request): Promise<boolean> {
+  // Internal secret path (server-to-server / ops tooling).
+  const expected = envGet("AI_ROUTER_INTERNAL_SECRET") ?? "";
+  if (expected) {
+    const provided = req.headers.get("x-internal-secret") ?? "";
+    if (provided && timingSafeEqual(provided, expected)) return true;
+  }
+
+  // Supabase user path: verify the bearer JWT identifies a real user AND
+  // that user has the admin role (via the public.is_admin RPC).
+  const authz = req.headers.get("authorization") ?? "";
+  const m = authz.match(/^Bearer\s+(.+)$/i);
+  if (!m) return false;
+  const token = m[1].trim();
+  const parts = token.split(".");
+  if (parts.length !== 3) return false;
+  let payload: { sub?: string; exp?: number; aud?: string } | null = null;
+  try {
+    payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+  } catch {
+    return false;
+  }
+  if (!payload?.sub) return false;
+  if (payload.aud && payload.aud !== "authenticated") return false;
+  if (payload.exp && Date.now() / 1000 > Number(payload.exp)) return false;
+
+  const url = envGet("SUPABASE_URL");
+  const anon = envGet("SUPABASE_ANON_KEY") ?? envGet("SUPABASE_PUBLISHABLE_KEY");
+  if (!url || !anon) return false;
+  try {
+    const res = await fetch(`${url.replace(/\/$/, "")}/rest/v1/rpc/is_admin`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        apikey: anon,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ _user_id: payload.sub }),
+    });
+    if (!res.ok) return false;
+    const body = await res.json().catch(() => null);
+    return body === true;
+  } catch {
+    return false;
+  }
 }
 
 async function pingOpenAi(): Promise<Pick<AIHealthResponse, "providerReachable" | "openaiError" | "authorizationHeaderValid">> {
@@ -88,33 +140,31 @@ async function handle(req: Request): Promise<Response> {
     return json(405, { error: "Only POST is supported." }, { "allow": "POST, OPTIONS" });
   }
 
+  if (!(await isAuthorizedAdmin(req))) {
+    return json(401, { error: "Unauthorized" });
+  }
+
   const diagnostics = publicOpenAiSecretDiagnostics();
   const ping = await pingOpenAi();
+  // IMPORTANT: never return key length, prefix, or suffix — a single
+  // boolean is enough for a health check and cannot narrow brute-force
+  // search space for the live API key.
   const payload: AIHealthResponse = {
-    secretExists: diagnostics.secretExists,
-    secretLength: diagnostics.secretLength,
-    startsWith: diagnostics.startsWith,
-    endsWith: diagnostics.endsWith,
+    configured: diagnostics.secretExists && diagnostics.malformedReasons.length === 0,
     providerReachable: ping.providerReachable,
     openaiError: diagnostics.secretExists && diagnostics.malformedReasons.length > 0
-      ? `OPENAI_API_KEY is malformed: ${diagnostics.malformedReasons.join(" ")}`
+      ? "OPENAI_API_KEY is malformed."
       : ping.openaiError,
-    malformedReasons: diagnostics.malformedReasons,
     authorizationHeaderValid: ping.authorizationHeaderValid,
-    authorizationHeaderShape: diagnostics.authorizationHeaderShape,
   };
 
   logger.info({
     provider: "openai",
     task: "ai_health",
     message: "ai_health_diagnostics",
-    secretExists: payload.secretExists,
-    secretLength: payload.secretLength,
-    startsWith: payload.startsWith,
-    endsWith: payload.endsWith,
+    configured: payload.configured,
     providerReachable: payload.providerReachable,
     authorizationHeaderValid: payload.authorizationHeaderValid,
-    malformedReasons: payload.malformedReasons,
   });
 
   return json(200, payload);
