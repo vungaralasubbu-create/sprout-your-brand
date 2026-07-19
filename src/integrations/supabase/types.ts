@@ -1325,6 +1325,69 @@ export type Database = {
           },
         ]
       }
+      ai_seo_suggestions: {
+        Row: {
+          applied_at: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          input_snapshot: Json
+          kind: string
+          model: string | null
+          priority: number
+          rationale: string | null
+          review_notes: string | null
+          reviewer_id: string | null
+          score: number | null
+          status: string
+          suggestion: Json
+          target_id: string | null
+          target_type: string | null
+          target_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          applied_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          input_snapshot?: Json
+          kind: string
+          model?: string | null
+          priority?: number
+          rationale?: string | null
+          review_notes?: string | null
+          reviewer_id?: string | null
+          score?: number | null
+          status?: string
+          suggestion: Json
+          target_id?: string | null
+          target_type?: string | null
+          target_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          applied_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          input_snapshot?: Json
+          kind?: string
+          model?: string | null
+          priority?: number
+          rationale?: string | null
+          review_notes?: string | null
+          reviewer_id?: string | null
+          score?: number | null
+          status?: string
+          suggestion?: Json
+          target_id?: string | null
+          target_type?: string | null
+          target_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ambassador_badge_achievements: {
         Row: {
           achieved_at: string
