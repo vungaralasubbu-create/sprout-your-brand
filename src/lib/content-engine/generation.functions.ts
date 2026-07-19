@@ -172,12 +172,11 @@ export const editGeneration = createServerFn({ method: "POST" })
     }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = {
+    const patch: any = {
       content: data.content,
       edited: true,
+      status: data.status ?? "edited",
     };
-    if (data.status) patch.status = data.status;
-    else patch.status = "edited";
     const { data: updated, error } = await context.supabase
       .from("ce_generations")
       .update(patch)
