@@ -20,15 +20,7 @@ import {
   CreditCard,
   ArrowUpRight,
 } from "lucide-react";
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
+const DashboardSalesChart = lazy(() => import("@/components/partner/dashboard-sales-chart"));
 import { getOverviewStats, getPartnerContext } from "@/lib/partner/dashboard.functions";
 import { getFollowUpCounts } from "@/lib/partner/follow-ups.functions";
 import { Button } from "@/components/ui/button";
