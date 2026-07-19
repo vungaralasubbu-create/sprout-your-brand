@@ -206,6 +206,7 @@ import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authe
 import { Route as AuthenticatedBrandCoursesRouteImport } from './routes/_authenticated/brand.courses'
 import { Route as AuthenticatedBrandCommunicationsRouteImport } from './routes/_authenticated/brand.communications'
 import { Route as AuthenticatedBrandCertificatesRouteImport } from './routes/_authenticated/brand.certificates'
+import { Route as AuthenticatedBrandBlogOsRouteImport } from './routes/_authenticated/brand.blog-os'
 import { Route as AuthenticatedBrandBillingRouteImport } from './routes/_authenticated/brand.billing'
 import { Route as AuthenticatedBrandAnalyticsRouteImport } from './routes/_authenticated/brand.analytics'
 import { Route as AuthenticatedBrandAiAssistantRouteImport } from './routes/_authenticated/brand.ai-assistant'
@@ -265,6 +266,7 @@ import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
+import { Route as AuthenticatedAdminBlogOsRouteImport } from './routes/_authenticated/admin.blog-os'
 import { Route as AuthenticatedAdminAuthorsRouteImport } from './routes/_authenticated/admin.authors'
 import { Route as AuthenticatedAdminAuthDiagnosticsRouteImport } from './routes/_authenticated/admin.auth-diagnostics'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
@@ -1501,6 +1503,12 @@ const AuthenticatedBrandCertificatesRoute =
     path: '/certificates',
     getParentRoute: () => AuthenticatedBrandRoute,
   } as any)
+const AuthenticatedBrandBlogOsRoute =
+  AuthenticatedBrandBlogOsRouteImport.update({
+    id: '/blog-os',
+    path: '/blog-os',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
 const AuthenticatedBrandBillingRoute =
   AuthenticatedBrandBillingRouteImport.update({
     id: '/billing',
@@ -1848,6 +1856,12 @@ const AuthenticatedAdminCategoriesRoute =
   AuthenticatedAdminCategoriesRouteImport.update({
     id: '/categories',
     path: '/categories',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminBlogOsRoute =
+  AuthenticatedAdminBlogOsRouteImport.update({
+    id: '/blog-os',
+    path: '/blog-os',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminAuthorsRoute =
@@ -3095,6 +3109,7 @@ export interface FileRoutesByFullPath {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
+  '/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -3154,6 +3169,7 @@ export interface FileRoutesByFullPath {
   '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/brand/blog-os': typeof AuthenticatedBrandBlogOsRoute
   '/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
   '/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
@@ -3527,6 +3543,7 @@ export interface FileRoutesByTo {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
+  '/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -3583,6 +3600,7 @@ export interface FileRoutesByTo {
   '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/brand/blog-os': typeof AuthenticatedBrandBlogOsRoute
   '/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
   '/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
@@ -3969,6 +3987,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/_authenticated/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/_authenticated/admin/authors': typeof AuthenticatedAdminAuthorsRoute
+  '/_authenticated/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -4028,6 +4047,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/_authenticated/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/_authenticated/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/_authenticated/brand/blog-os': typeof AuthenticatedBrandBlogOsRoute
   '/_authenticated/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
   '/_authenticated/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
   '/_authenticated/brand/courses': typeof AuthenticatedBrandCoursesRoute
@@ -4414,6 +4434,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/auth-diagnostics'
     | '/admin/authors'
+    | '/admin/blog-os'
     | '/admin/categories'
     | '/admin/content'
     | '/admin/content-intelligence'
@@ -4473,6 +4494,7 @@ export interface FileRouteTypes {
     | '/brand/ai-assistant'
     | '/brand/analytics'
     | '/brand/billing'
+    | '/brand/blog-os'
     | '/brand/certificates'
     | '/brand/communications'
     | '/brand/courses'
@@ -4846,6 +4868,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/auth-diagnostics'
     | '/admin/authors'
+    | '/admin/blog-os'
     | '/admin/categories'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
@@ -4902,6 +4925,7 @@ export interface FileRouteTypes {
     | '/brand/ai-assistant'
     | '/brand/analytics'
     | '/brand/billing'
+    | '/brand/blog-os'
     | '/brand/certificates'
     | '/brand/communications'
     | '/brand/courses'
@@ -5287,6 +5311,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/attribution-reviews'
     | '/_authenticated/admin/auth-diagnostics'
     | '/_authenticated/admin/authors'
+    | '/_authenticated/admin/blog-os'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/content'
     | '/_authenticated/admin/content-intelligence'
@@ -5346,6 +5371,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/ai-assistant'
     | '/_authenticated/brand/analytics'
     | '/_authenticated/brand/billing'
+    | '/_authenticated/brand/blog-os'
     | '/_authenticated/brand/certificates'
     | '/_authenticated/brand/communications'
     | '/_authenticated/brand/courses'
@@ -7074,6 +7100,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBrandCertificatesRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
+    '/_authenticated/brand/blog-os': {
+      id: '/_authenticated/brand/blog-os'
+      path: '/blog-os'
+      fullPath: '/brand/blog-os'
+      preLoaderRoute: typeof AuthenticatedBrandBlogOsRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
     '/_authenticated/brand/billing': {
       id: '/_authenticated/brand/billing'
       path: '/billing'
@@ -7485,6 +7518,13 @@ declare module '@tanstack/react-router' {
       path: '/categories'
       fullPath: '/admin/categories'
       preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/blog-os': {
+      id: '/_authenticated/admin/blog-os'
+      path: '/blog-os'
+      fullPath: '/admin/blog-os'
+      preLoaderRoute: typeof AuthenticatedAdminBlogOsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/authors': {
@@ -9159,6 +9199,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
   AuthenticatedAdminAuthDiagnosticsRoute: typeof AuthenticatedAdminAuthDiagnosticsRoute
   AuthenticatedAdminAuthorsRoute: typeof AuthenticatedAdminAuthorsRoute
+  AuthenticatedAdminBlogOsRoute: typeof AuthenticatedAdminBlogOsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -9258,6 +9299,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAuthDiagnosticsRoute:
     AuthenticatedAdminAuthDiagnosticsRoute,
   AuthenticatedAdminAuthorsRoute: AuthenticatedAdminAuthorsRoute,
+  AuthenticatedAdminBlogOsRoute: AuthenticatedAdminBlogOsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
   AuthenticatedAdminContentIntelligenceRoute:
@@ -9446,6 +9488,7 @@ interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandAiAssistantRoute: typeof AuthenticatedBrandAiAssistantRoute
   AuthenticatedBrandAnalyticsRoute: typeof AuthenticatedBrandAnalyticsRoute
   AuthenticatedBrandBillingRoute: typeof AuthenticatedBrandBillingRoute
+  AuthenticatedBrandBlogOsRoute: typeof AuthenticatedBrandBlogOsRoute
   AuthenticatedBrandCertificatesRoute: typeof AuthenticatedBrandCertificatesRoute
   AuthenticatedBrandCommunicationsRoute: typeof AuthenticatedBrandCommunicationsRoute
   AuthenticatedBrandCoursesRoute: typeof AuthenticatedBrandCoursesRoute
@@ -9469,6 +9512,7 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
   AuthenticatedBrandAiAssistantRoute: AuthenticatedBrandAiAssistantRoute,
   AuthenticatedBrandAnalyticsRoute: AuthenticatedBrandAnalyticsRoute,
   AuthenticatedBrandBillingRoute: AuthenticatedBrandBillingRoute,
+  AuthenticatedBrandBlogOsRoute: AuthenticatedBrandBlogOsRoute,
   AuthenticatedBrandCertificatesRoute: AuthenticatedBrandCertificatesRoute,
   AuthenticatedBrandCommunicationsRoute: AuthenticatedBrandCommunicationsRoute,
   AuthenticatedBrandCoursesRoute: AuthenticatedBrandCoursesRoute,
