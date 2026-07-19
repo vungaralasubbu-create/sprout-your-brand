@@ -80,8 +80,7 @@ type RouteResult =
 export const routeContactEnquiry = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => RouteInputSchema.parse(d))
   .handler(async ({ data }): Promise<RouteResult> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) return { ok: false, reason: "AI routing is not available." };
+    if (!process.env.SUPABASE_URL) return { ok: false, reason: "AI routing is not available." };
 
     const safeDescription = redactSensitiveText(data.description).slice(0, 1200);
 
