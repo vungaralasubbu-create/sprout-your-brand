@@ -114,6 +114,7 @@ import { Route as LearnPathsRouteImport } from './routes/learn.paths'
 import { Route as LearnSlugRouteImport } from './routes/learn.$slug'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
+import { Route as HelpSlugRouteImport } from './routes/help.$slug'
 import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
 import { Route as FaqsSlugRouteImport } from './routes/faqs.$slug'
 import { Route as EntitiesSlugRouteImport } from './routes/entities.$slug'
@@ -993,6 +994,11 @@ const LaunchYourBrandConsultationRoute =
     path: '/launch-your-brand/consultation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const HelpSlugRoute = HelpSlugRouteImport.update({
+  id: '/help/$slug',
+  path: '/help/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GlossarySlugRoute = GlossarySlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -3125,6 +3131,7 @@ export interface FileRoutesByFullPath {
   '/entities/$slug': typeof EntitiesSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
+  '/help/$slug': typeof HelpSlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learn/$slug': typeof LearnSlugRoute
@@ -3576,6 +3583,7 @@ export interface FileRoutesByTo {
   '/entities/$slug': typeof EntitiesSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
+  '/help/$slug': typeof HelpSlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learn/$slug': typeof LearnSlugRoute
@@ -4027,6 +4035,7 @@ export interface FileRoutesById {
   '/entities/$slug': typeof EntitiesSlugRoute
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
+  '/help/$slug': typeof HelpSlugRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learn/$slug': typeof LearnSlugRoute
@@ -4486,6 +4495,7 @@ export interface FileRouteTypes {
     | '/entities/$slug'
     | '/faqs/$slug'
     | '/glossary/$slug'
+    | '/help/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learn/$slug'
@@ -4937,6 +4947,7 @@ export interface FileRouteTypes {
     | '/entities/$slug'
     | '/faqs/$slug'
     | '/glossary/$slug'
+    | '/help/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learn/$slug'
@@ -5387,6 +5398,7 @@ export interface FileRouteTypes {
     | '/entities/$slug'
     | '/faqs/$slug'
     | '/glossary/$slug'
+    | '/help/$slug'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learn/$slug'
@@ -5833,6 +5845,7 @@ export interface RootRouteChildren {
   CareerHubTypeRoute: typeof CareerHubTypeRouteWithChildren
   CommunityNewRoute: typeof CommunityNewRoute
   EntitiesSlugRoute: typeof EntitiesSlugRoute
+  HelpSlugRoute: typeof HelpSlugRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -6609,6 +6622,13 @@ declare module '@tanstack/react-router' {
       path: '/launch-your-brand/consultation'
       fullPath: '/launch-your-brand/consultation'
       preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help/$slug': {
+      id: '/help/$slug'
+      path: '/help/$slug'
+      fullPath: '/help/$slug'
+      preLoaderRoute: typeof HelpSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glossary/$slug': {
@@ -10449,6 +10469,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareerHubTypeRoute: CareerHubTypeRouteWithChildren,
   CommunityNewRoute: CommunityNewRoute,
   EntitiesSlugRoute: EntitiesSlugRoute,
+  HelpSlugRoute: HelpSlugRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
