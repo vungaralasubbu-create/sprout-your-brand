@@ -152,7 +152,7 @@ export const generateSeoSuggestion = createServerFn({ method: "POST" })
       .single();
 
     if (error) throw error;
-    return { id: row.id, suggestion, model: row.model };
+    return { id: row.id as string, suggestionJson: JSON.stringify(suggestion), model: row.model };
   });
 
 // ---------- Review queue ----------
