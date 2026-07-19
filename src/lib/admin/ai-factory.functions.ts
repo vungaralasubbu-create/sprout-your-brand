@@ -32,34 +32,15 @@ const DEPTH_TARGETS: Record<string, { min: number; max: number; sections: number
   master: { min: 2800, max: 4000, sections: 12 },
 };
 
-// ---------- IMAGE GENERATION (Lovable Gateway → storage bucket) ----------
+// ---------- IMAGE GENERATION (native provider → storage bucket) ----------
 
-const IMAGE_MODEL = "google/gemini-2.5-flash-image";
 const BASE_STYLE =
   "Premium Glintr editorial visual. Modern, clean, cinematic. Deep navy background (#0A1128), " +
   "cyan/azure and lime green accents, subtle grid, soft glow, no faces, no logos, no text overlays. " +
   "3D isometric or abstract geometry. High detail, magazine-quality.";
 
 async function generateImageBase64(prompt: string): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("AI service not configured");
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/images/generations", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Lovable-API-Key": key, Authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: IMAGE_MODEL,
-      messages: [{ role: "user", content: `${prompt}\n\nStyle: ${BASE_STYLE}` }],
-      modalities: ["image", "text"],
-    }),
-  });
-  if (!res.ok) {
-    const t = await res.text().catch(() => "");
-    throw new Error(`Image generation failed (${res.status}): ${t.slice(0, 240)}`);
-  }
-  const data = await res.json();
-  const b64 = data?.data?.[0]?.b64_json;
-  if (!b64) throw new Error("Image generator returned no data");
-  return b64;
+  return generateImageBase64Provider(`${prompt}\n\nStyle: ${BASE_STYLE}`);
 }
 
 async function uploadPngAndSign(context: any, path: string, b64: string): Promise<string> {
