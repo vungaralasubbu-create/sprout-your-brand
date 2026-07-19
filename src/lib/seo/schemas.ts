@@ -227,3 +227,77 @@ export function aggregateRatingSchema(input: {
     worstRating: 1,
   };
 }
+
+export function breadcrumbSchema(items: Array<{ name: string; path: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      item: absoluteUrl(it.path),
+    })),
+  };
+}
+
+export function videoObjectSchema(input: {
+  name: string;
+  description: string;
+  thumbnailUrl: string;
+  uploadDate: string;
+  contentUrl?: string;
+  embedUrl?: string;
+  duration?: string; // ISO 8601 e.g. "PT2M30S"
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: input.name,
+    description: input.description,
+    thumbnailUrl: input.thumbnailUrl,
+    uploadDate: input.uploadDate,
+    contentUrl: input.contentUrl,
+    embedUrl: input.embedUrl,
+    duration: input.duration,
+    publisher: { "@id": ORG_ID },
+  };
+}
+
+export function personSchema(input: {
+  name: string;
+  slug?: string;
+  jobTitle?: string;
+  image?: string;
+  bio?: string;
+  sameAs?: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: input.name,
+    url: input.slug ? absoluteUrl(`/authors/${input.slug}`) : undefined,
+    jobTitle: input.jobTitle,
+    image: input.image,
+    description: input.bio,
+    sameAs: input.sameAs,
+    worksFor: { "@id": ORG_ID },
+  };
+}
+
+export function localBusinessSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "@id": `${SITE_ORIGIN}/#localbusiness`,
+    name: "Glintr",
+    url: SITE_ORIGIN,
+    telephone: "+91-000-000-0000",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IN",
+    },
+    areaServed: "IN",
+  };
+}
+
