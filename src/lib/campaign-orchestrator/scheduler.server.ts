@@ -79,10 +79,11 @@ export async function publishScheduleEntry(entry: {
         recipient: String(entry.content.toEmail ?? entry.content.recipient ?? ""),
         category: String(entry.content.category ?? "campaign"),
         context: {
+          recipient: { email: String(entry.content.toEmail ?? entry.content.recipient ?? "") },
           subject: String(entry.content.subject ?? ""),
           html: String(entry.content.html ?? ""),
           ...(entry.content.context as Record<string, unknown> | undefined),
-        } as Parameters<typeof sendViaEngage>[0]["context"],
+        } as unknown as Parameters<typeof sendViaEngage>[0]["context"],
       });
       return { ok: !!result.ok, externalId: result.message_id, error: result.error_message ?? result.skipped_reason };
     }
