@@ -1,3 +1,7 @@
+# Glintr — robots.txt
+# Machine-readable index for AI systems: https://glintr.com/llms.txt
+# AI usage policy: https://glintr.com/ai.txt
+
 User-agent: *
 Allow: /
 
@@ -32,8 +36,10 @@ Disallow: /hq/
 Disallow: /dashboard
 Disallow: /dashboard/
 
-# APIs and internal
+# APIs and internal (public JSON feeds are allowed below)
 Disallow: /api/
+Allow: /api/public/courses.json
+Allow: /api/public/topics.json
 Disallow: /lovable/
 Disallow: /private/
 Disallow: /private
@@ -41,6 +47,73 @@ Disallow: /private
 # Referral / verification (per-user tokens)
 Disallow: /ref/
 Disallow: /verify-certificate/
+
+# --- AI search & assistant crawlers ---
+# Explicitly allowed on public content. Same Disallow rules apply.
+
+User-agent: GPTBot
+Allow: /
+Disallow: /auth
+Disallow: /admin/
+Disallow: /partner/
+Disallow: /student/
+Disallow: /my/
+Disallow: /workspace/
+Disallow: /hq/
+Disallow: /dashboard/
+Disallow: /api/
+Allow: /api/public/courses.json
+Allow: /api/public/topics.json
+Disallow: /ref/
+Disallow: /verify-certificate/
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
 
 Sitemap: https://glintr.com/sitemap-index.xml
 Sitemap: https://glintr.com/sitemap.xml
@@ -58,5 +131,3 @@ Sitemap: https://glintr.com/sitemap-brands.xml
 Sitemap: https://glintr.com/sitemap-landing.xml
 Sitemap: https://glintr.com/sitemap-locations.xml
 Sitemap: https://glintr.com/sitemap-instructors.xml
-
-

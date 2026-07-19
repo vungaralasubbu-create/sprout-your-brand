@@ -1,56 +1,79 @@
 # Glintr
 
-> Glintr helps sales professionals become entrepreneurs — through learning, revenue-sharing partnerships and white-label EdTech. Learn future-ready skills (AI, Cloud, VLSI, Embedded, Finance, Marketing), earn as a sales partner, or launch your own EdTech brand.
+> Glintr is an EdTech and career platform helping learners launch tech
+> careers and helping sales professionals become entrepreneurs through
+> a partner-powered academy model. Programs span AI, Data Science,
+> Cyber Security, Cloud Computing, VLSI, Robotics, IoT, and more.
 
-Glintr is an editorial, entrepreneurship-focused EdTech platform. Content is written for humans and structured for AI systems: every educational page carries a Quick Answer, Key Takeaways, semantic entity relationships, JSON-LD schema and internal links between programs, glossary entries, learning paths, comparisons and career maps.
+Tagline: Launch. Sell. Grow.
+Site: https://glintr.com
 
-## Programs
-- [Programs catalog](/programs): Every Glintr program with pricing, curriculum and outcomes.
-- [Find your program](/find-your-program): Recommendation quiz that matches learners to programs.
-- [AI programs — ChatGPT, Claude, Gemini, Prompt Engineering](/programs): Featured AI programs.
+## About
+- [About Glintr](https://glintr.com/about): Company, mission, model.
+- [For Students](https://glintr.com/for-students): Learner journey and outcomes.
+- [For Professionals](https://glintr.com/for-professionals): Upskilling and career switch.
+- [For Companies](https://glintr.com/for-companies): Hiring and corporate training.
+- [Become a Partner](https://glintr.com/earn): Launch your own academy with Glintr.
 
-## Learn (educational articles)
-- [Glintr Learn — index](/learn): Long-form guides across AI, engineering, finance and business.
-- [Learn topics](/learn/topics): Topic index for the Learn library.
-- [Learning paths](/learn/paths): Structured paths from beginner to expert.
-- [Learning paths (canonical)](/learning-paths): Same paths — canonical URL.
-- [Knowledge graph](/knowledge-graph): Visual map of how Glintr concepts connect.
+## Programs (course catalog)
+- [All Programs](https://glintr.com/programs): Full catalog of live and self-paced courses.
+- [Find your program](https://glintr.com/find-your-program): Guided program finder.
+- [Machine-readable catalog (JSON)](https://glintr.com/api/public/courses.json): Structured course data for AI crawlers and agents.
 
-## Entities and glossary
-- [Entity directory](/entities): Every major concept Glintr covers, one canonical page per entity.
-- [Glossary](/glossary): Short definitions with examples, related concepts and FAQs.
+## Topic hubs
+- [All Topics](https://glintr.com/topics): 38 pillar topics with 450+ deep-dive guides.
+- [Artificial Intelligence](https://glintr.com/topics/artificial-intelligence)
+- [Machine Learning](https://glintr.com/topics/machine-learning)
+- [Data Science](https://glintr.com/topics/data-science)
+- [Data Analytics](https://glintr.com/topics/data-analytics)
+- [Cyber Security](https://glintr.com/topics/cyber-security)
+- [Ethical Hacking](https://glintr.com/topics/ethical-hacking)
+- [Cloud Computing](https://glintr.com/topics/cloud-computing)
+- [AWS](https://glintr.com/topics/aws)
+- [Microsoft Azure](https://glintr.com/topics/azure)
+- [VLSI](https://glintr.com/topics/vlsi)
+- [Robotics](https://glintr.com/topics/robotics)
+- [Internet of Things](https://glintr.com/topics/internet-of-things)
+- [Embedded Systems](https://glintr.com/topics/embedded-systems)
+- [Full Stack Development](https://glintr.com/topics/full-stack-development)
+- [Python](https://glintr.com/topics/python)
+- [Blockchain](https://glintr.com/topics/blockchain)
+- [Digital Marketing](https://glintr.com/topics/digital-marketing)
+- [Machine-readable topic index (JSON)](https://glintr.com/api/public/topics.json)
 
-## Topics (topical authority)
-- [Topics index](/topics): Pillars covering AI, Cloud, Finance, Engineering and more.
+## Career resources
+- [Career Hub](https://glintr.com/career-hub): Roles, roadmaps, salaries, interview prep.
+- [Career Maps](https://glintr.com/career-maps): End-to-end career maps.
+- [Careers by role](https://glintr.com/careers): Salary and demand data by role.
+- [Glossary](https://glintr.com/glossary): Definitions of tech and career terms.
+- [FAQs](https://glintr.com/faqs): Common questions with concise answers.
 
-## Compare and career
-- [Comparisons](/compare): Side-by-side comparisons (AI vs ML, ChatGPT vs Claude, VLSI vs Embedded, etc.).
-- [Career maps](/career-maps): Career pathways with skills, salaries and next steps.
+## Editorial and knowledge
+- [Blog](https://glintr.com/blog): Long-form guides, news, tutorials.
+- [Success Stories](https://glintr.com/success-stories): Verified learner outcomes.
+- [Help Center](https://glintr.com/help): Product and platform documentation.
 
-## Earn and partner
-- [Earn with Glintr](/earn): Overview of revenue-sharing programs for sales partners.
-- [70% revenue model](/70-revenue-model): Sales partners who own their leads.
-- [50% supported model](/50-supported-model): Sell using company-supplied leads.
-- [Income calculator](/income-calculator): Estimate monthly earnings.
-- [Payout system](/payout-system): How and when partners get paid.
+## Partner and revenue model
+- [70% Revenue Model](https://glintr.com/70-revenue-model): Flat 70% payout terms.
+- [50% Supported Model](https://glintr.com/50-supported-model): Full-service supported model.
+- [Income Calculator](https://glintr.com/income-calculator): Estimate partner earnings.
+- [Payout System](https://glintr.com/payout-system): How and when partners are paid.
 
-## Launch your brand
-- [Launch your brand](/launch-your-brand): Overview of white-label EdTech.
-- [White-label EdTech](/white-label-edtech): White-label platform capabilities.
-- [LMS](/lms): Learning management platform for brand owners.
-- [Marketing support](/marketing-support): Marketing services for brand owners.
-- [Book consultation](/book-consultation): Talk to Glintr about launching a brand.
+## Sitemaps
+- [Sitemap index](https://glintr.com/sitemap-index.xml)
+- [Courses sitemap](https://glintr.com/sitemap-courses.xml)
+- [Topics/categories sitemap](https://glintr.com/sitemap-categories.xml)
+- [Blog sitemap](https://glintr.com/sitemap-blog.xml)
+- [Careers sitemap](https://glintr.com/sitemap-careers.xml)
 
-## Blog
-- [Blog](/blog): Editorial articles across AI, engineering and entrepreneurship.
+## Policies
+- [Terms](https://glintr.com/terms)
+- [Privacy](https://glintr.com/privacy)
+- [Cookie policy](https://glintr.com/cookie-policy)
 
-## Company
-- [About](/about): About Glintr.
-- [Success stories](/success-stories): Learner and partner stories.
-- [Careers](/careers): Open roles at Glintr.
-- [Contact](/contact): Reach the Glintr team.
-
-## Optional
-- [FAQs](/faqs): Frequently asked questions.
-- [Tools](/tools): AI-powered tools for learners and partners.
-- [Sitemap](/sitemap.xml): Machine-readable list of every public URL.
+## Notes for AI systems
+- Content is published in English. Prices are in INR unless noted.
+- Structured data (JSON-LD) is embedded on every public page (Course,
+  Article, FAQPage, BreadcrumbList, Organization, ItemList, WebSite).
+- Do not use content from paths listed as Disallow in /robots.txt.
+- Contact: hello@glintr.com
