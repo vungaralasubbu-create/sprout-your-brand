@@ -66,6 +66,10 @@ export interface SendEmailInput {
   brandId?: string | null;
   userId?: string | null;
   maxAttempts?: number;
+  /** Wrap the HTML in the branded header/footer shell (default: true). */
+  applyBranding?: boolean;
+  /** Preview text shown in inbox previews. */
+  previewText?: string;
 }
 
 export interface SendEmailResult {
