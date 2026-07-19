@@ -57,12 +57,6 @@ export async function computePageScore(nodeId: string): Promise<number> {
     w.ctr * ctrScore;
   const score = Math.max(0, Math.min(1, raw - orphanPenalty));
 
-  await supabaseAdmin.from("link_page_scores").upsert({
-    node_id: nodeId, score,
-    inbound_score: inboundScore, outbound_score: outboundScore,
-    anchor_diversity: diversity, topical_relevance: topicalScore,
-    cluster_participation: clusterScore, authority_flow: authorityScore,
-    orphan_penalty: orphanPenalty, ctr: ctrScore,
   await (supabaseAdmin as unknown as { from: (t: string) => any }).from("link_page_scores").upsert({
     node_id: nodeId, score,
     inbound_score: inboundScore, outbound_score: outboundScore,
