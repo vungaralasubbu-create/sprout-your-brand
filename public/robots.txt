@@ -46,9 +46,17 @@ Sitemap: https://glintr.com/sitemap-index.xml
 Sitemap: https://glintr.com/sitemap.xml
 Sitemap: https://glintr.com/sitemap-courses.xml
 Sitemap: https://glintr.com/sitemap-categories.xml
+Sitemap: https://glintr.com/sitemap-programs.xml
 Sitemap: https://glintr.com/sitemap-blog.xml
 Sitemap: https://glintr.com/sitemap-learning-paths.xml
 Sitemap: https://glintr.com/sitemap-careers.xml
 Sitemap: https://glintr.com/sitemap-success-stories.xml
 Sitemap: https://glintr.com/sitemap-images.xml
+Sitemap: https://glintr.com/sitemap-help.xml
+Sitemap: https://glintr.com/sitemap-partners.xml
+Sitemap: https://glintr.com/sitemap-brands.xml
+Sitemap: https://glintr.com/sitemap-landing.xml
+Sitemap: https://glintr.com/sitemap-locations.xml
+Sitemap: https://glintr.com/sitemap-instructors.xml
+
 
