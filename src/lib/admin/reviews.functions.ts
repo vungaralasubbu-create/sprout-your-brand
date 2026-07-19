@@ -286,14 +286,13 @@ export const submitReviewByToken = createServerFn({ method: "POST" })
     if (req.user_id !== context.userId) throw new Error("This review link is not for your account");
 
     const spam_score = heuristicSpamScore(data.review_text, data.rating);
-    const { data: profile } = await context.supabase.from("student_profiles").select("full_name, avatar_url").eq("user_id", context.userId).maybeSingle();
+    const { data: profile } = await context.supabase.from("student_profiles").select("full_name").eq("user_id", context.userId).maybeSingle();
     const authUser = (await context.supabase.auth.getUser()).data.user;
 
     const { data: review, error: rErr } = await context.supabase.from("student_reviews").insert({
       user_id: context.userId,
       reviewer_name: profile?.full_name || authUser?.email || "Anonymous",
       reviewer_email: authUser?.email,
-      reviewer_avatar_url: profile?.avatar_url,
       reviewer_linkedin_url: data.reviewer_linkedin_url || null,
       trigger_event: req.trigger_event,
       target_type: req.target_type,
