@@ -7,6 +7,7 @@ import {
   OPENAI_RESPONSES_URL,
   readOpenAiError,
 } from "./openai-diagnostics.ts";
+import { buildResponsesBody } from "./openai-params.ts";
 import type { AIProvider } from "../types.ts";
 
 /** Extract plain text from an OpenAI Responses API payload. */
@@ -49,15 +50,21 @@ export const openAiProvider: AIProvider = {
 
     const chosenModel = model ?? (options?.model as string | undefined) ?? "gpt-4o-mini";
 
-    const body = {
+    const { body, family } = buildResponsesBody({
       model: chosenModel,
-      input: [
-        { role: "system", content: system },
-        { role: "user", content: prompt },
-      ],
-      max_output_tokens: (options?.max_output_tokens as number) ?? 2000,
-      temperature: (options?.temperature as number) ?? 0.7,
-    };
+      system,
+      prompt,
+      options: options as Record<string, unknown> | undefined,
+    });
+
+    logger.info({
+      provider: "openai",
+      task,
+      message: "openai_request_normalized",
+      model: chosenModel,
+      family,
+      params: Object.keys(body),
+    });
 
     const authorization = getOpenAiAuthHeader(apiKey);
 
