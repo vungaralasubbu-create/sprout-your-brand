@@ -197,7 +197,7 @@ export const setGenerationStatus = createServerFn({ method: "POST" })
     }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = { status: data.status };
+    const patch: any = { status: data.status };
     if (data.status === "published") patch.published_at = new Date().toISOString();
     if (data.status === "scheduled") patch.scheduled_at = data.scheduledAt ?? null;
     const { data: updated, error } = await context.supabase
