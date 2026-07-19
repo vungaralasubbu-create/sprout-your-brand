@@ -350,6 +350,7 @@ import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/publ
 import { Route as ApiPublicTopicsJsonRouteImport } from './routes/api/public/topics.json'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
 import { Route as ApiPublicHooksMktPublishRouteImport } from './routes/api/public/hooks/mkt-publish'
+import { Route as ApiPublicHooksCampaignTickRouteImport } from './routes/api/public/hooks/campaign-tick'
 import { Route as ApiPublicHooksBrainTickRouteImport } from './routes/api/public/hooks/brain-tick'
 import { Route as ApiPublicHooksAutomationTickRouteImport } from './routes/api/public/hooks/automation-tick'
 import { Route as ApiPublicEmailTickRouteImport } from './routes/api/public/email/tick'
@@ -2368,6 +2369,12 @@ const ApiPublicHooksMktPublishRoute =
     path: '/api/public/hooks/mkt-publish',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksCampaignTickRoute =
+  ApiPublicHooksCampaignTickRouteImport.update({
+    id: '/api/public/hooks/campaign-tick',
+    path: '/api/public/hooks/campaign-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksBrainTickRoute = ApiPublicHooksBrainTickRouteImport.update({
   id: '/api/public/hooks/brain-tick',
   path: '/api/public/hooks/brain-tick',
@@ -3581,6 +3588,7 @@ export interface FileRoutesByFullPath {
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
+  '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
@@ -4042,6 +4050,7 @@ export interface FileRoutesByTo {
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
+  '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
@@ -4519,6 +4528,7 @@ export interface FileRoutesById {
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
+  '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
@@ -4996,6 +5006,7 @@ export interface FileRouteTypes {
     | '/api/public/email/tick'
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
+    | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/seo-ping'
     | '/api/public/topics/json'
@@ -5457,6 +5468,7 @@ export interface FileRouteTypes {
     | '/api/public/email/tick'
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
+    | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/seo-ping'
     | '/api/public/topics/json'
@@ -5933,6 +5945,7 @@ export interface FileRouteTypes {
     | '/api/public/email/tick'
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
+    | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/seo-ping'
     | '/api/public/topics/json'
@@ -6097,6 +6110,7 @@ export interface RootRouteChildren {
   ApiPublicEmailTickRoute: typeof ApiPublicEmailTickRoute
   ApiPublicHooksAutomationTickRoute: typeof ApiPublicHooksAutomationTickRoute
   ApiPublicHooksBrainTickRoute: typeof ApiPublicHooksBrainTickRoute
+  ApiPublicHooksCampaignTickRoute: typeof ApiPublicHooksCampaignTickRoute
   ApiPublicHooksMktPublishRoute: typeof ApiPublicHooksMktPublishRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ApiPublicTopicsJsonRoute: typeof ApiPublicTopicsJsonRoute
@@ -8498,6 +8512,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksMktPublishRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/campaign-tick': {
+      id: '/api/public/hooks/campaign-tick'
+      path: '/api/public/hooks/campaign-tick'
+      fullPath: '/api/public/hooks/campaign-tick'
+      preLoaderRoute: typeof ApiPublicHooksCampaignTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/brain-tick': {
       id: '/api/public/hooks/brain-tick'
       path: '/api/public/hooks/brain-tick'
@@ -10859,6 +10880,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicEmailTickRoute: ApiPublicEmailTickRoute,
   ApiPublicHooksAutomationTickRoute: ApiPublicHooksAutomationTickRoute,
   ApiPublicHooksBrainTickRoute: ApiPublicHooksBrainTickRoute,
+  ApiPublicHooksCampaignTickRoute: ApiPublicHooksCampaignTickRoute,
   ApiPublicHooksMktPublishRoute: ApiPublicHooksMktPublishRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ApiPublicTopicsJsonRoute: ApiPublicTopicsJsonRoute,
