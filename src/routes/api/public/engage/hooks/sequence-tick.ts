@@ -90,10 +90,10 @@ export const Route = createFileRoute("/api/public/engage/hooks/sequence-tick")({
           if (userId) {
             const { data: prof } = await supabaseAdmin
               .from("student_profiles")
-              .select("email, first_name")
+              .select("email, full_name")
               .eq("user_id", userId)
               .maybeSingle();
-            email = prof?.email ?? null;
+            email = (prof as { email?: string | null } | null)?.email ?? null;
           }
           if (!email) {
             await supabaseAdmin

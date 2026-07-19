@@ -86,7 +86,7 @@ export const upsertEngageTemplate = createServerFn({ method: "POST" })
           preview_text: data.preview_text ?? null,
           body_html,
           body_text: data.body_text ?? null,
-          body_json: data.body_json ?? null,
+          body_json: (data.body_json ?? null) as never,
           category: data.category ?? null,
           is_active: data.is_active ?? true,
         })
@@ -108,7 +108,7 @@ export const upsertEngageTemplate = createServerFn({ method: "POST" })
         preview_text: data.preview_text ?? null,
         body_html,
         body_text: data.body_text ?? null,
-        body_json: data.body_json ?? null,
+        body_json: (data.body_json ?? null) as never,
         is_active: data.is_active ?? true,
         created_by: context.userId,
       })

@@ -34,7 +34,7 @@ export const Route = createFileRoute("/api/public/engage/webhooks/$provider")({
           if (ev.event === "unsubscribed") patch.unsubscribed_at = new Date().toISOString();
           const { error } = await supabaseAdmin
             .from("engage_messages")
-            .update(patch)
+            .update(patch as never)
             .eq("provider_message_id", ev.provider_message_id);
           if (!error) applied++;
         }

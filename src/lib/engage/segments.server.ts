@@ -25,7 +25,7 @@ export async function evaluateSegment(
     case "students":
       baseQuery = supabaseAdmin
         .from("student_profiles")
-        .select("user_id, email, first_name, country");
+        .select("user_id, email, full_name");
       break;
     case "partners":
       baseQuery = supabaseAdmin
@@ -35,19 +35,18 @@ export async function evaluateSegment(
     case "brand_owners":
       baseQuery = supabaseAdmin
         .from("partner_brand_profiles")
-        .select("user_id, contact_email, brand_name")
-        .not("contact_email", "is", null);
+        .select("user_id, brand_name");
       break;
     case "instructors":
     case "admins":
       baseQuery = supabaseAdmin
         .from("admin_users")
-        .select("user_id, email, first_name");
+        .select("user_id, email, full_name");
       break;
     default:
       baseQuery = supabaseAdmin
         .from("student_profiles")
-        .select("user_id, email, first_name, country");
+        .select("user_id, email, full_name");
   }
 
   // Apply rules (a lightweight subset — the UI limits ops to what we support).
