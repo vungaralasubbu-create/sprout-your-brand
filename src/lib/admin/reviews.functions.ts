@@ -139,9 +139,9 @@ Review text: ${r.review_text}`;
     const { data: story, error: sErr } = await context.supabase.from("success_stories").insert({
       name: r.reviewer_name,
       avatar_url: r.reviewer_avatar_url,
-      role: r.after_snapshot?.role || null,
-      company: r.company_name,
-      course: r.target_label,
+      role: (r.after_snapshot as any)?.role || r.target_label || "Learner",
+      company: r.company_name || "Independent",
+      course: r.target_label || "Glintr Program",
       package_lpa: r.salary_after_lpa,
       rating: r.rating,
       quote: out.quote || (r.review_text || "").slice(0, 220),
