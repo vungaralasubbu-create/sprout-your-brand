@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_authenticated/admin/blog-os")({
   component: BlogOsDashboard,
 });
 
-function BlogOsDashboard() {
+export default function BlogOsDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 text-white">
       <div className="mx-auto max-w-[1400px] px-6 py-8">

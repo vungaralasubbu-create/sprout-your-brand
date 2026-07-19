@@ -206,6 +206,7 @@ import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authe
 import { Route as AuthenticatedBrandCoursesRouteImport } from './routes/_authenticated/brand.courses'
 import { Route as AuthenticatedBrandCommunicationsRouteImport } from './routes/_authenticated/brand.communications'
 import { Route as AuthenticatedBrandCertificatesRouteImport } from './routes/_authenticated/brand.certificates'
+import { Route as AuthenticatedBrandBlogOsRouteImport } from './routes/_authenticated/brand.blog-os'
 import { Route as AuthenticatedBrandBillingRouteImport } from './routes/_authenticated/brand.billing'
 import { Route as AuthenticatedBrandAnalyticsRouteImport } from './routes/_authenticated/brand.analytics'
 import { Route as AuthenticatedBrandAiAssistantRouteImport } from './routes/_authenticated/brand.ai-assistant'
@@ -1500,6 +1501,12 @@ const AuthenticatedBrandCertificatesRoute =
   AuthenticatedBrandCertificatesRouteImport.update({
     id: '/certificates',
     path: '/certificates',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandBlogOsRoute =
+  AuthenticatedBrandBlogOsRouteImport.update({
+    id: '/blog-os',
+    path: '/blog-os',
     getParentRoute: () => AuthenticatedBrandRoute,
   } as any)
 const AuthenticatedBrandBillingRoute =
@@ -3162,6 +3169,7 @@ export interface FileRoutesByFullPath {
   '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/brand/blog-os': typeof AuthenticatedBrandBlogOsRoute
   '/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
   '/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
@@ -3592,6 +3600,7 @@ export interface FileRoutesByTo {
   '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/brand/blog-os': typeof AuthenticatedBrandBlogOsRoute
   '/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
   '/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
@@ -4038,6 +4047,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/_authenticated/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/_authenticated/brand/billing': typeof AuthenticatedBrandBillingRoute
+  '/_authenticated/brand/blog-os': typeof AuthenticatedBrandBlogOsRoute
   '/_authenticated/brand/certificates': typeof AuthenticatedBrandCertificatesRoute
   '/_authenticated/brand/communications': typeof AuthenticatedBrandCommunicationsRoute
   '/_authenticated/brand/courses': typeof AuthenticatedBrandCoursesRoute
@@ -4484,6 +4494,7 @@ export interface FileRouteTypes {
     | '/brand/ai-assistant'
     | '/brand/analytics'
     | '/brand/billing'
+    | '/brand/blog-os'
     | '/brand/certificates'
     | '/brand/communications'
     | '/brand/courses'
@@ -4914,6 +4925,7 @@ export interface FileRouteTypes {
     | '/brand/ai-assistant'
     | '/brand/analytics'
     | '/brand/billing'
+    | '/brand/blog-os'
     | '/brand/certificates'
     | '/brand/communications'
     | '/brand/courses'
@@ -5359,6 +5371,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/ai-assistant'
     | '/_authenticated/brand/analytics'
     | '/_authenticated/brand/billing'
+    | '/_authenticated/brand/blog-os'
     | '/_authenticated/brand/certificates'
     | '/_authenticated/brand/communications'
     | '/_authenticated/brand/courses'
@@ -7085,6 +7098,13 @@ declare module '@tanstack/react-router' {
       path: '/certificates'
       fullPath: '/brand/certificates'
       preLoaderRoute: typeof AuthenticatedBrandCertificatesRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/blog-os': {
+      id: '/_authenticated/brand/blog-os'
+      path: '/blog-os'
+      fullPath: '/brand/blog-os'
+      preLoaderRoute: typeof AuthenticatedBrandBlogOsRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
     '/_authenticated/brand/billing': {
@@ -9468,6 +9488,7 @@ interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandAiAssistantRoute: typeof AuthenticatedBrandAiAssistantRoute
   AuthenticatedBrandAnalyticsRoute: typeof AuthenticatedBrandAnalyticsRoute
   AuthenticatedBrandBillingRoute: typeof AuthenticatedBrandBillingRoute
+  AuthenticatedBrandBlogOsRoute: typeof AuthenticatedBrandBlogOsRoute
   AuthenticatedBrandCertificatesRoute: typeof AuthenticatedBrandCertificatesRoute
   AuthenticatedBrandCommunicationsRoute: typeof AuthenticatedBrandCommunicationsRoute
   AuthenticatedBrandCoursesRoute: typeof AuthenticatedBrandCoursesRoute
@@ -9491,6 +9512,7 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
   AuthenticatedBrandAiAssistantRoute: AuthenticatedBrandAiAssistantRoute,
   AuthenticatedBrandAnalyticsRoute: AuthenticatedBrandAnalyticsRoute,
   AuthenticatedBrandBillingRoute: AuthenticatedBrandBillingRoute,
+  AuthenticatedBrandBlogOsRoute: AuthenticatedBrandBlogOsRoute,
   AuthenticatedBrandCertificatesRoute: AuthenticatedBrandCertificatesRoute,
   AuthenticatedBrandCommunicationsRoute: AuthenticatedBrandCommunicationsRoute,
   AuthenticatedBrandCoursesRoute: AuthenticatedBrandCoursesRoute,
