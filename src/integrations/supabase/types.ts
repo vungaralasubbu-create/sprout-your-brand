@@ -14427,6 +14427,345 @@ export type Database = {
           },
         ]
       }
+      ma_agents: {
+        Row: {
+          approval_level: string
+          auto_blog: boolean
+          auto_email: boolean
+          auto_landing: boolean
+          auto_optimize: boolean
+          auto_publish: boolean
+          auto_social: boolean
+          auto_video: boolean
+          brand_id: string | null
+          budget_monthly: number | null
+          channels: string[]
+          created_at: string
+          goals: Json
+          id: string
+          language: string
+          last_tick_at: string | null
+          name: string
+          next_tick_at: string | null
+          owner_id: string
+          status: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          approval_level?: string
+          auto_blog?: boolean
+          auto_email?: boolean
+          auto_landing?: boolean
+          auto_optimize?: boolean
+          auto_publish?: boolean
+          auto_social?: boolean
+          auto_video?: boolean
+          brand_id?: string | null
+          budget_monthly?: number | null
+          channels?: string[]
+          created_at?: string
+          goals?: Json
+          id?: string
+          language?: string
+          last_tick_at?: string | null
+          name: string
+          next_tick_at?: string | null
+          owner_id: string
+          status?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          approval_level?: string
+          auto_blog?: boolean
+          auto_email?: boolean
+          auto_landing?: boolean
+          auto_optimize?: boolean
+          auto_publish?: boolean
+          auto_social?: boolean
+          auto_video?: boolean
+          brand_id?: string | null
+          budget_monthly?: number | null
+          channels?: string[]
+          created_at?: string
+          goals?: Json
+          id?: string
+          language?: string
+          last_tick_at?: string | null
+          name?: string
+          next_tick_at?: string | null
+          owner_id?: string
+          status?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ma_decisions: {
+        Row: {
+          action: Json
+          agent_id: string
+          confidence: number | null
+          created_at: string
+          executed_at: string | null
+          id: string
+          kind: string
+          rationale: string | null
+          reviewer_id: string | null
+          rolled_back_at: string | null
+          state: string
+          target_id: string | null
+          target_kind: string | null
+        }
+        Insert: {
+          action?: Json
+          agent_id: string
+          confidence?: number | null
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          kind: string
+          rationale?: string | null
+          reviewer_id?: string | null
+          rolled_back_at?: string | null
+          state?: string
+          target_id?: string | null
+          target_kind?: string | null
+        }
+        Update: {
+          action?: Json
+          agent_id?: string
+          confidence?: number | null
+          created_at?: string
+          executed_at?: string | null
+          id?: string
+          kind?: string
+          rationale?: string | null
+          reviewer_id?: string | null
+          rolled_back_at?: string | null
+          state?: string
+          target_id?: string | null
+          target_kind?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ma_decisions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ma_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ma_knowledge: {
+        Row: {
+          agent_id: string
+          created_at: string
+          id: string
+          key: string
+          kind: string
+          last_seen_at: string
+          score: number | null
+          value: Json
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          id?: string
+          key: string
+          kind: string
+          last_seen_at?: string
+          score?: number | null
+          value?: Json
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          id?: string
+          key?: string
+          kind?: string
+          last_seen_at?: string
+          score?: number | null
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ma_knowledge_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ma_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ma_metrics_snapshots: {
+        Row: {
+          agent_id: string
+          created_at: string
+          day: string
+          id: string
+          metrics: Json
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          day: string
+          id?: string
+          metrics?: Json
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          day?: string
+          id?: string
+          metrics?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ma_metrics_snapshots_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ma_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ma_plans: {
+        Row: {
+          agent_id: string
+          created_at: string
+          created_by: string
+          horizon: string
+          id: string
+          period_end: string
+          period_start: string
+          plan: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          created_by?: string
+          horizon: string
+          id?: string
+          period_end: string
+          period_start: string
+          plan?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          created_by?: string
+          horizon?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          plan?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ma_plans_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ma_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ma_recommendations: {
+        Row: {
+          actioned_at: string | null
+          agent_id: string
+          created_at: string
+          detail: Json
+          id: string
+          kind: string
+          priority: number
+          state: string
+          title: string
+        }
+        Insert: {
+          actioned_at?: string | null
+          agent_id: string
+          created_at?: string
+          detail?: Json
+          id?: string
+          kind: string
+          priority?: number
+          state?: string
+          title: string
+        }
+        Update: {
+          actioned_at?: string | null
+          agent_id?: string
+          created_at?: string
+          detail?: Json
+          id?: string
+          kind?: string
+          priority?: number
+          state?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ma_recommendations_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ma_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ma_reports: {
+        Row: {
+          agent_id: string
+          body: Json
+          created_at: string
+          id: string
+          kind: string
+          period_end: string | null
+          period_start: string | null
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          agent_id: string
+          body?: Json
+          created_at?: string
+          id?: string
+          kind: string
+          period_end?: string | null
+          period_start?: string | null
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          agent_id?: string
+          body?: Json
+          created_at?: string
+          id?: string
+          kind?: string
+          period_end?: string | null
+          period_start?: string | null
+          summary?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ma_reports_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ma_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_resource_interactions: {
         Row: {
           ambassador_id: string
@@ -22482,6 +22821,7 @@ export type Database = {
       is_partner: { Args: { _user_id: string }; Returns: boolean }
       is_student: { Args: { _user_id: string }; Returns: boolean }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      ma_agent_accessible: { Args: { _agent_id: string }; Returns: boolean }
       mask_account_number: { Args: { _num: string }; Returns: string }
       mask_upi_id: { Args: { _upi: string }; Returns: string }
       mkt_is_staff: { Args: { _uid: string }; Returns: boolean }
