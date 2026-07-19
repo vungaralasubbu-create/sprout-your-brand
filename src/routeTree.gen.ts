@@ -381,7 +381,6 @@ import { Route as AuthenticatedAdminWorkflowsNewRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminWorkflowsIdRouteImport } from './routes/_authenticated/admin.workflows.$id'
 import { Route as AuthenticatedAdminTeamIdRouteImport } from './routes/_authenticated/admin.team.$id'
 import { Route as AuthenticatedAdminSupportIdRouteImport } from './routes/_authenticated/admin.support.$id'
-import { Route as AuthenticatedAdminSeoHealthRouteImport } from './routes/_authenticated/admin.seo.health'
 import { Route as AuthenticatedAdminRiskReviewIdRouteImport } from './routes/_authenticated/admin.risk-review.$id'
 import { Route as AuthenticatedAdminProgrammaticSeoNewRouteImport } from './routes/_authenticated/admin.programmatic-seo.new'
 import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './routes/_authenticated/admin.programmatic-seo.$id'
@@ -2550,12 +2549,6 @@ const AuthenticatedAdminSupportIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminSupportRoute,
   } as any)
-const AuthenticatedAdminSeoHealthRoute =
-  AuthenticatedAdminSeoHealthRouteImport.update({
-    id: '/seo/health',
-    path: '/seo/health',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
 const AuthenticatedAdminRiskReviewIdRoute =
   AuthenticatedAdminRiskReviewIdRouteImport.update({
     id: '/$id',
@@ -3549,7 +3542,6 @@ export interface FileRoutesByFullPath {
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
-  '/admin/seo/health': typeof AuthenticatedAdminSeoHealthRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
@@ -4010,7 +4002,6 @@ export interface FileRoutesByTo {
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
-  '/admin/seo/health': typeof AuthenticatedAdminSeoHealthRoute
   '/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
@@ -4487,7 +4478,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/_authenticated/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
   '/_authenticated/admin/risk-review/$id': typeof AuthenticatedAdminRiskReviewIdRoute
-  '/_authenticated/admin/seo/health': typeof AuthenticatedAdminSeoHealthRoute
   '/_authenticated/admin/support/$id': typeof AuthenticatedAdminSupportIdRoute
   '/_authenticated/admin/team/$id': typeof AuthenticatedAdminTeamIdRoute
   '/_authenticated/admin/workflows/$id': typeof AuthenticatedAdminWorkflowsIdRoute
@@ -4964,7 +4954,6 @@ export interface FileRouteTypes {
     | '/admin/programmatic-seo/$id'
     | '/admin/programmatic-seo/new'
     | '/admin/risk-review/$id'
-    | '/admin/seo/health'
     | '/admin/support/$id'
     | '/admin/team/$id'
     | '/admin/workflows/$id'
@@ -5425,7 +5414,6 @@ export interface FileRouteTypes {
     | '/admin/programmatic-seo/$id'
     | '/admin/programmatic-seo/new'
     | '/admin/risk-review/$id'
-    | '/admin/seo/health'
     | '/admin/support/$id'
     | '/admin/team/$id'
     | '/admin/workflows/$id'
@@ -5901,7 +5889,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/programmatic-seo/$id'
     | '/_authenticated/admin/programmatic-seo/new'
     | '/_authenticated/admin/risk-review/$id'
-    | '/_authenticated/admin/seo/health'
     | '/_authenticated/admin/support/$id'
     | '/_authenticated/admin/team/$id'
     | '/_authenticated/admin/workflows/$id'
@@ -8714,13 +8701,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminSupportIdRouteImport
       parentRoute: typeof AuthenticatedAdminSupportRoute
     }
-    '/_authenticated/admin/seo/health': {
-      id: '/_authenticated/admin/seo/health'
-      path: '/seo/health'
-      fullPath: '/admin/seo/health'
-      preLoaderRoute: typeof AuthenticatedAdminSeoHealthRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
     '/_authenticated/admin/risk-review/$id': {
       id: '/_authenticated/admin/risk-review/$id'
       path: '/$id'
@@ -9863,7 +9843,6 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPayoutsIdRoute: typeof AuthenticatedAdminPayoutsIdRoute
   AuthenticatedAdminProgrammaticSeoIdRoute: typeof AuthenticatedAdminProgrammaticSeoIdRoute
   AuthenticatedAdminProgrammaticSeoNewRoute: typeof AuthenticatedAdminProgrammaticSeoNewRoute
-  AuthenticatedAdminSeoHealthRoute: typeof AuthenticatedAdminSeoHealthRoute
   AuthenticatedAdminTeamIdRoute: typeof AuthenticatedAdminTeamIdRoute
   AuthenticatedAdminWorkflowsIdRoute: typeof AuthenticatedAdminWorkflowsIdRoute
   AuthenticatedAdminWorkflowsNewRoute: typeof AuthenticatedAdminWorkflowsNewRoute
@@ -9988,7 +9967,6 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminProgrammaticSeoIdRoute,
   AuthenticatedAdminProgrammaticSeoNewRoute:
     AuthenticatedAdminProgrammaticSeoNewRoute,
-  AuthenticatedAdminSeoHealthRoute: AuthenticatedAdminSeoHealthRoute,
   AuthenticatedAdminTeamIdRoute: AuthenticatedAdminTeamIdRoute,
   AuthenticatedAdminWorkflowsIdRoute: AuthenticatedAdminWorkflowsIdRoute,
   AuthenticatedAdminWorkflowsNewRoute: AuthenticatedAdminWorkflowsNewRoute,
