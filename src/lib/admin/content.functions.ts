@@ -586,7 +586,7 @@ export const generateContentDraft = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => AiWriterInput.parse(i))
   .handler(async ({ data, context }) => {
     await ensureAdmin(context);
-    if (!isAiAvailable()) throw new Error("AI service not configured. Set LOVABLE_API_KEY.");
+    if (!isAiAvailable()) throw new Error("AI service not configured");
 
     const typeGuidance: Record<string, string> = {
       learn_guide: "A comprehensive learn guide with intro, key sections (with h2 subheadings), examples, and takeaways.",

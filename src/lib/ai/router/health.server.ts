@@ -148,8 +148,10 @@ export async function pingAll(): Promise<Array<{ provider: ProviderId; latencyMs
   const registry = getProviderRegistry();
   const results: Array<{ provider: ProviderId; latencyMs?: number; ok: boolean; error?: string }> = [];
   for (const provider of Object.keys(registry) as ProviderId[]) {
+    const adapter = registry[provider];
+    if (!adapter) continue;
     try {
-      const latencyMs = await registry[provider].ping();
+      const latencyMs = await adapter.ping();
       await recordProviderEvent({ provider, latencyMs, success: true, task: "healthcheck" });
       results.push({ provider, latencyMs, ok: true });
     } catch (e) {

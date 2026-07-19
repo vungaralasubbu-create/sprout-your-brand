@@ -1,18 +1,14 @@
 /**
- * Shared adapter primitives:
- *  - Lovable AI Gateway transport (fetch wrapper)
- *  - Retry with exponential backoff (only on 429 / 5xx)
- *  - Per-attempt timeout
+ * Shared adapter primitives — provider-agnostic HTTP client used by every
+ * adapter. Each adapter provides its own `baseUrl` and `apiKey` at
+ * construction; the client handles retries, timeouts, and error classification.
  *
- * Every provider adapter routes chat/embedding/image calls through the
- * Lovable AI Gateway (`ai.gateway.lovable.dev`). The gateway is OpenAI-
- * compatible, so we build one HTTP client here and let each adapter map
- * its own request/response shapes on top.
+ * No traffic is routed through the Lovable AI Gateway. Adapters call each
+ * provider's native API directly (OpenAI-compatible endpoints for OpenAI,
+ * native REST for Anthropic/Google via their own adapter helpers).
  */
 
 import type { AdapterInit } from "./types";
-
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1";
 
 export interface GatewayCallOpts {
   path: string;
@@ -20,6 +16,7 @@ export interface GatewayCallOpts {
   signal?: AbortSignal;
   timeoutMs?: number;
   maxRetries?: number;
+  headers?: Record<string, string>;
 }
 
 export class GatewayError extends Error {
@@ -33,7 +30,8 @@ export class GatewayError extends Error {
       | "unauthorized"
       | "upstream_error"
       | "timeout"
-      | "network",
+      | "network"
+      | "not_configured",
     public readonly retryable: boolean,
   ) {
     super(message);
@@ -67,10 +65,26 @@ async function withTimeout<T>(
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export class GatewayClient {
-  constructor(private readonly init: AdapterInit) {}
+  constructor(private readonly init: AdapterInit) {
+    if (!init.baseUrl) {
+      throw new GatewayError(
+        "Adapter baseUrl is required — providers call their native API directly.",
+        0,
+        "not_configured",
+        false,
+      );
+    }
+  }
 
   get baseUrl(): string {
-    return this.init.baseUrl ?? GATEWAY_URL;
+    return this.init.baseUrl as string;
+  }
+
+  private authHeaders(): Record<string, string> {
+    const { apiKey, authHeader } = this.init;
+    if (authHeader === "x-api-key") return { "x-api-key": apiKey };
+    if (authHeader === "x-goog-api-key") return { "x-goog-api-key": apiKey };
+    return { Authorization: `Bearer ${apiKey}` };
   }
 
   async call<T>(opts: GatewayCallOpts): Promise<T> {
@@ -88,7 +102,9 @@ export class GatewayClient {
               method: "POST",
               headers: {
                 "content-type": "application/json",
-                Authorization: `Bearer ${this.init.apiKey}`,
+                ...this.authHeaders(),
+                ...(this.init.extraHeaders ?? {}),
+                ...(opts.headers ?? {}),
               },
               body: JSON.stringify(opts.body),
               signal,
@@ -97,7 +113,7 @@ export class GatewayClient {
               const text = await res.text().catch(() => "");
               const { code, retryable } = classify(res.status);
               throw new GatewayError(
-                `Gateway ${res.status}: ${text.slice(0, 300)}`,
+                `Provider ${res.status}: ${text.slice(0, 300)}`,
                 res.status,
                 code,
                 retryable,
@@ -111,7 +127,7 @@ export class GatewayClient {
         lastErr = err;
         const retryable = err instanceof GatewayError ? err.retryable : true;
         if (!retryable || attempt >= maxRetries) break;
-        await sleep(250 * Math.pow(2, attempt)); // 250ms, 500ms, 1s...
+        await sleep(250 * Math.pow(2, attempt));
         attempt++;
       }
     }
@@ -128,7 +144,9 @@ export class GatewayClient {
           method: "POST",
           headers: {
             "content-type": "application/json",
-            Authorization: `Bearer ${this.init.apiKey}`,
+            ...this.authHeaders(),
+            ...(this.init.extraHeaders ?? {}),
+            ...(opts.headers ?? {}),
             accept: "text/event-stream",
           },
           body: JSON.stringify({ ...(opts.body as object), stream: true }),
@@ -139,7 +157,7 @@ export class GatewayClient {
     if (!res.ok || !res.body) {
       const text = await res.text().catch(() => "");
       const { code, retryable } = classify(res.status);
-      throw new GatewayError(`Gateway ${res.status}: ${text.slice(0, 300)}`, res.status, code, retryable);
+      throw new GatewayError(`Provider ${res.status}: ${text.slice(0, 300)}`, res.status, code, retryable);
     }
 
     const reader = res.body.getReader();

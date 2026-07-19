@@ -1,6 +1,9 @@
 /**
- * OpenAI Provider Adapter (via Lovable AI Gateway).
- * Handles chat, streaming, embeddings, images, tools, structured output.
+ * OpenAI Provider Adapter — calls the native OpenAI API directly.
+ * Handles chat, streaming, embeddings, images, tools, and structured output.
+ *
+ * Model IDs may arrive with or without an `openai/` prefix (legacy routing).
+ * The adapter strips the prefix so the OpenAI API receives its native names.
  */
 
 import { GatewayClient, GatewayError } from "./base-adapter";
@@ -25,26 +28,31 @@ const CAPS: ProviderCapabilities = {
   toolCalling: true,
   structuredOutput: true,
   maxContextTokens: 200_000,
-  defaultChatModel: "openai/gpt-5.4-mini",
-  defaultEmbedModel: "openai/text-embedding-3-small",
-  defaultImageModel: "openai/gpt-image-1",
+  defaultChatModel: "gpt-4o-mini",
+  defaultEmbedModel: "text-embedding-3-small",
+  defaultImageModel: "gpt-image-1",
 };
 
-const REASONING_MODELS = /^openai\/(gpt-5(\.[0-9]+)?(-[a-z]+)?|o[134])/;
+const REASONING_MODELS = /^(gpt-5(\.[0-9]+)?(-[a-z]+)?|o[134])/;
+
+function nativeModel(id: string): string {
+  // Strip legacy provider prefix used by the smart router catalog.
+  return id.replace(/^openai\//, "");
+}
 
 function shapeBody(req: ChatRequest, forceReasoningNone = false) {
+  const model = nativeModel(req.model);
   const body: Record<string, unknown> = {
-    model: req.model,
+    model,
     messages: req.messages,
   };
-  // Reasoning models reject temperature / max_tokens; use max_completion_tokens.
-  const isReasoning = REASONING_MODELS.test(req.model);
+  const isReasoning = REASONING_MODELS.test(model);
   if (!isReasoning) {
     if (req.temperature != null) body.temperature = req.temperature;
     if (req.maxTokens != null) body.max_tokens = req.maxTokens;
   } else {
     if (req.maxTokens != null) body.max_completion_tokens = req.maxTokens;
-    if (forceReasoningNone || /gpt-5\.6/.test(req.model)) {
+    if (forceReasoningNone || /gpt-5\.6/.test(model)) {
       body.reasoning_effort = "none";
     }
   }
@@ -101,7 +109,7 @@ export class OpenAIAdapter implements ProviderAdapter {
   async embed(req: EmbeddingRequest): Promise<EmbeddingResponse> {
     const raw = await this.client.call<any>({
       path: "/embeddings",
-      body: { model: req.model, input: req.input },
+      body: { model: nativeModel(req.model), input: req.input },
       signal: req.signal,
     });
     return {
@@ -114,7 +122,7 @@ export class OpenAIAdapter implements ProviderAdapter {
     const raw = await this.client.call<any>({
       path: "/images/generations",
       body: {
-        model: req.model,
+        model: nativeModel(req.model),
         prompt: req.prompt,
         size: req.size ?? "1024x1024",
         quality: req.quality ?? "low",
@@ -134,8 +142,7 @@ export class OpenAIAdapter implements ProviderAdapter {
         body: {
           model: CAPS.defaultChatModel,
           messages: [{ role: "user", content: "ping" }],
-          max_completion_tokens: 5,
-          reasoning_effort: "none",
+          max_tokens: 5,
         },
         timeoutMs: 8000,
         maxRetries: 0,

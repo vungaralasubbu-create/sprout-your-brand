@@ -4,8 +4,8 @@ export const Route = createFileRoute("/api/voice/transcribe")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const key = process.env.LOVABLE_API_KEY;
-        if (!key) return new Response("Voice service not configured", { status: 500 });
+        const key = process.env.OPENAI_API_KEY;
+        if (!key) return new Response("Voice service not configured (OPENAI_API_KEY missing)", { status: 500 });
 
         const form = await request.formData();
         const file = form.get("file");
@@ -18,11 +18,11 @@ export const Route = createFileRoute("/api/voice/transcribe")({
           ({ "audio/webm": "webm", "audio/mp4": "mp4", "audio/mpeg": "mp3", "audio/wav": "wav", "audio/ogg": "ogg" } as Record<string, string>)[type] ?? "webm";
 
         const upstream = new FormData();
-        upstream.append("model", "openai/gpt-4o-mini-transcribe");
+        upstream.append("model", "gpt-4o-mini-transcribe");
         upstream.append("file", file, `recording.${ext}`);
 
         try {
-          const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
+          const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
             method: "POST",
             headers: { Authorization: `Bearer ${key}` },
             body: upstream,
