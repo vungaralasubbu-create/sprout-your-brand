@@ -7171,6 +7171,560 @@ export type Database = {
           },
         ]
       }
+      co_ab_tests: {
+        Row: {
+          campaign_id: string
+          concluded_at: string | null
+          hypothesis: string | null
+          id: string
+          metric: string
+          results: Json
+          started_at: string
+          status: string
+          variant_asset_ids: string[]
+          winner_asset_id: string | null
+        }
+        Insert: {
+          campaign_id: string
+          concluded_at?: string | null
+          hypothesis?: string | null
+          id?: string
+          metric?: string
+          results?: Json
+          started_at?: string
+          status?: string
+          variant_asset_ids?: string[]
+          winner_asset_id?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          concluded_at?: string | null
+          hypothesis?: string | null
+          id?: string
+          metric?: string
+          results?: Json
+          started_at?: string
+          status?: string
+          variant_asset_ids?: string[]
+          winner_asset_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_ab_tests_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "co_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_ab_tests_winner_asset_id_fkey"
+            columns: ["winner_asset_id"]
+            isOneToOne: false
+            referencedRelation: "co_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_analytics: {
+        Row: {
+          bounce_rate: number | null
+          campaign_id: string
+          channel: string | null
+          clicks: number
+          comments: number
+          conversions: number
+          cost: number
+          cost_per_enrollment: number | null
+          cost_per_lead: number | null
+          created_at: string
+          ctr: number | null
+          day: string
+          enrollments: number
+          id: string
+          impressions: number
+          likes: number
+          meta: Json
+          open_rate: number | null
+          reach: number
+          revenue: number
+          roi: number | null
+          shares: number
+          views: number
+          watch_time_seconds: number
+        }
+        Insert: {
+          bounce_rate?: number | null
+          campaign_id: string
+          channel?: string | null
+          clicks?: number
+          comments?: number
+          conversions?: number
+          cost?: number
+          cost_per_enrollment?: number | null
+          cost_per_lead?: number | null
+          created_at?: string
+          ctr?: number | null
+          day: string
+          enrollments?: number
+          id?: string
+          impressions?: number
+          likes?: number
+          meta?: Json
+          open_rate?: number | null
+          reach?: number
+          revenue?: number
+          roi?: number | null
+          shares?: number
+          views?: number
+          watch_time_seconds?: number
+        }
+        Update: {
+          bounce_rate?: number | null
+          campaign_id?: string
+          channel?: string | null
+          clicks?: number
+          comments?: number
+          conversions?: number
+          cost?: number
+          cost_per_enrollment?: number | null
+          cost_per_lead?: number | null
+          created_at?: string
+          ctr?: number | null
+          day?: string
+          enrollments?: number
+          id?: string
+          impressions?: number
+          likes?: number
+          meta?: Json
+          open_rate?: number | null
+          reach?: number
+          revenue?: number
+          roi?: number | null
+          shares?: number
+          views?: number
+          watch_time_seconds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_analytics_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "co_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_approvals: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          decided_at: string | null
+          id: string
+          notes: string | null
+          reviewer_id: string | null
+          stage: Database["public"]["Enums"]["co_approval_stage"]
+          state: Database["public"]["Enums"]["co_approval_state"]
+          task_id: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          notes?: string | null
+          reviewer_id?: string | null
+          stage: Database["public"]["Enums"]["co_approval_stage"]
+          state?: Database["public"]["Enums"]["co_approval_state"]
+          task_id?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          decided_at?: string | null
+          id?: string
+          notes?: string | null
+          reviewer_id?: string | null
+          stage?: Database["public"]["Enums"]["co_approval_stage"]
+          state?: Database["public"]["Enums"]["co_approval_state"]
+          task_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_approvals_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "co_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_approvals_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "co_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_assets: {
+        Row: {
+          asset_type: string
+          brand_kit_id: string | null
+          campaign_id: string
+          channel: string | null
+          content: Json
+          created_at: string
+          format: string | null
+          id: string
+          moderation_status: string
+          preview_url: string | null
+          storage_url: string | null
+          task_id: string | null
+          variant_of: string | null
+          version: number
+        }
+        Insert: {
+          asset_type: string
+          brand_kit_id?: string | null
+          campaign_id: string
+          channel?: string | null
+          content?: Json
+          created_at?: string
+          format?: string | null
+          id?: string
+          moderation_status?: string
+          preview_url?: string | null
+          storage_url?: string | null
+          task_id?: string | null
+          variant_of?: string | null
+          version?: number
+        }
+        Update: {
+          asset_type?: string
+          brand_kit_id?: string | null
+          campaign_id?: string
+          channel?: string | null
+          content?: Json
+          created_at?: string
+          format?: string | null
+          id?: string
+          moderation_status?: string
+          preview_url?: string | null
+          storage_url?: string | null
+          task_id?: string | null
+          variant_of?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_assets_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "co_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_assets_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "co_tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_assets_variant_of_fkey"
+            columns: ["variant_of"]
+            isOneToOne: false
+            referencedRelation: "co_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_campaigns: {
+        Row: {
+          audience: Json
+          brand_kit_id: string | null
+          budget: number | null
+          coupon_code: string | null
+          created_at: string
+          currency: string | null
+          duration_days: number | null
+          ends_at: string | null
+          geo: Json
+          hashtags: string[]
+          id: string
+          keywords: string[]
+          kind: Database["public"]["Enums"]["co_campaign_kind"]
+          kpis: Json
+          landing_goal: string | null
+          language: string | null
+          meta: Json
+          name: string
+          objective: string | null
+          offer: Json
+          owner_id: string
+          plan: Json
+          platforms: string[]
+          primary_cta: string | null
+          priority: number
+          prompt: string | null
+          secondary_cta: string | null
+          slug: string | null
+          starts_at: string | null
+          status: Database["public"]["Enums"]["co_campaign_status"]
+          updated_at: string
+        }
+        Insert: {
+          audience?: Json
+          brand_kit_id?: string | null
+          budget?: number | null
+          coupon_code?: string | null
+          created_at?: string
+          currency?: string | null
+          duration_days?: number | null
+          ends_at?: string | null
+          geo?: Json
+          hashtags?: string[]
+          id?: string
+          keywords?: string[]
+          kind?: Database["public"]["Enums"]["co_campaign_kind"]
+          kpis?: Json
+          landing_goal?: string | null
+          language?: string | null
+          meta?: Json
+          name: string
+          objective?: string | null
+          offer?: Json
+          owner_id: string
+          plan?: Json
+          platforms?: string[]
+          primary_cta?: string | null
+          priority?: number
+          prompt?: string | null
+          secondary_cta?: string | null
+          slug?: string | null
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["co_campaign_status"]
+          updated_at?: string
+        }
+        Update: {
+          audience?: Json
+          brand_kit_id?: string | null
+          budget?: number | null
+          coupon_code?: string | null
+          created_at?: string
+          currency?: string | null
+          duration_days?: number | null
+          ends_at?: string | null
+          geo?: Json
+          hashtags?: string[]
+          id?: string
+          keywords?: string[]
+          kind?: Database["public"]["Enums"]["co_campaign_kind"]
+          kpis?: Json
+          landing_goal?: string | null
+          language?: string | null
+          meta?: Json
+          name?: string
+          objective?: string | null
+          offer?: Json
+          owner_id?: string
+          plan?: Json
+          platforms?: string[]
+          primary_cta?: string | null
+          priority?: number
+          prompt?: string | null
+          secondary_cta?: string | null
+          slug?: string | null
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["co_campaign_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      co_optimizations: {
+        Row: {
+          applied: boolean
+          campaign_id: string
+          category: string
+          created_at: string
+          detail: string | null
+          id: string
+          recommended_action: Json
+          severity: string
+          title: string
+        }
+        Insert: {
+          applied?: boolean
+          campaign_id: string
+          category: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          recommended_action?: Json
+          severity?: string
+          title: string
+        }
+        Update: {
+          applied?: boolean
+          campaign_id?: string
+          category?: string
+          created_at?: string
+          detail?: string | null
+          id?: string
+          recommended_action?: Json
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_optimizations_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "co_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_schedule: {
+        Row: {
+          asset_id: string | null
+          attempts: number
+          campaign_id: string
+          channel: string
+          created_at: string
+          external_id: string | null
+          external_url: string | null
+          id: string
+          last_error: string | null
+          publish_status: string
+          published_at: string | null
+          scheduled_at: string
+          task_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          asset_id?: string | null
+          attempts?: number
+          campaign_id: string
+          channel: string
+          created_at?: string
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          last_error?: string | null
+          publish_status?: string
+          published_at?: string | null
+          scheduled_at: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          asset_id?: string | null
+          attempts?: number
+          campaign_id?: string
+          channel?: string
+          created_at?: string
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          last_error?: string | null
+          publish_status?: string
+          published_at?: string | null
+          scheduled_at?: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_schedule_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "co_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_schedule_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "co_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "co_schedule_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "co_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_tasks: {
+        Row: {
+          asset_id: string | null
+          brief: Json
+          campaign_id: string
+          channel: string | null
+          cost_estimate: number | null
+          created_at: string
+          error: string | null
+          id: string
+          kind: Database["public"]["Enums"]["co_task_kind"]
+          max_retries: number
+          model: string | null
+          output: Json
+          provider: string | null
+          retries: number
+          scheduled_at: string | null
+          status: Database["public"]["Enums"]["co_task_status"]
+          updated_at: string
+        }
+        Insert: {
+          asset_id?: string | null
+          brief?: Json
+          campaign_id: string
+          channel?: string | null
+          cost_estimate?: number | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["co_task_kind"]
+          max_retries?: number
+          model?: string | null
+          output?: Json
+          provider?: string | null
+          retries?: number
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["co_task_status"]
+          updated_at?: string
+        }
+        Update: {
+          asset_id?: string | null
+          brief?: Json
+          campaign_id?: string
+          channel?: string | null
+          cost_estimate?: number | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["co_task_kind"]
+          max_retries?: number
+          model?: string | null
+          output?: Json
+          provider?: string | null
+          retries?: number
+          scheduled_at?: string | null
+          status?: Database["public"]["Enums"]["co_task_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_tasks_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "co_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           admin_notes: string | null
@@ -22182,6 +22736,96 @@ export type Database = {
         | "approved"
         | "rejected"
         | "withdrawn"
+      co_approval_stage: "marketing" | "seo" | "brand" | "final"
+      co_approval_state:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "changes_requested"
+      co_campaign_kind:
+        | "course_launch"
+        | "admissions"
+        | "internship"
+        | "hiring"
+        | "scholarship"
+        | "live_class"
+        | "masterclass"
+        | "discount"
+        | "festival"
+        | "referral"
+        | "certification"
+        | "partner_announcement"
+        | "placement_drive"
+        | "brand_awareness"
+        | "email_campaign"
+        | "webinar"
+        | "bootcamp"
+        | "ai_news"
+        | "tech_update"
+        | "success_story"
+        | "custom"
+      co_campaign_status:
+        | "draft"
+        | "planning"
+        | "generating"
+        | "review"
+        | "approved"
+        | "scheduled"
+        | "publishing"
+        | "running"
+        | "paused"
+        | "completed"
+        | "archived"
+        | "failed"
+      co_task_kind:
+        | "landing_page"
+        | "blog"
+        | "seo_meta"
+        | "linkedin_post"
+        | "linkedin_carousel"
+        | "instagram_post"
+        | "instagram_carousel"
+        | "instagram_story"
+        | "facebook_post"
+        | "telegram_message"
+        | "whatsapp_message"
+        | "x_post"
+        | "threads_post"
+        | "youtube_community"
+        | "email_welcome"
+        | "email_campaign"
+        | "email_reminder"
+        | "email_last_chance"
+        | "email_certificate"
+        | "email_enrollment"
+        | "newsletter"
+        | "push_notification"
+        | "video_reel"
+        | "video_short"
+        | "video_promo"
+        | "video_explainer"
+        | "video_ad"
+        | "video_story"
+        | "video_intro"
+        | "voice_narration"
+        | "poster"
+        | "banner"
+        | "carousel_slide"
+        | "story_creative"
+        | "course_cover"
+        | "thumbnail"
+        | "infographic"
+        | "certificate_promo"
+        | "faq"
+      co_task_status:
+        | "queued"
+        | "generating"
+        | "ready"
+        | "failed"
+        | "approved"
+        | "rejected"
+        | "scheduled"
+        | "published"
       commission_status:
         | "calculated"
         | "under_verification"
@@ -23056,6 +23700,101 @@ export const Constants = {
         "approved",
         "rejected",
         "withdrawn",
+      ],
+      co_approval_stage: ["marketing", "seo", "brand", "final"],
+      co_approval_state: [
+        "pending",
+        "approved",
+        "rejected",
+        "changes_requested",
+      ],
+      co_campaign_kind: [
+        "course_launch",
+        "admissions",
+        "internship",
+        "hiring",
+        "scholarship",
+        "live_class",
+        "masterclass",
+        "discount",
+        "festival",
+        "referral",
+        "certification",
+        "partner_announcement",
+        "placement_drive",
+        "brand_awareness",
+        "email_campaign",
+        "webinar",
+        "bootcamp",
+        "ai_news",
+        "tech_update",
+        "success_story",
+        "custom",
+      ],
+      co_campaign_status: [
+        "draft",
+        "planning",
+        "generating",
+        "review",
+        "approved",
+        "scheduled",
+        "publishing",
+        "running",
+        "paused",
+        "completed",
+        "archived",
+        "failed",
+      ],
+      co_task_kind: [
+        "landing_page",
+        "blog",
+        "seo_meta",
+        "linkedin_post",
+        "linkedin_carousel",
+        "instagram_post",
+        "instagram_carousel",
+        "instagram_story",
+        "facebook_post",
+        "telegram_message",
+        "whatsapp_message",
+        "x_post",
+        "threads_post",
+        "youtube_community",
+        "email_welcome",
+        "email_campaign",
+        "email_reminder",
+        "email_last_chance",
+        "email_certificate",
+        "email_enrollment",
+        "newsletter",
+        "push_notification",
+        "video_reel",
+        "video_short",
+        "video_promo",
+        "video_explainer",
+        "video_ad",
+        "video_story",
+        "video_intro",
+        "voice_narration",
+        "poster",
+        "banner",
+        "carousel_slide",
+        "story_creative",
+        "course_cover",
+        "thumbnail",
+        "infographic",
+        "certificate_promo",
+        "faq",
+      ],
+      co_task_status: [
+        "queued",
+        "generating",
+        "ready",
+        "failed",
+        "approved",
+        "rejected",
+        "scheduled",
+        "published",
       ],
       commission_status: [
         "calculated",
