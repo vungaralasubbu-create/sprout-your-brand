@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { redactSensitiveText } from "@/lib/student-support/student-support.functions";
+import { callAiChatCompletions } from "@/lib/ai-gateway.server";
 
-const BASE_URL = "https://ai.gateway.lovable.dev/v1";
-const DEFAULT_MODEL = "google/gemini-3.5-flash";
+const DEFAULT_MODEL = "gpt-4o-mini";
 
 // Delimit visitor-supplied text so the model treats it strictly as data.
 const VISITOR_START = "<<<VISITOR_TEXT_START>>>";
