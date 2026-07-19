@@ -70,14 +70,13 @@ export const getPseoPageBySlug = createServerFn({ method: "GET" })
     // Non-blocking view increment
     void sb.rpc("increment_pseo_view", { p_id: row.id }).then(() => {}, () => {});
 
-    interface JoinedLink { relation: string; pseo_pages: { slug: string; title: string | null; status: string } | null }
-    const interlinks = ((linkRes.data ?? []) as JoinedLink[])
-      .filter((l) => l.pseo_pages && l.pseo_pages.status === "published")
-      .map((l) => ({
-        slug: l.pseo_pages!.slug,
-        title: l.pseo_pages!.title,
-        relation: l.relation,
-      }));
+    type LinkRow = { relation: string; pseo_pages: { slug: string; title: string | null; status: string } | { slug: string; title: string | null; status: string }[] | null };
+    const interlinks = ((linkRes.data ?? []) as unknown as LinkRow[])
+      .map((l) => {
+        const p = Array.isArray(l.pseo_pages) ? l.pseo_pages[0] : l.pseo_pages;
+        return p && p.status === "published" ? { slug: p.slug, title: p.title, relation: l.relation } : null;
+      })
+      .filter((x): x is { slug: string; title: string | null; relation: string } => x !== null);
 
     return {
       ...(row as unknown as PseoDbPageWithRelations),
@@ -179,7 +178,7 @@ export const processPseoQueue = createServerFn({ method: "POST" })
             h1: built.h1,
             meta_description: built.meta_description,
             keywords: built.keywords,
-            content: built.content,
+            content: built.content as unknown as Record<string, unknown>,
             word_count: built.word_count,
             quality_score: Math.min(1, built.word_count / 600),
             status: "published",

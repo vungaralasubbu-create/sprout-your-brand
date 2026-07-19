@@ -131,7 +131,6 @@ export interface PseoContent {
   cta?: { label: string; href: string };
   stats?: Array<{ label: string; value: string }>;
   updated_at?: string;
-  [key: string]: unknown;
 }
 
 export interface PseoDbPage {
