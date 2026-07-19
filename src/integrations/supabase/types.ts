@@ -16023,6 +16023,230 @@ export type Database = {
           },
         ]
       }
+      pseo_generation_jobs: {
+        Row: {
+          attempts: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          last_error: string | null
+          page_id: string
+          priority: number
+          scheduled_for: string
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          page_id: string
+          priority?: number
+          scheduled_for?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          page_id?: string
+          priority?: number
+          scheduled_for?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pseo_generation_jobs_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pseo_interlinks: {
+        Row: {
+          anchor: string | null
+          created_at: string
+          from_page_id: string
+          id: string
+          relation: string
+          to_page_id: string
+          weight: number
+        }
+        Insert: {
+          anchor?: string | null
+          created_at?: string
+          from_page_id: string
+          id?: string
+          relation: string
+          to_page_id: string
+          weight?: number
+        }
+        Update: {
+          anchor?: string | null
+          created_at?: string
+          from_page_id?: string
+          id?: string
+          relation?: string
+          to_page_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pseo_interlinks_from_page_id_fkey"
+            columns: ["from_page_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pseo_interlinks_to_page_id_fkey"
+            columns: ["to_page_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pseo_locations: {
+        Row: {
+          country: string
+          created_at: string
+          id: string
+          is_active: boolean
+          kind: string
+          name: string
+          parent_slug: string | null
+          population: number | null
+          priority: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          country?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind: string
+          name: string
+          parent_slug?: string | null
+          population?: number | null
+          priority?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          country?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind?: string
+          name?: string
+          parent_slug?: string | null
+          population?: number | null
+          priority?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pseo_pages: {
+        Row: {
+          canonical_url: string | null
+          content: Json
+          course_id: string | null
+          created_at: string
+          error_message: string | null
+          h1: string | null
+          id: string
+          keywords: string[]
+          last_regenerated_at: string | null
+          location_id: string | null
+          meta_description: string | null
+          page_type: string
+          published_at: string | null
+          quality_score: number | null
+          related_slugs: string[]
+          slug: string
+          status: string
+          title: string | null
+          updated_at: string
+          view_count: number
+          word_count: number | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          content?: Json
+          course_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          h1?: string | null
+          id?: string
+          keywords?: string[]
+          last_regenerated_at?: string | null
+          location_id?: string | null
+          meta_description?: string | null
+          page_type: string
+          published_at?: string | null
+          quality_score?: number | null
+          related_slugs?: string[]
+          slug: string
+          status?: string
+          title?: string | null
+          updated_at?: string
+          view_count?: number
+          word_count?: number | null
+        }
+        Update: {
+          canonical_url?: string | null
+          content?: Json
+          course_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          h1?: string | null
+          id?: string
+          keywords?: string[]
+          last_regenerated_at?: string | null
+          location_id?: string | null
+          meta_description?: string | null
+          page_type?: string
+          published_at?: string | null
+          quality_score?: number | null
+          related_slugs?: string[]
+          slug?: string
+          status?: string
+          title?: string | null
+          updated_at?: string
+          view_count?: number
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pseo_pages_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pseo_pages_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rate_limit_buckets: {
         Row: {
           bucket_key: string
@@ -18681,7 +18905,15 @@ export type Database = {
         Args: { _bucket_key: string; _delta?: number; _window_start: string }
         Returns: number
       }
+      recompute_pseo_interlinks: {
+        Args: { p_page_id: string }
+        Returns: number
+      }
       scan_referral_patterns: { Args: never; Returns: number }
+      seed_pseo_pages_for_course: {
+        Args: { p_course_id: string }
+        Returns: number
+      }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       student_enrolled_in_course: {

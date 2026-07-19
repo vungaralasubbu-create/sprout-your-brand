@@ -25,6 +25,7 @@ export const Route = createFileRoute("/sitemap-index.xml")({
           "/sitemap-landing.xml",
           "/sitemap-locations.xml",
           "/sitemap-instructors.xml",
+          "/sitemap-pseo.xml",
         ];
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,

@@ -17,6 +17,7 @@ import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapSuccessStoriesDotxmlRouteImport } from './routes/sitemap-success-stories[.]xml'
+import { Route as SitemapPseoDotxmlRouteImport } from './routes/sitemap-pseo[.]xml'
 import { Route as SitemapProgramsDotxmlRouteImport } from './routes/sitemap-programs[.]xml'
 import { Route as SitemapPartnersDotxmlRouteImport } from './routes/sitemap-partners[.]xml'
 import { Route as SitemapLocationsDotxmlRouteImport } from './routes/sitemap-locations[.]xml'
@@ -105,6 +106,7 @@ import { Route as RefCodeRouteImport } from './routes/ref.$code'
 import { Route as PartnerSignupRouteImport } from './routes/partner.signup'
 import { Route as PartnerApplyRouteImport } from './routes/partner.apply'
 import { Route as PartnerSupportRequestsRouteImport } from './routes/partner-support.requests'
+import { Route as PSlugRouteImport } from './routes/p.$slug'
 import { Route as MySearchRouteImport } from './routes/my.search'
 import { Route as MyRoadmapsRouteImport } from './routes/my.roadmaps'
 import { Route as MyProfileRouteImport } from './routes/my.profile'
@@ -519,6 +521,11 @@ const SitemapSuccessStoriesDotxmlRoute =
     path: '/sitemap-success-stories.xml',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SitemapPseoDotxmlRoute = SitemapPseoDotxmlRouteImport.update({
+  id: '/sitemap-pseo.xml',
+  path: '/sitemap-pseo.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapProgramsDotxmlRoute = SitemapProgramsDotxmlRouteImport.update({
   id: '/sitemap-programs.xml',
   path: '/sitemap-programs.xml',
@@ -959,6 +966,11 @@ const PartnerSupportRequestsRoute = PartnerSupportRequestsRouteImport.update({
   id: '/requests',
   path: '/requests',
   getParentRoute: () => PartnerSupportRoute,
+} as any)
+const PSlugRoute = PSlugRouteImport.update({
+  id: '/p/$slug',
+  path: '/p/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MySearchRoute = MySearchRouteImport.update({
   id: '/search',
@@ -3180,6 +3192,7 @@ export interface FileRoutesByFullPath {
   '/sitemap-locations.xml': typeof SitemapLocationsDotxmlRoute
   '/sitemap-partners.xml': typeof SitemapPartnersDotxmlRoute
   '/sitemap-programs.xml': typeof SitemapProgramsDotxmlRoute
+  '/sitemap-pseo.xml': typeof SitemapPseoDotxmlRoute
   '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -3224,6 +3237,7 @@ export interface FileRoutesByFullPath {
   '/my/profile': typeof MyProfileRoute
   '/my/roadmaps': typeof MyRoadmapsRoute
   '/my/search': typeof MySearchRoute
+  '/p/$slug': typeof PSlugRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
@@ -3647,6 +3661,7 @@ export interface FileRoutesByTo {
   '/sitemap-locations.xml': typeof SitemapLocationsDotxmlRoute
   '/sitemap-partners.xml': typeof SitemapPartnersDotxmlRoute
   '/sitemap-programs.xml': typeof SitemapProgramsDotxmlRoute
+  '/sitemap-pseo.xml': typeof SitemapPseoDotxmlRoute
   '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -3687,6 +3702,7 @@ export interface FileRoutesByTo {
   '/my/profile': typeof MyProfileRoute
   '/my/roadmaps': typeof MyRoadmapsRoute
   '/my/search': typeof MySearchRoute
+  '/p/$slug': typeof PSlugRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
@@ -4106,6 +4122,7 @@ export interface FileRoutesById {
   '/sitemap-locations.xml': typeof SitemapLocationsDotxmlRoute
   '/sitemap-partners.xml': typeof SitemapPartnersDotxmlRoute
   '/sitemap-programs.xml': typeof SitemapProgramsDotxmlRoute
+  '/sitemap-pseo.xml': typeof SitemapPseoDotxmlRoute
   '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -4150,6 +4167,7 @@ export interface FileRoutesById {
   '/my/profile': typeof MyProfileRoute
   '/my/roadmaps': typeof MyRoadmapsRoute
   '/my/search': typeof MySearchRoute
+  '/p/$slug': typeof PSlugRoute
   '/partner-support/requests': typeof PartnerSupportRequestsRouteWithChildren
   '/partner/apply': typeof PartnerApplyRoute
   '/partner/signup': typeof PartnerSignupRoute
@@ -4577,6 +4595,7 @@ export interface FileRouteTypes {
     | '/sitemap-locations.xml'
     | '/sitemap-partners.xml'
     | '/sitemap-programs.xml'
+    | '/sitemap-pseo.xml'
     | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
@@ -4621,6 +4640,7 @@ export interface FileRouteTypes {
     | '/my/profile'
     | '/my/roadmaps'
     | '/my/search'
+    | '/p/$slug'
     | '/partner-support/requests'
     | '/partner/apply'
     | '/partner/signup'
@@ -5044,6 +5064,7 @@ export interface FileRouteTypes {
     | '/sitemap-locations.xml'
     | '/sitemap-partners.xml'
     | '/sitemap-programs.xml'
+    | '/sitemap-pseo.xml'
     | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
@@ -5084,6 +5105,7 @@ export interface FileRouteTypes {
     | '/my/profile'
     | '/my/roadmaps'
     | '/my/search'
+    | '/p/$slug'
     | '/partner-support/requests'
     | '/partner/apply'
     | '/partner/signup'
@@ -5502,6 +5524,7 @@ export interface FileRouteTypes {
     | '/sitemap-locations.xml'
     | '/sitemap-partners.xml'
     | '/sitemap-programs.xml'
+    | '/sitemap-pseo.xml'
     | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
@@ -5546,6 +5569,7 @@ export interface FileRouteTypes {
     | '/my/profile'
     | '/my/roadmaps'
     | '/my/search'
+    | '/p/$slug'
     | '/partner-support/requests'
     | '/partner/apply'
     | '/partner/signup'
@@ -5973,6 +5997,7 @@ export interface RootRouteChildren {
   SitemapLocationsDotxmlRoute: typeof SitemapLocationsDotxmlRoute
   SitemapPartnersDotxmlRoute: typeof SitemapPartnersDotxmlRoute
   SitemapProgramsDotxmlRoute: typeof SitemapProgramsDotxmlRoute
+  SitemapPseoDotxmlRoute: typeof SitemapPseoDotxmlRoute
   SitemapSuccessStoriesDotxmlRoute: typeof SitemapSuccessStoriesDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
@@ -5990,6 +6015,7 @@ export interface RootRouteChildren {
   HelpSearchRoute: typeof HelpSearchRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
+  PSlugRoute: typeof PSlugRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
   PartnerSignupRoute: typeof PartnerSignupRoute
   RefCodeRoute: typeof RefCodeRoute
@@ -6087,6 +6113,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-success-stories.xml'
       fullPath: '/sitemap-success-stories.xml'
       preLoaderRoute: typeof SitemapSuccessStoriesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-pseo.xml': {
+      id: '/sitemap-pseo.xml'
+      path: '/sitemap-pseo.xml'
+      fullPath: '/sitemap-pseo.xml'
+      preLoaderRoute: typeof SitemapPseoDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-programs.xml': {
@@ -6704,6 +6737,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner-support/requests'
       preLoaderRoute: typeof PartnerSupportRequestsRouteImport
       parentRoute: typeof PartnerSupportRoute
+    }
+    '/p/$slug': {
+      id: '/p/$slug'
+      path: '/p/$slug'
+      fullPath: '/p/$slug'
+      preLoaderRoute: typeof PSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/my/search': {
       id: '/my/search'
@@ -10686,6 +10726,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapLocationsDotxmlRoute: SitemapLocationsDotxmlRoute,
   SitemapPartnersDotxmlRoute: SitemapPartnersDotxmlRoute,
   SitemapProgramsDotxmlRoute: SitemapProgramsDotxmlRoute,
+  SitemapPseoDotxmlRoute: SitemapPseoDotxmlRoute,
   SitemapSuccessStoriesDotxmlRoute: SitemapSuccessStoriesDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudentSupportRoute: StudentSupportRouteWithChildren,
@@ -10703,6 +10744,7 @@ const rootRouteChildren: RootRouteChildren = {
   HelpSearchRoute: HelpSearchRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
+  PSlugRoute: PSlugRoute,
   PartnerApplyRoute: PartnerApplyRoute,
   PartnerSignupRoute: PartnerSignupRoute,
   RefCodeRoute: RefCodeRoute,

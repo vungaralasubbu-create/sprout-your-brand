@@ -1,39 +1,32 @@
-// Programmatic SEO engine — types
+/**
+ * Programmatic SEO — shared types.
+ *
+ * Two families live here side by side:
+ *
+ *  1. Legacy editorial pSEO (in-browser localStorage prototype used by the
+ *     admin `/admin/programmatic-seo` editor). Types: PseoPage, PseoStatus,
+ *     PseoSection, PseoFaq, PseoTemplateDef, PseoAnalytics.
+ *
+ *  2. Database-backed pSEO engine (auto-generated per course × page_type ×
+ *     location, served through `/p/$slug`, indexed via `/sitemap-pseo.xml`).
+ *     Types: PseoDbPage, PseoDbPageWithRelations, PseoContent, PseoLocation,
+ *     PseoPageType.
+ *
+ * The two systems don't share rows — the legacy editor is scoped to a
+ * hand-authored preview flow, while the DB engine is the production
+ * pipeline that scales to hundreds of thousands of pages.
+ */
 
-export type PseoStatus = "draft" | "review" | "approved" | "scheduled" | "published";
+// ============================================================
+// (1) Legacy editorial prototype
+// ============================================================
 
-export type PseoPageType =
-  | "course"
-  | "career-guide"
-  | "salary-guide"
-  | "learning-path"
-  | "interview-guide"
-  | "certification-guide"
-  | "technology-guide"
-  | "comparison"
-  | "skill-guide"
-  | "industry-guide"
-  | "glossary"
-  | "faq"
-  | "location";
-
-export type PseoTemplateId =
-  | "best-skill-course"
-  | "how-to-learn-skill"
-  | "what-is-technology"
-  | "career-guide"
-  | "salary-guide"
-  | "technology-roadmap"
-  | "interview-questions"
-  | "certification-guide"
-  | "technology-projects"
-  | "technology-for-beginners"
-  | "technology-trends"
-  | "location-course"
-  | "comparison"
-  | "how-to-become"
-  | "faq-hub"
-  | "glossary-term";
+export type PseoStatus =
+  | "draft"
+  | "review"
+  | "approved"
+  | "scheduled"
+  | "published";
 
 export interface PseoSection {
   heading: string;
@@ -46,16 +39,20 @@ export interface PseoFaq {
   a: string;
 }
 
-export interface PseoRelated {
-  label: string;
-  href: string;
+export interface PseoAnalytics {
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  avgPosition: number;
+  organicTraffic: number;
+  internalClicks: number;
 }
 
 export interface PseoPage {
   id: string;
   slug: string;
-  pageType: PseoPageType;
-  templateId: PseoTemplateId;
+  pageType: string;
+  templateId: string;
   category: string;
   status: PseoStatus;
   author: string;
@@ -67,34 +64,126 @@ export interface PseoPage {
   variables: Record<string, string>;
   sections: PseoSection[];
   faqs: PseoFaq[];
-  related: PseoRelated[];
+  related: Array<{ label: string; href: string }>;
   readingTimeMin: number;
   createdAt: string;
   updatedAt: string;
-  scheduledAt?: string;
   publishedAt?: string;
+  scheduledFor?: string;
   reviewNotes?: string;
-  analytics?: {
-    impressions: number;
-    clicks: number;
-    ctr: number;
-    avgPosition: number;
-    organicTraffic: number;
-    internalClicks: number;
-  };
+  analytics: PseoAnalytics;
+}
+
+export interface PseoTemplateVar {
+  key: string;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
 }
 
 export interface PseoTemplateDef {
-  id: PseoTemplateId;
+  id: string;
   label: string;
-  pageType: PseoPageType;
+  pageType: string;
   description: string;
-  variables: Array<{ key: string; label: string; placeholder?: string; required?: boolean }>;
+  variables: PseoTemplateVar[];
   titleTemplate: string;
   descriptionTemplate: string;
   slugTemplate: string;
   h1Template: string;
-  sectionPlan: Array<{ heading: string; body: string; bullets?: string[] }>;
-  faqPlan: Array<{ q: string; a: string }>;
   keywords: string[];
+  sectionPlan: PseoSection[];
+  faqPlan: PseoFaq[];
 }
+
+// ============================================================
+// (2) Database-backed pSEO engine
+// ============================================================
+
+export type PseoPageType =
+  | "by_city"
+  | "by_state"
+  | "online"
+  | "career_roadmap"
+  | "interview_questions"
+  | "salary_guide"
+  | "projects"
+  | "certification"
+  | "faq"
+  | "internship";
+
+export interface PseoLocation {
+  id: string;
+  kind: "city" | "state" | "country";
+  name: string;
+  slug: string;
+  parent_slug: string | null;
+  country: string;
+  population: number | null;
+  priority: number;
+}
+
+export interface PseoContent {
+  intro?: string;
+  sections?: Array<{ heading: string; body: string }>;
+  faqs?: Array<{ question: string; answer: string }>;
+  bullets?: string[];
+  cta?: { label: string; href: string };
+  stats?: Array<{ label: string; value: string }>;
+  updated_at?: string;
+}
+
+export interface PseoDbPage {
+  id: string;
+  course_id: string | null;
+  page_type: PseoPageType;
+  location_id: string | null;
+  slug: string;
+  title: string | null;
+  h1: string | null;
+  meta_description: string | null;
+  canonical_url: string | null;
+  content: PseoContent;
+  keywords: string[];
+  related_slugs: string[];
+  status: "queued" | "generating" | "published" | "failed" | "archived";
+  quality_score: number | null;
+  word_count: number | null;
+  view_count: number;
+  published_at: string | null;
+  last_regenerated_at: string | null;
+  updated_at: string;
+}
+
+export interface PseoDbPageWithRelations extends PseoDbPage {
+  course?: {
+    id: string;
+    slug: string;
+    name: string;
+    short_description: string | null;
+    full_description: string | null;
+    category_id: string | null;
+    subcategory: string | null;
+    hero_image_url: string | null;
+    offer_price: number | null;
+    base_price: number | null;
+    currency: string | null;
+    duration: string | null;
+    level: string | null;
+  } | null;
+  location?: PseoLocation | null;
+  interlinks?: Array<{ slug: string; title: string | null; relation: string }>;
+}
+
+export const PAGE_TYPE_LABEL: Record<PseoPageType, string> = {
+  by_city: "in {location}",
+  by_state: "in {location}",
+  online: "Online",
+  career_roadmap: "Career Roadmap",
+  interview_questions: "Interview Questions",
+  salary_guide: "Salary Guide",
+  projects: "Projects",
+  certification: "Certification",
+  faq: "FAQ",
+  internship: "Internship",
+};
