@@ -11,6 +11,15 @@ import {
   Sparkles,
   TrendingUp,
   Wrench,
+  GraduationCap,
+  Rocket,
+  Hammer,
+  MessageSquare,
+  IndianRupee,
+  Award,
+  Map as MapIcon,
+  Newspaper,
+  HelpCircle,
 } from "lucide-react";
 
 import { SiteHeader } from "@/components/shared/site-header";
