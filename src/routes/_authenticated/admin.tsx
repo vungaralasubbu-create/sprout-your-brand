@@ -70,6 +70,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/blog-os", label: "Blog OS", icon: Sparkles },
       { to: "/admin/ai-content", label: "AI Content Factory", icon: Sparkles },
       { to: "/admin/keyword-research", label: "Keyword Research", icon: Search },
+      { to: "/admin/reviews", label: "Reviews & Success", icon: Sparkles },
       { to: "/admin/content-intelligence", label: "Content Intelligence", icon: Activity },
     ],
   },
