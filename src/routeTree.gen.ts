@@ -349,6 +349,7 @@ import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/progra
 import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/public/webhooks/cashfree'
 import { Route as ApiPublicTopicsJsonRouteImport } from './routes/api/public/topics.json'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
+import { Route as ApiPublicHooksPseoTickRouteImport } from './routes/api/public/hooks/pseo-tick'
 import { Route as ApiPublicHooksMktPublishRouteImport } from './routes/api/public/hooks/mkt-publish'
 import { Route as ApiPublicHooksMarketingAgentTickRouteImport } from './routes/api/public/hooks/marketing-agent-tick'
 import { Route as ApiPublicHooksCampaignTickRouteImport } from './routes/api/public/hooks/campaign-tick'
@@ -2364,6 +2365,11 @@ const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   path: '/api/public/hooks/seo-ping',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksPseoTickRoute = ApiPublicHooksPseoTickRouteImport.update({
+  id: '/api/public/hooks/pseo-tick',
+  path: '/api/public/hooks/pseo-tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksMktPublishRoute =
   ApiPublicHooksMktPublishRouteImport.update({
     id: '/api/public/hooks/mkt-publish',
@@ -3598,6 +3604,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
+  '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
@@ -4061,6 +4068,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
+  '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
@@ -4540,6 +4548,7 @@ export interface FileRoutesById {
   '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
+  '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
@@ -5019,6 +5028,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
+    | '/api/public/hooks/pseo-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
@@ -5482,6 +5492,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
+    | '/api/public/hooks/pseo-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
@@ -5960,6 +5971,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
+    | '/api/public/hooks/pseo-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
@@ -6126,6 +6138,7 @@ export interface RootRouteChildren {
   ApiPublicHooksCampaignTickRoute: typeof ApiPublicHooksCampaignTickRoute
   ApiPublicHooksMarketingAgentTickRoute: typeof ApiPublicHooksMarketingAgentTickRoute
   ApiPublicHooksMktPublishRoute: typeof ApiPublicHooksMktPublishRoute
+  ApiPublicHooksPseoTickRoute: typeof ApiPublicHooksPseoTickRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ApiPublicTopicsJsonRoute: typeof ApiPublicTopicsJsonRoute
   ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
@@ -8519,6 +8532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksSeoPingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/pseo-tick': {
+      id: '/api/public/hooks/pseo-tick'
+      path: '/api/public/hooks/pseo-tick'
+      fullPath: '/api/public/hooks/pseo-tick'
+      preLoaderRoute: typeof ApiPublicHooksPseoTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/mkt-publish': {
       id: '/api/public/hooks/mkt-publish'
       path: '/api/public/hooks/mkt-publish'
@@ -10904,6 +10924,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksCampaignTickRoute: ApiPublicHooksCampaignTickRoute,
   ApiPublicHooksMarketingAgentTickRoute: ApiPublicHooksMarketingAgentTickRoute,
   ApiPublicHooksMktPublishRoute: ApiPublicHooksMktPublishRoute,
+  ApiPublicHooksPseoTickRoute: ApiPublicHooksPseoTickRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ApiPublicTopicsJsonRoute: ApiPublicTopicsJsonRoute,
   ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,

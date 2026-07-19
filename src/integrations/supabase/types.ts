@@ -18761,14 +18761,162 @@ export type Database = {
           },
         ]
       }
+      pseo_analytics_daily: {
+        Row: {
+          avg_position: number | null
+          bounce_rate: number | null
+          clicks: number | null
+          conversions: number | null
+          created_at: string | null
+          ctr: number | null
+          day: string
+          id: string
+          impressions: number | null
+          leads: number | null
+          page_id: string
+          views: number | null
+        }
+        Insert: {
+          avg_position?: number | null
+          bounce_rate?: number | null
+          clicks?: number | null
+          conversions?: number | null
+          created_at?: string | null
+          ctr?: number | null
+          day: string
+          id?: string
+          impressions?: number | null
+          leads?: number | null
+          page_id: string
+          views?: number | null
+        }
+        Update: {
+          avg_position?: number | null
+          bounce_rate?: number | null
+          clicks?: number | null
+          conversions?: number | null
+          created_at?: string | null
+          ctr?: number | null
+          day?: string
+          id?: string
+          impressions?: number | null
+          leads?: number | null
+          page_id?: string
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pseo_analytics_daily_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pseo_batches: {
+        Row: {
+          completed_at: string | null
+          config: Json | null
+          created_at: string | null
+          created_by: string | null
+          failed: number | null
+          id: string
+          name: string
+          page_type: string | null
+          status: string | null
+          succeeded: number | null
+          template_id: string | null
+          total: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          config?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          failed?: number | null
+          id?: string
+          name: string
+          page_type?: string | null
+          status?: string | null
+          succeeded?: number | null
+          template_id?: string | null
+          total?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          config?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          failed?: number | null
+          id?: string
+          name?: string
+          page_type?: string | null
+          status?: string | null
+          succeeded?: number | null
+          template_id?: string | null
+          total?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pseo_batches_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pseo_entities: {
+        Row: {
+          aliases: string[] | null
+          attributes: Json
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          kind: string
+          name: string
+          priority: number | null
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          aliases?: string[] | null
+          attributes?: Json
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          kind: string
+          name: string
+          priority?: number | null
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          aliases?: string[] | null
+          attributes?: Json
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          kind?: string
+          name?: string
+          priority?: number | null
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       pseo_generation_jobs: {
         Row: {
           attempts: number
+          batch_id: string | null
           completed_at: string | null
           created_at: string
           id: string
+          job_type: string | null
           last_error: string | null
           page_id: string
+          payload: Json | null
           priority: number
           scheduled_for: string
           started_at: string | null
@@ -18777,11 +18925,14 @@ export type Database = {
         }
         Insert: {
           attempts?: number
+          batch_id?: string | null
           completed_at?: string | null
           created_at?: string
           id?: string
+          job_type?: string | null
           last_error?: string | null
           page_id: string
+          payload?: Json | null
           priority?: number
           scheduled_for?: string
           started_at?: string | null
@@ -18790,11 +18941,14 @@ export type Database = {
         }
         Update: {
           attempts?: number
+          batch_id?: string | null
           completed_at?: string | null
           created_at?: string
           id?: string
+          job_type?: string | null
           last_error?: string | null
           page_id?: string
+          payload?: Json | null
           priority?: number
           scheduled_for?: string
           started_at?: string | null
@@ -18804,6 +18958,59 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "pseo_generation_jobs_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pseo_indexing_status: {
+        Row: {
+          canonical_url: string | null
+          checked_at: string | null
+          coverage_state: string | null
+          google_canonical: string | null
+          id: string
+          indexing_verdict: string | null
+          last_crawl_at: string | null
+          page_fetch_state: string | null
+          page_id: string | null
+          raw: Json | null
+          robots_txt_state: string | null
+          url: string
+        }
+        Insert: {
+          canonical_url?: string | null
+          checked_at?: string | null
+          coverage_state?: string | null
+          google_canonical?: string | null
+          id?: string
+          indexing_verdict?: string | null
+          last_crawl_at?: string | null
+          page_fetch_state?: string | null
+          page_id?: string | null
+          raw?: Json | null
+          robots_txt_state?: string | null
+          url: string
+        }
+        Update: {
+          canonical_url?: string | null
+          checked_at?: string | null
+          coverage_state?: string | null
+          google_canonical?: string | null
+          id?: string
+          indexing_verdict?: string | null
+          last_crawl_at?: string | null
+          page_fetch_state?: string | null
+          page_id?: string | null
+          raw?: Json | null
+          robots_txt_state?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pseo_indexing_status_page_id_fkey"
             columns: ["page_id"]
             isOneToOne: false
             referencedRelation: "pseo_pages"
@@ -18900,13 +19107,24 @@ export type Database = {
       }
       pseo_pages: {
         Row: {
+          ai_prompt_version: string | null
+          archived_at: string | null
+          batch_id: string | null
+          canonical_of: string | null
           canonical_url: string | null
           content: Json
+          content_hash: string | null
           course_id: string | null
           created_at: string
+          duplicate_score: number | null
+          entity_id: string | null
+          entity_id_secondary: string | null
           error_message: string | null
+          freshness_score: number | null
           h1: string | null
           id: string
+          index_last_checked_at: string | null
+          index_status: string | null
           keywords: string[]
           last_regenerated_at: string | null
           location_id: string | null
@@ -18914,22 +19132,43 @@ export type Database = {
           page_type: string
           published_at: string | null
           quality_score: number | null
+          readability_score: number | null
           related_slugs: string[]
+          review_state: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          scheduled_at: string | null
+          schema_types: string[] | null
+          seo_score: number | null
+          similarity_score: number | null
           slug: string
           status: string
+          template_id: string | null
           title: string | null
           updated_at: string
+          variables: Json | null
           view_count: number
           word_count: number | null
         }
         Insert: {
+          ai_prompt_version?: string | null
+          archived_at?: string | null
+          batch_id?: string | null
+          canonical_of?: string | null
           canonical_url?: string | null
           content?: Json
+          content_hash?: string | null
           course_id?: string | null
           created_at?: string
+          duplicate_score?: number | null
+          entity_id?: string | null
+          entity_id_secondary?: string | null
           error_message?: string | null
+          freshness_score?: number | null
           h1?: string | null
           id?: string
+          index_last_checked_at?: string | null
+          index_status?: string | null
           keywords?: string[]
           last_regenerated_at?: string | null
           location_id?: string | null
@@ -18937,22 +19176,43 @@ export type Database = {
           page_type: string
           published_at?: string | null
           quality_score?: number | null
+          readability_score?: number | null
           related_slugs?: string[]
+          review_state?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scheduled_at?: string | null
+          schema_types?: string[] | null
+          seo_score?: number | null
+          similarity_score?: number | null
           slug: string
           status?: string
+          template_id?: string | null
           title?: string | null
           updated_at?: string
+          variables?: Json | null
           view_count?: number
           word_count?: number | null
         }
         Update: {
+          ai_prompt_version?: string | null
+          archived_at?: string | null
+          batch_id?: string | null
+          canonical_of?: string | null
           canonical_url?: string | null
           content?: Json
+          content_hash?: string | null
           course_id?: string | null
           created_at?: string
+          duplicate_score?: number | null
+          entity_id?: string | null
+          entity_id_secondary?: string | null
           error_message?: string | null
+          freshness_score?: number | null
           h1?: string | null
           id?: string
+          index_last_checked_at?: string | null
+          index_status?: string | null
           keywords?: string[]
           last_regenerated_at?: string | null
           location_id?: string | null
@@ -18960,20 +19220,51 @@ export type Database = {
           page_type?: string
           published_at?: string | null
           quality_score?: number | null
+          readability_score?: number | null
           related_slugs?: string[]
+          review_state?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scheduled_at?: string | null
+          schema_types?: string[] | null
+          seo_score?: number | null
+          similarity_score?: number | null
           slug?: string
           status?: string
+          template_id?: string | null
           title?: string | null
           updated_at?: string
+          variables?: Json | null
           view_count?: number
           word_count?: number | null
         }
         Relationships: [
           {
+            foreignKeyName: "pseo_pages_canonical_of_fkey"
+            columns: ["canonical_of"]
+            isOneToOne: false
+            referencedRelation: "pseo_pages"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "pseo_pages_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pseo_pages_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pseo_pages_entity_id_secondary_fkey"
+            columns: ["entity_id_secondary"]
+            isOneToOne: false
+            referencedRelation: "pseo_entities"
             referencedColumns: ["id"]
           },
           {
@@ -18983,7 +19274,172 @@ export type Database = {
             referencedRelation: "pseo_locations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "pseo_pages_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_templates"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      pseo_quality_reviews: {
+        Row: {
+          created_at: string | null
+          duplicate_score: number | null
+          grammar_score: number | null
+          id: string
+          internal_link_count: number | null
+          issues: Json | null
+          keyword_coverage: number | null
+          overall_score: number | null
+          page_id: string
+          readability_score: number | null
+          reviewer: string | null
+          schema_complete: boolean | null
+          seo_score: number | null
+          suggestions: Json | null
+          word_count: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          duplicate_score?: number | null
+          grammar_score?: number | null
+          id?: string
+          internal_link_count?: number | null
+          issues?: Json | null
+          keyword_coverage?: number | null
+          overall_score?: number | null
+          page_id: string
+          readability_score?: number | null
+          reviewer?: string | null
+          schema_complete?: boolean | null
+          seo_score?: number | null
+          suggestions?: Json | null
+          word_count?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          duplicate_score?: number | null
+          grammar_score?: number | null
+          id?: string
+          internal_link_count?: number | null
+          issues?: Json | null
+          keyword_coverage?: number | null
+          overall_score?: number | null
+          page_id?: string
+          readability_score?: number | null
+          reviewer?: string | null
+          schema_complete?: boolean | null
+          seo_score?: number | null
+          suggestions?: Json | null
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pseo_quality_reviews_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pseo_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pseo_settings: {
+        Row: {
+          auto_publish_threshold: number | null
+          batch_size: number | null
+          canonical_domain: string | null
+          daily_generation_limit: number | null
+          id: number
+          indexing_enabled: boolean | null
+          min_quality_score: number | null
+          rules: Json | null
+          sitemap_split_size: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          auto_publish_threshold?: number | null
+          batch_size?: number | null
+          canonical_domain?: string | null
+          daily_generation_limit?: number | null
+          id?: number
+          indexing_enabled?: boolean | null
+          min_quality_score?: number | null
+          rules?: Json | null
+          sitemap_split_size?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          auto_publish_threshold?: number | null
+          batch_size?: number | null
+          canonical_domain?: string | null
+          daily_generation_limit?: number | null
+          id?: number
+          indexing_enabled?: boolean | null
+          min_quality_score?: number | null
+          rules?: Json | null
+          sitemap_split_size?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      pseo_templates: {
+        Row: {
+          created_at: string | null
+          h1_pattern: string | null
+          id: string
+          is_active: boolean | null
+          key: string
+          meta_pattern: string | null
+          min_words: number | null
+          name: string
+          page_type: string
+          prompt_version: string | null
+          schema_types: string[] | null
+          sections: Json
+          title_pattern: string
+          updated_at: string | null
+          url_pattern: string
+          variables: Json
+        }
+        Insert: {
+          created_at?: string | null
+          h1_pattern?: string | null
+          id?: string
+          is_active?: boolean | null
+          key: string
+          meta_pattern?: string | null
+          min_words?: number | null
+          name: string
+          page_type: string
+          prompt_version?: string | null
+          schema_types?: string[] | null
+          sections?: Json
+          title_pattern: string
+          updated_at?: string | null
+          url_pattern: string
+          variables?: Json
+        }
+        Update: {
+          created_at?: string | null
+          h1_pattern?: string | null
+          id?: string
+          is_active?: boolean | null
+          key?: string
+          meta_pattern?: string | null
+          min_words?: number | null
+          name?: string
+          page_type?: string
+          prompt_version?: string | null
+          schema_types?: string[] | null
+          sections?: Json
+          title_pattern?: string
+          updated_at?: string | null
+          url_pattern?: string
+          variables?: Json
+        }
+        Relationships: []
       }
       rate_limit_buckets: {
         Row: {
