@@ -39,9 +39,9 @@ const ChatInput = z.object({
   tools: z.array(z.object({
     name: z.string(),
     description: z.string(),
-    parameters: z.record(z.unknown()),
+    parameters: z.any(),
   })).optional(),
-  responseSchema: z.record(z.unknown()).optional(),
+  responseSchema: z.any().optional(),
 });
 
 export const aiChat = createServerFn({ method: "POST" })
