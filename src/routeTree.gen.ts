@@ -72,6 +72,7 @@ import { Route as MyIndexRouteImport } from './routes/my.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-brand.index'
 import { Route as EntitiesIndexRouteImport } from './routes/entities.index'
+import { Route as CareerHubIndexRouteImport } from './routes/career-hub.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AuthorsIndexRouteImport } from './routes/authors.index'
@@ -117,6 +118,7 @@ import { Route as EntitiesSlugRouteImport } from './routes/entities.$slug'
 import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
 import { Route as CareerMapsSlugRouteImport } from './routes/career-maps.$slug'
+import { Route as CareerHubTypeRouteImport } from './routes/career-hub.$type'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 import { Route as AiAgentsIdRouteImport } from './routes/ai-agents.$id'
@@ -142,6 +144,7 @@ import { Route as TopicsPillarClusterRouteImport } from './routes/topics.$pillar
 import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
 import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collections.$slug'
+import { Route as CareerHubTypeSlugRouteImport } from './routes/career-hub.$type.$slug'
 import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/transcribe'
 import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
@@ -268,6 +271,7 @@ import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
+import { Route as AuthenticatedAdminCareerHubRouteImport } from './routes/_authenticated/admin.career-hub'
 import { Route as AuthenticatedAdminBlogOsRouteImport } from './routes/_authenticated/admin.blog-os'
 import { Route as AuthenticatedAdminAuthorsRouteImport } from './routes/_authenticated/admin.authors'
 import { Route as AuthenticatedAdminAuthDiagnosticsRouteImport } from './routes/_authenticated/admin.auth-diagnostics'
@@ -772,6 +776,11 @@ const EntitiesIndexRoute = EntitiesIndexRouteImport.update({
   path: '/entities/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CareerHubIndexRoute = CareerHubIndexRouteImport.update({
+  id: '/career-hub/',
+  path: '/career-hub/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CampusAmbassadorIndexRoute = CampusAmbassadorIndexRouteImport.update({
   id: '/campus-ambassador/',
   path: '/campus-ambassador/',
@@ -998,6 +1007,11 @@ const CareerMapsSlugRoute = CareerMapsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => CareerMapsRoute,
 } as any)
+const CareerHubTypeRoute = CareerHubTypeRouteImport.update({
+  id: '/career-hub/$type',
+  path: '/career-hub/$type',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -1127,6 +1141,11 @@ const LearnCollectionsSlugRoute = LearnCollectionsSlugRouteImport.update({
   id: '/collections/$slug',
   path: '/collections/$slug',
   getParentRoute: () => LearnRoute,
+} as any)
+const CareerHubTypeSlugRoute = CareerHubTypeSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CareerHubTypeRoute,
 } as any)
 const ApiVoiceTranscribeRoute = ApiVoiceTranscribeRouteImport.update({
   id: '/api/voice/transcribe',
@@ -1870,6 +1889,12 @@ const AuthenticatedAdminCategoriesRoute =
   AuthenticatedAdminCategoriesRouteImport.update({
     id: '/categories',
     path: '/categories',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCareerHubRoute =
+  AuthenticatedAdminCareerHubRouteImport.update({
+    id: '/career-hub',
+    path: '/career-hub',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminBlogOsRoute =
@@ -3055,6 +3080,7 @@ export interface FileRoutesByFullPath {
   '/ai-agents/$id': typeof AiAgentsIdRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/career-hub/$type': typeof CareerHubTypeRouteWithChildren
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
@@ -3100,6 +3126,7 @@ export interface FileRoutesByFullPath {
   '/authors/': typeof AuthorsIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
+  '/career-hub/': typeof CareerHubIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
@@ -3124,6 +3151,7 @@ export interface FileRoutesByFullPath {
   '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
+  '/admin/career-hub': typeof AuthenticatedAdminCareerHubRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -3250,6 +3278,7 @@ export interface FileRoutesByFullPath {
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -3496,6 +3525,7 @@ export interface FileRoutesByTo {
   '/ai-agents/$id': typeof AiAgentsIdRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/career-hub/$type': typeof CareerHubTypeRouteWithChildren
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
@@ -3540,6 +3570,7 @@ export interface FileRoutesByTo {
   '/authors': typeof AuthorsIndexRoute
   '/blog': typeof BlogIndexRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
+  '/career-hub': typeof CareerHubIndexRoute
   '/entities': typeof EntitiesIndexRoute
   '/launch-your-brand': typeof LaunchYourBrandIndexRoute
   '/learn': typeof LearnIndexRoute
@@ -3560,6 +3591,7 @@ export interface FileRoutesByTo {
   '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
+  '/admin/career-hub': typeof AuthenticatedAdminCareerHubRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -3683,6 +3715,7 @@ export interface FileRoutesByTo {
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -3937,6 +3970,7 @@ export interface FileRoutesById {
   '/ai-agents/$id': typeof AiAgentsIdRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/career-hub/$type': typeof CareerHubTypeRouteWithChildren
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/compare/$slug': typeof CompareSlugRoute
@@ -3982,6 +4016,7 @@ export interface FileRoutesById {
   '/authors/': typeof AuthorsIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
+  '/career-hub/': typeof CareerHubIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/launch-your-brand/': typeof LaunchYourBrandIndexRoute
   '/learn/': typeof LearnIndexRoute
@@ -4006,6 +4041,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/_authenticated/admin/authors': typeof AuthenticatedAdminAuthorsRoute
   '/_authenticated/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
+  '/_authenticated/admin/career-hub': typeof AuthenticatedAdminCareerHubRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -4132,6 +4168,7 @@ export interface FileRoutesById {
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -4386,6 +4423,7 @@ export interface FileRouteTypes {
     | '/ai-agents/$id'
     | '/authors/$slug'
     | '/blog/$slug'
+    | '/career-hub/$type'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
     | '/compare/$slug'
@@ -4431,6 +4469,7 @@ export interface FileRouteTypes {
     | '/authors/'
     | '/blog/'
     | '/campus-ambassador/'
+    | '/career-hub/'
     | '/entities/'
     | '/launch-your-brand/'
     | '/learn/'
@@ -4455,6 +4494,7 @@ export interface FileRouteTypes {
     | '/admin/auth-diagnostics'
     | '/admin/authors'
     | '/admin/blog-os'
+    | '/admin/career-hub'
     | '/admin/categories'
     | '/admin/content'
     | '/admin/content-intelligence'
@@ -4581,6 +4621,7 @@ export interface FileRouteTypes {
     | '/api/v1/version'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/career-hub/$type/$slug'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -4827,6 +4868,7 @@ export interface FileRouteTypes {
     | '/ai-agents/$id'
     | '/authors/$slug'
     | '/blog/$slug'
+    | '/career-hub/$type'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
     | '/compare/$slug'
@@ -4871,6 +4913,7 @@ export interface FileRouteTypes {
     | '/authors'
     | '/blog'
     | '/campus-ambassador'
+    | '/career-hub'
     | '/entities'
     | '/launch-your-brand'
     | '/learn'
@@ -4891,6 +4934,7 @@ export interface FileRouteTypes {
     | '/admin/auth-diagnostics'
     | '/admin/authors'
     | '/admin/blog-os'
+    | '/admin/career-hub'
     | '/admin/categories'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
@@ -5014,6 +5058,7 @@ export interface FileRouteTypes {
     | '/api/v1/version'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/career-hub/$type/$slug'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -5267,6 +5312,7 @@ export interface FileRouteTypes {
     | '/ai-agents/$id'
     | '/authors/$slug'
     | '/blog/$slug'
+    | '/career-hub/$type'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
     | '/compare/$slug'
@@ -5312,6 +5358,7 @@ export interface FileRouteTypes {
     | '/authors/'
     | '/blog/'
     | '/campus-ambassador/'
+    | '/career-hub/'
     | '/entities/'
     | '/launch-your-brand/'
     | '/learn/'
@@ -5336,6 +5383,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/auth-diagnostics'
     | '/_authenticated/admin/authors'
     | '/_authenticated/admin/blog-os'
+    | '/_authenticated/admin/career-hub'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/content'
     | '/_authenticated/admin/content-intelligence'
@@ -5462,6 +5510,7 @@ export interface FileRouteTypes {
     | '/api/v1/version'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/career-hub/$type/$slug'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -5708,6 +5757,7 @@ export interface RootRouteChildren {
   WorkspaceRoute: typeof WorkspaceRouteWithChildren
   AuthorsSlugRoute: typeof AuthorsSlugRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  CareerHubTypeRoute: typeof CareerHubTypeRouteWithChildren
   EntitiesSlugRoute: typeof EntitiesSlugRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
@@ -5719,6 +5769,7 @@ export interface RootRouteChildren {
   AuthorsIndexRoute: typeof AuthorsIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
   CampusAmbassadorIndexRoute: typeof CampusAmbassadorIndexRoute
+  CareerHubIndexRoute: typeof CareerHubIndexRoute
   EntitiesIndexRoute: typeof EntitiesIndexRoute
   LaunchYourBrandIndexRoute: typeof LaunchYourBrandIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
@@ -6188,6 +6239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EntitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/career-hub/': {
+      id: '/career-hub/'
+      path: '/career-hub'
+      fullPath: '/career-hub/'
+      preLoaderRoute: typeof CareerHubIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/campus-ambassador/': {
       id: '/campus-ambassador/'
       path: '/campus-ambassador'
@@ -6503,6 +6561,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CareerMapsSlugRouteImport
       parentRoute: typeof CareerMapsRoute
     }
+    '/career-hub/$type': {
+      id: '/career-hub/$type'
+      path: '/career-hub/$type'
+      fullPath: '/career-hub/$type'
+      preLoaderRoute: typeof CareerHubTypeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -6677,6 +6742,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/learn/collections/$slug'
       preLoaderRoute: typeof LearnCollectionsSlugRouteImport
       parentRoute: typeof LearnRoute
+    }
+    '/career-hub/$type/$slug': {
+      id: '/career-hub/$type/$slug'
+      path: '/$slug'
+      fullPath: '/career-hub/$type/$slug'
+      preLoaderRoute: typeof CareerHubTypeSlugRouteImport
+      parentRoute: typeof CareerHubTypeRoute
     }
     '/api/voice/transcribe': {
       id: '/api/voice/transcribe'
@@ -7558,6 +7630,13 @@ declare module '@tanstack/react-router' {
       path: '/categories'
       fullPath: '/admin/categories'
       preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/career-hub': {
+      id: '/_authenticated/admin/career-hub'
+      path: '/career-hub'
+      fullPath: '/admin/career-hub'
+      preLoaderRoute: typeof AuthenticatedAdminCareerHubRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/blog-os': {
@@ -9240,6 +9319,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAuthDiagnosticsRoute: typeof AuthenticatedAdminAuthDiagnosticsRoute
   AuthenticatedAdminAuthorsRoute: typeof AuthenticatedAdminAuthorsRoute
   AuthenticatedAdminBlogOsRoute: typeof AuthenticatedAdminBlogOsRoute
+  AuthenticatedAdminCareerHubRoute: typeof AuthenticatedAdminCareerHubRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -9341,6 +9421,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminAuthDiagnosticsRoute,
   AuthenticatedAdminAuthorsRoute: AuthenticatedAdminAuthorsRoute,
   AuthenticatedAdminBlogOsRoute: AuthenticatedAdminBlogOsRoute,
+  AuthenticatedAdminCareerHubRoute: AuthenticatedAdminCareerHubRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
   AuthenticatedAdminContentIntelligenceRoute:
@@ -10173,6 +10254,18 @@ const WorkspaceRouteWithChildren = WorkspaceRoute._addFileChildren(
   WorkspaceRouteChildren,
 )
 
+interface CareerHubTypeRouteChildren {
+  CareerHubTypeSlugRoute: typeof CareerHubTypeSlugRoute
+}
+
+const CareerHubTypeRouteChildren: CareerHubTypeRouteChildren = {
+  CareerHubTypeSlugRoute: CareerHubTypeSlugRoute,
+}
+
+const CareerHubTypeRouteWithChildren = CareerHubTypeRoute._addFileChildren(
+  CareerHubTypeRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -10231,6 +10324,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorkspaceRoute: WorkspaceRouteWithChildren,
   AuthorsSlugRoute: AuthorsSlugRoute,
   BlogSlugRoute: BlogSlugRoute,
+  CareerHubTypeRoute: CareerHubTypeRouteWithChildren,
   EntitiesSlugRoute: EntitiesSlugRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
@@ -10242,6 +10336,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthorsIndexRoute: AuthorsIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
   CampusAmbassadorIndexRoute: CampusAmbassadorIndexRoute,
+  CareerHubIndexRoute: CareerHubIndexRoute,
   EntitiesIndexRoute: EntitiesIndexRoute,
   LaunchYourBrandIndexRoute: LaunchYourBrandIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,

@@ -8,7 +8,7 @@ import { CAREER_HUB_TYPES, type CareerHubTypeId } from "@/lib/career-hub/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/career-hub")({
+export const Route = createFileRoute("/career-hub/")({
   component: CareerHubIndex,
   head: () => ({
     meta: [
