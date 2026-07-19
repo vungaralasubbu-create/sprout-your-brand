@@ -81,7 +81,7 @@ function ReviewsPage() {
 
       <div className="flex flex-wrap items-center gap-2">
         {(["pending", "approved", "spam", "rejected", "archived", "all"] as Status[]).map((k) => (
-          <Button key={k} size="sm" variant={status === k ? "default" : "outline"} onClick={() => setStatus(k)}>
+          <Button key={k} size="sm" variant={status === k ? "primary" : "outline"} onClick={() => setStatus(k)}>
             {k[0].toUpperCase() + k.slice(1)}
           </Button>
         ))}
@@ -105,7 +105,7 @@ function ReviewsPage() {
                   <div className="font-semibold flex items-center gap-2">
                     {r.reviewer_name}
                     {r.video_url && <Video className="w-4 h-4 text-primary" />}
-                    {r.featured && <Badge variant="secondary">Featured</Badge>}
+                    {r.featured && <Badge variant="featured">Featured</Badge>}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {r.target_label} · {r.company_name || "—"} · {new Date(r.created_at).toLocaleDateString()}
