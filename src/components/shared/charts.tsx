@@ -1,21 +1,7 @@
-import * as React from "react";
-import {
-  Area,
-  AreaChart,
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-
+// Lazy-loaded chart wrappers. Recharts is ~100KB gzipped; keep it out of
+// the initial bundle for every route that only conditionally shows charts.
+import { lazy, Suspense, type ComponentType } from "react";
 import { cn } from "@/lib/utils";
-
-const gridStroke = "color-mix(in oklab, var(--border) 100%, transparent)";
 
 interface ChartProps {
   data: Record<string, number | string>[];
@@ -26,109 +12,36 @@ interface ChartProps {
   className?: string;
 }
 
-const brand = "var(--primary)";
+const RevenueAreaChartLazy = lazy(() =>
+  import("./charts-impl").then((m) => ({ default: m.RevenueAreaChart })),
+);
+const EnrollmentBarChartLazy = lazy(() =>
+  import("./charts-impl").then((m) => ({ default: m.EnrollmentBarChart })),
+);
+const TrafficLineChartLazy = lazy(() =>
+  import("./charts-impl").then((m) => ({ default: m.TrafficLineChart })),
+);
 
-export function RevenueAreaChart({
-  data,
-  dataKey,
-  xKey = "name",
-  color = brand,
-  height = 240,
-  className,
-}: ChartProps) {
+function ChartSkeleton({ height = 240, className }: { height?: number; className?: string }) {
   return (
-    <div className={cn("w-full", className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ left: -20, right: 8, top: 8, bottom: 0 }}>
-          <defs>
-            <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.32} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid stroke={gridStroke} vertical={false} strokeDasharray="4 4" />
-          <XAxis dataKey={xKey} stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-          <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-          <Tooltip
-            contentStyle={{
-              background: "var(--popover)",
-              border: "1px solid var(--border)",
-              borderRadius: 10,
-              fontSize: 12,
-            }}
-            labelStyle={{ color: "var(--muted-foreground)" }}
-          />
-          <Area type="monotone" dataKey={dataKey} stroke={color} strokeWidth={2.5} fill="url(#revFill)" />
-        </AreaChart>
-      </ResponsiveContainer>
-    </div>
+    <div
+      className={cn("w-full animate-pulse rounded-lg bg-muted/30", className)}
+      style={{ height }}
+      aria-hidden
+    />
   );
 }
 
-export function EnrollmentBarChart({
-  data,
-  dataKey,
-  xKey = "name",
-  color = "var(--brand-lime)",
-  height = 220,
-  className,
-}: ChartProps) {
-  return (
-    <div className={cn("w-full", className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ left: -20, right: 8, top: 8, bottom: 0 }}>
-          <CartesianGrid stroke={gridStroke} vertical={false} strokeDasharray="4 4" />
-          <XAxis dataKey={xKey} stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-          <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-          <Tooltip
-            cursor={{ fill: "var(--surface-2)" }}
-            contentStyle={{
-              background: "var(--popover)",
-              border: "1px solid var(--border)",
-              borderRadius: 10,
-              fontSize: 12,
-            }}
-          />
-          <Bar dataKey={dataKey} fill={color} radius={[6, 6, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
+function withLazy(Cmp: ComponentType<ChartProps>) {
+  return function LazyChart(props: ChartProps) {
+    return (
+      <Suspense fallback={<ChartSkeleton height={props.height} className={props.className} />}>
+        <Cmp {...props} />
+      </Suspense>
+    );
+  };
 }
 
-export function TrafficLineChart({
-  data,
-  dataKey,
-  xKey = "name",
-  color = "var(--brand-violet)",
-  height = 220,
-  className,
-}: ChartProps) {
-  return (
-    <div className={cn("w-full", className)} style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ left: -20, right: 8, top: 8, bottom: 0 }}>
-          <CartesianGrid stroke={gridStroke} vertical={false} strokeDasharray="4 4" />
-          <XAxis dataKey={xKey} stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-          <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-          <Tooltip
-            contentStyle={{
-              background: "var(--popover)",
-              border: "1px solid var(--border)",
-              borderRadius: 10,
-              fontSize: 12,
-            }}
-          />
-          <Line
-            type="monotone"
-            dataKey={dataKey}
-            stroke={color}
-            strokeWidth={2.5}
-            dot={{ r: 3, fill: color, strokeWidth: 0 }}
-            activeDot={{ r: 5 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
-}
+export const RevenueAreaChart = withLazy(RevenueAreaChartLazy);
+export const EnrollmentBarChart = withLazy(EnrollmentBarChartLazy);
+export const TrafficLineChart = withLazy(TrafficLineChartLazy);

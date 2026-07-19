@@ -14,12 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsProvider } from "@/components/analytics/analytics-provider";
 import { RouteTracker } from "@/components/shared/route-tracker";
-import { StickyActionBar } from "@/components/shared/sticky-action-bar";
-
-import { SmartLeadCard } from "@/components/leads/smart-lead-card";
-import { LeadFormDialog } from "@/components/leads/lead-form-dialog";
-import { GlobalPalette } from "@/components/command-center/global-palette";
-import { SalesAgentWidget } from "@/components/sales-agent/sales-agent-widget";
+import { RootOverlays } from "@/components/shared/root-overlays";
 
 import { PreviewProvider } from "@/lib/preview/preview-context";
 import { PreviewBanner } from "@/components/admin/preview-banner";
@@ -214,12 +209,7 @@ function RootComponent() {
           <AnalyticsProvider />
           <RouteTracker />
           <Outlet />
-          <StickyActionBar />
-          <SmartLeadCard />
-          <LeadFormDialog />
-
-          <GlobalPalette />
-          <SalesAgentWidget />
+          <RootOverlays />
           <Toaster richColors position="top-right" />
         </PreviewProvider>
       </PartnerEarningsCopyProvider>
