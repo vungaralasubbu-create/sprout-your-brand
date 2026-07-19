@@ -151,8 +151,8 @@ type PrepareResult =
 export const prepareContactEnquiry = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => PrepareInputSchema.parse(d))
   .handler(async ({ data }): Promise<PrepareResult> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) return { ok: false, reason: "AI enquiry preparation is not available." };
+    const _unused = process.env.SUPABASE_URL;
+    if (!_unused) return { ok: false, reason: "AI enquiry preparation is not available." };
 
     const safe = redactSensitiveText(data.description).slice(0, 4000);
 
@@ -173,24 +173,16 @@ export const prepareContactEnquiry = createServerFn({ method: "POST" })
     ].join("\n");
 
     try {
-      const res = await fetch(`${BASE_URL}/chat/completions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
-        body: JSON.stringify({
-          model: DEFAULT_MODEL,
-          messages: [
-            { role: "system", content: system },
-            { role: "user", content: wrapVisitor(safe) },
-          ],
-          temperature: 0.2,
-          response_format: { type: "json_object" },
-        }),
+      const raw = await callAiChatCompletions({
+        model: DEFAULT_MODEL,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: wrapVisitor(safe) },
+        ],
+        temperature: 0.2,
+        response_format: { type: "json_object" },
       });
-      if (res.status === 429) return { ok: false, reason: "Glintr is busy — please retry shortly." };
-      if (!res.ok) return { ok: false, reason: "Enquiry preparation is temporarily unavailable." };
-      const json = await res.json();
-      const raw = json?.choices?.[0]?.message?.content ?? "{}";
-      const parsed = JSON.parse(raw);
+      const parsed = JSON.parse(raw || "{}");
       const title = redactSensitiveText(String(parsed.title ?? "").trim()).slice(0, 120);
       const summary = redactSensitiveText(String(parsed.summary ?? "").trim()).slice(0, 2400);
       const intent = normaliseContactIntent(parsed.intent ?? data.intent);
@@ -198,7 +190,9 @@ export const prepareContactEnquiry = createServerFn({ method: "POST" })
       const partnerIssue = Boolean(parsed.partnerIssue);
       if (!title || !summary) return { ok: false, reason: "Could not prepare a clear enquiry." };
       return { ok: true, title, summary, intent, studentIssue, partnerIssue };
-    } catch {
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "";
+      if (msg.includes("rate limit")) return { ok: false, reason: "Glintr is busy — please retry shortly." };
       return { ok: false, reason: "Enquiry preparation is temporarily unavailable." };
     }
   });
