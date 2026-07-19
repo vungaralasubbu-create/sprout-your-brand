@@ -245,8 +245,10 @@ function AuthPage() {
     const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
     if (!email.trim()) nextErrors.email = "Email is required.";
     else if (!emailOk) nextErrors.email = "Enter a valid email address.";
-    if (!password) nextErrors.password = "Password is required.";
-    else if (password.length < 6) nextErrors.password = "Password must be at least 6 characters.";
+    if (mode === "signup") {
+      if (!password) nextErrors.password = "Password is required.";
+      else if (password.length < 6) nextErrors.password = "Password must be at least 6 characters.";
+    }
 
     const needsMobile = !(mode === "signin" && isTrustedEmail(email));
     if (needsMobile) {
