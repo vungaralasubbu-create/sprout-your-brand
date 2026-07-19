@@ -12,7 +12,7 @@ export type GeoRecommendation = {
   kind: string;
   title: string;
   body: string;
-  payload?: Record<string, unknown>;
+  payload?: any;
   priority: "low" | "medium" | "high";
   impact: number;
 };

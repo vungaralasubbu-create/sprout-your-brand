@@ -6,7 +6,7 @@ import { GEO_SCHEMA_TYPES } from "./constants";
 
 export type SchemaSuggestion = {
   schema_type: (typeof GEO_SCHEMA_TYPES)[number] | string;
-  json_ld: Record<string, unknown>;
+  json_ld: any;
 };
 
 const SYSTEM = `You are the Glintr GEO Schema Recommender.
