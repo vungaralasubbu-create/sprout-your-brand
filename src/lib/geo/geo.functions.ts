@@ -536,10 +536,10 @@ export const getDashboard = createServerFn({ method: "GET" })
           .order("day", { ascending: false })
           .limit(60),
       ]);
-    const rows = scores.data ?? [];
-    const avg = (k: keyof (typeof rows)[number]) =>
+    const rows: any[] = scores.data ?? [];
+    const avg = (k: string) =>
       rows.length
-        ? rows.reduce((s, r) => s + (Number(r[k]) || 0), 0) / rows.length
+        ? rows.reduce((s: number, r: any) => s + (Number(r[k]) || 0), 0) / rows.length
         : 0;
     return {
       totals: {
@@ -663,10 +663,10 @@ export const snapshotAnalytics = createServerFn({ method: "POST" })
         )
         .limit(5000),
     ]);
-    const rows = scores.data ?? [];
+    const rows: any[] = scores.data ?? [];
     const avg = (k: string) =>
       rows.length
-        ? rows.reduce((s, r: any) => s + (Number(r[k]) || 0), 0) / rows.length
+        ? rows.reduce((s: number, r: any) => s + (Number(r[k]) || 0), 0) / rows.length
         : 0;
     const day = new Date().toISOString().slice(0, 10);
     const recsList = recs.data ?? [];
