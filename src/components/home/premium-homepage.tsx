@@ -35,17 +35,34 @@ import { GlintrLogo } from "@/components/shared/logo";
 import { cn } from "@/lib/utils";
 import mark from "@/assets/glintr-mark.png.asset.json";
 import { useReveal, usePrefersReducedMotion } from "@/hooks/use-motion";
-import { ThreeJourneys, EarnSpotlight } from "@/components/home/dimensional-sections";
 import { AIWorkspaceVisual, type AIWorkspaceVariant } from "@/components/home/ai-workspace-visual";
 import { GlintrDimension } from "@/components/home/glintr-dimension";
 import { HeroMobileCarousel } from "@/components/home/hero-mobile-carousel";
-import { WhoAreYou } from "@/components/home/who-are-you";
 import { partnerEarningsCopy } from "@/data/partner-earnings-copy";
-import {
-  GlintrWorld,
-  CertificationEcosystem,
-  LearnerInstitutions,
-} from "@/components/home/glintr-world-sections";
+
+/* Below-the-fold heavy sections — split into their own chunks and streamed in via Suspense. */
+const ThreeJourneys = React.lazy(() =>
+  import("@/components/home/dimensional-sections").then((m) => ({ default: m.ThreeJourneys })),
+);
+const EarnSpotlight = React.lazy(() =>
+  import("@/components/home/dimensional-sections").then((m) => ({ default: m.EarnSpotlight })),
+);
+const WhoAreYou = React.lazy(() =>
+  import("@/components/home/who-are-you").then((m) => ({ default: m.WhoAreYou })),
+);
+const GlintrWorld = React.lazy(() =>
+  import("@/components/home/glintr-world-sections").then((m) => ({ default: m.GlintrWorld })),
+);
+const CertificationEcosystem = React.lazy(() =>
+  import("@/components/home/glintr-world-sections").then((m) => ({ default: m.CertificationEcosystem })),
+);
+const LearnerInstitutions = React.lazy(() =>
+  import("@/components/home/glintr-world-sections").then((m) => ({ default: m.LearnerInstitutions })),
+);
+
+function SectionFallback() {
+  return <div aria-hidden className="min-h-[320px]" />;
+}
 
 
 /* --------------------------------------------------------------------- *
@@ -1847,28 +1864,38 @@ export function PremiumHomepage() {
   return (
     <>
       <HeroUniverse />
-      <ThreeJourneys />
+      <React.Suspense fallback={<SectionFallback />}>
+        <ThreeJourneys />
+      </React.Suspense>
       <MotionStatement />
-      <EarnSpotlight />
+      <React.Suspense fallback={<SectionFallback />}>
+        <EarnSpotlight />
+      </React.Suspense>
       <TechnologyLandscape />
       <MotionDivider variant="line" />
       <ProgramUniverse />
       <GenerativeAISpotlight />
-      <CertificationEcosystem />
-      <LearnerInstitutions />
+      <React.Suspense fallback={<SectionFallback />}>
+        <CertificationEcosystem />
+        <LearnerInstitutions />
+      </React.Suspense>
       <LearningDirection />
       <MotionDivider variant="nodes" />
       <CampusCommunity />
       <LearningJourney />
       <SkillsNetwork />
       <WhyGlintr />
-      <WhoAreYou />
+      <React.Suspense fallback={<SectionFallback />}>
+        <WhoAreYou />
+      </React.Suspense>
       <MotionDivider variant="line" />
 
       <EarnWithUs />
       <RevenueStory />
       <LaunchYourBrand />
-      <GlintrWorld />
+      <React.Suspense fallback={<SectionFallback />}>
+        <GlintrWorld />
+      </React.Suspense>
       <GlintrNumbers />
       <FinalBrandStatement />
       <PreFooterPathways />
