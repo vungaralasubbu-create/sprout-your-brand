@@ -251,7 +251,7 @@ export const processProgrammaticJob = createServerFn({ method: "POST" })
     let completed = job.completed_items;
     let failed = job.failed_items;
     const outputs = [...(job.output_blog_ids ?? [])];
-    const errors = [...(job.error_log ?? [])];
+    const errors: any[] = Array.isArray(job.error_log) ? [...(job.error_log as any[])] : [];
 
     for (const item of slice) {
       try {
