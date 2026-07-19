@@ -17,7 +17,7 @@ export function BlockPalette() {
       </div>
       <div className="flex-1 overflow-auto p-3 space-y-4">
         {BLOCK_GROUPS.map((g) => {
-          const items = g.blocks.filter((b) => !query || b.label.toLowerCase().includes(query) || b.description.toLowerCase().includes(query));
+          const items = g.blocks.filter((b) => !query || b.label.toLowerCase().includes(query) || (b.description ?? "").toLowerCase().includes(query));
           if (!items.length) return null;
           return (
             <div key={g.key}>

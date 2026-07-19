@@ -306,6 +306,7 @@ import { Route as AuthenticatedAdminContentIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminContentIntelligenceIndexRouteImport } from './routes/_authenticated/admin.content-intelligence.index'
 import { Route as AuthenticatedAdminBlogsIndexRouteImport } from './routes/_authenticated/admin.blogs.index'
 import { Route as AuthenticatedAdminAutomationIndexRouteImport } from './routes/_authenticated/admin.automation.index'
+import { Route as AuthenticatedAdminAutomationHubIndexRouteImport } from './routes/_authenticated/admin/automation-hub/index'
 import { Route as AuthenticatedAdminAiosIndexRouteImport } from './routes/_authenticated/admin.aios.index'
 import { Route as AuthenticatedAdminAiSearchIndexRouteImport } from './routes/_authenticated/admin.ai-search.index'
 import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_authenticated/admin.ai-content.index'
@@ -315,6 +316,7 @@ import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/progra
 import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/public/webhooks/cashfree'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
 import { Route as ApiPublicHooksBrainTickRouteImport } from './routes/api/public/hooks/brain-tick'
+import { Route as ApiPublicHooksAutomationTickRouteImport } from './routes/api/public/hooks/automation-tick'
 import { Route as ApiPublicEmailTickRouteImport } from './routes/api/public/email/tick'
 import { Route as ApiPublicAiSalesWebhookRouteImport } from './routes/api/public/ai-sales/webhook'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
@@ -431,6 +433,7 @@ import { Route as AuthenticatedAdminAiAgentsOrchestratorRouteImport } from './ro
 import { Route as AuthenticatedAdminAiAgentsNewRouteImport } from './routes/_authenticated/admin.ai-agents.new'
 import { Route as AuthenticatedAdminAiAgentsAnalyticsRouteImport } from './routes/_authenticated/admin.ai-agents.analytics'
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
+import { Route as AuthenticatedAdminAutomationHubWorkflowsIndexRouteImport } from './routes/_authenticated/admin/automation-hub/workflows.index'
 import { Route as ApiV1CertificatesVerifyCodeRouteImport } from './routes/api/v1/certificates.verify.$code'
 import { Route as ApiPublicEngageWebhooksProviderRouteImport } from './routes/api/public/engage/webhooks/$provider'
 import { Route as ApiPublicEngageUnsubscribeTokenRouteImport } from './routes/api/public/engage/unsubscribe.$token'
@@ -442,6 +445,7 @@ import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from 
 import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport } from './routes/_authenticated/ambassador.marketing-resources.programs.$slug'
 import { Route as AuthenticatedAdminCoursesIdAiStudioRouteImport } from './routes/_authenticated/admin.courses.$id.ai-studio'
 import { Route as AuthenticatedAdminContentArticlesIdRouteImport } from './routes/_authenticated/admin.content.articles.$id'
+import { Route as AuthenticatedAdminAutomationHubWorkflowsIdRouteImport } from './routes/_authenticated/admin/automation-hub/workflows.$id'
 import { Route as AuthenticatedStudentInternshipIdTasksTaskIdRouteImport } from './routes/_authenticated/student.internship.$id.tasks.$taskId'
 import { Route as AuthenticatedStudentCareerInterviewIdReportRouteImport } from './routes/_authenticated/student.career.interview.$id.report'
 
@@ -2088,6 +2092,12 @@ const AuthenticatedAdminAutomationIndexRoute =
     path: '/automation/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminAutomationHubIndexRoute =
+  AuthenticatedAdminAutomationHubIndexRouteImport.update({
+    id: '/automation-hub/',
+    path: '/automation-hub/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAiosIndexRoute =
   AuthenticatedAdminAiosIndexRouteImport.update({
     id: '/',
@@ -2140,6 +2150,12 @@ const ApiPublicHooksBrainTickRoute = ApiPublicHooksBrainTickRouteImport.update({
   path: '/api/public/hooks/brain-tick',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksAutomationTickRoute =
+  ApiPublicHooksAutomationTickRouteImport.update({
+    id: '/api/public/hooks/automation-tick',
+    path: '/api/public/hooks/automation-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicEmailTickRoute = ApiPublicEmailTickRouteImport.update({
   id: '/api/public/email/tick',
   path: '/api/public/email/tick',
@@ -2834,6 +2850,12 @@ const AuthenticatedAdminContentArticlesIndexRoute =
     path: '/articles/',
     getParentRoute: () => AuthenticatedAdminContentRoute,
   } as any)
+const AuthenticatedAdminAutomationHubWorkflowsIndexRoute =
+  AuthenticatedAdminAutomationHubWorkflowsIndexRouteImport.update({
+    id: '/automation-hub/workflows/',
+    path: '/automation-hub/workflows/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const ApiV1CertificatesVerifyCodeRoute =
   ApiV1CertificatesVerifyCodeRouteImport.update({
     id: '/api/v1/certificates/verify/$code',
@@ -2899,6 +2921,12 @@ const AuthenticatedAdminContentArticlesIdRoute =
     id: '/articles/$id',
     path: '/articles/$id',
     getParentRoute: () => AuthenticatedAdminContentRoute,
+  } as any)
+const AuthenticatedAdminAutomationHubWorkflowsIdRoute =
+  AuthenticatedAdminAutomationHubWorkflowsIdRouteImport.update({
+    id: '/automation-hub/workflows/$id',
+    path: '/automation-hub/workflows/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedStudentInternshipIdTasksTaskIdRoute =
   AuthenticatedStudentInternshipIdTasksTaskIdRouteImport.update({
@@ -3296,6 +3324,7 @@ export interface FileRoutesByFullPath {
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
+  '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
@@ -3305,6 +3334,7 @@ export interface FileRoutesByFullPath {
   '/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
+  '/admin/automation-hub/': typeof AuthenticatedAdminAutomationHubIndexRoute
   '/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
   '/admin/blogs/': typeof AuthenticatedAdminBlogsIndexRoute
   '/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
@@ -3334,6 +3364,7 @@ export interface FileRoutesByFullPath {
   '/student/projects/': typeof AuthenticatedStudentProjectsIndexRoute
   '/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
+  '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -3345,6 +3376,7 @@ export interface FileRoutesByFullPath {
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
+  '/admin/automation-hub/workflows/': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
@@ -3718,6 +3750,7 @@ export interface FileRoutesByTo {
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
+  '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
@@ -3727,6 +3760,7 @@ export interface FileRoutesByTo {
   '/admin/ai-content': typeof AuthenticatedAdminAiContentIndexRoute
   '/admin/ai-search': typeof AuthenticatedAdminAiSearchIndexRoute
   '/admin/aios': typeof AuthenticatedAdminAiosIndexRoute
+  '/admin/automation-hub': typeof AuthenticatedAdminAutomationHubIndexRoute
   '/admin/automation': typeof AuthenticatedAdminAutomationIndexRoute
   '/admin/blogs': typeof AuthenticatedAdminBlogsIndexRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceIndexRoute
@@ -3756,6 +3790,7 @@ export interface FileRoutesByTo {
   '/student/projects': typeof AuthenticatedStudentProjectsIndexRoute
   '/student/support': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course': typeof ProgramsCategoryCourseIndexRoute
+  '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -3767,6 +3802,7 @@ export interface FileRoutesByTo {
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
+  '/admin/automation-hub/workflows': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/admin/content/articles': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
@@ -4156,6 +4192,7 @@ export interface FileRoutesById {
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
+  '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
@@ -4165,6 +4202,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/ai-content/': typeof AuthenticatedAdminAiContentIndexRoute
   '/_authenticated/admin/ai-search/': typeof AuthenticatedAdminAiSearchIndexRoute
   '/_authenticated/admin/aios/': typeof AuthenticatedAdminAiosIndexRoute
+  '/_authenticated/admin/automation-hub/': typeof AuthenticatedAdminAutomationHubIndexRoute
   '/_authenticated/admin/automation/': typeof AuthenticatedAdminAutomationIndexRoute
   '/_authenticated/admin/blogs/': typeof AuthenticatedAdminBlogsIndexRoute
   '/_authenticated/admin/content-intelligence/': typeof AuthenticatedAdminContentIntelligenceIndexRoute
@@ -4194,6 +4232,7 @@ export interface FileRoutesById {
   '/_authenticated/student/projects/': typeof AuthenticatedStudentProjectsIndexRoute
   '/_authenticated/student/support/': typeof AuthenticatedStudentSupportIndexRoute
   '/programs/$category/$course/': typeof ProgramsCategoryCourseIndexRoute
+  '/_authenticated/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/_authenticated/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/_authenticated/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
   '/_authenticated/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -4205,6 +4244,7 @@ export interface FileRoutesById {
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
+  '/_authenticated/admin/automation-hub/workflows/': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/_authenticated/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/_authenticated/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
   '/_authenticated/student/internship/$id/tasks/$taskId': typeof AuthenticatedStudentInternshipIdTasksTaskIdRoute
@@ -4594,6 +4634,7 @@ export interface FileRouteTypes {
     | '/student/support/new'
     | '/api/public/ai-sales/webhook'
     | '/api/public/email/tick'
+    | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/webhooks/cashfree'
@@ -4603,6 +4644,7 @@ export interface FileRouteTypes {
     | '/admin/ai-content/'
     | '/admin/ai-search/'
     | '/admin/aios/'
+    | '/admin/automation-hub/'
     | '/admin/automation/'
     | '/admin/blogs/'
     | '/admin/content-intelligence/'
@@ -4632,6 +4674,7 @@ export interface FileRouteTypes {
     | '/student/projects/'
     | '/student/support/'
     | '/programs/$category/$course/'
+    | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
     | '/ambassador/marketing-resources/programs/$slug'
@@ -4643,6 +4686,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
     | '/api/v1/certificates/verify/$code'
+    | '/admin/automation-hub/workflows/'
     | '/admin/content/articles/'
     | '/student/career/interview/$id/report'
     | '/student/internship/$id/tasks/$taskId'
@@ -5016,6 +5060,7 @@ export interface FileRouteTypes {
     | '/student/support/new'
     | '/api/public/ai-sales/webhook'
     | '/api/public/email/tick'
+    | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/webhooks/cashfree'
@@ -5025,6 +5070,7 @@ export interface FileRouteTypes {
     | '/admin/ai-content'
     | '/admin/ai-search'
     | '/admin/aios'
+    | '/admin/automation-hub'
     | '/admin/automation'
     | '/admin/blogs'
     | '/admin/content-intelligence'
@@ -5054,6 +5100,7 @@ export interface FileRouteTypes {
     | '/student/projects'
     | '/student/support'
     | '/programs/$category/$course'
+    | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
     | '/ambassador/marketing-resources/programs/$slug'
@@ -5065,6 +5112,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
     | '/api/v1/certificates/verify/$code'
+    | '/admin/automation-hub/workflows'
     | '/admin/content/articles'
     | '/student/career/interview/$id/report'
     | '/student/internship/$id/tasks/$taskId'
@@ -5453,6 +5501,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/new'
     | '/api/public/ai-sales/webhook'
     | '/api/public/email/tick'
+    | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/webhooks/cashfree'
@@ -5462,6 +5511,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/ai-content/'
     | '/_authenticated/admin/ai-search/'
     | '/_authenticated/admin/aios/'
+    | '/_authenticated/admin/automation-hub/'
     | '/_authenticated/admin/automation/'
     | '/_authenticated/admin/blogs/'
     | '/_authenticated/admin/content-intelligence/'
@@ -5491,6 +5541,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/projects/'
     | '/_authenticated/student/support/'
     | '/programs/$category/$course/'
+    | '/_authenticated/admin/automation-hub/workflows/$id'
     | '/_authenticated/admin/content/articles/$id'
     | '/_authenticated/admin/courses/$id/ai-studio'
     | '/_authenticated/ambassador/marketing-resources/programs/$slug'
@@ -5502,6 +5553,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
     | '/api/v1/certificates/verify/$code'
+    | '/_authenticated/admin/automation-hub/workflows/'
     | '/_authenticated/admin/content/articles/'
     | '/_authenticated/student/career/interview/$id/report'
     | '/_authenticated/student/internship/$id/tasks/$taskId'
@@ -5589,6 +5641,7 @@ export interface RootRouteChildren {
   TopicsPillarIndexRoute: typeof TopicsPillarIndexRoute
   ApiPublicAiSalesWebhookRoute: typeof ApiPublicAiSalesWebhookRoute
   ApiPublicEmailTickRoute: typeof ApiPublicEmailTickRoute
+  ApiPublicHooksAutomationTickRoute: typeof ApiPublicHooksAutomationTickRoute
   ApiPublicHooksBrainTickRoute: typeof ApiPublicHooksBrainTickRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
@@ -7681,6 +7734,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAutomationIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/automation-hub/': {
+      id: '/_authenticated/admin/automation-hub/'
+      path: '/automation-hub'
+      fullPath: '/admin/automation-hub/'
+      preLoaderRoute: typeof AuthenticatedAdminAutomationHubIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/aios/': {
       id: '/_authenticated/admin/aios/'
       path: '/'
@@ -7742,6 +7802,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/brain-tick'
       fullPath: '/api/public/hooks/brain-tick'
       preLoaderRoute: typeof ApiPublicHooksBrainTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/automation-tick': {
+      id: '/api/public/hooks/automation-tick'
+      path: '/api/public/hooks/automation-tick'
+      fullPath: '/api/public/hooks/automation-tick'
+      preLoaderRoute: typeof ApiPublicHooksAutomationTickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/email/tick': {
@@ -8556,6 +8623,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentArticlesIndexRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
     }
+    '/_authenticated/admin/automation-hub/workflows/': {
+      id: '/_authenticated/admin/automation-hub/workflows/'
+      path: '/automation-hub/workflows'
+      fullPath: '/admin/automation-hub/workflows/'
+      preLoaderRoute: typeof AuthenticatedAdminAutomationHubWorkflowsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/api/v1/certificates/verify/$code': {
       id: '/api/v1/certificates/verify/$code'
       path: '/api/v1/certificates/verify/$code'
@@ -8632,6 +8706,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/content/articles/$id'
       preLoaderRoute: typeof AuthenticatedAdminContentArticlesIdRouteImport
       parentRoute: typeof AuthenticatedAdminContentRoute
+    }
+    '/_authenticated/admin/automation-hub/workflows/$id': {
+      id: '/_authenticated/admin/automation-hub/workflows/$id'
+      path: '/automation-hub/workflows/$id'
+      fullPath: '/admin/automation-hub/workflows/$id'
+      preLoaderRoute: typeof AuthenticatedAdminAutomationHubWorkflowsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/student/internship/$id/tasks/$taskId': {
       id: '/_authenticated/student/internship/$id/tasks/$taskId'
@@ -9079,6 +9160,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminWorkflowsIdRoute: typeof AuthenticatedAdminWorkflowsIdRoute
   AuthenticatedAdminWorkflowsNewRoute: typeof AuthenticatedAdminWorkflowsNewRoute
   AuthenticatedAdminWorkflowsTemplatesRoute: typeof AuthenticatedAdminWorkflowsTemplatesRoute
+  AuthenticatedAdminAutomationHubIndexRoute: typeof AuthenticatedAdminAutomationHubIndexRoute
   AuthenticatedAdminAutomationIndexRoute: typeof AuthenticatedAdminAutomationIndexRoute
   AuthenticatedAdminBlogsIndexRoute: typeof AuthenticatedAdminBlogsIndexRoute
   AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
@@ -9090,6 +9172,8 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminProgrammaticSeoIndexRoute: typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   AuthenticatedAdminTeamIndexRoute: typeof AuthenticatedAdminTeamIndexRoute
   AuthenticatedAdminWorkflowsIndexRoute: typeof AuthenticatedAdminWorkflowsIndexRoute
+  AuthenticatedAdminAutomationHubWorkflowsIdRoute: typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
+  AuthenticatedAdminAutomationHubWorkflowsIndexRoute: typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
@@ -9193,6 +9277,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminWorkflowsNewRoute: AuthenticatedAdminWorkflowsNewRoute,
   AuthenticatedAdminWorkflowsTemplatesRoute:
     AuthenticatedAdminWorkflowsTemplatesRoute,
+  AuthenticatedAdminAutomationHubIndexRoute:
+    AuthenticatedAdminAutomationHubIndexRoute,
   AuthenticatedAdminAutomationIndexRoute:
     AuthenticatedAdminAutomationIndexRoute,
   AuthenticatedAdminBlogsIndexRoute: AuthenticatedAdminBlogsIndexRoute,
@@ -9207,6 +9293,10 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminProgrammaticSeoIndexRoute,
   AuthenticatedAdminTeamIndexRoute: AuthenticatedAdminTeamIndexRoute,
   AuthenticatedAdminWorkflowsIndexRoute: AuthenticatedAdminWorkflowsIndexRoute,
+  AuthenticatedAdminAutomationHubWorkflowsIdRoute:
+    AuthenticatedAdminAutomationHubWorkflowsIdRoute,
+  AuthenticatedAdminAutomationHubWorkflowsIndexRoute:
+    AuthenticatedAdminAutomationHubWorkflowsIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
@@ -10010,6 +10100,7 @@ const rootRouteChildren: RootRouteChildren = {
   TopicsPillarIndexRoute: TopicsPillarIndexRoute,
   ApiPublicAiSalesWebhookRoute: ApiPublicAiSalesWebhookRoute,
   ApiPublicEmailTickRoute: ApiPublicEmailTickRoute,
+  ApiPublicHooksAutomationTickRoute: ApiPublicHooksAutomationTickRoute,
   ApiPublicHooksBrainTickRoute: ApiPublicHooksBrainTickRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,

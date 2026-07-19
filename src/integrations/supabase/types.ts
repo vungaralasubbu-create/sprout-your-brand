@@ -3382,6 +3382,368 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_attribution: {
+        Row: {
+          brand_id: string | null
+          campaign_id: string | null
+          created_at: string
+          event_id: string | null
+          event_type: string
+          id: string
+          revenue: number
+          user_id: string | null
+          workflow_id: string | null
+          workflow_run_id: string | null
+        }
+        Insert: {
+          brand_id?: string | null
+          campaign_id?: string | null
+          created_at?: string
+          event_id?: string | null
+          event_type: string
+          id?: string
+          revenue?: number
+          user_id?: string | null
+          workflow_id?: string | null
+          workflow_run_id?: string | null
+        }
+        Update: {
+          brand_id?: string | null
+          campaign_id?: string | null
+          created_at?: string
+          event_id?: string | null
+          event_type?: string
+          id?: string
+          revenue?: number
+          user_id?: string | null
+          workflow_id?: string | null
+          workflow_run_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_attribution_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "automation_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_attribution_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_attribution_workflow_run_id_fkey"
+            columns: ["workflow_run_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflow_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_channel_messages: {
+        Row: {
+          body: string | null
+          brand_id: string | null
+          channel: string
+          created_at: string
+          error: string | null
+          id: string
+          provider: string | null
+          provider_message_id: string | null
+          recipient: string
+          sent_at: string | null
+          status: string
+          subject: string | null
+          user_id: string | null
+          workflow_run_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          brand_id?: string | null
+          channel: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          provider?: string | null
+          provider_message_id?: string | null
+          recipient: string
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          user_id?: string | null
+          workflow_run_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          brand_id?: string | null
+          channel?: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          provider?: string | null
+          provider_message_id?: string | null
+          recipient?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          user_id?: string | null
+          workflow_run_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_channel_messages_workflow_run_id_fkey"
+            columns: ["workflow_run_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflow_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_events: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          device: string | null
+          event_name: string
+          id: string
+          location: string | null
+          occurred_at: string
+          properties: Json
+          session_id: string | null
+          user_id: string | null
+          utm: Json
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          device?: string | null
+          event_name: string
+          id?: string
+          location?: string | null
+          occurred_at?: string
+          properties?: Json
+          session_id?: string | null
+          user_id?: string | null
+          utm?: Json
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          device?: string | null
+          event_name?: string
+          id?: string
+          location?: string | null
+          occurred_at?: string
+          properties?: Json
+          session_id?: string | null
+          user_id?: string | null
+          utm?: Json
+        }
+        Relationships: []
+      }
+      automation_recommendations: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          dismissed_at: string | null
+          expires_at: string | null
+          id: string
+          kind: string
+          reason: string | null
+          score: number
+          target_id: string | null
+          target_slug: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          dismissed_at?: string | null
+          expires_at?: string | null
+          id?: string
+          kind: string
+          reason?: string | null
+          score?: number
+          target_id?: string | null
+          target_slug?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          dismissed_at?: string | null
+          expires_at?: string | null
+          id?: string
+          kind?: string
+          reason?: string | null
+          score?: number
+          target_id?: string | null
+          target_slug?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      automation_user_profiles: {
+        Row: {
+          ai_segment_labels: string[]
+          brand_id: string | null
+          created_at: string
+          engagement_score: number
+          last_active_at: string | null
+          lead_source: string | null
+          lifetime_revenue: number
+          next_best_action: Json | null
+          referral_source: string | null
+          top_interests: Json
+          total_course_views: number
+          total_logins: number
+          total_page_views: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_segment_labels?: string[]
+          brand_id?: string | null
+          created_at?: string
+          engagement_score?: number
+          last_active_at?: string | null
+          lead_source?: string | null
+          lifetime_revenue?: number
+          next_best_action?: Json | null
+          referral_source?: string | null
+          top_interests?: Json
+          total_course_views?: number
+          total_logins?: number
+          total_page_views?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_segment_labels?: string[]
+          brand_id?: string | null
+          created_at?: string
+          engagement_score?: number
+          last_active_at?: string | null
+          lead_source?: string | null
+          lifetime_revenue?: number
+          next_best_action?: Json | null
+          referral_source?: string | null
+          top_interests?: Json
+          total_course_views?: number
+          total_logins?: number
+          total_page_views?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      automation_workflow_runs: {
+        Row: {
+          brand_id: string | null
+          completed_at: string | null
+          context: Json
+          created_at: string
+          current_node_id: string | null
+          history: Json
+          id: string
+          started_at: string
+          status: string
+          updated_at: string
+          user_id: string | null
+          wait_until: string | null
+          workflow_id: string
+        }
+        Insert: {
+          brand_id?: string | null
+          completed_at?: string | null
+          context?: Json
+          created_at?: string
+          current_node_id?: string | null
+          history?: Json
+          id?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          wait_until?: string | null
+          workflow_id: string
+        }
+        Update: {
+          brand_id?: string | null
+          completed_at?: string | null
+          context?: Json
+          created_at?: string
+          current_node_id?: string | null
+          history?: Json
+          id?: string
+          started_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          wait_until?: string | null
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_workflow_runs_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automation_workflows: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          description: string | null
+          goal: Json | null
+          graph: Json
+          id: string
+          name: string
+          owner_id: string | null
+          stats: Json
+          status: string
+          trigger: Json
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          description?: string | null
+          goal?: Json | null
+          graph?: Json
+          id?: string
+          name: string
+          owner_id?: string | null
+          stats?: Json
+          status?: string
+          trigger?: Json
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          description?: string | null
+          goal?: Json | null
+          graph?: Json
+          id?: string
+          name?: string
+          owner_id?: string | null
+          stats?: Json
+          status?: string
+          trigger?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       batch_enrollments: {
         Row: {
           active: boolean
