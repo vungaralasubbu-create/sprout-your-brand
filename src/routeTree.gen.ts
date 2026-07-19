@@ -198,6 +198,7 @@ import { Route as AuthenticatedBrandSecurityRouteImport } from './routes/_authen
 import { Route as AuthenticatedBrandPreviewRouteImport } from './routes/_authenticated/brand.preview'
 import { Route as AuthenticatedBrandMarketingRouteImport } from './routes/_authenticated/brand.marketing'
 import { Route as AuthenticatedBrandLmsRouteImport } from './routes/_authenticated/brand.lms'
+import { Route as AuthenticatedBrandKeywordResearchRouteImport } from './routes/_authenticated/brand.keyword-research'
 import { Route as AuthenticatedBrandFacultyRouteImport } from './routes/_authenticated/brand.faculty'
 import { Route as AuthenticatedBrandEmailBrandingRouteImport } from './routes/_authenticated/brand.email-branding'
 import { Route as AuthenticatedBrandDomainRouteImport } from './routes/_authenticated/brand.domain'
@@ -1452,6 +1453,12 @@ const AuthenticatedBrandLmsRoute = AuthenticatedBrandLmsRouteImport.update({
   path: '/lms',
   getParentRoute: () => AuthenticatedBrandRoute,
 } as any)
+const AuthenticatedBrandKeywordResearchRoute =
+  AuthenticatedBrandKeywordResearchRouteImport.update({
+    id: '/keyword-research',
+    path: '/keyword-research',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
 const AuthenticatedBrandFacultyRoute =
   AuthenticatedBrandFacultyRouteImport.update({
     id: '/faculty',
@@ -3154,6 +3161,7 @@ export interface FileRoutesByFullPath {
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
   '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/brand/keyword-research': typeof AuthenticatedBrandKeywordResearchRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
   '/brand/preview': typeof AuthenticatedBrandPreviewRoute
@@ -3582,6 +3590,7 @@ export interface FileRoutesByTo {
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
   '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/brand/keyword-research': typeof AuthenticatedBrandKeywordResearchRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
   '/brand/preview': typeof AuthenticatedBrandPreviewRoute
@@ -4026,6 +4035,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/domain': typeof AuthenticatedBrandDomainRoute
   '/_authenticated/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/_authenticated/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/_authenticated/brand/keyword-research': typeof AuthenticatedBrandKeywordResearchRoute
   '/_authenticated/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/_authenticated/brand/marketing': typeof AuthenticatedBrandMarketingRoute
   '/_authenticated/brand/preview': typeof AuthenticatedBrandPreviewRoute
@@ -4470,6 +4480,7 @@ export interface FileRouteTypes {
     | '/brand/domain'
     | '/brand/email-branding'
     | '/brand/faculty'
+    | '/brand/keyword-research'
     | '/brand/lms'
     | '/brand/marketing'
     | '/brand/preview'
@@ -4898,6 +4909,7 @@ export interface FileRouteTypes {
     | '/brand/domain'
     | '/brand/email-branding'
     | '/brand/faculty'
+    | '/brand/keyword-research'
     | '/brand/lms'
     | '/brand/marketing'
     | '/brand/preview'
@@ -5341,6 +5353,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/domain'
     | '/_authenticated/brand/email-branding'
     | '/_authenticated/brand/faculty'
+    | '/_authenticated/brand/keyword-research'
     | '/_authenticated/brand/lms'
     | '/_authenticated/brand/marketing'
     | '/_authenticated/brand/preview'
@@ -7003,6 +7016,13 @@ declare module '@tanstack/react-router' {
       path: '/lms'
       fullPath: '/brand/lms'
       preLoaderRoute: typeof AuthenticatedBrandLmsRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/keyword-research': {
+      id: '/_authenticated/brand/keyword-research'
+      path: '/keyword-research'
+      fullPath: '/brand/keyword-research'
+      preLoaderRoute: typeof AuthenticatedBrandKeywordResearchRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
     '/_authenticated/brand/faculty': {
@@ -9433,6 +9453,7 @@ interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandDomainRoute: typeof AuthenticatedBrandDomainRoute
   AuthenticatedBrandEmailBrandingRoute: typeof AuthenticatedBrandEmailBrandingRoute
   AuthenticatedBrandFacultyRoute: typeof AuthenticatedBrandFacultyRoute
+  AuthenticatedBrandKeywordResearchRoute: typeof AuthenticatedBrandKeywordResearchRoute
   AuthenticatedBrandLmsRoute: typeof AuthenticatedBrandLmsRoute
   AuthenticatedBrandMarketingRoute: typeof AuthenticatedBrandMarketingRoute
   AuthenticatedBrandPreviewRoute: typeof AuthenticatedBrandPreviewRoute
@@ -9455,6 +9476,8 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
   AuthenticatedBrandDomainRoute: AuthenticatedBrandDomainRoute,
   AuthenticatedBrandEmailBrandingRoute: AuthenticatedBrandEmailBrandingRoute,
   AuthenticatedBrandFacultyRoute: AuthenticatedBrandFacultyRoute,
+  AuthenticatedBrandKeywordResearchRoute:
+    AuthenticatedBrandKeywordResearchRoute,
   AuthenticatedBrandLmsRoute: AuthenticatedBrandLmsRoute,
   AuthenticatedBrandMarketingRoute: AuthenticatedBrandMarketingRoute,
   AuthenticatedBrandPreviewRoute: AuthenticatedBrandPreviewRoute,
