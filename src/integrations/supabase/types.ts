@@ -19991,6 +19991,765 @@ export type Database = {
         }
         Relationships: []
       }
+      vs_analytics: {
+        Row: {
+          channel: string | null
+          comments: number
+          completion_rate: number
+          conversions: number
+          ctr: number
+          engagement: number
+          id: string
+          likes: number
+          metadata: Json
+          owner_id: string
+          project_id: string
+          recorded_at: string
+          shares: number
+          views: number
+          watch_time_seconds: number
+        }
+        Insert: {
+          channel?: string | null
+          comments?: number
+          completion_rate?: number
+          conversions?: number
+          ctr?: number
+          engagement?: number
+          id?: string
+          likes?: number
+          metadata?: Json
+          owner_id: string
+          project_id: string
+          recorded_at?: string
+          shares?: number
+          views?: number
+          watch_time_seconds?: number
+        }
+        Update: {
+          channel?: string | null
+          comments?: number
+          completion_rate?: number
+          conversions?: number
+          ctr?: number
+          engagement?: number
+          id?: string
+          likes?: number
+          metadata?: Json
+          owner_id?: string
+          project_id?: string
+          recorded_at?: string
+          shares?: number
+          views?: number
+          watch_time_seconds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_analytics_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "vs_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_assets: {
+        Row: {
+          bytes: number | null
+          created_at: string
+          duration_seconds: number | null
+          height: number | null
+          id: string
+          kind: Database["public"]["Enums"]["vs_asset_kind"]
+          language: string | null
+          metadata: Json
+          mime_type: string | null
+          owner_id: string
+          project_id: string | null
+          provider_ref: string | null
+          provider_slug: string | null
+          scene_id: string | null
+          storage_path: string | null
+          url: string | null
+          width: number | null
+        }
+        Insert: {
+          bytes?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          kind: Database["public"]["Enums"]["vs_asset_kind"]
+          language?: string | null
+          metadata?: Json
+          mime_type?: string | null
+          owner_id: string
+          project_id?: string | null
+          provider_ref?: string | null
+          provider_slug?: string | null
+          scene_id?: string | null
+          storage_path?: string | null
+          url?: string | null
+          width?: number | null
+        }
+        Update: {
+          bytes?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          kind?: Database["public"]["Enums"]["vs_asset_kind"]
+          language?: string | null
+          metadata?: Json
+          mime_type?: string | null
+          owner_id?: string
+          project_id?: string | null
+          provider_ref?: string | null
+          provider_slug?: string | null
+          scene_id?: string | null
+          storage_path?: string | null
+          url?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_assets_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "vs_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_assets_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "vs_scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          detail: Json
+          id: string
+          owner_id: string | null
+          project_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          owner_id?: string | null
+          project_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          detail?: Json
+          id?: string
+          owner_id?: string | null
+          project_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_audit_log_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "vs_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_automation_sources: {
+        Row: {
+          config: Json
+          created_at: string
+          format: Database["public"]["Enums"]["vs_video_format"]
+          id: string
+          is_active: boolean
+          last_project_id: string | null
+          last_run_at: string | null
+          owner_id: string
+          source_id: string
+          source_type: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          format: Database["public"]["Enums"]["vs_video_format"]
+          id?: string
+          is_active?: boolean
+          last_project_id?: string | null
+          last_run_at?: string | null
+          owner_id: string
+          source_id: string
+          source_type: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          format?: Database["public"]["Enums"]["vs_video_format"]
+          id?: string
+          is_active?: boolean
+          last_project_id?: string | null
+          last_run_at?: string | null
+          owner_id?: string
+          source_id?: string
+          source_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_automation_sources_last_project_id_fkey"
+            columns: ["last_project_id"]
+            isOneToOne: false
+            referencedRelation: "vs_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_brand_kits: {
+        Row: {
+          accent_color: string | null
+          created_at: string
+          cta_style: Json
+          font_body: string | null
+          font_heading: string | null
+          id: string
+          intro_asset_url: string | null
+          is_default: boolean
+          logo_url: string | null
+          metadata: Json
+          name: string
+          outro_asset_url: string | null
+          owner_id: string
+          primary_color: string | null
+          secondary_color: string | null
+          tone_of_voice: string | null
+          updated_at: string
+          watermark_url: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          created_at?: string
+          cta_style?: Json
+          font_body?: string | null
+          font_heading?: string | null
+          id?: string
+          intro_asset_url?: string | null
+          is_default?: boolean
+          logo_url?: string | null
+          metadata?: Json
+          name: string
+          outro_asset_url?: string | null
+          owner_id: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          tone_of_voice?: string | null
+          updated_at?: string
+          watermark_url?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          created_at?: string
+          cta_style?: Json
+          font_body?: string | null
+          font_heading?: string | null
+          id?: string
+          intro_asset_url?: string | null
+          is_default?: boolean
+          logo_url?: string | null
+          metadata?: Json
+          name?: string
+          outro_asset_url?: string | null
+          owner_id?: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          tone_of_voice?: string | null
+          updated_at?: string
+          watermark_url?: string | null
+        }
+        Relationships: []
+      }
+      vs_jobs: {
+        Row: {
+          attempts: number
+          cost_credits: number
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          input: Json
+          kind: string
+          max_attempts: number
+          next_poll_at: string | null
+          output: Json
+          owner_id: string
+          priority: number
+          project_id: string | null
+          provider_ref: string | null
+          provider_slug: string
+          scene_id: string | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["vs_job_status"]
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          cost_credits?: number
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          input?: Json
+          kind: string
+          max_attempts?: number
+          next_poll_at?: string | null
+          output?: Json
+          owner_id: string
+          priority?: number
+          project_id?: string | null
+          provider_ref?: string | null
+          provider_slug: string
+          scene_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["vs_job_status"]
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          cost_credits?: number
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          input?: Json
+          kind?: string
+          max_attempts?: number
+          next_poll_at?: string | null
+          output?: Json
+          owner_id?: string
+          priority?: number
+          project_id?: string | null
+          provider_ref?: string | null
+          provider_slug?: string
+          scene_id?: string | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["vs_job_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_jobs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "vs_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_jobs_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "vs_scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_projects: {
+        Row: {
+          archived_at: string | null
+          aspect_ratio: string
+          brand_id: string | null
+          brand_kit_id: string | null
+          brief: Json
+          cost_credits: number
+          created_at: string
+          cta: string | null
+          duration_seconds: number
+          format: Database["public"]["Enums"]["vs_video_format"]
+          generation_ms: number
+          goal: string | null
+          id: string
+          language: string
+          metadata: Json
+          owner_id: string
+          platform: string | null
+          published_at: string | null
+          resolution: string
+          script: string | null
+          seo: Json
+          source_id: string | null
+          source_type: string | null
+          status: Database["public"]["Enums"]["vs_project_status"]
+          storyboard: Json
+          style: string | null
+          target_audience: string | null
+          template_id: string | null
+          title: string
+          topic: string | null
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          aspect_ratio?: string
+          brand_id?: string | null
+          brand_kit_id?: string | null
+          brief?: Json
+          cost_credits?: number
+          created_at?: string
+          cta?: string | null
+          duration_seconds?: number
+          format: Database["public"]["Enums"]["vs_video_format"]
+          generation_ms?: number
+          goal?: string | null
+          id?: string
+          language?: string
+          metadata?: Json
+          owner_id: string
+          platform?: string | null
+          published_at?: string | null
+          resolution?: string
+          script?: string | null
+          seo?: Json
+          source_id?: string | null
+          source_type?: string | null
+          status?: Database["public"]["Enums"]["vs_project_status"]
+          storyboard?: Json
+          style?: string | null
+          target_audience?: string | null
+          template_id?: string | null
+          title: string
+          topic?: string | null
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          aspect_ratio?: string
+          brand_id?: string | null
+          brand_kit_id?: string | null
+          brief?: Json
+          cost_credits?: number
+          created_at?: string
+          cta?: string | null
+          duration_seconds?: number
+          format?: Database["public"]["Enums"]["vs_video_format"]
+          generation_ms?: number
+          goal?: string | null
+          id?: string
+          language?: string
+          metadata?: Json
+          owner_id?: string
+          platform?: string | null
+          published_at?: string | null
+          resolution?: string
+          script?: string | null
+          seo?: Json
+          source_id?: string | null
+          source_type?: string | null
+          status?: Database["public"]["Enums"]["vs_project_status"]
+          storyboard?: Json
+          style?: string | null
+          target_audience?: string | null
+          template_id?: string | null
+          title?: string
+          topic?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_projects_brand_kit_id_fkey"
+            columns: ["brand_kit_id"]
+            isOneToOne: false
+            referencedRelation: "vs_brand_kits"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_projects_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "vs_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_providers: {
+        Row: {
+          adapter: string
+          capabilities: Json
+          config: Json
+          created_at: string
+          id: string
+          is_active: boolean
+          kind: string
+          name: string
+          pricing: Json
+          priority: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          adapter: string
+          capabilities?: Json
+          config?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind: string
+          name: string
+          pricing?: Json
+          priority?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          adapter?: string
+          capabilities?: Json
+          config?: Json
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind?: string
+          name?: string
+          pricing?: Json
+          priority?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      vs_scenes: {
+        Row: {
+          animation_type: string | null
+          background_audio: string | null
+          brand_assets: Json
+          camera_movement: string | null
+          created_at: string
+          duration_seconds: number
+          id: string
+          metadata: Json
+          narration: string | null
+          overlay_text: string | null
+          project_id: string
+          scene_number: number
+          status: Database["public"]["Enums"]["vs_job_status"]
+          subtitle_asset_id: string | null
+          transition: string | null
+          updated_at: string
+          video_asset_id: string | null
+          video_prompt: string | null
+          visual_prompt: string | null
+          voice_asset_id: string | null
+        }
+        Insert: {
+          animation_type?: string | null
+          background_audio?: string | null
+          brand_assets?: Json
+          camera_movement?: string | null
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          metadata?: Json
+          narration?: string | null
+          overlay_text?: string | null
+          project_id: string
+          scene_number: number
+          status?: Database["public"]["Enums"]["vs_job_status"]
+          subtitle_asset_id?: string | null
+          transition?: string | null
+          updated_at?: string
+          video_asset_id?: string | null
+          video_prompt?: string | null
+          visual_prompt?: string | null
+          voice_asset_id?: string | null
+        }
+        Update: {
+          animation_type?: string | null
+          background_audio?: string | null
+          brand_assets?: Json
+          camera_movement?: string | null
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          metadata?: Json
+          narration?: string | null
+          overlay_text?: string | null
+          project_id?: string
+          scene_number?: number
+          status?: Database["public"]["Enums"]["vs_job_status"]
+          subtitle_asset_id?: string | null
+          transition?: string | null
+          updated_at?: string
+          video_asset_id?: string | null
+          video_prompt?: string | null
+          visual_prompt?: string | null
+          voice_asset_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_scenes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "vs_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_templates: {
+        Row: {
+          aspect_ratio: string
+          brand_kit_id: string | null
+          category: string | null
+          created_at: string
+          default_duration: number
+          description: string | null
+          format: Database["public"]["Enums"]["vs_video_format"]
+          id: string
+          is_public: boolean
+          language: string
+          metadata: Json
+          name: string
+          owner_id: string | null
+          storyboard: Json
+          style: string | null
+          updated_at: string
+        }
+        Insert: {
+          aspect_ratio?: string
+          brand_kit_id?: string | null
+          category?: string | null
+          created_at?: string
+          default_duration?: number
+          description?: string | null
+          format: Database["public"]["Enums"]["vs_video_format"]
+          id?: string
+          is_public?: boolean
+          language?: string
+          metadata?: Json
+          name: string
+          owner_id?: string | null
+          storyboard?: Json
+          style?: string | null
+          updated_at?: string
+        }
+        Update: {
+          aspect_ratio?: string
+          brand_kit_id?: string | null
+          category?: string | null
+          created_at?: string
+          default_duration?: number
+          description?: string | null
+          format?: Database["public"]["Enums"]["vs_video_format"]
+          id?: string
+          is_public?: boolean
+          language?: string
+          metadata?: Json
+          name?: string
+          owner_id?: string | null
+          storyboard?: Json
+          style?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_templates_brand_kit_id_fkey"
+            columns: ["brand_kit_id"]
+            isOneToOne: false
+            referencedRelation: "vs_brand_kits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string | null
+          project_id: string
+          snapshot: Json
+          version_number: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          project_id: string
+          snapshot: Json
+          version_number: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          project_id?: string
+          snapshot?: Json
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_versions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "vs_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_voices: {
+        Row: {
+          accent: string | null
+          created_at: string
+          external_id: string
+          gender: string | null
+          id: string
+          is_active: boolean
+          language: string
+          metadata: Json
+          name: string
+          preview_url: string | null
+          provider_slug: string
+          style: string | null
+        }
+        Insert: {
+          accent?: string | null
+          created_at?: string
+          external_id: string
+          gender?: string | null
+          id?: string
+          is_active?: boolean
+          language?: string
+          metadata?: Json
+          name: string
+          preview_url?: string | null
+          provider_slug: string
+          style?: string | null
+        }
+        Update: {
+          accent?: string | null
+          created_at?: string
+          external_id?: string
+          gender?: string | null
+          id?: string
+          is_active?: boolean
+          language?: string
+          metadata?: Json
+          name?: string
+          preview_url?: string | null
+          provider_slug?: string
+          style?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       internal_link_orphans: {
@@ -21205,6 +21964,56 @@ export type Database = {
         | "resolved"
         | "closed"
         | "admin_replied"
+      vs_asset_kind:
+        | "video"
+        | "thumbnail"
+        | "voice"
+        | "music"
+        | "subtitle_srt"
+        | "subtitle_vtt"
+        | "image"
+        | "logo"
+        | "project_file"
+        | "scene_clip"
+        | "preview"
+        | "other"
+      vs_job_status:
+        | "queued"
+        | "running"
+        | "succeeded"
+        | "failed"
+        | "cancelled"
+        | "retrying"
+      vs_project_status:
+        | "draft"
+        | "brief"
+        | "storyboard"
+        | "generating"
+        | "ready"
+        | "failed"
+        | "archived"
+        | "published"
+      vs_video_format:
+        | "instagram_reel"
+        | "youtube_short"
+        | "tiktok"
+        | "linkedin_video"
+        | "facebook_video"
+        | "course_promo"
+        | "webinar_promo"
+        | "workshop_promo"
+        | "internship_promo"
+        | "hiring"
+        | "explainer"
+        | "product_demo"
+        | "feature_announcement"
+        | "success_story"
+        | "testimonial"
+        | "corporate"
+        | "avatar"
+        | "slideshow"
+        | "educational"
+        | "animated_presentation"
       working_pref: "part_time" | "full_time" | "freelance" | "launch_brand"
     }
     CompositeTypes: {
@@ -22081,6 +22890,60 @@ export const Constants = {
         "resolved",
         "closed",
         "admin_replied",
+      ],
+      vs_asset_kind: [
+        "video",
+        "thumbnail",
+        "voice",
+        "music",
+        "subtitle_srt",
+        "subtitle_vtt",
+        "image",
+        "logo",
+        "project_file",
+        "scene_clip",
+        "preview",
+        "other",
+      ],
+      vs_job_status: [
+        "queued",
+        "running",
+        "succeeded",
+        "failed",
+        "cancelled",
+        "retrying",
+      ],
+      vs_project_status: [
+        "draft",
+        "brief",
+        "storyboard",
+        "generating",
+        "ready",
+        "failed",
+        "archived",
+        "published",
+      ],
+      vs_video_format: [
+        "instagram_reel",
+        "youtube_short",
+        "tiktok",
+        "linkedin_video",
+        "facebook_video",
+        "course_promo",
+        "webinar_promo",
+        "workshop_promo",
+        "internship_promo",
+        "hiring",
+        "explainer",
+        "product_demo",
+        "feature_announcement",
+        "success_story",
+        "testimonial",
+        "corporate",
+        "avatar",
+        "slideshow",
+        "educational",
+        "animated_presentation",
       ],
       working_pref: ["part_time", "full_time", "freelance", "launch_brand"],
     },
