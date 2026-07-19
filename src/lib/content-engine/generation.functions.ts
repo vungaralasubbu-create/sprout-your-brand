@@ -124,7 +124,7 @@ export const generateCampaignAll = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const campaign = await loadCampaign(context.supabase, data.campaignId);
     const types = data.assetTypes ?? [...ASSET_TYPES];
-    const generations: Array<Record<string, unknown>> = [];
+    const generations: any[] = [];
     for (const t of types) {
       try {
         const g = await runAsset(context.supabase, context.userId, campaign.id, campaign, t);
@@ -133,7 +133,7 @@ export const generateCampaignAll = createServerFn({ method: "POST" })
         generations.push({ asset_type: t, error: (e as Error).message });
       }
     }
-    return { generations };
+    return { generations } as { generations: any[] };
   });
 
 /** Regenerate an existing asset. Chains new row with parent_generation_id. */
