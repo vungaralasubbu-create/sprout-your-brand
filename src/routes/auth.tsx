@@ -263,13 +263,11 @@ function AuthPage() {
     }
     setErrors({});
 
-    // Trusted device: skip OTP.
-    if (mode === "signin" && isTrustedEmail(email)) {
-      setLoading(true);
-      await completePasswordAuth();
-      setLoading(false);
-      return;
-    }
+    // OTP is the sole authentication factor. Session persistence keeps the
+    // user signed in across reloads/tabs — OTP is only re-required when the
+    // browser session is cleared or expires.
+
+
 
     setLoading(true);
     const res = await sendOtp({
