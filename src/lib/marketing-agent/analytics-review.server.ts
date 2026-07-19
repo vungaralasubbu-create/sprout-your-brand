@@ -26,8 +26,11 @@ export async function reviewYesterday(admin: Admin, agentId: string) {
     admin.from("blog_seo_scores").select("score,day:updated_at").limit(20),
   ]);
 
-  const sum = (rows: unknown[] | null | undefined, key: string) =>
-    (rows ?? []).reduce((n, r) => n + Number((r as Record<string, unknown>)[key] ?? 0), 0);
+  const sum = (rows: unknown[] | null | undefined, key: string): number =>
+    (rows ?? []).reduce<number>(
+      (n, r) => n + Number((r as Record<string, unknown>)[key] ?? 0),
+      0,
+    );
 
   const emails = (email.data ?? []) as Array<{ status?: string; opened_at?: string | null; clicked_at?: string | null }>;
   const metrics = {
