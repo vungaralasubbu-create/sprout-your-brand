@@ -339,6 +339,98 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_career_coach_conversations: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          id: string
+          last_activity_at: string
+          message_count: number
+          metadata: Json
+          mode: string
+          student_user_id: string
+          target_industry: string | null
+          target_location: string | null
+          target_role: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          message_count?: number
+          metadata?: Json
+          mode?: string
+          student_user_id: string
+          target_industry?: string | null
+          target_location?: string | null
+          target_role?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          message_count?: number
+          metadata?: Json
+          mode?: string
+          student_user_id?: string
+          target_industry?: string | null
+          target_location?: string | null
+          target_role?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_career_coach_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          error_reason: string | null
+          id: string
+          metadata: Json
+          role: string
+          status: string
+          student_user_id: string
+        }
+        Insert: {
+          content?: string
+          conversation_id: string
+          created_at?: string
+          error_reason?: string | null
+          id?: string
+          metadata?: Json
+          role: string
+          status?: string
+          student_user_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          error_reason?: string | null
+          id?: string
+          metadata?: Json
+          role?: string
+          status?: string
+          student_user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_career_coach_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_career_coach_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_mentor_activity: {
         Row: {
           conversation_id: string | null
