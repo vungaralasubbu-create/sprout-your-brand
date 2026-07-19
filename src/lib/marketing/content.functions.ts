@@ -119,12 +119,12 @@ Hashtag arrays: heavy=15-25, medium=5-10, light=1-3, none=[].`;
         status: data.approvalMode === "auto" ? "approved" : "pending_review",
         approval_mode: data.approvalMode,
         created_by: userId,
-        meta: {
+        meta: JSON.parse(JSON.stringify({
           headline: parsed.headline,
           seo_title: parsed.seo_title,
           seo_description: parsed.seo_description,
           ai_chosen: ai.chosen,
-        },
+        })),
       })
       .select("id").single();
     if (insErr || !item) throw new Error(insErr?.message ?? "Failed to insert content");
