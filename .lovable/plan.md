@@ -1,141 +1,97 @@
-# AI Marketing Automation Engine
+# Glintr Performance & Modular Architecture Plan
 
-Glintr already has a marketing spine ("Glintr Engage") with campaigns, sequences, templates, segments, providers, senders, in-app + push, and AI generations. This plan turns it into a full **AI Marketing Automation Engine** by adding a behavior event stream, an AI decision layer, a visual workflow builder, multi-channel dispatch (WhatsApp/SMS added), attribution reporting, and per-brand white-label isolation.
-
-Nothing existing is thrown away — every new module composes with `engage_*` tables and the centralized email service.
+This is a large refactor. Attempting all of it in one pass would break the running app. I'll ship it in **5 phases**, each independently verifiable, so the platform stays live throughout.
 
 ---
 
-## What we're adding (on top of what exists)
+## Phase 1 — Route-level code splitting & bundle diet (biggest single win)
 
-1. **Behavior tracking layer** — one event stream powering AI + workflows.
-2. **AI Decision Engine** — picks the next-best campaign per user.
-3. **Visual Workflow Builder** — drag-and-drop triggers → conditions → actions → delays → branches → goals.
-4. **Multi-channel dispatch** — Email, In-App, Push (existing) + WhatsApp, SMS (new adapters, plug-and-play interface).
-5. **AI Content Studio** — generate subject lines, email/SMS/WhatsApp/push copy, captions, recommendation blocks.
-6. **Attribution & ROI reporting** — enrollments and revenue tied back to campaigns.
-7. **White-label isolation** — brand-scoped campaigns, templates, senders, domains, colors, analytics.
-8. **Scheduled worker** — one cron entry drives the whole engine (event scoring, workflow ticks, campaign dispatch).
+Goal: cut initial JS by 60–80%. Every dashboard becomes its own chunk.
 
----
+- Convert heavy route files to `.lazy.tsx` split: `admin.*`, `partner.*`, `brand.*`, `instructor.*`, `student.*`, `_authenticated/counsellor/*`, `_authenticated/admin/*`, `launch-your-brand/*`, `academy-builder`, `business-os`, `sales-ai`, `ai-os`, `automation-hub`, `engage`, `enrollment-brain`.
+- Move Homepage 3D hero, ecosystem grid, success stories carousel, mobile carousels behind `React.lazy` + `<Suspense>` with skeletons.
+- Remove any `export function XComponent` from route files (blocks auto-splitting).
+- Configure per-route `codeSplitGroupings` for the biggest routes.
+- Add `vite-bundle-visualizer` script; commit a baseline size report in `.lovable/perf-baseline.md`.
 
-## Technical section
-
-### 1. Database (single migration)
-
-New tables (all with `brand_id nullable` for white-label scoping, RLS, GRANTs, timestamps):
-
-- `automation_events` — unified behavior stream: `user_id`, `brand_id`, `event_name` (`signup|login|logout|page_view|course_view|wishlist_add|cart_add|payment|certificate_earned|internship_apply|workshop_register|inactive`), `properties jsonb`, `session_id`, `device`, `location`, `utm jsonb`, `occurred_at`.
-- `automation_user_profiles` — rolling per-user aggregates: `last_active_at`, `total_course_views`, `top_interests jsonb`, `lead_source`, `referral_source`, `lifetime_revenue`, `engagement_score int`, `ai_segment_labels text[]`, `next_best_action jsonb`.
-- `automation_workflows` — visual workflow definitions: `name`, `brand_id`, `status`, `trigger jsonb` (event or schedule), `graph jsonb` (nodes/edges), `goal jsonb`, `stats jsonb`.
-- `automation_workflow_runs` — per-user execution state: `workflow_id`, `user_id`, `current_node_id`, `wait_until`, `status` (`running|completed|goal_met|exited`), `context jsonb`, `history jsonb`.
-- `automation_recommendations` — AI-generated per-user next-course/internship/program suggestions with `reason`, `score`, `expires_at`.
-- `automation_channel_messages` — unified log for WhatsApp/SMS sends (email/push already tracked in `email_logs` + `engage_messages`).
-- `automation_attribution` — links `automation_events` of type `enrollment|payment` to originating `workflow_run_id` / `campaign_id` for ROI math.
-
-`app_role` policies: super_admin sees all; brand_owner/partner sees own `brand_id`; end users see only their own rows on read-appropriate tables.
-
-### 2. Server-side engine
-
-New client-safe function modules (`src/lib/automation/*.functions.ts`) + server-only helpers (`*.server.ts`):
-
-- `track.functions.ts` → `trackEvent({ event, properties })` — RLS-scoped write with `requireSupabaseAuth`, plus public endpoint for anonymous website events.
-- `profile.server.ts` — pure functions rolling events into `automation_user_profiles`.
-- `decision.server.ts` — AI decision engine. Uses `google/gemini-3.5-flash` via Lovable AI Gateway to score candidate actions from a rule catalog (signed-up-never-logged-in, viewed-N-times, completed-course, inactive-30d, partner-no-sales-15d, brand-no-website, etc.) and writes to `automation_recommendations` + `next_best_action`.
-- `workflows.server.ts` — executor: given a `workflow_run`, walk `graph.nodes` (Trigger / Condition / Delay / Action / Branch / Goal). Actions dispatch to channel adapters. `Delay` sets `wait_until` and returns; the tick worker resumes.
-- `channels/` — pluggable adapters exposing a common `dispatch({ userId, brandId, payload })`:
-  - `email.ts` → existing `sendEmail` (branded shell already applied).
-  - `push.ts` / `inapp.ts` → existing Engage paths.
-  - `whatsapp.ts` — connector-gateway adapter (WhatsApp Cloud / provider TBD via `standard_connectors--connect` when the user links one; interface ready today with a graceful "not configured" state).
-  - `sms.ts` — same shape, provider-agnostic.
-- `ai/content.functions.ts` — generate subject lines, email/SMS/WhatsApp/push copy, captions, recommendation blocks (Lovable AI).
-
-### 3. Cron / worker (single entry, no duplication)
-
-One public route `src/routes/api/public/hooks/automation-tick.ts` handles:
-1. Roll new `automation_events` into profiles.
-2. Advance `automation_workflow_runs` whose `wait_until <= now()`.
-3. Enqueue scheduled campaigns.
-4. Refresh top-of-funnel AI recommendations for active users.
-
-One `pg_cron` job (every 5 min) calls it. No new secrets required.
-
-### 4. Visual Workflow Builder UI
-
-`/admin/automation` and `/brand/automation` — same component, brand-scoped by route:
-- Canvas built on `@xyflow/react` (already common in this codebase pattern for graph UIs; installed if missing).
-- Node palette: Trigger, Condition, Delay, Send (Email/WhatsApp/SMS/Push/In-App), Branch (If/Else), Notify Partner, Wait for Goal, Exit.
-- Inline AI writer for each Send node using `ai/content.functions.ts`.
-- Live "test with user" preview.
-
-### 5. Reporting dashboard
-
-`/admin/automation/reports` (super admin) and `/brand/automation/reports` (brand):
-- Open rate, click rate, conversion rate, revenue, enrollments, campaign ROI.
-- Top campaigns, inactive users, most engaged users.
-- Aggregations run via Supabase RPCs off `automation_events` + `automation_attribution` + `email_logs`.
-
-### 6. White-label
-
-Everything keys off `brand_id`. Brand Owner routes never see other brands' rows (RLS). Uses existing `email_brand_settings` for senders/logos/colors and `email_partner_logos` for logo strips.
-
-### 7. Behavior tracking hooks
-
-- Client util `src/lib/automation/track.ts` — `trackEvent()` fired from: signup/login/logout flows, program cards, course viewer, wishlist/cart, payment success, certificate issue, internship apply, workshop registration.
-- Passive collector for `device` (UA), `location` (accept-language / IP-region best-effort server side), UTM params on landing.
-
-### 8. Files created (high level)
-
-```text
-supabase migration (7 tables, RLS, GRANTs, triggers, seed rule catalog)
-src/lib/automation/
-  track.functions.ts
-  track.ts                     # client
-  profile.server.ts
-  decision.server.ts
-  workflows.functions.ts
-  workflows.server.ts
-  ai/content.functions.ts
-  channels/{email,push,inapp,whatsapp,sms}.ts
-  channels/index.ts            # registry + plug-and-play interface
-src/routes/api/public/hooks/automation-tick.ts
-src/routes/_authenticated/admin/automation/
-  index.tsx                    # workflow list
-  builder.$id.tsx              # visual builder
-  reports.tsx
-  recommendations.tsx
-  events.tsx                   # live event stream (debug + audit)
-src/routes/_authenticated/brand/automation/
-  index.tsx / builder.$id.tsx / reports.tsx
-src/components/automation/
-  workflow-canvas.tsx
-  node-palette.tsx
-  node-inspector.tsx
-  ai-writer-inline.tsx
-  channel-badge.tsx
-  metric-cards.tsx
-```
-
-Nav entries added to Admin, Brand, Partner shells.
-
-### 9. What ships in this pass
-
-All of the above except **WhatsApp / SMS live providers** — adapters and UI ship, but they show a "Connect provider" empty state until the user links a WhatsApp Business or SMS connector. Every other channel (Email, Push, In-App) works end-to-end on the first turn.
-
-### 10. What is intentionally NOT changed
-
-- Existing `engage_*` tables — kept as-is; new tables sit alongside.
-- Existing centralized `sendEmail` + branded shell.
-- Auth / roles.
-- Homepage / marketing site.
+Success: Homepage JS < 250KB gzipped, Admin routes lazy-loaded, no admin code in public bundles.
 
 ---
 
-## Rollout order in a single build
+## Phase 2 — Data layer: TanStack Query everywhere + query hygiene
 
-1. Migration + seed rule catalog.
-2. Server engine (`track` → `profile` → `decision` → `workflows` + channel adapters).
-3. Cron worker route + `pg_cron` schedule.
-4. Client `trackEvent` + wire into key user flows.
-5. Admin + Brand builder UI, reports, recommendations.
-6. Verify with a build + one seeded workflow ("Signup → Wait 2d → If not verified → Reminder → Wait 3d → Offer coupon → Notify partner").
+Goal: kill duplicate fetches, add real caching, tighten Supabase reads.
+
+- Standardize on `queryOptions` + `ensureQueryData` (loader) + `useSuspenseQuery` (component) across all dashboards.
+- Set global defaults: `staleTime` 60s for reference data (categories, programs, templates, settings, navigation), 5m for brand data, 10s for dashboard stats.
+- Audit every `.select('*')` — replace with explicit column lists. Priority tables: `programs`, `blog_posts`, `brand_applications`, `lead_intelligence`, `email_logs`, `automation_runs`, `enrollments`.
+- Add cursor pagination helpers (`useCursorPage`) for admin tables: leads, email logs, automation runs, enrollments, brand applications.
+- Parallelize independent loader fetches with `Promise.all` inside server fns.
+- Add indexes for common WHERE/ORDER BY combos found via `supabase--slow_queries` (created_at DESC, status, brand_id, user_id).
+
+Success: no `select('*')` in hot paths, dashboard stats P95 < 500ms.
+
+---
+
+## Phase 3 — AI & heavy jobs → background queue
+
+Goal: no AI call blocks the UI; heavy generation is durable.
+
+- Introduce **Inngest** connector for durable background execution (already documented in stack).
+- Move to Inngest: AI Academy Builder generation, Brand Website generation, AI blog batch generation, AI email content, bulk campaign send, CSV/PDF exports, certificate generation, nightly analytics rollups, automation workflow resumes.
+- Replace synchronous AI calls in UI with: enqueue → return `job_id` → poll job status → stream/reveal result. Add `ai_jobs` table with status + result.
+- Stream AI Gateway responses (SSE) where the UI expects a single completion (Ask GlintrAI, counsellor copilot, AI content writer).
+- Cache identical AI prompts (hash of prompt+model) in `ai_response_cache` with TTL.
+
+Success: Website generation, AI batch runs, exports never freeze the tab.
+
+---
+
+## Phase 4 — Assets, images, and animations
+
+- Image transformer route with allow-list + `sharp` for WebP/AVIF (see `perf` knowledge).
+- `<Img>` component: `loading="lazy"`, `decoding="async"`, `srcset`, WebP first with JPEG fallback.
+- Preload only the homepage LCP hero via `head().links`.
+- Wrap Framer Motion sections in `IntersectionObserver` — pause when off-screen; respect `prefers-reduced-motion`.
+- Compress upload path in the brand website builder (client-side resize before Supabase Storage put).
+
+Success: LCP < 2.0s on Homepage & Programs.
+
+---
+
+## Phase 5 — Monitoring, preloading & production hygiene
+
+- Web Vitals reporter → new `perf_metrics` table (FCP/LCP/TTI/INP/CLS + route + user role).
+- Admin **Performance Dashboard** at `/admin/performance`: Web Vitals p50/p95, slowest queries (from `pg_stat_statements`), largest routes, top AI cache misses, background job queue depth.
+- Router preload rules: `Homepage→Programs`, `Programs→Course Detail`, `Dashboard→Analytics` only (never global).
+- Sign-out cache teardown + `onAuthStateChange` filtering audit (already partially in place).
+- Compute-size check via `db_health`; recommend Cloud instance upgrade only if metrics justify it.
+
+Success: Admin can see real numbers; no accidental global preload.
+
+---
+
+## Non-goals / clarifications
+
+- **No repo-splitting into micro-frontends.** "Independently deployable modules" in a single TanStack Start app = route-level chunks + shared services. True multi-repo micro-frontends aren't compatible with this stack and would slow you down, not speed you up.
+- **Website Builder isolation**: achieved via Phase 1 code split + Phase 3 background jobs — the generator runs on Inngest workers, not in the user's tab.
+- **No rewrite of Supabase client** or authentication flow.
+- **No visual/UX changes** unless a component is genuinely dead-duplicated.
+
+---
+
+## Technical anchor points
+
+- `src/routes/_authenticated/admin/*` — biggest offenders, split first.
+- `src/lib/automation/*`, `src/lib/engage/*` — already server-fn shaped; wrap dispatchers in Inngest handlers.
+- `src/components/home/*` — lazy-load carousels + ecosystem grid.
+- New `src/lib/perf/` — Web Vitals reporter, `<Img>`, `useVisible`, `useCursorPage`.
+- New tables: `ai_jobs`, `ai_response_cache`, `perf_metrics`, plus indexes on hot tables.
+
+---
+
+## Execution order
+
+I'll start with **Phase 1** (code splitting) because it's the highest-leverage change with the lowest risk and gives you visible speed today. I'll ship each phase as a discrete change so you can approve and verify before the next one begins.
+
+Reply **"go"** to start Phase 1, or tell me to reorder / drop phases.
