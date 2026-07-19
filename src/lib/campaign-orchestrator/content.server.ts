@@ -205,7 +205,7 @@ Return JSON: { "prompt": string }`,
   const prompt = (promptRaw as { prompt?: string }).prompt ?? `${brief.kind} for ${ctx}`;
 
   try {
-    const dataUrl = await generateImageDataUrl(prompt, { size: brief.kind === "instagram_story" ? "1024x1792" : "1024x1024" });
+    const dataUrl = await generateImageDataUrl(prompt, { size: brief.kind === "instagram_story" ? "1024x1536" : "1024x1024" });
     return { imageUrl: dataUrl, text: prompt, meta: { imagePrompt: prompt } };
   } catch (e) {
     return { text: prompt, meta: { imagePrompt: prompt, error: e instanceof Error ? e.message : String(e) } };
