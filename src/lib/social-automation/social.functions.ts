@@ -113,7 +113,7 @@ export const createCampaign = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("soc_campaigns")
-      .insert({ ...data, owner_id: context.userId, approval_status: "draft" })
+      .insert({ ...data, owner_id: context.userId, approval_status: "draft" } as never)
       .select("id")
       .single();
     if (error) throw new Error(error.message);
