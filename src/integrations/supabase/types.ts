@@ -431,6 +431,98 @@ export type Database = {
           },
         ]
       }
+      ai_marketing_conversations: {
+        Row: {
+          archived_at: string | null
+          asset_type: string
+          brand_voice: string | null
+          created_at: string
+          id: string
+          last_activity_at: string
+          message_count: number
+          metadata: Json
+          owner_user_id: string
+          product_or_topic: string | null
+          target_audience: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          asset_type?: string
+          brand_voice?: string | null
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          message_count?: number
+          metadata?: Json
+          owner_user_id: string
+          product_or_topic?: string | null
+          target_audience?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          asset_type?: string
+          brand_voice?: string | null
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          message_count?: number
+          metadata?: Json
+          owner_user_id?: string
+          product_or_topic?: string | null
+          target_audience?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_marketing_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          error_reason: string | null
+          id: string
+          metadata: Json
+          owner_user_id: string
+          role: string
+          status: string
+        }
+        Insert: {
+          content?: string
+          conversation_id: string
+          created_at?: string
+          error_reason?: string | null
+          id?: string
+          metadata?: Json
+          owner_user_id: string
+          role: string
+          status?: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          error_reason?: string | null
+          id?: string
+          metadata?: Json
+          owner_user_id?: string
+          role?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_marketing_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_marketing_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_mentor_activity: {
         Row: {
           conversation_id: string | null
