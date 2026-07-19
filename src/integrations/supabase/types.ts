@@ -5524,6 +5524,159 @@ export type Database = {
         }
         Relationships: []
       }
+      career_hub_generation_jobs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          errors: Json
+          failed: number
+          id: string
+          page_type: string
+          processed: number
+          results: Json
+          seeds: Json
+          status: string
+          succeeded: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          errors?: Json
+          failed?: number
+          id?: string
+          page_type: string
+          processed?: number
+          results?: Json
+          seeds?: Json
+          status?: string
+          succeeded?: number
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          errors?: Json
+          failed?: number
+          id?: string
+          page_type?: string
+          processed?: number
+          results?: Json
+          seeds?: Json
+          status?: string
+          succeeded?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      career_hub_pages: {
+        Row: {
+          ai_generated_at: string | null
+          ai_model: string | null
+          category: string | null
+          certifications: Json
+          content: Json
+          cover_image_url: string | null
+          created_at: string
+          created_by: string | null
+          faqs: Json
+          featured: boolean
+          hero_emoji: string | null
+          hero_image_url: string | null
+          id: string
+          internal_links: Json
+          json_ld: Json | null
+          learning_path: Json
+          page_type: string
+          projects: Json
+          published: boolean
+          recommended_courses: Json
+          related_blogs: Json
+          related_slugs: Json
+          roadmap: Json
+          seo_description: string | null
+          seo_keywords: string[] | null
+          seo_title: string | null
+          slug: string
+          subtitle: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          ai_generated_at?: string | null
+          ai_model?: string | null
+          category?: string | null
+          certifications?: Json
+          content?: Json
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          faqs?: Json
+          featured?: boolean
+          hero_emoji?: string | null
+          hero_image_url?: string | null
+          id?: string
+          internal_links?: Json
+          json_ld?: Json | null
+          learning_path?: Json
+          page_type: string
+          projects?: Json
+          published?: boolean
+          recommended_courses?: Json
+          related_blogs?: Json
+          related_slugs?: Json
+          roadmap?: Json
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          slug: string
+          subtitle?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          ai_generated_at?: string | null
+          ai_model?: string | null
+          category?: string | null
+          certifications?: Json
+          content?: Json
+          cover_image_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          faqs?: Json
+          featured?: boolean
+          hero_emoji?: string | null
+          hero_image_url?: string | null
+          id?: string
+          internal_links?: Json
+          json_ld?: Json | null
+          learning_path?: Json
+          page_type?: string
+          projects?: Json
+          published?: boolean
+          recommended_courses?: Json
+          related_blogs?: Json
+          related_slugs?: Json
+          roadmap?: Json
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          slug?: string
+          subtitle?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       career_profiles: {
         Row: {
           city: string | null

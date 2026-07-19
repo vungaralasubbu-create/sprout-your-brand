@@ -3,8 +3,9 @@ import { useEffect, useState, useMemo } from "react";
 import {
   LayoutDashboard, Activity, Users, UserCheck, Target, Scale, ShieldCheck, FileSignature, Wallet,
   Handshake, Building2, Bell, Shield, GraduationCap, FolderTree, BookOpen, ClipboardList,
-  History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown, Sparkles, Server, Eye,
+  History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown, Sparkles, Server, Eye, Rocket,
 } from "lucide-react";
+
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +72,8 @@ const NAV: NavGroup[] = [
       { to: "/admin/ai-content", label: "AI Content Factory", icon: Sparkles },
       { to: "/admin/keyword-research", label: "Keyword Research", icon: Search },
       { to: "/admin/reviews", label: "Reviews & Success", icon: Sparkles },
+      { to: "/admin/career-hub", label: "Career Hub", icon: Rocket },
+
       { to: "/admin/content-intelligence", label: "Content Intelligence", icon: Activity },
     ],
   },
