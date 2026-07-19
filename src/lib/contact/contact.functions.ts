@@ -107,29 +107,23 @@ export const routeContactEnquiry = createServerFn({ method: "POST" })
     ].join("\n");
 
     try {
-      const res = await fetch(`${BASE_URL}/chat/completions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
-        body: JSON.stringify({
-          model: DEFAULT_MODEL,
-          messages: [
-            { role: "system", content: system },
-            { role: "user", content: wrapVisitor(safeDescription) },
-          ],
-          temperature: 0.1,
-          response_format: { type: "json_object" },
-        }),
+      const raw = await callAiChatCompletions({
+        model: DEFAULT_MODEL,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: wrapVisitor(safeDescription) },
+        ],
+        temperature: 0.1,
+        response_format: { type: "json_object" },
       });
-      if (res.status === 429) return { ok: false, reason: "Glintr is busy — please retry shortly." };
-      if (!res.ok) return { ok: false, reason: "Contact routing is temporarily unavailable." };
-      const json = await res.json();
-      const raw = json?.choices?.[0]?.message?.content ?? "{}";
-      const parsed = JSON.parse(raw);
+      const parsed = JSON.parse(raw || "{}");
       const intent = normaliseContactIntent(parsed.intent);
       const confident = Boolean(parsed.confident);
       const reason = String(parsed.reason ?? "").slice(0, 220);
       return { ok: true, intent, confident, reason };
-    } catch {
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "";
+      if (msg.includes("rate limit")) return { ok: false, reason: "Glintr is busy — please retry shortly." };
       return { ok: false, reason: "Contact routing is temporarily unavailable." };
     }
   });
