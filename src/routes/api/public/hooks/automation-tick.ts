@@ -54,6 +54,20 @@ export const Route = createFileRoute("/api/public/hooks/automation-tick")({
           results.runs_error = err instanceof Error ? err.message : String(err);
         }
 
+        // Automation Engine: dispatch triggers → drain queue → clear stuck.
+        try {
+          const { requeueStuck } = await import("@/lib/automation/engine/queue.server");
+          const { runOnce } = await import("@/lib/automation/engine/worker.server");
+          const requeued = await requeueStuck();
+          const drained = await runOnce(`tick:${Date.now()}`, 25);
+          results.engine_requeued = requeued;
+          results.engine_processed = drained.processed;
+          results.engine_ok = drained.ok;
+          results.engine_failed = drained.failed;
+        } catch (err) {
+          results.engine_error = err instanceof Error ? err.message : String(err);
+        }
+
         return new Response(JSON.stringify({ ok: true, ...results }), {
           headers: { "Content-Type": "application/json" },
         });
