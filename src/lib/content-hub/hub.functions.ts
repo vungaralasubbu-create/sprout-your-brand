@@ -4,8 +4,8 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { aiChat } from "@/lib/ai-gateway.server";
-import { safeParseAiJson } from "@/lib/ai-json";
+import { aiChat } from "@/lib/ai/router.server";
+import { tryParseAiJson } from "@/lib/ai-json";
 import { z } from "zod";
 import {
   AI_ASSIST_ACTIONS,
