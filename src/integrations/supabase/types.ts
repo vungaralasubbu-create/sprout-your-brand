@@ -7616,6 +7616,869 @@ export type Database = {
           },
         ]
       }
+      engage_ai_generations: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          id: string
+          input: Json | null
+          kind: string
+          model: string | null
+          output: Json | null
+          prompt: string | null
+          tokens_in: number | null
+          tokens_out: number | null
+          user_id: string | null
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          input?: Json | null
+          kind: string
+          model?: string | null
+          output?: Json | null
+          prompt?: string | null
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          input?: Json | null
+          kind?: string
+          model?: string | null
+          output?: Json | null
+          prompt?: string | null
+          tokens_in?: number | null
+          tokens_out?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_ai_generations_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_campaigns: {
+        Row: {
+          ab_test: Json | null
+          bounced_count: number
+          brand_id: string | null
+          channel: string
+          clicked_count: number
+          created_at: string
+          created_by: string | null
+          delivered_count: number
+          description: string | null
+          id: string
+          metadata: Json
+          name: string
+          opened_count: number
+          provider_id: string | null
+          recurring_cron: string | null
+          revenue_amount: number | null
+          schedule_type: string
+          scheduled_at: string | null
+          segment_id: string | null
+          sent_at: string | null
+          sent_count: number
+          status: string
+          template_id: string | null
+          template_key: string | null
+          tenant_scope: string
+          timezone: string | null
+          total_recipients: number | null
+          unsubscribed_count: number
+          updated_at: string
+        }
+        Insert: {
+          ab_test?: Json | null
+          bounced_count?: number
+          brand_id?: string | null
+          channel?: string
+          clicked_count?: number
+          created_at?: string
+          created_by?: string | null
+          delivered_count?: number
+          description?: string | null
+          id?: string
+          metadata?: Json
+          name: string
+          opened_count?: number
+          provider_id?: string | null
+          recurring_cron?: string | null
+          revenue_amount?: number | null
+          schedule_type?: string
+          scheduled_at?: string | null
+          segment_id?: string | null
+          sent_at?: string | null
+          sent_count?: number
+          status?: string
+          template_id?: string | null
+          template_key?: string | null
+          tenant_scope?: string
+          timezone?: string | null
+          total_recipients?: number | null
+          unsubscribed_count?: number
+          updated_at?: string
+        }
+        Update: {
+          ab_test?: Json | null
+          bounced_count?: number
+          brand_id?: string | null
+          channel?: string
+          clicked_count?: number
+          created_at?: string
+          created_by?: string | null
+          delivered_count?: number
+          description?: string | null
+          id?: string
+          metadata?: Json
+          name?: string
+          opened_count?: number
+          provider_id?: string | null
+          recurring_cron?: string | null
+          revenue_amount?: number | null
+          schedule_type?: string
+          scheduled_at?: string | null
+          segment_id?: string | null
+          sent_at?: string | null
+          sent_count?: number
+          status?: string
+          template_id?: string | null
+          template_key?: string | null
+          tenant_scope?: string
+          timezone?: string | null
+          total_recipients?: number | null
+          unsubscribed_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_campaigns_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engage_campaigns_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "engage_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engage_campaigns_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "engage_segments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engage_campaigns_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "engage_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_events: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          event: string
+          id: string
+          payload: Json
+          processed_at: string | null
+          tenant_scope: string
+          user_id: string | null
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          event: string
+          id?: string
+          payload?: Json
+          processed_at?: string | null
+          tenant_scope?: string
+          user_id?: string | null
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          event?: string
+          id?: string
+          payload?: Json
+          processed_at?: string | null
+          tenant_scope?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_events_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_inapp_notifications: {
+        Row: {
+          action_label: string | null
+          action_url: string | null
+          archived_at: string | null
+          body: string | null
+          brand_id: string | null
+          category: string
+          created_at: string
+          icon: string | null
+          id: string
+          metadata: Json
+          priority: string
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          action_label?: string | null
+          action_url?: string | null
+          archived_at?: string | null
+          body?: string | null
+          brand_id?: string | null
+          category?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          metadata?: Json
+          priority?: string
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          action_label?: string | null
+          action_url?: string | null
+          archived_at?: string | null
+          body?: string | null
+          brand_id?: string | null
+          category?: string
+          created_at?: string
+          icon?: string | null
+          id?: string
+          metadata?: Json
+          priority?: string
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_inapp_notifications_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_messages: {
+        Row: {
+          bounced_at: string | null
+          brand_id: string | null
+          campaign_id: string | null
+          channel: string
+          clicked_at: string | null
+          complained_at: string | null
+          delivered_at: string | null
+          error_code: string | null
+          error_message: string | null
+          id: string
+          idempotency_key: string | null
+          metadata: Json
+          opened_at: string | null
+          provider: string | null
+          provider_message_id: string | null
+          queued_at: string
+          recipient: string
+          sent_at: string | null
+          sequence_enrollment_id: string | null
+          status: string
+          subject: string | null
+          template_id: string | null
+          template_key: string | null
+          tenant_scope: string
+          unsubscribed_at: string | null
+          user_id: string | null
+          variant: string | null
+        }
+        Insert: {
+          bounced_at?: string | null
+          brand_id?: string | null
+          campaign_id?: string | null
+          channel?: string
+          clicked_at?: string | null
+          complained_at?: string | null
+          delivered_at?: string | null
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          opened_at?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
+          queued_at?: string
+          recipient: string
+          sent_at?: string | null
+          sequence_enrollment_id?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          template_key?: string | null
+          tenant_scope?: string
+          unsubscribed_at?: string | null
+          user_id?: string | null
+          variant?: string | null
+        }
+        Update: {
+          bounced_at?: string | null
+          brand_id?: string | null
+          campaign_id?: string | null
+          channel?: string
+          clicked_at?: string | null
+          complained_at?: string | null
+          delivered_at?: string | null
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          opened_at?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
+          queued_at?: string
+          recipient?: string
+          sent_at?: string | null
+          sequence_enrollment_id?: string | null
+          status?: string
+          subject?: string | null
+          template_id?: string | null
+          template_key?: string | null
+          tenant_scope?: string
+          unsubscribed_at?: string | null
+          user_id?: string | null
+          variant?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_messages_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engage_messages_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "engage_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engage_messages_sequence_enrollment_id_fkey"
+            columns: ["sequence_enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "engage_sequence_enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "engage_messages_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "engage_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_providers: {
+        Row: {
+          brand_id: string | null
+          channel: string
+          config: Json
+          created_at: string
+          created_by: string | null
+          display_name: string | null
+          id: string
+          is_active: boolean
+          is_default: boolean
+          kind: string
+          last_test_at: string | null
+          last_test_error: string | null
+          last_test_status: string | null
+          secret_ref: string | null
+          tenant_scope: string
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          brand_id?: string | null
+          channel?: string
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          display_name?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          kind: string
+          last_test_at?: string | null
+          last_test_error?: string | null
+          last_test_status?: string | null
+          secret_ref?: string | null
+          tenant_scope?: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          brand_id?: string | null
+          channel?: string
+          config?: Json
+          created_at?: string
+          created_by?: string | null
+          display_name?: string | null
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          kind?: string
+          last_test_at?: string | null
+          last_test_error?: string | null
+          last_test_status?: string | null
+          secret_ref?: string | null
+          tenant_scope?: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_providers_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_push_subscriptions: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          device_label: string | null
+          endpoint: string
+          id: string
+          is_active: boolean
+          keys: Json
+          last_used_at: string | null
+          updated_at: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          device_label?: string | null
+          endpoint: string
+          id?: string
+          is_active?: boolean
+          keys: Json
+          last_used_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          device_label?: string | null
+          endpoint?: string
+          id?: string
+          is_active?: boolean
+          keys?: Json
+          last_used_at?: string | null
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_push_subscriptions_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_segments: {
+        Row: {
+          audience: string
+          brand_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          estimated_size: number | null
+          id: string
+          is_active: boolean
+          last_evaluated_at: string | null
+          name: string
+          rules: Json
+          tenant_scope: string
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          brand_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          estimated_size?: number | null
+          id?: string
+          is_active?: boolean
+          last_evaluated_at?: string | null
+          name: string
+          rules?: Json
+          tenant_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          brand_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          estimated_size?: number | null
+          id?: string
+          is_active?: boolean
+          last_evaluated_at?: string | null
+          name?: string
+          rules?: Json
+          tenant_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_segments_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_senders: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          dkim_status: string | null
+          dmarc_status: string | null
+          domain: string | null
+          from_email: string
+          from_name: string
+          id: string
+          is_default: boolean
+          reply_to: string | null
+          spf_status: string | null
+          tenant_scope: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          dkim_status?: string | null
+          dmarc_status?: string | null
+          domain?: string | null
+          from_email: string
+          from_name: string
+          id?: string
+          is_default?: boolean
+          reply_to?: string | null
+          spf_status?: string | null
+          tenant_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          dkim_status?: string | null
+          dmarc_status?: string | null
+          domain?: string | null
+          from_email?: string
+          from_name?: string
+          id?: string
+          is_default?: boolean
+          reply_to?: string | null
+          spf_status?: string | null
+          tenant_scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_senders_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_sequence_enrollments: {
+        Row: {
+          completed_at: string | null
+          context: Json
+          current_step: number
+          enrolled_at: string
+          id: string
+          last_error: string | null
+          next_run_at: string | null
+          recipient_email: string | null
+          sequence_id: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          context?: Json
+          current_step?: number
+          enrolled_at?: string
+          id?: string
+          last_error?: string | null
+          next_run_at?: string | null
+          recipient_email?: string | null
+          sequence_id: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          context?: Json
+          current_step?: number
+          enrolled_at?: string
+          id?: string
+          last_error?: string | null
+          next_run_at?: string | null
+          recipient_email?: string | null
+          sequence_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_sequence_enrollments_sequence_id_fkey"
+            columns: ["sequence_id"]
+            isOneToOne: false
+            referencedRelation: "engage_sequences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_sequences: {
+        Row: {
+          audience: string
+          brand_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean
+          is_system: boolean
+          metadata: Json
+          name: string
+          steps: Json
+          tenant_scope: string
+          trigger_event: string
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          brand_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          metadata?: Json
+          name: string
+          steps?: Json
+          tenant_scope?: string
+          trigger_event: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          brand_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          metadata?: Json
+          name?: string
+          steps?: Json
+          tenant_scope?: string
+          trigger_event?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_sequences_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_subscriptions: {
+        Row: {
+          brand_id: string | null
+          category: string
+          channel: string
+          created_at: string
+          email: string | null
+          id: string
+          is_subscribed: boolean
+          unsubscribe_token: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          brand_id?: string | null
+          category: string
+          channel?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_subscribed?: boolean
+          unsubscribe_token?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          brand_id?: string | null
+          category?: string
+          channel?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_subscribed?: boolean
+          unsubscribe_token?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_subscriptions_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      engage_templates: {
+        Row: {
+          body_html: string | null
+          body_json: Json | null
+          body_mjml: string | null
+          body_text: string | null
+          brand_id: string | null
+          category: string | null
+          channel: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          is_system: boolean
+          locale: string
+          metadata: Json
+          name: string
+          preview_text: string | null
+          subject: string | null
+          template_key: string
+          tenant_scope: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          body_html?: string | null
+          body_json?: Json | null
+          body_mjml?: string | null
+          body_text?: string | null
+          brand_id?: string | null
+          category?: string | null
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          locale?: string
+          metadata?: Json
+          name: string
+          preview_text?: string | null
+          subject?: string | null
+          template_key: string
+          tenant_scope?: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          body_html?: string | null
+          body_json?: Json | null
+          body_mjml?: string | null
+          body_text?: string | null
+          brand_id?: string | null
+          category?: string | null
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          is_system?: boolean
+          locale?: string
+          metadata?: Json
+          name?: string
+          preview_text?: string | null
+          subject?: string | null
+          template_key?: string
+          tenant_scope?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engage_templates_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       enrollments: {
         Row: {
           ambassador_id: string | null

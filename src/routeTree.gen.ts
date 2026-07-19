@@ -427,6 +427,9 @@ import { Route as AuthenticatedAdminAiAgentsNewRouteImport } from './routes/_aut
 import { Route as AuthenticatedAdminAiAgentsAnalyticsRouteImport } from './routes/_authenticated/admin.ai-agents.analytics'
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
 import { Route as ApiV1CertificatesVerifyCodeRouteImport } from './routes/api/v1/certificates.verify.$code'
+import { Route as ApiPublicEngageWebhooksProviderRouteImport } from './routes/api/public/engage/webhooks/$provider'
+import { Route as ApiPublicEngageUnsubscribeTokenRouteImport } from './routes/api/public/engage/unsubscribe.$token'
+import { Route as ApiPublicEngageHooksSequenceTickRouteImport } from './routes/api/public/engage/hooks/sequence-tick'
 import { Route as AuthenticatedStudentProgramsViewSlugRouteImport } from './routes/_authenticated/student.programs.view.$slug'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
@@ -2803,6 +2806,24 @@ const ApiV1CertificatesVerifyCodeRoute =
     path: '/api/v1/certificates/verify/$code',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicEngageWebhooksProviderRoute =
+  ApiPublicEngageWebhooksProviderRouteImport.update({
+    id: '/api/public/engage/webhooks/$provider',
+    path: '/api/public/engage/webhooks/$provider',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicEngageUnsubscribeTokenRoute =
+  ApiPublicEngageUnsubscribeTokenRouteImport.update({
+    id: '/api/public/engage/unsubscribe/$token',
+    path: '/api/public/engage/unsubscribe/$token',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicEngageHooksSequenceTickRoute =
+  ApiPublicEngageHooksSequenceTickRouteImport.update({
+    id: '/api/public/engage/hooks/sequence-tick',
+    path: '/api/public/engage/hooks/sequence-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedStudentProgramsViewSlugRoute =
   AuthenticatedStudentProgramsViewSlugRouteImport.update({
     id: '/programs/view/$slug',
@@ -3281,6 +3302,9 @@ export interface FileRoutesByFullPath {
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
+  '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
+  '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
+  '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
@@ -3695,6 +3719,9 @@ export interface FileRoutesByTo {
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
+  '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
+  '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
+  '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/content/articles': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
@@ -4125,6 +4152,9 @@ export interface FileRoutesById {
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/_authenticated/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/_authenticated/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
+  '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
+  '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
+  '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/_authenticated/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
   '/_authenticated/student/career/interview/$id/report': typeof AuthenticatedStudentCareerInterviewIdReportRoute
@@ -4555,6 +4585,9 @@ export interface FileRouteTypes {
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
     | '/student/programs/view/$slug'
+    | '/api/public/engage/hooks/sequence-tick'
+    | '/api/public/engage/unsubscribe/$token'
+    | '/api/public/engage/webhooks/$provider'
     | '/api/v1/certificates/verify/$code'
     | '/admin/content/articles/'
     | '/student/career/interview/$id/report'
@@ -4969,6 +5002,9 @@ export interface FileRouteTypes {
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
     | '/student/programs/view/$slug'
+    | '/api/public/engage/hooks/sequence-tick'
+    | '/api/public/engage/unsubscribe/$token'
+    | '/api/public/engage/webhooks/$provider'
     | '/api/v1/certificates/verify/$code'
     | '/admin/content/articles'
     | '/student/career/interview/$id/report'
@@ -5398,6 +5434,9 @@ export interface FileRouteTypes {
     | '/_authenticated/student/career/interview/$id'
     | '/_authenticated/student/career/interview/setup'
     | '/_authenticated/student/programs/view/$slug'
+    | '/api/public/engage/hooks/sequence-tick'
+    | '/api/public/engage/unsubscribe/$token'
+    | '/api/public/engage/webhooks/$provider'
     | '/api/v1/certificates/verify/$code'
     | '/_authenticated/admin/content/articles/'
     | '/_authenticated/student/career/interview/$id/report'
@@ -5490,6 +5529,9 @@ export interface RootRouteChildren {
   ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
+  ApiPublicEngageHooksSequenceTickRoute: typeof ApiPublicEngageHooksSequenceTickRoute
+  ApiPublicEngageUnsubscribeTokenRoute: typeof ApiPublicEngageUnsubscribeTokenRoute
+  ApiPublicEngageWebhooksProviderRoute: typeof ApiPublicEngageWebhooksProviderRoute
   ApiV1CertificatesVerifyCodeRoute: typeof ApiV1CertificatesVerifyCodeRoute
 }
 
@@ -8421,6 +8463,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1CertificatesVerifyCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/engage/webhooks/$provider': {
+      id: '/api/public/engage/webhooks/$provider'
+      path: '/api/public/engage/webhooks/$provider'
+      fullPath: '/api/public/engage/webhooks/$provider'
+      preLoaderRoute: typeof ApiPublicEngageWebhooksProviderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/engage/unsubscribe/$token': {
+      id: '/api/public/engage/unsubscribe/$token'
+      path: '/api/public/engage/unsubscribe/$token'
+      fullPath: '/api/public/engage/unsubscribe/$token'
+      preLoaderRoute: typeof ApiPublicEngageUnsubscribeTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/engage/hooks/sequence-tick': {
+      id: '/api/public/engage/hooks/sequence-tick'
+      path: '/api/public/engage/hooks/sequence-tick'
+      fullPath: '/api/public/engage/hooks/sequence-tick'
+      preLoaderRoute: typeof ApiPublicEngageHooksSequenceTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/student/programs/view/$slug': {
       id: '/_authenticated/student/programs/view/$slug'
       path: '/programs/view/$slug'
@@ -9843,6 +9906,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
+  ApiPublicEngageHooksSequenceTickRoute: ApiPublicEngageHooksSequenceTickRoute,
+  ApiPublicEngageUnsubscribeTokenRoute: ApiPublicEngageUnsubscribeTokenRoute,
+  ApiPublicEngageWebhooksProviderRoute: ApiPublicEngageWebhooksProviderRoute,
   ApiV1CertificatesVerifyCodeRoute: ApiV1CertificatesVerifyCodeRoute,
 }
 export const routeTree = rootRouteImport
