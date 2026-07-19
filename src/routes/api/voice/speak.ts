@@ -4,10 +4,10 @@ export const Route = createFileRoute("/api/voice/speak")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const key = process.env.LOVABLE_API_KEY;
-        if (!key) return new Response("Voice service not configured", { status: 500 });
+        const key = process.env.OPENAI_API_KEY;
+        if (!key) return new Response("Voice service not configured (OPENAI_API_KEY missing)", { status: 500 });
 
-        let body: { text?: string; voice?: string; speed?: number };
+        let body: { text?: string; voice?: string; speed?: number; model?: string };
         try {
           body = await request.json();
         } catch {
@@ -19,16 +19,17 @@ export const Route = createFileRoute("/api/voice/speak")({
 
         const voice = String(body.voice ?? "alloy");
         const speed = Math.max(0.5, Math.min(2, Number(body.speed ?? 1)));
+        const model = String(body.model ?? "gpt-4o-mini-tts");
 
         try {
-          const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/speech", {
+          const res = await fetch("https://api.openai.com/v1/audio/speech", {
             method: "POST",
             headers: {
               Authorization: `Bearer ${key}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              model: "openai/gpt-4o-mini-tts",
+              model,
               input: text,
               voice,
               speed,
