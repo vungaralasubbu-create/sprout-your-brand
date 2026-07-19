@@ -1864,28 +1864,38 @@ export function PremiumHomepage() {
   return (
     <>
       <HeroUniverse />
-      <ThreeJourneys />
+      <React.Suspense fallback={<SectionFallback />}>
+        <ThreeJourneys />
+      </React.Suspense>
       <MotionStatement />
-      <EarnSpotlight />
+      <React.Suspense fallback={<SectionFallback />}>
+        <EarnSpotlight />
+      </React.Suspense>
       <TechnologyLandscape />
       <MotionDivider variant="line" />
       <ProgramUniverse />
       <GenerativeAISpotlight />
-      <CertificationEcosystem />
-      <LearnerInstitutions />
+      <React.Suspense fallback={<SectionFallback />}>
+        <CertificationEcosystem />
+        <LearnerInstitutions />
+      </React.Suspense>
       <LearningDirection />
       <MotionDivider variant="nodes" />
       <CampusCommunity />
       <LearningJourney />
       <SkillsNetwork />
       <WhyGlintr />
-      <WhoAreYou />
+      <React.Suspense fallback={<SectionFallback />}>
+        <WhoAreYou />
+      </React.Suspense>
       <MotionDivider variant="line" />
 
       <EarnWithUs />
       <RevenueStory />
       <LaunchYourBrand />
-      <GlintrWorld />
+      <React.Suspense fallback={<SectionFallback />}>
+        <GlintrWorld />
+      </React.Suspense>
       <GlintrNumbers />
       <FinalBrandStatement />
       <PreFooterPathways />
