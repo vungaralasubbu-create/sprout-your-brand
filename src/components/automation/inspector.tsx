@@ -92,13 +92,13 @@ export function NodeInspector({ workflow, nodeId, onChange, onSelect }: Props) {
       {def?.configSchema?.map((f) => (
         <Field key={f.key} label={f.label}>
           {f.type === "select" ? (
-            <select value={node.config[f.key] ?? f.default ?? ""} onChange={(e) => patchConfig(f.key, e.target.value)} className="w-full h-8 rounded-md border border-input bg-transparent px-2 text-xs">
+            <select value={String(node.config[f.key] ?? f.default ?? "")} onChange={(e) => patchConfig(f.key, e.target.value)} className="w-full h-8 rounded-md border border-input bg-transparent px-2 text-xs">
               {(f.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
           ) : f.type === "boolean" ? (
             <input type="checkbox" checked={!!node.config[f.key]} onChange={(e) => patchConfig(f.key, e.target.checked)} />
           ) : (
-            <Input type={f.type === "number" ? "number" : "text"} value={node.config[f.key] ?? f.default ?? ""} onChange={(e) => patchConfig(f.key, f.type === "number" ? Number(e.target.value) : e.target.value)} className="h-8 text-xs" />
+            <Input type={f.type === "number" ? "number" : "text"} value={String(node.config[f.key] ?? f.default ?? "")} onChange={(e) => patchConfig(f.key, f.type === "number" ? Number(e.target.value) : e.target.value)} className="h-8 text-xs" />
           )}
         </Field>
       ))}
