@@ -17,6 +17,48 @@ function newRequestId(req: Request): string {
     (globalThis.crypto?.randomUUID?.() ?? `req_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`);
 }
 
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let out = 0;
+  for (let i = 0; i < a.length; i++) out |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return out === 0;
+}
+
+function isAuthorized(req: Request): boolean {
+  // Accept either the shared internal secret (server-to-server callers such
+  // as the app's ai-gateway.server.ts) or a valid Supabase user JWT via
+  // Authorization: Bearer <access_token>. The anon/publishable key does NOT
+  // grant access — it is public and shipped in the client bundle.
+  // deno-lint-ignore no-explicit-any
+  const env = (globalThis as any).Deno?.env;
+  const expected = env?.get?.("AI_ROUTER_INTERNAL_SECRET") ?? "";
+  if (expected) {
+    const provided = req.headers.get("x-internal-secret") ?? "";
+    if (provided && timingSafeEqual(provided, expected)) return true;
+  }
+  // Fall back to Supabase JWT check: verify the Bearer token is a signed JWT
+  // (not just the public anon key). The anon key is not a JWT — it starts
+  // with `sb_` or is a static publishable key — while a user session JWT has
+  // three base64url segments. Require exactly that shape here so anon keys
+  // are rejected.
+  const authz = req.headers.get("authorization") ?? "";
+  const m = authz.match(/^Bearer\s+(.+)$/i);
+  if (!m) return false;
+  const tok = m[1].trim();
+  const parts = tok.split(".");
+  if (parts.length !== 3) return false;
+  try {
+    const payload = JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+    // A real Supabase user JWT carries `sub` (user id) and `aud === "authenticated"`.
+    if (!payload?.sub) return false;
+    if (payload.aud && payload.aud !== "authenticated") return false;
+    if (payload.exp && Date.now() / 1000 > Number(payload.exp)) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function handle(req: Request): Promise<Response> {
   // CORS preflight
   if (req.method === "OPTIONS") {
@@ -27,6 +69,13 @@ export async function handle(req: Request): Promise<Response> {
       success: false,
       error: { code: "method_not_allowed", message: "Only POST is supported." },
     } as AIRouterError, { "allow": "POST, OPTIONS" });
+  }
+
+  if (!isAuthorized(req)) {
+    return json(401, {
+      success: false,
+      error: { code: "unauthorized", message: "Missing or invalid credentials." },
+    } as AIRouterError);
   }
 
   const requestId = newRequestId(req);
