@@ -5,6 +5,12 @@
  */
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
+// The graph spans many content tables with distinct schemas; use a loose
+// client here to avoid coupling to generated types. Never used for auth.
+const db = supabaseAdmin as unknown as {
+  from: (t: string) => any;
+};
+
 export type NodeContentType =
   | "blog" | "course" | "career_guide" | "roadmap" | "interview_questions"
   | "project" | "tutorial" | "salary" | "technology" | "comparison"
@@ -12,50 +18,35 @@ export type NodeContentType =
   | "student_story" | "case_study" | "landing" | "faq" | "glossary"
   | "pseo";
 
-export interface NodeRow {
-  id: string;
-  content_type: string;
-  content_id: string;
-  url: string;
-  title: string | null;
-  topic_cluster: string | null;
-  keywords: string[];
-  authority: number;
-  inbound_count: number;
-  outbound_count: number;
-  is_orphan: boolean;
-}
-
 /**
  * Rebuild the graph node index from published content sources.
  * Idempotent — upserts by (content_type, content_id).
  */
 export async function rebuildGraphNodes(): Promise<{ upserted: number }> {
   let upserted = 0;
-  const push = async (rows: Array<Partial<NodeRow> & { content_type: string; content_id: string; url: string }>) => {
+  const push = async (rows: Array<Record<string, unknown>>) => {
     if (!rows.length) return;
-    const { error } = await supabaseAdmin
-      .from("link_graph_nodes")
+    const { error } = await db.from("link_graph_nodes")
       .upsert(rows, { onConflict: "content_type,content_id" });
     if (!error) upserted += rows.length;
   };
 
   // Blogs
-  const { data: blogs } = await supabaseAdmin
-    .from("blog_posts").select("id, slug, title, category, tags, status")
+  const { data: blogs } = await db.from("blog_posts")
+    .select("id, slug, title, category_id, keywords, status")
     .eq("status", "published").limit(5000);
   await push((blogs ?? []).map((b: any) => ({
     content_type: "blog",
     content_id: String(b.id),
     url: `/blog/${b.slug}`,
     title: b.title,
-    topic_cluster: b.category ?? null,
-    keywords: Array.isArray(b.tags) ? b.tags : [],
+    topic_cluster: b.category_id ?? null,
+    keywords: Array.isArray(b.keywords) ? b.keywords : [],
   })));
 
   // Courses
-  const { data: courses } = await supabaseAdmin
-    .from("courses").select("id, slug, title, category_id, tags, status")
+  const { data: courses } = await db.from("courses")
+    .select("id, slug, title, category_id, status")
     .in("status", ["published", "active"]).limit(5000);
   await push((courses ?? []).map((c: any) => ({
     content_type: "course",
@@ -63,53 +54,52 @@ export async function rebuildGraphNodes(): Promise<{ upserted: number }> {
     url: `/programs/${c.slug}`,
     title: c.title,
     topic_cluster: c.category_id ?? null,
-    keywords: Array.isArray(c.tags) ? c.tags : [],
+    keywords: [],
   })));
 
   // Content Hub items (roadmaps, tutorials, guides, comparisons, etc.)
-  const { data: items } = await supabaseAdmin
-    .from("content_items").select("id, slug, title, kind, category, tags, status")
+  const { data: items } = await db.from("content_items")
+    .select("id, slug, title, kind, category_id, status")
     .eq("status", "published").limit(20000);
   await push((items ?? []).map((c: any) => ({
     content_type: mapKind(c.kind),
     content_id: String(c.id),
-    url: `/${c.kind}/${c.slug}`,
+    url: `/${c.kind ?? "content"}/${c.slug}`,
     title: c.title,
-    topic_cluster: c.category ?? null,
-    keywords: Array.isArray(c.tags) ? c.tags : [],
+    topic_cluster: c.category_id ?? null,
+    keywords: [],
   })));
 
   // Programmatic SEO pages
-  const { data: pseo } = await supabaseAdmin
-    .from("pseo_pages").select("id, slug, title, template_type, keywords, status")
+  const { data: pseo } = await db.from("pseo_pages")
+    .select("id, slug, title, keywords, status")
     .eq("status", "published").limit(20000);
   await push((pseo ?? []).map((p: any) => ({
     content_type: "pseo",
     content_id: String(p.id),
     url: `/p/${p.slug}`,
     title: p.title,
-    topic_cluster: p.template_type ?? null,
     keywords: Array.isArray(p.keywords) ? p.keywords : [],
   })));
 
-  // Glossary
-  const { data: glossary } = await supabaseAdmin
-    .from("kb_articles").select("id, slug, title, category_id, status")
-    .eq("status", "published").limit(5000);
-  await push((glossary ?? []).map((g: any) => ({
-    content_type: "glossary",
+  // Knowledge base / glossary
+  const { data: kb } = await db.from("kb_articles")
+    .select("id, slug, title, category_id, kind, tags, published")
+    .eq("published", true).limit(5000);
+  await push((kb ?? []).map((g: any) => ({
+    content_type: g.kind === "glossary" ? "glossary" : "faq",
     content_id: String(g.id),
     url: `/help/${g.slug}`,
     title: g.title,
     topic_cluster: g.category_id ?? null,
-    keywords: [],
+    keywords: Array.isArray(g.tags) ? g.tags : [],
   })));
 
   await recomputeGraphStats();
   return { upserted };
 }
 
-function mapKind(kind: string): string {
+function mapKind(kind: string | null): string {
   const m: Record<string, string> = {
     roadmap: "roadmap", tutorial: "tutorial", guide: "career_guide",
     comparison: "comparison", certification: "certification",
@@ -119,51 +109,44 @@ function mapKind(kind: string): string {
     company: "company", placement: "placement", scholarship: "scholarship",
     landing: "landing",
   };
-  return m[kind] ?? "landing";
+  return m[kind ?? ""] ?? "landing";
 }
 
 /** Recompute inbound/outbound counts + orphan flags from link_graph_edges. */
 export async function recomputeGraphStats(): Promise<void> {
-  await supabaseAdmin.rpc("exec_sql", { sql: "SELECT 1" }).catch(() => {});
-  // Fallback: two aggregate queries
-  const { data: outb } = await supabaseAdmin
-    .from("link_graph_edges").select("from_node_id").eq("status", "active");
-  const { data: inb } = await supabaseAdmin
-    .from("link_graph_edges").select("to_node_id").eq("status", "active");
+  const { data: outb } = await db.from("link_graph_edges")
+    .select("from_node_id").eq("status", "active");
+  const { data: inb } = await db.from("link_graph_edges")
+    .select("to_node_id").eq("status", "active");
 
   const outCount = new Map<string, number>();
   const inCount = new Map<string, number>();
   (outb ?? []).forEach((r: any) => outCount.set(r.from_node_id, (outCount.get(r.from_node_id) ?? 0) + 1));
   (inb ?? []).forEach((r: any) => inCount.set(r.to_node_id, (inCount.get(r.to_node_id) ?? 0) + 1));
 
-  const { data: nodes } = await supabaseAdmin.from("link_graph_nodes").select("id");
-  const updates = (nodes ?? []).map((n: any) => {
+  const { data: nodes } = await db.from("link_graph_nodes").select("id");
+  for (const n of (nodes ?? []) as Array<{ id: string }>) {
     const outC = outCount.get(n.id) ?? 0;
     const inC = inCount.get(n.id) ?? 0;
-    return {
-      id: n.id,
+    await db.from("link_graph_nodes").update({
       inbound_count: inC,
       outbound_count: outC,
       is_orphan: inC === 0,
       updated_at: new Date().toISOString(),
-    };
-  });
-  // Chunked upsert
-  for (let i = 0; i < updates.length; i += 500) {
-    await supabaseAdmin.from("link_graph_nodes").upsert(updates.slice(i, i + 500));
+    }).eq("id", n.id);
   }
 }
 
 /** Simple internal PageRank (damped, in-memory). */
 export async function computePageRank(iterations = 20, damping = 0.85): Promise<void> {
-  const { data: nodes } = await supabaseAdmin.from("link_graph_nodes").select("id");
-  const { data: edges } = await supabaseAdmin
-    .from("link_graph_edges").select("from_node_id, to_node_id, weight").eq("status", "active");
+  const { data: nodes } = await db.from("link_graph_nodes").select("id");
+  const { data: edges } = await db.from("link_graph_edges")
+    .select("from_node_id, to_node_id, weight").eq("status", "active");
   if (!nodes?.length) return;
 
-  const ids = nodes.map((n: any) => n.id);
+  const ids = (nodes as Array<{ id: string }>).map((n) => n.id);
   const N = ids.length;
-  const rank = new Map<string, number>(ids.map((id: string) => [id, 1 / N]));
+  const rank = new Map<string, number>(ids.map((id) => [id, 1 / N]));
   const outAdj = new Map<string, Array<{ to: string; w: number }>>();
   (edges ?? []).forEach((e: any) => {
     const arr = outAdj.get(e.from_node_id) ?? [];
@@ -172,7 +155,7 @@ export async function computePageRank(iterations = 20, damping = 0.85): Promise<
   });
 
   for (let it = 0; it < iterations; it++) {
-    const next = new Map<string, number>(ids.map((id: string) => [id, (1 - damping) / N]));
+    const next = new Map<string, number>(ids.map((id) => [id, (1 - damping) / N]));
     for (const [from, outs] of outAdj) {
       const r = rank.get(from) ?? 0;
       const totalW = outs.reduce((s, o) => s + o.w, 0) || 1;
@@ -183,11 +166,11 @@ export async function computePageRank(iterations = 20, damping = 0.85): Promise<
     for (const [k, v] of next) rank.set(k, v);
   }
 
-  const updates = ids.map((id: string) => ({
-    id, pagerank: rank.get(id) ?? 0, authority: (rank.get(id) ?? 0) * N,
-    updated_at: new Date().toISOString(),
-  }));
-  for (let i = 0; i < updates.length; i += 500) {
-    await supabaseAdmin.from("link_graph_nodes").upsert(updates.slice(i, i + 500));
+  for (const id of ids) {
+    await db.from("link_graph_nodes").update({
+      pagerank: rank.get(id) ?? 0,
+      authority: (rank.get(id) ?? 0) * N,
+      updated_at: new Date().toISOString(),
+    }).eq("id", id);
   }
 }
