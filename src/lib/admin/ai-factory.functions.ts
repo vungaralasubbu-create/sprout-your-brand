@@ -7,6 +7,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { callLovableAiJson, callLovableAiText, isAiAvailable } from "@/lib/ai-gateway.server";
+import { generateImageBase64 as generateImageBase64Provider } from "@/lib/ai/image.server";
 
 async function ensureAdmin(context: any) {
   const { data, error } = await context.supabase.rpc("is_admin", { _user_id: context.userId });
