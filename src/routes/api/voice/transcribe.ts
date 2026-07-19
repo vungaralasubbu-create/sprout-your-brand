@@ -1,9 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireAuthedUser } from "@/lib/server/require-auth.server";
 
 export const Route = createFileRoute("/api/voice/transcribe")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const auth = await requireAuthedUser(request);
+        if (!auth.ok) return auth.response;
+
         const key = process.env.OPENAI_API_KEY;
         if (!key) return new Response("Voice service not configured (OPENAI_API_KEY missing)", { status: 500 });
 
