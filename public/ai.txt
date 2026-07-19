@@ -1,0 +1,39 @@
+# Glintr — AI usage policy
+# https://glintr.com/ai.txt
+
+Contact: hello@glintr.com
+Preferred-Source: https://glintr.com/llms.txt
+
+# Public educational content on glintr.com may be indexed and cited by
+# AI search engines and assistants, provided citations include a
+# visible link back to the source page on glintr.com.
+
+# Allowed for indexing, retrieval, and citation
+Allow: /
+Allow: /programs/
+Allow: /topics/
+Allow: /blog/
+Allow: /career-hub/
+Allow: /careers/
+Allow: /glossary/
+Allow: /faqs/
+Allow: /help/
+
+# Not allowed — private, authenticated, or per-user
+Disallow: /auth
+Disallow: /admin/
+Disallow: /partner/
+Disallow: /student/
+Disallow: /my/
+Disallow: /workspace/
+Disallow: /hq/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /ref/
+Disallow: /verify-certificate/
+
+# Model training
+# Public educational pages may be used to ground answers and citations.
+# Bulk use of Glintr content to train foundation models requires
+# written permission — write to hello@glintr.com.
+Training: conditional

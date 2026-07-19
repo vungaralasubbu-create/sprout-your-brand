@@ -346,10 +346,12 @@ import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_a
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/public/webhooks/cashfree'
+import { Route as ApiPublicTopicsJsonRouteImport } from './routes/api/public/topics.json'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
 import { Route as ApiPublicHooksBrainTickRouteImport } from './routes/api/public/hooks/brain-tick'
 import { Route as ApiPublicHooksAutomationTickRouteImport } from './routes/api/public/hooks/automation-tick'
 import { Route as ApiPublicEmailTickRouteImport } from './routes/api/public/email/tick'
+import { Route as ApiPublicCoursesJsonRouteImport } from './routes/api/public/courses.json'
 import { Route as ApiPublicAiSalesWebhookRouteImport } from './routes/api/public/ai-sales/webhook'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
@@ -2343,6 +2345,11 @@ const ApiPublicWebhooksCashfreeRoute =
     path: '/api/public/webhooks/cashfree',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicTopicsJsonRoute = ApiPublicTopicsJsonRouteImport.update({
+  id: '/api/public/topics/json',
+  path: '/api/public/topics/json',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   id: '/api/public/hooks/seo-ping',
   path: '/api/public/hooks/seo-ping',
@@ -2362,6 +2369,11 @@ const ApiPublicHooksAutomationTickRoute =
 const ApiPublicEmailTickRoute = ApiPublicEmailTickRouteImport.update({
   id: '/api/public/email/tick',
   path: '/api/public/email/tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCoursesJsonRoute = ApiPublicCoursesJsonRouteImport.update({
+  id: '/api/public/courses/json',
+  path: '/api/public/courses/json',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicAiSalesWebhookRoute = ApiPublicAiSalesWebhookRouteImport.update({
@@ -3558,10 +3570,12 @@ export interface FileRoutesByFullPath {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
+  '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -4016,10 +4030,12 @@ export interface FileRoutesByTo {
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
+  '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -4490,10 +4506,12 @@ export interface FileRoutesById {
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
+  '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
   '/api/public/hooks/automation-tick': typeof ApiPublicHooksAutomationTickRoute
   '/api/public/hooks/brain-tick': typeof ApiPublicHooksBrainTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
@@ -4964,10 +4982,12 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/api/public/ai-sales/webhook'
+    | '/api/public/courses/json'
     | '/api/public/email/tick'
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -5422,10 +5442,12 @@ export interface FileRouteTypes {
     | '/student/support/$id'
     | '/student/support/new'
     | '/api/public/ai-sales/webhook'
+    | '/api/public/courses/json'
     | '/api/public/email/tick'
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -5895,10 +5917,12 @@ export interface FileRouteTypes {
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
     | '/api/public/ai-sales/webhook'
+    | '/api/public/courses/json'
     | '/api/public/email/tick'
     | '/api/public/hooks/automation-tick'
     | '/api/public/hooks/brain-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
@@ -6056,10 +6080,12 @@ export interface RootRouteChildren {
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
   TopicsPillarIndexRoute: typeof TopicsPillarIndexRoute
   ApiPublicAiSalesWebhookRoute: typeof ApiPublicAiSalesWebhookRoute
+  ApiPublicCoursesJsonRoute: typeof ApiPublicCoursesJsonRoute
   ApiPublicEmailTickRoute: typeof ApiPublicEmailTickRoute
   ApiPublicHooksAutomationTickRoute: typeof ApiPublicHooksAutomationTickRoute
   ApiPublicHooksBrainTickRoute: typeof ApiPublicHooksBrainTickRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
+  ApiPublicTopicsJsonRoute: typeof ApiPublicTopicsJsonRoute
   ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
@@ -8430,6 +8456,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksCashfreeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/topics/json': {
+      id: '/api/public/topics/json'
+      path: '/api/public/topics/json'
+      fullPath: '/api/public/topics/json'
+      preLoaderRoute: typeof ApiPublicTopicsJsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/seo-ping': {
       id: '/api/public/hooks/seo-ping'
       path: '/api/public/hooks/seo-ping'
@@ -8456,6 +8489,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/email/tick'
       fullPath: '/api/public/email/tick'
       preLoaderRoute: typeof ApiPublicEmailTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/courses/json': {
+      id: '/api/public/courses/json'
+      path: '/api/public/courses/json'
+      fullPath: '/api/public/courses/json'
+      preLoaderRoute: typeof ApiPublicCoursesJsonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/ai-sales/webhook': {
@@ -10794,10 +10834,12 @@ const rootRouteChildren: RootRouteChildren = {
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
   TopicsPillarIndexRoute: TopicsPillarIndexRoute,
   ApiPublicAiSalesWebhookRoute: ApiPublicAiSalesWebhookRoute,
+  ApiPublicCoursesJsonRoute: ApiPublicCoursesJsonRoute,
   ApiPublicEmailTickRoute: ApiPublicEmailTickRoute,
   ApiPublicHooksAutomationTickRoute: ApiPublicHooksAutomationTickRoute,
   ApiPublicHooksBrainTickRoute: ApiPublicHooksBrainTickRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
+  ApiPublicTopicsJsonRoute: ApiPublicTopicsJsonRoute,
   ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,

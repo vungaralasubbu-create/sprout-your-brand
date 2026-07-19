@@ -160,6 +160,45 @@ function PillarPage() {
 
         <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 lg:grid-cols-[1fr_260px]">
           <article className="min-w-0 space-y-16">
+            {/* QuickAnswer / TL;DR — optimized for AI extractive answers */}
+            <section
+              aria-labelledby="quick-answer"
+              itemScope
+              itemType="https://schema.org/Question"
+              className="rounded-2xl border border-primary/30 bg-primary/5 p-5"
+            >
+              <h2 id="quick-answer" className="text-label mb-2 flex items-center gap-2" itemProp="name">
+                <Sparkles className="h-4 w-4 text-primary" /> What is {pillar.name}?
+              </h2>
+              <div
+                itemProp="acceptedAnswer"
+                itemScope
+                itemType="https://schema.org/Answer"
+              >
+                <p className="text-sm leading-relaxed text-foreground" itemProp="text">
+                  {pillar.overview}
+                </p>
+              </div>
+              <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-3">
+                <div>
+                  <dt className="text-muted-foreground">Category</dt>
+                  <dd className="mt-0.5 font-semibold">{pillar.category}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Top roles</dt>
+                  <dd className="mt-0.5 font-semibold">
+                    {pillar.careers.slice(0, 2).map((c: { role: string }) => c.role).join(", ")}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">Core skills</dt>
+                  <dd className="mt-0.5 font-semibold">
+                    {pillar.skills.slice(0, 3).join(", ")}
+                  </dd>
+                </div>
+              </dl>
+            </section>
+
             {/* Overview */}
             {pillar.body && (
               <section>
