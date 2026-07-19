@@ -162,7 +162,7 @@ export async function evaluatePrompt(
     }
   }
 
-  const allowed = action !== "block";
+  const allowed = (action as string) !== "block";
   return {
     allowed,
     action,
