@@ -218,7 +218,7 @@ function SeoHealthCenter() {
                 <Button
                   key={f}
                   size="sm"
-                  variant={filter === f ? "default" : "outline"}
+                  variant={filter === f ? "primary" : "outline"}
                   onClick={() => setFilter(f)}
                   className="capitalize"
                 >
