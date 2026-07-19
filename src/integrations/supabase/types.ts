@@ -6840,6 +6840,271 @@ export type Database = {
         }
         Relationships: []
       }
+      ce_campaigns: {
+        Row: {
+          audience: string | null
+          brand_id: string | null
+          created_at: string
+          description: string | null
+          goal: string | null
+          id: string
+          language: string
+          meta: Json
+          owner_id: string
+          platforms: string[]
+          scheduled_at: string | null
+          status: string
+          title: string
+          tone: string | null
+          updated_at: string
+        }
+        Insert: {
+          audience?: string | null
+          brand_id?: string | null
+          created_at?: string
+          description?: string | null
+          goal?: string | null
+          id?: string
+          language?: string
+          meta?: Json
+          owner_id: string
+          platforms?: string[]
+          scheduled_at?: string | null
+          status?: string
+          title: string
+          tone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          audience?: string | null
+          brand_id?: string | null
+          created_at?: string
+          description?: string | null
+          goal?: string | null
+          id?: string
+          language?: string
+          meta?: Json
+          owner_id?: string
+          platforms?: string[]
+          scheduled_at?: string | null
+          status?: string
+          title?: string
+          tone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ce_campaigns_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ce_generations: {
+        Row: {
+          asset_type: string
+          campaign_id: string
+          content: string
+          created_at: string
+          edited: boolean
+          id: string
+          meta: Json
+          model_used: string | null
+          owner_id: string
+          parent_generation_id: string | null
+          prompt_version_id: string | null
+          provider: string | null
+          published_at: string | null
+          scheduled_at: string | null
+          status: string
+          updated_at: string
+          usage: Json
+        }
+        Insert: {
+          asset_type: string
+          campaign_id: string
+          content?: string
+          created_at?: string
+          edited?: boolean
+          id?: string
+          meta?: Json
+          model_used?: string | null
+          owner_id: string
+          parent_generation_id?: string | null
+          prompt_version_id?: string | null
+          provider?: string | null
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+          usage?: Json
+        }
+        Update: {
+          asset_type?: string
+          campaign_id?: string
+          content?: string
+          created_at?: string
+          edited?: boolean
+          id?: string
+          meta?: Json
+          model_used?: string | null
+          owner_id?: string
+          parent_generation_id?: string | null
+          prompt_version_id?: string | null
+          provider?: string | null
+          published_at?: string | null
+          scheduled_at?: string | null
+          status?: string
+          updated_at?: string
+          usage?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ce_generations_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ce_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ce_generations_parent_generation_id_fkey"
+            columns: ["parent_generation_id"]
+            isOneToOne: false
+            referencedRelation: "ce_generations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ce_generations_prompt_version_id_fkey"
+            columns: ["prompt_version_id"]
+            isOneToOne: false
+            referencedRelation: "ce_prompt_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ce_prompt_registry: {
+        Row: {
+          active_version_id: string | null
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+        }
+        Insert: {
+          active_version_id?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+        }
+        Update: {
+          active_version_id?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ce_prompt_registry_active_version_fkey"
+            columns: ["active_version_id"]
+            isOneToOne: false
+            referencedRelation: "ce_prompt_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ce_prompt_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          model_preference: Json
+          notes: string | null
+          registry_id: string
+          template: string
+          variables: Json
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          model_preference?: Json
+          notes?: string | null
+          registry_id: string
+          template: string
+          variables?: Json
+          version: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          model_preference?: Json
+          notes?: string | null
+          registry_id?: string
+          template?: string
+          variables?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ce_prompt_versions_registry_id_fkey"
+            columns: ["registry_id"]
+            isOneToOne: false
+            referencedRelation: "ce_prompt_registry"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ce_templates: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          name: string
+          owner_id: string | null
+          payload: Json
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name: string
+          owner_id?: string | null
+          payload?: Json
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name?: string
+          owner_id?: string | null
+          payload?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           certificate_number: string
