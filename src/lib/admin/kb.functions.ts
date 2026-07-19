@@ -133,16 +133,13 @@ export const getKbArticle = createServerFn({ method: "GET" })
       (data || []).forEach((r: any) => { if (!seen.has(r.id) && related.length < 6) related.push(r); });
     }
 
-    // Fire-and-forget view increment via admin client (safe, single-column)
+    // Fire-and-forget view increment via admin client
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      await supabaseAdmin.rpc("kb_increment_view", { _id: article.id }).then(() => {}, () => {
-        // rpc might not exist; fall back to direct update
-        return supabaseAdmin
-          .from("kb_articles")
-          .update({ view_count: (article.view_count || 0) + 1 })
-          .eq("id", article.id);
-      });
+      await supabaseAdmin
+        .from("kb_articles")
+        .update({ view_count: (article.view_count || 0) + 1 })
+        .eq("id", article.id);
     } catch { /* non-fatal */ }
 
     return { article, related, category: category || null };
