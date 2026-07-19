@@ -8485,6 +8485,62 @@ export type Database = {
         }
         Relationships: []
       }
+      content_ai_assist_jobs: {
+        Row: {
+          action: string
+          completed_at: string | null
+          content_id: string | null
+          cost_usd: number | null
+          created_at: string
+          error: string | null
+          id: string
+          input: Json
+          model: string | null
+          output: Json | null
+          requested_by: string
+          status: string
+          tokens_used: number | null
+        }
+        Insert: {
+          action: string
+          completed_at?: string | null
+          content_id?: string | null
+          cost_usd?: number | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          input?: Json
+          model?: string | null
+          output?: Json | null
+          requested_by: string
+          status?: string
+          tokens_used?: number | null
+        }
+        Update: {
+          action?: string
+          completed_at?: string | null
+          content_id?: string | null
+          cost_usd?: number | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          input?: Json
+          model?: string | null
+          output?: Json | null
+          requested_by?: string
+          status?: string
+          tokens_used?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_ai_assist_jobs_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_analytics_events: {
         Row: {
           content_id: string
@@ -8697,111 +8753,195 @@ export type Database = {
       }
       content_items: {
         Row: {
+          ai_generated: boolean
           archived_at: string | null
           author_id: string | null
           avg_reading_time_sec: number | null
           body_markdown: string | null
+          breadcrumb: Json
           canonical_url: string | null
           category_id: string | null
           completion_rate: number | null
           created_at: string
           created_by: string | null
+          difficulty: string | null
+          downloads: Json
+          editor_blocks: Json
+          expires_at: string | null
           featured_image: string | null
           featured_image_alt: string | null
           focus_topic: string | null
+          hero_video_url: string | null
           id: string
           internal_click_count: number
+          language: string
           last_edited_by: string | null
+          locale_group_id: string | null
+          media_gallery: Json
           metadata: Json | null
           og_image: string | null
           outline: Json | null
           published_at: string | null
           reading_time_min: number | null
+          refresh_due_at: string | null
+          rejection_reason: string | null
+          related_career_ids: string[]
+          related_certification_slugs: string[]
+          related_content_ids: string[]
+          related_course_ids: string[]
+          related_project_ids: string[]
           related_topics: string[] | null
+          review_due_at: string | null
           reviewer_id: string | null
+          robots_directives: string
           scheduled_for: string | null
           schema_type: string | null
+          search_tsv: unknown
+          secondary_keywords: string[]
           seo_description: string | null
+          seo_score: number | null
           seo_title: string | null
           slug: string
           status: Database["public"]["Enums"]["content_status"]
+          subcategory: string | null
           summary: string | null
           tag_slugs: string[] | null
+          target_audience: string | null
           title: string
+          twitter_card: string
+          twitter_description: string | null
+          twitter_image: string | null
+          twitter_title: string | null
           type: Database["public"]["Enums"]["content_type"]
           updated_at: string
           view_count: number
           word_count: number | null
         }
         Insert: {
+          ai_generated?: boolean
           archived_at?: string | null
           author_id?: string | null
           avg_reading_time_sec?: number | null
           body_markdown?: string | null
+          breadcrumb?: Json
           canonical_url?: string | null
           category_id?: string | null
           completion_rate?: number | null
           created_at?: string
           created_by?: string | null
+          difficulty?: string | null
+          downloads?: Json
+          editor_blocks?: Json
+          expires_at?: string | null
           featured_image?: string | null
           featured_image_alt?: string | null
           focus_topic?: string | null
+          hero_video_url?: string | null
           id?: string
           internal_click_count?: number
+          language?: string
           last_edited_by?: string | null
+          locale_group_id?: string | null
+          media_gallery?: Json
           metadata?: Json | null
           og_image?: string | null
           outline?: Json | null
           published_at?: string | null
           reading_time_min?: number | null
+          refresh_due_at?: string | null
+          rejection_reason?: string | null
+          related_career_ids?: string[]
+          related_certification_slugs?: string[]
+          related_content_ids?: string[]
+          related_course_ids?: string[]
+          related_project_ids?: string[]
           related_topics?: string[] | null
+          review_due_at?: string | null
           reviewer_id?: string | null
+          robots_directives?: string
           scheduled_for?: string | null
           schema_type?: string | null
+          search_tsv?: unknown
+          secondary_keywords?: string[]
           seo_description?: string | null
+          seo_score?: number | null
           seo_title?: string | null
           slug: string
           status?: Database["public"]["Enums"]["content_status"]
+          subcategory?: string | null
           summary?: string | null
           tag_slugs?: string[] | null
+          target_audience?: string | null
           title: string
+          twitter_card?: string
+          twitter_description?: string | null
+          twitter_image?: string | null
+          twitter_title?: string | null
           type: Database["public"]["Enums"]["content_type"]
           updated_at?: string
           view_count?: number
           word_count?: number | null
         }
         Update: {
+          ai_generated?: boolean
           archived_at?: string | null
           author_id?: string | null
           avg_reading_time_sec?: number | null
           body_markdown?: string | null
+          breadcrumb?: Json
           canonical_url?: string | null
           category_id?: string | null
           completion_rate?: number | null
           created_at?: string
           created_by?: string | null
+          difficulty?: string | null
+          downloads?: Json
+          editor_blocks?: Json
+          expires_at?: string | null
           featured_image?: string | null
           featured_image_alt?: string | null
           focus_topic?: string | null
+          hero_video_url?: string | null
           id?: string
           internal_click_count?: number
+          language?: string
           last_edited_by?: string | null
+          locale_group_id?: string | null
+          media_gallery?: Json
           metadata?: Json | null
           og_image?: string | null
           outline?: Json | null
           published_at?: string | null
           reading_time_min?: number | null
+          refresh_due_at?: string | null
+          rejection_reason?: string | null
+          related_career_ids?: string[]
+          related_certification_slugs?: string[]
+          related_content_ids?: string[]
+          related_course_ids?: string[]
+          related_project_ids?: string[]
           related_topics?: string[] | null
+          review_due_at?: string | null
           reviewer_id?: string | null
+          robots_directives?: string
           scheduled_for?: string | null
           schema_type?: string | null
+          search_tsv?: unknown
+          secondary_keywords?: string[]
           seo_description?: string | null
+          seo_score?: number | null
           seo_title?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["content_status"]
+          subcategory?: string | null
           summary?: string | null
           tag_slugs?: string[] | null
+          target_audience?: string | null
           title?: string
+          twitter_card?: string
+          twitter_description?: string | null
+          twitter_image?: string | null
+          twitter_title?: string | null
           type?: Database["public"]["Enums"]["content_type"]
           updated_at?: string
           view_count?: number
@@ -8827,6 +8967,38 @@ export type Database = {
             columns: ["reviewer_id"]
             isOneToOne: false
             referencedRelation: "content_authors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_locks: {
+        Row: {
+          acquired_at: string
+          content_id: string
+          expires_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          acquired_at?: string
+          content_id: string
+          expires_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          acquired_at?: string
+          content_id?: string
+          expires_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_locks_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: true
+            referencedRelation: "content_items"
             referencedColumns: ["id"]
           },
         ]
@@ -8882,6 +9054,50 @@ export type Database = {
         }
         Relationships: []
       }
+      content_relations: {
+        Row: {
+          auto_generated: boolean
+          created_at: string
+          id: string
+          relation: string
+          source_id: string
+          target_id: string | null
+          target_slug: string | null
+          target_type: string
+          weight: number
+        }
+        Insert: {
+          auto_generated?: boolean
+          created_at?: string
+          id?: string
+          relation?: string
+          source_id: string
+          target_id?: string | null
+          target_slug?: string | null
+          target_type: string
+          weight?: number
+        }
+        Update: {
+          auto_generated?: boolean
+          created_at?: string
+          id?: string
+          relation?: string
+          source_id?: string
+          target_id?: string | null
+          target_slug?: string | null
+          target_type?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_relations_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_revisions: {
         Row: {
           body_markdown: string | null
@@ -8929,6 +9145,62 @@ export type Database = {
           },
         ]
       }
+      content_schedule: {
+        Row: {
+          assigned_to: string | null
+          content_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: string
+          metadata: Json
+          notes: string | null
+          recurrence: string | null
+          scheduled_for: string
+          status: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          content_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind: string
+          metadata?: Json
+          notes?: string | null
+          recurrence?: string | null
+          scheduled_for: string
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          content_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          metadata?: Json
+          notes?: string | null
+          recurrence?: string | null
+          scheduled_for?: string
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_schedule_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_tags: {
         Row: {
           created_at: string
@@ -8952,6 +9224,44 @@ export type Database = {
           usage_count?: number
         }
         Relationships: []
+      }
+      content_translations: {
+        Row: {
+          content_id: string
+          created_at: string
+          id: string
+          language: string
+          locale_group_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          id?: string
+          language: string
+          locale_group_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          id?: string
+          language?: string
+          locale_group_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_translations_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       counsellor_ai_analyses: {
         Row: {
@@ -23216,6 +23526,7 @@ export type Database = {
         | "in_review"
         | "approved"
         | "scheduled"
+        | "rejected"
       content_type:
         | "learn_guide"
         | "glossary"
@@ -23227,6 +23538,21 @@ export type Database = {
         | "cheat_sheet"
         | "learning_path"
         | "program_support"
+        | "blog_article"
+        | "technology_guide"
+        | "interview_questions"
+        | "project"
+        | "mini_tutorial"
+        | "course_guide"
+        | "salary_guide"
+        | "company_hiring_guide"
+        | "certification_guide"
+        | "industry_news"
+        | "ai_trend"
+        | "success_story"
+        | "case_study"
+        | "tool_review"
+        | "student_story"
       course_app_status:
         | "new"
         | "contacted"
@@ -24191,6 +24517,7 @@ export const Constants = {
         "in_review",
         "approved",
         "scheduled",
+        "rejected",
       ],
       content_type: [
         "learn_guide",
@@ -24203,6 +24530,21 @@ export const Constants = {
         "cheat_sheet",
         "learning_path",
         "program_support",
+        "blog_article",
+        "technology_guide",
+        "interview_questions",
+        "project",
+        "mini_tutorial",
+        "course_guide",
+        "salary_guide",
+        "company_hiring_guide",
+        "certification_guide",
+        "industry_news",
+        "ai_trend",
+        "success_story",
+        "case_study",
+        "tool_review",
+        "student_story",
       ],
       course_app_status: [
         "new",
