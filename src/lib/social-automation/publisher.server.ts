@@ -101,7 +101,7 @@ export async function publishVariant(variantId: string): Promise<{ ok: boolean; 
       owner_id: ownerId,
       attempt_number: attemptNumber,
       status: "success",
-      response_payload: result.raw ?? {},
+      response_payload: (result.raw ?? {}) as never,
       started_at: startedAt,
       finished_at: finishedAt,
     });

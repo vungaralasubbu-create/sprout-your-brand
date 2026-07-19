@@ -110,6 +110,6 @@ export async function computeInsights(ownerId: string) {
   topFrom(buckets.cta, "best_cta");
   topFrom(buckets.capLen, "best_caption_length");
 
-  if (insightRows.length) await db.from("soc_optimization_insights").insert(insightRows);
+  if (insightRows.length) await db.from("soc_optimization_insights").insert(insightRows as never);
   return { insights: insightRows.length };
 }
