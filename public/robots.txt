@@ -49,4 +49,6 @@ Sitemap: https://glintr.com/sitemap-categories.xml
 Sitemap: https://glintr.com/sitemap-blog.xml
 Sitemap: https://glintr.com/sitemap-learning-paths.xml
 Sitemap: https://glintr.com/sitemap-careers.xml
+Sitemap: https://glintr.com/sitemap-success-stories.xml
 Sitemap: https://glintr.com/sitemap-images.xml
+

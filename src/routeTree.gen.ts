@@ -16,6 +16,7 @@ import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-condi
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SitemapSuccessStoriesDotxmlRouteImport } from './routes/sitemap-success-stories[.]xml'
 import { Route as SitemapLearningPathsDotxmlRouteImport } from './routes/sitemap-learning-paths[.]xml'
 import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml'
 import { Route as SitemapImagesDotxmlRouteImport } from './routes/sitemap-images[.]xml'
@@ -484,6 +485,12 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapSuccessStoriesDotxmlRoute =
+  SitemapSuccessStoriesDotxmlRouteImport.update({
+    id: '/sitemap-success-stories.xml',
+    path: '/sitemap-success-stories.xml',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SitemapLearningPathsDotxmlRoute =
   SitemapLearningPathsDotxmlRouteImport.update({
     id: '/sitemap-learning-paths.xml',
@@ -2988,6 +2995,7 @@ export interface FileRoutesByFullPath {
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
+  '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -3426,6 +3434,7 @@ export interface FileRoutesByTo {
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
+  '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -3856,6 +3865,7 @@ export interface FileRoutesById {
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
+  '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
   '/success-stories': typeof SuccessStoriesRouteWithChildren
@@ -4298,6 +4308,7 @@ export interface FileRouteTypes {
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
     | '/sitemap-learning-paths.xml'
+    | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
@@ -4736,6 +4747,7 @@ export interface FileRouteTypes {
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
     | '/sitemap-learning-paths.xml'
+    | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
@@ -5165,6 +5177,7 @@ export interface FileRouteTypes {
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
     | '/sitemap-learning-paths.xml'
+    | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
     | '/success-stories'
@@ -5607,6 +5620,7 @@ export interface RootRouteChildren {
   SitemapImagesDotxmlRoute: typeof SitemapImagesDotxmlRoute
   SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute
   SitemapLearningPathsDotxmlRoute: typeof SitemapLearningPathsDotxmlRoute
+  SitemapSuccessStoriesDotxmlRoute: typeof SitemapSuccessStoriesDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRouteWithChildren
@@ -5702,6 +5716,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-success-stories.xml': {
+      id: '/sitemap-success-stories.xml'
+      path: '/sitemap-success-stories.xml'
+      fullPath: '/sitemap-success-stories.xml'
+      preLoaderRoute: typeof SitemapSuccessStoriesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-learning-paths.xml': {
@@ -10066,6 +10087,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapImagesDotxmlRoute: SitemapImagesDotxmlRoute,
   SitemapIndexDotxmlRoute: SitemapIndexDotxmlRoute,
   SitemapLearningPathsDotxmlRoute: SitemapLearningPathsDotxmlRoute,
+  SitemapSuccessStoriesDotxmlRoute: SitemapSuccessStoriesDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudentSupportRoute: StudentSupportRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRouteWithChildren,
