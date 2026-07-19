@@ -348,6 +348,7 @@ import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspac
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
 import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/public/webhooks/cashfree'
 import { Route as ApiPublicTopicsJsonRouteImport } from './routes/api/public/topics.json'
+import { Route as ApiPublicHooksTechSeoTickRouteImport } from './routes/api/public/hooks/tech-seo-tick'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
 import { Route as ApiPublicHooksPseoTickRouteImport } from './routes/api/public/hooks/pseo-tick'
 import { Route as ApiPublicHooksMktPublishRouteImport } from './routes/api/public/hooks/mkt-publish'
@@ -2361,6 +2362,12 @@ const ApiPublicTopicsJsonRoute = ApiPublicTopicsJsonRouteImport.update({
   path: '/api/public/topics/json',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksTechSeoTickRoute =
+  ApiPublicHooksTechSeoTickRouteImport.update({
+    id: '/api/public/hooks/tech-seo-tick',
+    path: '/api/public/hooks/tech-seo-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   id: '/api/public/hooks/seo-ping',
   path: '/api/public/hooks/seo-ping',
@@ -3614,6 +3621,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
@@ -4079,6 +4087,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
@@ -4560,6 +4569,7 @@ export interface FileRoutesById {
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
+  '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
@@ -5041,6 +5051,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
@@ -5506,6 +5517,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
@@ -5986,6 +5998,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
     | '/api/public/hooks/seo-ping'
+    | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
     | '/programs/$category/$course/apply'
@@ -6154,6 +6167,7 @@ export interface RootRouteChildren {
   ApiPublicHooksMktPublishRoute: typeof ApiPublicHooksMktPublishRoute
   ApiPublicHooksPseoTickRoute: typeof ApiPublicHooksPseoTickRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
+  ApiPublicHooksTechSeoTickRoute: typeof ApiPublicHooksTechSeoTickRoute
   ApiPublicTopicsJsonRoute: typeof ApiPublicTopicsJsonRoute
   ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
@@ -8537,6 +8551,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/topics/json'
       fullPath: '/api/public/topics/json'
       preLoaderRoute: typeof ApiPublicTopicsJsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/tech-seo-tick': {
+      id: '/api/public/hooks/tech-seo-tick'
+      path: '/api/public/hooks/tech-seo-tick'
+      fullPath: '/api/public/hooks/tech-seo-tick'
+      preLoaderRoute: typeof ApiPublicHooksTechSeoTickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/seo-ping': {
@@ -10949,6 +10970,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksMktPublishRoute: ApiPublicHooksMktPublishRoute,
   ApiPublicHooksPseoTickRoute: ApiPublicHooksPseoTickRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
+  ApiPublicHooksTechSeoTickRoute: ApiPublicHooksTechSeoTickRoute,
   ApiPublicTopicsJsonRoute: ApiPublicTopicsJsonRoute,
   ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,

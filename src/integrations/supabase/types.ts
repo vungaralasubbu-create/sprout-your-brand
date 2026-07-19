@@ -23221,6 +23221,494 @@ export type Database = {
         }
         Relationships: []
       }
+      tsh_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          category: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          meta: Json
+          severity: string
+          title: string
+          url: string | null
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          category?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          meta?: Json
+          severity?: string
+          title: string
+          url?: string | null
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          category?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          meta?: Json
+          severity?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
+      tsh_audit_runs: {
+        Row: {
+          config: Json
+          created_at: string
+          error: string | null
+          finished_at: string | null
+          id: string
+          issues_found: number
+          kind: string
+          pages_scanned: number
+          started_at: string | null
+          status: string
+          triggered_by: string | null
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          issues_found?: number
+          kind: string
+          pages_scanned?: number
+          started_at?: string | null
+          status?: string
+          triggered_by?: string | null
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          error?: string | null
+          finished_at?: string | null
+          id?: string
+          issues_found?: number
+          kind?: string
+          pages_scanned?: number
+          started_at?: string | null
+          status?: string
+          triggered_by?: string | null
+        }
+        Relationships: []
+      }
+      tsh_core_web_vitals: {
+        Row: {
+          cls: number | null
+          device: string
+          fcp: number | null
+          id: string
+          inp: number | null
+          lcp: number | null
+          measured_at: string
+          meta: Json
+          source: string
+          speed_index: number | null
+          tbt: number | null
+          ttfb: number | null
+          url: string
+        }
+        Insert: {
+          cls?: number | null
+          device?: string
+          fcp?: number | null
+          id?: string
+          inp?: number | null
+          lcp?: number | null
+          measured_at?: string
+          meta?: Json
+          source?: string
+          speed_index?: number | null
+          tbt?: number | null
+          ttfb?: number | null
+          url: string
+        }
+        Update: {
+          cls?: number | null
+          device?: string
+          fcp?: number | null
+          id?: string
+          inp?: number | null
+          lcp?: number | null
+          measured_at?: string
+          meta?: Json
+          source?: string
+          speed_index?: number | null
+          tbt?: number | null
+          ttfb?: number | null
+          url?: string
+        }
+        Relationships: []
+      }
+      tsh_issues: {
+        Row: {
+          category: string
+          code: string
+          detail: string | null
+          evidence: Json
+          first_seen_at: string
+          id: string
+          ignored_reason: string | null
+          last_seen_at: string
+          page_id: string | null
+          recommendation: string | null
+          resolved_at: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          run_id: string | null
+          severity: string
+          status: string
+          title: string
+          url: string | null
+        }
+        Insert: {
+          category: string
+          code: string
+          detail?: string | null
+          evidence?: Json
+          first_seen_at?: string
+          id?: string
+          ignored_reason?: string | null
+          last_seen_at?: string
+          page_id?: string | null
+          recommendation?: string | null
+          resolved_at?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          run_id?: string | null
+          severity?: string
+          status?: string
+          title: string
+          url?: string | null
+        }
+        Update: {
+          category?: string
+          code?: string
+          detail?: string | null
+          evidence?: Json
+          first_seen_at?: string
+          id?: string
+          ignored_reason?: string | null
+          last_seen_at?: string
+          page_id?: string | null
+          recommendation?: string | null
+          resolved_at?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          run_id?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tsh_issues_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "tsh_pages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tsh_issues_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "tsh_audit_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tsh_link_edges: {
+        Row: {
+          detected_at: string
+          from_url: string
+          hops: number | null
+          id: string
+          is_external: boolean
+          redirect_target: string | null
+          status_code: number | null
+          to_url: string
+        }
+        Insert: {
+          detected_at?: string
+          from_url: string
+          hops?: number | null
+          id?: string
+          is_external?: boolean
+          redirect_target?: string | null
+          status_code?: number | null
+          to_url: string
+        }
+        Update: {
+          detected_at?: string
+          from_url?: string
+          hops?: number | null
+          id?: string
+          is_external?: boolean
+          redirect_target?: string | null
+          status_code?: number | null
+          to_url?: string
+        }
+        Relationships: []
+      }
+      tsh_page_scores: {
+        Row: {
+          accessibility: number | null
+          ai_readiness: number | null
+          breakdown: Json
+          computed_at: string
+          content_quality: number | null
+          id: string
+          internal_linking: number | null
+          metadata: number | null
+          mobile: number | null
+          overall: number | null
+          page_id: string | null
+          performance: number | null
+          schema_health: number | null
+          technical: number | null
+          url: string
+        }
+        Insert: {
+          accessibility?: number | null
+          ai_readiness?: number | null
+          breakdown?: Json
+          computed_at?: string
+          content_quality?: number | null
+          id?: string
+          internal_linking?: number | null
+          metadata?: number | null
+          mobile?: number | null
+          overall?: number | null
+          page_id?: string | null
+          performance?: number | null
+          schema_health?: number | null
+          technical?: number | null
+          url: string
+        }
+        Update: {
+          accessibility?: number | null
+          ai_readiness?: number | null
+          breakdown?: Json
+          computed_at?: string
+          content_quality?: number | null
+          id?: string
+          internal_linking?: number | null
+          metadata?: number | null
+          mobile?: number | null
+          overall?: number | null
+          page_id?: string | null
+          performance?: number | null
+          schema_health?: number | null
+          technical?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tsh_page_scores_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "tsh_pages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tsh_pages: {
+        Row: {
+          canonical_url: string | null
+          content_id: string | null
+          content_length: number | null
+          content_type: string | null
+          created_at: string
+          id: string
+          in_sitemap: boolean | null
+          is_indexable: boolean | null
+          is_orphan: boolean | null
+          last_crawled_at: string | null
+          last_modified_at: string | null
+          meta: Json
+          path: string
+          response_time_ms: number | null
+          robots_directive: string | null
+          status_code: number | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          canonical_url?: string | null
+          content_id?: string | null
+          content_length?: number | null
+          content_type?: string | null
+          created_at?: string
+          id?: string
+          in_sitemap?: boolean | null
+          is_indexable?: boolean | null
+          is_orphan?: boolean | null
+          last_crawled_at?: string | null
+          last_modified_at?: string | null
+          meta?: Json
+          path: string
+          response_time_ms?: number | null
+          robots_directive?: string | null
+          status_code?: number | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          canonical_url?: string | null
+          content_id?: string | null
+          content_length?: number | null
+          content_type?: string | null
+          created_at?: string
+          id?: string
+          in_sitemap?: boolean | null
+          is_indexable?: boolean | null
+          is_orphan?: boolean | null
+          last_crawled_at?: string | null
+          last_modified_at?: string | null
+          meta?: Json
+          path?: string
+          response_time_ms?: number | null
+          robots_directive?: string | null
+          status_code?: number | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      tsh_reports: {
+        Row: {
+          ai_summary: string | null
+          generated_at: string
+          generated_by: string | null
+          id: string
+          kind: string
+          period_end: string | null
+          period_start: string | null
+          summary: Json
+        }
+        Insert: {
+          ai_summary?: string | null
+          generated_at?: string
+          generated_by?: string | null
+          id?: string
+          kind: string
+          period_end?: string | null
+          period_start?: string | null
+          summary?: Json
+        }
+        Update: {
+          ai_summary?: string | null
+          generated_at?: string
+          generated_by?: string | null
+          id?: string
+          kind?: string
+          period_end?: string | null
+          period_start?: string | null
+          summary?: Json
+        }
+        Relationships: []
+      }
+      tsh_settings: {
+        Row: {
+          audit_frequency: string
+          base_url: string
+          id: string
+          ignored_file_types: string[]
+          ignored_urls: string[]
+          max_pages_per_run: number
+          notification_prefs: Json
+          psi_enabled: boolean
+          report_schedule: Json
+          scoring_weights: Json
+          severity_rules: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          audit_frequency?: string
+          base_url?: string
+          id?: string
+          ignored_file_types?: string[]
+          ignored_urls?: string[]
+          max_pages_per_run?: number
+          notification_prefs?: Json
+          psi_enabled?: boolean
+          report_schedule?: Json
+          scoring_weights?: Json
+          severity_rules?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          audit_frequency?: string
+          base_url?: string
+          id?: string
+          ignored_file_types?: string[]
+          ignored_urls?: string[]
+          max_pages_per_run?: number
+          notification_prefs?: Json
+          psi_enabled?: boolean
+          report_schedule?: Json
+          scoring_weights?: Json
+          severity_rules?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      tsh_sitemap_status: {
+        Row: {
+          broken_entries: number | null
+          duplicate_urls: number | null
+          error: string | null
+          fetched_at: string
+          id: string
+          invalid_urls: number | null
+          meta: Json
+          sitemap: string
+          size_bytes: number | null
+          status_code: number | null
+          url_count: number | null
+        }
+        Insert: {
+          broken_entries?: number | null
+          duplicate_urls?: number | null
+          error?: string | null
+          fetched_at?: string
+          id?: string
+          invalid_urls?: number | null
+          meta?: Json
+          sitemap: string
+          size_bytes?: number | null
+          status_code?: number | null
+          url_count?: number | null
+        }
+        Update: {
+          broken_entries?: number | null
+          duplicate_urls?: number | null
+          error?: string | null
+          fetched_at?: string
+          id?: string
+          invalid_urls?: number | null
+          meta?: Json
+          sitemap?: string
+          size_bytes?: number | null
+          status_code?: number | null
+          url_count?: number | null
+        }
+        Relationships: []
+      }
       usage_counters: {
         Row: {
           id: string
