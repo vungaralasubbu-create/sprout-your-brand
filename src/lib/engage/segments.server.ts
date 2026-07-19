@@ -90,21 +90,10 @@ export async function evaluateSegment(
     }
   }
 
-  if (brandId && audience === "students") {
-    // Optional: scope students to a brand via enrollments
-    const { data: enrolledIds } = await supabaseAdmin
-      .from("enrollments")
-      .select("student_user_id, courses!inner(brand_id)")
-      .eq("courses.brand_id", brandId);
-    const ids = new Set(
-      (enrolledIds ?? [])
-        .map((r) => (r as unknown as { student_user_id: string | null }).student_user_id)
-        .filter((v): v is string => Boolean(v)),
-    );
-    if (ids.size > 0) {
-      baseQuery = baseQuery.in("user_id", Array.from(ids));
-    }
-  }
+  // Brand scoping for students would require a courses.brand_id column.
+  // Left as a future enhancement — for now, brand-scoped campaigns rely on
+  // segment rules (e.g. filter by a stored brand tag).
+  void brandId;
 
   const { data, error } = await baseQuery.limit(50000);
   if (error) {
