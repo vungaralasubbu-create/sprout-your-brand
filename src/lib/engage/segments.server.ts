@@ -95,9 +95,13 @@ export async function evaluateSegment(
     // Optional: scope students to a brand via enrollments
     const { data: enrolledIds } = await supabaseAdmin
       .from("enrollments")
-      .select("user_id, courses!inner(brand_id)")
+      .select("student_user_id, courses!inner(brand_id)")
       .eq("courses.brand_id", brandId);
-    const ids = new Set((enrolledIds ?? []).map((r) => (r as { user_id: string }).user_id));
+    const ids = new Set(
+      (enrolledIds ?? [])
+        .map((r) => (r as unknown as { student_user_id: string | null }).student_user_id)
+        .filter((v): v is string => Boolean(v)),
+    );
     if (ids.size > 0) {
       baseQuery = baseQuery.in("user_id", Array.from(ids));
     }
@@ -108,14 +112,14 @@ export async function evaluateSegment(
     return { recipients: [], total: 0 };
   }
 
-  const recipients = (data ?? [])
-    .map((row) => {
-      const r = row as Record<string, unknown>;
+  const recipients = ((data as unknown as Array<Record<string, unknown>>) ?? [])
+    .map((r) => {
       const email = (r.email as string) ?? (r.contact_email as string) ?? "";
+      const fullName = (r.full_name as string) ?? (r.first_name as string) ?? (r.brand_name as string) ?? null;
       return {
         user_id: (r.user_id as string) ?? null,
         email,
-        first_name: (r.first_name as string) ?? (r.brand_name as string) ?? null,
+        first_name: fullName ? fullName.split(" ")[0] : null,
         country: (r.country as string) ?? null,
       };
     })

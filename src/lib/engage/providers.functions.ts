@@ -50,7 +50,7 @@ export const saveEngageProvider = createServerFn({ method: "POST" })
       kind: data.kind,
       channel: data.channel,
       display_name: data.display_name ?? null,
-      config: data.config,
+      config: data.config as never,
       secret_ref: data.secret_ref ?? null,
       is_default: data.is_default ?? false,
       is_active: data.is_active ?? true,
