@@ -80,7 +80,7 @@ export async function secureExecuteChat(input: SecureChatInput): Promise<SecureC
   if (input.rateLimit) {
     const rl = await limitByUserAndRoute(input.userId, route, input.rateLimit.limit, input.rateLimit.windowSeconds ?? 60);
     if (!rl.ok) {
-      await auditLog({ ...ctx, action: "rate_limit.exceeded", outcome: "denied", riskLevel: "low", resourceType: "ai", metadata: rl });
+      await auditLog({ ...ctx, action: "rate_limit.exceeded", outcome: "denied", riskLevel: "low", resourceType: "ai", metadata: { ...rl } });
       return { ok: false, denied: { code: "rate_limited", message: "Rate limit exceeded", details: rl } };
     }
   }
@@ -88,14 +88,14 @@ export async function secureExecuteChat(input: SecureChatInput): Promise<SecureC
   // 3. Quota
   const q = await checkQuota({ userId: input.userId, role, quotaKey });
   if (!q.ok) {
-    await auditLog({ ...ctx, action: "quota.exceeded", outcome: "denied", riskLevel: "medium", resourceType: "ai", metadata: q });
+    await auditLog({ ...ctx, action: "quota.exceeded", outcome: "denied", riskLevel: "medium", resourceType: "ai", metadata: { ...q } });
     return { ok: false, denied: { code: "quota_exceeded", message: "Quota exceeded", details: q } };
   }
 
   // 4. Budget
   const b = await checkBudget({ userId: input.userId, role }, input.estimatedCredits ?? 0);
   if (!b.ok) {
-    await auditLog({ ...ctx, action: "budget.exceeded", outcome: "denied", riskLevel: "high", resourceType: "ai", metadata: b });
+    await auditLog({ ...ctx, action: "budget.exceeded", outcome: "denied", riskLevel: "high", resourceType: "ai", metadata: { ...b } });
     return { ok: false, denied: { code: "budget_exceeded", message: "Budget exceeded", details: b } };
   }
 
