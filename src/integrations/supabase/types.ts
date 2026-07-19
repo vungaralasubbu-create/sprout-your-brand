@@ -757,6 +757,98 @@ export type Database = {
           },
         ]
       }
+      ai_policies: {
+        Row: {
+          action: string
+          config: Json
+          created_at: string
+          description: string | null
+          enabled: boolean
+          id: string
+          name: string
+          patterns: Json
+          rule_type: string
+          scope: string
+          severity: string
+          updated_at: string
+        }
+        Insert: {
+          action?: string
+          config?: Json
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          name: string
+          patterns?: Json
+          rule_type: string
+          scope?: string
+          severity?: string
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          config?: Json
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          name?: string
+          patterns?: Json
+          rule_type?: string
+          scope?: string
+          severity?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_policy_violations: {
+        Row: {
+          action_taken: string
+          created_at: string
+          id: string
+          matched_text_hash: string | null
+          metadata: Json
+          policy_id: string | null
+          policy_name: string
+          request_id: string | null
+          severity: string
+          user_id: string | null
+        }
+        Insert: {
+          action_taken: string
+          created_at?: string
+          id?: string
+          matched_text_hash?: string | null
+          metadata?: Json
+          policy_id?: string | null
+          policy_name: string
+          request_id?: string | null
+          severity: string
+          user_id?: string | null
+        }
+        Update: {
+          action_taken?: string
+          created_at?: string
+          id?: string
+          matched_text_hash?: string | null
+          metadata?: Json
+          policy_id?: string | null
+          policy_name?: string
+          request_id?: string | null
+          severity?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_policy_violations_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "ai_policies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_provider_events: {
         Row: {
           cost_credits: number | null
@@ -5599,6 +5691,89 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      budget_events: {
+        Row: {
+          budget_id: string | null
+          created_at: string
+          credits: number
+          id: string
+          period_start: string
+          request_id: string | null
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          budget_id?: string | null
+          created_at?: string
+          credits: number
+          id?: string
+          period_start: string
+          request_id?: string | null
+          source: string
+          user_id?: string | null
+        }
+        Update: {
+          budget_id?: string | null
+          created_at?: string
+          credits?: number
+          id?: string
+          period_start?: string
+          request_id?: string | null
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budget_events_budget_id_fkey"
+            columns: ["budget_id"]
+            isOneToOne: false
+            referencedRelation: "budgets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      budgets: {
+        Row: {
+          alert_threshold: number
+          created_at: string
+          enabled: boolean
+          hard_stop: boolean
+          id: string
+          limit_credits: number
+          period: string
+          subject_id: string | null
+          subject_role: string | null
+          subject_type: string
+          updated_at: string
+        }
+        Insert: {
+          alert_threshold?: number
+          created_at?: string
+          enabled?: boolean
+          hard_stop?: boolean
+          id?: string
+          limit_credits: number
+          period: string
+          subject_id?: string | null
+          subject_role?: string | null
+          subject_type: string
+          updated_at?: string
+        }
+        Update: {
+          alert_threshold?: number
+          created_at?: string
+          enabled?: boolean
+          hard_stop?: boolean
+          id?: string
+          limit_credits?: number
+          period?: string
+          subject_id?: string | null
+          subject_role?: string | null
+          subject_type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       campus_ambassador_activity: {
         Row: {
@@ -15073,6 +15248,33 @@ export type Database = {
           },
         ]
       }
+      permission_registry: {
+        Row: {
+          allowed: boolean
+          created_at: string
+          id: string
+          permission: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          allowed?: boolean
+          created_at?: string
+          id?: string
+          permission: string
+          role: string
+          updated_at?: string
+        }
+        Update: {
+          allowed?: boolean
+          created_at?: string
+          id?: string
+          permission?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pf_preferences: {
         Row: {
           admin_notes: string | null
@@ -15423,6 +15625,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rate_limit_buckets: {
+        Row: {
+          bucket_key: string
+          count: number
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          bucket_key: string
+          count?: number
+          updated_at?: string
+          window_start: string
+        }
+        Update: {
+          bucket_key?: string
+          count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
       }
       referral_program_settings: {
         Row: {
@@ -16024,6 +16247,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      secret_rotation_history: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json
+          reason: string | null
+          rotated_by: string | null
+          secret_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          rotated_by?: string | null
+          secret_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          rotated_by?: string | null
+          secret_name?: string
+        }
+        Relationships: []
+      }
+      security_audit_log: {
+        Row: {
+          action: string
+          actor_role: string | null
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          ip: string | null
+          metadata: Json
+          outcome: string
+          request_id: string | null
+          resource_id: string | null
+          resource_type: string | null
+          risk_level: string
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_role?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip?: string | null
+          metadata?: Json
+          outcome: string
+          request_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          risk_level?: string
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_role?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          ip?: string | null
+          metadata?: Json
+          outcome?: string
+          request_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          risk_level?: string
+          user_agent?: string | null
+        }
+        Relationships: []
       }
       session_attendance: {
         Row: {
@@ -17450,6 +17748,72 @@ export type Database = {
         }
         Relationships: []
       }
+      usage_counters: {
+        Row: {
+          id: string
+          period_start: string
+          quota_key: string
+          updated_at: string
+          used: number
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          period_start: string
+          quota_key: string
+          updated_at?: string
+          used?: number
+          user_id: string
+        }
+        Update: {
+          id?: string
+          period_start?: string
+          quota_key?: string
+          updated_at?: string
+          used?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      usage_quotas: {
+        Row: {
+          created_at: string
+          hard_stop: boolean
+          id: string
+          limit_value: number
+          period: string
+          quota_key: string
+          scope: string
+          subject_id: string | null
+          subject_role: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          hard_stop?: boolean
+          id?: string
+          limit_value: number
+          period: string
+          quota_key: string
+          scope: string
+          subject_id?: string | null
+          subject_role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          hard_stop?: boolean
+          id?: string
+          limit_value?: number
+          period?: string
+          quota_key?: string
+          scope?: string
+          subject_id?: string | null
+          subject_role?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -17878,6 +18242,10 @@ export type Database = {
       notify_campaigns_ending_soon: { Args: never; Returns: number }
       partner_id_for: { Args: { _user_id: string }; Returns: string }
       promote_scheduled_content: { Args: never; Returns: undefined }
+      rate_limit_incr: {
+        Args: { _bucket_key: string; _delta?: number; _window_start: string }
+        Returns: number
+      }
       scan_referral_patterns: { Args: never; Returns: number }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
