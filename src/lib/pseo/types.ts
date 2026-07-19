@@ -1,14 +1,104 @@
 /**
  * Programmatic SEO — shared types.
  *
- * The pSEO engine generates a landing page for every (course × page_type × location)
- * combination. Each row lives in `pseo_pages` and is served through `/p/$slug`.
+ * Two families live here side by side:
  *
- * Page types:
- *  - by_city / by_state / online — geo & delivery variants of a course
- *  - career_roadmap / interview_questions / salary_guide / projects
- *  - certification / faq / internship — informational long-tails
+ *  1. Legacy editorial pSEO (in-browser localStorage prototype used by the
+ *     admin `/admin/programmatic-seo` editor). Types: PseoPage, PseoStatus,
+ *     PseoSection, PseoFaq, PseoTemplateDef, PseoAnalytics.
+ *
+ *  2. Database-backed pSEO engine (auto-generated per course × page_type ×
+ *     location, served through `/p/$slug`, indexed via `/sitemap-pseo.xml`).
+ *     Types: PseoDbPage, PseoDbPageWithRelations, PseoContent, PseoLocation,
+ *     PseoPageType.
+ *
+ * The two systems don't share rows — the legacy editor is scoped to a
+ * hand-authored preview flow, while the DB engine is the production
+ * pipeline that scales to hundreds of thousands of pages.
  */
+
+// ============================================================
+// (1) Legacy editorial prototype
+// ============================================================
+
+export type PseoStatus =
+  | "draft"
+  | "review"
+  | "approved"
+  | "scheduled"
+  | "published";
+
+export interface PseoSection {
+  heading: string;
+  body: string;
+  bullets?: string[];
+}
+
+export interface PseoFaq {
+  q: string;
+  a: string;
+}
+
+export interface PseoAnalytics {
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  avgPosition: number;
+  organicTraffic: number;
+  internalClicks: number;
+}
+
+export interface PseoPage {
+  id: string;
+  slug: string;
+  pageType: string;
+  templateId: string;
+  category: string;
+  status: PseoStatus;
+  author: string;
+  title: string;
+  description: string;
+  canonical: string;
+  h1: string;
+  keywords: string[];
+  variables: Record<string, string>;
+  sections: PseoSection[];
+  faqs: PseoFaq[];
+  related: Array<{ slug: string; title: string }>;
+  readingTimeMin: number;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string;
+  scheduledFor?: string;
+  reviewNotes?: string;
+  analytics: PseoAnalytics;
+}
+
+export interface PseoTemplateVar {
+  key: string;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
+}
+
+export interface PseoTemplateDef {
+  id: string;
+  label: string;
+  pageType: string;
+  description: string;
+  variables: PseoTemplateVar[];
+  titleTemplate: string;
+  descriptionTemplate: string;
+  slugTemplate: string;
+  h1Template: string;
+  keywords: string[];
+  sectionPlan: PseoSection[];
+  faqPlan: PseoFaq[];
+}
+
+// ============================================================
+// (2) Database-backed pSEO engine
+// ============================================================
 
 export type PseoPageType =
   | "by_city"
@@ -41,9 +131,10 @@ export interface PseoContent {
   cta?: { label: string; href: string };
   stats?: Array<{ label: string; value: string }>;
   updated_at?: string;
+  [key: string]: unknown;
 }
 
-export interface PseoPage {
+export interface PseoDbPage {
   id: string;
   course_id: string | null;
   page_type: PseoPageType;
@@ -65,7 +156,7 @@ export interface PseoPage {
   updated_at: string;
 }
 
-export interface PseoPageWithRelations extends PseoPage {
+export interface PseoDbPageWithRelations extends PseoDbPage {
   course?: {
     id: string;
     slug: string;
