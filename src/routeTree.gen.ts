@@ -146,6 +146,7 @@ import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/trans
 import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
+import { Route as AuthenticatedSubmitReviewTokenRouteImport } from './routes/_authenticated/submit-review.$token'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
 import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
 import { Route as AuthenticatedStudentMentorRouteImport } from './routes/_authenticated/student.mentor'
@@ -1147,6 +1148,12 @@ const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
   path: '/api/v1/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedSubmitReviewTokenRoute =
+  AuthenticatedSubmitReviewTokenRouteImport.update({
+    id: '/submit-review/$token',
+    path: '/submit-review/$token',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudentProfileRoute =
   AuthenticatedStudentProfileRouteImport.update({
     id: '/profile',
@@ -3238,6 +3245,7 @@ export interface FileRoutesByFullPath {
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -3670,6 +3678,7 @@ export interface FileRoutesByTo {
   '/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -4118,6 +4127,7 @@ export interface FileRoutesById {
   '/_authenticated/student/mentor': typeof AuthenticatedStudentMentorRoute
   '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
+  '/_authenticated/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
@@ -4566,6 +4576,7 @@ export interface FileRouteTypes {
     | '/student/mentor'
     | '/student/notifications'
     | '/student/profile'
+    | '/submit-review/$token'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -4998,6 +5009,7 @@ export interface FileRouteTypes {
     | '/student/mentor'
     | '/student/notifications'
     | '/student/profile'
+    | '/submit-review/$token'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -5445,6 +5457,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/mentor'
     | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
+    | '/_authenticated/submit-review/$token'
     | '/api/v1/health'
     | '/api/v1/version'
     | '/api/voice/speak'
@@ -6692,6 +6705,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/v1/health'
       preLoaderRoute: typeof ApiV1HealthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/submit-review/$token': {
+      id: '/_authenticated/submit-review/$token'
+      path: '/submit-review/$token'
+      fullPath: '/submit-review/$token'
+      preLoaderRoute: typeof AuthenticatedSubmitReviewTokenRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/student/profile': {
       id: '/_authenticated/student/profile'
@@ -9870,6 +9890,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
   AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
   AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
 }
 
@@ -9887,6 +9908,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCampusAmbassadorStatusRoute,
   AuthenticatedCounsellorCopilotRoute:
     AuthenticatedCounsellorCopilotRouteWithChildren,
+  AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
 }
 
