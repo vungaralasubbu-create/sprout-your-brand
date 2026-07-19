@@ -59,7 +59,6 @@ const studentSuccessCheckin: Handler = async () => {
     .from("enrollments")
     .select("user_id, id, updated_at")
     .lt("updated_at", cutoff)
-    .eq("status", "active")
     .limit(50);
   const notifications = (atRisk ?? []).map((e: any) => ({
     recipientUserId: e.user_id as string,
