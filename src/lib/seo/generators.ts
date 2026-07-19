@@ -17,7 +17,7 @@ import { buildSeo, type HeadPayload, SITE_ORIGIN } from "./engine";
 import { withHome, type BreadcrumbItem } from "./breadcrumbs";
 import {
   organizationSchema,
-  webSiteSchema,
+  websiteSchema,
 } from "./schemas";
 
 /** Wrap generator output in the TanStack head payload shape. */
@@ -33,7 +33,7 @@ export function homepageSeo(): HeadPayload {
     description:
       "Glintr helps ambitious learners and sales professionals launch AI-first careers and businesses with live cohorts, mentors, and hands-on projects.",
     ogType: "website",
-    schemas: [organizationSchema(), webSiteSchema()],
+    schemas: [organizationSchema(), websiteSchema()],
   });
 }
 
