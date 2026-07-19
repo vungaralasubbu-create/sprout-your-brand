@@ -210,7 +210,7 @@ function AiSeoEnginePage() {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="secondary">{KIND_LABELS[row.kind as AiSeoKind] ?? row.kind}</Badge>
+                  <Badge variant="info">{KIND_LABELS[row.kind as AiSeoKind] ?? row.kind}</Badge>
                   <Badge>{row.status}</Badge>
                   {row.target_url && (
                     <span className="text-xs text-muted-foreground font-mono truncate">{row.target_url}</span>
