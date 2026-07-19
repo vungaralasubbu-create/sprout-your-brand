@@ -2,10 +2,12 @@
 // videos / keywords, plus general patterns. Every write is idempotent per
 // (agent, kind, key); scores are rolling exponential moving averages.
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+// New ma_* tables aren't in generated Database types yet; use permissive client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabase = any;
 import type { KnowledgeKind } from "./types";
 
-type Admin = SupabaseClient<never, "public", "public", never, never>;
+type Admin = AnySupabase;
 
 const ALPHA = 0.35; // EMA weight for the new observation
 

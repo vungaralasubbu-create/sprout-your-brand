@@ -4,11 +4,13 @@
 // a "pattern" so subsequent ticks can consult it cheaply.
 
 import { aiChat } from "@/lib/ai/router.server";
-import type { SupabaseClient } from "@supabase/supabase-js";
+// New ma_* tables aren't in generated Database types yet; use permissive client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabase = any;
 import type { AgentRow } from "./types";
 import { remember } from "./knowledge-base.server";
 
-type Admin = SupabaseClient<never, "public", "public", never, never>;
+type Admin = AnySupabase;
 
 export interface SocialAdvice {
   best_times: Record<string, string[]>;   // platform -> ["09:30", "18:00"]

@@ -2,10 +2,12 @@
 // simple performance score, and writes the top performers into ma_knowledge
 // so tomorrow's planner has winning patterns to imitate.
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+// New ma_* tables aren't in generated Database types yet; use permissive client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabase = any;
 import { remember } from "./knowledge-base.server";
 
-type Admin = SupabaseClient<never, "public", "public", never, never>;
+type Admin = AnySupabase;
 
 function ctrScore(impressions: number, clicks: number, weight = 1) {
   if (impressions <= 0) return 0;

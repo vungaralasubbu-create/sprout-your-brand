@@ -3,10 +3,12 @@
 // the executive summary; numbers come straight from the database.
 
 import { aiChat } from "@/lib/ai/router.server";
-import type { SupabaseClient } from "@supabase/supabase-js";
+// New ma_* tables aren't in generated Database types yet; use permissive client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabase = any;
 import type { AgentRow, ReportKind } from "./types";
 
-type Admin = SupabaseClient<never, "public", "public", never, never>;
+type Admin = AnySupabase;
 
 export async function generateReport(
   admin: Admin,

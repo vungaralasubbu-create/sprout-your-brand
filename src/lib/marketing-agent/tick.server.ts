@@ -2,7 +2,9 @@
 // the daily workflow the user described: review analytics → learn → plan →
 // decide → execute (subject to approval level) → generate reports.
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+// New ma_* tables aren't in generated Database types yet; use permissive client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabase = any;
 import type { AgentRow } from "./types";
 import { reviewYesterday } from "./analytics-review.server";
 import { runLearningLoop } from "./learning-loop.server";
@@ -14,7 +16,7 @@ import { runSeoSweep } from "./seo-engine.server";
 import { generateReport } from "./reporting.server";
 import { topWins } from "./knowledge-base.server";
 
-type Admin = SupabaseClient<never, "public", "public", never, never>;
+type Admin = AnySupabase;
 
 const MAX_AGENTS_PER_TICK = 5;
 const MAX_DECISIONS_EXECUTED_PER_TICK = 20;

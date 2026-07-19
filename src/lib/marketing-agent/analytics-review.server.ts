@@ -2,9 +2,11 @@
 // compact metrics snapshot the planner + learning loop consume. Reads only —
 // no side effects beyond persisting the ma_metrics_snapshots row.
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+// New ma_* tables aren't in generated Database types yet; use permissive client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabase = any;
 
-type Admin = SupabaseClient<never, "public", "public", never, never>;
+type Admin = AnySupabase;
 
 function ymd(d: Date): string { return d.toISOString().slice(0, 10); }
 

@@ -3,9 +3,11 @@
 // engine. All AI calls happen inside that module and route through the
 // centralized AI Router.
 
-import type { SupabaseClient } from "@supabase/supabase-js";
+// New ma_* tables aren't in generated Database types yet; use permissive client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnySupabase = any;
 
-type Admin = SupabaseClient<never, "public", "public", never, never>;
+type Admin = AnySupabase;
 
 /** Enqueue high-value SEO suggestions for review. Returns the count of
  *  suggestions created. */
