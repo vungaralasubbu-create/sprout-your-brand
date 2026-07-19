@@ -6,7 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * roles, and deep-dive cluster URLs — all keyed to their canonical URL.
  * Referenced from /llms.txt.
  */
-export const Route = createFileRoute("/api/public/topics.json")({
+export const Route = createFileRoute("/api/public/topics/json")({
   server: {
     handlers: {
       GET: async () => {

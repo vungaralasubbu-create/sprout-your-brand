@@ -9,7 +9,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * Consumers: OpenAI/ChatGPT search, Perplexity, Claude, Gemini, custom
  * RAG pipelines. Referenced from /llms.txt and /robots.txt.
  */
-export const Route = createFileRoute("/api/public/courses.json")({
+export const Route = createFileRoute("/api/public/courses/json")({
   server: {
     handlers: {
       GET: async () => {
