@@ -178,7 +178,7 @@ export const processPseoQueue = createServerFn({ method: "POST" })
             h1: built.h1,
             meta_description: built.meta_description,
             keywords: built.keywords,
-            content: built.content as unknown as Record<string, unknown>,
+            content: built.content as never,
             word_count: built.word_count,
             quality_score: Math.min(1, built.word_count / 600),
             status: "published",
