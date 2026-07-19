@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Activity, Users, UserCheck, Target, Scale, ShieldCheck, FileSignature, Wallet,
   Handshake, Building2, Bell, Shield, GraduationCap, FolderTree, BookOpen, ClipboardList,
   History, Settings, UserCog, Menu, X, LogOut, Search, ChevronDown, Sparkles, Server, Eye, Rocket,
-  MessageSquare,
+  MessageSquare, HelpCircle,
 } from "lucide-react";
 
 
@@ -75,6 +75,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/reviews", label: "Reviews & Success", icon: Sparkles },
       { to: "/admin/career-hub", label: "Career Hub", icon: Rocket },
       { to: "/admin/community", label: "Community Mod", icon: MessageSquare },
+      { to: "/admin/knowledge-base", label: "Knowledge Base", icon: HelpCircle },
 
       { to: "/admin/content-intelligence", label: "Content Intelligence", icon: Activity },
     ],

@@ -10990,6 +10990,227 @@ export type Database = {
           },
         ]
       }
+      kb_article_versions: {
+        Row: {
+          article_id: string
+          body_md: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          summary: string | null
+          title: string
+          version_number: number
+        }
+        Insert: {
+          article_id: string
+          body_md?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          summary?: string | null
+          title: string
+          version_number: number
+        }
+        Update: {
+          article_id?: string
+          body_md?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          summary?: string | null
+          title?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_article_versions_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "kb_articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kb_articles: {
+        Row: {
+          author_id: string | null
+          body_md: string | null
+          category_id: string | null
+          cover_image: string | null
+          created_at: string
+          featured: boolean
+          helpful_count: number
+          id: string
+          json_ld: Json | null
+          kind: string
+          published: boolean
+          reading_time: number | null
+          related_ids: string[]
+          seo_description: string | null
+          seo_keywords: string[]
+          seo_title: string | null
+          slug: string
+          summary: string | null
+          tags: string[]
+          title: string
+          unhelpful_count: number
+          updated_at: string
+          version: number
+          video_url: string | null
+          view_count: number
+        }
+        Insert: {
+          author_id?: string | null
+          body_md?: string | null
+          category_id?: string | null
+          cover_image?: string | null
+          created_at?: string
+          featured?: boolean
+          helpful_count?: number
+          id?: string
+          json_ld?: Json | null
+          kind?: string
+          published?: boolean
+          reading_time?: number | null
+          related_ids?: string[]
+          seo_description?: string | null
+          seo_keywords?: string[]
+          seo_title?: string | null
+          slug: string
+          summary?: string | null
+          tags?: string[]
+          title: string
+          unhelpful_count?: number
+          updated_at?: string
+          version?: number
+          video_url?: string | null
+          view_count?: number
+        }
+        Update: {
+          author_id?: string | null
+          body_md?: string | null
+          category_id?: string | null
+          cover_image?: string | null
+          created_at?: string
+          featured?: boolean
+          helpful_count?: number
+          id?: string
+          json_ld?: Json | null
+          kind?: string
+          published?: boolean
+          reading_time?: number | null
+          related_ids?: string[]
+          seo_description?: string | null
+          seo_keywords?: string[]
+          seo_title?: string | null
+          slug?: string
+          summary?: string | null
+          tags?: string[]
+          title?: string
+          unhelpful_count?: number
+          updated_at?: string
+          version?: number
+          video_url?: string | null
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_articles_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "kb_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kb_categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          parent_id: string | null
+          position: number
+          published: boolean
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          parent_id?: string | null
+          position?: number
+          published?: boolean
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          parent_id?: string | null
+          position?: number
+          published?: boolean
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "kb_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kb_feedback: {
+        Row: {
+          article_id: string
+          comment: string | null
+          created_at: string
+          helpful: boolean
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          article_id: string
+          comment?: string | null
+          created_at?: string
+          helpful: boolean
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          article_id?: string
+          comment?: string | null
+          created_at?: string
+          helpful?: boolean
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_feedback_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "kb_articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       keyword_content_plan: {
         Row: {
           business_value: number | null
