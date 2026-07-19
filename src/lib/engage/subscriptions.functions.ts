@@ -10,7 +10,7 @@ import { NOTIFICATION_CATEGORIES } from "./constants";
 
 export const listMySubscriptions = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(() => ({}))
+  .inputValidator((data: unknown) => (data ?? {}) as Record<string, never>)
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("engage_subscriptions")
