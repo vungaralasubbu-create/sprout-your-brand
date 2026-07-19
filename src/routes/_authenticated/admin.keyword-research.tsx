@@ -45,7 +45,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   informational: "Informational", comparison: "Comparison", trending: "Trending",
 };
 
-function KeywordResearchPage() {
+export default function KeywordResearchPage() {
   const qc = useQueryClient();
   const listFn = useServerFn(listKeywordProjects);
   const [selectedId, setSelectedId] = useState<string | null>(null);
