@@ -1,24 +1,12 @@
-// Server-only Lovable AI Gateway helper. Do not import from client code.
+// Server-only AI client. Every AI request across the Glintr platform is
+// funneled through this module, which in turn calls the centralized
+// AI Router edge function at /functions/v1/ai-router (backed by the
+// workspace's own OpenAI API key). Lovable AI Gateway is no longer used.
 import { AiJsonParseError, parseAiJson } from "./ai-json";
 
 type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
-const BASE_URL = "https://ai.gateway.lovable.dev/v1";
-const DEFAULT_MODEL = "google/gemini-2.5-flash";
-
-// ---------------------------------------------------------------------------
-// Request coalescing + short-lived response cache.
-//
-// Two identical AI calls that arrive within `CACHE_TTL_MS` share a single
-// upstream request (deduplication) and reuse the same response body (cache).
-// This targets bursty duplicate traffic — e.g. multiple partners viewing the
-// same AI-generated brand summary, or the same admin refreshing an AI report
-// twice — without changing any prompt, model, or response shape.
-//
-// Cache is process-local (per Worker isolate); it is not a source of truth
-// and never persists user data. Callers that must always hit the model pass
-// `bypassCache: true`.
-// ---------------------------------------------------------------------------
+const DEFAULT_MODEL = "gpt-4o-mini";
 const CACHE_TTL_MS = 60_000;
 const CACHE_MAX_ENTRIES = 200;
 
@@ -32,7 +20,6 @@ function cacheKey(opts: {
   temperature?: number;
   jsonMode: boolean;
 }): string {
-  // Deterministic key across identical prompts.
   return JSON.stringify({
     m: opts.model ?? DEFAULT_MODEL,
     t: opts.temperature ?? 0.6,
@@ -53,7 +40,6 @@ function readCache(key: string): string | undefined {
 
 function writeCache(key: string, value: string): void {
   if (responseCache.size >= CACHE_MAX_ENTRIES) {
-    // Drop the oldest inserted key. Map iteration order == insertion order.
     const firstKey = responseCache.keys().next().value as string | undefined;
     if (firstKey) responseCache.delete(firstKey);
   }
@@ -61,20 +47,38 @@ function writeCache(key: string, value: string): void {
 }
 
 export function isAiAvailable(): boolean {
-  return !!process.env.LOVABLE_API_KEY;
+  // The centralized router provisions its own OPENAI_API_KEY at the
+  // edge-function environment. On the app tier we only need the Supabase
+  // URL / publishable key to reach the router.
+  return !!(process.env.SUPABASE_URL && process.env.SUPABASE_PUBLISHABLE_KEY);
 }
 
-async function rawChat(opts: {
+function routerUrl(): string {
+  const base = process.env.SUPABASE_URL;
+  if (!base) throw new Error("SUPABASE_URL not configured");
+  return `${base.replace(/\/$/, "")}/functions/v1/ai-router`;
+}
+
+function routerAuthHeaders(): Record<string, string> {
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+  if (!key) throw new Error("SUPABASE_PUBLISHABLE_KEY not configured");
+  return { apikey: key, authorization: `Bearer ${key}` };
+}
+
+/**
+ * Low-level: call the centralized AI Router `chat` task and return the
+ * raw assistant content as a string. Every AI feature in the platform
+ * ultimately routes through here.
+ */
+async function callRouterChat(opts: {
   messages: ChatMessage[];
   model?: string;
   temperature?: number;
-  jsonMode: boolean;
+  response_format?: { type: "json_object" | "text" };
   bypassCache?: boolean;
 }): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("AI service not configured");
-
-  const cKey = cacheKey(opts);
+  const jsonMode = opts.response_format?.type === "json_object";
+  const cKey = cacheKey({ ...opts, jsonMode });
 
   if (!opts.bypassCache) {
     const cached = readCache(cKey);
@@ -84,17 +88,26 @@ async function rawChat(opts: {
   }
 
   const run = (async () => {
-    const res = await fetch(`${BASE_URL}/chat/completions`, {
+    const lastUser = [...opts.messages].reverse().find((m) => m.role === "user")?.content
+      ?? opts.messages[opts.messages.length - 1]?.content
+      ?? "chat";
+
+    const res = await fetch(routerUrl(), {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Lovable-API-Key": key,
+        "content-type": "application/json",
+        ...routerAuthHeaders(),
       },
       body: JSON.stringify({
+        task: "chat",
+        provider: "openai",
         model: opts.model ?? DEFAULT_MODEL,
-        messages: opts.messages,
-        temperature: opts.temperature ?? 0.6,
-        ...(opts.jsonMode ? { response_format: { type: "json_object" } } : {}),
+        prompt: lastUser.slice(0, 100_000),
+        options: {
+          messages: opts.messages,
+          temperature: opts.temperature ?? 0.6,
+          ...(opts.response_format ? { response_format: opts.response_format } : {}),
+        },
       }),
     });
 
@@ -102,11 +115,19 @@ async function rawChat(opts: {
     if (res.status === 402) throw new Error("AI service credits exhausted.");
     if (!res.ok) {
       const t = await res.text().catch(() => "");
-      throw new Error(`AI service error (${res.status}): ${t.slice(0, 200)}`);
+      throw new Error(`AI Router error (${res.status}): ${t.slice(0, 300)}`);
     }
-    const data = await res.json();
-    const content = data?.choices?.[0]?.message?.content;
-    if (!content) throw new Error("AI service returned no content");
+    const data = (await res.json()) as {
+      success?: boolean;
+      content?: string;
+      data?: { content?: string };
+      error?: { message?: string };
+    };
+    if (data?.success === false) {
+      throw new Error(data.error?.message ?? "AI Router returned an error.");
+    }
+    const content = data?.content ?? data?.data?.content;
+    if (!content) throw new Error("AI Router returned no content");
     const str = String(content);
     if (!opts.bypassCache) writeCache(cKey, str);
     return str;
@@ -120,29 +141,17 @@ async function rawChat(opts: {
   return run;
 }
 
-/**
- * Call the AI Gateway and return the raw string content (no JSON parse).
- * Use this when the payload is prose/markdown so no JSON escaping applies —
- * the root fix for "Bad escaped character in JSON" when markdown contains
- * regex-like tokens (\d, \w, \s), LaTeX (\alpha), or Windows paths.
- */
+/** Call the AI Router and return raw string content (no JSON parse). */
 export async function callLovableAiText(opts: {
   messages: ChatMessage[];
   model?: string;
   temperature?: number;
   bypassCache?: boolean;
 }): Promise<string> {
-  return rawChat({ ...opts, jsonMode: false });
+  return callRouterChat({ ...opts });
 }
 
-/**
- * Call the AI Gateway and parse its response as JSON.
- *
- * Diagnostics: on parse failure the RAW response is logged (developer only,
- * never surfaced to end users) along with the offset and offending field.
- * A single automatic retry is issued with a strict "escape everything"
- * reminder before failing with a friendly error.
- */
+/** Call the AI Router and parse the response as JSON, with one retry. */
 export async function callLovableAiJson<T = unknown>(opts: {
   messages: ChatMessage[];
   model?: string;
@@ -153,7 +162,12 @@ export async function callLovableAiJson<T = unknown>(opts: {
     const messages = extraSystem
       ? [{ role: "system" as const, content: extraSystem }, ...opts.messages]
       : opts.messages;
-    return rawChat({ ...opts, messages, jsonMode: true, bypassCache: bypass || opts.bypassCache });
+    return callRouterChat({
+      ...opts,
+      messages,
+      response_format: { type: "json_object" },
+      bypassCache: bypass || opts.bypassCache,
+    });
   };
 
   let raw = await attempt();
@@ -161,7 +175,6 @@ export async function callLovableAiJson<T = unknown>(opts: {
     return parseAiJson<T>(raw);
   } catch (err) {
     if (err instanceof AiJsonParseError) {
-      // Developer log — full raw payload for diagnosis, NEVER shown to users.
       console.error("[callLovableAiJson] JSON.parse failed (attempt 1)", {
         parseError: err.message,
         offset: err.offset,
@@ -172,8 +185,6 @@ export async function callLovableAiJson<T = unknown>(opts: {
     } else {
       console.error("[callLovableAiJson] non-parse failure (attempt 1)", err);
     }
-    // Retry once with a strict reminder — bypass the cache so we don't loop
-    // on a poisoned entry.
     raw = await attempt(
       "Your previous response was not valid JSON. Return ONLY a single JSON object. " +
         "Escape every backslash, newline, tab, and double-quote inside string values " +
@@ -202,10 +213,28 @@ export async function callLovableAiJson<T = unknown>(opts: {
 }
 
 /**
- * Testing / admin utility. Not exported through any client-reachable path.
- * Clears the in-process response cache (does not affect the durable job/log
- * tables owned by feature modules).
+ * OpenAI-Chat-Completions-shaped passthrough for call sites that were
+ * previously talking to the Lovable AI Gateway directly. Returns the
+ * assistant content string. This is the migration on-ramp: it lets
+ * legacy callers keep their existing request-shape logic while routing
+ * every request through the centralized AI Router.
  */
+export async function callAiChatCompletions(opts: {
+  model?: string;
+  messages: ChatMessage[];
+  temperature?: number;
+  response_format?: { type: "json_object" | "text" };
+  bypassCache?: boolean;
+}): Promise<string> {
+  return callRouterChat({
+    messages: opts.messages,
+    model: opts.model,
+    temperature: opts.temperature,
+    response_format: opts.response_format,
+    bypassCache: opts.bypassCache,
+  });
+}
+
 export function __clearAiResponseCache(): void {
   responseCache.clear();
   inflight.clear();
