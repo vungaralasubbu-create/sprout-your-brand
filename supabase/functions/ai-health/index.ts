@@ -54,7 +54,7 @@ async function pingOpenAi(): Promise<Pick<AIHealthResponse, "providerReachable" 
         body: JSON.stringify({
           model: "gpt-4o-mini",
           input: [{ role: "user", content: "Return ok." }],
-          max_output_tokens: 1,
+          max_output_tokens: 16,
           temperature: 0,
         }),
       })
