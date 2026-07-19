@@ -1,6 +1,6 @@
-import { withCors } from "../ai-router/helpers/cors.ts";
-import { logger } from "../ai-router/helpers/logger.ts";
-import { withTimeout } from "../ai-router/helpers/retry.ts";
+import { withCors } from "../_shared/http/cors.ts";
+import { logger } from "../_shared/http/logger.ts";
+import { withTimeout } from "../_shared/http/timeout.ts";
 import {
   getOpenAiAuthHeader,
   getOpenAiSecretForAuth,
@@ -8,7 +8,7 @@ import {
   OPENAI_RESPONSES_URL,
   publicOpenAiSecretDiagnostics,
   readOpenAiError,
-} from "../ai-router/providers/openai-diagnostics.ts";
+} from "../_shared/ai/openai-diagnostics.ts";
 
 interface AIHealthResponse {
   secretExists: boolean;
