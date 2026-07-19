@@ -10,12 +10,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { callLovableAiJson, isAiAvailable } from "@/lib/ai-gateway.server";
+import { generateImageDataUrl as generateImageDataUrlProvider } from "@/lib/ai/image.server";
 
 /* ------------------------------------------------------------------ */
 /* Shared helpers                                                     */
 /* ------------------------------------------------------------------ */
-
-const IMAGE_MODEL = "google/gemini-2.5-flash-image";
 
 async function ensurePartner(context: any) {
   // Any authenticated user may draft; publishing is gated separately.
@@ -23,21 +22,8 @@ async function ensurePartner(context: any) {
 }
 
 async function generateImageDataUrl(prompt: string): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("AI service not configured");
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/images/generations", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Lovable-API-Key": key,
-      Authorization: `Bearer ${key}`,
-    },
-    body: JSON.stringify({
-      model: IMAGE_MODEL,
-      messages: [{ role: "user", content: prompt }],
-      modalities: ["image", "text"],
-    }),
-  });
+  return generateImageDataUrlProvider(prompt);
+}
   if (!res.ok) {
     const t = await res.text().catch(() => "");
     throw new Error(`Image gen failed (${res.status}): ${t.slice(0, 240)}`);
