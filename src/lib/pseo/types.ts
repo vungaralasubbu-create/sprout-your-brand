@@ -1,100 +1,99 @@
-// Programmatic SEO engine — types
-
-export type PseoStatus = "draft" | "review" | "approved" | "scheduled" | "published";
+/**
+ * Programmatic SEO — shared types.
+ *
+ * The pSEO engine generates a landing page for every (course × page_type × location)
+ * combination. Each row lives in `pseo_pages` and is served through `/p/$slug`.
+ *
+ * Page types:
+ *  - by_city / by_state / online — geo & delivery variants of a course
+ *  - career_roadmap / interview_questions / salary_guide / projects
+ *  - certification / faq / internship — informational long-tails
+ */
 
 export type PseoPageType =
-  | "course"
-  | "career-guide"
-  | "salary-guide"
-  | "learning-path"
-  | "interview-guide"
-  | "certification-guide"
-  | "technology-guide"
-  | "comparison"
-  | "skill-guide"
-  | "industry-guide"
-  | "glossary"
+  | "by_city"
+  | "by_state"
+  | "online"
+  | "career_roadmap"
+  | "interview_questions"
+  | "salary_guide"
+  | "projects"
+  | "certification"
   | "faq"
-  | "location";
+  | "internship";
 
-export type PseoTemplateId =
-  | "best-skill-course"
-  | "how-to-learn-skill"
-  | "what-is-technology"
-  | "career-guide"
-  | "salary-guide"
-  | "technology-roadmap"
-  | "interview-questions"
-  | "certification-guide"
-  | "technology-projects"
-  | "technology-for-beginners"
-  | "technology-trends"
-  | "location-course"
-  | "comparison"
-  | "how-to-become"
-  | "faq-hub"
-  | "glossary-term";
+export interface PseoLocation {
+  id: string;
+  kind: "city" | "state" | "country";
+  name: string;
+  slug: string;
+  parent_slug: string | null;
+  country: string;
+  population: number | null;
+  priority: number;
+}
 
-export interface PseoSection {
-  heading: string;
-  body: string;
+export interface PseoContent {
+  intro?: string;
+  sections?: Array<{ heading: string; body: string }>;
+  faqs?: Array<{ question: string; answer: string }>;
   bullets?: string[];
-}
-
-export interface PseoFaq {
-  q: string;
-  a: string;
-}
-
-export interface PseoRelated {
-  label: string;
-  href: string;
+  cta?: { label: string; href: string };
+  stats?: Array<{ label: string; value: string }>;
+  updated_at?: string;
 }
 
 export interface PseoPage {
   id: string;
+  course_id: string | null;
+  page_type: PseoPageType;
+  location_id: string | null;
   slug: string;
-  pageType: PseoPageType;
-  templateId: PseoTemplateId;
-  category: string;
-  status: PseoStatus;
-  author: string;
-  title: string;
-  description: string;
-  canonical: string;
-  h1: string;
+  title: string | null;
+  h1: string | null;
+  meta_description: string | null;
+  canonical_url: string | null;
+  content: PseoContent;
   keywords: string[];
-  variables: Record<string, string>;
-  sections: PseoSection[];
-  faqs: PseoFaq[];
-  related: PseoRelated[];
-  readingTimeMin: number;
-  createdAt: string;
-  updatedAt: string;
-  scheduledAt?: string;
-  publishedAt?: string;
-  reviewNotes?: string;
-  analytics?: {
-    impressions: number;
-    clicks: number;
-    ctr: number;
-    avgPosition: number;
-    organicTraffic: number;
-    internalClicks: number;
-  };
+  related_slugs: string[];
+  status: "queued" | "generating" | "published" | "failed" | "archived";
+  quality_score: number | null;
+  word_count: number | null;
+  view_count: number;
+  published_at: string | null;
+  last_regenerated_at: string | null;
+  updated_at: string;
 }
 
-export interface PseoTemplateDef {
-  id: PseoTemplateId;
-  label: string;
-  pageType: PseoPageType;
-  description: string;
-  variables: Array<{ key: string; label: string; placeholder?: string; required?: boolean }>;
-  titleTemplate: string;
-  descriptionTemplate: string;
-  slugTemplate: string;
-  h1Template: string;
-  sectionPlan: Array<{ heading: string; body: string; bullets?: string[] }>;
-  faqPlan: Array<{ q: string; a: string }>;
-  keywords: string[];
+export interface PseoPageWithRelations extends PseoPage {
+  course?: {
+    id: string;
+    slug: string;
+    name: string;
+    short_description: string | null;
+    full_description: string | null;
+    category_id: string | null;
+    subcategory: string | null;
+    hero_image_url: string | null;
+    offer_price: number | null;
+    base_price: number | null;
+    currency: string | null;
+    duration: string | null;
+    level: string | null;
+  } | null;
+  location?: PseoLocation | null;
+  interlinks?: Array<{ slug: string; title: string | null; relation: string }>;
 }
+
+export const PAGE_TYPE_LABEL: Record<PseoPageType, string> = {
+  by_city: "in {location}",
+  by_state: "in {location}",
+  online: "Online",
+  career_roadmap: "Career Roadmap",
+  interview_questions: "Interview Questions",
+  salary_guide: "Salary Guide",
+  projects: "Projects",
+  certification: "Certification",
+  faq: "FAQ",
+  internship: "Internship",
+};
