@@ -167,7 +167,7 @@ export const analyzeLead = createServerFn({ method: "POST" })
     if (!ctx.lead) throw new Error("Lead not found");
 
     if (!isAiAvailable()) {
-      throw new Error("AI service not configured. Add LOVABLE_API_KEY.");
+      throw new Error("AI service not configured");
     }
 
     const contextBlock = buildLeadContextPrompt(ctx as never);

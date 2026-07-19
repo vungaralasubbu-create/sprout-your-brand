@@ -76,7 +76,7 @@ export const generateCompleteDraft = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => CompleteInput.parse(i))
   .handler(async ({ data, context }) => {
     await ensureAdmin(context);
-    if (!isAiAvailable()) throw new Error("AI service not configured. Set LOVABLE_API_KEY.");
+    if (!isAiAvailable()) throw new Error("AI service not configured");
 
     const t = DEPTH_TARGETS[data.depth];
     const kw = (data.focusKeywords ?? []).join(", ");

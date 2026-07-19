@@ -126,7 +126,7 @@ export const generateAiOutline = createServerFn({ method: "POST" })
   }).parse(i))
   .handler(async ({ data, context }) => {
     await ensureAdmin(context);
-    if (!isAiAvailable()) throw new Error("AI service not configured. Set LOVABLE_API_KEY.");
+    if (!isAiAvailable()) throw new Error("AI service not configured");
 
     // Duplicate check
     const { data: existing } = await context.supabase

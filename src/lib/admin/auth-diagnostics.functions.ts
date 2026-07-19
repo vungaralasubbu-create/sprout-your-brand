@@ -33,7 +33,7 @@ export const getAuthDiagnostics = createServerFn({ method: "GET" })
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
-      lovable_api_key_set: !!process.env.LOVABLE_API_KEY,
+      ai_provider_configured: !!process.env.OPENAI_API_KEY,
       supabase_url_set: !!process.env.SUPABASE_URL,
       service_role_set: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
     };

@@ -133,7 +133,7 @@ async function computeDecision(supabase: never, leadId: string): Promise<BrainDe
     .order!("created_at", { ascending: false })
     .limit(30)) as { data: Array<Record<string, unknown>> | null };
 
-  if (!isAiAvailable()) throw new Error("LOVABLE_API_KEY missing");
+  if (!isAiAvailable()) throw new Error("AI service not configured");
 
   const decision = await callLovableAiJson<Omit<BrainDecision, "lead_id">>({
     model: BRAIN_MODEL,
