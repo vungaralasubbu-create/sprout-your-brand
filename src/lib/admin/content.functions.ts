@@ -213,7 +213,7 @@ export const upsertContent = createServerFn({ method: "POST" })
           title: current.title,
           body_markdown: current.body_markdown,
           status: current.status,
-          snapshot: current,
+          snapshot: (({ search_tsv: _t, ...rest }) => rest)(current as Record<string, unknown>) as any,
           change_note: data.change_note ?? null,
           edited_by: context.userId,
         });
