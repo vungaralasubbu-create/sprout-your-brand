@@ -48,7 +48,7 @@ export const aiChat = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ChatInput.parse(input))
   .handler(async ({ data }) => {
     const { executeChat } = await import("./router/failover.server");
-    return executeChat(
+    const res = await executeChat(
       { ...data.profile, kind: "chat", needsTools: !!data.tools?.length, needsStructured: !!data.responseSchema },
       {
         messages: data.messages,
@@ -58,6 +58,25 @@ export const aiChat = createServerFn({ method: "POST" })
         responseSchema: data.responseSchema,
       },
     );
+    // Project to a JSON-serializable envelope for the RPC boundary.
+    return {
+      ok: res.ok,
+      chosen: res.chosen ?? null,
+      attempts: res.attempts,
+      error: res.error ?? null,
+      result: res.result
+        ? {
+            content: res.result.content,
+            toolCalls: (res.result.toolCalls ?? []).map((t) => ({
+              name: t.name,
+              argumentsJson: JSON.stringify(t.arguments),
+            })),
+            structuredJson: res.result.structured != null ? JSON.stringify(res.result.structured) : null,
+            usage: res.result.usage,
+            finishReason: res.result.finishReason,
+          }
+        : null,
+    };
   });
 
 const EmbedInput = z.object({
