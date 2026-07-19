@@ -28,6 +28,18 @@ export class ProviderNotConfiguredError extends AIRouterHttpError {
   }
 }
 
+export class ProviderSecretMalformedError extends AIRouterHttpError {
+  constructor(provider: string, reasons: string[], diagnostics?: unknown) {
+    super(
+      503,
+      "provider_secret_malformed",
+      `Provider '${provider}' API key is malformed: ${reasons.join(" ")}`,
+      diagnostics,
+    );
+    this.name = "ProviderSecretMalformedError";
+  }
+}
+
 export class ProviderTaskUnsupportedError extends AIRouterHttpError {
   constructor(provider: string, task: string) {
     super(

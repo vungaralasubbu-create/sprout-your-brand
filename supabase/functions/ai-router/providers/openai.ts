@@ -1,9 +1,13 @@
-import { getSecret } from "../config.ts";
 import { ProviderNotConfiguredError, ProviderTaskUnsupportedError, UpstreamError } from "../errors.ts";
 import { withRetry } from "../helpers/retry.ts";
+import { logger } from "../helpers/logger.ts";
+import {
+  getOpenAiAuthHeader,
+  getOpenAiSecretForAuth,
+  OPENAI_RESPONSES_URL,
+  readOpenAiError,
+} from "./openai-diagnostics.ts";
 import type { AIProvider } from "../types.ts";
-
-const RESPONSES_URL = "https://api.openai.com/v1/responses";
 
 /** Extract plain text from an OpenAI Responses API payload. */
 function extractText(payload: any): string {
@@ -29,12 +33,16 @@ export const openAiProvider: AIProvider = {
   id: "openai",
 
   isConfigured() {
-    return Boolean(getSecret("OPENAI_API_KEY"));
+    try {
+      getOpenAiSecretForAuth();
+      return true;
+    } catch {
+      return false;
+    }
   },
 
   async execute({ task, model, prompt, options, signal }) {
-    const apiKey = getSecret("OPENAI_API_KEY");
-    if (!apiKey) throw new ProviderNotConfiguredError("openai");
+    const { value: apiKey, diagnostics } = getOpenAiSecretForAuth();
 
     const system = SYSTEM_PROMPTS[task];
     if (!system) throw new ProviderTaskUnsupportedError("openai", task);
@@ -51,25 +59,38 @@ export const openAiProvider: AIProvider = {
       temperature: (options?.temperature as number) ?? 0.7,
     };
 
+    const authorization = getOpenAiAuthHeader(apiKey);
+
+    logger.info({
+      provider: "openai",
+      task,
+      message: "openai_secret_diagnostics",
+      secretExists: diagnostics.secretExists,
+      secretLength: diagnostics.secretLength,
+      startsWith: diagnostics.startsWith,
+      endsWith: diagnostics.endsWith,
+      authorizationHeaderShape: diagnostics.authorizationHeaderShape,
+    });
+
     const res = await withRetry(
       async () => {
-        const r = await fetch(RESPONSES_URL, {
+        const r = await fetch(OPENAI_RESPONSES_URL, {
           method: "POST",
           signal,
           headers: {
             "content-type": "application/json",
-            "authorization": `Bearer ${apiKey}`,
+            "authorization": authorization,
           },
           body: JSON.stringify(body),
         });
 
         if (!r.ok) {
-          const text = await r.text().catch(() => "");
+          const openaiError = await readOpenAiError(r);
           // Retry on transient upstream errors; fail fast on 4xx (except 429).
           const retryable = r.status === 429 || r.status >= 500;
           const err = new UpstreamError(
-            `OpenAI request failed (${r.status})`,
-            { status: r.status, body: text.slice(0, 500) },
+            openaiError.message || `OpenAI request failed (${r.status})`,
+            { provider: "openai", openaiError },
           );
           (err as any).__retryable = retryable;
           throw err;
