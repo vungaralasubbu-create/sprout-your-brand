@@ -10090,6 +10090,434 @@ export type Database = {
           },
         ]
       }
+      cs_assets: {
+        Row: {
+          ai_prompt: string | null
+          brand_kit_id: string | null
+          created_at: string
+          height: number | null
+          id: string
+          kind: string
+          metadata: Json
+          mime_type: string | null
+          name: string
+          owner_id: string
+          size_bytes: number | null
+          source: string
+          tags: string[]
+          url: string
+          width: number | null
+        }
+        Insert: {
+          ai_prompt?: string | null
+          brand_kit_id?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          kind: string
+          metadata?: Json
+          mime_type?: string | null
+          name: string
+          owner_id: string
+          size_bytes?: number | null
+          source?: string
+          tags?: string[]
+          url: string
+          width?: number | null
+        }
+        Update: {
+          ai_prompt?: string | null
+          brand_kit_id?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          kind?: string
+          metadata?: Json
+          mime_type?: string | null
+          name?: string
+          owner_id?: string
+          size_bytes?: number | null
+          source?: string
+          tags?: string[]
+          url?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cs_assets_brand_kit_id_fkey"
+            columns: ["brand_kit_id"]
+            isOneToOne: false
+            referencedRelation: "cs_brand_kits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cs_brand_kits: {
+        Row: {
+          accent_color: string | null
+          body_font: string | null
+          border_radius: string | null
+          button_style: string | null
+          created_at: string
+          cta_style: string | null
+          heading_font: string | null
+          icon_style: string | null
+          id: string
+          illustration_style: string | null
+          is_default: boolean
+          logo_url: string | null
+          metadata: Json
+          name: string
+          owner_id: string
+          primary_color: string | null
+          secondary_color: string | null
+          tone_of_voice: string | null
+          updated_at: string
+          watermark_url: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          body_font?: string | null
+          border_radius?: string | null
+          button_style?: string | null
+          created_at?: string
+          cta_style?: string | null
+          heading_font?: string | null
+          icon_style?: string | null
+          id?: string
+          illustration_style?: string | null
+          is_default?: boolean
+          logo_url?: string | null
+          metadata?: Json
+          name: string
+          owner_id: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          tone_of_voice?: string | null
+          updated_at?: string
+          watermark_url?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          body_font?: string | null
+          border_radius?: string | null
+          button_style?: string | null
+          created_at?: string
+          cta_style?: string | null
+          heading_font?: string | null
+          icon_style?: string | null
+          id?: string
+          illustration_style?: string | null
+          is_default?: boolean
+          logo_url?: string | null
+          metadata?: Json
+          name?: string
+          owner_id?: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          tone_of_voice?: string | null
+          updated_at?: string
+          watermark_url?: string | null
+        }
+        Relationships: []
+      }
+      cs_design_analytics: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          design_id: string
+          event: string
+          id: number
+          payload: Json
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          design_id: string
+          event: string
+          id?: number
+          payload?: Json
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          design_id?: string
+          event?: string
+          id?: number
+          payload?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cs_design_analytics_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "cs_designs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cs_design_comments: {
+        Row: {
+          anchor: Json | null
+          author_id: string
+          body: string
+          created_at: string
+          design_id: string
+          id: string
+          status: string | null
+        }
+        Insert: {
+          anchor?: Json | null
+          author_id: string
+          body: string
+          created_at?: string
+          design_id: string
+          id?: string
+          status?: string | null
+        }
+        Update: {
+          anchor?: Json | null
+          author_id?: string
+          body?: string
+          created_at?: string
+          design_id?: string
+          id?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cs_design_comments_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "cs_designs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cs_design_versions: {
+        Row: {
+          copy: Json
+          created_at: string
+          created_by: string | null
+          design_id: string
+          id: string
+          layout: Json
+          note: string | null
+          palette: Json
+          preview_url: string | null
+          typography: Json
+          version: number
+        }
+        Insert: {
+          copy?: Json
+          created_at?: string
+          created_by?: string | null
+          design_id: string
+          id?: string
+          layout?: Json
+          note?: string | null
+          palette?: Json
+          preview_url?: string | null
+          typography?: Json
+          version: number
+        }
+        Update: {
+          copy?: Json
+          created_at?: string
+          created_by?: string | null
+          design_id?: string
+          id?: string
+          layout?: Json
+          note?: string | null
+          palette?: Json
+          preview_url?: string | null
+          typography?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cs_design_versions_design_id_fkey"
+            columns: ["design_id"]
+            isOneToOne: false
+            referencedRelation: "cs_designs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cs_designs: {
+        Row: {
+          brand_kit_id: string | null
+          copy: Json
+          created_at: string
+          export_urls: Json
+          folder_id: string | null
+          format: string
+          id: string
+          layout: Json
+          locked_elements: Json
+          metadata: Json
+          owner_id: string
+          palette: Json
+          preview_url: string | null
+          prompt: string | null
+          status: string
+          style: string | null
+          template_id: string | null
+          title: string
+          typography: Json
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          brand_kit_id?: string | null
+          copy?: Json
+          created_at?: string
+          export_urls?: Json
+          folder_id?: string | null
+          format: string
+          id?: string
+          layout?: Json
+          locked_elements?: Json
+          metadata?: Json
+          owner_id: string
+          palette?: Json
+          preview_url?: string | null
+          prompt?: string | null
+          status?: string
+          style?: string | null
+          template_id?: string | null
+          title: string
+          typography?: Json
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          brand_kit_id?: string | null
+          copy?: Json
+          created_at?: string
+          export_urls?: Json
+          folder_id?: string | null
+          format?: string
+          id?: string
+          layout?: Json
+          locked_elements?: Json
+          metadata?: Json
+          owner_id?: string
+          palette?: Json
+          preview_url?: string | null
+          prompt?: string | null
+          status?: string
+          style?: string | null
+          template_id?: string | null
+          title?: string
+          typography?: Json
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cs_designs_brand_kit_id_fkey"
+            columns: ["brand_kit_id"]
+            isOneToOne: false
+            referencedRelation: "cs_brand_kits"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cs_designs_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "cs_folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cs_designs_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "cs_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cs_folders: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+          parent_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+          parent_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          parent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cs_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "cs_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cs_templates: {
+        Row: {
+          category: string
+          created_at: string
+          format: string
+          id: string
+          is_public: boolean
+          layout: Json
+          metadata: Json
+          name: string
+          owner_id: string | null
+          style: string | null
+          thumbnail_url: string | null
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          format: string
+          id?: string
+          is_public?: boolean
+          layout?: Json
+          metadata?: Json
+          name: string
+          owner_id?: string | null
+          style?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          format?: string
+          id?: string
+          is_public?: boolean
+          layout?: Json
+          metadata?: Json
+          name?: string
+          owner_id?: string | null
+          style?: string | null
+          thumbnail_url?: string | null
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       email_brand_settings: {
         Row: {
           accent_color: string | null
