@@ -11,10 +11,10 @@ import { z } from "zod";
 const searchSchema = z.object({ q: z.string().optional().default("") });
 
 export const Route = createFileRoute("/help/search")({
-  validateSearch: (s) => searchSchema.parse(s),
-  head: ({ search }) => ({
+  validateSearch: (s: Record<string, unknown>) => searchSchema.parse(s),
+  head: ({ search }: any) => ({
     meta: [
-      { title: search.q ? `Search: ${search.q} — Glintr Help` : "Search — Glintr Help" },
+      { title: search?.q ? `Search: ${search.q} — Glintr Help` : "Search — Glintr Help" },
       { name: "robots", content: "noindex" },
     ],
   }),

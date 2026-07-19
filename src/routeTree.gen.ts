@@ -20,6 +20,7 @@ import { Route as SitemapSuccessStoriesDotxmlRouteImport } from './routes/sitema
 import { Route as SitemapLearningPathsDotxmlRouteImport } from './routes/sitemap-learning-paths[.]xml'
 import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml'
 import { Route as SitemapImagesDotxmlRouteImport } from './routes/sitemap-images[.]xml'
+import { Route as SitemapHelpDotxmlRouteImport } from './routes/sitemap-help[.]xml'
 import { Route as SitemapCoursesDotxmlRouteImport } from './routes/sitemap-courses[.]xml'
 import { Route as SitemapCategoriesDotxmlRouteImport } from './routes/sitemap-categories[.]xml'
 import { Route as SitemapCareersDotxmlRouteImport } from './routes/sitemap-careers[.]xml'
@@ -114,6 +115,7 @@ import { Route as LearnPathsRouteImport } from './routes/learn.paths'
 import { Route as LearnSlugRouteImport } from './routes/learn.$slug'
 import { Route as LaunchYourBrandStartRouteImport } from './routes/launch-your-brand.start'
 import { Route as LaunchYourBrandConsultationRouteImport } from './routes/launch-your-brand.consultation'
+import { Route as HelpSearchRouteImport } from './routes/help.search'
 import { Route as HelpSlugRouteImport } from './routes/help.$slug'
 import { Route as GlossarySlugRouteImport } from './routes/glossary.$slug'
 import { Route as FaqsSlugRouteImport } from './routes/faqs.$slug'
@@ -149,6 +151,7 @@ import { Route as TopicsPillarClusterRouteImport } from './routes/topics.$pillar
 import { Route as StudentSupportRequestsRefRouteImport } from './routes/student-support.requests.$ref'
 import { Route as PartnerSupportRequestsRefRouteImport } from './routes/partner-support.requests.$ref'
 import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collections.$slug'
+import { Route as HelpCCategoryRouteImport } from './routes/help.c.$category'
 import { Route as CommunitySpaceSlugRouteImport } from './routes/community.$space.$slug'
 import { Route as CareerHubTypeSlugRouteImport } from './routes/career-hub.$type.$slug'
 import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/transcribe'
@@ -264,6 +267,7 @@ import { Route as AuthenticatedAdminLeadOwnershipRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_authenticated/admin.lead-monitoring'
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminLeadIntelligenceRouteImport } from './routes/_authenticated/admin.lead-intelligence'
+import { Route as AuthenticatedAdminKnowledgeBaseRouteImport } from './routes/_authenticated/admin.knowledge-base'
 import { Route as AuthenticatedAdminKeywordResearchRouteImport } from './routes/_authenticated/admin.keyword-research'
 import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
@@ -522,6 +526,11 @@ const SitemapIndexDotxmlRoute = SitemapIndexDotxmlRouteImport.update({
 const SitemapImagesDotxmlRoute = SitemapImagesDotxmlRouteImport.update({
   id: '/sitemap-images.xml',
   path: '/sitemap-images.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapHelpDotxmlRoute = SitemapHelpDotxmlRouteImport.update({
+  id: '/sitemap-help.xml',
+  path: '/sitemap-help.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapCoursesDotxmlRoute = SitemapCoursesDotxmlRouteImport.update({
@@ -994,6 +1003,11 @@ const LaunchYourBrandConsultationRoute =
     path: '/launch-your-brand/consultation',
     getParentRoute: () => rootRouteImport,
   } as any)
+const HelpSearchRoute = HelpSearchRouteImport.update({
+  id: '/help/search',
+  path: '/help/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HelpSlugRoute = HelpSlugRouteImport.update({
   id: '/help/$slug',
   path: '/help/$slug',
@@ -1173,6 +1187,11 @@ const LearnCollectionsSlugRoute = LearnCollectionsSlugRouteImport.update({
   id: '/collections/$slug',
   path: '/collections/$slug',
   getParentRoute: () => LearnRoute,
+} as any)
+const HelpCCategoryRoute = HelpCCategoryRouteImport.update({
+  id: '/help/c/$category',
+  path: '/help/c/$category',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CommunitySpaceSlugRoute = CommunitySpaceSlugRouteImport.update({
   id: '/community/$space/$slug',
@@ -1848,6 +1867,12 @@ const AuthenticatedAdminLeadIntelligenceRoute =
   AuthenticatedAdminLeadIntelligenceRouteImport.update({
     id: '/lead-intelligence',
     path: '/lead-intelligence',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminKnowledgeBaseRoute =
+  AuthenticatedAdminKnowledgeBaseRouteImport.update({
+    id: '/knowledge-base',
+    path: '/knowledge-base',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminKeywordResearchRoute =
@@ -3102,6 +3127,7 @@ export interface FileRoutesByFullPath {
   '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
   '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-help.xml': typeof SitemapHelpDotxmlRoute
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
@@ -3132,6 +3158,7 @@ export interface FileRoutesByFullPath {
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
   '/help/$slug': typeof HelpSlugRoute
+  '/help/search': typeof HelpSearchRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learn/$slug': typeof LearnSlugRoute
@@ -3213,6 +3240,7 @@ export interface FileRoutesByFullPath {
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
+  '/admin/knowledge-base': typeof AuthenticatedAdminKnowledgeBaseRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
@@ -3328,6 +3356,7 @@ export interface FileRoutesByFullPath {
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
+  '/help/c/$category': typeof HelpCCategoryRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -3558,6 +3587,7 @@ export interface FileRoutesByTo {
   '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
   '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-help.xml': typeof SitemapHelpDotxmlRoute
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
@@ -3584,6 +3614,7 @@ export interface FileRoutesByTo {
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
   '/help/$slug': typeof HelpSlugRoute
+  '/help/search': typeof HelpSearchRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learn/$slug': typeof LearnSlugRoute
@@ -3658,6 +3689,7 @@ export interface FileRoutesByTo {
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
+  '/admin/knowledge-base': typeof AuthenticatedAdminKnowledgeBaseRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
@@ -3772,6 +3804,7 @@ export interface FileRoutesByTo {
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
+  '/help/c/$category': typeof HelpCCategoryRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -4006,6 +4039,7 @@ export interface FileRoutesById {
   '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
   '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
+  '/sitemap-help.xml': typeof SitemapHelpDotxmlRoute
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
@@ -4036,6 +4070,7 @@ export interface FileRoutesById {
   '/faqs/$slug': typeof FaqsSlugRoute
   '/glossary/$slug': typeof GlossarySlugRoute
   '/help/$slug': typeof HelpSlugRoute
+  '/help/search': typeof HelpSearchRoute
   '/launch-your-brand/consultation': typeof LaunchYourBrandConsultationRoute
   '/launch-your-brand/start': typeof LaunchYourBrandStartRoute
   '/learn/$slug': typeof LearnSlugRoute
@@ -4117,6 +4152,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/_authenticated/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
+  '/_authenticated/admin/knowledge-base': typeof AuthenticatedAdminKnowledgeBaseRoute
   '/_authenticated/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/_authenticated/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
@@ -4232,6 +4268,7 @@ export interface FileRoutesById {
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
+  '/help/c/$category': typeof HelpCCategoryRoute
   '/learn/collections/$slug': typeof LearnCollectionsSlugRoute
   '/partner-support/requests/$ref': typeof PartnerSupportRequestsRefRoute
   '/student-support/requests/$ref': typeof StudentSupportRequestsRefRoute
@@ -4466,6 +4503,7 @@ export interface FileRouteTypes {
     | '/sitemap-careers.xml'
     | '/sitemap-categories.xml'
     | '/sitemap-courses.xml'
+    | '/sitemap-help.xml'
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
     | '/sitemap-learning-paths.xml'
@@ -4496,6 +4534,7 @@ export interface FileRouteTypes {
     | '/faqs/$slug'
     | '/glossary/$slug'
     | '/help/$slug'
+    | '/help/search'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learn/$slug'
@@ -4577,6 +4616,7 @@ export interface FileRouteTypes {
     | '/admin/infrastructure'
     | '/admin/integrations'
     | '/admin/keyword-research'
+    | '/admin/knowledge-base'
     | '/admin/lead-intelligence'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
@@ -4692,6 +4732,7 @@ export interface FileRouteTypes {
     | '/api/voice/transcribe'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
+    | '/help/c/$category'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -4922,6 +4963,7 @@ export interface FileRouteTypes {
     | '/sitemap-careers.xml'
     | '/sitemap-categories.xml'
     | '/sitemap-courses.xml'
+    | '/sitemap-help.xml'
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
     | '/sitemap-learning-paths.xml'
@@ -4948,6 +4990,7 @@ export interface FileRouteTypes {
     | '/faqs/$slug'
     | '/glossary/$slug'
     | '/help/$slug'
+    | '/help/search'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learn/$slug'
@@ -5022,6 +5065,7 @@ export interface FileRouteTypes {
     | '/admin/infrastructure'
     | '/admin/integrations'
     | '/admin/keyword-research'
+    | '/admin/knowledge-base'
     | '/admin/lead-intelligence'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
@@ -5136,6 +5180,7 @@ export interface FileRouteTypes {
     | '/api/voice/transcribe'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
+    | '/help/c/$category'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -5369,6 +5414,7 @@ export interface FileRouteTypes {
     | '/sitemap-careers.xml'
     | '/sitemap-categories.xml'
     | '/sitemap-courses.xml'
+    | '/sitemap-help.xml'
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
     | '/sitemap-learning-paths.xml'
@@ -5399,6 +5445,7 @@ export interface FileRouteTypes {
     | '/faqs/$slug'
     | '/glossary/$slug'
     | '/help/$slug'
+    | '/help/search'
     | '/launch-your-brand/consultation'
     | '/launch-your-brand/start'
     | '/learn/$slug'
@@ -5480,6 +5527,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/infrastructure'
     | '/_authenticated/admin/integrations'
     | '/_authenticated/admin/keyword-research'
+    | '/_authenticated/admin/knowledge-base'
     | '/_authenticated/admin/lead-intelligence'
     | '/_authenticated/admin/lead-management'
     | '/_authenticated/admin/lead-monitoring'
@@ -5595,6 +5643,7 @@ export interface FileRouteTypes {
     | '/api/voice/transcribe'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
+    | '/help/c/$category'
     | '/learn/collections/$slug'
     | '/partner-support/requests/$ref'
     | '/student-support/requests/$ref'
@@ -5829,6 +5878,7 @@ export interface RootRouteChildren {
   SitemapCareersDotxmlRoute: typeof SitemapCareersDotxmlRoute
   SitemapCategoriesDotxmlRoute: typeof SitemapCategoriesDotxmlRoute
   SitemapCoursesDotxmlRoute: typeof SitemapCoursesDotxmlRoute
+  SitemapHelpDotxmlRoute: typeof SitemapHelpDotxmlRoute
   SitemapImagesDotxmlRoute: typeof SitemapImagesDotxmlRoute
   SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute
   SitemapLearningPathsDotxmlRoute: typeof SitemapLearningPathsDotxmlRoute
@@ -5846,6 +5896,7 @@ export interface RootRouteChildren {
   CommunityNewRoute: typeof CommunityNewRoute
   EntitiesSlugRoute: typeof EntitiesSlugRoute
   HelpSlugRoute: typeof HelpSlugRoute
+  HelpSearchRoute: typeof HelpSearchRoute
   LaunchYourBrandConsultationRoute: typeof LaunchYourBrandConsultationRoute
   LaunchYourBrandStartRoute: typeof LaunchYourBrandStartRoute
   PartnerApplyRoute: typeof PartnerApplyRoute
@@ -5869,6 +5920,7 @@ export interface RootRouteChildren {
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
   CommunitySpaceSlugRoute: typeof CommunitySpaceSlugRoute
+  HelpCCategoryRoute: typeof HelpCCategoryRoute
   TopicsPillarClusterRoute: typeof TopicsPillarClusterRoute
   CommunitySpaceIndexRoute: typeof CommunitySpaceIndexRoute
   ProgramsCategoryIndexRoute: typeof ProgramsCategoryIndexRoute
@@ -5964,6 +6016,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-images.xml'
       fullPath: '/sitemap-images.xml'
       preLoaderRoute: typeof SitemapImagesDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-help.xml': {
+      id: '/sitemap-help.xml'
+      path: '/sitemap-help.xml'
+      fullPath: '/sitemap-help.xml'
+      preLoaderRoute: typeof SitemapHelpDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-courses.xml': {
@@ -6624,6 +6683,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LaunchYourBrandConsultationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/help/search': {
+      id: '/help/search'
+      path: '/help/search'
+      fullPath: '/help/search'
+      preLoaderRoute: typeof HelpSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/help/$slug': {
       id: '/help/$slug'
       path: '/help/$slug'
@@ -6868,6 +6934,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/learn/collections/$slug'
       preLoaderRoute: typeof LearnCollectionsSlugRouteImport
       parentRoute: typeof LearnRoute
+    }
+    '/help/c/$category': {
+      id: '/help/c/$category'
+      path: '/help/c/$category'
+      fullPath: '/help/c/$category'
+      preLoaderRoute: typeof HelpCCategoryRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/community/$space/$slug': {
       id: '/community/$space/$slug'
@@ -7672,6 +7745,13 @@ declare module '@tanstack/react-router' {
       path: '/lead-intelligence'
       fullPath: '/admin/lead-intelligence'
       preLoaderRoute: typeof AuthenticatedAdminLeadIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/knowledge-base': {
+      id: '/_authenticated/admin/knowledge-base'
+      path: '/knowledge-base'
+      fullPath: '/admin/knowledge-base'
+      preLoaderRoute: typeof AuthenticatedAdminKnowledgeBaseRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/keyword-research': {
@@ -9474,6 +9554,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
   AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
   AuthenticatedAdminKeywordResearchRoute: typeof AuthenticatedAdminKeywordResearchRoute
+  AuthenticatedAdminKnowledgeBaseRoute: typeof AuthenticatedAdminKnowledgeBaseRoute
   AuthenticatedAdminLeadIntelligenceRoute: typeof AuthenticatedAdminLeadIntelligenceRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
   AuthenticatedAdminLeadMonitoringRoute: typeof AuthenticatedAdminLeadMonitoringRoute
@@ -9582,6 +9663,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
   AuthenticatedAdminKeywordResearchRoute:
     AuthenticatedAdminKeywordResearchRoute,
+  AuthenticatedAdminKnowledgeBaseRoute: AuthenticatedAdminKnowledgeBaseRoute,
   AuthenticatedAdminLeadIntelligenceRoute:
     AuthenticatedAdminLeadIntelligenceRoute,
   AuthenticatedAdminLeadManagementRoute: AuthenticatedAdminLeadManagementRoute,
@@ -10453,6 +10535,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapCareersDotxmlRoute: SitemapCareersDotxmlRoute,
   SitemapCategoriesDotxmlRoute: SitemapCategoriesDotxmlRoute,
   SitemapCoursesDotxmlRoute: SitemapCoursesDotxmlRoute,
+  SitemapHelpDotxmlRoute: SitemapHelpDotxmlRoute,
   SitemapImagesDotxmlRoute: SitemapImagesDotxmlRoute,
   SitemapIndexDotxmlRoute: SitemapIndexDotxmlRoute,
   SitemapLearningPathsDotxmlRoute: SitemapLearningPathsDotxmlRoute,
@@ -10470,6 +10553,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityNewRoute: CommunityNewRoute,
   EntitiesSlugRoute: EntitiesSlugRoute,
   HelpSlugRoute: HelpSlugRoute,
+  HelpSearchRoute: HelpSearchRoute,
   LaunchYourBrandConsultationRoute: LaunchYourBrandConsultationRoute,
   LaunchYourBrandStartRoute: LaunchYourBrandStartRoute,
   PartnerApplyRoute: PartnerApplyRoute,
@@ -10493,6 +10577,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
   CommunitySpaceSlugRoute: CommunitySpaceSlugRoute,
+  HelpCCategoryRoute: HelpCCategoryRoute,
   TopicsPillarClusterRoute: TopicsPillarClusterRoute,
   CommunitySpaceIndexRoute: CommunitySpaceIndexRoute,
   ProgramsCategoryIndexRoute: ProgramsCategoryIndexRoute,
