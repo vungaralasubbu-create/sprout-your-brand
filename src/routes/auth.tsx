@@ -301,7 +301,7 @@ function AuthPage() {
     setErrors((p) => ({ ...p, code: undefined }));
     setLoading(true);
     const result = await completeOtpAuth({
-      data: { mobile, code, email, password, mode: mode === "signup" ? "signup" : "signin" },
+      data: { mobile, code, email, password: password || undefined, mode: mode === "signup" ? "signup" : "signin" },
     });
     if (!result.ok) {
       setLoading(false);
