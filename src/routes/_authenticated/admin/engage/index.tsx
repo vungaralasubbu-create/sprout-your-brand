@@ -64,7 +64,7 @@ function Header() {
   const bootstrap = useServerFn(bootstrapEngageDefaults);
   const qc = useQueryClient();
   const seed = useMutation({
-    mutationFn: async () => bootstrap({ data: {} }),
+    mutationFn: async () => bootstrap(),
     onSuccess: (r) => {
       if (r.ok) {
         toast.success(`Seeded ${r.templates} templates & ${r.sequences} sequences`);
