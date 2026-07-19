@@ -198,6 +198,7 @@ import { Route as AuthenticatedBrandPreviewRouteImport } from './routes/_authent
 import { Route as AuthenticatedBrandMarketingRouteImport } from './routes/_authenticated/brand.marketing'
 import { Route as AuthenticatedBrandLmsRouteImport } from './routes/_authenticated/brand.lms'
 import { Route as AuthenticatedBrandFacultyRouteImport } from './routes/_authenticated/brand.faculty'
+import { Route as AuthenticatedBrandEmailBrandingRouteImport } from './routes/_authenticated/brand.email-branding'
 import { Route as AuthenticatedBrandDomainRouteImport } from './routes/_authenticated/brand.domain'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
 import { Route as AuthenticatedBrandCoursesRouteImport } from './routes/_authenticated/brand.courses'
@@ -255,6 +256,7 @@ import { Route as AuthenticatedAdminExecutiveRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminExecutionRouteImport } from './routes/_authenticated/admin.execution'
 import { Route as AuthenticatedAdminEnrollmentBrainRouteImport } from './routes/_authenticated/admin.enrollment-brain'
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
+import { Route as AuthenticatedAdminEmailBrandingRouteImport } from './routes/_authenticated/admin.email-branding'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/_authenticated/admin.content-pipeline'
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
@@ -1444,6 +1446,12 @@ const AuthenticatedBrandFacultyRoute =
     path: '/faculty',
     getParentRoute: () => AuthenticatedBrandRoute,
   } as any)
+const AuthenticatedBrandEmailBrandingRoute =
+  AuthenticatedBrandEmailBrandingRouteImport.update({
+    id: '/email-branding',
+    path: '/email-branding',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
 const AuthenticatedBrandDomainRoute =
   AuthenticatedBrandDomainRouteImport.update({
     id: '/domain',
@@ -1779,6 +1787,12 @@ const AuthenticatedAdminEmploymentSettingsRoute =
   AuthenticatedAdminEmploymentSettingsRouteImport.update({
     id: '/employment-settings',
     path: '/employment-settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminEmailBrandingRoute =
+  AuthenticatedAdminEmailBrandingRouteImport.update({
+    id: '/email-branding',
+    path: '/email-branding',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminDashboardRoute =
@@ -3036,6 +3050,7 @@ export interface FileRoutesByFullPath {
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/email-branding': typeof AuthenticatedAdminEmailBrandingRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
@@ -3093,6 +3108,7 @@ export interface FileRoutesByFullPath {
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
@@ -3457,6 +3473,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/admin/email-branding': typeof AuthenticatedAdminEmailBrandingRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
@@ -3513,6 +3530,7 @@ export interface FileRoutesByTo {
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
@@ -3892,6 +3910,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/_authenticated/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
+  '/_authenticated/admin/email-branding': typeof AuthenticatedAdminEmailBrandingRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
   '/_authenticated/admin/enrollment-brain': typeof AuthenticatedAdminEnrollmentBrainRoute
   '/_authenticated/admin/execution': typeof AuthenticatedAdminExecutionRoute
@@ -3949,6 +3968,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/_authenticated/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/_authenticated/brand/faculty': typeof AuthenticatedBrandFacultyRoute
   '/_authenticated/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/_authenticated/brand/marketing': typeof AuthenticatedBrandMarketingRoute
@@ -4328,6 +4348,7 @@ export interface FileRouteTypes {
     | '/admin/content-intelligence'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
+    | '/admin/email-branding'
     | '/admin/employment-settings'
     | '/admin/enrollment-brain'
     | '/admin/execution'
@@ -4385,6 +4406,7 @@ export interface FileRouteTypes {
     | '/brand/courses'
     | '/brand/dashboard'
     | '/brand/domain'
+    | '/brand/email-branding'
     | '/brand/faculty'
     | '/brand/lms'
     | '/brand/marketing'
@@ -4749,6 +4771,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
+    | '/admin/email-branding'
     | '/admin/employment-settings'
     | '/admin/enrollment-brain'
     | '/admin/execution'
@@ -4805,6 +4828,7 @@ export interface FileRouteTypes {
     | '/brand/courses'
     | '/brand/dashboard'
     | '/brand/domain'
+    | '/brand/email-branding'
     | '/brand/faculty'
     | '/brand/lms'
     | '/brand/marketing'
@@ -5183,6 +5207,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content-intelligence'
     | '/_authenticated/admin/content-pipeline'
     | '/_authenticated/admin/dashboard'
+    | '/_authenticated/admin/email-branding'
     | '/_authenticated/admin/employment-settings'
     | '/_authenticated/admin/enrollment-brain'
     | '/_authenticated/admin/execution'
@@ -5240,6 +5265,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/courses'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/brand/domain'
+    | '/_authenticated/brand/email-branding'
     | '/_authenticated/brand/faculty'
     | '/_authenticated/brand/lms'
     | '/_authenticated/brand/marketing'
@@ -6899,6 +6925,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBrandFacultyRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
+    '/_authenticated/brand/email-branding': {
+      id: '/_authenticated/brand/email-branding'
+      path: '/email-branding'
+      fullPath: '/brand/email-branding'
+      preLoaderRoute: typeof AuthenticatedBrandEmailBrandingRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
     '/_authenticated/brand/domain': {
       id: '/_authenticated/brand/domain'
       path: '/domain'
@@ -7296,6 +7329,13 @@ declare module '@tanstack/react-router' {
       path: '/employment-settings'
       fullPath: '/admin/employment-settings'
       preLoaderRoute: typeof AuthenticatedAdminEmploymentSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/email-branding': {
+      id: '/_authenticated/admin/email-branding'
+      path: '/email-branding'
+      fullPath: '/admin/email-branding'
+      preLoaderRoute: typeof AuthenticatedAdminEmailBrandingRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/dashboard': {
@@ -8982,6 +9022,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   AuthenticatedAdminContentPipelineRoute: typeof AuthenticatedAdminContentPipelineRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
+  AuthenticatedAdminEmailBrandingRoute: typeof AuthenticatedAdminEmailBrandingRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
   AuthenticatedAdminEnrollmentBrainRoute: typeof AuthenticatedAdminEnrollmentBrainRoute
   AuthenticatedAdminExecutionRoute: typeof AuthenticatedAdminExecutionRoute
@@ -9078,6 +9119,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminContentPipelineRoute:
     AuthenticatedAdminContentPipelineRoute,
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
+  AuthenticatedAdminEmailBrandingRoute: AuthenticatedAdminEmailBrandingRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
     AuthenticatedAdminEmploymentSettingsRoute,
   AuthenticatedAdminEnrollmentBrainRoute:
@@ -9255,6 +9297,7 @@ interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandCoursesRoute: typeof AuthenticatedBrandCoursesRoute
   AuthenticatedBrandDashboardRoute: typeof AuthenticatedBrandDashboardRoute
   AuthenticatedBrandDomainRoute: typeof AuthenticatedBrandDomainRoute
+  AuthenticatedBrandEmailBrandingRoute: typeof AuthenticatedBrandEmailBrandingRoute
   AuthenticatedBrandFacultyRoute: typeof AuthenticatedBrandFacultyRoute
   AuthenticatedBrandLmsRoute: typeof AuthenticatedBrandLmsRoute
   AuthenticatedBrandMarketingRoute: typeof AuthenticatedBrandMarketingRoute
@@ -9276,6 +9319,7 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
   AuthenticatedBrandCoursesRoute: AuthenticatedBrandCoursesRoute,
   AuthenticatedBrandDashboardRoute: AuthenticatedBrandDashboardRoute,
   AuthenticatedBrandDomainRoute: AuthenticatedBrandDomainRoute,
+  AuthenticatedBrandEmailBrandingRoute: AuthenticatedBrandEmailBrandingRoute,
   AuthenticatedBrandFacultyRoute: AuthenticatedBrandFacultyRoute,
   AuthenticatedBrandLmsRoute: AuthenticatedBrandLmsRoute,
   AuthenticatedBrandMarketingRoute: AuthenticatedBrandMarketingRoute,

@@ -7438,6 +7438,95 @@ export type Database = {
           },
         ]
       }
+      email_brand_settings: {
+        Row: {
+          accent_color: string | null
+          address: string | null
+          brand_id: string | null
+          brand_name: string | null
+          created_at: string
+          favicon_url: string | null
+          footer_background: string | null
+          footer_tagline: string | null
+          header_background: string | null
+          id: string
+          is_platform: boolean
+          logo_url: string | null
+          logo_url_dark: string | null
+          primary_color: string | null
+          show_partner_logos: boolean
+          social_facebook: string | null
+          social_instagram: string | null
+          social_linkedin: string | null
+          social_twitter: string | null
+          social_youtube: string | null
+          support_email: string | null
+          support_phone: string | null
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          address?: string | null
+          brand_id?: string | null
+          brand_name?: string | null
+          created_at?: string
+          favicon_url?: string | null
+          footer_background?: string | null
+          footer_tagline?: string | null
+          header_background?: string | null
+          id?: string
+          is_platform?: boolean
+          logo_url?: string | null
+          logo_url_dark?: string | null
+          primary_color?: string | null
+          show_partner_logos?: boolean
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_twitter?: string | null
+          social_youtube?: string | null
+          support_email?: string | null
+          support_phone?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          address?: string | null
+          brand_id?: string | null
+          brand_name?: string | null
+          created_at?: string
+          favicon_url?: string | null
+          footer_background?: string | null
+          footer_tagline?: string | null
+          header_background?: string | null
+          id?: string
+          is_platform?: boolean
+          logo_url?: string | null
+          logo_url_dark?: string | null
+          primary_color?: string | null
+          show_partner_logos?: boolean
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_twitter?: string | null
+          social_youtube?: string | null
+          support_email?: string | null
+          support_phone?: string | null
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_brand_settings_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: true
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_logs: {
         Row: {
           attachments: Json | null
@@ -7539,6 +7628,59 @@ export type Database = {
           variables?: Json | null
         }
         Relationships: []
+      }
+      email_partner_logos: {
+        Row: {
+          brand_id: string | null
+          category: string
+          created_at: string
+          created_by: string | null
+          enabled: boolean
+          id: string
+          link_url: string | null
+          logo_url: string
+          logo_url_dark: string | null
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          enabled?: boolean
+          id?: string
+          link_url?: string | null
+          logo_url: string
+          logo_url_dark?: string | null
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          enabled?: boolean
+          id?: string
+          link_url?: string | null
+          logo_url?: string
+          logo_url_dark?: string | null
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_partner_logos_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "partner_brand_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       employee_attendance: {
         Row: {

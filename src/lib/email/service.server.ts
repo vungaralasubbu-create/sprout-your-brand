@@ -23,6 +23,7 @@
  */
 
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { resolveEmailBrand, resolvePartnerLogos, wrapWithBrandedShell } from "./branding.server";
 
 // ---------- Types ----------
 
@@ -65,6 +66,10 @@ export interface SendEmailInput {
   brandId?: string | null;
   userId?: string | null;
   maxAttempts?: number;
+  /** Wrap the HTML in the branded header/footer shell (default: true). */
+  applyBranding?: boolean;
+  /** Preview text shown in inbox previews. */
+  previewText?: string;
 }
 
 export interface SendEmailResult {
@@ -125,8 +130,16 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
     input.subject ?? input.template?.subject ?? "",
     vars,
   );
-  const html = interpolate(input.html ?? input.template?.html ?? "", vars);
+  let html = interpolate(input.html ?? input.template?.html ?? "", vars);
   const text = interpolate(input.text ?? input.template?.text ?? "", vars);
+
+  // Apply professional branded shell (header/footer + partner logos) unless
+  // the caller opted out. Only wraps when we actually have HTML content.
+  if (html && input.applyBranding !== false) {
+    const brand = await resolveEmailBrand(input.brandId ?? null);
+    const logos = await resolvePartnerLogos(input.brandId ?? null);
+    html = wrapWithBrandedShell(html, brand, logos, input.previewText ?? subject);
+  }
 
   const to = toArray(input.to) ?? [];
   const cc = toArray(input.cc);
