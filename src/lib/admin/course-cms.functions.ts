@@ -128,27 +128,16 @@ type GenKind =
   | "blog_suggestions";
 
 async function callGateway(prompt: string, systemPrompt?: string): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("LOVABLE_API_KEY not configured");
-
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "google/gemini-3.1-flash",
-      messages: [
-        ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
-        { role: "user", content: prompt },
-      ],
-      response_format: { type: "json_object" },
-    }),
+  const { callAiChatCompletions } = await import("@/lib/ai-gateway.server");
+  const content = await callAiChatCompletions({
+    model: "gpt-4o-mini",
+    messages: [
+      ...(systemPrompt ? [{ role: "system" as const, content: systemPrompt }] : []),
+      { role: "user" as const, content: prompt },
+    ],
+    response_format: { type: "json_object" },
   });
-  if (!res.ok) throw new Error(`AI Gateway ${res.status}: ${await res.text().catch(() => "")}`);
-  const json = await res.json() as { choices?: Array<{ message?: { content?: string } }> };
-  return json.choices?.[0]?.message?.content ?? "{}";
+  return content || "{}";
 }
 
 function safeParseJson<T>(raw: string, fallback: T): T {

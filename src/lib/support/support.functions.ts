@@ -1,8 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { callAiChatCompletions } from "@/lib/ai-gateway.server";
 
-const BASE_URL = "https://ai.gateway.lovable.dev/v1";
-const DEFAULT_MODEL = "google/gemini-2.5-flash";
+const DEFAULT_MODEL = "gpt-4o-mini";
 
 const MessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
@@ -42,9 +42,6 @@ export const supportIntentLabel = (intent?: string | null) =>
 export const sendSupportMessage = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => InputSchema.parse(d))
   .handler(async ({ data }): Promise<{ reply: string }> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("AI Support is not configured.");
-
     const handoff = data.handoff;
     const intentLabel = supportIntentLabel(handoff?.supportIntent);
 
@@ -78,26 +75,18 @@ export const sendSupportMessage = createServerFn({ method: "POST" })
       ...data.messages,
     ];
 
-    const res = await fetch(`${BASE_URL}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Lovable-API-Key": key,
-      },
-      body: JSON.stringify({
+    try {
+      const reply = await callAiChatCompletions({
         model: DEFAULT_MODEL,
         messages,
         temperature: 0.4,
-      }),
-    });
-
-    if (res.status === 429) throw new Error("GlintrAI Support is busy — please retry shortly.");
-    if (res.status === 402) throw new Error("GlintrAI Support is temporarily unavailable.");
-    if (!res.ok) {
-      throw new Error("GlintrAI Support is temporarily unavailable.");
+      });
+      const trimmed = reply.trim();
+      if (!trimmed) throw new Error("GlintrAI Support did not return a response.");
+      return { reply: trimmed };
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "GlintrAI Support is temporarily unavailable.";
+      if (msg.includes("rate limit")) throw new Error("GlintrAI Support is busy — please retry shortly.");
+      throw new Error(msg);
     }
-    const json = await res.json();
-    const reply = json?.choices?.[0]?.message?.content?.trim();
-    if (!reply) throw new Error("GlintrAI Support did not return a response.");
-    return { reply };
   });

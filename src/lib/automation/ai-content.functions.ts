@@ -15,27 +15,17 @@ const genSchema = z.object({
 });
 
 async function callLovableAI(prompt: string): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("LOVABLE_API_KEY not configured");
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
-    body: JSON.stringify({
-      model: "google/gemini-3.5-flash",
-      messages: [
-        { role: "system", content: "You are an elite lifecycle marketer for an EdTech platform (Glintr). Return ONLY valid JSON with the requested keys — no prose, no markdown." },
-        { role: "user", content: prompt },
-      ],
-      temperature: 0.75,
-    }),
+  const { callAiChatCompletions } = await import("@/lib/ai-gateway.server");
+  const content = await callAiChatCompletions({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: "You are an elite lifecycle marketer for an EdTech platform (Glintr). Return ONLY valid JSON with the requested keys — no prose, no markdown." },
+      { role: "user", content: prompt },
+    ],
+    temperature: 0.75,
+    response_format: { type: "json_object" },
   });
-  if (!res.ok) {
-    if (res.status === 429) throw new Error("AI is rate-limited. Try again shortly.");
-    if (res.status === 402) throw new Error("AI credits exhausted. Add credits to continue.");
-    throw new Error(`AI Gateway error: HTTP ${res.status}`);
-  }
-  const body = await res.json();
-  return (body?.choices?.[0]?.message?.content ?? "").replace(/```json|```/g, "").trim();
+  return content.replace(/```json|```/g, "").trim();
 }
 
 export const generateAutomationContent = createServerFn({ method: "POST" })

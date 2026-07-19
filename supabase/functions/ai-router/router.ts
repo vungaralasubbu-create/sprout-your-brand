@@ -55,8 +55,15 @@ export async function handle(req: Request): Promise<Response> {
     // Dispatch: only `generate_blog` is wired to a live provider (OpenAI) in
     // this milestone. Other tasks resolve to the placeholder envelope so the
     // pipeline stays exercisable without incurring costs.
-    if (input.task === "generate_blog") {
-      const provider = PROVIDERS[input.provider ?? "openai"];
+    // `chat` is the generic OpenAI Chat Completions passthrough used by
+    // every AI feature across the platform (Ask Glintr AI, Mentor,
+    // Career Coach, Blog / Email / Marketing generators, Support agents).
+    // `generate_blog` retains its Responses-API path for long-form editorial.
+    if (input.task === "chat" || input.task === "generate_blog") {
+      const { openAiChatProvider } = await import("./providers/openai-chat.ts");
+      const provider = input.task === "chat"
+        ? openAiChatProvider
+        : PROVIDERS[input.provider ?? "openai"];
       const { data, model } = await withTimeout(CONFIG.requestTimeoutMs, (signal) =>
         provider.execute({ task: input.task, model: input.model, prompt: input.prompt, options: input.options, signal }),
       );

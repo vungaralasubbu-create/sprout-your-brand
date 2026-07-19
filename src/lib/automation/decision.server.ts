@@ -74,24 +74,17 @@ const RULES: RuleCandidate[] = [
 ];
 
 async function callLovableAIJson<T>(prompt: string): Promise<T | null> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) return null;
   try {
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
-      body: JSON.stringify({
-        model: "google/gemini-3.5-flash",
-        messages: [
-          { role: "system", content: "You are an expert lifecycle marketing AI for an EdTech platform. Return ONLY valid JSON with the requested keys." },
-          { role: "user", content: prompt },
-        ],
-        temperature: 0.3,
-      }),
+    const { callAiChatCompletions } = await import("@/lib/ai-gateway.server");
+    const content = await callAiChatCompletions({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are an expert lifecycle marketing AI for an EdTech platform. Return ONLY valid JSON with the requested keys." },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.3,
+      response_format: { type: "json_object" },
     });
-    if (!res.ok) return null;
-    const body = await res.json();
-    const content: string = body?.choices?.[0]?.message?.content ?? "";
     const cleaned = content.replace(/```json|```/g, "").trim();
     return JSON.parse(cleaned) as T;
   } catch {

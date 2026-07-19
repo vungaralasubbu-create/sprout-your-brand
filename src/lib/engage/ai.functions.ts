@@ -16,31 +16,16 @@ const draftSchema = z.object({
   variants: z.number().min(1).max(4).default(1),
 });
 
-async function callLovableAI(prompt: string, model = "google/gemini-3.5-flash"): Promise<string> {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("LOVABLE_API_KEY not configured");
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Lovable-API-Key": key,
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: "You are an expert email marketer for an EdTech platform. Return only valid JSON with the requested fields." },
-        { role: "user", content: prompt },
-      ],
-      temperature: 0.7,
-    }),
+async function callLovableAI(prompt: string, model = "gpt-4o-mini"): Promise<string> {
+  const { callAiChatCompletions } = await import("@/lib/ai-gateway.server");
+  return callAiChatCompletions({
+    model,
+    messages: [
+      { role: "system", content: "You are an expert email marketer for an EdTech platform. Return only valid JSON with the requested fields." },
+      { role: "user", content: prompt },
+    ],
+    temperature: 0.7,
   });
-  if (!res.ok) {
-    if (res.status === 429) throw new Error("Rate limit — try again shortly.");
-    if (res.status === 402) throw new Error("AI credits exhausted. Add credits to continue.");
-    throw new Error(`AI Gateway error: HTTP ${res.status}`);
-  }
-  const json = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
-  return json?.choices?.[0]?.message?.content ?? "";
 }
 
 function parseJson(raw: string): Record<string, unknown> | null {
