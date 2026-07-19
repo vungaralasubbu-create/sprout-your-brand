@@ -224,7 +224,7 @@ export const generateVideoStoryboard = createServerFn({ method: "POST" })
         })),
       );
     }
-    return storyboard as Storyboard;
+    return storyboard as unknown as Record<string, unknown>;
   });
 
 // ============================================================
