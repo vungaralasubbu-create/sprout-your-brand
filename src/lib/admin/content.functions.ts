@@ -121,6 +121,7 @@ export const getContent = createServerFn({ method: "POST" })
       .from("content_items").select("*").eq("id", data.id).maybeSingle();
     if (error) throw new Error(error.message);
     if (!item) throw new Error("Content not found");
+    const { search_tsv: _tsv, ...itemClean } = item as Record<string, unknown>;
     const [revs, comments, links] = await Promise.all([
       context.supabase.from("content_revisions")
         .select("id, revision_number, change_note, edited_by, created_at, status")
@@ -132,7 +133,7 @@ export const getContent = createServerFn({ method: "POST" })
         .select("id, target_url, anchor_text, target_kind, target_content_id")
         .eq("source_content_id", data.id),
     ]);
-    return { item, revisions: revs.data ?? [], comments: comments.data ?? [], links: links.data ?? [] };
+    return { item: itemClean as Omit<typeof item, "search_tsv">, revisions: revs.data ?? [], comments: comments.data ?? [], links: links.data ?? [] };
   });
 
 const UpsertInput = z.object({
@@ -212,7 +213,7 @@ export const upsertContent = createServerFn({ method: "POST" })
           title: current.title,
           body_markdown: current.body_markdown,
           status: current.status,
-          snapshot: current,
+          snapshot: (({ search_tsv: _t, ...rest }) => rest)(current as Record<string, unknown>) as any,
           change_note: data.change_note ?? null,
           edited_by: context.userId,
         });
