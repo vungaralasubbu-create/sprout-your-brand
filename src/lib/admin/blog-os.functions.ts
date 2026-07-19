@@ -147,7 +147,7 @@ Return strict JSON:
 
 Write helpful, human, non-fluffy prose. Avoid keyword stuffing. Use semantic LSI variations naturally.`;
 
-    const ai = await callLovableAiJson<any>({ prompt, model, cacheKey: null });
+    const ai = await callLovableAiJson<any>({ messages: [{ role: "user", content: prompt }], model });
 
     let saved: any = null;
     if (data.save_as_draft && ai?.content_markdown) {
@@ -242,7 +242,7 @@ export const processProgrammaticJob = createServerFn({ method: "POST" })
     if (job.status === "completed" || job.status === "cancelled") return { done: true, job };
 
     const payload = job.input_payload as any;
-    const titles: any[] = payload.titles ?? [];
+    const titles: any[] = Array.isArray((payload as any)?.titles) ? (payload as any).titles : [];
     const start = job.completed_items + job.failed_items;
     const slice = titles.slice(start, start + data.batch);
 
@@ -256,7 +256,7 @@ export const processProgrammaticJob = createServerFn({ method: "POST" })
     for (const item of slice) {
       try {
         const prompt = `Write a SEO blog titled "${item.title}". Target ~${payload.target_words} words. Angle: ${payload.angle}. Return JSON with keys: seo_title, meta_description, slug, intro, content_markdown, faqs (5), keywords, reading_time_minutes.`;
-        const ai = await callLovableAiJson<any>({ prompt, model: "google/gemini-3.5-flash", cacheKey: null });
+        const ai = await callLovableAiJson<any>({ messages: [{ role: "user", content: prompt }], model: "google/gemini-3.5-flash" });
         const slug = slugify(ai.slug || item.title) + "-" + Date.now().toString(36).slice(-4);
         const wc = wordCount(ai.content_markdown);
         const { data: post } = await supabase.from("blog_posts").insert({
@@ -436,7 +436,7 @@ Existing content:
 ${(post.content_markdown || "").slice(0, 8000)}
 
 Return JSON: { seo_title, meta_description, content_markdown (updated, current year stats and examples, improved structure), faqs, keywords, changelog (array of what changed) }.`;
-    const ai = await callLovableAiJson<any>({ prompt, model: "google/gemini-3.5-flash", cacheKey: null });
+    const ai = await callLovableAiJson<any>({ messages: [{ role: "user", content: prompt }], model: "google/gemini-3.5-flash" });
 
     const wc = wordCount(ai.content_markdown);
     await supabase.from("blog_posts").update({
