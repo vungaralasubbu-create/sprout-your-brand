@@ -62,7 +62,13 @@ function routerUrl(): string {
 function routerAuthHeaders(): Record<string, string> {
   const key = process.env.SUPABASE_PUBLISHABLE_KEY;
   if (!key) throw new Error("SUPABASE_PUBLISHABLE_KEY not configured");
-  return { apikey: key, authorization: `Bearer ${key}` };
+  const headers: Record<string, string> = { apikey: key, authorization: `Bearer ${key}` };
+  // Server-to-server callers authenticate to the AI Router via a shared
+  // internal secret. The apikey/anon key alone is NOT accepted by the
+  // router (it is public and would allow anonymous OpenAI credit drain).
+  const internal = process.env.AI_ROUTER_INTERNAL_SECRET;
+  if (internal) headers["x-internal-secret"] = internal;
+  return headers;
 }
 
 /**
