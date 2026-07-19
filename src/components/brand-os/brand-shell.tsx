@@ -33,6 +33,7 @@ const GROUPS: NavGroup[] = [
   ]},
   { label: "Growth", items: [
     { to: "/brand/marketing", label: "Marketing Center", icon: Megaphone },
+    { to: "/brand/keyword-research", label: "Keyword Research", icon: Search },
     { to: "/brand/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/brand/ai-assistant", label: "GlintrAI", icon: Sparkles },
     { to: "/brand/communications", label: "Communications", icon: MessageSquare },
