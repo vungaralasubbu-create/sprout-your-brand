@@ -198,6 +198,7 @@ import { Route as AuthenticatedBrandPreviewRouteImport } from './routes/_authent
 import { Route as AuthenticatedBrandMarketingRouteImport } from './routes/_authenticated/brand.marketing'
 import { Route as AuthenticatedBrandLmsRouteImport } from './routes/_authenticated/brand.lms'
 import { Route as AuthenticatedBrandFacultyRouteImport } from './routes/_authenticated/brand.faculty'
+import { Route as AuthenticatedBrandEmailBrandingRouteImport } from './routes/_authenticated/brand.email-branding'
 import { Route as AuthenticatedBrandDomainRouteImport } from './routes/_authenticated/brand.domain'
 import { Route as AuthenticatedBrandDashboardRouteImport } from './routes/_authenticated/brand.dashboard'
 import { Route as AuthenticatedBrandCoursesRouteImport } from './routes/_authenticated/brand.courses'
@@ -1443,6 +1444,12 @@ const AuthenticatedBrandFacultyRoute =
   AuthenticatedBrandFacultyRouteImport.update({
     id: '/faculty',
     path: '/faculty',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBrandEmailBrandingRoute =
+  AuthenticatedBrandEmailBrandingRouteImport.update({
+    id: '/email-branding',
+    path: '/email-branding',
     getParentRoute: () => AuthenticatedBrandRoute,
   } as any)
 const AuthenticatedBrandDomainRoute =
@@ -3101,6 +3108,7 @@ export interface FileRoutesByFullPath {
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
@@ -3522,6 +3530,7 @@ export interface FileRoutesByTo {
   '/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
@@ -3959,6 +3968,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/courses': typeof AuthenticatedBrandCoursesRoute
   '/_authenticated/brand/dashboard': typeof AuthenticatedBrandDashboardRoute
   '/_authenticated/brand/domain': typeof AuthenticatedBrandDomainRoute
+  '/_authenticated/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/_authenticated/brand/faculty': typeof AuthenticatedBrandFacultyRoute
   '/_authenticated/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/_authenticated/brand/marketing': typeof AuthenticatedBrandMarketingRoute
@@ -4396,6 +4406,7 @@ export interface FileRouteTypes {
     | '/brand/courses'
     | '/brand/dashboard'
     | '/brand/domain'
+    | '/brand/email-branding'
     | '/brand/faculty'
     | '/brand/lms'
     | '/brand/marketing'
@@ -4817,6 +4828,7 @@ export interface FileRouteTypes {
     | '/brand/courses'
     | '/brand/dashboard'
     | '/brand/domain'
+    | '/brand/email-branding'
     | '/brand/faculty'
     | '/brand/lms'
     | '/brand/marketing'
@@ -5253,6 +5265,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/courses'
     | '/_authenticated/brand/dashboard'
     | '/_authenticated/brand/domain'
+    | '/_authenticated/brand/email-branding'
     | '/_authenticated/brand/faculty'
     | '/_authenticated/brand/lms'
     | '/_authenticated/brand/marketing'
@@ -6910,6 +6923,13 @@ declare module '@tanstack/react-router' {
       path: '/faculty'
       fullPath: '/brand/faculty'
       preLoaderRoute: typeof AuthenticatedBrandFacultyRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/brand/email-branding': {
+      id: '/_authenticated/brand/email-branding'
+      path: '/email-branding'
+      fullPath: '/brand/email-branding'
+      preLoaderRoute: typeof AuthenticatedBrandEmailBrandingRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
     '/_authenticated/brand/domain': {
@@ -9277,6 +9297,7 @@ interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandCoursesRoute: typeof AuthenticatedBrandCoursesRoute
   AuthenticatedBrandDashboardRoute: typeof AuthenticatedBrandDashboardRoute
   AuthenticatedBrandDomainRoute: typeof AuthenticatedBrandDomainRoute
+  AuthenticatedBrandEmailBrandingRoute: typeof AuthenticatedBrandEmailBrandingRoute
   AuthenticatedBrandFacultyRoute: typeof AuthenticatedBrandFacultyRoute
   AuthenticatedBrandLmsRoute: typeof AuthenticatedBrandLmsRoute
   AuthenticatedBrandMarketingRoute: typeof AuthenticatedBrandMarketingRoute
@@ -9298,6 +9319,7 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
   AuthenticatedBrandCoursesRoute: AuthenticatedBrandCoursesRoute,
   AuthenticatedBrandDashboardRoute: AuthenticatedBrandDashboardRoute,
   AuthenticatedBrandDomainRoute: AuthenticatedBrandDomainRoute,
+  AuthenticatedBrandEmailBrandingRoute: AuthenticatedBrandEmailBrandingRoute,
   AuthenticatedBrandFacultyRoute: AuthenticatedBrandFacultyRoute,
   AuthenticatedBrandLmsRoute: AuthenticatedBrandLmsRoute,
   AuthenticatedBrandMarketingRoute: AuthenticatedBrandMarketingRoute,
