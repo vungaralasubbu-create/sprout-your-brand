@@ -80,7 +80,7 @@ export const getInterviewSetupContext = createServerFn({ method: "GET" })
       internships,
       suggestedRoles: Array.from(new Set(suggestedRoles.filter(Boolean))),
       hasResume,
-      aiAvailable: !!process.env.LOVABLE_API_KEY,
+      aiAvailable: isAiAvailable(),
     };
   });
 
@@ -182,7 +182,7 @@ export const startInterviewSession = createServerFn({ method: "POST" })
     const uid = context.userId;
     const sb = context.supabase;
     const setup = data as SetupInput;
-    const aiAvailable = !!process.env.LOVABLE_API_KEY;
+    const aiAvailable = isAiAvailable();
 
     // Authorise project/internship ownership
     if (setup.project_id) {
@@ -393,7 +393,7 @@ export const regenerateInterviewQuestions = createServerFn({ method: "POST" })
       .select("id", { count: "exact", head: true })
       .eq("session_id", session.id);
     if ((count ?? 0) > 0) return { ok: true };
-    if (!process.env.LOVABLE_API_KEY) throw new Error("AI service not configured");
+    if (!isAiAvailable()) throw new Error("AI service not configured");
     await generateAndSaveQuestions(sb, session);
     await sb.from("interview_sessions").update({ ai_available: true }).eq("id", session.id);
     return { ok: true };
@@ -511,7 +511,7 @@ export const submitInterviewAnswer = createServerFn({ method: "POST" })
     });
 
     // Evaluate if AI available
-    if (process.env.LOVABLE_API_KEY) {
+    if (isAiAvailable()) {
       try {
         const { callLovableAiJson } = await import("@/lib/ai-gateway.server");
         const evalResult = await callLovableAiJson<{
