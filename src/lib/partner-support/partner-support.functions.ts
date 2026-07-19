@@ -129,20 +129,21 @@ function buildSystemLines(
 }
 
 async function callGateway(messages: { role: "system" | "user" | "assistant"; content: string }[]) {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("Glintr AI Partner Support is not configured.");
-  const res = await fetch(`${BASE_URL}/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
-    body: JSON.stringify({ model: DEFAULT_MODEL, messages, temperature: 0.35 }),
-  });
-  if (res.status === 429) throw new Error("Glintr AI Partner Support is busy — please retry shortly.");
-  if (res.status === 402) throw new Error("Glintr AI Partner Support is temporarily unavailable.");
-  if (!res.ok) throw new Error("Glintr AI Partner Support is temporarily unavailable.");
-  const json = await res.json();
-  const reply = json?.choices?.[0]?.message?.content?.trim();
-  if (!reply) throw new Error("Glintr AI Partner Support did not return a response.");
-  return reply as string;
+  const { callAiChatCompletions } = await import("@/lib/ai-gateway.server");
+  try {
+    const reply = await callAiChatCompletions({
+      model: "gpt-4o-mini",
+      messages,
+      temperature: 0.35,
+    });
+    const trimmed = reply.trim();
+    if (!trimmed) throw new Error("Glintr AI Partner Support did not return a response.");
+    return trimmed;
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "";
+    if (msg.includes("rate limit")) throw new Error("Glintr AI Partner Support is busy — please retry shortly.");
+    throw new Error("Glintr AI Partner Support is temporarily unavailable.");
+  }
 }
 
 // ---- Partner snapshot (authorised, partner-safe) ----
