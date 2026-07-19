@@ -56,7 +56,7 @@ export const scheduleContent = createServerFn({ method: "POST" })
       variant_id: variantByChannel.get(k) ?? null,
       channel_id: channelByKind.get(k)?.id ?? null,
       channel_kind: k,
-      status: "scheduled",
+      status: "scheduled" as const,
       due_at: dueAt,
       meta: { mode: data.mode, timezone: data.timezone },
     }));

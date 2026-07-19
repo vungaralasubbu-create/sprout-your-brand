@@ -88,7 +88,7 @@ Hashtag arrays: heavy=15-25, medium=5-10, light=1-3, none=[].`;
     });
 
     if (!ai.ok || !ai.result?.content) {
-      throw new Error(`AI generation failed: ${ai.error ?? "unknown"}`);
+      throw new Error(`AI generation failed: ${typeof ai.error === "string" ? ai.error : JSON.stringify(ai.error ?? "unknown")}`);
     }
 
     // Robust JSON extraction
@@ -244,7 +244,7 @@ Return JSON: {"script": string, "voiceover": string, "subtitles": [{"t": number,
         temperature: 0.7, maxTokens: 2048,
       },
     });
-    if (!ai.ok || !ai.result?.content) throw new Error(ai.error ?? "AI failed");
+    if (!ai.ok || !ai.result?.content) throw new Error(typeof ai.error === "string" ? ai.error : "AI failed");
     const raw = ai.result.content.trim().replace(/^```(?:json)?\s*/, "").replace(/```$/, "");
     return JSON.parse(raw);
   });

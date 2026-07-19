@@ -145,7 +145,7 @@ const instagramPublisher: Publisher = async (input) => {
   return { externalId: p.id, raw: { creation: c, publish: p } };
 };
 
-/** Blog — persists to the internal blog_posts table (auto-publishes as draft). */
+/** Blog — persists to the internal blog_posts table as a draft. */
 const blogPublisher: Publisher = async (input) => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const v = input.variant;
@@ -154,28 +154,32 @@ const blogPublisher: Publisher = async (input) => {
   const { data, error } = await supabaseAdmin.from("blog_posts").insert({
     title: v?.seo_title ?? input.content.title ?? "Untitled",
     slug: `${slug}-${input.post.id.slice(0, 6)}`,
-    excerpt: v?.seo_description ?? input.content.brief,
-    content: v?.body ?? v?.caption ?? input.content.brief,
+    short_summary: (v?.seo_description ?? input.content.brief ?? "").slice(0, 500),
+    content_markdown: v?.body ?? v?.caption ?? input.content.brief ?? "",
+    seo_title: v?.seo_title ?? null,
+    seo_description: v?.seo_description ?? null,
     status: "draft",
-    meta: { source: "marketing_automation", post_id: input.post.id },
+    is_published: false,
   }).select("id, slug").single();
   if (error) throw new Error(`Blog: ${error.message}`);
   return { externalId: data!.id as string, externalUrl: `/blogs/${data!.slug}`, raw: data };
 };
 
-/** Email — queues into email_logs; delivery handled by existing engage stack. */
+/** Email — queues into engage_messages; delivery handled by existing engage stack. */
 const emailPublisher: Publisher = async (input) => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const v = input.variant;
+  const recipient = (input.channel?.config as { recipient?: string })?.recipient ?? "list@queued";
   const { data, error } = await supabaseAdmin.from("engage_messages").insert({
-    kind: "email",
+    channel: "email",
+    recipient,
     subject: v?.seo_title ?? v?.headline ?? input.content.title ?? "Update",
-    body_html: v?.body ?? v?.caption ?? "",
     status: "queued",
-    meta: { source: "marketing_automation", post_id: input.post.id },
+    tenant_scope: "marketing",
+    metadata: { source: "marketing_automation", post_id: input.post.id, body_html: v?.body ?? v?.caption ?? "" },
   }).select("id").maybeSingle();
   if (error) throw new Error(`Email: ${error.message}`);
-  return { externalId: (data?.id ?? null) as string | undefined, raw: data };
+  return { externalId: (data?.id ?? undefined) as string | undefined, raw: data };
 };
 
 /** Fallback publisher: records the payload for manual dispatch. */

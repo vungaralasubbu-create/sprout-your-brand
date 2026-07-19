@@ -99,9 +99,6 @@ export const recomputeLearnings = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => z.object({ brandId: z.string().uuid() }).parse(i))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    // Pull last 90d of analytics joined to posts+variants
-    const { data: rows } = await supabase.rpc("mkt_top_signals" as never, { _brand: data.brandId }).select("*").limit(1);
-    // Fallback: derive best posting time from analytics if RPC absent.
     const since = new Date(Date.now() - 90 * 86400_000).toISOString();
     const { data: a } = await supabase.from("mkt_analytics")
       .select("channel_kind, engagement_rate, measured_at").eq("brand_id", data.brandId).gte("measured_at", since);
@@ -114,18 +111,23 @@ export const recomputeLearnings = createServerFn({ method: "POST" })
       byChannelHour[ch][h].e += Number(r.engagement_rate ?? 0);
       byChannelHour[ch][h].n += 1;
     }
-    const updates = [];
+    type ChannelEnum = "blog" | "email" | "facebook" | "instagram" | "linkedin" | "telegram" | "threads" | "twitter" | "whatsapp_channel" | "youtube_community";
+    const updates: Array<{
+      brand_id: string; channel_kind: ChannelEnum; metric: string;
+      value: unknown; score: number; sample_size: number;
+    }> = [];
     for (const [ch, hours] of Object.entries(byChannelHour)) {
       const ranked = Object.entries(hours)
         .map(([h, v]) => ({ hour: Number(h), avg: v.n ? v.e / v.n : 0 }))
         .sort((x, y) => y.avg - x.avg).slice(0, 3);
       updates.push({
-        brand_id: data.brandId, channel_kind: ch, metric: "best_time",
+        brand_id: data.brandId, channel_kind: ch as ChannelEnum, metric: "best_time",
         value: ranked, score: ranked[0]?.avg ?? 0, sample_size: Object.values(hours).reduce((s, v) => s + v.n, 0),
       });
     }
     if (updates.length) {
-      await supabase.from("mkt_learnings").upsert(updates, { onConflict: "brand_id,channel_kind,metric" });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await supabase.from("mkt_learnings").upsert(updates as any, { onConflict: "brand_id,channel_kind,metric" });
     }
-    return { ok: true, updated: updates.length, rowsSeen: rows?.length ?? 0 };
+    return { ok: true, updated: updates.length };
   });
