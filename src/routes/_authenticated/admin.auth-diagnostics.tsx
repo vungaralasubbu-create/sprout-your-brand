@@ -147,9 +147,9 @@ function AuthDiagnosticsPage() {
         />
         <StatusCard
           icon={CheckCircle2}
-          label="Lovable API Key"
-          value={cfg?.lovable_api_key_set ? "Set" : "Missing"}
-          ok={!!cfg?.lovable_api_key_set}
+          label="AI Provider"
+          value={cfg?.ai_provider_configured ? "Configured" : "Missing"}
+          ok={!!cfg?.ai_provider_configured}
         />
       </section>
 
