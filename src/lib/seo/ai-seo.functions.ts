@@ -114,23 +114,24 @@ export const generateSeoSuggestion = createServerFn({ method: "POST" })
 
     // Prefer structured payload, fall back to parsing JSON from content.
     let suggestion: Record<string, unknown> = {};
-
     if (chat.result.structuredJson) {
       try {
-        suggestion = JSON.parse(chat.result.structuredJson);
+        const parsed = JSON.parse(chat.result.structuredJson);
+        suggestion = parsed && typeof parsed === "object" ? parsed : { value: parsed };
       } catch {
-        suggestion = chat.result.structuredJson;
+        suggestion = { raw: chat.result.structuredJson };
       }
-    }
-    if (suggestion == null) {
+    } else {
       const raw = chat.result.content ?? "";
       const match = raw.match(/\{[\s\S]*\}$/m) ?? raw.match(/\{[\s\S]*\}/);
       try {
-        suggestion = match ? JSON.parse(match[0]) : { raw };
+        const parsed = match ? JSON.parse(match[0]) : null;
+        suggestion = parsed && typeof parsed === "object" ? parsed : { raw };
       } catch {
         suggestion = { raw };
       }
     }
+
 
     const { data: row, error } = await context.supabase
       .from("ai_seo_suggestions")
