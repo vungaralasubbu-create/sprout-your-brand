@@ -198,6 +198,7 @@ import { Route as AuthenticatedBrandSecurityRouteImport } from './routes/_authen
 import { Route as AuthenticatedBrandPreviewRouteImport } from './routes/_authenticated/brand.preview'
 import { Route as AuthenticatedBrandMarketingRouteImport } from './routes/_authenticated/brand.marketing'
 import { Route as AuthenticatedBrandLmsRouteImport } from './routes/_authenticated/brand.lms'
+import { Route as AuthenticatedBrandKeywordResearchRouteImport } from './routes/_authenticated/brand.keyword-research'
 import { Route as AuthenticatedBrandFacultyRouteImport } from './routes/_authenticated/brand.faculty'
 import { Route as AuthenticatedBrandEmailBrandingRouteImport } from './routes/_authenticated/brand.email-branding'
 import { Route as AuthenticatedBrandDomainRouteImport } from './routes/_authenticated/brand.domain'
@@ -251,6 +252,7 @@ import { Route as AuthenticatedAdminLeadOwnershipRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminLeadMonitoringRouteImport } from './routes/_authenticated/admin.lead-monitoring'
 import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_authenticated/admin.lead-management'
 import { Route as AuthenticatedAdminLeadIntelligenceRouteImport } from './routes/_authenticated/admin.lead-intelligence'
+import { Route as AuthenticatedAdminKeywordResearchRouteImport } from './routes/_authenticated/admin.keyword-research'
 import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
 import { Route as AuthenticatedAdminExecutiveRouteImport } from './routes/_authenticated/admin.executive'
@@ -1451,6 +1453,12 @@ const AuthenticatedBrandLmsRoute = AuthenticatedBrandLmsRouteImport.update({
   path: '/lms',
   getParentRoute: () => AuthenticatedBrandRoute,
 } as any)
+const AuthenticatedBrandKeywordResearchRoute =
+  AuthenticatedBrandKeywordResearchRouteImport.update({
+    id: '/keyword-research',
+    path: '/keyword-research',
+    getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
 const AuthenticatedBrandFacultyRoute =
   AuthenticatedBrandFacultyRouteImport.update({
     id: '/faculty',
@@ -1762,6 +1770,12 @@ const AuthenticatedAdminLeadIntelligenceRoute =
   AuthenticatedAdminLeadIntelligenceRouteImport.update({
     id: '/lead-intelligence',
     path: '/lead-intelligence',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminKeywordResearchRoute =
+  AuthenticatedAdminKeywordResearchRouteImport.update({
+    id: '/keyword-research',
+    path: '/keyword-research',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminIntegrationsRoute =
@@ -3093,6 +3107,7 @@ export interface FileRoutesByFullPath {
   '/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
+  '/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
@@ -3146,6 +3161,7 @@ export interface FileRoutesByFullPath {
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
   '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/brand/keyword-research': typeof AuthenticatedBrandKeywordResearchRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
   '/brand/preview': typeof AuthenticatedBrandPreviewRoute
@@ -3521,6 +3537,7 @@ export interface FileRoutesByTo {
   '/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
+  '/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
@@ -3573,6 +3590,7 @@ export interface FileRoutesByTo {
   '/brand/domain': typeof AuthenticatedBrandDomainRoute
   '/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/brand/keyword-research': typeof AuthenticatedBrandKeywordResearchRoute
   '/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/brand/marketing': typeof AuthenticatedBrandMarketingRoute
   '/brand/preview': typeof AuthenticatedBrandPreviewRoute
@@ -3963,6 +3981,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
   '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
+  '/_authenticated/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
   '/_authenticated/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
   '/_authenticated/admin/lead-management': typeof AuthenticatedAdminLeadManagementRoute
   '/_authenticated/admin/lead-monitoring': typeof AuthenticatedAdminLeadMonitoringRoute
@@ -4016,6 +4035,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/domain': typeof AuthenticatedBrandDomainRoute
   '/_authenticated/brand/email-branding': typeof AuthenticatedBrandEmailBrandingRoute
   '/_authenticated/brand/faculty': typeof AuthenticatedBrandFacultyRoute
+  '/_authenticated/brand/keyword-research': typeof AuthenticatedBrandKeywordResearchRoute
   '/_authenticated/brand/lms': typeof AuthenticatedBrandLmsRoute
   '/_authenticated/brand/marketing': typeof AuthenticatedBrandMarketingRoute
   '/_authenticated/brand/preview': typeof AuthenticatedBrandPreviewRoute
@@ -4406,6 +4426,7 @@ export interface FileRouteTypes {
     | '/admin/executive'
     | '/admin/infrastructure'
     | '/admin/integrations'
+    | '/admin/keyword-research'
     | '/admin/lead-intelligence'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
@@ -4459,6 +4480,7 @@ export interface FileRouteTypes {
     | '/brand/domain'
     | '/brand/email-branding'
     | '/brand/faculty'
+    | '/brand/keyword-research'
     | '/brand/lms'
     | '/brand/marketing'
     | '/brand/preview'
@@ -4834,6 +4856,7 @@ export interface FileRouteTypes {
     | '/admin/executive'
     | '/admin/infrastructure'
     | '/admin/integrations'
+    | '/admin/keyword-research'
     | '/admin/lead-intelligence'
     | '/admin/lead-management'
     | '/admin/lead-monitoring'
@@ -4886,6 +4909,7 @@ export interface FileRouteTypes {
     | '/brand/domain'
     | '/brand/email-branding'
     | '/brand/faculty'
+    | '/brand/keyword-research'
     | '/brand/lms'
     | '/brand/marketing'
     | '/brand/preview'
@@ -5275,6 +5299,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/executive'
     | '/_authenticated/admin/infrastructure'
     | '/_authenticated/admin/integrations'
+    | '/_authenticated/admin/keyword-research'
     | '/_authenticated/admin/lead-intelligence'
     | '/_authenticated/admin/lead-management'
     | '/_authenticated/admin/lead-monitoring'
@@ -5328,6 +5353,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/domain'
     | '/_authenticated/brand/email-branding'
     | '/_authenticated/brand/faculty'
+    | '/_authenticated/brand/keyword-research'
     | '/_authenticated/brand/lms'
     | '/_authenticated/brand/marketing'
     | '/_authenticated/brand/preview'
@@ -6992,6 +7018,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBrandLmsRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
     }
+    '/_authenticated/brand/keyword-research': {
+      id: '/_authenticated/brand/keyword-research'
+      path: '/keyword-research'
+      fullPath: '/brand/keyword-research'
+      preLoaderRoute: typeof AuthenticatedBrandKeywordResearchRouteImport
+      parentRoute: typeof AuthenticatedBrandRoute
+    }
     '/_authenticated/brand/faculty': {
       id: '/_authenticated/brand/faculty'
       path: '/faculty'
@@ -7361,6 +7394,13 @@ declare module '@tanstack/react-router' {
       path: '/lead-intelligence'
       fullPath: '/admin/lead-intelligence'
       preLoaderRoute: typeof AuthenticatedAdminLeadIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/keyword-research': {
+      id: '/_authenticated/admin/keyword-research'
+      path: '/keyword-research'
+      fullPath: '/admin/keyword-research'
+      preLoaderRoute: typeof AuthenticatedAdminKeywordResearchRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/integrations': {
@@ -9131,6 +9171,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminExecutiveRoute: typeof AuthenticatedAdminExecutiveRoute
   AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
   AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
+  AuthenticatedAdminKeywordResearchRoute: typeof AuthenticatedAdminKeywordResearchRoute
   AuthenticatedAdminLeadIntelligenceRoute: typeof AuthenticatedAdminLeadIntelligenceRoute
   AuthenticatedAdminLeadManagementRoute: typeof AuthenticatedAdminLeadManagementRoute
   AuthenticatedAdminLeadMonitoringRoute: typeof AuthenticatedAdminLeadMonitoringRoute
@@ -9233,6 +9274,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminExecutiveRoute: AuthenticatedAdminExecutiveRoute,
   AuthenticatedAdminInfrastructureRoute: AuthenticatedAdminInfrastructureRoute,
   AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
+  AuthenticatedAdminKeywordResearchRoute:
+    AuthenticatedAdminKeywordResearchRoute,
   AuthenticatedAdminLeadIntelligenceRoute:
     AuthenticatedAdminLeadIntelligenceRoute,
   AuthenticatedAdminLeadManagementRoute: AuthenticatedAdminLeadManagementRoute,
@@ -9410,6 +9453,7 @@ interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandDomainRoute: typeof AuthenticatedBrandDomainRoute
   AuthenticatedBrandEmailBrandingRoute: typeof AuthenticatedBrandEmailBrandingRoute
   AuthenticatedBrandFacultyRoute: typeof AuthenticatedBrandFacultyRoute
+  AuthenticatedBrandKeywordResearchRoute: typeof AuthenticatedBrandKeywordResearchRoute
   AuthenticatedBrandLmsRoute: typeof AuthenticatedBrandLmsRoute
   AuthenticatedBrandMarketingRoute: typeof AuthenticatedBrandMarketingRoute
   AuthenticatedBrandPreviewRoute: typeof AuthenticatedBrandPreviewRoute
@@ -9432,6 +9476,8 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
   AuthenticatedBrandDomainRoute: AuthenticatedBrandDomainRoute,
   AuthenticatedBrandEmailBrandingRoute: AuthenticatedBrandEmailBrandingRoute,
   AuthenticatedBrandFacultyRoute: AuthenticatedBrandFacultyRoute,
+  AuthenticatedBrandKeywordResearchRoute:
+    AuthenticatedBrandKeywordResearchRoute,
   AuthenticatedBrandLmsRoute: AuthenticatedBrandLmsRoute,
   AuthenticatedBrandMarketingRoute: AuthenticatedBrandMarketingRoute,
   AuthenticatedBrandPreviewRoute: AuthenticatedBrandPreviewRoute,

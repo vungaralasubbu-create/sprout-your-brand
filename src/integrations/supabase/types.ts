@@ -10011,6 +10011,184 @@ export type Database = {
           },
         ]
       }
+      keyword_content_plan: {
+        Row: {
+          business_value: number | null
+          cluster: string | null
+          content_type: string
+          created_at: string
+          id: string
+          internal_links: Json | null
+          month: number
+          priority: number | null
+          project_id: string
+          status: string
+          supporting_keywords: string[] | null
+          target_keyword: string | null
+          title: string
+        }
+        Insert: {
+          business_value?: number | null
+          cluster?: string | null
+          content_type: string
+          created_at?: string
+          id?: string
+          internal_links?: Json | null
+          month: number
+          priority?: number | null
+          project_id: string
+          status?: string
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          title: string
+        }
+        Update: {
+          business_value?: number | null
+          cluster?: string | null
+          content_type?: string
+          created_at?: string
+          id?: string
+          internal_links?: Json | null
+          month?: number
+          priority?: number | null
+          project_id?: string
+          status?: string
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "keyword_content_plan_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "keyword_research_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      keyword_research_keywords: {
+        Row: {
+          business_value: number | null
+          category: string
+          cluster: string | null
+          competition: string | null
+          conversion_score: number | null
+          cpc: number | null
+          created_at: string
+          difficulty: number | null
+          estimated_traffic: number | null
+          id: string
+          intent: string | null
+          keyword: string
+          monthly_volume: number | null
+          notes: string | null
+          priority: number | null
+          project_id: string
+          seasonality: string | null
+          suggested_content_type: string | null
+        }
+        Insert: {
+          business_value?: number | null
+          category: string
+          cluster?: string | null
+          competition?: string | null
+          conversion_score?: number | null
+          cpc?: number | null
+          created_at?: string
+          difficulty?: number | null
+          estimated_traffic?: number | null
+          id?: string
+          intent?: string | null
+          keyword: string
+          monthly_volume?: number | null
+          notes?: string | null
+          priority?: number | null
+          project_id: string
+          seasonality?: string | null
+          suggested_content_type?: string | null
+        }
+        Update: {
+          business_value?: number | null
+          category?: string
+          cluster?: string | null
+          competition?: string | null
+          conversion_score?: number | null
+          cpc?: number | null
+          created_at?: string
+          difficulty?: number | null
+          estimated_traffic?: number | null
+          id?: string
+          intent?: string | null
+          keyword?: string
+          monthly_volume?: number | null
+          notes?: string | null
+          priority?: number | null
+          project_id?: string
+          seasonality?: string | null
+          suggested_content_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "keyword_research_keywords_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "keyword_research_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      keyword_research_projects: {
+        Row: {
+          brand_id: string | null
+          created_at: string
+          id: string
+          language: string | null
+          location: string | null
+          name: string
+          notes: string | null
+          owner_id: string | null
+          scope: string
+          seed_query: string
+          status: string
+          subject_type: string
+          summary: Json | null
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          language?: string | null
+          location?: string | null
+          name: string
+          notes?: string | null
+          owner_id?: string | null
+          scope?: string
+          seed_query: string
+          status?: string
+          subject_type: string
+          summary?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          created_at?: string
+          id?: string
+          language?: string | null
+          location?: string | null
+          name?: string
+          notes?: string | null
+          owner_id?: string | null
+          scope?: string
+          seed_query?: string
+          status?: string
+          subject_type?: string
+          summary?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lead_assignment_history: {
         Row: {
           action: string

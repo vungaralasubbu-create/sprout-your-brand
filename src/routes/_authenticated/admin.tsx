@@ -68,6 +68,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/content", label: "Content Dashboard", icon: BookOpen },
       { to: "/admin/blogs", label: "Blog CMS", icon: BookOpen },
       { to: "/admin/ai-content", label: "AI Content Factory", icon: Sparkles },
+      { to: "/admin/keyword-research", label: "Keyword Research", icon: Search },
       { to: "/admin/content-intelligence", label: "Content Intelligence", icon: Activity },
     ],
   },
