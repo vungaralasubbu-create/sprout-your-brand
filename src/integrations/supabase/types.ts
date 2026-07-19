@@ -14440,6 +14440,484 @@ export type Database = {
           },
         ]
       }
+      link_anchor_history: {
+        Row: {
+          anchor_style: string | null
+          anchor_text: string
+          created_at: string
+          id: string
+          last_used_at: string
+          to_content_id: string | null
+          to_content_type: string | null
+          to_node_id: string | null
+          usage_count: number
+        }
+        Insert: {
+          anchor_style?: string | null
+          anchor_text: string
+          created_at?: string
+          id?: string
+          last_used_at?: string
+          to_content_id?: string | null
+          to_content_type?: string | null
+          to_node_id?: string | null
+          usage_count?: number
+        }
+        Update: {
+          anchor_style?: string | null
+          anchor_text?: string
+          created_at?: string
+          id?: string
+          last_used_at?: string
+          to_content_id?: string | null
+          to_content_type?: string | null
+          to_node_id?: string | null
+          usage_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "link_anchor_history_to_node_id_fkey"
+            columns: ["to_node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      link_clicks: {
+        Row: {
+          anchor_text: string | null
+          clicked_at: string
+          from_node_id: string | null
+          id: number
+          session_id: string | null
+          to_node_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          anchor_text?: string | null
+          clicked_at?: string
+          from_node_id?: string | null
+          id?: number
+          session_id?: string | null
+          to_node_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          anchor_text?: string | null
+          clicked_at?: string
+          from_node_id?: string | null
+          id?: number
+          session_id?: string | null
+          to_node_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "link_clicks_from_node_id_fkey"
+            columns: ["from_node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "link_clicks_to_node_id_fkey"
+            columns: ["to_node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      link_graph_edges: {
+        Row: {
+          anchor_style: string | null
+          anchor_text: string | null
+          created_at: string
+          discovered_by: string
+          from_node_id: string
+          id: string
+          link_type: string
+          meta: Json
+          similarity: number | null
+          status: string
+          to_node_id: string
+          weight: number
+        }
+        Insert: {
+          anchor_style?: string | null
+          anchor_text?: string | null
+          created_at?: string
+          discovered_by?: string
+          from_node_id: string
+          id?: string
+          link_type?: string
+          meta?: Json
+          similarity?: number | null
+          status?: string
+          to_node_id: string
+          weight?: number
+        }
+        Update: {
+          anchor_style?: string | null
+          anchor_text?: string | null
+          created_at?: string
+          discovered_by?: string
+          from_node_id?: string
+          id?: string
+          link_type?: string
+          meta?: Json
+          similarity?: number | null
+          status?: string
+          to_node_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "link_graph_edges_from_node_id_fkey"
+            columns: ["from_node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "link_graph_edges_to_node_id_fkey"
+            columns: ["to_node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      link_graph_nodes: {
+        Row: {
+          authority: number
+          content_id: string
+          content_type: string
+          created_at: string
+          depth: number
+          id: string
+          inbound_count: number
+          is_orphan: boolean
+          keywords: string[] | null
+          last_crawled_at: string | null
+          meta: Json
+          outbound_count: number
+          pagerank: number
+          status: string
+          summary: string | null
+          title: string | null
+          topic_cluster: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          authority?: number
+          content_id: string
+          content_type: string
+          created_at?: string
+          depth?: number
+          id?: string
+          inbound_count?: number
+          is_orphan?: boolean
+          keywords?: string[] | null
+          last_crawled_at?: string | null
+          meta?: Json
+          outbound_count?: number
+          pagerank?: number
+          status?: string
+          summary?: string | null
+          title?: string | null
+          topic_cluster?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          authority?: number
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          depth?: number
+          id?: string
+          inbound_count?: number
+          is_orphan?: boolean
+          keywords?: string[] | null
+          last_crawled_at?: string | null
+          meta?: Json
+          outbound_count?: number
+          pagerank?: number
+          status?: string
+          summary?: string | null
+          title?: string | null
+          topic_cluster?: string | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      link_health_issues: {
+        Row: {
+          detected_at: string
+          edge_id: string | null
+          id: string
+          issue_type: string
+          last_seen_at: string
+          meta: Json
+          node_id: string | null
+          recommendation: string | null
+          redirect_chain: string[] | null
+          resolved_at: string | null
+          severity: string
+          status_code: number | null
+          url: string | null
+        }
+        Insert: {
+          detected_at?: string
+          edge_id?: string | null
+          id?: string
+          issue_type: string
+          last_seen_at?: string
+          meta?: Json
+          node_id?: string | null
+          recommendation?: string | null
+          redirect_chain?: string[] | null
+          resolved_at?: string | null
+          severity?: string
+          status_code?: number | null
+          url?: string | null
+        }
+        Update: {
+          detected_at?: string
+          edge_id?: string | null
+          id?: string
+          issue_type?: string
+          last_seen_at?: string
+          meta?: Json
+          node_id?: string | null
+          recommendation?: string | null
+          redirect_chain?: string[] | null
+          resolved_at?: string | null
+          severity?: string
+          status_code?: number | null
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "link_health_issues_edge_id_fkey"
+            columns: ["edge_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_edges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "link_health_issues_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      link_intelligence_settings: {
+        Row: {
+          ai_prompt_version: string
+          anchor_diversity_min: number
+          auto_approve_threshold: number
+          excluded_types: string[]
+          excluded_urls: string[]
+          id: string
+          max_links_per_page: number
+          min_links_per_page: number
+          require_approval: boolean
+          scoring_weights: Json
+          suggestion_threshold: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          ai_prompt_version?: string
+          anchor_diversity_min?: number
+          auto_approve_threshold?: number
+          excluded_types?: string[]
+          excluded_urls?: string[]
+          id?: string
+          max_links_per_page?: number
+          min_links_per_page?: number
+          require_approval?: boolean
+          scoring_weights?: Json
+          suggestion_threshold?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          ai_prompt_version?: string
+          anchor_diversity_min?: number
+          auto_approve_threshold?: number
+          excluded_types?: string[]
+          excluded_urls?: string[]
+          id?: string
+          max_links_per_page?: number
+          min_links_per_page?: number
+          require_approval?: boolean
+          scoring_weights?: Json
+          suggestion_threshold?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      link_page_scores: {
+        Row: {
+          anchor_diversity: number | null
+          authority_flow: number | null
+          breakdown: Json
+          cluster_participation: number | null
+          computed_at: string
+          ctr: number | null
+          id: string
+          inbound_score: number | null
+          node_id: string
+          orphan_penalty: number | null
+          outbound_score: number | null
+          score: number
+          topical_relevance: number | null
+        }
+        Insert: {
+          anchor_diversity?: number | null
+          authority_flow?: number | null
+          breakdown?: Json
+          cluster_participation?: number | null
+          computed_at?: string
+          ctr?: number | null
+          id?: string
+          inbound_score?: number | null
+          node_id: string
+          orphan_penalty?: number | null
+          outbound_score?: number | null
+          score?: number
+          topical_relevance?: number | null
+        }
+        Update: {
+          anchor_diversity?: number | null
+          authority_flow?: number | null
+          breakdown?: Json
+          cluster_participation?: number | null
+          computed_at?: string
+          ctr?: number | null
+          id?: string
+          inbound_score?: number | null
+          node_id?: string
+          orphan_penalty?: number | null
+          outbound_score?: number | null
+          score?: number
+          topical_relevance?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "link_page_scores_node_id_fkey"
+            columns: ["node_id"]
+            isOneToOne: true
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      link_suggestions: {
+        Row: {
+          ai_model: string | null
+          ai_prompt_version: string | null
+          anchor_style: string
+          anchor_text: string
+          context_snippet: string | null
+          created_at: string
+          from_content_id: string | null
+          from_content_type: string | null
+          from_node_id: string | null
+          id: string
+          intent_match: number | null
+          link_type: string
+          meta: Json
+          placement_hint: string | null
+          reasoning: string | null
+          rejection_reason: string | null
+          relevance_score: number
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          to_content_id: string | null
+          to_content_type: string | null
+          to_node_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          anchor_style?: string
+          anchor_text: string
+          context_snippet?: string | null
+          created_at?: string
+          from_content_id?: string | null
+          from_content_type?: string | null
+          from_node_id?: string | null
+          id?: string
+          intent_match?: number | null
+          link_type?: string
+          meta?: Json
+          placement_hint?: string | null
+          reasoning?: string | null
+          rejection_reason?: string | null
+          relevance_score?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          to_content_id?: string | null
+          to_content_type?: string | null
+          to_node_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ai_model?: string | null
+          ai_prompt_version?: string | null
+          anchor_style?: string
+          anchor_text?: string
+          context_snippet?: string | null
+          created_at?: string
+          from_content_id?: string | null
+          from_content_type?: string | null
+          from_node_id?: string | null
+          id?: string
+          intent_match?: number | null
+          link_type?: string
+          meta?: Json
+          placement_hint?: string | null
+          reasoning?: string | null
+          rejection_reason?: string | null
+          relevance_score?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          to_content_id?: string | null
+          to_content_type?: string | null
+          to_node_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "link_suggestions_from_node_id_fkey"
+            columns: ["from_node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "link_suggestions_to_node_id_fkey"
+            columns: ["to_node_id"]
+            isOneToOne: false
+            referencedRelation: "link_graph_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       live_class_ai_outputs: {
         Row: {
           assignments: Json | null
