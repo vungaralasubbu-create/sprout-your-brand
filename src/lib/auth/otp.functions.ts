@@ -116,7 +116,7 @@ const completeSchema = z.object({
   mobile: z.string().trim().min(6).max(20),
   code: z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code."),
   email: z.string().trim().email().max(255),
-  password: z.string().min(6).max(72),
+  password: z.string().min(6).max(72).optional().nullable(),
   mode: z.enum(["signin", "signup"]).default("signin"),
 });
 
@@ -199,11 +199,15 @@ export const completeOtpPasswordAuth = createServerFn({ method: "POST" })
       return { ok: false as const, step: "otp" as const, error: "Invalid OTP. Check the 6-digit code and try again." };
     }
 
+    // OTP is the sole authentication factor. Password (if provided) is stored
+    // on signup for future recovery but is NOT required to match on signin —
+    // successful OTP verification alone mints the session via a magiclink token.
     const authClient = await createPasswordAuthClient();
+
     if (data.mode === "signup") {
       const created = await supabaseAdmin.auth.admin.createUser({
         email,
-        password: data.password,
+        password: data.password ?? undefined,
         email_confirm: true,
         user_metadata: { mobile },
       });
@@ -215,19 +219,34 @@ export const completeOtpPasswordAuth = createServerFn({ method: "POST" })
       }
     }
 
-    const authResult = await authClient.auth.signInWithPassword({ email, password: data.password });
-
-    if (authResult.error) {
-      return { ok: false as const, step: "session" as const, error: authErrorMessage(authResult.error.message) };
+    // Mint a session via magiclink token — no password check.
+    const linkRes = await supabaseAdmin.auth.admin.generateLink({
+      type: "magiclink",
+      email,
+    });
+    if (linkRes.error || !linkRes.data?.properties?.hashed_token) {
+      const msg = linkRes.error?.message || "";
+      if (msg.toLowerCase().includes("user not found") || msg.toLowerCase().includes("not found")) {
+        return { ok: false as const, step: "session" as const, error: "No account found for this email. Create an account first." };
+      }
+      return { ok: false as const, step: "session" as const, error: authErrorMessage(msg || "Session creation failed.") };
     }
 
-    const session = authResult.data.session;
-    const user = authResult.data.user;
+    const verifyRes = await authClient.auth.verifyOtp({
+      token_hash: linkRes.data.properties.hashed_token,
+      type: "magiclink",
+    });
+    if (verifyRes.error) {
+      return { ok: false as const, step: "session" as const, error: authErrorMessage(verifyRes.error.message) };
+    }
+
+    const session = verifyRes.data.session;
+    const user = verifyRes.data.user;
     if (!session?.access_token || !session.refresh_token || !user?.id) {
       return {
         ok: false as const,
         step: "session" as const,
-        error: "OTP verified, but the session could not be created. Please try Forgot password or Continue with Google if this email uses Google sign-in.",
+        error: "OTP verified, but the session could not be created. Please retry.",
       };
     }
 

@@ -245,8 +245,10 @@ function AuthPage() {
     const emailOk = z.string().email().max(255).safeParse(email.trim()).success;
     if (!email.trim()) nextErrors.email = "Email is required.";
     else if (!emailOk) nextErrors.email = "Enter a valid email address.";
-    if (!password) nextErrors.password = "Password is required.";
-    else if (password.length < 6) nextErrors.password = "Password must be at least 6 characters.";
+    if (mode === "signup") {
+      if (!password) nextErrors.password = "Password is required.";
+      else if (password.length < 6) nextErrors.password = "Password must be at least 6 characters.";
+    }
 
     const needsMobile = !(mode === "signin" && isTrustedEmail(email));
     if (needsMobile) {
@@ -261,13 +263,11 @@ function AuthPage() {
     }
     setErrors({});
 
-    // Trusted device: skip OTP.
-    if (mode === "signin" && isTrustedEmail(email)) {
-      setLoading(true);
-      await completePasswordAuth();
-      setLoading(false);
-      return;
-    }
+    // OTP is the sole authentication factor. Session persistence keeps the
+    // user signed in across reloads/tabs — OTP is only re-required when the
+    // browser session is cleared or expires.
+
+
 
     setLoading(true);
     const res = await sendOtp({
@@ -301,7 +301,7 @@ function AuthPage() {
     setErrors((p) => ({ ...p, code: undefined }));
     setLoading(true);
     const result = await completeOtpAuth({
-      data: { mobile, code, email, password, mode: mode === "signup" ? "signup" : "signin" },
+      data: { mobile, code, email, password: password || undefined, mode: mode === "signup" ? "signup" : "signin" },
     });
     if (!result.ok) {
       setLoading(false);
@@ -434,26 +434,28 @@ function AuthPage() {
                       )}
                     </div>
                   )}
-                  <div>
-                    <Label htmlFor="password">
-                      {mode === "recovery" ? "New password" : "Password"}
-                    </Label>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      aria-invalid={!!errors.password}
-                      aria-describedby={errors.password ? "password-error" : undefined}
-                      className={`mt-2 h-11 ${errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                    />
-                    {errors.password && (
-                      <p id="password-error" role="alert" className="text-caption mt-1 text-destructive">
-                        {errors.password}
-                      </p>
-                    )}
-                  </div>
+                  {(mode === "signup" || mode === "recovery") && (
+                    <div>
+                      <Label htmlFor="password">
+                        {mode === "recovery" ? "New password" : "Password"}
+                      </Label>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        aria-invalid={!!errors.password}
+                        aria-describedby={errors.password ? "password-error" : undefined}
+                        className={`mt-2 h-11 ${errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                      />
+                      {errors.password && (
+                        <p id="password-error" role="alert" className="text-caption mt-1 text-destructive">
+                          {errors.password}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   {mode !== "recovery" && !(mode === "signin" && trustedEmail) && (
                     <div>
                       <Label htmlFor="mobile">Mobile number</Label>
