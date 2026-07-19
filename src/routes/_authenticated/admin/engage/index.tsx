@@ -82,7 +82,7 @@ function Header() {
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="muted" onClick={() => seed.mutate()} disabled={seed.isPending}>
+        <Button variant="soft" onClick={() => seed.mutate()} disabled={seed.isPending}>
           {seed.isPending ? "Seeding…" : "Seed default templates"}
         </Button>
       </div>
