@@ -125,7 +125,7 @@ export const getThread = createServerFn({ method: "POST" })
 
     // Fire-and-forget view increment (best effort via publishable client—will only work if RLS allows;
     // this is intentional and non-blocking).
-    void sb.rpc("noop" as any).catch(() => {});
+    
 
     // Get post authors' rep in one call
     const authorIds = Array.from(new Set([thread.author_id, ...(posts ?? []).map((p: any) => p.author_id)]));
@@ -389,7 +389,7 @@ export const acceptAnswer = createServerFn({ method: "POST" })
     // reputation bonus
     const { data: postAuthor } = await supabase.from("community_posts").select("author_id").eq("id", data.post_id).maybeSingle();
     if (postAuthor?.author_id) {
-      await supabase.rpc("noop" as any).catch(() => {});
+      
       const { data: rep } = await supabase.from("community_reputation").select("points,answers_accepted").eq("user_id", postAuthor.author_id).maybeSingle();
       await supabase.from("community_reputation").upsert({
         user_id: postAuthor.author_id,
