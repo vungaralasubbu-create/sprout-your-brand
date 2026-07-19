@@ -96,29 +96,23 @@ export async function recordProviderEvent(evt: RecordEventInput): Promise<void> 
     const errorRate = w.errors / total;
     const status = deriveStatus(errorRate, p95);
 
-    await admin.rpc("increment_provider_counters", {
-      _provider: evt.provider,
-      _is_error: !evt.success,
-    }).catch(async () => {
-      // Fallback: manual upsert if RPC not present.
-      const { data: existing } = await admin
-        .from("ai_provider_health")
-        .select("requests_today, errors_today")
-        .eq("provider", evt.provider)
-        .maybeSingle();
-      await admin.from("ai_provider_health").upsert({
-        provider: evt.provider,
-        status,
-        latency_ms_p50: p50,
-        latency_ms_p95: p95,
-        success_rate: successRate,
-        error_rate: errorRate,
-        requests_today: (existing?.requests_today ?? 0) + 1,
-        errors_today: (existing?.errors_today ?? 0) + (evt.success ? 0 : 1),
-        last_error: evt.success ? null : evt.errorMessage?.slice(0, 500) ?? null,
-        last_checked_at: new Date().toISOString(),
-      }, { onConflict: "provider" });
-    });
+    const { data: existing } = await admin
+      .from("ai_provider_health")
+      .select("requests_today, errors_today")
+      .eq("provider", evt.provider)
+      .maybeSingle();
+    await admin.from("ai_provider_health").upsert({
+      provider: evt.provider,
+      status,
+      latency_ms_p50: p50,
+      latency_ms_p95: p95,
+      success_rate: successRate,
+      error_rate: errorRate,
+      requests_today: (existing?.requests_today ?? 0) + 1,
+      errors_today: (existing?.errors_today ?? 0) + (evt.success ? 0 : 1),
+      last_error: evt.success ? null : evt.errorMessage?.slice(0, 500) ?? null,
+      last_checked_at: new Date().toISOString(),
+    }, { onConflict: "provider" });
   } catch {
     /* health telemetry is best-effort */
   }
