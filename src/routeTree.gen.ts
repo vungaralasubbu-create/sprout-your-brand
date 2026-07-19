@@ -17,13 +17,19 @@ import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StudentSupportRouteImport } from './routes/student-support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SitemapSuccessStoriesDotxmlRouteImport } from './routes/sitemap-success-stories[.]xml'
+import { Route as SitemapProgramsDotxmlRouteImport } from './routes/sitemap-programs[.]xml'
+import { Route as SitemapPartnersDotxmlRouteImport } from './routes/sitemap-partners[.]xml'
+import { Route as SitemapLocationsDotxmlRouteImport } from './routes/sitemap-locations[.]xml'
 import { Route as SitemapLearningPathsDotxmlRouteImport } from './routes/sitemap-learning-paths[.]xml'
+import { Route as SitemapLandingDotxmlRouteImport } from './routes/sitemap-landing[.]xml'
+import { Route as SitemapInstructorsDotxmlRouteImport } from './routes/sitemap-instructors[.]xml'
 import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml'
 import { Route as SitemapImagesDotxmlRouteImport } from './routes/sitemap-images[.]xml'
 import { Route as SitemapHelpDotxmlRouteImport } from './routes/sitemap-help[.]xml'
 import { Route as SitemapCoursesDotxmlRouteImport } from './routes/sitemap-courses[.]xml'
 import { Route as SitemapCategoriesDotxmlRouteImport } from './routes/sitemap-categories[.]xml'
 import { Route as SitemapCareersDotxmlRouteImport } from './routes/sitemap-careers[.]xml'
+import { Route as SitemapBrandsDotxmlRouteImport } from './routes/sitemap-brands[.]xml'
 import { Route as SitemapBlogDotxmlRouteImport } from './routes/sitemap-blog[.]xml'
 import { Route as SalesOpportunityRouteImport } from './routes/sales-opportunity'
 import { Route as RevenueShareTermsRouteImport } from './routes/revenue-share-terms'
@@ -513,10 +519,36 @@ const SitemapSuccessStoriesDotxmlRoute =
     path: '/sitemap-success-stories.xml',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SitemapProgramsDotxmlRoute = SitemapProgramsDotxmlRouteImport.update({
+  id: '/sitemap-programs.xml',
+  path: '/sitemap-programs.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapPartnersDotxmlRoute = SitemapPartnersDotxmlRouteImport.update({
+  id: '/sitemap-partners.xml',
+  path: '/sitemap-partners.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapLocationsDotxmlRoute = SitemapLocationsDotxmlRouteImport.update({
+  id: '/sitemap-locations.xml',
+  path: '/sitemap-locations.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapLearningPathsDotxmlRoute =
   SitemapLearningPathsDotxmlRouteImport.update({
     id: '/sitemap-learning-paths.xml',
     path: '/sitemap-learning-paths.xml',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SitemapLandingDotxmlRoute = SitemapLandingDotxmlRouteImport.update({
+  id: '/sitemap-landing.xml',
+  path: '/sitemap-landing.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapInstructorsDotxmlRoute =
+  SitemapInstructorsDotxmlRouteImport.update({
+    id: '/sitemap-instructors.xml',
+    path: '/sitemap-instructors.xml',
     getParentRoute: () => rootRouteImport,
   } as any)
 const SitemapIndexDotxmlRoute = SitemapIndexDotxmlRouteImport.update({
@@ -547,6 +579,11 @@ const SitemapCategoriesDotxmlRoute = SitemapCategoriesDotxmlRouteImport.update({
 const SitemapCareersDotxmlRoute = SitemapCareersDotxmlRouteImport.update({
   id: '/sitemap-careers.xml',
   path: '/sitemap-careers.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapBrandsDotxmlRoute = SitemapBrandsDotxmlRouteImport.update({
+  id: '/sitemap-brands.xml',
+  path: '/sitemap-brands.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapBlogDotxmlRoute = SitemapBlogDotxmlRouteImport.update({
@@ -3130,13 +3167,19 @@ export interface FileRoutesByFullPath {
   '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-brands.xml': typeof SitemapBrandsDotxmlRoute
   '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
   '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
   '/sitemap-help.xml': typeof SitemapHelpDotxmlRoute
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-instructors.xml': typeof SitemapInstructorsDotxmlRoute
+  '/sitemap-landing.xml': typeof SitemapLandingDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
+  '/sitemap-locations.xml': typeof SitemapLocationsDotxmlRoute
+  '/sitemap-partners.xml': typeof SitemapPartnersDotxmlRoute
+  '/sitemap-programs.xml': typeof SitemapProgramsDotxmlRoute
   '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -3591,13 +3634,19 @@ export interface FileRoutesByTo {
   '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-brands.xml': typeof SitemapBrandsDotxmlRoute
   '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
   '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
   '/sitemap-help.xml': typeof SitemapHelpDotxmlRoute
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-instructors.xml': typeof SitemapInstructorsDotxmlRoute
+  '/sitemap-landing.xml': typeof SitemapLandingDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
+  '/sitemap-locations.xml': typeof SitemapLocationsDotxmlRoute
+  '/sitemap-partners.xml': typeof SitemapPartnersDotxmlRoute
+  '/sitemap-programs.xml': typeof SitemapProgramsDotxmlRoute
   '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -4044,13 +4093,19 @@ export interface FileRoutesById {
   '/revenue-share-terms': typeof RevenueShareTermsRoute
   '/sales-opportunity': typeof SalesOpportunityRoute
   '/sitemap-blog.xml': typeof SitemapBlogDotxmlRoute
+  '/sitemap-brands.xml': typeof SitemapBrandsDotxmlRoute
   '/sitemap-careers.xml': typeof SitemapCareersDotxmlRoute
   '/sitemap-categories.xml': typeof SitemapCategoriesDotxmlRoute
   '/sitemap-courses.xml': typeof SitemapCoursesDotxmlRoute
   '/sitemap-help.xml': typeof SitemapHelpDotxmlRoute
   '/sitemap-images.xml': typeof SitemapImagesDotxmlRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-instructors.xml': typeof SitemapInstructorsDotxmlRoute
+  '/sitemap-landing.xml': typeof SitemapLandingDotxmlRoute
   '/sitemap-learning-paths.xml': typeof SitemapLearningPathsDotxmlRoute
+  '/sitemap-locations.xml': typeof SitemapLocationsDotxmlRoute
+  '/sitemap-partners.xml': typeof SitemapPartnersDotxmlRoute
+  '/sitemap-programs.xml': typeof SitemapProgramsDotxmlRoute
   '/sitemap-success-stories.xml': typeof SitemapSuccessStoriesDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/student-support': typeof StudentSupportRouteWithChildren
@@ -4509,13 +4564,19 @@ export interface FileRouteTypes {
     | '/revenue-share-terms'
     | '/sales-opportunity'
     | '/sitemap-blog.xml'
+    | '/sitemap-brands.xml'
     | '/sitemap-careers.xml'
     | '/sitemap-categories.xml'
     | '/sitemap-courses.xml'
     | '/sitemap-help.xml'
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
+    | '/sitemap-instructors.xml'
+    | '/sitemap-landing.xml'
     | '/sitemap-learning-paths.xml'
+    | '/sitemap-locations.xml'
+    | '/sitemap-partners.xml'
+    | '/sitemap-programs.xml'
     | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
@@ -4970,13 +5031,19 @@ export interface FileRouteTypes {
     | '/revenue-share-terms'
     | '/sales-opportunity'
     | '/sitemap-blog.xml'
+    | '/sitemap-brands.xml'
     | '/sitemap-careers.xml'
     | '/sitemap-categories.xml'
     | '/sitemap-courses.xml'
     | '/sitemap-help.xml'
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
+    | '/sitemap-instructors.xml'
+    | '/sitemap-landing.xml'
     | '/sitemap-learning-paths.xml'
+    | '/sitemap-locations.xml'
+    | '/sitemap-partners.xml'
+    | '/sitemap-programs.xml'
     | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
@@ -5422,13 +5489,19 @@ export interface FileRouteTypes {
     | '/revenue-share-terms'
     | '/sales-opportunity'
     | '/sitemap-blog.xml'
+    | '/sitemap-brands.xml'
     | '/sitemap-careers.xml'
     | '/sitemap-categories.xml'
     | '/sitemap-courses.xml'
     | '/sitemap-help.xml'
     | '/sitemap-images.xml'
     | '/sitemap-index.xml'
+    | '/sitemap-instructors.xml'
+    | '/sitemap-landing.xml'
     | '/sitemap-learning-paths.xml'
+    | '/sitemap-locations.xml'
+    | '/sitemap-partners.xml'
+    | '/sitemap-programs.xml'
     | '/sitemap-success-stories.xml'
     | '/sitemap.xml'
     | '/student-support'
@@ -5887,13 +5960,19 @@ export interface RootRouteChildren {
   RevenueShareTermsRoute: typeof RevenueShareTermsRoute
   SalesOpportunityRoute: typeof SalesOpportunityRoute
   SitemapBlogDotxmlRoute: typeof SitemapBlogDotxmlRoute
+  SitemapBrandsDotxmlRoute: typeof SitemapBrandsDotxmlRoute
   SitemapCareersDotxmlRoute: typeof SitemapCareersDotxmlRoute
   SitemapCategoriesDotxmlRoute: typeof SitemapCategoriesDotxmlRoute
   SitemapCoursesDotxmlRoute: typeof SitemapCoursesDotxmlRoute
   SitemapHelpDotxmlRoute: typeof SitemapHelpDotxmlRoute
   SitemapImagesDotxmlRoute: typeof SitemapImagesDotxmlRoute
   SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute
+  SitemapInstructorsDotxmlRoute: typeof SitemapInstructorsDotxmlRoute
+  SitemapLandingDotxmlRoute: typeof SitemapLandingDotxmlRoute
   SitemapLearningPathsDotxmlRoute: typeof SitemapLearningPathsDotxmlRoute
+  SitemapLocationsDotxmlRoute: typeof SitemapLocationsDotxmlRoute
+  SitemapPartnersDotxmlRoute: typeof SitemapPartnersDotxmlRoute
+  SitemapProgramsDotxmlRoute: typeof SitemapProgramsDotxmlRoute
   SitemapSuccessStoriesDotxmlRoute: typeof SitemapSuccessStoriesDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StudentSupportRoute: typeof StudentSupportRouteWithChildren
@@ -6010,11 +6089,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapSuccessStoriesDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap-programs.xml': {
+      id: '/sitemap-programs.xml'
+      path: '/sitemap-programs.xml'
+      fullPath: '/sitemap-programs.xml'
+      preLoaderRoute: typeof SitemapProgramsDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-partners.xml': {
+      id: '/sitemap-partners.xml'
+      path: '/sitemap-partners.xml'
+      fullPath: '/sitemap-partners.xml'
+      preLoaderRoute: typeof SitemapPartnersDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-locations.xml': {
+      id: '/sitemap-locations.xml'
+      path: '/sitemap-locations.xml'
+      fullPath: '/sitemap-locations.xml'
+      preLoaderRoute: typeof SitemapLocationsDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap-learning-paths.xml': {
       id: '/sitemap-learning-paths.xml'
       path: '/sitemap-learning-paths.xml'
       fullPath: '/sitemap-learning-paths.xml'
       preLoaderRoute: typeof SitemapLearningPathsDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-landing.xml': {
+      id: '/sitemap-landing.xml'
+      path: '/sitemap-landing.xml'
+      fullPath: '/sitemap-landing.xml'
+      preLoaderRoute: typeof SitemapLandingDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-instructors.xml': {
+      id: '/sitemap-instructors.xml'
+      path: '/sitemap-instructors.xml'
+      fullPath: '/sitemap-instructors.xml'
+      preLoaderRoute: typeof SitemapInstructorsDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-index.xml': {
@@ -6057,6 +6171,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-careers.xml'
       fullPath: '/sitemap-careers.xml'
       preLoaderRoute: typeof SitemapCareersDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-brands.xml': {
+      id: '/sitemap-brands.xml'
+      path: '/sitemap-brands.xml'
+      fullPath: '/sitemap-brands.xml'
+      preLoaderRoute: typeof SitemapBrandsDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap-blog.xml': {
@@ -10552,13 +10673,19 @@ const rootRouteChildren: RootRouteChildren = {
   RevenueShareTermsRoute: RevenueShareTermsRoute,
   SalesOpportunityRoute: SalesOpportunityRoute,
   SitemapBlogDotxmlRoute: SitemapBlogDotxmlRoute,
+  SitemapBrandsDotxmlRoute: SitemapBrandsDotxmlRoute,
   SitemapCareersDotxmlRoute: SitemapCareersDotxmlRoute,
   SitemapCategoriesDotxmlRoute: SitemapCategoriesDotxmlRoute,
   SitemapCoursesDotxmlRoute: SitemapCoursesDotxmlRoute,
   SitemapHelpDotxmlRoute: SitemapHelpDotxmlRoute,
   SitemapImagesDotxmlRoute: SitemapImagesDotxmlRoute,
   SitemapIndexDotxmlRoute: SitemapIndexDotxmlRoute,
+  SitemapInstructorsDotxmlRoute: SitemapInstructorsDotxmlRoute,
+  SitemapLandingDotxmlRoute: SitemapLandingDotxmlRoute,
   SitemapLearningPathsDotxmlRoute: SitemapLearningPathsDotxmlRoute,
+  SitemapLocationsDotxmlRoute: SitemapLocationsDotxmlRoute,
+  SitemapPartnersDotxmlRoute: SitemapPartnersDotxmlRoute,
+  SitemapProgramsDotxmlRoute: SitemapProgramsDotxmlRoute,
   SitemapSuccessStoriesDotxmlRoute: SitemapSuccessStoriesDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StudentSupportRoute: StudentSupportRouteWithChildren,

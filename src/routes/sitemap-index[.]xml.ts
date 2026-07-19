@@ -13,12 +13,18 @@ export const Route = createFileRoute("/sitemap-index.xml")({
           "/sitemap.xml",
           "/sitemap-courses.xml",
           "/sitemap-categories.xml",
+          "/sitemap-programs.xml",
           "/sitemap-blog.xml",
           "/sitemap-learning-paths.xml",
           "/sitemap-careers.xml",
           "/sitemap-success-stories.xml",
           "/sitemap-images.xml",
           "/sitemap-help.xml",
+          "/sitemap-partners.xml",
+          "/sitemap-brands.xml",
+          "/sitemap-landing.xml",
+          "/sitemap-locations.xml",
+          "/sitemap-instructors.xml",
         ];
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,
