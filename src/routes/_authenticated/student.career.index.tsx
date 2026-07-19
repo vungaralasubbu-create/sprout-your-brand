@@ -38,6 +38,7 @@ import {
   togglePortfolioProject,
   listEligiblePortfolioProjects,
 } from "@/lib/student/career.functions";
+import { LazySection } from "@/components/shared/lazy-section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -227,18 +228,30 @@ function CareerContent({ data }: { data: Overview }) {
           <div className="lg:col-span-2 space-y-6">
             <ProfileSection profile={data.profile} />
             <EducationSection education={data.education} />
-            <SkillsSection
-              skills={data.skills}
-              programSkillOptions={data.programSkillOptions}
-            />
-            <PortfolioSection portfolio={data.portfolioProjects} />
-            <PreferencesSection preferences={data.preferences} />
+            <LazySection minHeight={320}>
+              <SkillsSection
+                skills={data.skills}
+                programSkillOptions={data.programSkillOptions}
+              />
+            </LazySection>
+            <LazySection minHeight={280}>
+              <PortfolioSection portfolio={data.portfolioProjects} />
+            </LazySection>
+            <LazySection minHeight={280}>
+              <PreferencesSection preferences={data.preferences} />
+            </LazySection>
           </div>
           <aside className="space-y-6">
             <TasksCard tasks={tasks} />
-            <CertificatesCard certificates={data.certificates} />
-            <InternshipCard internships={data.internships} />
-            <GuidanceCard guidance={data.guidance} />
+            <LazySection minHeight={220}>
+              <CertificatesCard certificates={data.certificates} />
+            </LazySection>
+            <LazySection minHeight={220}>
+              <InternshipCard internships={data.internships} />
+            </LazySection>
+            <LazySection minHeight={220}>
+              <GuidanceCard guidance={data.guidance} />
+            </LazySection>
           </aside>
         </div>
       )}
