@@ -24,15 +24,6 @@ async function ensurePartner(context: any) {
 async function generateImageDataUrl(prompt: string): Promise<string> {
   return generateImageDataUrlProvider(prompt);
 }
-  if (!res.ok) {
-    const t = await res.text().catch(() => "");
-    throw new Error(`Image gen failed (${res.status}): ${t.slice(0, 240)}`);
-  }
-  const data = await res.json();
-  const b64 = data?.data?.[0]?.b64_json;
-  if (!b64) throw new Error("Image generator returned no data");
-  return `data:image/png;base64,${b64}`;
-}
 
 /* ------------------------------------------------------------------ */
 /* 1. BRAND identity (name, tagline, story, colors, typography, voice)*/
