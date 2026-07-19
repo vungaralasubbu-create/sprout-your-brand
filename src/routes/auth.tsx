@@ -436,26 +436,28 @@ function AuthPage() {
                       )}
                     </div>
                   )}
-                  <div>
-                    <Label htmlFor="password">
-                      {mode === "recovery" ? "New password" : "Password"}
-                    </Label>
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      aria-invalid={!!errors.password}
-                      aria-describedby={errors.password ? "password-error" : undefined}
-                      className={`mt-2 h-11 ${errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                    />
-                    {errors.password && (
-                      <p id="password-error" role="alert" className="text-caption mt-1 text-destructive">
-                        {errors.password}
-                      </p>
-                    )}
-                  </div>
+                  {(mode === "signup" || mode === "recovery") && (
+                    <div>
+                      <Label htmlFor="password">
+                        {mode === "recovery" ? "New password" : "Password"}
+                      </Label>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        aria-invalid={!!errors.password}
+                        aria-describedby={errors.password ? "password-error" : undefined}
+                        className={`mt-2 h-11 ${errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                      />
+                      {errors.password && (
+                        <p id="password-error" role="alert" className="text-caption mt-1 text-destructive">
+                          {errors.password}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   {mode !== "recovery" && !(mode === "signin" && trustedEmail) && (
                     <div>
                       <Label htmlFor="mobile">Mobile number</Label>
