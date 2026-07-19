@@ -41,6 +41,7 @@ export const Route = createFileRoute("/api/public/courses/json")({
               "id, category_id, name, slug, short_description, full_description, thumbnail_url, hero_image_url, duration, learning_mode, level, language, weekly_commitment, format, prerequisites, target_audience, base_price, offer_price, currency, emi_available, is_featured, is_bestseller, seo_title, seo_description",
             )
             .eq("is_published", true)
+            .eq("status", "published")
             .order("display_order", { ascending: true });
 
           const catById = new Map<string, { name: string; slug: string }>();
