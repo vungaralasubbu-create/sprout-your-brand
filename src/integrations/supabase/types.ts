@@ -13436,6 +13436,743 @@ export type Database = {
           },
         ]
       }
+      mkt_analytics: {
+        Row: {
+          brand_id: string
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          clicks: number | null
+          comments: number | null
+          ctr: number | null
+          engagement_rate: number | null
+          followers_delta: number | null
+          id: string
+          impressions: number | null
+          likes: number | null
+          measured_at: string
+          post_id: string | null
+          raw: Json
+          reach: number | null
+          saves: number | null
+          shares: number | null
+        }
+        Insert: {
+          brand_id: string
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          clicks?: number | null
+          comments?: number | null
+          ctr?: number | null
+          engagement_rate?: number | null
+          followers_delta?: number | null
+          id?: string
+          impressions?: number | null
+          likes?: number | null
+          measured_at?: string
+          post_id?: string | null
+          raw?: Json
+          reach?: number | null
+          saves?: number | null
+          shares?: number | null
+        }
+        Update: {
+          brand_id?: string
+          channel_kind?: Database["public"]["Enums"]["mkt_channel_kind"]
+          clicks?: number | null
+          comments?: number | null
+          ctr?: number | null
+          engagement_rate?: number | null
+          followers_delta?: number | null
+          id?: string
+          impressions?: number | null
+          likes?: number | null
+          measured_at?: string
+          post_id?: string | null
+          raw?: Json
+          reach?: number | null
+          saves?: number | null
+          shares?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_analytics_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_analytics_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_approvals: {
+        Row: {
+          content_id: string
+          created_at: string
+          decided_at: string | null
+          decision: string
+          id: string
+          note: string | null
+          requested_by: string | null
+          reviewer_id: string | null
+        }
+        Insert: {
+          content_id: string
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          id?: string
+          note?: string | null
+          requested_by?: string | null
+          reviewer_id?: string | null
+        }
+        Update: {
+          content_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          id?: string
+          note?: string | null
+          requested_by?: string | null
+          reviewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_approvals_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_assets: {
+        Row: {
+          content_id: string | null
+          created_at: string
+          height: number | null
+          id: string
+          kind: Database["public"]["Enums"]["mkt_asset_kind"]
+          meta: Json
+          prompt: string | null
+          provider: string | null
+          url: string
+          variant_id: string | null
+          width: number | null
+        }
+        Insert: {
+          content_id?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          kind: Database["public"]["Enums"]["mkt_asset_kind"]
+          meta?: Json
+          prompt?: string | null
+          provider?: string | null
+          url: string
+          variant_id?: string | null
+          width?: number | null
+        }
+        Update: {
+          content_id?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          kind?: Database["public"]["Enums"]["mkt_asset_kind"]
+          meta?: Json
+          prompt?: string | null
+          provider?: string | null
+          url?: string
+          variant_id?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_assets_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_assets_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_content_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_brands: {
+        Row: {
+          accent_color: string | null
+          created_at: string
+          default_approval_mode: Database["public"]["Enums"]["mkt_approval_mode"]
+          default_timezone: string
+          id: string
+          logo_url: string | null
+          meta: Json
+          name: string
+          owner_id: string
+          primary_color: string | null
+          slug: string | null
+          tone: string | null
+          updated_at: string
+          voice_notes: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          created_at?: string
+          default_approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          default_timezone?: string
+          id?: string
+          logo_url?: string | null
+          meta?: Json
+          name: string
+          owner_id: string
+          primary_color?: string | null
+          slug?: string | null
+          tone?: string | null
+          updated_at?: string
+          voice_notes?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          created_at?: string
+          default_approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          default_timezone?: string
+          id?: string
+          logo_url?: string | null
+          meta?: Json
+          name?: string
+          owner_id?: string
+          primary_color?: string | null
+          slug?: string | null
+          tone?: string | null
+          updated_at?: string
+          voice_notes?: string | null
+        }
+        Relationships: []
+      }
+      mkt_calendar_events: {
+        Row: {
+          brand_id: string | null
+          category: string
+          created_at: string
+          description: string | null
+          event_date: string
+          id: string
+          meta: Json
+          suggested_type: Database["public"]["Enums"]["mkt_content_type"] | null
+          title: string
+        }
+        Insert: {
+          brand_id?: string | null
+          category: string
+          created_at?: string
+          description?: string | null
+          event_date: string
+          id?: string
+          meta?: Json
+          suggested_type?:
+            | Database["public"]["Enums"]["mkt_content_type"]
+            | null
+          title: string
+        }
+        Update: {
+          brand_id?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          id?: string
+          meta?: Json
+          suggested_type?:
+            | Database["public"]["Enums"]["mkt_content_type"]
+            | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_calendar_events_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_campaigns: {
+        Row: {
+          approval_mode: Database["public"]["Enums"]["mkt_approval_mode"]
+          brand_id: string
+          budget_cents: number | null
+          created_at: string
+          created_by: string | null
+          ends_at: string | null
+          id: string
+          meta: Json
+          name: string
+          objective: string | null
+          starts_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          brand_id: string
+          budget_cents?: number | null
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          id?: string
+          meta?: Json
+          name: string
+          objective?: string | null
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          brand_id?: string
+          budget_cents?: number | null
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          id?: string
+          meta?: Json
+          name?: string
+          objective?: string | null
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_campaigns_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_channels: {
+        Row: {
+          auto_publish: boolean
+          brand_id: string
+          config: Json
+          connector_id: string | null
+          created_at: string
+          credentials_ref: string | null
+          display_name: string
+          enabled: boolean
+          handle: string | null
+          id: string
+          kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          last_health: string | null
+          last_health_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          auto_publish?: boolean
+          brand_id: string
+          config?: Json
+          connector_id?: string | null
+          created_at?: string
+          credentials_ref?: string | null
+          display_name: string
+          enabled?: boolean
+          handle?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          last_health?: string | null
+          last_health_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          auto_publish?: boolean
+          brand_id?: string
+          config?: Json
+          connector_id?: string | null
+          created_at?: string
+          credentials_ref?: string | null
+          display_name?: string
+          enabled?: boolean
+          handle?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["mkt_channel_kind"]
+          last_health?: string | null
+          last_health_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_channels_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_content_items: {
+        Row: {
+          approval_mode: Database["public"]["Enums"]["mkt_approval_mode"]
+          brand_id: string
+          brief: string | null
+          campaign_id: string | null
+          content_type: Database["public"]["Enums"]["mkt_content_type"]
+          created_at: string
+          created_by: string | null
+          id: string
+          language: string | null
+          meta: Json
+          prompt: string | null
+          source_kind: string | null
+          source_ref: string | null
+          status: Database["public"]["Enums"]["mkt_status"]
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          brand_id: string
+          brief?: string | null
+          campaign_id?: string | null
+          content_type?: Database["public"]["Enums"]["mkt_content_type"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          language?: string | null
+          meta?: Json
+          prompt?: string | null
+          source_kind?: string | null
+          source_ref?: string | null
+          status?: Database["public"]["Enums"]["mkt_status"]
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          brand_id?: string
+          brief?: string | null
+          campaign_id?: string | null
+          content_type?: Database["public"]["Enums"]["mkt_content_type"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          language?: string | null
+          meta?: Json
+          prompt?: string | null
+          source_kind?: string | null
+          source_ref?: string | null
+          status?: Database["public"]["Enums"]["mkt_status"]
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_content_items_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_content_items_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_content_variants: {
+        Row: {
+          body: string | null
+          caption: string | null
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          content_id: string
+          created_at: string
+          cta: string | null
+          hashtags: string[] | null
+          headline: string | null
+          id: string
+          meta: Json
+          seo_description: string | null
+          seo_title: string | null
+          updated_at: string
+          variant_label: string | null
+        }
+        Insert: {
+          body?: string | null
+          caption?: string | null
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          content_id: string
+          created_at?: string
+          cta?: string | null
+          hashtags?: string[] | null
+          headline?: string | null
+          id?: string
+          meta?: Json
+          seo_description?: string | null
+          seo_title?: string | null
+          updated_at?: string
+          variant_label?: string | null
+        }
+        Update: {
+          body?: string | null
+          caption?: string | null
+          channel_kind?: Database["public"]["Enums"]["mkt_channel_kind"]
+          content_id?: string
+          created_at?: string
+          cta?: string | null
+          hashtags?: string[] | null
+          headline?: string | null
+          id?: string
+          meta?: Json
+          seo_description?: string | null
+          seo_title?: string | null
+          updated_at?: string
+          variant_label?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_content_variants_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_learnings: {
+        Row: {
+          brand_id: string
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          id: string
+          metric: string
+          sample_size: number | null
+          score: number | null
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          brand_id: string
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          id?: string
+          metric: string
+          sample_size?: number | null
+          score?: number | null
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          brand_id?: string
+          channel_kind?: Database["public"]["Enums"]["mkt_channel_kind"]
+          id?: string
+          metric?: string
+          sample_size?: number | null
+          score?: number | null
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_learnings_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_posts: {
+        Row: {
+          attempts: number
+          brand_id: string
+          campaign_id: string | null
+          channel_id: string | null
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          content_id: string
+          created_at: string
+          due_at: string
+          external_id: string | null
+          external_url: string | null
+          id: string
+          last_error: string | null
+          locked_until: string | null
+          max_attempts: number
+          meta: Json
+          provider_response: Json | null
+          published_at: string | null
+          status: Database["public"]["Enums"]["mkt_status"]
+          updated_at: string
+          variant_id: string | null
+        }
+        Insert: {
+          attempts?: number
+          brand_id: string
+          campaign_id?: string | null
+          channel_id?: string | null
+          channel_kind: Database["public"]["Enums"]["mkt_channel_kind"]
+          content_id: string
+          created_at?: string
+          due_at?: string
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          last_error?: string | null
+          locked_until?: string | null
+          max_attempts?: number
+          meta?: Json
+          provider_response?: Json | null
+          published_at?: string | null
+          status?: Database["public"]["Enums"]["mkt_status"]
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Update: {
+          attempts?: number
+          brand_id?: string
+          campaign_id?: string | null
+          channel_id?: string | null
+          channel_kind?: Database["public"]["Enums"]["mkt_channel_kind"]
+          content_id?: string
+          created_at?: string
+          due_at?: string
+          external_id?: string | null
+          external_url?: string | null
+          id?: string
+          last_error?: string | null
+          locked_until?: string | null
+          max_attempts?: number
+          meta?: Json
+          provider_response?: Json | null
+          published_at?: string | null
+          status?: Database["public"]["Enums"]["mkt_status"]
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_posts_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_posts_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_posts_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_posts_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_posts_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_content_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_schedules: {
+        Row: {
+          active: boolean
+          brand_id: string
+          campaign_id: string | null
+          channels: Database["public"]["Enums"]["mkt_channel_kind"][]
+          content_id: string | null
+          created_at: string
+          cron: string | null
+          id: string
+          last_run_at: string | null
+          meta: Json
+          mode: string
+          next_run_at: string | null
+          run_at: string | null
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          brand_id: string
+          campaign_id?: string | null
+          channels?: Database["public"]["Enums"]["mkt_channel_kind"][]
+          content_id?: string | null
+          created_at?: string
+          cron?: string | null
+          id?: string
+          last_run_at?: string | null
+          meta?: Json
+          mode: string
+          next_run_at?: string | null
+          run_at?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          brand_id?: string
+          campaign_id?: string | null
+          channels?: Database["public"]["Enums"]["mkt_channel_kind"][]
+          content_id?: string | null
+          created_at?: string
+          cron?: string | null
+          id?: string
+          last_run_at?: string | null
+          meta?: Json
+          mode?: string
+          next_run_at?: string | null
+          run_at?: string | null
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_schedules_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_schedules_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mkt_schedules_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       module_completions: {
         Row: {
           completed_at: string
@@ -19028,6 +19765,7 @@ export type Database = {
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       mask_account_number: { Args: { _num: string }; Returns: string }
       mask_upi_id: { Args: { _upi: string }; Returns: string }
+      mkt_is_staff: { Args: { _uid: string }; Returns: boolean }
       normalize_email: { Args: { _email: string }; Returns: string }
       normalize_phone: { Args: { _phone: string }; Returns: string }
       notify_campaigns_ending_soon: { Args: never; Returns: number }
@@ -19493,6 +20231,56 @@ export type Database = {
         | "short_copy"
         | "whatsapp_message"
         | "story_text"
+      mkt_approval_mode: "auto" | "manual" | "team_review"
+      mkt_asset_kind:
+        | "square"
+        | "portrait"
+        | "landscape"
+        | "carousel_slide"
+        | "quote"
+        | "infographic"
+        | "story"
+        | "event_poster"
+        | "course_poster"
+        | "video"
+        | "thumbnail"
+      mkt_channel_kind:
+        | "linkedin"
+        | "instagram"
+        | "facebook"
+        | "twitter"
+        | "threads"
+        | "youtube_community"
+        | "telegram"
+        | "whatsapp_channel"
+        | "blog"
+        | "email"
+      mkt_content_type:
+        | "course_launch"
+        | "career_tip"
+        | "hiring_update"
+        | "success_story"
+        | "project_showcase"
+        | "tech_news"
+        | "ai_news"
+        | "learning_tip"
+        | "certification_promo"
+        | "webinar"
+        | "event"
+        | "discount_campaign"
+        | "internship"
+        | "partner_announcement"
+        | "custom"
+      mkt_status:
+        | "draft"
+        | "pending_review"
+        | "approved"
+        | "rejected"
+        | "scheduled"
+        | "publishing"
+        | "published"
+        | "failed"
+        | "cancelled"
       partner_activity_type:
         | "note"
         | "stage_change"
@@ -20293,6 +21081,60 @@ export const Constants = {
         "short_copy",
         "whatsapp_message",
         "story_text",
+      ],
+      mkt_approval_mode: ["auto", "manual", "team_review"],
+      mkt_asset_kind: [
+        "square",
+        "portrait",
+        "landscape",
+        "carousel_slide",
+        "quote",
+        "infographic",
+        "story",
+        "event_poster",
+        "course_poster",
+        "video",
+        "thumbnail",
+      ],
+      mkt_channel_kind: [
+        "linkedin",
+        "instagram",
+        "facebook",
+        "twitter",
+        "threads",
+        "youtube_community",
+        "telegram",
+        "whatsapp_channel",
+        "blog",
+        "email",
+      ],
+      mkt_content_type: [
+        "course_launch",
+        "career_tip",
+        "hiring_update",
+        "success_story",
+        "project_showcase",
+        "tech_news",
+        "ai_news",
+        "learning_tip",
+        "certification_promo",
+        "webinar",
+        "event",
+        "discount_campaign",
+        "internship",
+        "partner_announcement",
+        "custom",
+      ],
+      mkt_status: [
+        "draft",
+        "pending_review",
+        "approved",
+        "rejected",
+        "scheduled",
+        "publishing",
+        "published",
+        "failed",
+        "cancelled",
       ],
       partner_activity_type: [
         "note",
