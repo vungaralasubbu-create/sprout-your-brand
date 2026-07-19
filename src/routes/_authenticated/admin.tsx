@@ -75,6 +75,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/reviews", label: "Reviews & Success", icon: Sparkles },
       { to: "/admin/career-hub", label: "Career Hub", icon: Rocket },
       { to: "/admin/community", label: "Community Mod", icon: MessageSquare },
+      { to: "/admin/knowledge-base", label: "Knowledge Base", icon: HelpCircle },
 
       { to: "/admin/content-intelligence", label: "Content Intelligence", icon: Activity },
     ],
