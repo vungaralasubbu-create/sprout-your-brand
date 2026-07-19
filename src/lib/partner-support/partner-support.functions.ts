@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const DEFAULT_MODEL_UNUSED_BASE = "";
+
 const DEFAULT_MODEL = "google/gemini-2.5-flash";
 
 // ---- Partner Support Intents ----

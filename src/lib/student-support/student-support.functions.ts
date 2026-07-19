@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const BASE_URL = "https://ai.gateway.lovable.dev/v1";
+
 const DEFAULT_MODEL = "google/gemini-2.5-flash";
 
 // =========================================================================
@@ -741,8 +741,7 @@ export const generateStudentSupportIssueSummary = createServerFn({ method: "POST
     summary: string;
     category: StudentSupportCategory;
   }> => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("Glintr AI Student Support is not configured.");
+    if (!process.env.SUPABASE_URL) throw new Error("Glintr AI Student Support is not configured.");
     const suggestedCategory: StudentSupportCategory =
       data.category ?? suggestStudentSupportCategory(data.supportIntent);
     const intentLabel = studentIntentLabel(data.supportIntent ?? null);
@@ -780,10 +779,10 @@ export const generateStudentSupportIssueSummary = createServerFn({ method: "POST
       "\nReturn only the JSON object.",
     ].join("\n");
 
-    const res = await fetch(`${BASE_URL}/chat/completions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": key },
-      body: JSON.stringify({
+    const { callAiChatCompletions } = await import("@/lib/ai-gateway.server");
+    let raw: string;
+    try {
+      raw = (await callAiChatCompletions({
         model: DEFAULT_MODEL,
         messages: [
           { role: "system", content: system },
@@ -791,15 +790,13 @@ export const generateStudentSupportIssueSummary = createServerFn({ method: "POST
         ],
         temperature: 0.2,
         response_format: { type: "json_object" },
-      }),
-    });
-    if (res.status === 429)
-      throw new Error("Glintr AI Student Support is busy — please retry shortly.");
-    if (res.status === 402)
-      throw new Error("Glintr AI Student Support is temporarily unavailable.");
-    if (!res.ok) throw new Error("Unable to prepare the issue summary.");
-    const json = await res.json();
-    const raw = json?.choices?.[0]?.message?.content?.trim();
+      })).trim();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "";
+      if (msg.includes("rate limit"))
+        throw new Error("Glintr AI Student Support is busy — please retry shortly.");
+      throw new Error("Unable to prepare the issue summary.");
+    }
     if (!raw) throw new Error("Unable to prepare the issue summary.");
     let parsed: { title?: string; summary?: string } = {};
     try {
