@@ -104,8 +104,10 @@ export interface ProviderAdapter {
 }
 
 export interface AdapterInit {
-  apiKey: string;              // LOVABLE_API_KEY
-  baseUrl?: string;            // defaults to gateway
+  apiKey: string;              // Native provider key (OPENAI_API_KEY, etc.)
+  baseUrl: string;             // Native provider base URL (required)
+  authHeader?: "authorization" | "x-api-key" | "x-goog-api-key";
+  extraHeaders?: Record<string, string>;
   requestTimeoutMs?: number;   // per-attempt timeout
   maxRetries?: number;         // for transient errors only
 }
