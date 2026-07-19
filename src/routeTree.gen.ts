@@ -265,6 +265,7 @@ import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
+import { Route as AuthenticatedAdminBlogOsRouteImport } from './routes/_authenticated/admin.blog-os'
 import { Route as AuthenticatedAdminAuthorsRouteImport } from './routes/_authenticated/admin.authors'
 import { Route as AuthenticatedAdminAuthDiagnosticsRouteImport } from './routes/_authenticated/admin.auth-diagnostics'
 import { Route as AuthenticatedAdminAttributionReviewsRouteImport } from './routes/_authenticated/admin.attribution-reviews'
@@ -1850,6 +1851,12 @@ const AuthenticatedAdminCategoriesRoute =
     path: '/categories',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminBlogOsRoute =
+  AuthenticatedAdminBlogOsRouteImport.update({
+    id: '/blog-os',
+    path: '/blog-os',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminAuthorsRoute =
   AuthenticatedAdminAuthorsRouteImport.update({
     id: '/authors',
@@ -3095,6 +3102,7 @@ export interface FileRoutesByFullPath {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
+  '/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -3527,6 +3535,7 @@ export interface FileRoutesByTo {
   '/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/admin/authors': typeof AuthenticatedAdminAuthorsRoute
+  '/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -3969,6 +3978,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/attribution-reviews': typeof AuthenticatedAdminAttributionReviewsRoute
   '/_authenticated/admin/auth-diagnostics': typeof AuthenticatedAdminAuthDiagnosticsRoute
   '/_authenticated/admin/authors': typeof AuthenticatedAdminAuthorsRoute
+  '/_authenticated/admin/blog-os': typeof AuthenticatedAdminBlogOsRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -4414,6 +4424,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/auth-diagnostics'
     | '/admin/authors'
+    | '/admin/blog-os'
     | '/admin/categories'
     | '/admin/content'
     | '/admin/content-intelligence'
@@ -4846,6 +4857,7 @@ export interface FileRouteTypes {
     | '/admin/attribution-reviews'
     | '/admin/auth-diagnostics'
     | '/admin/authors'
+    | '/admin/blog-os'
     | '/admin/categories'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
@@ -5287,6 +5299,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/attribution-reviews'
     | '/_authenticated/admin/auth-diagnostics'
     | '/_authenticated/admin/authors'
+    | '/_authenticated/admin/blog-os'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/content'
     | '/_authenticated/admin/content-intelligence'
@@ -7487,6 +7500,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCategoriesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/blog-os': {
+      id: '/_authenticated/admin/blog-os'
+      path: '/blog-os'
+      fullPath: '/admin/blog-os'
+      preLoaderRoute: typeof AuthenticatedAdminBlogOsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/authors': {
       id: '/_authenticated/admin/authors'
       path: '/authors'
@@ -9159,6 +9179,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAttributionReviewsRoute: typeof AuthenticatedAdminAttributionReviewsRoute
   AuthenticatedAdminAuthDiagnosticsRoute: typeof AuthenticatedAdminAuthDiagnosticsRoute
   AuthenticatedAdminAuthorsRoute: typeof AuthenticatedAdminAuthorsRoute
+  AuthenticatedAdminBlogOsRoute: typeof AuthenticatedAdminBlogOsRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
@@ -9258,6 +9279,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAuthDiagnosticsRoute:
     AuthenticatedAdminAuthDiagnosticsRoute,
   AuthenticatedAdminAuthorsRoute: AuthenticatedAdminAuthorsRoute,
+  AuthenticatedAdminBlogOsRoute: AuthenticatedAdminBlogOsRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
   AuthenticatedAdminContentIntelligenceRoute:

@@ -129,7 +129,7 @@ function PostList({ title, icon: Icon, posts, showViews }: any) {
         {(posts ?? []).map((p: any) => (
           <div key={p.id} className="flex items-center justify-between rounded border border-white/5 bg-white/[0.02] px-3 py-2 text-sm">
             <div className="truncate">{p.title}</div>
-            {showViews ? <Badge variant="secondary" className="text-xs">{p.views ?? 0} views</Badge> : <span className="text-xs text-white/40">/{p.slug}</span>}
+            {showViews ? <Badge variant="muted" className="text-xs">{p.views ?? 0} views</Badge> : <span className="text-xs text-white/40">/{p.slug}</span>}
           </div>
         ))}
       </div>
@@ -335,7 +335,7 @@ function ProgrammaticPanel() {
                 </div>
               </div>
               {j.status !== "completed" && j.status !== "cancelled" && (
-                <Button size="sm" variant="secondary" onClick={() => runM.mutate(j.id)} disabled={runM.isPending}>
+                <Button size="sm" variant="muted" onClick={() => runM.mutate(j.id)} disabled={runM.isPending}>
                   <Play className="mr-1 h-3 w-3" />Run batch
                 </Button>
               )}
@@ -497,7 +497,7 @@ function AuditPanel() {
     <Card className="border-white/10 bg-white/[0.03] p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="text-sm font-semibold">Blog System Audit Report</div>
-        <Button size="sm" variant="secondary" onClick={() => refetch()}><RefreshCw className="mr-1 h-3 w-3" />Regenerate</Button>
+        <Button size="sm" variant="muted" onClick={() => refetch()}><RefreshCw className="mr-1 h-3 w-3" />Regenerate</Button>
       </div>
       <div className="grid gap-3 sm:grid-cols-4">
         <Metric icon={FileText} label="Total" value={data.totals.total} />
