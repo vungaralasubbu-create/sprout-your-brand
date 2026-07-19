@@ -16,6 +16,7 @@ export const Route = createFileRoute("/sitemap-index.xml")({
           "/sitemap-blog.xml",
           "/sitemap-learning-paths.xml",
           "/sitemap-careers.xml",
+          "/sitemap-success-stories.xml",
           "/sitemap-images.xml",
         ];
         const xml = [
