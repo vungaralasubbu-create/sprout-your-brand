@@ -44,6 +44,7 @@ import {
 } from "@/lib/contact/contact.functions";
 import { submitContactEnquiry } from "@/lib/contact/contact-submit.functions";
 import { toast } from "sonner";
+import { LazySection } from "@/components/shared/lazy-section";
 
 // Legacy Smart-FAQ handoff params are preserved so existing links keep working.
 const SearchSchema = z.object({
@@ -677,6 +678,7 @@ function ContactPage() {
       </Section>
 
       {/* WAYS GLINTR CAN HELP =========================================== */}
+      <LazySection minHeight={520}>
       <Section className="py-14 md:py-20 bg-muted/30 border-y border-border/60">
         <Container size="lg">
           <SectionHeading
@@ -687,8 +689,10 @@ function ContactPage() {
           <WaysGlintrCanHelp />
         </Container>
       </Section>
+      </LazySection>
 
       {/* CONTACT BY RELATIONSHIP ======================================== */}
+      <LazySection minHeight={520}>
       <Section className="py-14 md:py-20">
         <Container size="lg">
           <SectionHeading
@@ -699,6 +703,7 @@ function ContactPage() {
           <ContactByRelationship />
         </Container>
       </Section>
+      </LazySection>
 
       {/* BEFORE YOU SEND ================================================ */}
       <Section className="py-14 md:py-20 bg-muted/30 border-y border-border/60">

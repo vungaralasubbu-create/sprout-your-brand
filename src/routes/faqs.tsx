@@ -39,6 +39,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { LazySection } from "@/components/shared/lazy-section";
 import {
   listFaqCategories,
   listPopularFaqs,
@@ -713,10 +714,14 @@ function FaqsPage() {
       </Section>
 
       {/* ---- INTERACTIVE HELP JOURNEY ---- */}
-      <HelpJourneySection onRunQuery={runQuery} />
+      <LazySection minHeight={520}>
+        <HelpJourneySection onRunQuery={runQuery} />
+      </LazySection>
 
       {/* ---- BROWSE ALL QUESTIONS ---- */}
-      <BrowseAllSection groups={allFaqsQuery.data} isLoading={allFaqsQuery.isLoading} isError={allFaqsQuery.isError} />
+      <LazySection minHeight={640}>
+        <BrowseAllSection groups={allFaqsQuery.data} isLoading={allFaqsQuery.isLoading} isError={allFaqsQuery.isError} />
+      </LazySection>
 
       {/* ---- FROM QUESTION TO NEXT STEP ---- */}
       <Section className="py-16 border-t border-border/60 bg-muted/20">
