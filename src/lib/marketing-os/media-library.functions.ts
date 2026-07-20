@@ -577,20 +577,11 @@ Only return JSON.
 Asset metadata:
 ${JSON.stringify(asset)}`;
 
-    const result = await aiChat({
-      messages: [
-        { role: "system", content: "You are a helpful media librarian." },
-        { role: "user", content: prompt },
-      ],
+    const parsed = (await aiChat({
+      system: "You are a helpful media librarian.",
+      messages: [{ role: "user", content: prompt }],
       responseFormat: "json",
-    });
-
-    let parsed: any = {};
-    try {
-      parsed = typeof result === "string" ? JSON.parse(result) : (result as any)?.content ? JSON.parse((result as any).content) : result;
-    } catch {
-      parsed = {};
-    }
+    })) as Record<string, any>;
 
     const ai_tags: string[] = Array.isArray(parsed?.tags) ? parsed.tags.slice(0, 15) : [];
     const patch: any = { ai_tags };
