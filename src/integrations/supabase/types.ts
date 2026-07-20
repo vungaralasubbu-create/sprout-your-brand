@@ -3641,6 +3641,248 @@ export type Database = {
           },
         ]
       }
+      approval_activity: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          detail: Json | null
+          event: string
+          id: string
+          owner_id: string
+          queue_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          detail?: Json | null
+          event: string
+          id?: string
+          owner_id: string
+          queue_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          detail?: Json | null
+          event?: string
+          id?: string
+          owner_id?: string
+          queue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_activity_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "approval_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approval_comments: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          mentions: string[] | null
+          owner_id: string
+          queue_id: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          mentions?: string[] | null
+          owner_id: string
+          queue_id: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          mentions?: string[] | null
+          owner_id?: string
+          queue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_comments_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "approval_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approval_queue: {
+        Row: {
+          ai_generated: boolean
+          ai_model: string | null
+          approval_mode: string
+          approved_at: string | null
+          body: string | null
+          brand_score: number | null
+          business_unit: string | null
+          campaign: string | null
+          content: Json
+          content_id: string | null
+          content_type: string
+          country: string | null
+          created_at: string
+          created_by: string | null
+          cta: string | null
+          engagement_score: number | null
+          hashtags: string[] | null
+          id: string
+          language: string | null
+          media_prompts: Json | null
+          owner_id: string
+          plan_id: string | null
+          platform: string
+          preview: string | null
+          published_at: string | null
+          quality_score: number | null
+          review_notes: string | null
+          reviewer: string | null
+          scheduled_at: string | null
+          scores: Json
+          seo_score: number | null
+          status: string
+          title: string
+          updated_at: string
+          version: number
+          warnings: Json
+        }
+        Insert: {
+          ai_generated?: boolean
+          ai_model?: string | null
+          approval_mode?: string
+          approved_at?: string | null
+          body?: string | null
+          brand_score?: number | null
+          business_unit?: string | null
+          campaign?: string | null
+          content?: Json
+          content_id?: string | null
+          content_type?: string
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          cta?: string | null
+          engagement_score?: number | null
+          hashtags?: string[] | null
+          id?: string
+          language?: string | null
+          media_prompts?: Json | null
+          owner_id: string
+          plan_id?: string | null
+          platform?: string
+          preview?: string | null
+          published_at?: string | null
+          quality_score?: number | null
+          review_notes?: string | null
+          reviewer?: string | null
+          scheduled_at?: string | null
+          scores?: Json
+          seo_score?: number | null
+          status?: string
+          title: string
+          updated_at?: string
+          version?: number
+          warnings?: Json
+        }
+        Update: {
+          ai_generated?: boolean
+          ai_model?: string | null
+          approval_mode?: string
+          approved_at?: string | null
+          body?: string | null
+          brand_score?: number | null
+          business_unit?: string | null
+          campaign?: string | null
+          content?: Json
+          content_id?: string | null
+          content_type?: string
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          cta?: string | null
+          engagement_score?: number | null
+          hashtags?: string[] | null
+          id?: string
+          language?: string | null
+          media_prompts?: Json | null
+          owner_id?: string
+          plan_id?: string | null
+          platform?: string
+          preview?: string | null
+          published_at?: string | null
+          quality_score?: number | null
+          review_notes?: string | null
+          reviewer?: string | null
+          scheduled_at?: string | null
+          scores?: Json
+          seo_score?: number | null
+          status?: string
+          title?: string
+          updated_at?: string
+          version?: number
+          warnings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_queue_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approval_versions: {
+        Row: {
+          created_at: string
+          edited_by: string | null
+          id: string
+          note: string | null
+          owner_id: string
+          queue_id: string
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          edited_by?: string | null
+          id?: string
+          note?: string | null
+          owner_id: string
+          queue_id: string
+          snapshot: Json
+          version: number
+        }
+        Update: {
+          created_at?: string
+          edited_by?: string | null
+          id?: string
+          note?: string | null
+          owner_id?: string
+          queue_id?: string
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_versions_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "approval_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_attempts: {
         Row: {
           answers: Json

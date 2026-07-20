@@ -400,6 +400,7 @@ import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authe
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
 import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
+import { Route as AuthenticatedAdminMarketingOsApprovalsRouteImport } from './routes/_authenticated/admin.marketing-os.approvals'
 import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
 import { Route as AuthenticatedAdminLlmSectionsRouteImport } from './routes/_authenticated/admin.llm.sections'
 import { Route as AuthenticatedAdminEmployeesIdRouteImport } from './routes/_authenticated/admin.employees.$id'
@@ -2673,6 +2674,12 @@ const AuthenticatedAdminMarketingOsPlannerRoute =
     path: '/planner',
     getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
+const AuthenticatedAdminMarketingOsApprovalsRoute =
+  AuthenticatedAdminMarketingOsApprovalsRouteImport.update({
+    id: '/approvals',
+    path: '/approvals',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminLlmSettingsRoute =
   AuthenticatedAdminLlmSettingsRouteImport.update({
     id: '/settings',
@@ -3635,6 +3642,7 @@ export interface FileRoutesByFullPath {
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
@@ -4108,6 +4116,7 @@ export interface FileRoutesByTo {
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
@@ -4598,6 +4607,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/_authenticated/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/_authenticated/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
   '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
@@ -5088,6 +5098,7 @@ export interface FileRouteTypes {
     | '/admin/employees/$id'
     | '/admin/llm/sections'
     | '/admin/llm/settings'
+    | '/admin/marketing-os/approvals'
     | '/admin/marketing-os/planner'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
@@ -5561,6 +5572,7 @@ export interface FileRouteTypes {
     | '/admin/employees/$id'
     | '/admin/llm/sections'
     | '/admin/llm/settings'
+    | '/admin/marketing-os/approvals'
     | '/admin/marketing-os/planner'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
@@ -6050,6 +6062,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/employees/$id'
     | '/_authenticated/admin/llm/sections'
     | '/_authenticated/admin/llm/settings'
+    | '/_authenticated/admin/marketing-os/approvals'
     | '/_authenticated/admin/marketing-os/planner'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
@@ -9019,6 +9032,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsPlannerRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
+    '/_authenticated/admin/marketing-os/approvals': {
+      id: '/_authenticated/admin/marketing-os/approvals'
+      path: '/approvals'
+      fullPath: '/admin/marketing-os/approvals'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsApprovalsRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/llm/settings': {
       id: '/_authenticated/admin/llm/settings'
       path: '/settings'
@@ -10003,6 +10023,7 @@ const AuthenticatedAdminLlmRouteWithChildren =
   )
 
 interface AuthenticatedAdminMarketingOsRouteChildren {
+  AuthenticatedAdminMarketingOsApprovalsRoute: typeof AuthenticatedAdminMarketingOsApprovalsRoute
   AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
   AuthenticatedAdminMarketingOsIndexRoute: typeof AuthenticatedAdminMarketingOsIndexRoute
   AuthenticatedAdminMarketingOsPlansIdRoute: typeof AuthenticatedAdminMarketingOsPlansIdRoute
@@ -10010,6 +10031,8 @@ interface AuthenticatedAdminMarketingOsRouteChildren {
 
 const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsRouteChildren =
   {
+    AuthenticatedAdminMarketingOsApprovalsRoute:
+      AuthenticatedAdminMarketingOsApprovalsRoute,
     AuthenticatedAdminMarketingOsPlannerRoute:
       AuthenticatedAdminMarketingOsPlannerRoute,
     AuthenticatedAdminMarketingOsIndexRoute:
@@ -11170,13 +11193,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
