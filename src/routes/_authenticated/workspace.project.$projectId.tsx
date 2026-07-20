@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { CopilotPanel, CopilotToggle } from "@/components/marketing-os/copilot-panel";
 import {
   getMarketingProject,
   runProjectStep,
@@ -56,6 +57,7 @@ function WorkspaceProject() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [active, setActive] = useState<NavKey>("overview");
+  const [copilotOpen, setCopilotOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [device, setDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [editingName, setEditingName] = useState(false);
@@ -762,6 +764,16 @@ function WorkspaceProject() {
           </Button>
         </div>
       </div>
+
+      {/* ============== AI COPILOT ============== */}
+      <CopilotToggle open={copilotOpen} onClick={() => setCopilotOpen(true)} />
+      <CopilotPanel
+        projectId={projectId}
+        projectName={project.name}
+        status={project.status}
+        open={copilotOpen}
+        onClose={() => setCopilotOpen(false)}
+      />
     </div>
   );
 }
