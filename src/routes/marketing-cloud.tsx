@@ -187,7 +187,7 @@ function MarketingCloudOnboarding() {
         <Container>
           <div className="mx-auto max-w-5xl">
             <div className="mb-8 text-center">
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="muted" className="mb-4">
                 <Sparkles className="mr-1.5 h-3 w-3" /> AI Marketing Cloud
               </Badge>
               <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">

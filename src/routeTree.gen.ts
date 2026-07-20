@@ -42,6 +42,7 @@ import { Route as PartnerSupportRouteImport } from './routes/partner-support'
 import { Route as PartnerNetworkRouteImport } from './routes/partner-network'
 import { Route as MyRouteImport } from './routes/my'
 import { Route as MarketingSupportRouteImport } from './routes/marketing-support'
+import { Route as MarketingCloudRouteImport } from './routes/marketing-cloud'
 import { Route as LmsRouteImport } from './routes/lms'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as LearningPathsRouteImport } from './routes/learning-paths'
@@ -683,6 +684,11 @@ const MyRoute = MyRouteImport.update({
 const MarketingSupportRoute = MarketingSupportRouteImport.update({
   id: '/marketing-support',
   path: '/marketing-support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingCloudRoute = MarketingCloudRouteImport.update({
+  id: '/marketing-cloud',
+  path: '/marketing-cloud',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LmsRoute = LmsRouteImport.update({
@@ -3419,6 +3425,7 @@ export interface FileRoutesByFullPath {
   '/learning-paths': typeof LearningPathsRouteWithChildren
   '/live': typeof LiveRouteWithChildren
   '/lms': typeof LmsRoute
+  '/marketing-cloud': typeof MarketingCloudRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/my': typeof MyRouteWithChildren
   '/partner-network': typeof PartnerNetworkRoute
@@ -3926,6 +3933,7 @@ export interface FileRoutesByTo {
   '/learning-paths': typeof LearningPathsRouteWithChildren
   '/live': typeof LiveRouteWithChildren
   '/lms': typeof LmsRoute
+  '/marketing-cloud': typeof MarketingCloudRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/partner-network': typeof PartnerNetworkRoute
   '/partner-support': typeof PartnerSupportRouteWithChildren
@@ -4422,6 +4430,7 @@ export interface FileRoutesById {
   '/learning-paths': typeof LearningPathsRouteWithChildren
   '/live': typeof LiveRouteWithChildren
   '/lms': typeof LmsRoute
+  '/marketing-cloud': typeof MarketingCloudRoute
   '/marketing-support': typeof MarketingSupportRoute
   '/my': typeof MyRouteWithChildren
   '/partner-network': typeof PartnerNetworkRoute
@@ -4932,6 +4941,7 @@ export interface FileRouteTypes {
     | '/learning-paths'
     | '/live'
     | '/lms'
+    | '/marketing-cloud'
     | '/marketing-support'
     | '/my'
     | '/partner-network'
@@ -5439,6 +5449,7 @@ export interface FileRouteTypes {
     | '/learning-paths'
     | '/live'
     | '/lms'
+    | '/marketing-cloud'
     | '/marketing-support'
     | '/partner-network'
     | '/partner-support'
@@ -5934,6 +5945,7 @@ export interface FileRouteTypes {
     | '/learning-paths'
     | '/live'
     | '/lms'
+    | '/marketing-cloud'
     | '/marketing-support'
     | '/my'
     | '/partner-network'
@@ -6444,6 +6456,7 @@ export interface RootRouteChildren {
   LearningPathsRoute: typeof LearningPathsRouteWithChildren
   LiveRoute: typeof LiveRouteWithChildren
   LmsRoute: typeof LmsRoute
+  MarketingCloudRoute: typeof MarketingCloudRoute
   MarketingSupportRoute: typeof MarketingSupportRoute
   MyRoute: typeof MyRouteWithChildren
   PartnerNetworkRoute: typeof PartnerNetworkRoute
@@ -6773,6 +6786,13 @@ declare module '@tanstack/react-router' {
       path: '/marketing-support'
       fullPath: '/marketing-support'
       preLoaderRoute: typeof MarketingSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing-cloud': {
+      id: '/marketing-cloud'
+      path: '/marketing-cloud'
+      fullPath: '/marketing-cloud'
+      preLoaderRoute: typeof MarketingCloudRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lms': {
@@ -11561,6 +11581,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearningPathsRoute: LearningPathsRouteWithChildren,
   LiveRoute: LiveRouteWithChildren,
   LmsRoute: LmsRoute,
+  MarketingCloudRoute: MarketingCloudRoute,
   MarketingSupportRoute: MarketingSupportRoute,
   MyRoute: MyRouteWithChildren,
   PartnerNetworkRoute: PartnerNetworkRoute,
@@ -11662,13 +11683,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
