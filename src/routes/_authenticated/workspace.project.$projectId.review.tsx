@@ -168,7 +168,7 @@ function ReviewCenter() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <span className="font-semibold truncate max-w-[280px] md:max-w-md">{project.name}</span>
-              <Badge variant="secondary" className="capitalize">{project.status}</Badge>
+              <Badge variant="muted" className="capitalize">{project.status}</Badge>
               <Badge
                 variant="outline"
                 className={cn(
@@ -441,11 +441,11 @@ function ApprovalButtons({
 }: { id: string; status: Status; onStatus: (id: string, s: Status) => void }) {
   return (
     <div className="flex items-center gap-1">
-      <Button size="sm" variant={status === "approved" ? "default" : "outline"} className="h-7 px-2 gap-1"
+      <Button size="sm" variant={status === "approved" ? "primary" : "outline"} className="h-7 px-2 gap-1"
         onClick={() => onStatus(id, "approved")}>
         <Check className="size-3" /> Approve
       </Button>
-      <Button size="sm" variant={status === "rejected" ? "default" : "outline"} className="h-7 px-2 gap-1"
+      <Button size="sm" variant={status === "rejected" ? "primary" : "outline"} className="h-7 px-2 gap-1"
         onClick={() => onStatus(id, "rejected")}>
         <X className="size-3" /> Reject
       </Button>
@@ -544,7 +544,7 @@ function ImagesPanel({
                 <div className="absolute top-2 left-2"><Checkbox checked={selected.has(id)} onCheckedChange={() => onToggle(id)} /></div>
                 <div className="absolute top-2 right-2"><StatusPill status={status} /></div>
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-background/70 backdrop-blur-sm flex items-center justify-center gap-1">
-                  <Button size="sm" variant="secondary" className="h-7 gap-1" onClick={() => onStatus(id, "approved")}><Check className="size-3" /> Approve</Button>
+                  <Button size="sm" variant="primary" className="h-7 gap-1" onClick={() => onStatus(id, "approved")}><Check className="size-3" /> Approve</Button>
                   <Button size="sm" variant="outline" className="h-7 gap-1" onClick={() => onStatus(id, "rejected")}><X className="size-3" /> Reject</Button>
                   <Button size="sm" variant="ghost" className="h-7 w-7 p-0"><RefreshCw className="size-3.5" /></Button>
                   <Button size="sm" variant="ghost" className="h-7 w-7 p-0"><Download className="size-3.5" /></Button>
