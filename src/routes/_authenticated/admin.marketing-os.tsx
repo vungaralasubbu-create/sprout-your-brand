@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
-import { Sparkles, LayoutDashboard, CalendarDays, ListTodo, Send, BarChart3, Wand2, CheckSquare, Palette, Megaphone } from "lucide-react";
+import { Sparkles, LayoutDashboard, CalendarDays, ListTodo, Send, BarChart3, Wand2, CheckSquare, Palette, Megaphone, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin/marketing-os")({
