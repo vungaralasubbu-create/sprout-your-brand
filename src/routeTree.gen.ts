@@ -404,6 +404,7 @@ import { Route as AuthenticatedAdminMarketingOsPublisherRouteImport } from './ro
 import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
 import { Route as AuthenticatedAdminMarketingOsCalendarRouteImport } from './routes/_authenticated/admin.marketing-os.calendar'
 import { Route as AuthenticatedAdminMarketingOsApprovalsRouteImport } from './routes/_authenticated/admin.marketing-os.approvals'
+import { Route as AuthenticatedAdminMarketingOsAnalyticsRouteImport } from './routes/_authenticated/admin.marketing-os.analytics'
 import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
 import { Route as AuthenticatedAdminLlmSectionsRouteImport } from './routes/_authenticated/admin.llm.sections'
 import { Route as AuthenticatedAdminEmployeesIdRouteImport } from './routes/_authenticated/admin.employees.$id'
@@ -2701,6 +2702,12 @@ const AuthenticatedAdminMarketingOsApprovalsRoute =
     path: '/approvals',
     getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
+const AuthenticatedAdminMarketingOsAnalyticsRoute =
+  AuthenticatedAdminMarketingOsAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminLlmSettingsRoute =
   AuthenticatedAdminLlmSettingsRouteImport.update({
     id: '/settings',
@@ -3663,6 +3670,7 @@ export interface FileRoutesByFullPath {
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
@@ -4140,6 +4148,7 @@ export interface FileRoutesByTo {
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
@@ -4634,6 +4643,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/_authenticated/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/_authenticated/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/_authenticated/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
   '/_authenticated/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
@@ -5128,6 +5138,7 @@ export interface FileRouteTypes {
     | '/admin/employees/$id'
     | '/admin/llm/sections'
     | '/admin/llm/settings'
+    | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/planner'
@@ -5605,6 +5616,7 @@ export interface FileRouteTypes {
     | '/admin/employees/$id'
     | '/admin/llm/sections'
     | '/admin/llm/settings'
+    | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/planner'
@@ -6098,6 +6110,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/employees/$id'
     | '/_authenticated/admin/llm/sections'
     | '/_authenticated/admin/llm/settings'
+    | '/_authenticated/admin/marketing-os/analytics'
     | '/_authenticated/admin/marketing-os/approvals'
     | '/_authenticated/admin/marketing-os/calendar'
     | '/_authenticated/admin/marketing-os/planner'
@@ -9100,6 +9113,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsApprovalsRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
+    '/_authenticated/admin/marketing-os/analytics': {
+      id: '/_authenticated/admin/marketing-os/analytics'
+      path: '/analytics'
+      fullPath: '/admin/marketing-os/analytics'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/llm/settings': {
       id: '/_authenticated/admin/llm/settings'
       path: '/settings'
@@ -10084,6 +10104,7 @@ const AuthenticatedAdminLlmRouteWithChildren =
   )
 
 interface AuthenticatedAdminMarketingOsRouteChildren {
+  AuthenticatedAdminMarketingOsAnalyticsRoute: typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   AuthenticatedAdminMarketingOsApprovalsRoute: typeof AuthenticatedAdminMarketingOsApprovalsRoute
   AuthenticatedAdminMarketingOsCalendarRoute: typeof AuthenticatedAdminMarketingOsCalendarRoute
   AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
@@ -10094,6 +10115,8 @@ interface AuthenticatedAdminMarketingOsRouteChildren {
 
 const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsRouteChildren =
   {
+    AuthenticatedAdminMarketingOsAnalyticsRoute:
+      AuthenticatedAdminMarketingOsAnalyticsRoute,
     AuthenticatedAdminMarketingOsApprovalsRoute:
       AuthenticatedAdminMarketingOsApprovalsRoute,
     AuthenticatedAdminMarketingOsCalendarRoute:

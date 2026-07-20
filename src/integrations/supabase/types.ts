@@ -16733,6 +16733,120 @@ export type Database = {
           },
         ]
       }
+      mkt_analytics_events: {
+        Row: {
+          campaign: string | null
+          created_at: string
+          currency: string | null
+          entity_id: string | null
+          entity_type: string | null
+          event_type: string
+          id: string
+          metadata: Json
+          occurred_at: string
+          owner_id: string
+          platform: string | null
+          value: number | null
+        }
+        Insert: {
+          campaign?: string | null
+          created_at?: string
+          currency?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json
+          occurred_at?: string
+          owner_id: string
+          platform?: string | null
+          value?: number | null
+        }
+        Update: {
+          campaign?: string | null
+          created_at?: string
+          currency?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json
+          occurred_at?: string
+          owner_id?: string
+          platform?: string | null
+          value?: number | null
+        }
+        Relationships: []
+      }
+      mkt_analytics_reports: {
+        Row: {
+          created_at: string
+          data: Json
+          filters: Json
+          format: string
+          id: string
+          kind: string
+          name: string
+          owner_id: string
+          range_from: string | null
+          range_to: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          filters?: Json
+          format?: string
+          id?: string
+          kind?: string
+          name: string
+          owner_id: string
+          range_from?: string | null
+          range_to?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          filters?: Json
+          format?: string
+          id?: string
+          kind?: string
+          name?: string
+          owner_id?: string
+          range_from?: string | null
+          range_to?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mkt_analytics_snapshots: {
+        Row: {
+          created_at: string
+          id: string
+          metrics: Json
+          owner_id: string
+          platform: string | null
+          snapshot_date: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metrics?: Json
+          owner_id: string
+          platform?: string | null
+          snapshot_date: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metrics?: Json
+          owner_id?: string
+          platform?: string | null
+          snapshot_date?: string
+        }
+        Relationships: []
+      }
       mkt_approvals: {
         Row: {
           content_id: string
