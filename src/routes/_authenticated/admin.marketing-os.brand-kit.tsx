@@ -422,7 +422,7 @@ function BrandKitEditor({
           <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-primary">Brand Kit</div>
           <h1 className="text-2xl font-semibold">{form.name || "New Brand Kit"}</h1>
           {form.is_default && (
-            <Badge className="mt-1" variant="secondary">
+            <Badge className="mt-1" variant="muted">
               <Star className="size-3 mr-1" /> Default — used by all AI modules
             </Badge>
           )}
@@ -791,7 +791,7 @@ function TemplatesPanel({ kitId, templates, onSave, onDelete, onChange }: any) {
           <li key={t.id} className="py-3 flex items-start justify-between gap-3">
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <Badge variant="secondary">{t.channel}</Badge>
+                <Badge variant="muted">{t.channel}</Badge>
                 <div className="font-medium text-sm">{t.name}</div>
               </div>
               <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-x-auto whitespace-pre-wrap">{t.body}</pre>
