@@ -146,13 +146,19 @@ function SocialAccountsPage() {
         <div>
           <h1 className="text-2xl font-semibold">Social Accounts</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Connect Meta to publish to Facebook Pages and Instagram Business accounts.
+            Connect Meta (Facebook & Instagram) and LinkedIn for publishing.
           </p>
         </div>
-        <Button onClick={connectMeta} disabled={busy === "connect"}>
-          <Plus className="mr-2 h-4 w-4" />
-          {busy === "connect" ? "Redirecting…" : "Connect Meta"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button onClick={() => startOAuth("meta")} disabled={busy === "connect-meta"}>
+            <Plus className="mr-2 h-4 w-4" />
+            {busy === "connect-meta" ? "Redirecting…" : "Connect Meta"}
+          </Button>
+          <Button variant="secondary" onClick={() => startOAuth("linkedin")} disabled={busy === "connect-linkedin"}>
+            <Linkedin className="mr-2 h-4 w-4" />
+            {busy === "connect-linkedin" ? "Redirecting…" : "Connect LinkedIn"}
+          </Button>
+        </div>
       </div>
 
       <Card>
