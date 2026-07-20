@@ -19,22 +19,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import {
-  Megaphone,
-  Plus,
-  Copy,
-  Archive,
-  Pause,
-  Play,
-  TrendingUp,
-  Users,
-  IndianRupee,
-  Target,
-  Rocket,
-  Search,
-  Sparkles,
+  Megaphone, Plus, Copy, Archive, Pause, Play, TrendingUp, Users, IndianRupee, Target, Rocket,
+  Search, Sparkles, MoreHorizontal, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Filter,
+  Calendar as CalendarIcon, ListChecks, Activity, Wand2, GripVertical, ArrowUpRight, ArrowDownRight,
+  CheckCircle2, Clock, X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -48,6 +43,7 @@ function CampaignsLayout() {
   const isDetail = /\/admin\/marketing-os\/campaigns\/[^/]+/.test(loc.pathname);
   return isDetail ? <Outlet /> : <CampaignManager />;
 }
+
 
 const CAMPAIGN_TYPES = [
   "Admissions",
