@@ -116,7 +116,9 @@ const NAV: NavGroup[] = [
       { to: "/admin/live-classes", label: "Zoom LMS · Live Classes", icon: Sparkles, perms: ["system_settings.view"] },
       { to: "/admin/automation", label: "Automation Studio", icon: Sparkles, perms: ["system_settings.view"] },
       { to: "/admin/workflows", label: "Workflows", icon: Sparkles, perms: ["system_settings.view"] },
+      { to: "/admin/social-accounts", label: "Social Accounts", icon: Sparkles, perms: ["system_settings.view"] },
       { to: "/admin/settings", label: "Settings", icon: Settings, perms: ["system_settings.view"] },
+
     ],
   },
   {
