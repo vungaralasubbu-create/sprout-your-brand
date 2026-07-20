@@ -133,6 +133,13 @@ import { Route as FaqsSlugRouteImport } from './routes/faqs.$slug'
 import { Route as EntitiesSlugRouteImport } from './routes/entities.$slug'
 import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CommunityNewRouteImport } from './routes/community.new'
+import { Route as CloudTermsRouteImport } from './routes/cloud.terms'
+import { Route as CloudTemplatesRouteImport } from './routes/cloud.templates'
+import { Route as CloudPrivacyRouteImport } from './routes/cloud.privacy'
+import { Route as CloudPricingRouteImport } from './routes/cloud.pricing'
+import { Route as CloudFeaturesRouteImport } from './routes/cloud.features'
+import { Route as CloudContactRouteImport } from './routes/cloud.contact'
+import { Route as CloudBlogRouteImport } from './routes/cloud.blog'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
 import { Route as CareerMapsSlugRouteImport } from './routes/career-maps.$slug'
 import { Route as CareerHubTypeRouteImport } from './routes/career-hub.$type'
@@ -1142,6 +1149,41 @@ const CommunityNewRoute = CommunityNewRouteImport.update({
   id: '/community/new',
   path: '/community/new',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CloudTermsRoute = CloudTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudTemplatesRoute = CloudTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudPrivacyRoute = CloudPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudPricingRoute = CloudPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudFeaturesRoute = CloudFeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudContactRoute = CloudContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudBlogRoute = CloudBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => CloudRoute,
 } as any)
 const CareersRoleSlugRoute = CareersRoleSlugRouteImport.update({
   id: '/$roleSlug',
@@ -3485,6 +3527,13 @@ export interface FileRoutesByFullPath {
   '/career-hub/$type': typeof CareerHubTypeRouteWithChildren
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
+  '/cloud/blog': typeof CloudBlogRoute
+  '/cloud/contact': typeof CloudContactRoute
+  '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/pricing': typeof CloudPricingRoute
+  '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/templates': typeof CloudTemplatesRoute
+  '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/entities/$slug': typeof EntitiesSlugRoute
@@ -3989,6 +4038,13 @@ export interface FileRoutesByTo {
   '/career-hub/$type': typeof CareerHubTypeRouteWithChildren
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
+  '/cloud/blog': typeof CloudBlogRoute
+  '/cloud/contact': typeof CloudContactRoute
+  '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/pricing': typeof CloudPricingRoute
+  '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/templates': typeof CloudTemplatesRoute
+  '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/entities/$slug': typeof EntitiesSlugRoute
@@ -4493,6 +4549,13 @@ export interface FileRoutesById {
   '/career-hub/$type': typeof CareerHubTypeRouteWithChildren
   '/career-maps/$slug': typeof CareerMapsSlugRoute
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
+  '/cloud/blog': typeof CloudBlogRoute
+  '/cloud/contact': typeof CloudContactRoute
+  '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/pricing': typeof CloudPricingRoute
+  '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/templates': typeof CloudTemplatesRoute
+  '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/entities/$slug': typeof EntitiesSlugRoute
@@ -5006,6 +5069,13 @@ export interface FileRouteTypes {
     | '/career-hub/$type'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
+    | '/cloud/blog'
+    | '/cloud/contact'
+    | '/cloud/features'
+    | '/cloud/pricing'
+    | '/cloud/privacy'
+    | '/cloud/templates'
+    | '/cloud/terms'
     | '/community/new'
     | '/compare/$slug'
     | '/entities/$slug'
@@ -5510,6 +5580,13 @@ export interface FileRouteTypes {
     | '/career-hub/$type'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
+    | '/cloud/blog'
+    | '/cloud/contact'
+    | '/cloud/features'
+    | '/cloud/pricing'
+    | '/cloud/privacy'
+    | '/cloud/templates'
+    | '/cloud/terms'
     | '/community/new'
     | '/compare/$slug'
     | '/entities/$slug'
@@ -6013,6 +6090,13 @@ export interface FileRouteTypes {
     | '/career-hub/$type'
     | '/career-maps/$slug'
     | '/careers/$roleSlug'
+    | '/cloud/blog'
+    | '/cloud/contact'
+    | '/cloud/features'
+    | '/cloud/pricing'
+    | '/cloud/privacy'
+    | '/cloud/templates'
+    | '/cloud/terms'
     | '/community/new'
     | '/compare/$slug'
     | '/entities/$slug'
@@ -7447,6 +7531,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/community/new'
       preLoaderRoute: typeof CommunityNewRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/cloud/terms': {
+      id: '/cloud/terms'
+      path: '/terms'
+      fullPath: '/cloud/terms'
+      preLoaderRoute: typeof CloudTermsRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/templates': {
+      id: '/cloud/templates'
+      path: '/templates'
+      fullPath: '/cloud/templates'
+      preLoaderRoute: typeof CloudTemplatesRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/privacy': {
+      id: '/cloud/privacy'
+      path: '/privacy'
+      fullPath: '/cloud/privacy'
+      preLoaderRoute: typeof CloudPrivacyRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/pricing': {
+      id: '/cloud/pricing'
+      path: '/pricing'
+      fullPath: '/cloud/pricing'
+      preLoaderRoute: typeof CloudPricingRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/features': {
+      id: '/cloud/features'
+      path: '/features'
+      fullPath: '/cloud/features'
+      preLoaderRoute: typeof CloudFeaturesRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/contact': {
+      id: '/cloud/contact'
+      path: '/contact'
+      fullPath: '/cloud/contact'
+      preLoaderRoute: typeof CloudContactRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/blog': {
+      id: '/cloud/blog'
+      path: '/blog'
+      fullPath: '/cloud/blog'
+      preLoaderRoute: typeof CloudBlogRouteImport
+      parentRoute: typeof CloudRoute
     }
     '/careers/$roleSlug': {
       id: '/careers/$roleSlug'
@@ -11353,10 +11486,24 @@ const CareersRouteWithChildren =
   CareersRoute._addFileChildren(CareersRouteChildren)
 
 interface CloudRouteChildren {
+  CloudBlogRoute: typeof CloudBlogRoute
+  CloudContactRoute: typeof CloudContactRoute
+  CloudFeaturesRoute: typeof CloudFeaturesRoute
+  CloudPricingRoute: typeof CloudPricingRoute
+  CloudPrivacyRoute: typeof CloudPrivacyRoute
+  CloudTemplatesRoute: typeof CloudTemplatesRoute
+  CloudTermsRoute: typeof CloudTermsRoute
   CloudIndexRoute: typeof CloudIndexRoute
 }
 
 const CloudRouteChildren: CloudRouteChildren = {
+  CloudBlogRoute: CloudBlogRoute,
+  CloudContactRoute: CloudContactRoute,
+  CloudFeaturesRoute: CloudFeaturesRoute,
+  CloudPricingRoute: CloudPricingRoute,
+  CloudPrivacyRoute: CloudPrivacyRoute,
+  CloudTemplatesRoute: CloudTemplatesRoute,
+  CloudTermsRoute: CloudTermsRoute,
   CloudIndexRoute: CloudIndexRoute,
 }
 
