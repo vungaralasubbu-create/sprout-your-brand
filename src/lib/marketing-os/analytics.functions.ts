@@ -309,7 +309,7 @@ Respond as JSON with those keys.`;
       temperature: 0.4,
       maxTokens: 800,
     })) as Record<string, unknown>;
-    return { snapshot, insights: result };
+    return { snapshot, insights: result as unknown as Record<string, string> };
   });
 
 /* ---------------- Forecast (AI) ---------------- */
