@@ -310,9 +310,9 @@ function TopBar({
 
       {openFilters && (
         <Card className="p-3 grid md:grid-cols-3 gap-3 text-xs">
-          <FilterGroup label="Platform" values={facets.platforms} selected={platformFilter} setSelected={setPlatformFilter} renderLabel={(p) => `${pm(p).icon} ${pm(p).label}`} />
-          <FilterGroup label="Status" values={["draft","approved","queued","publishing","published","failed","retrying","cancelled"]} selected={statusFilter} setSelected={setStatusFilter} renderLabel={(s) => s} />
-          <FilterGroup label="Campaign" values={facets.campaigns} selected={campaignFilter} setSelected={setCampaignFilter} renderLabel={(c) => c} />
+          <FilterGroup label="Platform" values={facets.platforms} selected={platformFilter} setSelected={setPlatformFilter} renderLabel={(p: string) => `${pm(p).icon} ${pm(p).label}`} />
+          <FilterGroup label="Status" values={["draft","approved","queued","publishing","published","failed","retrying","cancelled"]} selected={statusFilter} setSelected={setStatusFilter} renderLabel={(s: string) => s} />
+          <FilterGroup label="Campaign" values={facets.campaigns} selected={campaignFilter} setSelected={setCampaignFilter} renderLabel={(c: string) => c} />
         </Card>
       )}
     </div>
