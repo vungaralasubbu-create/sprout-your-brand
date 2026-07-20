@@ -403,6 +403,7 @@ import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminMarketingOsPublisherRouteImport } from './routes/_authenticated/admin.marketing-os.publisher'
 import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
 import { Route as AuthenticatedAdminMarketingOsCalendarRouteImport } from './routes/_authenticated/admin.marketing-os.calendar'
+import { Route as AuthenticatedAdminMarketingOsBrandKitRouteImport } from './routes/_authenticated/admin.marketing-os.brand-kit'
 import { Route as AuthenticatedAdminMarketingOsApprovalsRouteImport } from './routes/_authenticated/admin.marketing-os.approvals'
 import { Route as AuthenticatedAdminMarketingOsAnalyticsRouteImport } from './routes/_authenticated/admin.marketing-os.analytics'
 import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
@@ -2696,6 +2697,12 @@ const AuthenticatedAdminMarketingOsCalendarRoute =
     path: '/calendar',
     getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
+const AuthenticatedAdminMarketingOsBrandKitRoute =
+  AuthenticatedAdminMarketingOsBrandKitRouteImport.update({
+    id: '/brand-kit',
+    path: '/brand-kit',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminMarketingOsApprovalsRoute =
   AuthenticatedAdminMarketingOsApprovalsRouteImport.update({
     id: '/approvals',
@@ -3672,6 +3679,7 @@ export interface FileRoutesByFullPath {
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
@@ -4150,6 +4158,7 @@ export interface FileRoutesByTo {
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
@@ -4645,6 +4654,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/_authenticated/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/_authenticated/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/_authenticated/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/_authenticated/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/_authenticated/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
@@ -5140,6 +5150,7 @@ export interface FileRouteTypes {
     | '/admin/llm/settings'
     | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
@@ -5618,6 +5629,7 @@ export interface FileRouteTypes {
     | '/admin/llm/settings'
     | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
@@ -6112,6 +6124,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/llm/settings'
     | '/_authenticated/admin/marketing-os/analytics'
     | '/_authenticated/admin/marketing-os/approvals'
+    | '/_authenticated/admin/marketing-os/brand-kit'
     | '/_authenticated/admin/marketing-os/calendar'
     | '/_authenticated/admin/marketing-os/planner'
     | '/_authenticated/admin/marketing-os/publisher'
@@ -9106,6 +9119,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsCalendarRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
+    '/_authenticated/admin/marketing-os/brand-kit': {
+      id: '/_authenticated/admin/marketing-os/brand-kit'
+      path: '/brand-kit'
+      fullPath: '/admin/marketing-os/brand-kit'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsBrandKitRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/marketing-os/approvals': {
       id: '/_authenticated/admin/marketing-os/approvals'
       path: '/approvals'
@@ -10106,6 +10126,7 @@ const AuthenticatedAdminLlmRouteWithChildren =
 interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsAnalyticsRoute: typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   AuthenticatedAdminMarketingOsApprovalsRoute: typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  AuthenticatedAdminMarketingOsBrandKitRoute: typeof AuthenticatedAdminMarketingOsBrandKitRoute
   AuthenticatedAdminMarketingOsCalendarRoute: typeof AuthenticatedAdminMarketingOsCalendarRoute
   AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
   AuthenticatedAdminMarketingOsPublisherRoute: typeof AuthenticatedAdminMarketingOsPublisherRoute
@@ -10119,6 +10140,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsAnalyticsRoute,
     AuthenticatedAdminMarketingOsApprovalsRoute:
       AuthenticatedAdminMarketingOsApprovalsRoute,
+    AuthenticatedAdminMarketingOsBrandKitRoute:
+      AuthenticatedAdminMarketingOsBrandKitRoute,
     AuthenticatedAdminMarketingOsCalendarRoute:
       AuthenticatedAdminMarketingOsCalendarRoute,
     AuthenticatedAdminMarketingOsPlannerRoute:
