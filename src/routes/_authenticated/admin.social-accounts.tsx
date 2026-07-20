@@ -160,7 +160,7 @@ function SocialAccountsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <Badge variant={a.connection_status === "connected" ? "default" : "secondary"}>
+                      <Badge variant={a.connection_status === "connected" ? "success" : "muted"}>
                         {a.connection_status ?? "unknown"}
                       </Badge>
                       <Button variant="outline" size="sm" onClick={() => refresh(a.id)} disabled={busy === a.id}>

@@ -246,6 +246,7 @@ import { Route as AuthenticatedAdminVoiceAiRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminTagsRouteImport } from './routes/_authenticated/admin.tags'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
 import { Route as AuthenticatedAdminSuccessStoriesRouteImport } from './routes/_authenticated/admin.success-stories'
+import { Route as AuthenticatedAdminSocialAccountsRouteImport } from './routes/_authenticated/admin.social-accounts'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminSeoHealthRouteImport } from './routes/_authenticated/admin.seo-health'
 import { Route as AuthenticatedAdminSalesCommandRouteImport } from './routes/_authenticated/admin.sales-command'
@@ -1755,6 +1756,12 @@ const AuthenticatedAdminSuccessStoriesRoute =
   AuthenticatedAdminSuccessStoriesRouteImport.update({
     id: '/success-stories',
     path: '/success-stories',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminSocialAccountsRoute =
+  AuthenticatedAdminSocialAccountsRouteImport.update({
+    id: '/social-accounts',
+    path: '/social-accounts',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminSettingsRoute =
@@ -3402,6 +3409,7 @@ export interface FileRoutesByFullPath {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/seo-health': typeof AuthenticatedAdminSeoHealthRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/social-accounts': typeof AuthenticatedAdminSocialAccountsRoute
   '/admin/success-stories': typeof AuthenticatedAdminSuccessStoriesRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
@@ -3869,6 +3877,7 @@ export interface FileRoutesByTo {
   '/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/admin/seo-health': typeof AuthenticatedAdminSeoHealthRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/admin/social-accounts': typeof AuthenticatedAdminSocialAccountsRoute
   '/admin/success-stories': typeof AuthenticatedAdminSuccessStoriesRoute
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
@@ -4352,6 +4361,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/sales-command': typeof AuthenticatedAdminSalesCommandRoute
   '/_authenticated/admin/seo-health': typeof AuthenticatedAdminSeoHealthRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
+  '/_authenticated/admin/social-accounts': typeof AuthenticatedAdminSocialAccountsRoute
   '/_authenticated/admin/success-stories': typeof AuthenticatedAdminSuccessStoriesRoute
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/_authenticated/admin/tags': typeof AuthenticatedAdminTagsRoute
@@ -4835,6 +4845,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/seo-health'
     | '/admin/settings'
+    | '/admin/social-accounts'
     | '/admin/success-stories'
     | '/admin/support'
     | '/admin/tags'
@@ -5302,6 +5313,7 @@ export interface FileRouteTypes {
     | '/admin/sales-command'
     | '/admin/seo-health'
     | '/admin/settings'
+    | '/admin/social-accounts'
     | '/admin/success-stories'
     | '/admin/support'
     | '/admin/tags'
@@ -5784,6 +5796,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/sales-command'
     | '/_authenticated/admin/seo-health'
     | '/_authenticated/admin/settings'
+    | '/_authenticated/admin/social-accounts'
     | '/_authenticated/admin/success-stories'
     | '/_authenticated/admin/support'
     | '/_authenticated/admin/tags'
@@ -7850,6 +7863,13 @@ declare module '@tanstack/react-router' {
       path: '/success-stories'
       fullPath: '/admin/success-stories'
       preLoaderRoute: typeof AuthenticatedAdminSuccessStoriesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/social-accounts': {
+      id: '/_authenticated/admin/social-accounts'
+      path: '/social-accounts'
+      fullPath: '/admin/social-accounts'
+      preLoaderRoute: typeof AuthenticatedAdminSocialAccountsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/settings': {
@@ -9973,6 +9993,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminSalesCommandRoute: typeof AuthenticatedAdminSalesCommandRoute
   AuthenticatedAdminSeoHealthRoute: typeof AuthenticatedAdminSeoHealthRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
+  AuthenticatedAdminSocialAccountsRoute: typeof AuthenticatedAdminSocialAccountsRoute
   AuthenticatedAdminSuccessStoriesRoute: typeof AuthenticatedAdminSuccessStoriesRoute
   AuthenticatedAdminSupportRoute: typeof AuthenticatedAdminSupportRouteWithChildren
   AuthenticatedAdminTagsRoute: typeof AuthenticatedAdminTagsRoute
@@ -10092,6 +10113,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminSalesCommandRoute: AuthenticatedAdminSalesCommandRoute,
   AuthenticatedAdminSeoHealthRoute: AuthenticatedAdminSeoHealthRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
+  AuthenticatedAdminSocialAccountsRoute: AuthenticatedAdminSocialAccountsRoute,
   AuthenticatedAdminSuccessStoriesRoute: AuthenticatedAdminSuccessStoriesRoute,
   AuthenticatedAdminSupportRoute: AuthenticatedAdminSupportRouteWithChildren,
   AuthenticatedAdminTagsRoute: AuthenticatedAdminTagsRoute,
