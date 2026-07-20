@@ -73,7 +73,7 @@ function ClientsPage() {
                 <tr key={c.workspace} className="hover:bg-muted/30">
                   <td className="px-4 py-3 font-medium">{c.name}</td>
                   <td className="px-4 py-3 text-muted-foreground">/{c.workspace}</td>
-                  <td className="px-4 py-3"><Badge variant="secondary">{c.plan}</Badge></td>
+                  <td className="px-4 py-3"><Badge variant="muted">{c.plan}</Badge></td>
                   <td className="px-4 py-3">{c.projects}</td>
                   <td className="px-4 py-3">{c.usage}</td>
                   <td className="px-4 py-3">

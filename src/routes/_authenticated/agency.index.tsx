@@ -95,7 +95,7 @@ function AgencyOverview() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant="secondary">{c.plan}</Badge>
+                  <Badge variant="muted">{c.plan}</Badge>
                   <div className="w-20 text-right font-medium">{c.revenue}</div>
                 </div>
               </div>

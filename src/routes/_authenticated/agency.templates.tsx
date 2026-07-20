@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/agency/templates")({
             <div className="p-4">
               <div className="flex items-center justify-between">
                 <div className="font-medium">Campaign Template {i + 1}</div>
-                {i % 3 === 0 && <Badge variant="secondary" className="gap-1"><Lock className="h-3 w-3" /> Locked</Badge>}
+                {i % 3 === 0 && <Badge variant="muted" className="gap-1"><Lock className="h-3 w-3" /> Locked</Badge>}
                 {i % 3 === 1 && <Badge className="gap-1"><Star className="h-3 w-3" /> Premium</Badge>}
                 {i % 3 === 2 && <Badge variant="outline" className="gap-1"><Users2 className="h-3 w-3" /> Shared</Badge>}
               </div>

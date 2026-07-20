@@ -67,7 +67,7 @@ function SettingsPage() {
                 <div className="font-medium">{t.name}</div>
                 <div className="text-xs text-muted-foreground">{t.email}</div>
               </div>
-              <Badge variant="secondary">{t.role}</Badge>
+              <Badge variant="muted">{t.role}</Badge>
             </div>
           ))}
         </div>

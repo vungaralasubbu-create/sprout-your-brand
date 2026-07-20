@@ -46,7 +46,7 @@ function DomainsPage() {
               {d.status === "connected" ? (
                 <Badge className="gap-1"><CheckCircle2 className="h-3.5 w-3.5" /> Connected</Badge>
               ) : (
-                <Badge variant="secondary" className="gap-1"><Clock className="h-3.5 w-3.5" /> {d.status}</Badge>
+                <Badge variant="muted" className="gap-1"><Clock className="h-3.5 w-3.5" /> {d.status}</Badge>
               )}
               <Badge variant="outline" className="gap-1"><ShieldCheck className="h-3.5 w-3.5" /> SSL {d.ssl}</Badge>
               <Button size="sm" variant="outline">DNS instructions</Button>
