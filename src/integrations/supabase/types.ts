@@ -15784,6 +15784,199 @@ export type Database = {
           },
         ]
       }
+      intg_accounts: {
+        Row: {
+          category: string
+          connected_by: string | null
+          created_at: string
+          display_name: string | null
+          external_account: string | null
+          health: string
+          id: string
+          last_synced_at: string | null
+          metadata: Json
+          provider: string
+          scopes: string[]
+          status: string
+          sync_frequency: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          category: string
+          connected_by?: string | null
+          created_at?: string
+          display_name?: string | null
+          external_account?: string | null
+          health?: string
+          id?: string
+          last_synced_at?: string | null
+          metadata?: Json
+          provider: string
+          scopes?: string[]
+          status?: string
+          sync_frequency?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          category?: string
+          connected_by?: string | null
+          created_at?: string
+          display_name?: string | null
+          external_account?: string | null
+          health?: string
+          id?: string
+          last_synced_at?: string | null
+          metadata?: Json
+          provider?: string
+          scopes?: string[]
+          status?: string
+          sync_frequency?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      intg_api_tokens: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          last_used_at: string | null
+          name: string
+          revoked_at: string | null
+          scopes: string[]
+          token_prefix: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name: string
+          revoked_at?: string | null
+          scopes?: string[]
+          token_prefix: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string
+          revoked_at?: string | null
+          scopes?: string[]
+          token_prefix?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      intg_logs: {
+        Row: {
+          account_id: string | null
+          actor_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          message: string | null
+          metadata: Json
+          provider: string
+          status: string
+          workspace_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          actor_id?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          message?: string | null
+          metadata?: Json
+          provider: string
+          status?: string
+          workspace_id: string
+        }
+        Update: {
+          account_id?: string | null
+          actor_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          message?: string | null
+          metadata?: Json
+          provider?: string
+          status?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intg_logs_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "intg_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      intg_webhooks: {
+        Row: {
+          account_id: string | null
+          created_at: string
+          direction: string
+          endpoint: string | null
+          event: string | null
+          failure_count: number
+          id: string
+          last_delivery_at: string | null
+          provider: string
+          status: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          created_at?: string
+          direction?: string
+          endpoint?: string | null
+          event?: string | null
+          failure_count?: number
+          id?: string
+          last_delivery_at?: string | null
+          provider: string
+          status?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          account_id?: string | null
+          created_at?: string
+          direction?: string
+          endpoint?: string | null
+          event?: string | null
+          failure_count?: number
+          id?: string
+          last_delivery_at?: string | null
+          provider?: string
+          status?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "intg_webhooks_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "intg_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kb_article_versions: {
         Row: {
           article_id: string
