@@ -13,6 +13,7 @@ import {
   User,
   LogOut,
   Sparkles,
+  Building2,
 } from "lucide-react";
 import { CloudLogo } from "./logo";
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ const NAV: { to: string; label: string; icon: any }[] = [
   { to: "/knowledge", label: "Knowledge", icon: Brain },
   { to: "/integrations", label: "Integrations", icon: Plug },
   { to: "/agents", label: "AI Agents", icon: Bot },
+  { to: "/agency", label: "Agency", icon: Building2 },
   { to: "/cloud/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/billing", label: "Billing", icon: CreditCard },
   { to: "/cloud/settings", label: "Settings", icon: SettingsIcon },

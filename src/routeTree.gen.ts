@@ -170,6 +170,7 @@ import { Route as AuthenticatedCloudRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
 import { Route as AuthenticatedBillingRouteImport } from './routes/_authenticated/billing'
 import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
+import { Route as AuthenticatedAgencyRouteImport } from './routes/_authenticated/agency'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as WorkspaceVoiceIndexRouteImport } from './routes/workspace.voice.index'
 import { Route as WorkspaceNotebooksIndexRouteImport } from './routes/workspace.notebooks.index'
@@ -184,6 +185,7 @@ import { Route as AuthenticatedIntegrationsIndexRouteImport } from './routes/_au
 import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
 import { Route as AuthenticatedBillingIndexRouteImport } from './routes/_authenticated/billing.index'
 import { Route as AuthenticatedAgentsIndexRouteImport } from './routes/_authenticated/agents.index'
+import { Route as AuthenticatedAgencyIndexRouteImport } from './routes/_authenticated/agency.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as WorkspaceVoiceSettingsRouteImport } from './routes/workspace.voice.settings'
 import { Route as WorkspaceVoiceHistoryRouteImport } from './routes/workspace.voice.history'
@@ -307,6 +309,14 @@ import { Route as AuthenticatedAmbassadorCommissionStructureRouteImport } from '
 import { Route as AuthenticatedAgentsSettingsRouteImport } from './routes/_authenticated/agents.settings'
 import { Route as AuthenticatedAgentsHistoryRouteImport } from './routes/_authenticated/agents.history'
 import { Route as AuthenticatedAgentsAgentRouteImport } from './routes/_authenticated/agents.$agent'
+import { Route as AuthenticatedAgencyTemplatesRouteImport } from './routes/_authenticated/agency.templates'
+import { Route as AuthenticatedAgencySettingsRouteImport } from './routes/_authenticated/agency.settings'
+import { Route as AuthenticatedAgencyDomainsRouteImport } from './routes/_authenticated/agency.domains'
+import { Route as AuthenticatedAgencyDashboardRouteImport } from './routes/_authenticated/agency.dashboard'
+import { Route as AuthenticatedAgencyClientsRouteImport } from './routes/_authenticated/agency.clients'
+import { Route as AuthenticatedAgencyBrandingRouteImport } from './routes/_authenticated/agency.branding'
+import { Route as AuthenticatedAgencyBillingRouteImport } from './routes/_authenticated/agency.billing'
+import { Route as AuthenticatedAgencyAnalyticsRouteImport } from './routes/_authenticated/agency.analytics'
 import { Route as AuthenticatedAdminVoiceAiRouteImport } from './routes/_authenticated/admin.voice-ai'
 import { Route as AuthenticatedAdminTagsRouteImport } from './routes/_authenticated/admin.tags'
 import { Route as AuthenticatedAdminSupportRouteImport } from './routes/_authenticated/admin.support'
@@ -1393,6 +1403,11 @@ const AuthenticatedAmbassadorRoute = AuthenticatedAmbassadorRouteImport.update({
   path: '/ambassador',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAgencyRoute = AuthenticatedAgencyRouteImport.update({
+  id: '/agency',
+  path: '/agency',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -1470,6 +1485,12 @@ const AuthenticatedAgentsIndexRoute =
     id: '/agents/',
     path: '/agents/',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAgencyIndexRoute =
+  AuthenticatedAgencyIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAgencyRoute,
   } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
@@ -2187,6 +2208,54 @@ const AuthenticatedAgentsAgentRoute =
     id: '/agents/$agent',
     path: '/agents/$agent',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAgencyTemplatesRoute =
+  AuthenticatedAgencyTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
+    getParentRoute: () => AuthenticatedAgencyRoute,
+  } as any)
+const AuthenticatedAgencySettingsRoute =
+  AuthenticatedAgencySettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAgencyRoute,
+  } as any)
+const AuthenticatedAgencyDomainsRoute =
+  AuthenticatedAgencyDomainsRouteImport.update({
+    id: '/domains',
+    path: '/domains',
+    getParentRoute: () => AuthenticatedAgencyRoute,
+  } as any)
+const AuthenticatedAgencyDashboardRoute =
+  AuthenticatedAgencyDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedAgencyRoute,
+  } as any)
+const AuthenticatedAgencyClientsRoute =
+  AuthenticatedAgencyClientsRouteImport.update({
+    id: '/clients',
+    path: '/clients',
+    getParentRoute: () => AuthenticatedAgencyRoute,
+  } as any)
+const AuthenticatedAgencyBrandingRoute =
+  AuthenticatedAgencyBrandingRouteImport.update({
+    id: '/branding',
+    path: '/branding',
+    getParentRoute: () => AuthenticatedAgencyRoute,
+  } as any)
+const AuthenticatedAgencyBillingRoute =
+  AuthenticatedAgencyBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
+    getParentRoute: () => AuthenticatedAgencyRoute,
+  } as any)
+const AuthenticatedAgencyAnalyticsRoute =
+  AuthenticatedAgencyAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedAgencyRoute,
   } as any)
 const AuthenticatedAdminVoiceAiRoute =
   AuthenticatedAdminVoiceAiRouteImport.update({
@@ -3878,6 +3947,7 @@ export interface FileRoutesByFullPath {
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/workspace': typeof WorkspaceRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/agency': typeof AuthenticatedAgencyRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/billing': typeof AuthenticatedBillingRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -4043,6 +4113,14 @@ export interface FileRoutesByFullPath {
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
+  '/agency/analytics': typeof AuthenticatedAgencyAnalyticsRoute
+  '/agency/billing': typeof AuthenticatedAgencyBillingRoute
+  '/agency/branding': typeof AuthenticatedAgencyBrandingRoute
+  '/agency/clients': typeof AuthenticatedAgencyClientsRoute
+  '/agency/dashboard': typeof AuthenticatedAgencyDashboardRoute
+  '/agency/domains': typeof AuthenticatedAgencyDomainsRoute
+  '/agency/settings': typeof AuthenticatedAgencySettingsRoute
+  '/agency/templates': typeof AuthenticatedAgencyTemplatesRoute
   '/agents/$agent': typeof AuthenticatedAgentsAgentRoute
   '/agents/history': typeof AuthenticatedAgentsHistoryRoute
   '/agents/settings': typeof AuthenticatedAgentsSettingsRoute
@@ -4166,6 +4244,7 @@ export interface FileRoutesByFullPath {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/agency/': typeof AuthenticatedAgencyIndexRoute
   '/agents/': typeof AuthenticatedAgentsIndexRoute
   '/billing/': typeof AuthenticatedBillingIndexRoute
   '/instructor/': typeof AuthenticatedInstructorIndexRoute
@@ -4595,6 +4674,14 @@ export interface FileRoutesByTo {
   '/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
+  '/agency/analytics': typeof AuthenticatedAgencyAnalyticsRoute
+  '/agency/billing': typeof AuthenticatedAgencyBillingRoute
+  '/agency/branding': typeof AuthenticatedAgencyBrandingRoute
+  '/agency/clients': typeof AuthenticatedAgencyClientsRoute
+  '/agency/dashboard': typeof AuthenticatedAgencyDashboardRoute
+  '/agency/domains': typeof AuthenticatedAgencyDomainsRoute
+  '/agency/settings': typeof AuthenticatedAgencySettingsRoute
+  '/agency/templates': typeof AuthenticatedAgencyTemplatesRoute
   '/agents/$agent': typeof AuthenticatedAgentsAgentRoute
   '/agents/history': typeof AuthenticatedAgentsHistoryRoute
   '/agents/settings': typeof AuthenticatedAgentsSettingsRoute
@@ -4718,6 +4805,7 @@ export interface FileRoutesByTo {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/agency': typeof AuthenticatedAgencyIndexRoute
   '/agents': typeof AuthenticatedAgentsIndexRoute
   '/billing': typeof AuthenticatedBillingIndexRoute
   '/instructor': typeof AuthenticatedInstructorIndexRoute
@@ -5003,6 +5091,7 @@ export interface FileRoutesById {
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/workspace': typeof WorkspaceRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/agency': typeof AuthenticatedAgencyRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/billing': typeof AuthenticatedBillingRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
@@ -5169,6 +5258,14 @@ export interface FileRoutesById {
   '/_authenticated/admin/support': typeof AuthenticatedAdminSupportRouteWithChildren
   '/_authenticated/admin/tags': typeof AuthenticatedAdminTagsRoute
   '/_authenticated/admin/voice-ai': typeof AuthenticatedAdminVoiceAiRoute
+  '/_authenticated/agency/analytics': typeof AuthenticatedAgencyAnalyticsRoute
+  '/_authenticated/agency/billing': typeof AuthenticatedAgencyBillingRoute
+  '/_authenticated/agency/branding': typeof AuthenticatedAgencyBrandingRoute
+  '/_authenticated/agency/clients': typeof AuthenticatedAgencyClientsRoute
+  '/_authenticated/agency/dashboard': typeof AuthenticatedAgencyDashboardRoute
+  '/_authenticated/agency/domains': typeof AuthenticatedAgencyDomainsRoute
+  '/_authenticated/agency/settings': typeof AuthenticatedAgencySettingsRoute
+  '/_authenticated/agency/templates': typeof AuthenticatedAgencyTemplatesRoute
   '/_authenticated/agents/$agent': typeof AuthenticatedAgentsAgentRoute
   '/_authenticated/agents/history': typeof AuthenticatedAgentsHistoryRoute
   '/_authenticated/agents/settings': typeof AuthenticatedAgentsSettingsRoute
@@ -5292,6 +5389,7 @@ export interface FileRoutesById {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/agency/': typeof AuthenticatedAgencyIndexRoute
   '/_authenticated/agents/': typeof AuthenticatedAgentsIndexRoute
   '/_authenticated/billing/': typeof AuthenticatedBillingIndexRoute
   '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
@@ -5577,6 +5675,7 @@ export interface FileRouteTypes {
     | '/white-label-edtech'
     | '/workspace'
     | '/admin'
+    | '/agency'
     | '/ambassador'
     | '/billing'
     | '/brand'
@@ -5742,6 +5841,14 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/admin/tags'
     | '/admin/voice-ai'
+    | '/agency/analytics'
+    | '/agency/billing'
+    | '/agency/branding'
+    | '/agency/clients'
+    | '/agency/dashboard'
+    | '/agency/domains'
+    | '/agency/settings'
+    | '/agency/templates'
     | '/agents/$agent'
     | '/agents/history'
     | '/agents/settings'
@@ -5865,6 +5972,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin/'
+    | '/agency/'
     | '/agents/'
     | '/billing/'
     | '/instructor/'
@@ -6294,6 +6402,14 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/admin/tags'
     | '/admin/voice-ai'
+    | '/agency/analytics'
+    | '/agency/billing'
+    | '/agency/branding'
+    | '/agency/clients'
+    | '/agency/dashboard'
+    | '/agency/domains'
+    | '/agency/settings'
+    | '/agency/templates'
     | '/agents/$agent'
     | '/agents/history'
     | '/agents/settings'
@@ -6417,6 +6533,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin'
+    | '/agency'
     | '/agents'
     | '/billing'
     | '/instructor'
@@ -6701,6 +6818,7 @@ export interface FileRouteTypes {
     | '/white-label-edtech'
     | '/workspace'
     | '/_authenticated/admin'
+    | '/_authenticated/agency'
     | '/_authenticated/ambassador'
     | '/_authenticated/billing'
     | '/_authenticated/brand'
@@ -6867,6 +6985,14 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/support'
     | '/_authenticated/admin/tags'
     | '/_authenticated/admin/voice-ai'
+    | '/_authenticated/agency/analytics'
+    | '/_authenticated/agency/billing'
+    | '/_authenticated/agency/branding'
+    | '/_authenticated/agency/clients'
+    | '/_authenticated/agency/dashboard'
+    | '/_authenticated/agency/domains'
+    | '/_authenticated/agency/settings'
+    | '/_authenticated/agency/templates'
     | '/_authenticated/agents/$agent'
     | '/_authenticated/agents/history'
     | '/_authenticated/agents/settings'
@@ -6990,6 +7116,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/_authenticated/admin/'
+    | '/_authenticated/agency/'
     | '/_authenticated/agents/'
     | '/_authenticated/billing/'
     | '/_authenticated/instructor/'
@@ -8469,6 +8596,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/agency': {
+      id: '/_authenticated/agency'
+      path: '/agency'
+      fullPath: '/agency'
+      preLoaderRoute: typeof AuthenticatedAgencyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -8566,6 +8700,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/agents/'
       preLoaderRoute: typeof AuthenticatedAgentsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/agency/': {
+      id: '/_authenticated/agency/'
+      path: '/'
+      fullPath: '/agency/'
+      preLoaderRoute: typeof AuthenticatedAgencyIndexRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -9427,6 +9568,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/agents/$agent'
       preLoaderRoute: typeof AuthenticatedAgentsAgentRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/agency/templates': {
+      id: '/_authenticated/agency/templates'
+      path: '/templates'
+      fullPath: '/agency/templates'
+      preLoaderRoute: typeof AuthenticatedAgencyTemplatesRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
+    }
+    '/_authenticated/agency/settings': {
+      id: '/_authenticated/agency/settings'
+      path: '/settings'
+      fullPath: '/agency/settings'
+      preLoaderRoute: typeof AuthenticatedAgencySettingsRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
+    }
+    '/_authenticated/agency/domains': {
+      id: '/_authenticated/agency/domains'
+      path: '/domains'
+      fullPath: '/agency/domains'
+      preLoaderRoute: typeof AuthenticatedAgencyDomainsRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
+    }
+    '/_authenticated/agency/dashboard': {
+      id: '/_authenticated/agency/dashboard'
+      path: '/dashboard'
+      fullPath: '/agency/dashboard'
+      preLoaderRoute: typeof AuthenticatedAgencyDashboardRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
+    }
+    '/_authenticated/agency/clients': {
+      id: '/_authenticated/agency/clients'
+      path: '/clients'
+      fullPath: '/agency/clients'
+      preLoaderRoute: typeof AuthenticatedAgencyClientsRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
+    }
+    '/_authenticated/agency/branding': {
+      id: '/_authenticated/agency/branding'
+      path: '/branding'
+      fullPath: '/agency/branding'
+      preLoaderRoute: typeof AuthenticatedAgencyBrandingRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
+    }
+    '/_authenticated/agency/billing': {
+      id: '/_authenticated/agency/billing'
+      path: '/billing'
+      fullPath: '/agency/billing'
+      preLoaderRoute: typeof AuthenticatedAgencyBillingRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
+    }
+    '/_authenticated/agency/analytics': {
+      id: '/_authenticated/agency/analytics'
+      path: '/analytics'
+      fullPath: '/agency/analytics'
+      preLoaderRoute: typeof AuthenticatedAgencyAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedAgencyRoute
     }
     '/_authenticated/admin/voice-ai': {
       id: '/_authenticated/admin/voice-ai'
@@ -12021,6 +12218,33 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedAgencyRouteChildren {
+  AuthenticatedAgencyAnalyticsRoute: typeof AuthenticatedAgencyAnalyticsRoute
+  AuthenticatedAgencyBillingRoute: typeof AuthenticatedAgencyBillingRoute
+  AuthenticatedAgencyBrandingRoute: typeof AuthenticatedAgencyBrandingRoute
+  AuthenticatedAgencyClientsRoute: typeof AuthenticatedAgencyClientsRoute
+  AuthenticatedAgencyDashboardRoute: typeof AuthenticatedAgencyDashboardRoute
+  AuthenticatedAgencyDomainsRoute: typeof AuthenticatedAgencyDomainsRoute
+  AuthenticatedAgencySettingsRoute: typeof AuthenticatedAgencySettingsRoute
+  AuthenticatedAgencyTemplatesRoute: typeof AuthenticatedAgencyTemplatesRoute
+  AuthenticatedAgencyIndexRoute: typeof AuthenticatedAgencyIndexRoute
+}
+
+const AuthenticatedAgencyRouteChildren: AuthenticatedAgencyRouteChildren = {
+  AuthenticatedAgencyAnalyticsRoute: AuthenticatedAgencyAnalyticsRoute,
+  AuthenticatedAgencyBillingRoute: AuthenticatedAgencyBillingRoute,
+  AuthenticatedAgencyBrandingRoute: AuthenticatedAgencyBrandingRoute,
+  AuthenticatedAgencyClientsRoute: AuthenticatedAgencyClientsRoute,
+  AuthenticatedAgencyDashboardRoute: AuthenticatedAgencyDashboardRoute,
+  AuthenticatedAgencyDomainsRoute: AuthenticatedAgencyDomainsRoute,
+  AuthenticatedAgencySettingsRoute: AuthenticatedAgencySettingsRoute,
+  AuthenticatedAgencyTemplatesRoute: AuthenticatedAgencyTemplatesRoute,
+  AuthenticatedAgencyIndexRoute: AuthenticatedAgencyIndexRoute,
+}
+
+const AuthenticatedAgencyRouteWithChildren =
+  AuthenticatedAgencyRoute._addFileChildren(AuthenticatedAgencyRouteChildren)
+
 interface AuthenticatedAmbassadorPayoutsRouteChildren {
   AuthenticatedAmbassadorPayoutsIdRoute: typeof AuthenticatedAmbassadorPayoutsIdRoute
 }
@@ -12574,6 +12798,7 @@ const AuthenticatedWorkspaceProjectProjectIdRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedAgencyRoute: typeof AuthenticatedAgencyRouteWithChildren
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
   AuthenticatedBillingRoute: typeof AuthenticatedBillingRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
@@ -12603,6 +12828,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedAgencyRoute: AuthenticatedAgencyRouteWithChildren,
   AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
   AuthenticatedBillingRoute: AuthenticatedBillingRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,

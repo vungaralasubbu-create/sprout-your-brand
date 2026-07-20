@@ -208,6 +208,203 @@ export type Database = {
         }
         Relationships: []
       }
+      agencies: {
+        Row: {
+          accent_color: string | null
+          billing_mode: string | null
+          border_radius: string | null
+          button_style: string | null
+          created_at: string
+          email_footer: string | null
+          favicon_url: string | null
+          id: string
+          invoice_frequency: string | null
+          logo_dark_url: string | null
+          logo_url: string | null
+          metadata: Json
+          name: string
+          notification_email: string | null
+          owner_id: string
+          plan: Database["public"]["Enums"]["agency_plan"]
+          primary_color: string | null
+          secondary_color: string | null
+          sender_name: string | null
+          slug: string
+          smtp_provider: string | null
+          support_email: string | null
+          typography: string | null
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string | null
+          billing_mode?: string | null
+          border_radius?: string | null
+          button_style?: string | null
+          created_at?: string
+          email_footer?: string | null
+          favicon_url?: string | null
+          id?: string
+          invoice_frequency?: string | null
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          metadata?: Json
+          name: string
+          notification_email?: string | null
+          owner_id: string
+          plan?: Database["public"]["Enums"]["agency_plan"]
+          primary_color?: string | null
+          secondary_color?: string | null
+          sender_name?: string | null
+          slug: string
+          smtp_provider?: string | null
+          support_email?: string | null
+          typography?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string | null
+          billing_mode?: string | null
+          border_radius?: string | null
+          button_style?: string | null
+          created_at?: string
+          email_footer?: string | null
+          favicon_url?: string | null
+          id?: string
+          invoice_frequency?: string | null
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          metadata?: Json
+          name?: string
+          notification_email?: string | null
+          owner_id?: string
+          plan?: Database["public"]["Enums"]["agency_plan"]
+          primary_color?: string | null
+          secondary_color?: string | null
+          sender_name?: string | null
+          slug?: string
+          smtp_provider?: string | null
+          support_email?: string | null
+          typography?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      agency_clients: {
+        Row: {
+          agency_id: string
+          company_name: string
+          created_at: string
+          id: string
+          industry: string | null
+          language: string | null
+          metadata: Json
+          owner_email: string | null
+          owner_name: string | null
+          owner_user_id: string | null
+          status: Database["public"]["Enums"]["agency_client_status"]
+          timezone: string | null
+          updated_at: string
+          website: string | null
+          workspace_id: string | null
+          workspace_name: string | null
+        }
+        Insert: {
+          agency_id: string
+          company_name: string
+          created_at?: string
+          id?: string
+          industry?: string | null
+          language?: string | null
+          metadata?: Json
+          owner_email?: string | null
+          owner_name?: string | null
+          owner_user_id?: string | null
+          status?: Database["public"]["Enums"]["agency_client_status"]
+          timezone?: string | null
+          updated_at?: string
+          website?: string | null
+          workspace_id?: string | null
+          workspace_name?: string | null
+        }
+        Update: {
+          agency_id?: string
+          company_name?: string
+          created_at?: string
+          id?: string
+          industry?: string | null
+          language?: string | null
+          metadata?: Json
+          owner_email?: string | null
+          owner_name?: string | null
+          owner_user_id?: string | null
+          status?: Database["public"]["Enums"]["agency_client_status"]
+          timezone?: string | null
+          updated_at?: string
+          website?: string | null
+          workspace_id?: string | null
+          workspace_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_clients_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agency_clients_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agency_members: {
+        Row: {
+          agency_id: string
+          created_at: string
+          id: string
+          invited_email: string | null
+          permissions: Json
+          role: Database["public"]["Enums"]["agency_member_role"]
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          agency_id: string
+          created_at?: string
+          id?: string
+          invited_email?: string | null
+          permissions?: Json
+          role?: Database["public"]["Enums"]["agency_member_role"]
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          agency_id?: string
+          created_at?: string
+          id?: string
+          invited_email?: string | null
+          permissions?: Json
+          role?: Database["public"]["Enums"]["agency_member_role"]
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_members_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_agent_runs: {
         Row: {
           agent_id: string | null
@@ -8362,6 +8559,433 @@ export type Database = {
           },
         ]
       }
+      client_ai_profiles: {
+        Row: {
+          ai_name: string | null
+          brand_voice: string | null
+          client_id: string
+          created_at: string
+          id: string
+          instructions: string | null
+          knowledge_scope: Json | null
+          personality: string | null
+          preferred_models: Json | null
+          prompt_rules: Json | null
+          restricted_topics: Json | null
+          tone: string | null
+          updated_at: string
+        }
+        Insert: {
+          ai_name?: string | null
+          brand_voice?: string | null
+          client_id: string
+          created_at?: string
+          id?: string
+          instructions?: string | null
+          knowledge_scope?: Json | null
+          personality?: string | null
+          preferred_models?: Json | null
+          prompt_rules?: Json | null
+          restricted_topics?: Json | null
+          tone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ai_name?: string | null
+          brand_voice?: string | null
+          client_id?: string
+          created_at?: string
+          id?: string
+          instructions?: string | null
+          knowledge_scope?: Json | null
+          personality?: string | null
+          preferred_models?: Json | null
+          prompt_rules?: Json | null
+          restricted_topics?: Json | null
+          tone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_ai_profiles_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "agency_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_branding: {
+        Row: {
+          accent_color: string | null
+          border_radius: string | null
+          button_style: string | null
+          client_id: string
+          created_at: string
+          dashboard_theme: string | null
+          email_header: Json | null
+          favicon_url: string | null
+          id: string
+          loading_screen: Json | null
+          login_screen: Json | null
+          logo_dark_url: string | null
+          logo_url: string | null
+          primary_color: string | null
+          secondary_color: string | null
+          typography: string | null
+          updated_at: string
+          welcome_message: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          border_radius?: string | null
+          button_style?: string | null
+          client_id: string
+          created_at?: string
+          dashboard_theme?: string | null
+          email_header?: Json | null
+          favicon_url?: string | null
+          id?: string
+          loading_screen?: Json | null
+          login_screen?: Json | null
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          typography?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          border_radius?: string | null
+          button_style?: string | null
+          client_id?: string
+          created_at?: string
+          dashboard_theme?: string | null
+          email_header?: Json | null
+          favicon_url?: string | null
+          id?: string
+          loading_screen?: Json | null
+          login_screen?: Json | null
+          logo_dark_url?: string | null
+          logo_url?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          typography?: string | null
+          updated_at?: string
+          welcome_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_branding_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "agency_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_domains: {
+        Row: {
+          client_id: string
+          connected_at: string | null
+          created_at: string
+          dns_records: Json | null
+          domain: string
+          id: string
+          is_primary: boolean
+          ssl_status: string
+          updated_at: string
+          verification_status: string
+          verification_token: string | null
+        }
+        Insert: {
+          client_id: string
+          connected_at?: string | null
+          created_at?: string
+          dns_records?: Json | null
+          domain: string
+          id?: string
+          is_primary?: boolean
+          ssl_status?: string
+          updated_at?: string
+          verification_status?: string
+          verification_token?: string | null
+        }
+        Update: {
+          client_id?: string
+          connected_at?: string | null
+          created_at?: string
+          dns_records?: Json | null
+          domain?: string
+          id?: string
+          is_primary?: boolean
+          ssl_status?: string
+          updated_at?: string
+          verification_status?: string
+          verification_token?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_domains_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "agency_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_settings: {
+        Row: {
+          client_id: string
+          created_at: string
+          email_footer: string | null
+          id: string
+          locale: string | null
+          metadata: Json
+          notification_email: string | null
+          privacy_url: string | null
+          sender_name: string | null
+          smtp_provider: string | null
+          support_email: string | null
+          terms_url: string | null
+          timezone: string | null
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          email_footer?: string | null
+          id?: string
+          locale?: string | null
+          metadata?: Json
+          notification_email?: string | null
+          privacy_url?: string | null
+          sender_name?: string | null
+          smtp_provider?: string | null
+          support_email?: string | null
+          terms_url?: string | null
+          timezone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          email_footer?: string | null
+          id?: string
+          locale?: string | null
+          metadata?: Json
+          notification_email?: string | null
+          privacy_url?: string | null
+          sender_name?: string | null
+          smtp_provider?: string | null
+          support_email?: string | null
+          terms_url?: string | null
+          timezone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_settings_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "agency_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_subscriptions: {
+        Row: {
+          agency_id: string
+          ai_credits: number
+          client_id: string | null
+          created_at: string
+          currency: string
+          current_period_end: string | null
+          features: Json
+          id: string
+          interval: string
+          is_template: boolean
+          plan_name: string
+          price_cents: number
+          projects_limit: number
+          status: string
+          storage_gb: number
+          updated_at: string
+          users_limit: number
+        }
+        Insert: {
+          agency_id: string
+          ai_credits?: number
+          client_id?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          features?: Json
+          id?: string
+          interval?: string
+          is_template?: boolean
+          plan_name: string
+          price_cents?: number
+          projects_limit?: number
+          status?: string
+          storage_gb?: number
+          updated_at?: string
+          users_limit?: number
+        }
+        Update: {
+          agency_id?: string
+          ai_credits?: number
+          client_id?: string | null
+          created_at?: string
+          currency?: string
+          current_period_end?: string | null
+          features?: Json
+          id?: string
+          interval?: string
+          is_template?: boolean
+          plan_name?: string
+          price_cents?: number
+          projects_limit?: number
+          status?: string
+          storage_gb?: number
+          updated_at?: string
+          users_limit?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_subscriptions_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_subscriptions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "agency_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_templates: {
+        Row: {
+          agency_id: string
+          category: string | null
+          client_id: string | null
+          content: Json
+          created_at: string
+          description: string | null
+          id: string
+          is_locked: boolean
+          is_premium: boolean
+          name: string
+          scope: string
+          updated_at: string
+        }
+        Insert: {
+          agency_id: string
+          category?: string | null
+          client_id?: string | null
+          content?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_locked?: boolean
+          is_premium?: boolean
+          name: string
+          scope?: string
+          updated_at?: string
+        }
+        Update: {
+          agency_id?: string
+          category?: string | null
+          client_id?: string | null
+          content?: Json
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_locked?: boolean
+          is_premium?: boolean
+          name?: string
+          scope?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_templates_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_templates_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "agency_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_usage: {
+        Row: {
+          ai_credits_used: number
+          campaigns_count: number
+          client_id: string
+          created_at: string
+          id: string
+          leads_count: number
+          metadata: Json
+          period_end: string
+          period_start: string
+          projects_count: number
+          revenue_cents: number
+          storage_mb: number
+          users_count: number
+        }
+        Insert: {
+          ai_credits_used?: number
+          campaigns_count?: number
+          client_id: string
+          created_at?: string
+          id?: string
+          leads_count?: number
+          metadata?: Json
+          period_end: string
+          period_start: string
+          projects_count?: number
+          revenue_cents?: number
+          storage_mb?: number
+          users_count?: number
+        }
+        Update: {
+          ai_credits_used?: number
+          campaigns_count?: number
+          client_id?: string
+          created_at?: string
+          id?: string
+          leads_count?: number
+          metadata?: Json
+          period_end?: string
+          period_start?: string
+          projects_count?: number
+          revenue_cents?: number
+          storage_mb?: number
+          users_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_usage_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "agency_clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_ab_tests: {
         Row: {
           campaign_id: string
@@ -15205,6 +15829,66 @@ export type Database = {
             columns: ["department_id"]
             isOneToOne: false
             referencedRelation: "hiring_departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      impersonation_logs: {
+        Row: {
+          action: string
+          actor_user_id: string
+          agency_id: string
+          client_id: string | null
+          ended_at: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json
+          reason: string | null
+          started_at: string
+          target_user_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id: string
+          agency_id: string
+          client_id?: string | null
+          ended_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          reason?: string | null
+          started_at?: string
+          target_user_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string
+          agency_id?: string
+          client_id?: string | null
+          ended_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          reason?: string | null
+          started_at?: string
+          target_user_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "impersonation_logs_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "impersonation_logs_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "agency_clients"
             referencedColumns: ["id"]
           },
         ]
@@ -29670,6 +30354,10 @@ export type Database = {
       }
     }
     Functions: {
+      agency_member_role: {
+        Args: { _agency_id: string; _user_id: string }
+        Returns: Database["public"]["Enums"]["agency_member_role"]
+      }
       amb_campaign_matches_scope: {
         Args: { _campus_scope: string; _college_name: string }
         Returns: boolean
@@ -30125,6 +30813,10 @@ export type Database = {
       }
       is_active_admin: { Args: { _user_id: string }; Returns: boolean }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_agency_member: {
+        Args: { _agency_id: string; _user_id: string }
+        Returns: boolean
+      }
       is_brand_owner: {
         Args: { _brand_id: string; _user_id: string }
         Returns: boolean
@@ -30228,6 +30920,22 @@ export type Database = {
         | "support_agent"
         | "employment_admin"
         | "payroll_admin"
+      agency_client_status: "active" | "trial" | "suspended" | "archived"
+      agency_member_role:
+        | "owner"
+        | "admin"
+        | "manager"
+        | "support"
+        | "sales"
+        | "developer"
+        | "finance"
+        | "viewer"
+      agency_plan:
+        | "starter"
+        | "growth"
+        | "professional"
+        | "enterprise"
+        | "custom"
       ai_mentor_context_type:
         | "general"
         | "current_lesson"
@@ -31245,6 +31953,24 @@ export const Constants = {
         "support_agent",
         "employment_admin",
         "payroll_admin",
+      ],
+      agency_client_status: ["active", "trial", "suspended", "archived"],
+      agency_member_role: [
+        "owner",
+        "admin",
+        "manager",
+        "support",
+        "sales",
+        "developer",
+        "finance",
+        "viewer",
+      ],
+      agency_plan: [
+        "starter",
+        "growth",
+        "professional",
+        "enterprise",
+        "custom",
       ],
       ai_mentor_context_type: [
         "general",
