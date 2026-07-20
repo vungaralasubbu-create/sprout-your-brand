@@ -16237,6 +16237,632 @@ export type Database = {
         }
         Relationships: []
       }
+      kn_brand: {
+        Row: {
+          approved_terminology: string[]
+          brand_voice: string | null
+          colors: string[]
+          fonts: string[]
+          forbidden_words: string[]
+          logo_url: string | null
+          mission: string | null
+          style_guide: string | null
+          tone: string | null
+          updated_at: string
+          values: string[]
+          vision: string | null
+          workspace_id: string
+          writing_rules: string | null
+        }
+        Insert: {
+          approved_terminology?: string[]
+          brand_voice?: string | null
+          colors?: string[]
+          fonts?: string[]
+          forbidden_words?: string[]
+          logo_url?: string | null
+          mission?: string | null
+          style_guide?: string | null
+          tone?: string | null
+          updated_at?: string
+          values?: string[]
+          vision?: string | null
+          workspace_id: string
+          writing_rules?: string | null
+        }
+        Update: {
+          approved_terminology?: string[]
+          brand_voice?: string | null
+          colors?: string[]
+          fonts?: string[]
+          forbidden_words?: string[]
+          logo_url?: string | null
+          mission?: string | null
+          style_guide?: string | null
+          tone?: string | null
+          updated_at?: string
+          values?: string[]
+          vision?: string | null
+          workspace_id?: string
+          writing_rules?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_brand_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: true
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_chunks: {
+        Row: {
+          chunk_index: number
+          content: string
+          created_at: string
+          document_id: string
+          embedding: string | null
+          id: string
+          metadata: Json
+          token_count: number | null
+          workspace_id: string
+        }
+        Insert: {
+          chunk_index: number
+          content: string
+          created_at?: string
+          document_id: string
+          embedding?: string | null
+          id?: string
+          metadata?: Json
+          token_count?: number | null
+          workspace_id: string
+        }
+        Update: {
+          chunk_index?: number
+          content?: string
+          created_at?: string
+          document_id?: string
+          embedding?: string | null
+          id?: string
+          metadata?: Json
+          token_count?: number | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_chunks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "kn_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kn_chunks_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_competitors: {
+        Row: {
+          company: string
+          created_at: string
+          id: string
+          positioning: string | null
+          pricing: string | null
+          strengths: string[]
+          weaknesses: string[]
+          website: string | null
+          workspace_id: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          id?: string
+          positioning?: string | null
+          pricing?: string | null
+          strengths?: string[]
+          weaknesses?: string[]
+          website?: string | null
+          workspace_id: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          id?: string
+          positioning?: string | null
+          pricing?: string | null
+          strengths?: string[]
+          weaknesses?: string[]
+          website?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_competitors_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_documents: {
+        Row: {
+          category: Database["public"]["Enums"]["kn_category"]
+          content: string
+          content_tsv: unknown
+          created_at: string
+          created_by: string | null
+          external_url: string | null
+          file_size_bytes: number | null
+          file_url: string | null
+          id: string
+          is_pinned: boolean
+          language: string
+          mime_type: string | null
+          source_id: string | null
+          summary: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          version: number
+          workspace_id: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["kn_category"]
+          content?: string
+          content_tsv?: unknown
+          created_at?: string
+          created_by?: string | null
+          external_url?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          is_pinned?: boolean
+          language?: string
+          mime_type?: string | null
+          source_id?: string | null
+          summary?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          version?: number
+          workspace_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["kn_category"]
+          content?: string
+          content_tsv?: unknown
+          created_at?: string
+          created_by?: string | null
+          external_url?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          is_pinned?: boolean
+          language?: string
+          mime_type?: string | null
+          source_id?: string | null
+          summary?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          version?: number
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_documents_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "kn_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kn_documents_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_faqs: {
+        Row: {
+          answer: string
+          category: string | null
+          created_at: string
+          id: string
+          is_published: boolean
+          question: string
+          sort_order: number
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          answer: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          question: string
+          sort_order?: number
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          answer?: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          question?: string
+          sort_order?: number
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_faqs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_personas: {
+        Row: {
+          age_range: string | null
+          buying_journey: string | null
+          channels: string[]
+          created_at: string
+          goals: string[]
+          id: string
+          industry: string | null
+          messaging: string | null
+          name: string
+          objections: string[]
+          pain_points: string[]
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          age_range?: string | null
+          buying_journey?: string | null
+          channels?: string[]
+          created_at?: string
+          goals?: string[]
+          id?: string
+          industry?: string | null
+          messaging?: string | null
+          name: string
+          objections?: string[]
+          pain_points?: string[]
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          age_range?: string | null
+          buying_journey?: string | null
+          channels?: string[]
+          created_at?: string
+          goals?: string[]
+          id?: string
+          industry?: string | null
+          messaging?: string | null
+          name?: string
+          objections?: string[]
+          pain_points?: string[]
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_personas_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_products: {
+        Row: {
+          benefits: string[]
+          case_studies: string[]
+          competitors: string[]
+          created_at: string
+          description: string | null
+          features: string[]
+          id: string
+          images: string[]
+          landing_pages: string[]
+          name: string
+          price: string | null
+          target_audience: string | null
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          benefits?: string[]
+          case_studies?: string[]
+          competitors?: string[]
+          created_at?: string
+          description?: string | null
+          features?: string[]
+          id?: string
+          images?: string[]
+          landing_pages?: string[]
+          name: string
+          price?: string | null
+          target_audience?: string | null
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          benefits?: string[]
+          case_studies?: string[]
+          competitors?: string[]
+          created_at?: string
+          description?: string | null
+          features?: string[]
+          id?: string
+          images?: string[]
+          landing_pages?: string[]
+          name?: string
+          price?: string | null
+          target_audience?: string | null
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_products_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_sales_playbook: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          kind: string
+          title: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          kind: string
+          title: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          title?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_sales_playbook_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_search_logs: {
+        Row: {
+          answer: string | null
+          created_at: string
+          duration_ms: number | null
+          id: string
+          query: string
+          results_count: number
+          user_id: string | null
+          workspace_id: string
+        }
+        Insert: {
+          answer?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          query: string
+          results_count?: number
+          user_id?: string | null
+          workspace_id: string
+        }
+        Update: {
+          answer?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          query?: string
+          results_count?: number
+          user_id?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_search_logs_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_services: {
+        Row: {
+          created_at: string
+          deliverables: string[]
+          documents: string[]
+          faqs: Json
+          id: string
+          name: string
+          pricing: string | null
+          timeline: string | null
+          updated_at: string
+          workflow: string | null
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          deliverables?: string[]
+          documents?: string[]
+          faqs?: Json
+          id?: string
+          name: string
+          pricing?: string | null
+          timeline?: string | null
+          updated_at?: string
+          workflow?: string | null
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          deliverables?: string[]
+          documents?: string[]
+          faqs?: Json
+          id?: string
+          name?: string
+          pricing?: string | null
+          timeline?: string | null
+          updated_at?: string
+          workflow?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_services_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_sources: {
+        Row: {
+          auto_sync: boolean
+          created_at: string
+          created_by: string | null
+          error_message: string | null
+          id: string
+          kind: Database["public"]["Enums"]["kn_source_kind"]
+          last_synced_at: string | null
+          meta: Json
+          name: string
+          next_sync_at: string | null
+          status: Database["public"]["Enums"]["kn_sync_status"]
+          sync_frequency: string | null
+          updated_at: string
+          url: string | null
+          workspace_id: string
+        }
+        Insert: {
+          auto_sync?: boolean
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["kn_source_kind"]
+          last_synced_at?: string | null
+          meta?: Json
+          name: string
+          next_sync_at?: string | null
+          status?: Database["public"]["Enums"]["kn_sync_status"]
+          sync_frequency?: string | null
+          updated_at?: string
+          url?: string | null
+          workspace_id: string
+        }
+        Update: {
+          auto_sync?: boolean
+          created_at?: string
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["kn_source_kind"]
+          last_synced_at?: string | null
+          meta?: Json
+          name?: string
+          next_sync_at?: string | null
+          status?: Database["public"]["Enums"]["kn_sync_status"]
+          sync_frequency?: string | null
+          updated_at?: string
+          url?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_sources_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kn_versions: {
+        Row: {
+          changelog: string | null
+          content: string
+          created_at: string
+          created_by: string | null
+          document_id: string
+          id: string
+          title: string
+          version: number
+        }
+        Insert: {
+          changelog?: string | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          document_id: string
+          id?: string
+          title: string
+          version: number
+        }
+        Update: {
+          changelog?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          document_id?: string
+          id?: string
+          title?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kn_versions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "kn_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_assignment_history: {
         Row: {
           action: string
@@ -29853,6 +30479,31 @@ export type Database = {
         | "project"
         | "internship"
         | "mixed"
+      kn_category:
+        | "documents"
+        | "websites"
+        | "brand"
+        | "products"
+        | "services"
+        | "sales"
+        | "marketing"
+        | "support"
+        | "competitors"
+        | "personas"
+        | "faqs"
+        | "team"
+        | "media"
+        | "other"
+      kn_source_kind:
+        | "file"
+        | "website"
+        | "notion"
+        | "google_drive"
+        | "slack"
+        | "github"
+        | "confluence"
+        | "manual"
+      kn_sync_status: "pending" | "running" | "completed" | "failed" | "paused"
       lead_model: "own_leads" | "supported" | "not_sure"
       lead_ownership_review_status:
         | "pending_review"
@@ -30892,6 +31543,33 @@ export const Constants = {
         "internship",
         "mixed",
       ],
+      kn_category: [
+        "documents",
+        "websites",
+        "brand",
+        "products",
+        "services",
+        "sales",
+        "marketing",
+        "support",
+        "competitors",
+        "personas",
+        "faqs",
+        "team",
+        "media",
+        "other",
+      ],
+      kn_source_kind: [
+        "file",
+        "website",
+        "notion",
+        "google_drive",
+        "slack",
+        "github",
+        "confluence",
+        "manual",
+      ],
+      kn_sync_status: ["pending", "running", "completed", "failed", "paused"],
       lead_model: ["own_leads", "supported", "not_sure"],
       lead_ownership_review_status: [
         "pending_review",
