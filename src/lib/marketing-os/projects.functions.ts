@@ -164,6 +164,29 @@ export const renameMarketingProject = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ---------------- patch project result (approvals, review notes, etc.) ----------------
+export const patchProjectResult = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) =>
+    z.object({ id: z.string().uuid(), patch: z.record(z.any()) }).parse(v),
+  )
+  .handler(async ({ data, context }) => {
+    const sb: any = context.supabase as any;
+    const { data: proj, error: gErr } = await sb
+      .from("marketing_projects")
+      .select("result")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (gErr) throw new Error(gErr.message);
+    const nextResult = { ...(proj?.result ?? {}), ...data.patch };
+    const { error } = await sb
+      .from("marketing_projects")
+      .update({ result: nextResult })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true, result: nextResult };
+  });
+
 // ---------------- copilot chat ----------------
 type CopilotMessage = {
   role: "user" | "assistant" | "system";

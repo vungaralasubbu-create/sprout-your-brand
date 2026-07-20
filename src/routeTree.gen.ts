@@ -501,6 +501,7 @@ import { Route as ApiPublicWorkflowsWebhookSlugRouteImport } from './routes/api/
 import { Route as ApiPublicEngageWebhooksProviderRouteImport } from './routes/api/public/engage/webhooks/$provider'
 import { Route as ApiPublicEngageUnsubscribeTokenRouteImport } from './routes/api/public/engage/unsubscribe.$token'
 import { Route as ApiPublicEngageHooksSequenceTickRouteImport } from './routes/api/public/engage/hooks/sequence-tick'
+import { Route as AuthenticatedWorkspaceProjectProjectIdReviewRouteImport } from './routes/_authenticated/workspace.project.$projectId.review'
 import { Route as AuthenticatedStudentProgramsViewSlugRouteImport } from './routes/_authenticated/student.programs.view.$slug'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
@@ -3297,6 +3298,12 @@ const ApiPublicEngageHooksSequenceTickRoute =
     path: '/api/public/engage/hooks/sequence-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedWorkspaceProjectProjectIdReviewRoute =
+  AuthenticatedWorkspaceProjectProjectIdReviewRouteImport.update({
+    id: '/review',
+    path: '/review',
+    getParentRoute: () => AuthenticatedWorkspaceProjectProjectIdRoute,
+  } as any)
 const AuthenticatedStudentProgramsViewSlugRoute =
   AuthenticatedStudentProgramsViewSlugRouteImport.update({
     id: '/programs/view/$slug',
@@ -3813,7 +3820,7 @@ export interface FileRoutesByFullPath {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
-  '/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRoute
+  '/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
@@ -3879,6 +3886,7 @@ export interface FileRoutesByFullPath {
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
+  '/workspace/project/$projectId/review': typeof AuthenticatedWorkspaceProjectProjectIdReviewRoute
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
@@ -4305,7 +4313,7 @@ export interface FileRoutesByTo {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
-  '/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRoute
+  '/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
@@ -4371,6 +4379,7 @@ export interface FileRoutesByTo {
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
+  '/workspace/project/$projectId/review': typeof AuthenticatedWorkspaceProjectProjectIdReviewRoute
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
@@ -4814,7 +4823,7 @@ export interface FileRoutesById {
   '/_authenticated/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
-  '/_authenticated/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRoute
+  '/_authenticated/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
@@ -4880,6 +4889,7 @@ export interface FileRoutesById {
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
   '/_authenticated/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/_authenticated/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
+  '/_authenticated/workspace/project/$projectId/review': typeof AuthenticatedWorkspaceProjectProjectIdReviewRoute
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
@@ -5389,6 +5399,7 @@ export interface FileRouteTypes {
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
     | '/student/programs/view/$slug'
+    | '/workspace/project/$projectId/review'
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
@@ -5881,6 +5892,7 @@ export interface FileRouteTypes {
     | '/student/career/interview/$id'
     | '/student/career/interview/setup'
     | '/student/programs/view/$slug'
+    | '/workspace/project/$projectId/review'
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
@@ -6389,6 +6401,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/career/interview/$id'
     | '/_authenticated/student/career/interview/setup'
     | '/_authenticated/student/programs/view/$slug'
+    | '/_authenticated/workspace/project/$projectId/review'
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
@@ -9975,6 +9988,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicEngageHooksSequenceTickRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/workspace/project/$projectId/review': {
+      id: '/_authenticated/workspace/project/$projectId/review'
+      path: '/review'
+      fullPath: '/workspace/project/$projectId/review'
+      preLoaderRoute: typeof AuthenticatedWorkspaceProjectProjectIdReviewRouteImport
+      parentRoute: typeof AuthenticatedWorkspaceProjectProjectIdRoute
+    }
     '/_authenticated/student/programs/view/$slug': {
       id: '/_authenticated/student/programs/view/$slug'
       path: '/programs/view/$slug'
@@ -11186,6 +11206,21 @@ const AuthenticatedCounsellorCopilotRouteWithChildren =
     AuthenticatedCounsellorCopilotRouteChildren,
   )
 
+interface AuthenticatedWorkspaceProjectProjectIdRouteChildren {
+  AuthenticatedWorkspaceProjectProjectIdReviewRoute: typeof AuthenticatedWorkspaceProjectProjectIdReviewRoute
+}
+
+const AuthenticatedWorkspaceProjectProjectIdRouteChildren: AuthenticatedWorkspaceProjectProjectIdRouteChildren =
+  {
+    AuthenticatedWorkspaceProjectProjectIdReviewRoute:
+      AuthenticatedWorkspaceProjectProjectIdReviewRoute,
+  }
+
+const AuthenticatedWorkspaceProjectProjectIdRouteWithChildren =
+  AuthenticatedWorkspaceProjectProjectIdRoute._addFileChildren(
+    AuthenticatedWorkspaceProjectProjectIdRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
@@ -11199,7 +11234,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
-  AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRoute
+  AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -11219,7 +11254,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
   AuthenticatedWorkspaceProjectProjectIdRoute:
-    AuthenticatedWorkspaceProjectProjectIdRoute,
+    AuthenticatedWorkspaceProjectProjectIdRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
