@@ -352,6 +352,7 @@ import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
+import { Route as ApiPublicWorkflowsTickRouteImport } from './routes/api/public/workflows/tick'
 import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/public/webhooks/cashfree'
 import { Route as ApiPublicTopicsJsonRouteImport } from './routes/api/public/topics.json'
 import { Route as ApiPublicHooksTechSeoTickRouteImport } from './routes/api/public/hooks/tech-seo-tick'
@@ -407,6 +408,7 @@ import { Route as AuthenticatedAdminMarketingOsGenerationEngineRouteImport } fro
 import { Route as AuthenticatedAdminMarketingOsCampaignsRouteImport } from './routes/_authenticated/admin.marketing-os.campaigns'
 import { Route as AuthenticatedAdminMarketingOsCalendarRouteImport } from './routes/_authenticated/admin.marketing-os.calendar'
 import { Route as AuthenticatedAdminMarketingOsBrandKitRouteImport } from './routes/_authenticated/admin.marketing-os.brand-kit'
+import { Route as AuthenticatedAdminMarketingOsAutomationRouteImport } from './routes/_authenticated/admin.marketing-os.automation'
 import { Route as AuthenticatedAdminMarketingOsApprovalsRouteImport } from './routes/_authenticated/admin.marketing-os.approvals'
 import { Route as AuthenticatedAdminMarketingOsAnalyticsRouteImport } from './routes/_authenticated/admin.marketing-os.analytics'
 import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
@@ -491,6 +493,7 @@ import { Route as AuthenticatedAdminAiAgentsAnalyticsRouteImport } from './route
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
 import { Route as AuthenticatedAdminAutomationHubWorkflowsIndexRouteImport } from './routes/_authenticated/admin/automation-hub/workflows.index'
 import { Route as ApiV1CertificatesVerifyCodeRouteImport } from './routes/api/v1/certificates.verify.$code'
+import { Route as ApiPublicWorkflowsWebhookSlugRouteImport } from './routes/api/public/workflows/webhook.$slug'
 import { Route as ApiPublicEngageWebhooksProviderRouteImport } from './routes/api/public/engage/webhooks/$provider'
 import { Route as ApiPublicEngageUnsubscribeTokenRouteImport } from './routes/api/public/engage/unsubscribe.$token'
 import { Route as ApiPublicEngageHooksSequenceTickRouteImport } from './routes/api/public/engage/hooks/sequence-tick'
@@ -501,6 +504,7 @@ import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from 
 import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport } from './routes/_authenticated/ambassador.marketing-resources.programs.$slug'
 import { Route as AuthenticatedAdminMarketingOsPlansIdRouteImport } from './routes/_authenticated/admin.marketing-os.plans.$id'
 import { Route as AuthenticatedAdminMarketingOsCampaignsIdRouteImport } from './routes/_authenticated/admin.marketing-os.campaigns.$id'
+import { Route as AuthenticatedAdminMarketingOsAutomationIdRouteImport } from './routes/_authenticated/admin.marketing-os.automation.$id'
 import { Route as AuthenticatedAdminCoursesIdAiStudioRouteImport } from './routes/_authenticated/admin.courses.$id.ai-studio'
 import { Route as AuthenticatedAdminContentArticlesIdRouteImport } from './routes/_authenticated/admin.content.articles.$id'
 import { Route as AuthenticatedAdminAutomationHubWorkflowsIdRouteImport } from './routes/_authenticated/admin/automation-hub/workflows.$id'
@@ -2402,6 +2406,11 @@ const ProgramsCategoryCourseApplyRoute =
     path: '/programs/$category/$course/apply',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWorkflowsTickRoute = ApiPublicWorkflowsTickRouteImport.update({
+  id: '/api/public/workflows/tick',
+  path: '/api/public/workflows/tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksCashfreeRoute =
   ApiPublicWebhooksCashfreeRouteImport.update({
     id: '/api/public/webhooks/cashfree',
@@ -2723,6 +2732,12 @@ const AuthenticatedAdminMarketingOsBrandKitRoute =
   AuthenticatedAdminMarketingOsBrandKitRouteImport.update({
     id: '/brand-kit',
     path: '/brand-kit',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
+const AuthenticatedAdminMarketingOsAutomationRoute =
+  AuthenticatedAdminMarketingOsAutomationRouteImport.update({
+    id: '/automation',
+    path: '/automation',
     getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
 const AuthenticatedAdminMarketingOsApprovalsRoute =
@@ -3229,6 +3244,12 @@ const ApiV1CertificatesVerifyCodeRoute =
     path: '/api/v1/certificates/verify/$code',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWorkflowsWebhookSlugRoute =
+  ApiPublicWorkflowsWebhookSlugRouteImport.update({
+    id: '/api/public/workflows/webhook/$slug',
+    path: '/api/public/workflows/webhook/$slug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicEngageWebhooksProviderRoute =
   ApiPublicEngageWebhooksProviderRouteImport.update({
     id: '/api/public/engage/webhooks/$provider',
@@ -3288,6 +3309,12 @@ const AuthenticatedAdminMarketingOsCampaignsIdRoute =
     id: '/$id',
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminMarketingOsCampaignsRoute,
+  } as any)
+const AuthenticatedAdminMarketingOsAutomationIdRoute =
+  AuthenticatedAdminMarketingOsAutomationIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminMarketingOsAutomationRoute,
   } as any)
 const AuthenticatedAdminCoursesIdAiStudioRoute =
   AuthenticatedAdminCoursesIdAiStudioRouteImport.update({
@@ -3707,6 +3734,7 @@ export interface FileRoutesByFullPath {
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/automation': typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -3762,6 +3790,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
+  '/api/public/workflows/tick': typeof ApiPublicWorkflowsTickRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -3802,6 +3831,7 @@ export interface FileRoutesByFullPath {
   '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -3812,6 +3842,7 @@ export interface FileRoutesByFullPath {
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
+  '/api/public/workflows/webhook/$slug': typeof ApiPublicWorkflowsWebhookSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/automation-hub/workflows/': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
@@ -4190,6 +4221,7 @@ export interface FileRoutesByTo {
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/automation': typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -4245,6 +4277,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
+  '/api/public/workflows/tick': typeof ApiPublicWorkflowsTickRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -4285,6 +4318,7 @@ export interface FileRoutesByTo {
   '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -4295,6 +4329,7 @@ export interface FileRoutesByTo {
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
+  '/api/public/workflows/webhook/$slug': typeof ApiPublicWorkflowsWebhookSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/automation-hub/workflows': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/admin/content/articles': typeof AuthenticatedAdminContentArticlesIndexRoute
@@ -4690,6 +4725,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/_authenticated/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/_authenticated/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/_authenticated/admin/marketing-os/automation': typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   '/_authenticated/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/_authenticated/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/_authenticated/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -4745,6 +4781,7 @@ export interface FileRoutesById {
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
+  '/api/public/workflows/tick': typeof ApiPublicWorkflowsTickRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -4785,6 +4822,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/_authenticated/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/_authenticated/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/_authenticated/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/_authenticated/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/_authenticated/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/_authenticated/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -4795,6 +4833,7 @@ export interface FileRoutesById {
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
+  '/api/public/workflows/webhook/$slug': typeof ApiPublicWorkflowsWebhookSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/_authenticated/admin/automation-hub/workflows/': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/_authenticated/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
@@ -5190,6 +5229,7 @@ export interface FileRouteTypes {
     | '/admin/llm/settings'
     | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/automation'
     | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/campaigns'
@@ -5245,6 +5285,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
+    | '/api/public/workflows/tick'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents/'
@@ -5285,6 +5326,7 @@ export interface FileRouteTypes {
     | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
+    | '/admin/marketing-os/automation/$id'
     | '/admin/marketing-os/campaigns/$id'
     | '/admin/marketing-os/plans/$id'
     | '/ambassador/marketing-resources/programs/$slug'
@@ -5295,6 +5337,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
+    | '/api/public/workflows/webhook/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/admin/automation-hub/workflows/'
     | '/admin/content/articles/'
@@ -5673,6 +5716,7 @@ export interface FileRouteTypes {
     | '/admin/llm/settings'
     | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/automation'
     | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/campaigns'
@@ -5728,6 +5772,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
+    | '/api/public/workflows/tick'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents'
@@ -5768,6 +5813,7 @@ export interface FileRouteTypes {
     | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
+    | '/admin/marketing-os/automation/$id'
     | '/admin/marketing-os/campaigns/$id'
     | '/admin/marketing-os/plans/$id'
     | '/ambassador/marketing-resources/programs/$slug'
@@ -5778,6 +5824,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
+    | '/api/public/workflows/webhook/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/admin/automation-hub/workflows'
     | '/admin/content/articles'
@@ -6172,6 +6219,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/llm/settings'
     | '/_authenticated/admin/marketing-os/analytics'
     | '/_authenticated/admin/marketing-os/approvals'
+    | '/_authenticated/admin/marketing-os/automation'
     | '/_authenticated/admin/marketing-os/brand-kit'
     | '/_authenticated/admin/marketing-os/calendar'
     | '/_authenticated/admin/marketing-os/campaigns'
@@ -6227,6 +6275,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
+    | '/api/public/workflows/tick'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/_authenticated/admin/ai-agents/'
@@ -6267,6 +6316,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/automation-hub/workflows/$id'
     | '/_authenticated/admin/content/articles/$id'
     | '/_authenticated/admin/courses/$id/ai-studio'
+    | '/_authenticated/admin/marketing-os/automation/$id'
     | '/_authenticated/admin/marketing-os/campaigns/$id'
     | '/_authenticated/admin/marketing-os/plans/$id'
     | '/_authenticated/ambassador/marketing-resources/programs/$slug'
@@ -6277,6 +6327,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
+    | '/api/public/workflows/webhook/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/_authenticated/admin/automation-hub/workflows/'
     | '/_authenticated/admin/content/articles/'
@@ -6403,11 +6454,13 @@ export interface RootRouteChildren {
   ApiPublicHooksTechSeoTickRoute: typeof ApiPublicHooksTechSeoTickRoute
   ApiPublicTopicsJsonRoute: typeof ApiPublicTopicsJsonRoute
   ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
+  ApiPublicWorkflowsTickRoute: typeof ApiPublicWorkflowsTickRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
   ApiPublicEngageHooksSequenceTickRoute: typeof ApiPublicEngageHooksSequenceTickRoute
   ApiPublicEngageUnsubscribeTokenRoute: typeof ApiPublicEngageUnsubscribeTokenRoute
   ApiPublicEngageWebhooksProviderRoute: typeof ApiPublicEngageWebhooksProviderRoute
+  ApiPublicWorkflowsWebhookSlugRoute: typeof ApiPublicWorkflowsWebhookSlugRoute
   ApiV1CertificatesVerifyCodeRoute: typeof ApiV1CertificatesVerifyCodeRoute
 }
 
@@ -8814,6 +8867,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/workflows/tick': {
+      id: '/api/public/workflows/tick'
+      path: '/api/public/workflows/tick'
+      fullPath: '/api/public/workflows/tick'
+      preLoaderRoute: typeof ApiPublicWorkflowsTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/webhooks/cashfree': {
       id: '/api/public/webhooks/cashfree'
       path: '/api/public/webhooks/cashfree'
@@ -9197,6 +9257,13 @@ declare module '@tanstack/react-router' {
       path: '/brand-kit'
       fullPath: '/admin/marketing-os/brand-kit'
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsBrandKitRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
+    '/_authenticated/admin/marketing-os/automation': {
+      id: '/_authenticated/admin/marketing-os/automation'
+      path: '/automation'
+      fullPath: '/admin/marketing-os/automation'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsAutomationRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
     '/_authenticated/admin/marketing-os/approvals': {
@@ -9787,6 +9854,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiV1CertificatesVerifyCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/workflows/webhook/$slug': {
+      id: '/api/public/workflows/webhook/$slug'
+      path: '/api/public/workflows/webhook/$slug'
+      fullPath: '/api/public/workflows/webhook/$slug'
+      preLoaderRoute: typeof ApiPublicWorkflowsWebhookSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/engage/webhooks/$provider': {
       id: '/api/public/engage/webhooks/$provider'
       path: '/api/public/engage/webhooks/$provider'
@@ -9856,6 +9930,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/marketing-os/campaigns/$id'
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsCampaignsIdRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsCampaignsRoute
+    }
+    '/_authenticated/admin/marketing-os/automation/$id': {
+      id: '/_authenticated/admin/marketing-os/automation/$id'
+      path: '/$id'
+      fullPath: '/admin/marketing-os/automation/$id'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsAutomationIdRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsAutomationRoute
     }
     '/_authenticated/admin/courses/$id/ai-studio': {
       id: '/_authenticated/admin/courses/$id/ai-studio'
@@ -10203,6 +10284,21 @@ const AuthenticatedAdminLlmRouteWithChildren =
     AuthenticatedAdminLlmRouteChildren,
   )
 
+interface AuthenticatedAdminMarketingOsAutomationRouteChildren {
+  AuthenticatedAdminMarketingOsAutomationIdRoute: typeof AuthenticatedAdminMarketingOsAutomationIdRoute
+}
+
+const AuthenticatedAdminMarketingOsAutomationRouteChildren: AuthenticatedAdminMarketingOsAutomationRouteChildren =
+  {
+    AuthenticatedAdminMarketingOsAutomationIdRoute:
+      AuthenticatedAdminMarketingOsAutomationIdRoute,
+  }
+
+const AuthenticatedAdminMarketingOsAutomationRouteWithChildren =
+  AuthenticatedAdminMarketingOsAutomationRoute._addFileChildren(
+    AuthenticatedAdminMarketingOsAutomationRouteChildren,
+  )
+
 interface AuthenticatedAdminMarketingOsCampaignsRouteChildren {
   AuthenticatedAdminMarketingOsCampaignsIdRoute: typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
 }
@@ -10221,6 +10317,7 @@ const AuthenticatedAdminMarketingOsCampaignsRouteWithChildren =
 interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsAnalyticsRoute: typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   AuthenticatedAdminMarketingOsApprovalsRoute: typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  AuthenticatedAdminMarketingOsAutomationRoute: typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   AuthenticatedAdminMarketingOsBrandKitRoute: typeof AuthenticatedAdminMarketingOsBrandKitRoute
   AuthenticatedAdminMarketingOsCalendarRoute: typeof AuthenticatedAdminMarketingOsCalendarRoute
   AuthenticatedAdminMarketingOsCampaignsRoute: typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -10238,6 +10335,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsAnalyticsRoute,
     AuthenticatedAdminMarketingOsApprovalsRoute:
       AuthenticatedAdminMarketingOsApprovalsRoute,
+    AuthenticatedAdminMarketingOsAutomationRoute:
+      AuthenticatedAdminMarketingOsAutomationRouteWithChildren,
     AuthenticatedAdminMarketingOsBrandKitRoute:
       AuthenticatedAdminMarketingOsBrandKitRoute,
     AuthenticatedAdminMarketingOsCalendarRoute:
@@ -11401,11 +11500,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksTechSeoTickRoute: ApiPublicHooksTechSeoTickRoute,
   ApiPublicTopicsJsonRoute: ApiPublicTopicsJsonRoute,
   ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,
+  ApiPublicWorkflowsTickRoute: ApiPublicWorkflowsTickRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
   ApiPublicEngageHooksSequenceTickRoute: ApiPublicEngageHooksSequenceTickRoute,
   ApiPublicEngageUnsubscribeTokenRoute: ApiPublicEngageUnsubscribeTokenRoute,
   ApiPublicEngageWebhooksProviderRoute: ApiPublicEngageWebhooksProviderRoute,
+  ApiPublicWorkflowsWebhookSlugRoute: ApiPublicWorkflowsWebhookSlugRoute,
   ApiV1CertificatesVerifyCodeRoute: ApiV1CertificatesVerifyCodeRoute,
 }
 export const routeTree = rootRouteImport

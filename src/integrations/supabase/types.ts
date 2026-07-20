@@ -4729,6 +4729,60 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_templates: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          graph: Json
+          icon: string | null
+          id: string
+          is_public: boolean
+          key: string
+          name: string
+          owner_id: string | null
+          tags: string[]
+          trigger: Json
+          updated_at: string
+          usage_count: number
+          variables: Json
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          graph?: Json
+          icon?: string | null
+          id?: string
+          is_public?: boolean
+          key: string
+          name: string
+          owner_id?: string | null
+          tags?: string[]
+          trigger?: Json
+          updated_at?: string
+          usage_count?: number
+          variables?: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          graph?: Json
+          icon?: string | null
+          id?: string
+          is_public?: boolean
+          key?: string
+          name?: string
+          owner_id?: string | null
+          tags?: string[]
+          trigger?: Json
+          updated_at?: string
+          usage_count?: number
+          variables?: Json
+        }
+        Relationships: []
+      }
       automation_triggers: {
         Row: {
           created_at: string
@@ -4848,6 +4902,53 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_webhooks: {
+        Row: {
+          created_at: string
+          id: string
+          is_enabled: boolean
+          last_triggered_at: string | null
+          owner_id: string | null
+          secret: string
+          slug: string
+          trigger_count: number
+          updated_at: string
+          workflow_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          last_triggered_at?: string | null
+          owner_id?: string | null
+          secret?: string
+          slug: string
+          trigger_count?: number
+          updated_at?: string
+          workflow_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          last_triggered_at?: string | null
+          owner_id?: string | null
+          secret?: string
+          slug?: string
+          trigger_count?: number
+          updated_at?: string
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_webhooks_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_workflow_runs: {
         Row: {
           brand_id: string | null
@@ -4855,10 +4956,18 @@ export type Database = {
           context: Json
           created_at: string
           current_node_id: string | null
+          current_step_index: number | null
+          duration_ms: number | null
+          error_message: string | null
           history: Json
           id: string
+          output: Json
+          progress: number
+          retry_count: number
           started_at: string
           status: string
+          trigger_payload: Json
+          trigger_source: string | null
           updated_at: string
           user_id: string | null
           wait_until: string | null
@@ -4870,10 +4979,18 @@ export type Database = {
           context?: Json
           created_at?: string
           current_node_id?: string | null
+          current_step_index?: number | null
+          duration_ms?: number | null
+          error_message?: string | null
           history?: Json
           id?: string
+          output?: Json
+          progress?: number
+          retry_count?: number
           started_at?: string
           status?: string
+          trigger_payload?: Json
+          trigger_source?: string | null
           updated_at?: string
           user_id?: string | null
           wait_until?: string | null
@@ -4885,10 +5002,18 @@ export type Database = {
           context?: Json
           created_at?: string
           current_node_id?: string | null
+          current_step_index?: number | null
+          duration_ms?: number | null
+          error_message?: string | null
           history?: Json
           id?: string
+          output?: Json
+          progress?: number
+          retry_count?: number
           started_at?: string
           status?: string
+          trigger_payload?: Json
+          trigger_source?: string | null
           updated_at?: string
           user_id?: string | null
           wait_until?: string | null
@@ -4904,48 +5029,128 @@ export type Database = {
           },
         ]
       }
+      automation_workflow_versions: {
+        Row: {
+          created_at: string
+          graph: Json
+          id: string
+          name: string | null
+          note: string | null
+          owner_id: string | null
+          trigger: Json
+          variables: Json
+          version: number
+          workflow_id: string
+        }
+        Insert: {
+          created_at?: string
+          graph: Json
+          id?: string
+          name?: string | null
+          note?: string | null
+          owner_id?: string | null
+          trigger?: Json
+          variables?: Json
+          version: number
+          workflow_id: string
+        }
+        Update: {
+          created_at?: string
+          graph?: Json
+          id?: string
+          name?: string | null
+          note?: string | null
+          owner_id?: string | null
+          trigger?: Json
+          variables?: Json
+          version?: number
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_workflow_versions_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "automation_workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automation_workflows: {
         Row: {
           brand_id: string | null
+          category: string | null
           created_at: string
           description: string | null
+          failure_count: number
           goal: Json | null
           graph: Json
           id: string
+          is_template: boolean
+          last_run_at: string | null
           name: string
           owner_id: string | null
+          retry_policy: Json
+          run_count: number
+          schedule: Json | null
           stats: Json
           status: string
+          success_count: number
+          tags: string[]
+          template_key: string | null
           trigger: Json
           updated_at: string
+          variables: Json
         }
         Insert: {
           brand_id?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
+          failure_count?: number
           goal?: Json | null
           graph?: Json
           id?: string
+          is_template?: boolean
+          last_run_at?: string | null
           name: string
           owner_id?: string | null
+          retry_policy?: Json
+          run_count?: number
+          schedule?: Json | null
           stats?: Json
           status?: string
+          success_count?: number
+          tags?: string[]
+          template_key?: string | null
           trigger?: Json
           updated_at?: string
+          variables?: Json
         }
         Update: {
           brand_id?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
+          failure_count?: number
           goal?: Json | null
           graph?: Json
           id?: string
+          is_template?: boolean
+          last_run_at?: string | null
           name?: string
           owner_id?: string | null
+          retry_policy?: Json
+          run_count?: number
+          schedule?: Json | null
           stats?: Json
           status?: string
+          success_count?: number
+          tags?: string[]
+          template_key?: string | null
           trigger?: Json
           updated_at?: string
+          variables?: Json
         }
         Relationships: []
       }
