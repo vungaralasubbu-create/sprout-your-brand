@@ -92,7 +92,7 @@ function MetaCallbackPage() {
           )}
           <Button
             onClick={() => {
-              window.location.href = "/admin/marketing/settings/social-accounts";
+              window.location.href = "/admin/social-accounts";
             }}
           >
             Return to Social Accounts
