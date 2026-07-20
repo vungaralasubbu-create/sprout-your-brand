@@ -13154,6 +13154,369 @@ export type Database = {
           },
         ]
       }
+      generation_jobs: {
+        Row: {
+          aspect_ratio: string | null
+          brand_context: Json | null
+          brand_id: string | null
+          campaign_context: Json | null
+          campaign_id: string | null
+          chosen_model: string | null
+          chosen_provider: string | null
+          completed_at: string | null
+          content_type: string
+          country: string | null
+          created_at: string
+          creativity: number | null
+          duration_seconds: number | null
+          error_code: string | null
+          error_message: string | null
+          id: string
+          language: string | null
+          metadata: Json
+          mode: string
+          negative_prompt: string | null
+          output_kinds: string[]
+          owner_id: string
+          parent_job_id: string | null
+          platform: string | null
+          progress: number
+          prompt: string | null
+          quality: string | null
+          requested_model: string | null
+          requested_provider: string | null
+          resolution: string | null
+          scheduled_at: string | null
+          started_at: string | null
+          status: string
+          updated_at: string
+          voice: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          aspect_ratio?: string | null
+          brand_context?: Json | null
+          brand_id?: string | null
+          campaign_context?: Json | null
+          campaign_id?: string | null
+          chosen_model?: string | null
+          chosen_provider?: string | null
+          completed_at?: string | null
+          content_type: string
+          country?: string | null
+          created_at?: string
+          creativity?: number | null
+          duration_seconds?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          language?: string | null
+          metadata?: Json
+          mode?: string
+          negative_prompt?: string | null
+          output_kinds?: string[]
+          owner_id?: string
+          parent_job_id?: string | null
+          platform?: string | null
+          progress?: number
+          prompt?: string | null
+          quality?: string | null
+          requested_model?: string | null
+          requested_provider?: string | null
+          resolution?: string | null
+          scheduled_at?: string | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          voice?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          aspect_ratio?: string | null
+          brand_context?: Json | null
+          brand_id?: string | null
+          campaign_context?: Json | null
+          campaign_id?: string | null
+          chosen_model?: string | null
+          chosen_provider?: string | null
+          completed_at?: string | null
+          content_type?: string
+          country?: string | null
+          created_at?: string
+          creativity?: number | null
+          duration_seconds?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          language?: string | null
+          metadata?: Json
+          mode?: string
+          negative_prompt?: string | null
+          output_kinds?: string[]
+          owner_id?: string
+          parent_job_id?: string | null
+          platform?: string | null
+          progress?: number
+          prompt?: string | null
+          quality?: string | null
+          requested_model?: string | null
+          requested_provider?: string | null
+          resolution?: string | null
+          scheduled_at?: string | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          voice?: string | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generation_jobs_parent_job_id_fkey"
+            columns: ["parent_job_id"]
+            isOneToOne: false
+            referencedRelation: "generation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generation_logs: {
+        Row: {
+          created_at: string
+          data: Json | null
+          event: string
+          id: string
+          job_id: string | null
+          latency_ms: number | null
+          level: string
+          message: string | null
+          model: string | null
+          owner_id: string | null
+          provider: string | null
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          event: string
+          id?: string
+          job_id?: string | null
+          latency_ms?: number | null
+          level?: string
+          message?: string | null
+          model?: string | null
+          owner_id?: string | null
+          provider?: string | null
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          event?: string
+          id?: string
+          job_id?: string | null
+          latency_ms?: number | null
+          level?: string
+          message?: string | null
+          model?: string | null
+          owner_id?: string | null
+          provider?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generation_logs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "generation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generation_outputs: {
+        Row: {
+          approval_id: string | null
+          created_at: string
+          duration_seconds: number | null
+          height: number | null
+          id: string
+          job_id: string
+          json_content: Json | null
+          media_asset_id: string | null
+          metadata: Json
+          mime_type: string | null
+          output_kind: string
+          owner_id: string
+          public_url: string | null
+          size_bytes: number | null
+          storage_path: string | null
+          text_content: string | null
+          width: number | null
+        }
+        Insert: {
+          approval_id?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          job_id: string
+          json_content?: Json | null
+          media_asset_id?: string | null
+          metadata?: Json
+          mime_type?: string | null
+          output_kind: string
+          owner_id?: string
+          public_url?: string | null
+          size_bytes?: number | null
+          storage_path?: string | null
+          text_content?: string | null
+          width?: number | null
+        }
+        Update: {
+          approval_id?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          job_id?: string
+          json_content?: Json | null
+          media_asset_id?: string | null
+          metadata?: Json
+          mime_type?: string | null
+          output_kind?: string
+          owner_id?: string
+          public_url?: string | null
+          size_bytes?: number | null
+          storage_path?: string | null
+          text_content?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generation_outputs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "generation_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "generation_outputs_media_asset_id_fkey"
+            columns: ["media_asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      generation_providers: {
+        Row: {
+          api_endpoint: string | null
+          capabilities: Json
+          category: string
+          created_at: string
+          display_name: string
+          enabled: boolean
+          fallback_key: string | null
+          health_status: string
+          id: string
+          last_health_at: string | null
+          priority: number
+          provider_key: string
+          updated_at: string
+          version: string | null
+          weight: number
+        }
+        Insert: {
+          api_endpoint?: string | null
+          capabilities?: Json
+          category: string
+          created_at?: string
+          display_name: string
+          enabled?: boolean
+          fallback_key?: string | null
+          health_status?: string
+          id?: string
+          last_health_at?: string | null
+          priority?: number
+          provider_key: string
+          updated_at?: string
+          version?: string | null
+          weight?: number
+        }
+        Update: {
+          api_endpoint?: string | null
+          capabilities?: Json
+          category?: string
+          created_at?: string
+          display_name?: string
+          enabled?: boolean
+          fallback_key?: string | null
+          health_status?: string
+          id?: string
+          last_health_at?: string | null
+          priority?: number
+          provider_key?: string
+          updated_at?: string
+          version?: string | null
+          weight?: number
+        }
+        Relationships: []
+      }
+      generation_usage: {
+        Row: {
+          actual_cost_cents: number | null
+          created_at: string
+          credits_used: number
+          estimated_cost_cents: number | null
+          id: string
+          job_id: string
+          latency_ms: number | null
+          model: string | null
+          owner_id: string
+          provider: string
+          tokens_in: number | null
+          tokens_out: number | null
+          units: number | null
+          workspace_id: string | null
+        }
+        Insert: {
+          actual_cost_cents?: number | null
+          created_at?: string
+          credits_used?: number
+          estimated_cost_cents?: number | null
+          id?: string
+          job_id: string
+          latency_ms?: number | null
+          model?: string | null
+          owner_id?: string
+          provider: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+          units?: number | null
+          workspace_id?: string | null
+        }
+        Update: {
+          actual_cost_cents?: number | null
+          created_at?: string
+          credits_used?: number
+          estimated_cost_cents?: number | null
+          id?: string
+          job_id?: string
+          latency_ms?: number | null
+          model?: string | null
+          owner_id?: string
+          provider?: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+          units?: number | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generation_usage_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "generation_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       geo_analytics_daily: {
         Row: {
           avg_ai_readiness: number | null
