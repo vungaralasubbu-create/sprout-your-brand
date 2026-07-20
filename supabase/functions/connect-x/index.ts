@@ -9,6 +9,7 @@ import {
   json,
   preflight,
   requireEnv,
+  TWITTER_CLIENT_ID as getTwitterClientId,
 } from "../_shared/x/x.ts";
 import { getUserFromRequest } from "../_shared/meta/auth.ts";
 
