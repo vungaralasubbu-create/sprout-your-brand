@@ -63,8 +63,8 @@ export async function codeChallengeS256(verifier: string): Promise<string> {
 
 // ---------- HTTP helpers ----------
 function basicAuth(): string {
-  const id = requireEnv("X_CLIENT_ID");
-  const secret = requireEnv("X_CLIENT_SECRET");
+  const id = getTwitterClientId();
+  const secret = getTwitterClientSecret();
   return "Basic " + btoa(`${id}:${secret}`);
 }
 
@@ -80,12 +80,27 @@ export async function exchangeCodeForToken(
   code: string,
   codeVerifier: string,
 ): Promise<XTokenResponse> {
+  const clientId = getTwitterClientId();
+  const clientSecret = getTwitterClientSecret();
+  const redirectUri = getRedirectUri();
+
+  console.log("[X OAuth] token exchange diagnostics", {
+    hasClientId: !!clientId,
+    clientIdPrefix: clientId.slice(0, 8),
+    clientIdLength: clientId.length,
+    hasClientSecret: !!clientSecret,
+    clientSecretLength: clientSecret.length,
+    redirectUri,
+    codeVerifierLength: codeVerifier.length,
+    expectedSecret: "Twitter/X App Primary Client Secret (not trimmed)",
+  });
+
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code,
-    redirect_uri: getRedirectUri(),
+    redirect_uri: redirectUri,
     code_verifier: codeVerifier,
-    client_id: requireEnv("X_CLIENT_ID"),
+    client_id: clientId,
   });
   const res = await fetch(X_TOKEN, {
     method: "POST",
@@ -96,7 +111,10 @@ export async function exchangeCodeForToken(
     body,
   });
   const j = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`X token exchange failed: ${res.status} ${JSON.stringify(j)}`);
+  if (!res.ok) {
+    console.error("[X OAuth] token exchange failed", { status: res.status, body: j });
+    throw new Error(`X token exchange failed: ${res.status} ${JSON.stringify(j)}`);
+  }
   return j as XTokenResponse;
 }
 
