@@ -48,7 +48,7 @@ function SocialAccountsPage() {
       .from("soc_accounts")
       .select("id, platform, account_name, account_external_id, connection_status, token_expires_at, last_synced_at, metadata")
       .eq("owner_id", uid)
-      .in("platform", ["facebook", "instagram"])
+      .in("platform", ["facebook", "instagram", "linkedin"])
       .order("platform", { ascending: true });
     if (error) toast.error(error.message);
     setAccounts((data ?? []) as Account[]);
