@@ -729,7 +729,7 @@ function CampaignTable({
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="h-9">
                 <Filter className="size-3.5 mr-1.5" /> Status
-                {statusFilter.length > 0 && <Badge variant="secondary" className="ml-1.5 h-5 px-1.5 text-[10px]">{statusFilter.length}</Badge>}
+                {statusFilter.length > 0 && <Badge variant="muted" className="ml-1.5 h-5 px-1.5 text-[10px]">{statusFilter.length}</Badge>}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
@@ -1003,7 +1003,7 @@ function CampaignDrawer({ campaign, onClose }: { campaign: Campaign | null; onCl
                   <div>
                     <div className="text-[11px] font-mono uppercase tracking-[0.14em] text-muted-foreground mb-2">Tags</div>
                     <div className="flex flex-wrap gap-1.5">
-                      {campaign.tags.map((t) => <Badge key={t} variant="secondary">{t}</Badge>)}
+                      {campaign.tags.map((t) => <Badge key={t} variant="muted">{t}</Badge>)}
                     </div>
                   </div>
                 )}
