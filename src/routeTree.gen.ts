@@ -135,11 +135,17 @@ import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CommunityNewRouteImport } from './routes/community.new'
 import { Route as CloudTermsRouteImport } from './routes/cloud.terms'
 import { Route as CloudTemplatesRouteImport } from './routes/cloud.templates'
+import { Route as CloudStatusRouteImport } from './routes/cloud.status'
+import { Route as CloudSolutionsRouteImport } from './routes/cloud.solutions'
 import { Route as CloudSignupRouteImport } from './routes/cloud.signup'
+import { Route as CloudSecurityRouteImport } from './routes/cloud.security'
+import { Route as CloudResourcesRouteImport } from './routes/cloud.resources'
 import { Route as CloudPrivacyRouteImport } from './routes/cloud.privacy'
 import { Route as CloudPricingRouteImport } from './routes/cloud.pricing'
 import { Route as CloudLoginRouteImport } from './routes/cloud.login'
 import { Route as CloudFeaturesRouteImport } from './routes/cloud.features'
+import { Route as CloudEnterpriseRouteImport } from './routes/cloud.enterprise'
+import { Route as CloudCustomersRouteImport } from './routes/cloud.customers'
 import { Route as CloudContactRouteImport } from './routes/cloud.contact'
 import { Route as CloudBlogRouteImport } from './routes/cloud.blog'
 import { Route as CareersRoleSlugRouteImport } from './routes/careers.$roleSlug'
@@ -1172,9 +1178,29 @@ const CloudTemplatesRoute = CloudTemplatesRouteImport.update({
   path: '/templates',
   getParentRoute: () => CloudRoute,
 } as any)
+const CloudStatusRoute = CloudStatusRouteImport.update({
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudSolutionsRoute = CloudSolutionsRouteImport.update({
+  id: '/solutions',
+  path: '/solutions',
+  getParentRoute: () => CloudRoute,
+} as any)
 const CloudSignupRoute = CloudSignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudSecurityRoute = CloudSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudResourcesRoute = CloudResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => CloudRoute,
 } as any)
 const CloudPrivacyRoute = CloudPrivacyRouteImport.update({
@@ -1195,6 +1221,16 @@ const CloudLoginRoute = CloudLoginRouteImport.update({
 const CloudFeaturesRoute = CloudFeaturesRouteImport.update({
   id: '/features',
   path: '/features',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudEnterpriseRoute = CloudEnterpriseRouteImport.update({
+  id: '/enterprise',
+  path: '/enterprise',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudCustomersRoute = CloudCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
   getParentRoute: () => CloudRoute,
 } as any)
 const CloudContactRoute = CloudContactRouteImport.update({
@@ -3609,11 +3645,17 @@ export interface FileRoutesByFullPath {
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/cloud/blog': typeof CloudBlogRoute
   '/cloud/contact': typeof CloudContactRoute
+  '/cloud/customers': typeof CloudCustomersRoute
+  '/cloud/enterprise': typeof CloudEnterpriseRoute
   '/cloud/features': typeof CloudFeaturesRoute
   '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/resources': typeof CloudResourcesRoute
+  '/cloud/security': typeof CloudSecurityRoute
   '/cloud/signup': typeof CloudSignupRoute
+  '/cloud/solutions': typeof CloudSolutionsRoute
+  '/cloud/status': typeof CloudStatusRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
@@ -4132,11 +4174,17 @@ export interface FileRoutesByTo {
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/cloud/blog': typeof CloudBlogRoute
   '/cloud/contact': typeof CloudContactRoute
+  '/cloud/customers': typeof CloudCustomersRoute
+  '/cloud/enterprise': typeof CloudEnterpriseRoute
   '/cloud/features': typeof CloudFeaturesRoute
   '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/resources': typeof CloudResourcesRoute
+  '/cloud/security': typeof CloudSecurityRoute
   '/cloud/signup': typeof CloudSignupRoute
+  '/cloud/solutions': typeof CloudSolutionsRoute
+  '/cloud/status': typeof CloudStatusRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
@@ -4654,11 +4702,17 @@ export interface FileRoutesById {
   '/careers/$roleSlug': typeof CareersRoleSlugRoute
   '/cloud/blog': typeof CloudBlogRoute
   '/cloud/contact': typeof CloudContactRoute
+  '/cloud/customers': typeof CloudCustomersRoute
+  '/cloud/enterprise': typeof CloudEnterpriseRoute
   '/cloud/features': typeof CloudFeaturesRoute
   '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/resources': typeof CloudResourcesRoute
+  '/cloud/security': typeof CloudSecurityRoute
   '/cloud/signup': typeof CloudSignupRoute
+  '/cloud/solutions': typeof CloudSolutionsRoute
+  '/cloud/status': typeof CloudStatusRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
@@ -5185,11 +5239,17 @@ export interface FileRouteTypes {
     | '/careers/$roleSlug'
     | '/cloud/blog'
     | '/cloud/contact'
+    | '/cloud/customers'
+    | '/cloud/enterprise'
     | '/cloud/features'
     | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/resources'
+    | '/cloud/security'
     | '/cloud/signup'
+    | '/cloud/solutions'
+    | '/cloud/status'
     | '/cloud/templates'
     | '/cloud/terms'
     | '/community/new'
@@ -5708,11 +5768,17 @@ export interface FileRouteTypes {
     | '/careers/$roleSlug'
     | '/cloud/blog'
     | '/cloud/contact'
+    | '/cloud/customers'
+    | '/cloud/enterprise'
     | '/cloud/features'
     | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/resources'
+    | '/cloud/security'
     | '/cloud/signup'
+    | '/cloud/solutions'
+    | '/cloud/status'
     | '/cloud/templates'
     | '/cloud/terms'
     | '/community/new'
@@ -6229,11 +6295,17 @@ export interface FileRouteTypes {
     | '/careers/$roleSlug'
     | '/cloud/blog'
     | '/cloud/contact'
+    | '/cloud/customers'
+    | '/cloud/enterprise'
     | '/cloud/features'
     | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/resources'
+    | '/cloud/security'
     | '/cloud/signup'
+    | '/cloud/solutions'
+    | '/cloud/status'
     | '/cloud/templates'
     | '/cloud/terms'
     | '/community/new'
@@ -7694,11 +7766,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CloudTemplatesRouteImport
       parentRoute: typeof CloudRoute
     }
+    '/cloud/status': {
+      id: '/cloud/status'
+      path: '/status'
+      fullPath: '/cloud/status'
+      preLoaderRoute: typeof CloudStatusRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/solutions': {
+      id: '/cloud/solutions'
+      path: '/solutions'
+      fullPath: '/cloud/solutions'
+      preLoaderRoute: typeof CloudSolutionsRouteImport
+      parentRoute: typeof CloudRoute
+    }
     '/cloud/signup': {
       id: '/cloud/signup'
       path: '/signup'
       fullPath: '/cloud/signup'
       preLoaderRoute: typeof CloudSignupRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/security': {
+      id: '/cloud/security'
+      path: '/security'
+      fullPath: '/cloud/security'
+      preLoaderRoute: typeof CloudSecurityRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/resources': {
+      id: '/cloud/resources'
+      path: '/resources'
+      fullPath: '/cloud/resources'
+      preLoaderRoute: typeof CloudResourcesRouteImport
       parentRoute: typeof CloudRoute
     }
     '/cloud/privacy': {
@@ -7727,6 +7827,20 @@ declare module '@tanstack/react-router' {
       path: '/features'
       fullPath: '/cloud/features'
       preLoaderRoute: typeof CloudFeaturesRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/enterprise': {
+      id: '/cloud/enterprise'
+      path: '/enterprise'
+      fullPath: '/cloud/enterprise'
+      preLoaderRoute: typeof CloudEnterpriseRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/customers': {
+      id: '/cloud/customers'
+      path: '/customers'
+      fullPath: '/cloud/customers'
+      preLoaderRoute: typeof CloudCustomersRouteImport
       parentRoute: typeof CloudRoute
     }
     '/cloud/contact': {
@@ -11749,11 +11863,17 @@ const CareersRouteWithChildren =
 interface CloudRouteChildren {
   CloudBlogRoute: typeof CloudBlogRoute
   CloudContactRoute: typeof CloudContactRoute
+  CloudCustomersRoute: typeof CloudCustomersRoute
+  CloudEnterpriseRoute: typeof CloudEnterpriseRoute
   CloudFeaturesRoute: typeof CloudFeaturesRoute
   CloudLoginRoute: typeof CloudLoginRoute
   CloudPricingRoute: typeof CloudPricingRoute
   CloudPrivacyRoute: typeof CloudPrivacyRoute
+  CloudResourcesRoute: typeof CloudResourcesRoute
+  CloudSecurityRoute: typeof CloudSecurityRoute
   CloudSignupRoute: typeof CloudSignupRoute
+  CloudSolutionsRoute: typeof CloudSolutionsRoute
+  CloudStatusRoute: typeof CloudStatusRoute
   CloudTemplatesRoute: typeof CloudTemplatesRoute
   CloudTermsRoute: typeof CloudTermsRoute
   CloudIndexRoute: typeof CloudIndexRoute
@@ -11762,11 +11882,17 @@ interface CloudRouteChildren {
 const CloudRouteChildren: CloudRouteChildren = {
   CloudBlogRoute: CloudBlogRoute,
   CloudContactRoute: CloudContactRoute,
+  CloudCustomersRoute: CloudCustomersRoute,
+  CloudEnterpriseRoute: CloudEnterpriseRoute,
   CloudFeaturesRoute: CloudFeaturesRoute,
   CloudLoginRoute: CloudLoginRoute,
   CloudPricingRoute: CloudPricingRoute,
   CloudPrivacyRoute: CloudPrivacyRoute,
+  CloudResourcesRoute: CloudResourcesRoute,
+  CloudSecurityRoute: CloudSecurityRoute,
   CloudSignupRoute: CloudSignupRoute,
+  CloudSolutionsRoute: CloudSolutionsRoute,
+  CloudStatusRoute: CloudStatusRoute,
   CloudTemplatesRoute: CloudTemplatesRoute,
   CloudTermsRoute: CloudTermsRoute,
   CloudIndexRoute: CloudIndexRoute,
