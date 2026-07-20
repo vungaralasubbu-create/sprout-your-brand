@@ -162,6 +162,7 @@ import { Route as LearnCollectionsSlugRouteImport } from './routes/learn.collect
 import { Route as HelpCCategoryRouteImport } from './routes/help.c.$category'
 import { Route as CommunitySpaceSlugRouteImport } from './routes/community.$space.$slug'
 import { Route as CareerHubTypeSlugRouteImport } from './routes/career-hub.$type.$slug'
+import { Route as AuthXCallbackRouteImport } from './routes/auth_.x.callback'
 import { Route as AuthMetaCallbackRouteImport } from './routes/auth_.meta.callback'
 import { Route as AuthLinkedinCallbackRouteImport } from './routes/auth_.linkedin.callback'
 import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/transcribe'
@@ -1264,6 +1265,11 @@ const CareerHubTypeSlugRoute = CareerHubTypeSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => CareerHubTypeRoute,
+} as any)
+const AuthXCallbackRoute = AuthXCallbackRouteImport.update({
+  id: '/auth_/x/callback',
+  path: '/auth/x/callback',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthMetaCallbackRoute = AuthMetaCallbackRouteImport.update({
   id: '/auth_/meta/callback',
@@ -3501,6 +3507,7 @@ export interface FileRoutesByFullPath {
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/auth/linkedin/callback': typeof AuthLinkedinCallbackRoute
   '/auth/meta/callback': typeof AuthMetaCallbackRoute
+  '/auth/x/callback': typeof AuthXCallbackRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
   '/help/c/$category': typeof HelpCCategoryRoute
@@ -3970,6 +3977,7 @@ export interface FileRoutesByTo {
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/auth/linkedin/callback': typeof AuthLinkedinCallbackRoute
   '/auth/meta/callback': typeof AuthMetaCallbackRoute
+  '/auth/x/callback': typeof AuthXCallbackRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
   '/help/c/$category': typeof HelpCCategoryRoute
@@ -4455,6 +4463,7 @@ export interface FileRoutesById {
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
   '/auth_/linkedin/callback': typeof AuthLinkedinCallbackRoute
   '/auth_/meta/callback': typeof AuthMetaCallbackRoute
+  '/auth_/x/callback': typeof AuthXCallbackRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
   '/help/c/$category': typeof HelpCCategoryRoute
@@ -4940,6 +4949,7 @@ export interface FileRouteTypes {
     | '/api/voice/transcribe'
     | '/auth/linkedin/callback'
     | '/auth/meta/callback'
+    | '/auth/x/callback'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
     | '/help/c/$category'
@@ -5409,6 +5419,7 @@ export interface FileRouteTypes {
     | '/api/voice/transcribe'
     | '/auth/linkedin/callback'
     | '/auth/meta/callback'
+    | '/auth/x/callback'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
     | '/help/c/$category'
@@ -5893,6 +5904,7 @@ export interface FileRouteTypes {
     | '/api/voice/transcribe'
     | '/auth_/linkedin/callback'
     | '/auth_/meta/callback'
+    | '/auth_/x/callback'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
     | '/help/c/$category'
@@ -6189,6 +6201,7 @@ export interface RootRouteChildren {
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
   AuthLinkedinCallbackRoute: typeof AuthLinkedinCallbackRoute
   AuthMetaCallbackRoute: typeof AuthMetaCallbackRoute
+  AuthXCallbackRoute: typeof AuthXCallbackRoute
   CommunitySpaceSlugRoute: typeof CommunitySpaceSlugRoute
   HelpCCategoryRoute: typeof HelpCCategoryRoute
   TopicsPillarClusterRoute: typeof TopicsPillarClusterRoute
@@ -7289,6 +7302,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/career-hub/$type/$slug'
       preLoaderRoute: typeof CareerHubTypeSlugRouteImport
       parentRoute: typeof CareerHubTypeRoute
+    }
+    '/auth_/x/callback': {
+      id: '/auth_/x/callback'
+      path: '/auth/x/callback'
+      fullPath: '/auth/x/callback'
+      preLoaderRoute: typeof AuthXCallbackRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth_/meta/callback': {
       id: '/auth_/meta/callback'
@@ -11016,6 +11036,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
   AuthLinkedinCallbackRoute: AuthLinkedinCallbackRoute,
   AuthMetaCallbackRoute: AuthMetaCallbackRoute,
+  AuthXCallbackRoute: AuthXCallbackRoute,
   CommunitySpaceSlugRoute: CommunitySpaceSlugRoute,
   HelpCCategoryRoute: HelpCCategoryRoute,
   TopicsPillarClusterRoute: TopicsPillarClusterRoute,
