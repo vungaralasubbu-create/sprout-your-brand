@@ -1,8 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { CreditCard, Sparkles, BarChart3, Receipt, Wallet, History, TicketPercent } from "lucide-react";
+import { CreditCard, Sparkles, BarChart3, Receipt, Wallet, History, TicketPercent, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const NAV = [
+type NavItem = { to: string; label: string; icon: LucideIcon; exact?: boolean };
+
+const NAV: NavItem[] = [
   { to: "/billing", label: "Overview", icon: CreditCard, exact: true },
   { to: "/billing/plans", label: "Plans", icon: Sparkles },
   { to: "/billing/usage", label: "Usage", icon: BarChart3 },
@@ -10,7 +12,7 @@ const NAV = [
   { to: "/billing/payment-methods", label: "Payment methods", icon: Wallet },
   { to: "/billing/history", label: "History", icon: History },
   { to: "/billing/coupons", label: "Coupons", icon: TicketPercent },
-] as const;
+];
 
 export function BillingShell({ children }: { children: React.ReactNode }) {
   const loc = useLocation();

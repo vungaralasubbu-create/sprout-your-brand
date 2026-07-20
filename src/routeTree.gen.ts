@@ -163,6 +163,7 @@ import { Route as AuthenticatedInstructorRouteImport } from './routes/_authentic
 import { Route as AuthenticatedHqRouteImport } from './routes/_authenticated/hq'
 import { Route as AuthenticatedCloudRouteImport } from './routes/_authenticated/cloud'
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
+import { Route as AuthenticatedBillingRouteImport } from './routes/_authenticated/billing'
 import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as WorkspaceVoiceIndexRouteImport } from './routes/workspace.voice.index'
@@ -265,6 +266,12 @@ import { Route as AuthenticatedBrandBlogOsRouteImport } from './routes/_authenti
 import { Route as AuthenticatedBrandBillingRouteImport } from './routes/_authenticated/brand.billing'
 import { Route as AuthenticatedBrandAnalyticsRouteImport } from './routes/_authenticated/brand.analytics'
 import { Route as AuthenticatedBrandAiAssistantRouteImport } from './routes/_authenticated/brand.ai-assistant'
+import { Route as AuthenticatedBillingUsageRouteImport } from './routes/_authenticated/billing.usage'
+import { Route as AuthenticatedBillingPlansRouteImport } from './routes/_authenticated/billing.plans'
+import { Route as AuthenticatedBillingPaymentMethodsRouteImport } from './routes/_authenticated/billing.payment-methods'
+import { Route as AuthenticatedBillingInvoicesRouteImport } from './routes/_authenticated/billing.invoices'
+import { Route as AuthenticatedBillingHistoryRouteImport } from './routes/_authenticated/billing.history'
+import { Route as AuthenticatedBillingCouponsRouteImport } from './routes/_authenticated/billing.coupons'
 import { Route as AuthenticatedAmbassadorSettingsRouteImport } from './routes/_authenticated/ambassador.settings'
 import { Route as AuthenticatedAmbassadorRecognitionRouteImport } from './routes/_authenticated/ambassador.recognition'
 import { Route as AuthenticatedAmbassadorRankHistoryRouteImport } from './routes/_authenticated/ambassador.rank-history'
@@ -532,6 +539,7 @@ import { Route as ApiPublicWorkflowsWebhookSlugRouteImport } from './routes/api/
 import { Route as ApiPublicEngageWebhooksProviderRouteImport } from './routes/api/public/engage/webhooks/$provider'
 import { Route as ApiPublicEngageUnsubscribeTokenRouteImport } from './routes/api/public/engage/unsubscribe.$token'
 import { Route as ApiPublicEngageHooksSequenceTickRouteImport } from './routes/api/public/engage/hooks/sequence-tick'
+import { Route as ApiPublicBillingCashfreeWebhookRouteImport } from './routes/api/public/billing.cashfree.webhook'
 import { Route as AuthenticatedWorkspaceProjectProjectIdReviewRouteImport } from './routes/_authenticated/workspace.project.$projectId.review'
 import { Route as AuthenticatedStudentProgramsViewSlugRouteImport } from './routes/_authenticated/student.programs.view.$slug'
 import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './routes/_authenticated/student.career.interview.setup'
@@ -1321,6 +1329,11 @@ const AuthenticatedBrandRoute = AuthenticatedBrandRouteImport.update({
   path: '/brand',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedBillingRoute = AuthenticatedBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAmbassadorRoute = AuthenticatedAmbassadorRouteImport.update({
   id: '/ambassador',
   path: '/ambassador',
@@ -1904,6 +1917,42 @@ const AuthenticatedBrandAiAssistantRoute =
     id: '/ai-assistant',
     path: '/ai-assistant',
     getParentRoute: () => AuthenticatedBrandRoute,
+  } as any)
+const AuthenticatedBillingUsageRoute =
+  AuthenticatedBillingUsageRouteImport.update({
+    id: '/usage',
+    path: '/usage',
+    getParentRoute: () => AuthenticatedBillingRoute,
+  } as any)
+const AuthenticatedBillingPlansRoute =
+  AuthenticatedBillingPlansRouteImport.update({
+    id: '/plans',
+    path: '/plans',
+    getParentRoute: () => AuthenticatedBillingRoute,
+  } as any)
+const AuthenticatedBillingPaymentMethodsRoute =
+  AuthenticatedBillingPaymentMethodsRouteImport.update({
+    id: '/payment-methods',
+    path: '/payment-methods',
+    getParentRoute: () => AuthenticatedBillingRoute,
+  } as any)
+const AuthenticatedBillingInvoicesRoute =
+  AuthenticatedBillingInvoicesRouteImport.update({
+    id: '/invoices',
+    path: '/invoices',
+    getParentRoute: () => AuthenticatedBillingRoute,
+  } as any)
+const AuthenticatedBillingHistoryRoute =
+  AuthenticatedBillingHistoryRouteImport.update({
+    id: '/history',
+    path: '/history',
+    getParentRoute: () => AuthenticatedBillingRoute,
+  } as any)
+const AuthenticatedBillingCouponsRoute =
+  AuthenticatedBillingCouponsRouteImport.update({
+    id: '/coupons',
+    path: '/coupons',
+    getParentRoute: () => AuthenticatedBillingRoute,
   } as any)
 const AuthenticatedAmbassadorSettingsRoute =
   AuthenticatedAmbassadorSettingsRouteImport.update({
@@ -3492,6 +3541,12 @@ const ApiPublicEngageHooksSequenceTickRoute =
     path: '/api/public/engage/hooks/sequence-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicBillingCashfreeWebhookRoute =
+  ApiPublicBillingCashfreeWebhookRouteImport.update({
+    id: '/api/public/billing/cashfree/webhook',
+    path: '/api/public/billing/cashfree/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedWorkspaceProjectProjectIdReviewRoute =
   AuthenticatedWorkspaceProjectProjectIdReviewRouteImport.update({
     id: '/review',
@@ -3650,6 +3705,7 @@ export interface FileRoutesByFullPath {
   '/workspace': typeof WorkspaceRouteWithChildren
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
+  '/billing': typeof AuthenticatedBillingRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/hq': typeof AuthenticatedHqRoute
   '/instructor': typeof AuthenticatedInstructorRouteWithChildren
@@ -3818,6 +3874,12 @@ export interface FileRoutesByFullPath {
   '/ambassador/rank-history': typeof AuthenticatedAmbassadorRankHistoryRoute
   '/ambassador/recognition': typeof AuthenticatedAmbassadorRecognitionRoute
   '/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
+  '/billing/coupons': typeof AuthenticatedBillingCouponsRoute
+  '/billing/history': typeof AuthenticatedBillingHistoryRoute
+  '/billing/invoices': typeof AuthenticatedBillingInvoicesRoute
+  '/billing/payment-methods': typeof AuthenticatedBillingPaymentMethodsRoute
+  '/billing/plans': typeof AuthenticatedBillingPlansRoute
+  '/billing/usage': typeof AuthenticatedBillingUsageRoute
   '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/brand/billing': typeof AuthenticatedBrandBillingRoute
@@ -4111,6 +4173,7 @@ export interface FileRoutesByFullPath {
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
   '/workspace/project/$projectId/review': typeof AuthenticatedWorkspaceProjectProjectIdReviewRoute
+  '/api/public/billing/cashfree/webhook': typeof ApiPublicBillingCashfreeWebhookRoute
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
@@ -4183,6 +4246,7 @@ export interface FileRoutesByTo {
   '/trust-center': typeof TrustCenterRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
+  '/billing': typeof AuthenticatedBillingRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/cloud': typeof CloudIndexRoute
   '/hq': typeof AuthenticatedHqRoute
@@ -4340,6 +4404,12 @@ export interface FileRoutesByTo {
   '/ambassador/rank-history': typeof AuthenticatedAmbassadorRankHistoryRoute
   '/ambassador/recognition': typeof AuthenticatedAmbassadorRecognitionRoute
   '/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
+  '/billing/coupons': typeof AuthenticatedBillingCouponsRoute
+  '/billing/history': typeof AuthenticatedBillingHistoryRoute
+  '/billing/invoices': typeof AuthenticatedBillingInvoicesRoute
+  '/billing/payment-methods': typeof AuthenticatedBillingPaymentMethodsRoute
+  '/billing/plans': typeof AuthenticatedBillingPlansRoute
+  '/billing/usage': typeof AuthenticatedBillingUsageRoute
   '/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/brand/billing': typeof AuthenticatedBrandBillingRoute
@@ -4633,6 +4703,7 @@ export interface FileRoutesByTo {
   '/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
   '/workspace/project/$projectId/review': typeof AuthenticatedWorkspaceProjectProjectIdReviewRoute
+  '/api/public/billing/cashfree/webhook': typeof ApiPublicBillingCashfreeWebhookRoute
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
@@ -4712,6 +4783,7 @@ export interface FileRoutesById {
   '/workspace': typeof WorkspaceRouteWithChildren
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
+  '/_authenticated/billing': typeof AuthenticatedBillingRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
   '/_authenticated/cloud': typeof AuthenticatedCloudRouteWithChildren
   '/_authenticated/hq': typeof AuthenticatedHqRoute
@@ -4881,6 +4953,12 @@ export interface FileRoutesById {
   '/_authenticated/ambassador/rank-history': typeof AuthenticatedAmbassadorRankHistoryRoute
   '/_authenticated/ambassador/recognition': typeof AuthenticatedAmbassadorRecognitionRoute
   '/_authenticated/ambassador/settings': typeof AuthenticatedAmbassadorSettingsRoute
+  '/_authenticated/billing/coupons': typeof AuthenticatedBillingCouponsRoute
+  '/_authenticated/billing/history': typeof AuthenticatedBillingHistoryRoute
+  '/_authenticated/billing/invoices': typeof AuthenticatedBillingInvoicesRoute
+  '/_authenticated/billing/payment-methods': typeof AuthenticatedBillingPaymentMethodsRoute
+  '/_authenticated/billing/plans': typeof AuthenticatedBillingPlansRoute
+  '/_authenticated/billing/usage': typeof AuthenticatedBillingUsageRoute
   '/_authenticated/brand/ai-assistant': typeof AuthenticatedBrandAiAssistantRoute
   '/_authenticated/brand/analytics': typeof AuthenticatedBrandAnalyticsRoute
   '/_authenticated/brand/billing': typeof AuthenticatedBrandBillingRoute
@@ -5174,6 +5252,7 @@ export interface FileRoutesById {
   '/_authenticated/student/career/interview/setup': typeof AuthenticatedStudentCareerInterviewSetupRoute
   '/_authenticated/student/programs/view/$slug': typeof AuthenticatedStudentProgramsViewSlugRoute
   '/_authenticated/workspace/project/$projectId/review': typeof AuthenticatedWorkspaceProjectProjectIdReviewRoute
+  '/api/public/billing/cashfree/webhook': typeof ApiPublicBillingCashfreeWebhookRoute
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
@@ -5253,6 +5332,7 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/admin'
     | '/ambassador'
+    | '/billing'
     | '/brand'
     | '/hq'
     | '/instructor'
@@ -5421,6 +5501,12 @@ export interface FileRouteTypes {
     | '/ambassador/rank-history'
     | '/ambassador/recognition'
     | '/ambassador/settings'
+    | '/billing/coupons'
+    | '/billing/history'
+    | '/billing/invoices'
+    | '/billing/payment-methods'
+    | '/billing/plans'
+    | '/billing/usage'
     | '/brand/ai-assistant'
     | '/brand/analytics'
     | '/brand/billing'
@@ -5714,6 +5800,7 @@ export interface FileRouteTypes {
     | '/student/career/interview/setup'
     | '/student/programs/view/$slug'
     | '/workspace/project/$projectId/review'
+    | '/api/public/billing/cashfree/webhook'
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
@@ -5786,6 +5873,7 @@ export interface FileRouteTypes {
     | '/trust-center'
     | '/white-label-edtech'
     | '/ambassador'
+    | '/billing'
     | '/brand'
     | '/cloud'
     | '/hq'
@@ -5943,6 +6031,12 @@ export interface FileRouteTypes {
     | '/ambassador/rank-history'
     | '/ambassador/recognition'
     | '/ambassador/settings'
+    | '/billing/coupons'
+    | '/billing/history'
+    | '/billing/invoices'
+    | '/billing/payment-methods'
+    | '/billing/plans'
+    | '/billing/usage'
     | '/brand/ai-assistant'
     | '/brand/analytics'
     | '/brand/billing'
@@ -6236,6 +6330,7 @@ export interface FileRouteTypes {
     | '/student/career/interview/setup'
     | '/student/programs/view/$slug'
     | '/workspace/project/$projectId/review'
+    | '/api/public/billing/cashfree/webhook'
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
@@ -6314,6 +6409,7 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
+    | '/_authenticated/billing'
     | '/_authenticated/brand'
     | '/_authenticated/cloud'
     | '/_authenticated/hq'
@@ -6483,6 +6579,12 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador/rank-history'
     | '/_authenticated/ambassador/recognition'
     | '/_authenticated/ambassador/settings'
+    | '/_authenticated/billing/coupons'
+    | '/_authenticated/billing/history'
+    | '/_authenticated/billing/invoices'
+    | '/_authenticated/billing/payment-methods'
+    | '/_authenticated/billing/plans'
+    | '/_authenticated/billing/usage'
     | '/_authenticated/brand/ai-assistant'
     | '/_authenticated/brand/analytics'
     | '/_authenticated/brand/billing'
@@ -6776,6 +6878,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/career/interview/setup'
     | '/_authenticated/student/programs/view/$slug'
     | '/_authenticated/workspace/project/$projectId/review'
+    | '/api/public/billing/cashfree/webhook'
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
@@ -6911,6 +7014,7 @@ export interface RootRouteChildren {
   ApiPublicWorkflowsTickRoute: typeof ApiPublicWorkflowsTickRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
+  ApiPublicBillingCashfreeWebhookRoute: typeof ApiPublicBillingCashfreeWebhookRoute
   ApiPublicEngageHooksSequenceTickRoute: typeof ApiPublicEngageHooksSequenceTickRoute
   ApiPublicEngageUnsubscribeTokenRoute: typeof ApiPublicEngageUnsubscribeTokenRoute
   ApiPublicEngageWebhooksProviderRoute: typeof ApiPublicEngageWebhooksProviderRoute
@@ -7998,6 +8102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBrandRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/billing': {
+      id: '/_authenticated/billing'
+      path: '/billing'
+      fullPath: '/billing'
+      preLoaderRoute: typeof AuthenticatedBillingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/ambassador': {
       id: '/_authenticated/ambassador'
       path: '/ambassador'
@@ -8711,6 +8822,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/brand/ai-assistant'
       preLoaderRoute: typeof AuthenticatedBrandAiAssistantRouteImport
       parentRoute: typeof AuthenticatedBrandRoute
+    }
+    '/_authenticated/billing/usage': {
+      id: '/_authenticated/billing/usage'
+      path: '/usage'
+      fullPath: '/billing/usage'
+      preLoaderRoute: typeof AuthenticatedBillingUsageRouteImport
+      parentRoute: typeof AuthenticatedBillingRoute
+    }
+    '/_authenticated/billing/plans': {
+      id: '/_authenticated/billing/plans'
+      path: '/plans'
+      fullPath: '/billing/plans'
+      preLoaderRoute: typeof AuthenticatedBillingPlansRouteImport
+      parentRoute: typeof AuthenticatedBillingRoute
+    }
+    '/_authenticated/billing/payment-methods': {
+      id: '/_authenticated/billing/payment-methods'
+      path: '/payment-methods'
+      fullPath: '/billing/payment-methods'
+      preLoaderRoute: typeof AuthenticatedBillingPaymentMethodsRouteImport
+      parentRoute: typeof AuthenticatedBillingRoute
+    }
+    '/_authenticated/billing/invoices': {
+      id: '/_authenticated/billing/invoices'
+      path: '/invoices'
+      fullPath: '/billing/invoices'
+      preLoaderRoute: typeof AuthenticatedBillingInvoicesRouteImport
+      parentRoute: typeof AuthenticatedBillingRoute
+    }
+    '/_authenticated/billing/history': {
+      id: '/_authenticated/billing/history'
+      path: '/history'
+      fullPath: '/billing/history'
+      preLoaderRoute: typeof AuthenticatedBillingHistoryRouteImport
+      parentRoute: typeof AuthenticatedBillingRoute
+    }
+    '/_authenticated/billing/coupons': {
+      id: '/_authenticated/billing/coupons'
+      path: '/coupons'
+      fullPath: '/billing/coupons'
+      preLoaderRoute: typeof AuthenticatedBillingCouponsRouteImport
+      parentRoute: typeof AuthenticatedBillingRoute
     }
     '/_authenticated/ambassador/settings': {
       id: '/_authenticated/ambassador/settings'
@@ -10581,6 +10734,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicEngageHooksSequenceTickRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/billing/cashfree/webhook': {
+      id: '/api/public/billing/cashfree/webhook'
+      path: '/api/public/billing/cashfree/webhook'
+      fullPath: '/api/public/billing/cashfree/webhook'
+      preLoaderRoute: typeof ApiPublicBillingCashfreeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/workspace/project/$projectId/review': {
       id: '/_authenticated/workspace/project/$projectId/review'
       path: '/review'
@@ -11446,6 +11606,28 @@ const AuthenticatedAmbassadorRouteWithChildren =
     AuthenticatedAmbassadorRouteChildren,
   )
 
+interface AuthenticatedBillingRouteChildren {
+  AuthenticatedBillingCouponsRoute: typeof AuthenticatedBillingCouponsRoute
+  AuthenticatedBillingHistoryRoute: typeof AuthenticatedBillingHistoryRoute
+  AuthenticatedBillingInvoicesRoute: typeof AuthenticatedBillingInvoicesRoute
+  AuthenticatedBillingPaymentMethodsRoute: typeof AuthenticatedBillingPaymentMethodsRoute
+  AuthenticatedBillingPlansRoute: typeof AuthenticatedBillingPlansRoute
+  AuthenticatedBillingUsageRoute: typeof AuthenticatedBillingUsageRoute
+}
+
+const AuthenticatedBillingRouteChildren: AuthenticatedBillingRouteChildren = {
+  AuthenticatedBillingCouponsRoute: AuthenticatedBillingCouponsRoute,
+  AuthenticatedBillingHistoryRoute: AuthenticatedBillingHistoryRoute,
+  AuthenticatedBillingInvoicesRoute: AuthenticatedBillingInvoicesRoute,
+  AuthenticatedBillingPaymentMethodsRoute:
+    AuthenticatedBillingPaymentMethodsRoute,
+  AuthenticatedBillingPlansRoute: AuthenticatedBillingPlansRoute,
+  AuthenticatedBillingUsageRoute: AuthenticatedBillingUsageRoute,
+}
+
+const AuthenticatedBillingRouteWithChildren =
+  AuthenticatedBillingRoute._addFileChildren(AuthenticatedBillingRouteChildren)
+
 interface AuthenticatedBrandRouteChildren {
   AuthenticatedBrandAiAssistantRoute: typeof AuthenticatedBrandAiAssistantRoute
   AuthenticatedBrandAnalyticsRoute: typeof AuthenticatedBrandAnalyticsRoute
@@ -11844,6 +12026,7 @@ const AuthenticatedWorkspaceProjectProjectIdRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
+  AuthenticatedBillingRoute: typeof AuthenticatedBillingRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
   AuthenticatedCloudRoute: typeof AuthenticatedCloudRouteWithChildren
   AuthenticatedHqRoute: typeof AuthenticatedHqRoute
@@ -11861,6 +12044,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
+  AuthenticatedBillingRoute: AuthenticatedBillingRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
   AuthenticatedCloudRoute: AuthenticatedCloudRouteWithChildren,
   AuthenticatedHqRoute: AuthenticatedHqRoute,
@@ -12323,6 +12507,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicWorkflowsTickRoute: ApiPublicWorkflowsTickRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
+  ApiPublicBillingCashfreeWebhookRoute: ApiPublicBillingCashfreeWebhookRoute,
   ApiPublicEngageHooksSequenceTickRoute: ApiPublicEngageHooksSequenceTickRoute,
   ApiPublicEngageUnsubscribeTokenRoute: ApiPublicEngageUnsubscribeTokenRoute,
   ApiPublicEngageWebhooksProviderRoute: ApiPublicEngageWebhooksProviderRoute,
