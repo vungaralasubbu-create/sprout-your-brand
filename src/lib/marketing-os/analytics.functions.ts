@@ -398,7 +398,7 @@ export const trackAnalyticsEvent = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("mkt_analytics_events").insert({
       owner_id: context.userId, ...data,
-    });
+    } as Any);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
