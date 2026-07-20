@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
     for (const p of pages) {
       // Facebook Page account
       const fbEncrypted = await encryptToken(p.page_access_token);
-      await admin.from("soc_accounts").upsert(
+      const { error: fbErr } = await admin.from("soc_accounts").upsert(
         {
           owner_id: parsed.userId,
           brand_id: parsed.brandId,
@@ -105,13 +105,17 @@ Deno.serve(async (req) => {
           },
           last_synced_at: now,
         },
-        { onConflict: "owner_id,platform,account_external_id" as unknown as string },
+        { onConflict: "owner_id,platform,account_external_id" },
       );
+      if (fbErr) {
+        console.error("soc_accounts upsert facebook error", fbErr);
+        return json({ error: `Failed to save Facebook account: ${fbErr.message}` }, { status: 500 });
+      }
       saved.push({ platform: "facebook", account_name: p.page_name, page_id: p.page_id });
 
       if (p.ig_business_id) {
         const igEncrypted = await encryptToken(p.page_access_token); // IG publishing uses page token
-        await admin.from("soc_accounts").upsert(
+        const { error: igErr } = await admin.from("soc_accounts").upsert(
           {
             owner_id: parsed.userId,
             brand_id: parsed.brandId,
@@ -132,8 +136,12 @@ Deno.serve(async (req) => {
             },
             last_synced_at: now,
           },
-          { onConflict: "owner_id,platform,account_external_id" as unknown as string },
+          { onConflict: "owner_id,platform,account_external_id" },
         );
+        if (igErr) {
+          console.error("soc_accounts upsert instagram error", igErr);
+          return json({ error: `Failed to save Instagram account: ${igErr.message}` }, { status: 500 });
+        }
         saved.push({
           platform: "instagram",
           account_name: p.ig_username || p.page_name,
@@ -141,6 +149,7 @@ Deno.serve(async (req) => {
         });
       }
     }
+
 
     return json({ ok: true, connected: saved });
   } catch (err) {

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS soc_accounts_owner_platform_external_uk ON public.soc_accounts (owner_id, platform, account_external_id);
