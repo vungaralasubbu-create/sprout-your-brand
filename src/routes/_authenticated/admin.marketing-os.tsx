@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
-import { Sparkles, LayoutDashboard, CalendarDays, ListTodo, Send, BarChart3, Wand2, CheckSquare, Palette } from "lucide-react";
+import { Sparkles, LayoutDashboard, CalendarDays, ListTodo, Send, BarChart3, Wand2, CheckSquare, Palette, Megaphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin/marketing-os")({
@@ -8,6 +8,7 @@ export const Route = createFileRoute("/_authenticated/admin/marketing-os")({
 
 const TABS: Array<{ to: string; label: string; icon: typeof LayoutDashboard; live: boolean; exact?: boolean }> = [
   { to: "/admin/marketing-os", label: "Dashboard", icon: LayoutDashboard, live: true, exact: true },
+  { to: "/admin/marketing-os/campaigns", label: "Campaign Manager", icon: Megaphone, live: true },
   { to: "/admin/marketing-os/planner", label: "AI Planner", icon: Wand2, live: true },
   { to: "/admin/marketing-os/approvals", label: "Approval Center", icon: CheckSquare, live: true },
   { to: "/admin/marketing-os/queue", label: "Content Queue", icon: ListTodo, live: false },
