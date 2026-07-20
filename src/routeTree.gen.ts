@@ -352,6 +352,7 @@ import { Route as AuthenticatedAdminAiContentIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminAiAgentsIndexRouteImport } from './routes/_authenticated/admin.ai-agents.index'
 import { Route as WorkspaceVoiceSessionModeRouteImport } from './routes/workspace.voice.session.$mode'
 import { Route as ProgramsCategoryCourseApplyRouteImport } from './routes/programs.$category.$course.apply'
+import { Route as ApiPublicWorkflowsTickRouteImport } from './routes/api/public/workflows/tick'
 import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/public/webhooks/cashfree'
 import { Route as ApiPublicTopicsJsonRouteImport } from './routes/api/public/topics.json'
 import { Route as ApiPublicHooksTechSeoTickRouteImport } from './routes/api/public/hooks/tech-seo-tick'
@@ -491,6 +492,7 @@ import { Route as AuthenticatedAdminAiAgentsAnalyticsRouteImport } from './route
 import { Route as AuthenticatedAdminContentArticlesIndexRouteImport } from './routes/_authenticated/admin.content.articles.index'
 import { Route as AuthenticatedAdminAutomationHubWorkflowsIndexRouteImport } from './routes/_authenticated/admin/automation-hub/workflows.index'
 import { Route as ApiV1CertificatesVerifyCodeRouteImport } from './routes/api/v1/certificates.verify.$code'
+import { Route as ApiPublicWorkflowsWebhookSlugRouteImport } from './routes/api/public/workflows/webhook.$slug'
 import { Route as ApiPublicEngageWebhooksProviderRouteImport } from './routes/api/public/engage/webhooks/$provider'
 import { Route as ApiPublicEngageUnsubscribeTokenRouteImport } from './routes/api/public/engage/unsubscribe.$token'
 import { Route as ApiPublicEngageHooksSequenceTickRouteImport } from './routes/api/public/engage/hooks/sequence-tick'
@@ -2402,6 +2404,11 @@ const ProgramsCategoryCourseApplyRoute =
     path: '/programs/$category/$course/apply',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWorkflowsTickRoute = ApiPublicWorkflowsTickRouteImport.update({
+  id: '/api/public/workflows/tick',
+  path: '/api/public/workflows/tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksCashfreeRoute =
   ApiPublicWebhooksCashfreeRouteImport.update({
     id: '/api/public/webhooks/cashfree',
@@ -3229,6 +3236,12 @@ const ApiV1CertificatesVerifyCodeRoute =
     path: '/api/v1/certificates/verify/$code',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWorkflowsWebhookSlugRoute =
+  ApiPublicWorkflowsWebhookSlugRouteImport.update({
+    id: '/api/public/workflows/webhook/$slug',
+    path: '/api/public/workflows/webhook/$slug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicEngageWebhooksProviderRoute =
   ApiPublicEngageWebhooksProviderRouteImport.update({
     id: '/api/public/engage/webhooks/$provider',
@@ -3762,6 +3775,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
+  '/api/public/workflows/tick': typeof ApiPublicWorkflowsTickRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -3812,6 +3826,7 @@ export interface FileRoutesByFullPath {
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
+  '/api/public/workflows/webhook/$slug': typeof ApiPublicWorkflowsWebhookSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/automation-hub/workflows/': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
@@ -4245,6 +4260,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
+  '/api/public/workflows/tick': typeof ApiPublicWorkflowsTickRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/admin/ai-agents': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -4295,6 +4311,7 @@ export interface FileRoutesByTo {
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
+  '/api/public/workflows/webhook/$slug': typeof ApiPublicWorkflowsWebhookSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/admin/automation-hub/workflows': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/admin/content/articles': typeof AuthenticatedAdminContentArticlesIndexRoute
@@ -4745,6 +4762,7 @@ export interface FileRoutesById {
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
   '/api/public/webhooks/cashfree': typeof ApiPublicWebhooksCashfreeRoute
+  '/api/public/workflows/tick': typeof ApiPublicWorkflowsTickRoute
   '/programs/$category/$course/apply': typeof ProgramsCategoryCourseApplyRoute
   '/workspace/voice/session/$mode': typeof WorkspaceVoiceSessionModeRoute
   '/_authenticated/admin/ai-agents/': typeof AuthenticatedAdminAiAgentsIndexRoute
@@ -4795,6 +4813,7 @@ export interface FileRoutesById {
   '/api/public/engage/hooks/sequence-tick': typeof ApiPublicEngageHooksSequenceTickRoute
   '/api/public/engage/unsubscribe/$token': typeof ApiPublicEngageUnsubscribeTokenRoute
   '/api/public/engage/webhooks/$provider': typeof ApiPublicEngageWebhooksProviderRoute
+  '/api/public/workflows/webhook/$slug': typeof ApiPublicWorkflowsWebhookSlugRoute
   '/api/v1/certificates/verify/$code': typeof ApiV1CertificatesVerifyCodeRoute
   '/_authenticated/admin/automation-hub/workflows/': typeof AuthenticatedAdminAutomationHubWorkflowsIndexRoute
   '/_authenticated/admin/content/articles/': typeof AuthenticatedAdminContentArticlesIndexRoute
@@ -5245,6 +5264,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
+    | '/api/public/workflows/tick'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents/'
@@ -5295,6 +5315,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
+    | '/api/public/workflows/webhook/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/admin/automation-hub/workflows/'
     | '/admin/content/articles/'
@@ -5728,6 +5749,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
+    | '/api/public/workflows/tick'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/admin/ai-agents'
@@ -5778,6 +5800,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
+    | '/api/public/workflows/webhook/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/admin/automation-hub/workflows'
     | '/admin/content/articles'
@@ -6227,6 +6250,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
     | '/api/public/webhooks/cashfree'
+    | '/api/public/workflows/tick'
     | '/programs/$category/$course/apply'
     | '/workspace/voice/session/$mode'
     | '/_authenticated/admin/ai-agents/'
@@ -6277,6 +6301,7 @@ export interface FileRouteTypes {
     | '/api/public/engage/hooks/sequence-tick'
     | '/api/public/engage/unsubscribe/$token'
     | '/api/public/engage/webhooks/$provider'
+    | '/api/public/workflows/webhook/$slug'
     | '/api/v1/certificates/verify/$code'
     | '/_authenticated/admin/automation-hub/workflows/'
     | '/_authenticated/admin/content/articles/'
@@ -6403,11 +6428,13 @@ export interface RootRouteChildren {
   ApiPublicHooksTechSeoTickRoute: typeof ApiPublicHooksTechSeoTickRoute
   ApiPublicTopicsJsonRoute: typeof ApiPublicTopicsJsonRoute
   ApiPublicWebhooksCashfreeRoute: typeof ApiPublicWebhooksCashfreeRoute
+  ApiPublicWorkflowsTickRoute: typeof ApiPublicWorkflowsTickRoute
   ProgramsCategoryCourseApplyRoute: typeof ProgramsCategoryCourseApplyRoute
   ProgramsCategoryCourseIndexRoute: typeof ProgramsCategoryCourseIndexRoute
   ApiPublicEngageHooksSequenceTickRoute: typeof ApiPublicEngageHooksSequenceTickRoute
   ApiPublicEngageUnsubscribeTokenRoute: typeof ApiPublicEngageUnsubscribeTokenRoute
   ApiPublicEngageWebhooksProviderRoute: typeof ApiPublicEngageWebhooksProviderRoute
+  ApiPublicWorkflowsWebhookSlugRoute: typeof ApiPublicWorkflowsWebhookSlugRoute
   ApiV1CertificatesVerifyCodeRoute: typeof ApiV1CertificatesVerifyCodeRoute
 }
 
@@ -8814,6 +8841,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsCategoryCourseApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/workflows/tick': {
+      id: '/api/public/workflows/tick'
+      path: '/api/public/workflows/tick'
+      fullPath: '/api/public/workflows/tick'
+      preLoaderRoute: typeof ApiPublicWorkflowsTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/webhooks/cashfree': {
       id: '/api/public/webhooks/cashfree'
       path: '/api/public/webhooks/cashfree'
@@ -9785,6 +9819,13 @@ declare module '@tanstack/react-router' {
       path: '/api/v1/certificates/verify/$code'
       fullPath: '/api/v1/certificates/verify/$code'
       preLoaderRoute: typeof ApiV1CertificatesVerifyCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/workflows/webhook/$slug': {
+      id: '/api/public/workflows/webhook/$slug'
+      path: '/api/public/workflows/webhook/$slug'
+      fullPath: '/api/public/workflows/webhook/$slug'
+      preLoaderRoute: typeof ApiPublicWorkflowsWebhookSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/engage/webhooks/$provider': {
@@ -11401,11 +11442,13 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksTechSeoTickRoute: ApiPublicHooksTechSeoTickRoute,
   ApiPublicTopicsJsonRoute: ApiPublicTopicsJsonRoute,
   ApiPublicWebhooksCashfreeRoute: ApiPublicWebhooksCashfreeRoute,
+  ApiPublicWorkflowsTickRoute: ApiPublicWorkflowsTickRoute,
   ProgramsCategoryCourseApplyRoute: ProgramsCategoryCourseApplyRoute,
   ProgramsCategoryCourseIndexRoute: ProgramsCategoryCourseIndexRoute,
   ApiPublicEngageHooksSequenceTickRoute: ApiPublicEngageHooksSequenceTickRoute,
   ApiPublicEngageUnsubscribeTokenRoute: ApiPublicEngageUnsubscribeTokenRoute,
   ApiPublicEngageWebhooksProviderRoute: ApiPublicEngageWebhooksProviderRoute,
+  ApiPublicWorkflowsWebhookSlugRoute: ApiPublicWorkflowsWebhookSlugRoute,
   ApiV1CertificatesVerifyCodeRoute: ApiV1CertificatesVerifyCodeRoute,
 }
 export const routeTree = rootRouteImport
