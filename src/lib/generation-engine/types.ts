@@ -90,7 +90,7 @@ export interface GenerationRequest {
 export interface GenerationOutput {
   kind: OutputKind;
   textContent?: string;
-  jsonContent?: unknown;
+  jsonContent?: Record<string, unknown> | Array<unknown> | string | number | boolean | null;
   storagePath?: string;
   publicUrl?: string;
   mediaAssetId?: string;

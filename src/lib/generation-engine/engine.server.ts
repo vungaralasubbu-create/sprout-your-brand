@@ -157,7 +157,8 @@ export async function submitGeneration(
 
     // 6. Optional approval queue enqueue
     if (req.approvalRequired) {
-      await supabase.from("approval_queue").insert({
+      try {
+        await supabase.from("approval_queue").insert({
         owner_id: userId,
         campaign_id: req.campaignId,
         brand_id: req.brandId,
@@ -166,7 +167,8 @@ export async function submitGeneration(
         status: "pending",
         source: "generation-engine",
         metadata: { jobId } as never,
-      }).select().maybeSingle().then(() => void 0).catch(() => void 0);
+        });
+      } catch { /* approval queue optional */ }
       await logEvent(supabase, jobId, userId, "approved", { message: "queued for review" });
     }
 

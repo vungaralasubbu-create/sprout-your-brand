@@ -42,8 +42,8 @@ function EngineDashboard() {
     const failed = jobs.filter((j: { status: string }) => j.status === "failed").length;
     const running = jobs.filter((j: { status: string }) => ["queued","preparing","generating","retrying"].includes(j.status)).length;
     const successRate = total ? Math.round((done / total) * 100) : 100;
-    const credits = usage.reduce((sum: number, u: { credits_used?: number }) => sum + Number(u.credits_used ?? 0), 0);
-    const cents = usage.reduce((sum: number, u: { estimated_cost_cents?: number }) => sum + Number(u.estimated_cost_cents ?? 0), 0);
+    const credits = usage.reduce((sum: number, u) => sum + Number(u.credits_used ?? 0), 0);
+    const cents = usage.reduce((sum: number, u) => sum + Number(u.estimated_cost_cents ?? 0), 0);
     return { total, done, failed, running, successRate, credits, cost: (cents / 100).toFixed(2) };
   }, [jobs, usage]);
 
