@@ -505,6 +505,7 @@ import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
 import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport } from './routes/_authenticated/ambassador.marketing-resources.programs.$slug'
+import { Route as AuthenticatedAdminMarketingOsProjectIdRouteImport } from './routes/_authenticated/admin.marketing-os.project.$id'
 import { Route as AuthenticatedAdminMarketingOsPlansIdRouteImport } from './routes/_authenticated/admin.marketing-os.plans.$id'
 import { Route as AuthenticatedAdminMarketingOsCampaignsIdRouteImport } from './routes/_authenticated/admin.marketing-os.campaigns.$id'
 import { Route as AuthenticatedAdminMarketingOsAutomationIdRouteImport } from './routes/_authenticated/admin.marketing-os.automation.$id'
@@ -3319,6 +3320,12 @@ const AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute =
     path: '/marketing-resources/programs/$slug',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAdminMarketingOsProjectIdRoute =
+  AuthenticatedAdminMarketingOsProjectIdRouteImport.update({
+    id: '/project/$id',
+    path: '/project/$id',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminMarketingOsPlansIdRoute =
   AuthenticatedAdminMarketingOsPlansIdRouteImport.update({
     id: '/plans/$id',
@@ -3858,6 +3865,7 @@ export interface FileRoutesByFullPath {
   '/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
+  '/admin/marketing-os/project/$id': typeof AuthenticatedAdminMarketingOsProjectIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -4348,6 +4356,7 @@ export interface FileRoutesByTo {
   '/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
+  '/admin/marketing-os/project/$id': typeof AuthenticatedAdminMarketingOsProjectIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -4855,6 +4864,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/_authenticated/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/_authenticated/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
+  '/_authenticated/admin/marketing-os/project/$id': typeof AuthenticatedAdminMarketingOsProjectIdRoute
   '/_authenticated/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -5362,6 +5372,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/automation/$id'
     | '/admin/marketing-os/campaigns/$id'
     | '/admin/marketing-os/plans/$id'
+    | '/admin/marketing-os/project/$id'
     | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -5852,6 +5863,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/automation/$id'
     | '/admin/marketing-os/campaigns/$id'
     | '/admin/marketing-os/plans/$id'
+    | '/admin/marketing-os/project/$id'
     | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -6358,6 +6370,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/marketing-os/automation/$id'
     | '/_authenticated/admin/marketing-os/campaigns/$id'
     | '/_authenticated/admin/marketing-os/plans/$id'
+    | '/_authenticated/admin/marketing-os/project/$id'
     | '/_authenticated/ambassador/marketing-resources/programs/$slug'
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
@@ -9977,6 +9990,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/admin/marketing-os/project/$id': {
+      id: '/_authenticated/admin/marketing-os/project/$id'
+      path: '/project/$id'
+      fullPath: '/admin/marketing-os/project/$id'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsProjectIdRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/marketing-os/plans/$id': {
       id: '/_authenticated/admin/marketing-os/plans/$id'
       path: '/plans/$id'
@@ -10390,6 +10410,7 @@ interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsSeoHubRoute: typeof AuthenticatedAdminMarketingOsSeoHubRoute
   AuthenticatedAdminMarketingOsIndexRoute: typeof AuthenticatedAdminMarketingOsIndexRoute
   AuthenticatedAdminMarketingOsPlansIdRoute: typeof AuthenticatedAdminMarketingOsPlansIdRoute
+  AuthenticatedAdminMarketingOsProjectIdRoute: typeof AuthenticatedAdminMarketingOsProjectIdRoute
 }
 
 const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsRouteChildren =
@@ -10424,6 +10445,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsIndexRoute,
     AuthenticatedAdminMarketingOsPlansIdRoute:
       AuthenticatedAdminMarketingOsPlansIdRoute,
+    AuthenticatedAdminMarketingOsProjectIdRoute:
+      AuthenticatedAdminMarketingOsProjectIdRoute,
   }
 
 const AuthenticatedAdminMarketingOsRouteWithChildren =

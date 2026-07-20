@@ -17278,6 +17278,72 @@ export type Database = {
           },
         ]
       }
+      marketing_projects: {
+        Row: {
+          brand_id: string | null
+          campaign_id: string | null
+          created_at: string
+          created_by: string
+          current_step: string | null
+          error: string | null
+          id: string
+          name: string
+          progress: number
+          prompt: string
+          result: Json
+          status: string
+          steps: Json
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          campaign_id?: string | null
+          created_at?: string
+          created_by: string
+          current_step?: string | null
+          error?: string | null
+          id?: string
+          name?: string
+          progress?: number
+          prompt: string
+          result?: Json
+          status?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          campaign_id?: string | null
+          created_at?: string
+          created_by?: string
+          current_step?: string | null
+          error?: string | null
+          id?: string
+          name?: string
+          progress?: number
+          prompt?: string
+          result?: Json
+          status?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_projects_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_projects_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_resource_interactions: {
         Row: {
           ambassador_id: string
