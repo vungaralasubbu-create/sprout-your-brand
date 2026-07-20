@@ -408,6 +408,7 @@ import { Route as AuthenticatedAdminMarketingOsGenerationEngineRouteImport } fro
 import { Route as AuthenticatedAdminMarketingOsCampaignsRouteImport } from './routes/_authenticated/admin.marketing-os.campaigns'
 import { Route as AuthenticatedAdminMarketingOsCalendarRouteImport } from './routes/_authenticated/admin.marketing-os.calendar'
 import { Route as AuthenticatedAdminMarketingOsBrandKitRouteImport } from './routes/_authenticated/admin.marketing-os.brand-kit'
+import { Route as AuthenticatedAdminMarketingOsAutomationRouteImport } from './routes/_authenticated/admin.marketing-os.automation'
 import { Route as AuthenticatedAdminMarketingOsApprovalsRouteImport } from './routes/_authenticated/admin.marketing-os.approvals'
 import { Route as AuthenticatedAdminMarketingOsAnalyticsRouteImport } from './routes/_authenticated/admin.marketing-os.analytics'
 import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
@@ -503,6 +504,7 @@ import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from 
 import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport } from './routes/_authenticated/ambassador.marketing-resources.programs.$slug'
 import { Route as AuthenticatedAdminMarketingOsPlansIdRouteImport } from './routes/_authenticated/admin.marketing-os.plans.$id'
 import { Route as AuthenticatedAdminMarketingOsCampaignsIdRouteImport } from './routes/_authenticated/admin.marketing-os.campaigns.$id'
+import { Route as AuthenticatedAdminMarketingOsAutomationIdRouteImport } from './routes/_authenticated/admin.marketing-os.automation.$id'
 import { Route as AuthenticatedAdminCoursesIdAiStudioRouteImport } from './routes/_authenticated/admin.courses.$id.ai-studio'
 import { Route as AuthenticatedAdminContentArticlesIdRouteImport } from './routes/_authenticated/admin.content.articles.$id'
 import { Route as AuthenticatedAdminAutomationHubWorkflowsIdRouteImport } from './routes/_authenticated/admin/automation-hub/workflows.$id'
@@ -2732,6 +2734,12 @@ const AuthenticatedAdminMarketingOsBrandKitRoute =
     path: '/brand-kit',
     getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
+const AuthenticatedAdminMarketingOsAutomationRoute =
+  AuthenticatedAdminMarketingOsAutomationRouteImport.update({
+    id: '/automation',
+    path: '/automation',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminMarketingOsApprovalsRoute =
   AuthenticatedAdminMarketingOsApprovalsRouteImport.update({
     id: '/approvals',
@@ -3302,6 +3310,12 @@ const AuthenticatedAdminMarketingOsCampaignsIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminMarketingOsCampaignsRoute,
   } as any)
+const AuthenticatedAdminMarketingOsAutomationIdRoute =
+  AuthenticatedAdminMarketingOsAutomationIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminMarketingOsAutomationRoute,
+  } as any)
 const AuthenticatedAdminCoursesIdAiStudioRoute =
   AuthenticatedAdminCoursesIdAiStudioRouteImport.update({
     id: '/ai-studio',
@@ -3720,6 +3734,7 @@ export interface FileRoutesByFullPath {
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/automation': typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -3816,6 +3831,7 @@ export interface FileRoutesByFullPath {
   '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -4205,6 +4221,7 @@ export interface FileRoutesByTo {
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/automation': typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -4301,6 +4318,7 @@ export interface FileRoutesByTo {
   '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -4707,6 +4725,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/_authenticated/admin/marketing-os/analytics': typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   '/_authenticated/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/_authenticated/admin/marketing-os/automation': typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   '/_authenticated/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/_authenticated/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/_authenticated/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -4803,6 +4822,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/_authenticated/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/_authenticated/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/_authenticated/admin/marketing-os/automation/$id': typeof AuthenticatedAdminMarketingOsAutomationIdRoute
   '/_authenticated/admin/marketing-os/campaigns/$id': typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
   '/_authenticated/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/_authenticated/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
@@ -5209,6 +5229,7 @@ export interface FileRouteTypes {
     | '/admin/llm/settings'
     | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/automation'
     | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/campaigns'
@@ -5305,6 +5326,7 @@ export interface FileRouteTypes {
     | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
+    | '/admin/marketing-os/automation/$id'
     | '/admin/marketing-os/campaigns/$id'
     | '/admin/marketing-os/plans/$id'
     | '/ambassador/marketing-resources/programs/$slug'
@@ -5694,6 +5716,7 @@ export interface FileRouteTypes {
     | '/admin/llm/settings'
     | '/admin/marketing-os/analytics'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/automation'
     | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/campaigns'
@@ -5790,6 +5813,7 @@ export interface FileRouteTypes {
     | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
+    | '/admin/marketing-os/automation/$id'
     | '/admin/marketing-os/campaigns/$id'
     | '/admin/marketing-os/plans/$id'
     | '/ambassador/marketing-resources/programs/$slug'
@@ -6195,6 +6219,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/llm/settings'
     | '/_authenticated/admin/marketing-os/analytics'
     | '/_authenticated/admin/marketing-os/approvals'
+    | '/_authenticated/admin/marketing-os/automation'
     | '/_authenticated/admin/marketing-os/brand-kit'
     | '/_authenticated/admin/marketing-os/calendar'
     | '/_authenticated/admin/marketing-os/campaigns'
@@ -6291,6 +6316,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/automation-hub/workflows/$id'
     | '/_authenticated/admin/content/articles/$id'
     | '/_authenticated/admin/courses/$id/ai-studio'
+    | '/_authenticated/admin/marketing-os/automation/$id'
     | '/_authenticated/admin/marketing-os/campaigns/$id'
     | '/_authenticated/admin/marketing-os/plans/$id'
     | '/_authenticated/ambassador/marketing-resources/programs/$slug'
@@ -9233,6 +9259,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsBrandKitRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
+    '/_authenticated/admin/marketing-os/automation': {
+      id: '/_authenticated/admin/marketing-os/automation'
+      path: '/automation'
+      fullPath: '/admin/marketing-os/automation'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsAutomationRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/marketing-os/approvals': {
       id: '/_authenticated/admin/marketing-os/approvals'
       path: '/approvals'
@@ -9898,6 +9931,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsCampaignsIdRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsCampaignsRoute
     }
+    '/_authenticated/admin/marketing-os/automation/$id': {
+      id: '/_authenticated/admin/marketing-os/automation/$id'
+      path: '/$id'
+      fullPath: '/admin/marketing-os/automation/$id'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsAutomationIdRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsAutomationRoute
+    }
     '/_authenticated/admin/courses/$id/ai-studio': {
       id: '/_authenticated/admin/courses/$id/ai-studio'
       path: '/ai-studio'
@@ -10244,6 +10284,21 @@ const AuthenticatedAdminLlmRouteWithChildren =
     AuthenticatedAdminLlmRouteChildren,
   )
 
+interface AuthenticatedAdminMarketingOsAutomationRouteChildren {
+  AuthenticatedAdminMarketingOsAutomationIdRoute: typeof AuthenticatedAdminMarketingOsAutomationIdRoute
+}
+
+const AuthenticatedAdminMarketingOsAutomationRouteChildren: AuthenticatedAdminMarketingOsAutomationRouteChildren =
+  {
+    AuthenticatedAdminMarketingOsAutomationIdRoute:
+      AuthenticatedAdminMarketingOsAutomationIdRoute,
+  }
+
+const AuthenticatedAdminMarketingOsAutomationRouteWithChildren =
+  AuthenticatedAdminMarketingOsAutomationRoute._addFileChildren(
+    AuthenticatedAdminMarketingOsAutomationRouteChildren,
+  )
+
 interface AuthenticatedAdminMarketingOsCampaignsRouteChildren {
   AuthenticatedAdminMarketingOsCampaignsIdRoute: typeof AuthenticatedAdminMarketingOsCampaignsIdRoute
 }
@@ -10262,6 +10317,7 @@ const AuthenticatedAdminMarketingOsCampaignsRouteWithChildren =
 interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsAnalyticsRoute: typeof AuthenticatedAdminMarketingOsAnalyticsRoute
   AuthenticatedAdminMarketingOsApprovalsRoute: typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  AuthenticatedAdminMarketingOsAutomationRoute: typeof AuthenticatedAdminMarketingOsAutomationRouteWithChildren
   AuthenticatedAdminMarketingOsBrandKitRoute: typeof AuthenticatedAdminMarketingOsBrandKitRoute
   AuthenticatedAdminMarketingOsCalendarRoute: typeof AuthenticatedAdminMarketingOsCalendarRoute
   AuthenticatedAdminMarketingOsCampaignsRoute: typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
@@ -10279,6 +10335,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsAnalyticsRoute,
     AuthenticatedAdminMarketingOsApprovalsRoute:
       AuthenticatedAdminMarketingOsApprovalsRoute,
+    AuthenticatedAdminMarketingOsAutomationRoute:
+      AuthenticatedAdminMarketingOsAutomationRouteWithChildren,
     AuthenticatedAdminMarketingOsBrandKitRoute:
       AuthenticatedAdminMarketingOsBrandKitRoute,
     AuthenticatedAdminMarketingOsCalendarRoute:
