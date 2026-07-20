@@ -59,14 +59,16 @@ function SocialAccountsPage() {
     void load();
   }, [load]);
 
-  const connectMeta = async () => {
-    setBusy("connect");
+  const startOAuth = async (provider: "meta" | "linkedin") => {
+    const key = `connect-${provider}`;
+    setBusy(key);
     try {
-      const { data, error } = await supabase.functions.invoke("connect-meta", { body: {} });
+      const fnName = provider === "meta" ? "connect-meta" : "connect-linkedin";
+      const { data, error } = await supabase.functions.invoke(fnName, { body: {} });
       if (error) throw new Error(error.message);
       const url = (data as { authorize_url?: string })?.authorize_url;
       if (!url) throw new Error("No authorize URL returned");
-      // Break out of preview iframe — Facebook OAuth sets X-Frame-Options: DENY.
+      // Break out of preview iframe — providers set X-Frame-Options: DENY.
       if (window.top && window.top !== window.self) {
         window.top.location.href = url;
       } else {
@@ -78,11 +80,18 @@ function SocialAccountsPage() {
     }
   };
 
-  const disconnect = async (id: string) => {
+  const fnFor = (platform: string, action: "disconnect" | "refresh") => {
+    if (platform === "linkedin") {
+      return action === "disconnect" ? "disconnect-linkedin" : "refresh-linkedin-token";
+    }
+    return action === "disconnect" ? "disconnect-meta" : "refresh-meta-token";
+  };
+
+  const disconnect = async (id: string, platform: string) => {
     if (!confirm("Disconnect this account? Its access token will be revoked.")) return;
     setBusy(id);
     try {
-      const { data, error } = await supabase.functions.invoke("disconnect-meta", { body: { account_id: id } });
+      const { data, error } = await supabase.functions.invoke(fnFor(platform, "disconnect"), { body: { account_id: id } });
       if (error) throw new Error(error.message);
       const err = (data as { error?: string })?.error;
       if (err) throw new Error(err);
@@ -95,15 +104,35 @@ function SocialAccountsPage() {
     }
   };
 
-  const refresh = async (id: string) => {
+  const refresh = async (id: string, platform: string) => {
     setBusy(id);
     try {
-      const { data, error } = await supabase.functions.invoke("refresh-meta-token", { body: { account_id: id } });
+      const { data, error } = await supabase.functions.invoke(fnFor(platform, "refresh"), { body: { account_id: id } });
       if (error) throw new Error(error.message);
       const err = (data as { error?: string })?.error;
       if (err) throw new Error(err);
       toast.success("Token refreshed");
       await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const testPublish = async (id: string, platform: string) => {
+    if (platform !== "linkedin") { toast.info("Test publish is available for LinkedIn only."); return; }
+    const message = prompt("Post text to publish on LinkedIn:", "Hello from Glintr 🚀");
+    if (!message) return;
+    setBusy(id);
+    try {
+      const { data, error } = await supabase.functions.invoke("publish-linkedin", {
+        body: { account_id: id, message },
+      });
+      if (error) throw new Error(error.message);
+      const err = (data as { error?: string })?.error;
+      if (err) throw new Error(err);
+      toast.success("Published to LinkedIn");
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
