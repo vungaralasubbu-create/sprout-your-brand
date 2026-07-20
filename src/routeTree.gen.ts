@@ -368,6 +368,7 @@ import { Route as ApiPublicHooksAutomationTickRouteImport } from './routes/api/p
 import { Route as ApiPublicEmailTickRouteImport } from './routes/api/public/email/tick'
 import { Route as ApiPublicCoursesJsonRouteImport } from './routes/api/public/courses.json'
 import { Route as ApiPublicAiSalesWebhookRouteImport } from './routes/api/public/ai-sales/webhook'
+import { Route as AuthenticatedWorkspaceProjectProjectIdRouteImport } from './routes/_authenticated/workspace.project.$projectId'
 import { Route as AuthenticatedStudentSupportNewRouteImport } from './routes/_authenticated/student.support.new'
 import { Route as AuthenticatedStudentSupportIdRouteImport } from './routes/_authenticated/student.support.$id'
 import { Route as AuthenticatedStudentProjectsIdRouteImport } from './routes/_authenticated/student.projects.$id'
@@ -2498,6 +2499,12 @@ const ApiPublicAiSalesWebhookRoute = ApiPublicAiSalesWebhookRouteImport.update({
   path: '/api/public/ai-sales/webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedWorkspaceProjectProjectIdRoute =
+  AuthenticatedWorkspaceProjectProjectIdRouteImport.update({
+    id: '/workspace/project/$projectId',
+    path: '/workspace/project/$projectId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudentSupportNewRoute =
   AuthenticatedStudentSupportNewRouteImport.update({
     id: '/support/new',
@@ -3806,6 +3813,7 @@ export interface FileRoutesByFullPath {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
@@ -4297,6 +4305,7 @@ export interface FileRoutesByTo {
   '/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
@@ -4805,6 +4814,7 @@ export interface FileRoutesById {
   '/_authenticated/student/projects/$id': typeof AuthenticatedStudentProjectsIdRoute
   '/_authenticated/student/support/$id': typeof AuthenticatedStudentSupportIdRoute
   '/_authenticated/student/support/new': typeof AuthenticatedStudentSupportNewRoute
+  '/_authenticated/workspace/project/$projectId': typeof AuthenticatedWorkspaceProjectProjectIdRoute
   '/api/public/ai-sales/webhook': typeof ApiPublicAiSalesWebhookRoute
   '/api/public/courses/json': typeof ApiPublicCoursesJsonRoute
   '/api/public/email/tick': typeof ApiPublicEmailTickRoute
@@ -5313,6 +5323,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/workspace/project/$projectId'
     | '/api/public/ai-sales/webhook'
     | '/api/public/courses/json'
     | '/api/public/email/tick'
@@ -5804,6 +5815,7 @@ export interface FileRouteTypes {
     | '/student/projects/$id'
     | '/student/support/$id'
     | '/student/support/new'
+    | '/workspace/project/$projectId'
     | '/api/public/ai-sales/webhook'
     | '/api/public/courses/json'
     | '/api/public/email/tick'
@@ -6311,6 +6323,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/projects/$id'
     | '/_authenticated/student/support/$id'
     | '/_authenticated/student/support/new'
+    | '/_authenticated/workspace/project/$projectId'
     | '/api/public/ai-sales/webhook'
     | '/api/public/courses/json'
     | '/api/public/email/tick'
@@ -9031,6 +9044,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAiSalesWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/workspace/project/$projectId': {
+      id: '/_authenticated/workspace/project/$projectId'
+      path: '/workspace/project/$projectId'
+      fullPath: '/workspace/project/$projectId'
+      preLoaderRoute: typeof AuthenticatedWorkspaceProjectProjectIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/student/support/new': {
       id: '/_authenticated/student/support/new'
       path: '/support/new'
@@ -11179,6 +11199,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
+  AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -11197,6 +11218,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCounsellorCopilotRouteWithChildren,
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
+  AuthenticatedWorkspaceProjectProjectIdRoute:
+    AuthenticatedWorkspaceProjectProjectIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

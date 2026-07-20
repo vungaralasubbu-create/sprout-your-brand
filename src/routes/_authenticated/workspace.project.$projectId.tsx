@@ -683,7 +683,7 @@ function WorkspaceProject() {
                   </div>
                 </div>
               </div>
-              <Button variant="destructive" size="sm" onClick={doDelete}>
+              <Button variant="danger" size="sm" onClick={doDelete}>
                 <Trash2 className="size-3.5 mr-1.5" /> Delete project
               </Button>
             </section>
