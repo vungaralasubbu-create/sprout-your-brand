@@ -162,6 +162,7 @@ import { Route as AuthenticatedTemplateBuilderRouteImport } from './routes/_auth
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedMyTemplatesRouteImport } from './routes/_authenticated/my-templates'
+import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
 import { Route as AuthenticatedInstructorRouteImport } from './routes/_authenticated/instructor'
 import { Route as AuthenticatedHqRouteImport } from './routes/_authenticated/hq'
 import { Route as AuthenticatedCloudRouteImport } from './routes/_authenticated/cloud'
@@ -177,6 +178,7 @@ import { Route as CommunitySpaceIndexRouteImport } from './routes/community.$spa
 import { Route as AuthenticatedTemplatesIndexRouteImport } from './routes/_authenticated/templates.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
+import { Route as AuthenticatedKnowledgeIndexRouteImport } from './routes/_authenticated/knowledge.index'
 import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
 import { Route as AuthenticatedBillingIndexRouteImport } from './routes/_authenticated/billing.index'
 import { Route as AuthenticatedAgentsIndexRouteImport } from './routes/_authenticated/agents.index'
@@ -240,6 +242,13 @@ import { Route as AuthenticatedPartnerAiAssistantRouteImport } from './routes/_a
 import { Route as AuthenticatedPartnerAddLeadsRouteImport } from './routes/_authenticated/partner.add-leads'
 import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authenticated/partner.account'
 import { Route as AuthenticatedPartnerAcademyBuilderRouteImport } from './routes/_authenticated/partner.academy-builder'
+import { Route as AuthenticatedKnowledgeWebsitesRouteImport } from './routes/_authenticated/knowledge.websites'
+import { Route as AuthenticatedKnowledgeUploadRouteImport } from './routes/_authenticated/knowledge.upload'
+import { Route as AuthenticatedKnowledgeTeamRouteImport } from './routes/_authenticated/knowledge.team'
+import { Route as AuthenticatedKnowledgeProductsRouteImport } from './routes/_authenticated/knowledge.products'
+import { Route as AuthenticatedKnowledgeHistoryRouteImport } from './routes/_authenticated/knowledge.history'
+import { Route as AuthenticatedKnowledgeFaqRouteImport } from './routes/_authenticated/knowledge.faq'
+import { Route as AuthenticatedKnowledgeDocumentsRouteImport } from './routes/_authenticated/knowledge.documents'
 import { Route as AuthenticatedInstructorDashboardRouteImport } from './routes/_authenticated/instructor.dashboard'
 import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
 import { Route as AuthenticatedCloudTeamRouteImport } from './routes/_authenticated/cloud.team'
@@ -1337,6 +1346,11 @@ const AuthenticatedMyTemplatesRoute =
     path: '/my-templates',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedInstructorRoute = AuthenticatedInstructorRouteImport.update({
   id: '/instructor',
   path: '/instructor',
@@ -1414,6 +1428,12 @@ const AuthenticatedNotificationsIndexRoute =
     id: '/notifications/',
     path: '/notifications/',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKnowledgeIndexRoute =
+  AuthenticatedKnowledgeIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
   } as any)
 const AuthenticatedInstructorIndexRoute =
   AuthenticatedInstructorIndexRouteImport.update({
@@ -1775,6 +1795,48 @@ const AuthenticatedPartnerAcademyBuilderRoute =
     id: '/academy-builder',
     path: '/academy-builder',
     getParentRoute: () => AuthenticatedPartnerRoute,
+  } as any)
+const AuthenticatedKnowledgeWebsitesRoute =
+  AuthenticatedKnowledgeWebsitesRouteImport.update({
+    id: '/websites',
+    path: '/websites',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedKnowledgeUploadRoute =
+  AuthenticatedKnowledgeUploadRouteImport.update({
+    id: '/upload',
+    path: '/upload',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedKnowledgeTeamRoute =
+  AuthenticatedKnowledgeTeamRouteImport.update({
+    id: '/team',
+    path: '/team',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedKnowledgeProductsRoute =
+  AuthenticatedKnowledgeProductsRouteImport.update({
+    id: '/products',
+    path: '/products',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedKnowledgeHistoryRoute =
+  AuthenticatedKnowledgeHistoryRouteImport.update({
+    id: '/history',
+    path: '/history',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedKnowledgeFaqRoute =
+  AuthenticatedKnowledgeFaqRouteImport.update({
+    id: '/faq',
+    path: '/faq',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedKnowledgeDocumentsRoute =
+  AuthenticatedKnowledgeDocumentsRouteImport.update({
+    id: '/documents',
+    path: '/documents',
+    getParentRoute: () => AuthenticatedKnowledgeRoute,
   } as any)
 const AuthenticatedInstructorDashboardRoute =
   AuthenticatedInstructorDashboardRouteImport.update({
@@ -3779,6 +3841,7 @@ export interface FileRoutesByFullPath {
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/hq': typeof AuthenticatedHqRoute
   '/instructor': typeof AuthenticatedInstructorRouteWithChildren
+  '/knowledge': typeof AuthenticatedKnowledgeRouteWithChildren
   '/my-templates': typeof AuthenticatedMyTemplatesRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
@@ -3989,6 +4052,13 @@ export interface FileRoutesByFullPath {
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
+  '/knowledge/documents': typeof AuthenticatedKnowledgeDocumentsRoute
+  '/knowledge/faq': typeof AuthenticatedKnowledgeFaqRoute
+  '/knowledge/history': typeof AuthenticatedKnowledgeHistoryRoute
+  '/knowledge/products': typeof AuthenticatedKnowledgeProductsRoute
+  '/knowledge/team': typeof AuthenticatedKnowledgeTeamRoute
+  '/knowledge/upload': typeof AuthenticatedKnowledgeUploadRoute
+  '/knowledge/websites': typeof AuthenticatedKnowledgeWebsitesRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -4052,6 +4122,7 @@ export interface FileRoutesByFullPath {
   '/agents/': typeof AuthenticatedAgentsIndexRoute
   '/billing/': typeof AuthenticatedBillingIndexRoute
   '/instructor/': typeof AuthenticatedInstructorIndexRoute
+  '/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
   '/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/templates/': typeof AuthenticatedTemplatesIndexRoute
@@ -4528,6 +4599,13 @@ export interface FileRoutesByTo {
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
+  '/knowledge/documents': typeof AuthenticatedKnowledgeDocumentsRoute
+  '/knowledge/faq': typeof AuthenticatedKnowledgeFaqRoute
+  '/knowledge/history': typeof AuthenticatedKnowledgeHistoryRoute
+  '/knowledge/products': typeof AuthenticatedKnowledgeProductsRoute
+  '/knowledge/team': typeof AuthenticatedKnowledgeTeamRoute
+  '/knowledge/upload': typeof AuthenticatedKnowledgeUploadRoute
+  '/knowledge/websites': typeof AuthenticatedKnowledgeWebsitesRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -4591,6 +4669,7 @@ export interface FileRoutesByTo {
   '/agents': typeof AuthenticatedAgentsIndexRoute
   '/billing': typeof AuthenticatedBillingIndexRoute
   '/instructor': typeof AuthenticatedInstructorIndexRoute
+  '/knowledge': typeof AuthenticatedKnowledgeIndexRoute
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/templates': typeof AuthenticatedTemplatesIndexRoute
@@ -4877,6 +4956,7 @@ export interface FileRoutesById {
   '/_authenticated/cloud': typeof AuthenticatedCloudRouteWithChildren
   '/_authenticated/hq': typeof AuthenticatedHqRoute
   '/_authenticated/instructor': typeof AuthenticatedInstructorRouteWithChildren
+  '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRouteWithChildren
   '/_authenticated/my-templates': typeof AuthenticatedMyTemplatesRoute
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
@@ -5087,6 +5167,13 @@ export interface FileRoutesById {
   '/_authenticated/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/_authenticated/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
+  '/_authenticated/knowledge/documents': typeof AuthenticatedKnowledgeDocumentsRoute
+  '/_authenticated/knowledge/faq': typeof AuthenticatedKnowledgeFaqRoute
+  '/_authenticated/knowledge/history': typeof AuthenticatedKnowledgeHistoryRoute
+  '/_authenticated/knowledge/products': typeof AuthenticatedKnowledgeProductsRoute
+  '/_authenticated/knowledge/team': typeof AuthenticatedKnowledgeTeamRoute
+  '/_authenticated/knowledge/upload': typeof AuthenticatedKnowledgeUploadRoute
+  '/_authenticated/knowledge/websites': typeof AuthenticatedKnowledgeWebsitesRoute
   '/_authenticated/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
   '/_authenticated/partner/account': typeof AuthenticatedPartnerAccountRoute
   '/_authenticated/partner/add-leads': typeof AuthenticatedPartnerAddLeadsRoute
@@ -5150,6 +5237,7 @@ export interface FileRoutesById {
   '/_authenticated/agents/': typeof AuthenticatedAgentsIndexRoute
   '/_authenticated/billing/': typeof AuthenticatedBillingIndexRoute
   '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
+  '/_authenticated/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
   '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/_authenticated/templates/': typeof AuthenticatedTemplatesIndexRoute
@@ -5435,6 +5523,7 @@ export interface FileRouteTypes {
     | '/brand'
     | '/hq'
     | '/instructor'
+    | '/knowledge'
     | '/my-templates'
     | '/partner'
     | '/student'
@@ -5645,6 +5734,13 @@ export interface FileRouteTypes {
     | '/cloud/team'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
+    | '/knowledge/documents'
+    | '/knowledge/faq'
+    | '/knowledge/history'
+    | '/knowledge/products'
+    | '/knowledge/team'
+    | '/knowledge/upload'
+    | '/knowledge/websites'
     | '/partner/academy-builder'
     | '/partner/account'
     | '/partner/add-leads'
@@ -5708,6 +5804,7 @@ export interface FileRouteTypes {
     | '/agents/'
     | '/billing/'
     | '/instructor/'
+    | '/knowledge/'
     | '/notifications/'
     | '/student/'
     | '/templates/'
@@ -6184,6 +6281,13 @@ export interface FileRouteTypes {
     | '/cloud/team'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
+    | '/knowledge/documents'
+    | '/knowledge/faq'
+    | '/knowledge/history'
+    | '/knowledge/products'
+    | '/knowledge/team'
+    | '/knowledge/upload'
+    | '/knowledge/websites'
     | '/partner/academy-builder'
     | '/partner/account'
     | '/partner/add-leads'
@@ -6247,6 +6351,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/billing'
     | '/instructor'
+    | '/knowledge'
     | '/notifications'
     | '/student'
     | '/templates'
@@ -6532,6 +6637,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cloud'
     | '/_authenticated/hq'
     | '/_authenticated/instructor'
+    | '/_authenticated/knowledge'
     | '/_authenticated/my-templates'
     | '/_authenticated/partner'
     | '/_authenticated/student'
@@ -6742,6 +6848,13 @@ export interface FileRouteTypes {
     | '/_authenticated/cloud/team'
     | '/_authenticated/counsellor/copilot'
     | '/_authenticated/instructor/dashboard'
+    | '/_authenticated/knowledge/documents'
+    | '/_authenticated/knowledge/faq'
+    | '/_authenticated/knowledge/history'
+    | '/_authenticated/knowledge/products'
+    | '/_authenticated/knowledge/team'
+    | '/_authenticated/knowledge/upload'
+    | '/_authenticated/knowledge/websites'
     | '/_authenticated/partner/academy-builder'
     | '/_authenticated/partner/account'
     | '/_authenticated/partner/add-leads'
@@ -6805,6 +6918,7 @@ export interface FileRouteTypes {
     | '/_authenticated/agents/'
     | '/_authenticated/billing/'
     | '/_authenticated/instructor/'
+    | '/_authenticated/knowledge/'
     | '/_authenticated/notifications/'
     | '/_authenticated/student/'
     | '/_authenticated/templates/'
@@ -8223,6 +8337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMyTemplatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/knowledge': {
+      id: '/_authenticated/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof AuthenticatedKnowledgeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/instructor': {
       id: '/_authenticated/instructor'
       path: '/instructor'
@@ -8327,6 +8448,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/notifications/'
       preLoaderRoute: typeof AuthenticatedNotificationsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/knowledge/': {
+      id: '/_authenticated/knowledge/'
+      path: '/'
+      fullPath: '/knowledge/'
+      preLoaderRoute: typeof AuthenticatedKnowledgeIndexRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
     }
     '/_authenticated/instructor/': {
       id: '/_authenticated/instructor/'
@@ -8768,6 +8896,55 @@ declare module '@tanstack/react-router' {
       fullPath: '/partner/academy-builder'
       preLoaderRoute: typeof AuthenticatedPartnerAcademyBuilderRouteImport
       parentRoute: typeof AuthenticatedPartnerRoute
+    }
+    '/_authenticated/knowledge/websites': {
+      id: '/_authenticated/knowledge/websites'
+      path: '/websites'
+      fullPath: '/knowledge/websites'
+      preLoaderRoute: typeof AuthenticatedKnowledgeWebsitesRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/knowledge/upload': {
+      id: '/_authenticated/knowledge/upload'
+      path: '/upload'
+      fullPath: '/knowledge/upload'
+      preLoaderRoute: typeof AuthenticatedKnowledgeUploadRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/knowledge/team': {
+      id: '/_authenticated/knowledge/team'
+      path: '/team'
+      fullPath: '/knowledge/team'
+      preLoaderRoute: typeof AuthenticatedKnowledgeTeamRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/knowledge/products': {
+      id: '/_authenticated/knowledge/products'
+      path: '/products'
+      fullPath: '/knowledge/products'
+      preLoaderRoute: typeof AuthenticatedKnowledgeProductsRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/knowledge/history': {
+      id: '/_authenticated/knowledge/history'
+      path: '/history'
+      fullPath: '/knowledge/history'
+      preLoaderRoute: typeof AuthenticatedKnowledgeHistoryRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/knowledge/faq': {
+      id: '/_authenticated/knowledge/faq'
+      path: '/faq'
+      fullPath: '/knowledge/faq'
+      preLoaderRoute: typeof AuthenticatedKnowledgeFaqRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/knowledge/documents': {
+      id: '/_authenticated/knowledge/documents'
+      path: '/documents'
+      fullPath: '/knowledge/documents'
+      preLoaderRoute: typeof AuthenticatedKnowledgeDocumentsRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeRoute
     }
     '/_authenticated/instructor/dashboard': {
       id: '/_authenticated/instructor/dashboard'
@@ -11924,6 +12101,34 @@ const AuthenticatedInstructorRouteWithChildren =
     AuthenticatedInstructorRouteChildren,
   )
 
+interface AuthenticatedKnowledgeRouteChildren {
+  AuthenticatedKnowledgeDocumentsRoute: typeof AuthenticatedKnowledgeDocumentsRoute
+  AuthenticatedKnowledgeFaqRoute: typeof AuthenticatedKnowledgeFaqRoute
+  AuthenticatedKnowledgeHistoryRoute: typeof AuthenticatedKnowledgeHistoryRoute
+  AuthenticatedKnowledgeProductsRoute: typeof AuthenticatedKnowledgeProductsRoute
+  AuthenticatedKnowledgeTeamRoute: typeof AuthenticatedKnowledgeTeamRoute
+  AuthenticatedKnowledgeUploadRoute: typeof AuthenticatedKnowledgeUploadRoute
+  AuthenticatedKnowledgeWebsitesRoute: typeof AuthenticatedKnowledgeWebsitesRoute
+  AuthenticatedKnowledgeIndexRoute: typeof AuthenticatedKnowledgeIndexRoute
+}
+
+const AuthenticatedKnowledgeRouteChildren: AuthenticatedKnowledgeRouteChildren =
+  {
+    AuthenticatedKnowledgeDocumentsRoute: AuthenticatedKnowledgeDocumentsRoute,
+    AuthenticatedKnowledgeFaqRoute: AuthenticatedKnowledgeFaqRoute,
+    AuthenticatedKnowledgeHistoryRoute: AuthenticatedKnowledgeHistoryRoute,
+    AuthenticatedKnowledgeProductsRoute: AuthenticatedKnowledgeProductsRoute,
+    AuthenticatedKnowledgeTeamRoute: AuthenticatedKnowledgeTeamRoute,
+    AuthenticatedKnowledgeUploadRoute: AuthenticatedKnowledgeUploadRoute,
+    AuthenticatedKnowledgeWebsitesRoute: AuthenticatedKnowledgeWebsitesRoute,
+    AuthenticatedKnowledgeIndexRoute: AuthenticatedKnowledgeIndexRoute,
+  }
+
+const AuthenticatedKnowledgeRouteWithChildren =
+  AuthenticatedKnowledgeRoute._addFileChildren(
+    AuthenticatedKnowledgeRouteChildren,
+  )
+
 interface AuthenticatedPartnerAiEmployeesRouteChildren {
   AuthenticatedPartnerAiEmployeesSlugRoute: typeof AuthenticatedPartnerAiEmployeesSlugRoute
 }
@@ -12231,6 +12436,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCloudRoute: typeof AuthenticatedCloudRouteWithChildren
   AuthenticatedHqRoute: typeof AuthenticatedHqRoute
   AuthenticatedInstructorRoute: typeof AuthenticatedInstructorRouteWithChildren
+  AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRouteWithChildren
   AuthenticatedMyTemplatesRoute: typeof AuthenticatedMyTemplatesRoute
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
@@ -12258,6 +12464,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCloudRoute: AuthenticatedCloudRouteWithChildren,
   AuthenticatedHqRoute: AuthenticatedHqRoute,
   AuthenticatedInstructorRoute: AuthenticatedInstructorRouteWithChildren,
+  AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRouteWithChildren,
   AuthenticatedMyTemplatesRoute: AuthenticatedMyTemplatesRoute,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
