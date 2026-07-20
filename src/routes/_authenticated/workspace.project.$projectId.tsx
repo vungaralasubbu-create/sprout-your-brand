@@ -93,7 +93,7 @@ function WorkspaceProject() {
   const statusVariant = (s?: string): any =>
     s === "completed" ? "success"
       : s === "running" ? "default"
-      : s === "failed" ? "destructive"
+      : s === "failed" ? "danger"
       : "muted";
 
   const saveName = async () => {
