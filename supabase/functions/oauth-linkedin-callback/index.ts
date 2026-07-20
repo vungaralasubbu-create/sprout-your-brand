@@ -22,30 +22,40 @@ Deno.serve(async (req) => {
       code = (body as { code?: string }).code ?? code;
       state = (body as { state?: string }).state ?? state;
     }
-    if (!code || !state) return json({ error: "Missing code or state" }, { status: 400 });
+    if (!code || !state) return json({ ok: false, stage: "input", error: "Missing code or state" });
 
     const parsed = await verifyState(state);
-    if (!parsed) return json({ error: "Invalid or expired state" }, { status: 400 });
+    if (!parsed) return json({ ok: false, stage: "state", error: "Invalid or expired state" });
 
     const caller = await getUserFromRequest(req);
     if (caller && caller.id !== parsed.userId) {
-      return json({ error: "State does not match session" }, { status: 403 });
+      return json({ ok: false, stage: "session", error: "State does not match session user" });
     }
 
-    const tok = await exchangeCodeForToken(code);
+    let tok;
+    try {
+      tok = await exchangeCodeForToken(code);
+    } catch (e) {
+      return json({ ok: false, stage: "token_exchange", error: (e as Error).message });
+    }
     const accessToken = tok.access_token;
     const expiresAt = tok.expires_in
       ? new Date(Date.now() + tok.expires_in * 1000).toISOString()
       : null;
 
-    const profile = await fetchUserInfo(accessToken);
+    let profile;
+    try {
+      profile = await fetchUserInfo(accessToken);
+    } catch (e) {
+      return json({ ok: false, stage: "userinfo", error: (e as Error).message });
+    }
     const memberUrn = `urn:li:person:${profile.sub}`;
     const displayName = profile.name || [profile.given_name, profile.family_name].filter(Boolean).join(" ") || profile.email || profile.sub;
 
     const admin = getAdminClient();
     const now = new Date().toISOString();
 
-    await admin.from("soc_accounts").upsert(
+    const { error: upsertErr } = await admin.from("soc_accounts").upsert(
       {
         owner_id: parsed.userId,
         brand_id: parsed.brandId,
@@ -74,12 +84,15 @@ Deno.serve(async (req) => {
       },
       { onConflict: "owner_id,platform,account_external_id" as unknown as string },
     );
+    if (upsertErr) {
+      return json({ ok: false, stage: "db_upsert", error: upsertErr.message, details: upsertErr });
+    }
 
     return json({
       ok: true,
       connected: [{ platform: "linkedin", account_name: displayName, external_id: profile.sub }],
     });
   } catch (err) {
-    return json({ error: (err as Error).message }, { status: 500 });
+    return json({ ok: false, stage: "unhandled", error: (err as Error).message, stack: (err as Error).stack });
   }
 });
