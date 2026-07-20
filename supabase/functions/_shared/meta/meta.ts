@@ -120,5 +120,13 @@ export function json(body: unknown, init: JsonResponseInit = {}): Response {
 
 export function preflight(req: Request): Response | null {
   if (req.method !== "OPTIONS") return null;
-  return json({}, { status: 204 });
+  const headers = new Headers();
+  headers.set("Access-Control-Allow-Origin", "*");
+  headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  headers.set(
+    "Access-Control-Allow-Headers",
+    "authorization, x-client-info, apikey, content-type",
+  );
+  headers.set("Access-Control-Max-Age", "86400");
+  return new Response(null, { status: 204, headers });
 }
