@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
 
     const url = new URL(X_AUTH);
     url.searchParams.set("response_type", "code");
-    url.searchParams.set("client_id", requireEnv("X_CLIENT_ID"));
+    url.searchParams.set("client_id", requireEnv("TWITTER_CLIENT_ID"));
     url.searchParams.set("redirect_uri", getRedirectUri());
     url.searchParams.set("scope", scopes);
     url.searchParams.set("state", state);
