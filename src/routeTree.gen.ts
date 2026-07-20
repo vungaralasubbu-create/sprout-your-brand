@@ -401,6 +401,7 @@ import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './route
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
+import { Route as AuthenticatedAdminMarketingOsSeoHubRouteImport } from './routes/_authenticated/admin.marketing-os.seo-hub'
 import { Route as AuthenticatedAdminMarketingOsPublisherRouteImport } from './routes/_authenticated/admin.marketing-os.publisher'
 import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
 import { Route as AuthenticatedAdminMarketingOsMediaLibraryRouteImport } from './routes/_authenticated/admin.marketing-os.media-library'
@@ -2692,6 +2693,12 @@ const AuthenticatedAdminPartnersIdRoute =
     path: '/partners/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMarketingOsSeoHubRoute =
+  AuthenticatedAdminMarketingOsSeoHubRouteImport.update({
+    id: '/seo-hub',
+    path: '/seo-hub',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminMarketingOsPublisherRoute =
   AuthenticatedAdminMarketingOsPublisherRouteImport.update({
     id: '/publisher',
@@ -3742,6 +3749,7 @@ export interface FileRoutesByFullPath {
   '/admin/marketing-os/media-library': typeof AuthenticatedAdminMarketingOsMediaLibraryRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
+  '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -4229,6 +4237,7 @@ export interface FileRoutesByTo {
   '/admin/marketing-os/media-library': typeof AuthenticatedAdminMarketingOsMediaLibraryRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
+  '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -4733,6 +4742,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/marketing-os/media-library': typeof AuthenticatedAdminMarketingOsMediaLibraryRoute
   '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/_authenticated/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
+  '/_authenticated/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -5237,6 +5247,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/media-library'
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
+    | '/admin/marketing-os/seo-hub'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -5724,6 +5735,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/media-library'
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
+    | '/admin/marketing-os/seo-hub'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -6227,6 +6239,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/marketing-os/media-library'
     | '/_authenticated/admin/marketing-os/planner'
     | '/_authenticated/admin/marketing-os/publisher'
+    | '/_authenticated/admin/marketing-os/seo-hub'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payouts/$id'
@@ -9210,6 +9223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/marketing-os/seo-hub': {
+      id: '/_authenticated/admin/marketing-os/seo-hub'
+      path: '/seo-hub'
+      fullPath: '/admin/marketing-os/seo-hub'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsSeoHubRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/marketing-os/publisher': {
       id: '/_authenticated/admin/marketing-os/publisher'
       path: '/publisher'
@@ -10325,6 +10345,7 @@ interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsMediaLibraryRoute: typeof AuthenticatedAdminMarketingOsMediaLibraryRoute
   AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
   AuthenticatedAdminMarketingOsPublisherRoute: typeof AuthenticatedAdminMarketingOsPublisherRoute
+  AuthenticatedAdminMarketingOsSeoHubRoute: typeof AuthenticatedAdminMarketingOsSeoHubRoute
   AuthenticatedAdminMarketingOsIndexRoute: typeof AuthenticatedAdminMarketingOsIndexRoute
   AuthenticatedAdminMarketingOsPlansIdRoute: typeof AuthenticatedAdminMarketingOsPlansIdRoute
 }
@@ -10351,6 +10372,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsPlannerRoute,
     AuthenticatedAdminMarketingOsPublisherRoute:
       AuthenticatedAdminMarketingOsPublisherRoute,
+    AuthenticatedAdminMarketingOsSeoHubRoute:
+      AuthenticatedAdminMarketingOsSeoHubRoute,
     AuthenticatedAdminMarketingOsIndexRoute:
       AuthenticatedAdminMarketingOsIndexRoute,
     AuthenticatedAdminMarketingOsPlansIdRoute:
