@@ -26,6 +26,7 @@ type Account = {
   account_external_id: string | null;
   connection_status: string | null;
   token_expires_at: string | null;
+  refresh_token_ciphertext: string | null;
   last_synced_at: string | null;
   metadata: Record<string, unknown> | null;
 };
@@ -46,7 +47,7 @@ function SocialAccountsPage() {
     }
     const { data, error } = await supabase
       .from("soc_accounts")
-      .select("id, platform, account_name, account_external_id, connection_status, token_expires_at, last_synced_at, metadata")
+      .select("id, platform, account_name, account_external_id, connection_status, token_expires_at, last_synced_at, metadata, refresh_token_ciphertext")
       .eq("owner_id", uid)
       .in("platform", ["facebook", "instagram", "linkedin", "x"])
       .order("platform", { ascending: true });
@@ -189,7 +190,19 @@ function SocialAccountsPage() {
               {accounts.map((a) => {
                 const Icon = a.platform === "facebook" ? Facebook : a.platform === "linkedin" ? Linkedin : a.platform === "x" ? Twitter : Instagram;
                 const expires = a.token_expires_at ? new Date(a.token_expires_at) : null;
-                const expiresSoon = expires && expires.getTime() - Date.now() < 7 * 86400_000;
+                const hasRefresh = !!a.refresh_token_ciphertext;
+                // X & LinkedIn use OAuth2 with rotating refresh tokens: the access token expires
+                // in ~2h but the connection stays alive via auto-refresh. Only warn when no
+                // refresh token is stored (e.g. Meta long-lived tokens nearing expiry).
+                const expiresSoon = !hasRefresh && expires && expires.getTime() - Date.now() < 7 * 86400_000;
+                const expiryLabel = hasRefresh
+                  ? "Auto-renews"
+                  : expires
+                    ? `Token expires ${expires.toLocaleDateString()}`
+                    : null;
+                const expiryTitle = expires
+                  ? `Access token expires ${expires.toLocaleString()}${hasRefresh ? " · refreshed automatically" : ""}`
+                  : undefined;
                 return (
                   <li key={a.id} className="flex items-center justify-between gap-4 py-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -200,11 +213,11 @@ function SocialAccountsPage() {
                           <span className="capitalize">{a.platform}</span>
                           <span>·</span>
                           <span>ID {a.account_external_id}</span>
-                          {expires && (
+                          {expiryLabel && (
                             <>
                               <span>·</span>
-                              <span className={expiresSoon ? "text-amber-600" : ""}>
-                                Token expires {expires.toLocaleDateString()}
+                              <span className={expiresSoon ? "text-amber-600" : ""} title={expiryTitle}>
+                                {expiryLabel}
                               </span>
                             </>
                           )}
