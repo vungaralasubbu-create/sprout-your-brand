@@ -4,6 +4,7 @@ import {
   Sparkles, LayoutDashboard, CalendarDays, Send, BarChart3, Wand2,
   CheckSquare, Palette, Megaphone, FolderOpen, FileText, Settings,
   Search, Bell, Zap, ChevronsUpDown, Plus, ChevronDown, TrendingUp,
+  Mail, Radar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,8 @@ const NAV: Array<{ to: string; label: string; icon: typeof LayoutDashboard; exac
   { to: "/admin/marketing-os/campaigns", label: "Campaigns", icon: Megaphone },
   { to: "/admin/marketing-os/planner", label: "Planner", icon: Wand2 },
   { to: "/admin/marketing-os/content", label: "Content", icon: FileText },
+  { to: "/admin/marketing-os/email", label: "Email Marketing", icon: Mail },
+  { to: "/admin/marketing-os/intelligence", label: "Market Intelligence", icon: Radar },
   { to: "/admin/marketing-os/approvals", label: "Approval", icon: CheckSquare },
   { to: "/admin/marketing-os/publisher", label: "Publisher", icon: Send },
   { to: "/admin/marketing-os/calendar", label: "Calendar", icon: CalendarDays },

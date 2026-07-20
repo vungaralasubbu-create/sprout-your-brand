@@ -9501,6 +9501,74 @@ export type Database = {
         }
         Relationships: []
       }
+      content_opportunities: {
+        Row: {
+          competition: number | null
+          created_at: string
+          estimated_reach: number | null
+          id: string
+          industry: string | null
+          metadata: Json | null
+          owner_id: string
+          priority_score: number | null
+          rationale: string | null
+          source_trend_id: string | null
+          status: string | null
+          supporting_keywords: string[] | null
+          target_keyword: string | null
+          title: string
+          topic: string | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          competition?: number | null
+          created_at?: string
+          estimated_reach?: number | null
+          id?: string
+          industry?: string | null
+          metadata?: Json | null
+          owner_id: string
+          priority_score?: number | null
+          rationale?: string | null
+          source_trend_id?: string | null
+          status?: string | null
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          title: string
+          topic?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          competition?: number | null
+          created_at?: string
+          estimated_reach?: number | null
+          id?: string
+          industry?: string | null
+          metadata?: Json | null
+          owner_id?: string
+          priority_score?: number | null
+          rationale?: string | null
+          source_trend_id?: string | null
+          status?: string | null
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          title?: string
+          topic?: string | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_opportunities_source_trend_id_fkey"
+            columns: ["source_trend_id"]
+            isOneToOne: false
+            referencedRelation: "market_trends"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_relations: {
         Row: {
           auto_generated: boolean
@@ -14397,6 +14465,66 @@ export type Database = {
           },
         ]
       }
+      industry_news: {
+        Row: {
+          ai_summary: string | null
+          business_relevance: number | null
+          created_at: string
+          headline: string
+          id: string
+          impact: string | null
+          industry: string | null
+          marketing_opportunities: string[] | null
+          owner_id: string
+          published_at: string | null
+          recommended_actions: string[] | null
+          source: string | null
+          status: string | null
+          summary: string | null
+          tags: string[] | null
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          business_relevance?: number | null
+          created_at?: string
+          headline: string
+          id?: string
+          impact?: string | null
+          industry?: string | null
+          marketing_opportunities?: string[] | null
+          owner_id: string
+          published_at?: string | null
+          recommended_actions?: string[] | null
+          source?: string | null
+          status?: string | null
+          summary?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          ai_summary?: string | null
+          business_relevance?: number | null
+          created_at?: string
+          headline?: string
+          id?: string
+          impact?: string | null
+          industry?: string | null
+          marketing_opportunities?: string[] | null
+          owner_id?: string
+          published_at?: string | null
+          recommended_actions?: string[] | null
+          source?: string | null
+          status?: string | null
+          summary?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       internal_links: {
         Row: {
           auto_generated: boolean
@@ -15307,6 +15435,60 @@ export type Database = {
           status?: string
           subject_type?: string
           summary?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      keyword_trends: {
+        Row: {
+          category: string | null
+          created_at: string
+          detected_at: string
+          difficulty: number | null
+          direction: string | null
+          growth_percent: number | null
+          id: string
+          industry: string | null
+          intent: string | null
+          keyword: string
+          monthly_volume: number | null
+          owner_id: string
+          regions: string[] | null
+          seasonality: Json | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          detected_at?: string
+          difficulty?: number | null
+          direction?: string | null
+          growth_percent?: number | null
+          id?: string
+          industry?: string | null
+          intent?: string | null
+          keyword: string
+          monthly_volume?: number | null
+          owner_id: string
+          regions?: string[] | null
+          seasonality?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          detected_at?: string
+          difficulty?: number | null
+          direction?: string | null
+          growth_percent?: number | null
+          id?: string
+          industry?: string | null
+          intent?: string | null
+          keyword?: string
+          monthly_volume?: number | null
+          owner_id?: string
+          regions?: string[] | null
+          seasonality?: Json | null
           updated_at?: string
         }
         Relationships: []
@@ -16830,6 +17012,129 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      market_reports: {
+        Row: {
+          created_at: string
+          generated_by: string | null
+          highlights: string[] | null
+          id: string
+          metrics: Json | null
+          owner_id: string
+          period_end: string | null
+          period_start: string | null
+          recommendations: string[] | null
+          report_type: string
+          status: string | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          generated_by?: string | null
+          highlights?: string[] | null
+          id?: string
+          metrics?: Json | null
+          owner_id: string
+          period_end?: string | null
+          period_start?: string | null
+          recommendations?: string[] | null
+          report_type: string
+          status?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          generated_by?: string | null
+          highlights?: string[] | null
+          id?: string
+          metrics?: Json | null
+          owner_id?: string
+          period_end?: string | null
+          period_start?: string | null
+          recommendations?: string[] | null
+          report_type?: string
+          status?: string | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      market_trends: {
+        Row: {
+          business_relevance: number | null
+          category: string | null
+          competition: number | null
+          created_at: string
+          detected_at: string
+          difficulty: number | null
+          growth_rate: number | null
+          id: string
+          industry: string | null
+          language: string | null
+          metadata: Json | null
+          opportunity_score: number | null
+          owner_id: string
+          popularity: number | null
+          region: string | null
+          source: string | null
+          status: string | null
+          tags: string[] | null
+          timeframe: string | null
+          topic: string
+          updated_at: string
+          velocity: number | null
+        }
+        Insert: {
+          business_relevance?: number | null
+          category?: string | null
+          competition?: number | null
+          created_at?: string
+          detected_at?: string
+          difficulty?: number | null
+          growth_rate?: number | null
+          id?: string
+          industry?: string | null
+          language?: string | null
+          metadata?: Json | null
+          opportunity_score?: number | null
+          owner_id: string
+          popularity?: number | null
+          region?: string | null
+          source?: string | null
+          status?: string | null
+          tags?: string[] | null
+          timeframe?: string | null
+          topic: string
+          updated_at?: string
+          velocity?: number | null
+        }
+        Update: {
+          business_relevance?: number | null
+          category?: string | null
+          competition?: number | null
+          created_at?: string
+          detected_at?: string
+          difficulty?: number | null
+          growth_rate?: number | null
+          id?: string
+          industry?: string | null
+          language?: string | null
+          metadata?: Json | null
+          opportunity_score?: number | null
+          owner_id?: string
+          popularity?: number | null
+          region?: string | null
+          source?: string | null
+          status?: string | null
+          tags?: string[] | null
+          timeframe?: string | null
+          topic?: string
+          updated_at?: string
+          velocity?: number | null
+        }
+        Relationships: []
       }
       marketing_plan_versions: {
         Row: {
@@ -25789,6 +26094,63 @@ export type Database = {
           website_url?: string | null
         }
         Relationships: []
+      }
+      trend_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          description: string | null
+          id: string
+          is_read: boolean
+          owner_id: string
+          payload: Json | null
+          severity: string
+          source_news_id: string | null
+          source_trend_id: string | null
+          title: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_read?: boolean
+          owner_id: string
+          payload?: Json | null
+          severity?: string
+          source_news_id?: string | null
+          source_trend_id?: string | null
+          title: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_read?: boolean
+          owner_id?: string
+          payload?: Json | null
+          severity?: string
+          source_news_id?: string | null
+          source_trend_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trend_alerts_source_news_id_fkey"
+            columns: ["source_news_id"]
+            isOneToOne: false
+            referencedRelation: "industry_news"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trend_alerts_source_trend_id_fkey"
+            columns: ["source_trend_id"]
+            isOneToOne: false
+            referencedRelation: "market_trends"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tsh_alerts: {
         Row: {
