@@ -110,7 +110,7 @@ export const listEmailSequences = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data } = await context.supabase
       .from("engage_sequences")
-      .select("id, name, status, trigger_type, updated_at")
+      .select("id, name, is_active, trigger_event, audience, updated_at")
       .order("updated_at", { ascending: false })
       .limit(100);
     return { sequences: data ?? [] };
