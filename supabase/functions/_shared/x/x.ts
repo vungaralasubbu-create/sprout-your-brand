@@ -300,7 +300,7 @@ export interface StatePayload {
 }
 
 export async function buildState(userId: string, brandId: string | null, codeVerifier: string): Promise<string> {
-  const secret = requireEnv("X_CLIENT_SECRET");
+  const secret = getTwitterClientSecret();
   const payload: StatePayload = { u: userId, b: brandId, v: codeVerifier, n: crypto.randomUUID(), t: Date.now() };
   const body = b64url(new TextEncoder().encode(JSON.stringify(payload)));
   const sig = await hmacSign(body, secret);
@@ -312,7 +312,7 @@ export async function verifyState(
 ): Promise<{ userId: string; brandId: string | null; codeVerifier: string } | null> {
   const [body, sig] = state.split(".");
   if (!body || !sig) return null;
-  const secret = requireEnv("X_CLIENT_SECRET");
+  const secret = getTwitterClientSecret();
   const expected = await hmacSign(body, secret);
   if (expected !== sig) return null;
   const decoded = JSON.parse(new TextDecoder().decode(b64urlDecode(body))) as StatePayload;
