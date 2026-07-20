@@ -299,7 +299,7 @@ function MarketingOSHome() {
 
       {/* PROGRESS MODAL */}
       <Dialog open={runningProject !== null}>
-        <DialogContent className="max-w-lg" hideClose>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-primary/60 grid place-items-center text-white">
