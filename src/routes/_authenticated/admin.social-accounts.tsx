@@ -60,6 +60,33 @@ function SocialAccountsPage() {
     void load();
   }, [load]);
 
+  // Silent auto-refresh: if any X/LinkedIn account's access token has expired
+  // or is within 10 minutes of expiring, call its refresh endpoint in the
+  // background. offline.access refresh tokens rotate on every refresh.
+  useEffect(() => {
+    if (loading || accounts.length === 0) return;
+    const now = Date.now();
+    const soon = 10 * 60 * 1000;
+    const stale = accounts.filter((a) => {
+      if (a.platform !== "x" && a.platform !== "linkedin") return false;
+      if (!a.refresh_token_ciphertext) return false;
+      if (!a.token_expires_at) return false;
+      return new Date(a.token_expires_at).getTime() - now < soon;
+    });
+    if (stale.length === 0) return;
+    void (async () => {
+      for (const a of stale) {
+        try {
+          await supabase.functions.invoke(fnFor(a.platform, "refresh"), { body: { account_id: a.id } });
+        } catch {
+          // surfaced via the manual refresh button if it recurs
+        }
+      }
+      await load();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
   const startOAuth = async (provider: "meta" | "linkedin" | "x") => {
     const key = `connect-${provider}`;
     setBusy(key);
@@ -190,56 +217,69 @@ function SocialAccountsPage() {
               {accounts.map((a) => {
                 const Icon = a.platform === "facebook" ? Facebook : a.platform === "linkedin" ? Linkedin : a.platform === "x" ? Twitter : Instagram;
                 const expires = a.token_expires_at ? new Date(a.token_expires_at) : null;
+                const lastSynced = a.last_synced_at ? new Date(a.last_synced_at) : null;
                 const hasRefresh = !!a.refresh_token_ciphertext;
-                // X & LinkedIn use OAuth2 with rotating refresh tokens: the access token expires
-                // in ~2h but the connection stays alive via auto-refresh. Only warn when no
-                // refresh token is stored (e.g. Meta long-lived tokens nearing expiry).
-                const expiresSoon = !hasRefresh && expires && expires.getTime() - Date.now() < 7 * 86400_000;
-                const expiryLabel = hasRefresh
-                  ? "Auto-renews"
-                  : expires
-                    ? `Token expires ${expires.toLocaleDateString()}`
-                    : null;
-                const expiryTitle = expires
-                  ? `Access token expires ${expires.toLocaleString()}${hasRefresh ? " · refreshed automatically" : ""}`
-                  : undefined;
+                const rotatingRefresh = hasRefresh && (a.platform === "x" || a.platform === "linkedin");
+                const accessExpired = expires && expires.getTime() < Date.now();
+                // Warn only when there's no refresh token AND access token is close to expiring.
+                const warn = !hasRefresh && expires && expires.getTime() - Date.now() < 7 * 86400_000;
+                const fmt = (d: Date | null) => (d ? d.toLocaleString() : "—");
                 return (
-                  <li key={a.id} className="flex items-center justify-between gap-4 py-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <Icon className="h-5 w-5 shrink-0 text-muted-foreground" />
-                      <div className="min-w-0">
-                        <div className="font-medium truncate">{a.account_name ?? a.account_external_id}</div>
-                        <div className="text-xs text-muted-foreground flex flex-wrap gap-2 mt-0.5">
-                          <span className="capitalize">{a.platform}</span>
-                          <span>·</span>
-                          <span>ID {a.account_external_id}</span>
-                          {expiryLabel && (
-                            <>
-                              <span>·</span>
-                              <span className={expiresSoon ? "text-amber-600" : ""} title={expiryTitle}>
-                                {expiryLabel}
-                              </span>
-                            </>
-                          )}
+                  <li key={a.id} className="py-3 space-y-2">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Icon className="h-5 w-5 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0">
+                          <div className="font-medium truncate">{a.account_name ?? a.account_external_id}</div>
+                          <div className="text-xs text-muted-foreground">
+                            <span className="capitalize">{a.platform}</span> · ID {a.account_external_id}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <Badge variant={a.connection_status === "connected" ? "success" : "muted"}>
-                        {a.connection_status ?? "unknown"}
-                      </Badge>
-                      <Button variant="outline" size="sm" onClick={() => refresh(a.id, a.platform)} disabled={busy === a.id} title="Refresh token">
-                        <RefreshCw className="h-4 w-4" />
-                      </Button>
-                      {(a.platform === "linkedin" || a.platform === "x") && (
-                        <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id}>
-                          Test Publish
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Badge variant={a.connection_status === "connected" ? "success" : "muted"}>
+                          {a.connection_status ?? "unknown"}
+                        </Badge>
+                        <Button variant="outline" size="sm" onClick={() => refresh(a.id, a.platform)} disabled={busy === a.id} title="Refresh token now">
+                          <RefreshCw className="h-4 w-4" />
                         </Button>
-                      )}
-                      <Button variant="outline" size="sm" onClick={() => disconnect(a.id, a.platform)} disabled={busy === a.id} title="Disconnect">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                        {(a.platform === "linkedin" || a.platform === "x") && (
+                          <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id}>
+                            Test Publish
+                          </Button>
+                        )}
+                        <Button variant="outline" size="sm" onClick={() => disconnect(a.id, a.platform)} disabled={busy === a.id} title="Disconnect">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs pl-8">
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-muted-foreground">Last refreshed</dt>
+                        <dd className="font-medium">{fmt(lastSynced)}</dd>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-muted-foreground">Access token expires</dt>
+                        <dd className={`font-medium ${warn ? "text-amber-600" : accessExpired && rotatingRefresh ? "text-muted-foreground" : ""}`}>
+                          {fmt(expires)}
+                          {accessExpired && rotatingRefresh && <span className="ml-1 text-muted-foreground">(auto-refresh pending)</span>}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-muted-foreground">Refresh token expires</dt>
+                        <dd className="font-medium">
+                          {hasRefresh
+                            ? rotatingRefresh
+                              ? "Never (rotates on refresh)"
+                              : "Provider-managed"
+                            : "No refresh token"}
+                        </dd>
+                      </div>
+                      <div className="flex justify-between gap-2">
+                        <dt className="text-muted-foreground">Auto-refresh</dt>
+                        <dd className="font-medium">{rotatingRefresh ? "Enabled" : "Manual only"}</dd>
+                      </div>
+                    </dl>
                   </li>
                 );
               })}
