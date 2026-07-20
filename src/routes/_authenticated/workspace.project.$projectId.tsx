@@ -764,6 +764,16 @@ function WorkspaceProject() {
           </Button>
         </div>
       </div>
+
+      {/* ============== AI COPILOT ============== */}
+      <CopilotToggle open={copilotOpen} onClick={() => setCopilotOpen(true)} />
+      <CopilotPanel
+        projectId={projectId}
+        projectName={project.name}
+        status={project.status}
+        open={copilotOpen}
+        onClose={() => setCopilotOpen(false)}
+      />
     </div>
   );
 }
