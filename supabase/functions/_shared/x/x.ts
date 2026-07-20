@@ -122,7 +122,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<XTokenRe
   const body = new URLSearchParams({
     grant_type: "refresh_token",
     refresh_token: refreshToken,
-    client_id: requireEnv("X_CLIENT_ID"),
+    client_id: getTwitterClientId(),
   });
   const res = await fetch(X_TOKEN, {
     method: "POST",
@@ -141,7 +141,7 @@ export async function revokeToken(token: string, tokenTypeHint: "access_token" |
   const body = new URLSearchParams({
     token,
     token_type_hint: tokenTypeHint,
-    client_id: requireEnv("X_CLIENT_ID"),
+    client_id: getTwitterClientId(),
   });
   await fetch(X_REVOKE, {
     method: "POST",
