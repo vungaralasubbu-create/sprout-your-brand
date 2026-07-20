@@ -163,6 +163,7 @@ import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedMyTemplatesRouteImport } from './routes/_authenticated/my-templates'
 import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
+import { Route as AuthenticatedIntegrationsRouteImport } from './routes/_authenticated/integrations'
 import { Route as AuthenticatedInstructorRouteImport } from './routes/_authenticated/instructor'
 import { Route as AuthenticatedHqRouteImport } from './routes/_authenticated/hq'
 import { Route as AuthenticatedCloudRouteImport } from './routes/_authenticated/cloud'
@@ -179,6 +180,7 @@ import { Route as AuthenticatedTemplatesIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
 import { Route as AuthenticatedKnowledgeIndexRouteImport } from './routes/_authenticated/knowledge.index'
+import { Route as AuthenticatedIntegrationsIndexRouteImport } from './routes/_authenticated/integrations.index'
 import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
 import { Route as AuthenticatedBillingIndexRouteImport } from './routes/_authenticated/billing.index'
 import { Route as AuthenticatedAgentsIndexRouteImport } from './routes/_authenticated/agents.index'
@@ -249,6 +251,11 @@ import { Route as AuthenticatedKnowledgeProductsRouteImport } from './routes/_au
 import { Route as AuthenticatedKnowledgeHistoryRouteImport } from './routes/_authenticated/knowledge.history'
 import { Route as AuthenticatedKnowledgeFaqRouteImport } from './routes/_authenticated/knowledge.faq'
 import { Route as AuthenticatedKnowledgeDocumentsRouteImport } from './routes/_authenticated/knowledge.documents'
+import { Route as AuthenticatedIntegrationsSettingsRouteImport } from './routes/_authenticated/integrations.settings'
+import { Route as AuthenticatedIntegrationsLogsRouteImport } from './routes/_authenticated/integrations.logs'
+import { Route as AuthenticatedIntegrationsInstalledRouteImport } from './routes/_authenticated/integrations.installed'
+import { Route as AuthenticatedIntegrationsDiscoverRouteImport } from './routes/_authenticated/integrations.discover'
+import { Route as AuthenticatedIntegrationsProviderRouteImport } from './routes/_authenticated/integrations.$provider'
 import { Route as AuthenticatedInstructorDashboardRouteImport } from './routes/_authenticated/instructor.dashboard'
 import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
 import { Route as AuthenticatedCloudTeamRouteImport } from './routes/_authenticated/cloud.team'
@@ -1351,6 +1358,12 @@ const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
   path: '/knowledge',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedIntegrationsRoute =
+  AuthenticatedIntegrationsRouteImport.update({
+    id: '/integrations',
+    path: '/integrations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedInstructorRoute = AuthenticatedInstructorRouteImport.update({
   id: '/instructor',
   path: '/instructor',
@@ -1434,6 +1447,12 @@ const AuthenticatedKnowledgeIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedIntegrationsIndexRoute =
+  AuthenticatedIntegrationsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedIntegrationsRoute,
   } as any)
 const AuthenticatedInstructorIndexRoute =
   AuthenticatedInstructorIndexRouteImport.update({
@@ -1837,6 +1856,36 @@ const AuthenticatedKnowledgeDocumentsRoute =
     id: '/documents',
     path: '/documents',
     getParentRoute: () => AuthenticatedKnowledgeRoute,
+  } as any)
+const AuthenticatedIntegrationsSettingsRoute =
+  AuthenticatedIntegrationsSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedIntegrationsRoute,
+  } as any)
+const AuthenticatedIntegrationsLogsRoute =
+  AuthenticatedIntegrationsLogsRouteImport.update({
+    id: '/logs',
+    path: '/logs',
+    getParentRoute: () => AuthenticatedIntegrationsRoute,
+  } as any)
+const AuthenticatedIntegrationsInstalledRoute =
+  AuthenticatedIntegrationsInstalledRouteImport.update({
+    id: '/installed',
+    path: '/installed',
+    getParentRoute: () => AuthenticatedIntegrationsRoute,
+  } as any)
+const AuthenticatedIntegrationsDiscoverRoute =
+  AuthenticatedIntegrationsDiscoverRouteImport.update({
+    id: '/discover',
+    path: '/discover',
+    getParentRoute: () => AuthenticatedIntegrationsRoute,
+  } as any)
+const AuthenticatedIntegrationsProviderRoute =
+  AuthenticatedIntegrationsProviderRouteImport.update({
+    id: '/$provider',
+    path: '/$provider',
+    getParentRoute: () => AuthenticatedIntegrationsRoute,
   } as any)
 const AuthenticatedInstructorDashboardRoute =
   AuthenticatedInstructorDashboardRouteImport.update({
@@ -3841,6 +3890,7 @@ export interface FileRoutesByFullPath {
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/hq': typeof AuthenticatedHqRoute
   '/instructor': typeof AuthenticatedInstructorRouteWithChildren
+  '/integrations': typeof AuthenticatedIntegrationsRouteWithChildren
   '/knowledge': typeof AuthenticatedKnowledgeRouteWithChildren
   '/my-templates': typeof AuthenticatedMyTemplatesRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -4052,6 +4102,11 @@ export interface FileRoutesByFullPath {
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
+  '/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
+  '/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
+  '/integrations/installed': typeof AuthenticatedIntegrationsInstalledRoute
+  '/integrations/logs': typeof AuthenticatedIntegrationsLogsRoute
+  '/integrations/settings': typeof AuthenticatedIntegrationsSettingsRoute
   '/knowledge/documents': typeof AuthenticatedKnowledgeDocumentsRoute
   '/knowledge/faq': typeof AuthenticatedKnowledgeFaqRoute
   '/knowledge/history': typeof AuthenticatedKnowledgeHistoryRoute
@@ -4122,6 +4177,7 @@ export interface FileRoutesByFullPath {
   '/agents/': typeof AuthenticatedAgentsIndexRoute
   '/billing/': typeof AuthenticatedBillingIndexRoute
   '/instructor/': typeof AuthenticatedInstructorIndexRoute
+  '/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
   '/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
@@ -4599,6 +4655,11 @@ export interface FileRoutesByTo {
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
+  '/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
+  '/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
+  '/integrations/installed': typeof AuthenticatedIntegrationsInstalledRoute
+  '/integrations/logs': typeof AuthenticatedIntegrationsLogsRoute
+  '/integrations/settings': typeof AuthenticatedIntegrationsSettingsRoute
   '/knowledge/documents': typeof AuthenticatedKnowledgeDocumentsRoute
   '/knowledge/faq': typeof AuthenticatedKnowledgeFaqRoute
   '/knowledge/history': typeof AuthenticatedKnowledgeHistoryRoute
@@ -4669,6 +4730,7 @@ export interface FileRoutesByTo {
   '/agents': typeof AuthenticatedAgentsIndexRoute
   '/billing': typeof AuthenticatedBillingIndexRoute
   '/instructor': typeof AuthenticatedInstructorIndexRoute
+  '/integrations': typeof AuthenticatedIntegrationsIndexRoute
   '/knowledge': typeof AuthenticatedKnowledgeIndexRoute
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
@@ -4956,6 +5018,7 @@ export interface FileRoutesById {
   '/_authenticated/cloud': typeof AuthenticatedCloudRouteWithChildren
   '/_authenticated/hq': typeof AuthenticatedHqRoute
   '/_authenticated/instructor': typeof AuthenticatedInstructorRouteWithChildren
+  '/_authenticated/integrations': typeof AuthenticatedIntegrationsRouteWithChildren
   '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRouteWithChildren
   '/_authenticated/my-templates': typeof AuthenticatedMyTemplatesRoute
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -5167,6 +5230,11 @@ export interface FileRoutesById {
   '/_authenticated/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/_authenticated/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
+  '/_authenticated/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
+  '/_authenticated/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
+  '/_authenticated/integrations/installed': typeof AuthenticatedIntegrationsInstalledRoute
+  '/_authenticated/integrations/logs': typeof AuthenticatedIntegrationsLogsRoute
+  '/_authenticated/integrations/settings': typeof AuthenticatedIntegrationsSettingsRoute
   '/_authenticated/knowledge/documents': typeof AuthenticatedKnowledgeDocumentsRoute
   '/_authenticated/knowledge/faq': typeof AuthenticatedKnowledgeFaqRoute
   '/_authenticated/knowledge/history': typeof AuthenticatedKnowledgeHistoryRoute
@@ -5237,6 +5305,7 @@ export interface FileRoutesById {
   '/_authenticated/agents/': typeof AuthenticatedAgentsIndexRoute
   '/_authenticated/billing/': typeof AuthenticatedBillingIndexRoute
   '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
+  '/_authenticated/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/_authenticated/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
   '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
@@ -5523,6 +5592,7 @@ export interface FileRouteTypes {
     | '/brand'
     | '/hq'
     | '/instructor'
+    | '/integrations'
     | '/knowledge'
     | '/my-templates'
     | '/partner'
@@ -5734,6 +5804,11 @@ export interface FileRouteTypes {
     | '/cloud/team'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
+    | '/integrations/$provider'
+    | '/integrations/discover'
+    | '/integrations/installed'
+    | '/integrations/logs'
+    | '/integrations/settings'
     | '/knowledge/documents'
     | '/knowledge/faq'
     | '/knowledge/history'
@@ -5804,6 +5879,7 @@ export interface FileRouteTypes {
     | '/agents/'
     | '/billing/'
     | '/instructor/'
+    | '/integrations/'
     | '/knowledge/'
     | '/notifications/'
     | '/student/'
@@ -6281,6 +6357,11 @@ export interface FileRouteTypes {
     | '/cloud/team'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
+    | '/integrations/$provider'
+    | '/integrations/discover'
+    | '/integrations/installed'
+    | '/integrations/logs'
+    | '/integrations/settings'
     | '/knowledge/documents'
     | '/knowledge/faq'
     | '/knowledge/history'
@@ -6351,6 +6432,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/billing'
     | '/instructor'
+    | '/integrations'
     | '/knowledge'
     | '/notifications'
     | '/student'
@@ -6637,6 +6719,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cloud'
     | '/_authenticated/hq'
     | '/_authenticated/instructor'
+    | '/_authenticated/integrations'
     | '/_authenticated/knowledge'
     | '/_authenticated/my-templates'
     | '/_authenticated/partner'
@@ -6848,6 +6931,11 @@ export interface FileRouteTypes {
     | '/_authenticated/cloud/team'
     | '/_authenticated/counsellor/copilot'
     | '/_authenticated/instructor/dashboard'
+    | '/_authenticated/integrations/$provider'
+    | '/_authenticated/integrations/discover'
+    | '/_authenticated/integrations/installed'
+    | '/_authenticated/integrations/logs'
+    | '/_authenticated/integrations/settings'
     | '/_authenticated/knowledge/documents'
     | '/_authenticated/knowledge/faq'
     | '/_authenticated/knowledge/history'
@@ -6918,6 +7006,7 @@ export interface FileRouteTypes {
     | '/_authenticated/agents/'
     | '/_authenticated/billing/'
     | '/_authenticated/instructor/'
+    | '/_authenticated/integrations/'
     | '/_authenticated/knowledge/'
     | '/_authenticated/notifications/'
     | '/_authenticated/student/'
@@ -8344,6 +8433,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKnowledgeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/integrations': {
+      id: '/_authenticated/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof AuthenticatedIntegrationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/instructor': {
       id: '/_authenticated/instructor'
       path: '/instructor'
@@ -8455,6 +8551,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/knowledge/'
       preLoaderRoute: typeof AuthenticatedKnowledgeIndexRouteImport
       parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/integrations/': {
+      id: '/_authenticated/integrations/'
+      path: '/'
+      fullPath: '/integrations/'
+      preLoaderRoute: typeof AuthenticatedIntegrationsIndexRouteImport
+      parentRoute: typeof AuthenticatedIntegrationsRoute
     }
     '/_authenticated/instructor/': {
       id: '/_authenticated/instructor/'
@@ -8945,6 +9048,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/knowledge/documents'
       preLoaderRoute: typeof AuthenticatedKnowledgeDocumentsRouteImport
       parentRoute: typeof AuthenticatedKnowledgeRoute
+    }
+    '/_authenticated/integrations/settings': {
+      id: '/_authenticated/integrations/settings'
+      path: '/settings'
+      fullPath: '/integrations/settings'
+      preLoaderRoute: typeof AuthenticatedIntegrationsSettingsRouteImport
+      parentRoute: typeof AuthenticatedIntegrationsRoute
+    }
+    '/_authenticated/integrations/logs': {
+      id: '/_authenticated/integrations/logs'
+      path: '/logs'
+      fullPath: '/integrations/logs'
+      preLoaderRoute: typeof AuthenticatedIntegrationsLogsRouteImport
+      parentRoute: typeof AuthenticatedIntegrationsRoute
+    }
+    '/_authenticated/integrations/installed': {
+      id: '/_authenticated/integrations/installed'
+      path: '/installed'
+      fullPath: '/integrations/installed'
+      preLoaderRoute: typeof AuthenticatedIntegrationsInstalledRouteImport
+      parentRoute: typeof AuthenticatedIntegrationsRoute
+    }
+    '/_authenticated/integrations/discover': {
+      id: '/_authenticated/integrations/discover'
+      path: '/discover'
+      fullPath: '/integrations/discover'
+      preLoaderRoute: typeof AuthenticatedIntegrationsDiscoverRouteImport
+      parentRoute: typeof AuthenticatedIntegrationsRoute
+    }
+    '/_authenticated/integrations/$provider': {
+      id: '/_authenticated/integrations/$provider'
+      path: '/$provider'
+      fullPath: '/integrations/$provider'
+      preLoaderRoute: typeof AuthenticatedIntegrationsProviderRouteImport
+      parentRoute: typeof AuthenticatedIntegrationsRoute
     }
     '/_authenticated/instructor/dashboard': {
       id: '/_authenticated/instructor/dashboard'
@@ -12101,6 +12239,34 @@ const AuthenticatedInstructorRouteWithChildren =
     AuthenticatedInstructorRouteChildren,
   )
 
+interface AuthenticatedIntegrationsRouteChildren {
+  AuthenticatedIntegrationsProviderRoute: typeof AuthenticatedIntegrationsProviderRoute
+  AuthenticatedIntegrationsDiscoverRoute: typeof AuthenticatedIntegrationsDiscoverRoute
+  AuthenticatedIntegrationsInstalledRoute: typeof AuthenticatedIntegrationsInstalledRoute
+  AuthenticatedIntegrationsLogsRoute: typeof AuthenticatedIntegrationsLogsRoute
+  AuthenticatedIntegrationsSettingsRoute: typeof AuthenticatedIntegrationsSettingsRoute
+  AuthenticatedIntegrationsIndexRoute: typeof AuthenticatedIntegrationsIndexRoute
+}
+
+const AuthenticatedIntegrationsRouteChildren: AuthenticatedIntegrationsRouteChildren =
+  {
+    AuthenticatedIntegrationsProviderRoute:
+      AuthenticatedIntegrationsProviderRoute,
+    AuthenticatedIntegrationsDiscoverRoute:
+      AuthenticatedIntegrationsDiscoverRoute,
+    AuthenticatedIntegrationsInstalledRoute:
+      AuthenticatedIntegrationsInstalledRoute,
+    AuthenticatedIntegrationsLogsRoute: AuthenticatedIntegrationsLogsRoute,
+    AuthenticatedIntegrationsSettingsRoute:
+      AuthenticatedIntegrationsSettingsRoute,
+    AuthenticatedIntegrationsIndexRoute: AuthenticatedIntegrationsIndexRoute,
+  }
+
+const AuthenticatedIntegrationsRouteWithChildren =
+  AuthenticatedIntegrationsRoute._addFileChildren(
+    AuthenticatedIntegrationsRouteChildren,
+  )
+
 interface AuthenticatedKnowledgeRouteChildren {
   AuthenticatedKnowledgeDocumentsRoute: typeof AuthenticatedKnowledgeDocumentsRoute
   AuthenticatedKnowledgeFaqRoute: typeof AuthenticatedKnowledgeFaqRoute
@@ -12436,6 +12602,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCloudRoute: typeof AuthenticatedCloudRouteWithChildren
   AuthenticatedHqRoute: typeof AuthenticatedHqRoute
   AuthenticatedInstructorRoute: typeof AuthenticatedInstructorRouteWithChildren
+  AuthenticatedIntegrationsRoute: typeof AuthenticatedIntegrationsRouteWithChildren
   AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRouteWithChildren
   AuthenticatedMyTemplatesRoute: typeof AuthenticatedMyTemplatesRoute
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
@@ -12464,6 +12631,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCloudRoute: AuthenticatedCloudRouteWithChildren,
   AuthenticatedHqRoute: AuthenticatedHqRoute,
   AuthenticatedInstructorRoute: AuthenticatedInstructorRouteWithChildren,
+  AuthenticatedIntegrationsRoute: AuthenticatedIntegrationsRouteWithChildren,
   AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRouteWithChildren,
   AuthenticatedMyTemplatesRoute: AuthenticatedMyTemplatesRoute,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
