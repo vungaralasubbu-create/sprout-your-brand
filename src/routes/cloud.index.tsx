@@ -345,7 +345,7 @@ function SocialProof() {
     "Technology",
     "Ecommerce",
   ];
-  const stats = [
+  const stats: { value: number; suffix: string; label: string; format?: "M" }[] = [
     { value: 100000, suffix: "+", label: "Campaigns Generated" },
     { value: 1000000, suffix: "+", label: "Assets Created", format: "M" },
     { value: 200, suffix: "+", label: "Countries" },
@@ -891,7 +891,7 @@ function Pricing() {
                       "w-full",
                       p.featured && "bg-gradient-to-r from-cyan-500 via-sky-500 to-lime-500 text-white",
                     )}
-                    variant={p.featured ? "default" : "outline"}
+                    variant={p.featured ? "primary" : "outline"}
                   >
                     {p.name === "Enterprise" ? "Contact sales" : "Start free"}
                   </Button>
