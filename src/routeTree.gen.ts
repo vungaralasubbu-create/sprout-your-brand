@@ -61,6 +61,7 @@ import { Route as EarnRouteImport } from './routes/earn'
 import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CompareRouteImport } from './routes/compare'
+import { Route as CloudRouteImport } from './routes/cloud'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as CareerMapsRouteImport } from './routes/career-maps'
 import { Route as BrandSetupRouteImport } from './routes/brand-setup'
@@ -83,6 +84,7 @@ import { Route as LaunchYourBrandIndexRouteImport } from './routes/launch-your-b
 import { Route as HelpIndexRouteImport } from './routes/help.index'
 import { Route as EntitiesIndexRouteImport } from './routes/entities.index'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
+import { Route as CloudIndexRouteImport } from './routes/cloud.index'
 import { Route as CareerHubIndexRouteImport } from './routes/career-hub.index'
 import { Route as CampusAmbassadorIndexRouteImport } from './routes/campus-ambassador.index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -781,6 +783,11 @@ const CompareRoute = CompareRouteImport.update({
   path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CloudRoute = CloudRouteImport.update({
+  id: '/cloud',
+  path: '/cloud',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CareersRoute = CareersRouteImport.update({
   id: '/careers',
   path: '/careers',
@@ -889,6 +896,11 @@ const CommunityIndexRoute = CommunityIndexRouteImport.update({
   id: '/community/',
   path: '/community/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CloudIndexRoute = CloudIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CloudRoute,
 } as any)
 const CareerHubIndexRoute = CareerHubIndexRouteImport.update({
   id: '/career-hub/',
@@ -3407,6 +3419,7 @@ export interface FileRoutesByFullPath {
   '/brand-setup': typeof BrandSetupRoute
   '/career-maps': typeof CareerMapsRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/cloud': typeof CloudRouteWithChildren
   '/compare': typeof CompareRouteWithChildren
   '/contact': typeof ContactRoute
   '/cookie-policy': typeof CookiePolicyRoute
@@ -3520,6 +3533,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/career-hub/': typeof CareerHubIndexRoute
+  '/cloud/': typeof CloudIndexRoute
   '/community/': typeof CommunityIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/help/': typeof HelpIndexRoute
@@ -4022,6 +4036,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/career-hub': typeof CareerHubIndexRoute
+  '/cloud': typeof CloudIndexRoute
   '/community': typeof CommunityIndexRoute
   '/entities': typeof EntitiesIndexRoute
   '/help': typeof HelpIndexRoute
@@ -4412,6 +4427,7 @@ export interface FileRoutesById {
   '/brand-setup': typeof BrandSetupRoute
   '/career-maps': typeof CareerMapsRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
+  '/cloud': typeof CloudRouteWithChildren
   '/compare': typeof CompareRouteWithChildren
   '/contact': typeof ContactRoute
   '/cookie-policy': typeof CookiePolicyRoute
@@ -4525,6 +4541,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/campus-ambassador/': typeof CampusAmbassadorIndexRoute
   '/career-hub/': typeof CareerHubIndexRoute
+  '/cloud/': typeof CloudIndexRoute
   '/community/': typeof CommunityIndexRoute
   '/entities/': typeof EntitiesIndexRoute
   '/help/': typeof HelpIndexRoute
@@ -4923,6 +4940,7 @@ export interface FileRouteTypes {
     | '/brand-setup'
     | '/career-maps'
     | '/careers'
+    | '/cloud'
     | '/compare'
     | '/contact'
     | '/cookie-policy'
@@ -5036,6 +5054,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/campus-ambassador/'
     | '/career-hub/'
+    | '/cloud/'
     | '/community/'
     | '/entities/'
     | '/help/'
@@ -5538,6 +5557,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/campus-ambassador'
     | '/career-hub'
+    | '/cloud'
     | '/community'
     | '/entities'
     | '/help'
@@ -5927,6 +5947,7 @@ export interface FileRouteTypes {
     | '/brand-setup'
     | '/career-maps'
     | '/careers'
+    | '/cloud'
     | '/compare'
     | '/contact'
     | '/cookie-policy'
@@ -6040,6 +6061,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/campus-ambassador/'
     | '/career-hub/'
+    | '/cloud/'
     | '/community/'
     | '/entities/'
     | '/help/'
@@ -6438,6 +6460,7 @@ export interface RootRouteChildren {
   BrandSetupRoute: typeof BrandSetupRoute
   CareerMapsRoute: typeof CareerMapsRouteWithChildren
   CareersRoute: typeof CareersRouteWithChildren
+  CloudRoute: typeof CloudRouteWithChildren
   CompareRoute: typeof CompareRouteWithChildren
   ContactRoute: typeof ContactRoute
   CookiePolicyRoute: typeof CookiePolicyRoute
@@ -6921,6 +6944,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cloud': {
+      id: '/cloud'
+      path: '/cloud'
+      fullPath: '/cloud'
+      preLoaderRoute: typeof CloudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/careers': {
       id: '/careers'
       path: '/careers'
@@ -7074,6 +7104,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/community/'
       preLoaderRoute: typeof CommunityIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/cloud/': {
+      id: '/cloud/'
+      path: '/'
+      fullPath: '/cloud/'
+      preLoaderRoute: typeof CloudIndexRouteImport
+      parentRoute: typeof CloudRoute
     }
     '/career-hub/': {
       id: '/career-hub/'
@@ -11315,6 +11352,16 @@ const CareersRouteChildren: CareersRouteChildren = {
 const CareersRouteWithChildren =
   CareersRoute._addFileChildren(CareersRouteChildren)
 
+interface CloudRouteChildren {
+  CloudIndexRoute: typeof CloudIndexRoute
+}
+
+const CloudRouteChildren: CloudRouteChildren = {
+  CloudIndexRoute: CloudIndexRoute,
+}
+
+const CloudRouteWithChildren = CloudRoute._addFileChildren(CloudRouteChildren)
+
 interface CompareRouteChildren {
   CompareSlugRoute: typeof CompareSlugRoute
 }
@@ -11563,6 +11610,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandSetupRoute: BrandSetupRoute,
   CareerMapsRoute: CareerMapsRouteWithChildren,
   CareersRoute: CareersRouteWithChildren,
+  CloudRoute: CloudRouteWithChildren,
   CompareRoute: CompareRouteWithChildren,
   ContactRoute: ContactRoute,
   CookiePolicyRoute: CookiePolicyRoute,
