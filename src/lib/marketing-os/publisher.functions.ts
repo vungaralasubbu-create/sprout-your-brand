@@ -295,3 +295,42 @@ export const listApprovedForPublishing = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return { items: data ?? [] };
   });
+
+/* ------------------- CALENDAR HELPERS (reuse Publisher engine) ------------------- */
+
+export const duplicateJob = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ id: z.string().uuid(), scheduled_at: z.string().datetime().optional() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { data: src, error } = await context.supabase.from("publishing_jobs").select("*").eq("id", data.id).maybeSingle();
+    if (error || !src) throw new Error("Job not found");
+    const s = src as Any;
+    const clone = {
+      owner_id: context.userId, created_by: context.userId,
+      content_id: s.content_id, campaign: s.campaign, campaign_id: s.campaign_id,
+      platform: s.platform, account_id: s.account_id, account_label: s.account_label,
+      payload: s.payload, mode: "schedule",
+      timezone: s.timezone, priority: s.priority, recurrence: null,
+      evergreen: false, evergreen_interval_days: null,
+      scheduled_at: data.scheduled_at ?? new Date(Date.now() + 3600_000).toISOString(),
+      status: "queued",
+    };
+    const { data: ins, error: e2 } = await context.supabase.from("publishing_jobs").insert(clone as Any).select("id").maybeSingle();
+    if (e2) throw new Error(e2.message);
+    return { id: (ins as Any)?.id };
+  });
+
+export const listHolidays = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({ from: z.string(), to: z.string() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { data: rows } = await context.supabase
+      .from("mkt_calendar_events")
+      .select("id, event_date, category, title, description")
+      .gte("event_date", data.from.slice(0, 10))
+      .lte("event_date", data.to.slice(0, 10))
+      .is("brand_id", null)
+      .limit(500);
+    return { holidays: rows ?? [] };
+  });
+
