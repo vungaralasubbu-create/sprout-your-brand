@@ -135,8 +135,10 @@ import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CommunityNewRouteImport } from './routes/community.new'
 import { Route as CloudTermsRouteImport } from './routes/cloud.terms'
 import { Route as CloudTemplatesRouteImport } from './routes/cloud.templates'
+import { Route as CloudSignupRouteImport } from './routes/cloud.signup'
 import { Route as CloudPrivacyRouteImport } from './routes/cloud.privacy'
 import { Route as CloudPricingRouteImport } from './routes/cloud.pricing'
+import { Route as CloudLoginRouteImport } from './routes/cloud.login'
 import { Route as CloudFeaturesRouteImport } from './routes/cloud.features'
 import { Route as CloudContactRouteImport } from './routes/cloud.contact'
 import { Route as CloudBlogRouteImport } from './routes/cloud.blog'
@@ -150,6 +152,7 @@ import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
 import { Route as AuthenticatedInstructorRouteImport } from './routes/_authenticated/instructor'
 import { Route as AuthenticatedHqRouteImport } from './routes/_authenticated/hq'
+import { Route as AuthenticatedCloudRouteImport } from './routes/_authenticated/cloud'
 import { Route as AuthenticatedBrandRouteImport } from './routes/_authenticated/brand'
 import { Route as AuthenticatedAmbassadorRouteImport } from './routes/_authenticated/ambassador'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -1160,6 +1163,11 @@ const CloudTemplatesRoute = CloudTemplatesRouteImport.update({
   path: '/templates',
   getParentRoute: () => CloudRoute,
 } as any)
+const CloudSignupRoute = CloudSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => CloudRoute,
+} as any)
 const CloudPrivacyRoute = CloudPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -1168,6 +1176,11 @@ const CloudPrivacyRoute = CloudPrivacyRouteImport.update({
 const CloudPricingRoute = CloudPricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudLoginRoute = CloudLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => CloudRoute,
 } as any)
 const CloudFeaturesRoute = CloudFeaturesRouteImport.update({
@@ -1233,6 +1246,11 @@ const AuthenticatedInstructorRoute = AuthenticatedInstructorRouteImport.update({
 const AuthenticatedHqRoute = AuthenticatedHqRouteImport.update({
   id: '/hq',
   path: '/hq',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCloudRoute = AuthenticatedCloudRouteImport.update({
+  id: '/cloud',
+  path: '/cloud',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedBrandRoute = AuthenticatedBrandRouteImport.update({
@@ -3461,7 +3479,7 @@ export interface FileRoutesByFullPath {
   '/brand-setup': typeof BrandSetupRoute
   '/career-maps': typeof CareerMapsRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
-  '/cloud': typeof CloudRouteWithChildren
+  '/cloud': typeof AuthenticatedCloudRoute
   '/compare': typeof CompareRouteWithChildren
   '/contact': typeof ContactRoute
   '/cookie-policy': typeof CookiePolicyRoute
@@ -3530,8 +3548,10 @@ export interface FileRoutesByFullPath {
   '/cloud/blog': typeof CloudBlogRoute
   '/cloud/contact': typeof CloudContactRoute
   '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/signup': typeof CloudSignupRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
@@ -4030,6 +4050,7 @@ export interface FileRoutesByTo {
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
+  '/cloud': typeof CloudIndexRoute
   '/hq': typeof AuthenticatedHqRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/ai-agents/$id': typeof AiAgentsIdRoute
@@ -4041,8 +4062,10 @@ export interface FileRoutesByTo {
   '/cloud/blog': typeof CloudBlogRoute
   '/cloud/contact': typeof CloudContactRoute
   '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/signup': typeof CloudSignupRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
@@ -4092,7 +4115,6 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/campus-ambassador': typeof CampusAmbassadorIndexRoute
   '/career-hub': typeof CareerHubIndexRoute
-  '/cloud': typeof CloudIndexRoute
   '/community': typeof CommunityIndexRoute
   '/entities': typeof EntitiesIndexRoute
   '/help': typeof HelpIndexRoute
@@ -4539,6 +4561,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
+  '/_authenticated/cloud': typeof AuthenticatedCloudRoute
   '/_authenticated/hq': typeof AuthenticatedHqRoute
   '/_authenticated/instructor': typeof AuthenticatedInstructorRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -4552,8 +4575,10 @@ export interface FileRoutesById {
   '/cloud/blog': typeof CloudBlogRoute
   '/cloud/contact': typeof CloudContactRoute
   '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/signup': typeof CloudSignupRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
   '/community/new': typeof CommunityNewRoute
@@ -5072,8 +5097,10 @@ export interface FileRouteTypes {
     | '/cloud/blog'
     | '/cloud/contact'
     | '/cloud/features'
+    | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/signup'
     | '/cloud/templates'
     | '/cloud/terms'
     | '/community/new'
@@ -5572,6 +5599,7 @@ export interface FileRouteTypes {
     | '/white-label-edtech'
     | '/ambassador'
     | '/brand'
+    | '/cloud'
     | '/hq'
     | '/partner'
     | '/ai-agents/$id'
@@ -5583,8 +5611,10 @@ export interface FileRouteTypes {
     | '/cloud/blog'
     | '/cloud/contact'
     | '/cloud/features'
+    | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/signup'
     | '/cloud/templates'
     | '/cloud/terms'
     | '/community/new'
@@ -5634,7 +5664,6 @@ export interface FileRouteTypes {
     | '/blog'
     | '/campus-ambassador'
     | '/career-hub'
-    | '/cloud'
     | '/community'
     | '/entities'
     | '/help'
@@ -6080,6 +6109,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/ambassador'
     | '/_authenticated/brand'
+    | '/_authenticated/cloud'
     | '/_authenticated/hq'
     | '/_authenticated/instructor'
     | '/_authenticated/partner'
@@ -6093,8 +6123,10 @@ export interface FileRouteTypes {
     | '/cloud/blog'
     | '/cloud/contact'
     | '/cloud/features'
+    | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/signup'
     | '/cloud/templates'
     | '/cloud/terms'
     | '/community/new'
@@ -7546,6 +7578,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CloudTemplatesRouteImport
       parentRoute: typeof CloudRoute
     }
+    '/cloud/signup': {
+      id: '/cloud/signup'
+      path: '/signup'
+      fullPath: '/cloud/signup'
+      preLoaderRoute: typeof CloudSignupRouteImport
+      parentRoute: typeof CloudRoute
+    }
     '/cloud/privacy': {
       id: '/cloud/privacy'
       path: '/privacy'
@@ -7558,6 +7597,13 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/cloud/pricing'
       preLoaderRoute: typeof CloudPricingRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/login': {
+      id: '/cloud/login'
+      path: '/login'
+      fullPath: '/cloud/login'
+      preLoaderRoute: typeof CloudLoginRouteImport
       parentRoute: typeof CloudRoute
     }
     '/cloud/features': {
@@ -7649,6 +7695,13 @@ declare module '@tanstack/react-router' {
       path: '/hq'
       fullPath: '/hq'
       preLoaderRoute: typeof AuthenticatedHqRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cloud': {
+      id: '/_authenticated/cloud'
+      path: '/cloud'
+      fullPath: '/cloud'
+      preLoaderRoute: typeof AuthenticatedCloudRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/brand': {
@@ -11415,6 +11468,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
+  AuthenticatedCloudRoute: typeof AuthenticatedCloudRoute
   AuthenticatedHqRoute: typeof AuthenticatedHqRoute
   AuthenticatedInstructorRoute: typeof AuthenticatedInstructorRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
@@ -11431,6 +11485,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
+  AuthenticatedCloudRoute: AuthenticatedCloudRoute,
   AuthenticatedHqRoute: AuthenticatedHqRoute,
   AuthenticatedInstructorRoute: AuthenticatedInstructorRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
@@ -11489,8 +11544,10 @@ interface CloudRouteChildren {
   CloudBlogRoute: typeof CloudBlogRoute
   CloudContactRoute: typeof CloudContactRoute
   CloudFeaturesRoute: typeof CloudFeaturesRoute
+  CloudLoginRoute: typeof CloudLoginRoute
   CloudPricingRoute: typeof CloudPricingRoute
   CloudPrivacyRoute: typeof CloudPrivacyRoute
+  CloudSignupRoute: typeof CloudSignupRoute
   CloudTemplatesRoute: typeof CloudTemplatesRoute
   CloudTermsRoute: typeof CloudTermsRoute
   CloudIndexRoute: typeof CloudIndexRoute
@@ -11500,8 +11557,10 @@ const CloudRouteChildren: CloudRouteChildren = {
   CloudBlogRoute: CloudBlogRoute,
   CloudContactRoute: CloudContactRoute,
   CloudFeaturesRoute: CloudFeaturesRoute,
+  CloudLoginRoute: CloudLoginRoute,
   CloudPricingRoute: CloudPricingRoute,
   CloudPrivacyRoute: CloudPrivacyRoute,
+  CloudSignupRoute: CloudSignupRoute,
   CloudTemplatesRoute: CloudTemplatesRoute,
   CloudTermsRoute: CloudTermsRoute,
   CloudIndexRoute: CloudIndexRoute,
