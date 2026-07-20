@@ -124,7 +124,7 @@ function MarketingOSHome() {
         setRunningProject(null);
         qc.invalidateQueries({ queryKey: ["marketing-projects"] });
         navigate({
-          to: "/admin/marketing-os/project/$id" as any,
+          to: "/admin/marketing-os/project/$id",
           params: { id: project.id },
         });
       }, 700);
