@@ -27006,6 +27006,445 @@ export type Database = {
         }
         Relationships: []
       }
+      tpl_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          kind: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          kind?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          kind?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      tpl_collections: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean
+          name: string
+          owner_id: string | null
+          slug: string
+          template_ids: string[]
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name: string
+          owner_id?: string | null
+          slug: string
+          template_ids?: string[]
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean
+          name?: string
+          owner_id?: string | null
+          slug?: string
+          template_ids?: string[]
+        }
+        Relationships: []
+      }
+      tpl_downloads: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          meta: Json
+          project_id: string | null
+          template_id: string
+          user_id: string | null
+          workspace_id: string | null
+        }
+        Insert: {
+          action?: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          project_id?: string | null
+          template_id: string
+          user_id?: string | null
+          workspace_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          project_id?: string | null
+          template_id?: string
+          user_id?: string | null
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tpl_downloads_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "tpl_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tpl_favorites: {
+        Row: {
+          created_at: string
+          template_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          template_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          template_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tpl_favorites_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "tpl_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tpl_reviews: {
+        Row: {
+          body: string | null
+          created_at: string
+          helpful_votes: number
+          id: string
+          is_verified: boolean
+          rating: number
+          template_id: string
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          helpful_votes?: number
+          id?: string
+          is_verified?: boolean
+          rating: number
+          template_id: string
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          helpful_votes?: number
+          id?: string
+          is_verified?: boolean
+          rating?: number
+          template_id?: string
+          title?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tpl_reviews_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "tpl_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tpl_templates: {
+        Row: {
+          ai_agents: string[]
+          approved_at: string | null
+          approved_by: string | null
+          author_display_name: string | null
+          author_id: string | null
+          campaign_length_days: number | null
+          channels: string[]
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          difficulty: Database["public"]["Enums"]["tpl_difficulty"]
+          downloads_count: number
+          estimated_credits: number
+          estimated_time_minutes: number
+          favorites_count: number
+          gallery: Json
+          goals: string[]
+          id: string
+          included_assets: string[]
+          industry: string[]
+          is_agency_pick: boolean
+          is_editors_choice: boolean
+          is_enterprise_ready: boolean
+          is_featured: boolean
+          is_official: boolean
+          is_trending: boolean
+          is_verified: boolean
+          languages: string[]
+          license: string
+          price_inr: number
+          prompts: Json
+          rating_avg: number
+          rating_count: number
+          rejection_reason: string | null
+          slug: string
+          status: Database["public"]["Enums"]["tpl_status"]
+          submitted_at: string | null
+          tagline: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          usage_count: number
+          variables: Json
+          version: number
+          visibility: string
+          workspace_id: string | null
+        }
+        Insert: {
+          ai_agents?: string[]
+          approved_at?: string | null
+          approved_by?: string | null
+          author_display_name?: string | null
+          author_id?: string | null
+          campaign_length_days?: number | null
+          channels?: string[]
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["tpl_difficulty"]
+          downloads_count?: number
+          estimated_credits?: number
+          estimated_time_minutes?: number
+          favorites_count?: number
+          gallery?: Json
+          goals?: string[]
+          id?: string
+          included_assets?: string[]
+          industry?: string[]
+          is_agency_pick?: boolean
+          is_editors_choice?: boolean
+          is_enterprise_ready?: boolean
+          is_featured?: boolean
+          is_official?: boolean
+          is_trending?: boolean
+          is_verified?: boolean
+          languages?: string[]
+          license?: string
+          price_inr?: number
+          prompts?: Json
+          rating_avg?: number
+          rating_count?: number
+          rejection_reason?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["tpl_status"]
+          submitted_at?: string | null
+          tagline?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          usage_count?: number
+          variables?: Json
+          version?: number
+          visibility?: string
+          workspace_id?: string | null
+        }
+        Update: {
+          ai_agents?: string[]
+          approved_at?: string | null
+          approved_by?: string | null
+          author_display_name?: string | null
+          author_id?: string | null
+          campaign_length_days?: number | null
+          channels?: string[]
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["tpl_difficulty"]
+          downloads_count?: number
+          estimated_credits?: number
+          estimated_time_minutes?: number
+          favorites_count?: number
+          gallery?: Json
+          goals?: string[]
+          id?: string
+          included_assets?: string[]
+          industry?: string[]
+          is_agency_pick?: boolean
+          is_editors_choice?: boolean
+          is_enterprise_ready?: boolean
+          is_featured?: boolean
+          is_official?: boolean
+          is_trending?: boolean
+          is_verified?: boolean
+          languages?: string[]
+          license?: string
+          price_inr?: number
+          prompts?: Json
+          rating_avg?: number
+          rating_count?: number
+          rejection_reason?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["tpl_status"]
+          submitted_at?: string | null
+          tagline?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          usage_count?: number
+          variables?: Json
+          version?: number
+          visibility?: string
+          workspace_id?: string | null
+        }
+        Relationships: []
+      }
+      tpl_usage: {
+        Row: {
+          created_at: string
+          id: string
+          project_id: string | null
+          template_id: string
+          user_id: string | null
+          variables: Json
+          workspace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          project_id?: string | null
+          template_id: string
+          user_id?: string | null
+          variables?: Json
+          workspace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          project_id?: string | null
+          template_id?: string
+          user_id?: string | null
+          variables?: Json
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tpl_usage_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "tpl_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tpl_variables: {
+        Row: {
+          help: string | null
+          id: string
+          input_type: string
+          is_system: boolean
+          key: string
+          label: string
+          options: Json | null
+          sort_order: number
+        }
+        Insert: {
+          help?: string | null
+          id?: string
+          input_type?: string
+          is_system?: boolean
+          key: string
+          label: string
+          options?: Json | null
+          sort_order?: number
+        }
+        Update: {
+          help?: string | null
+          id?: string
+          input_type?: string
+          is_system?: boolean
+          key?: string
+          label?: string
+          options?: Json | null
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      tpl_versions: {
+        Row: {
+          changelog: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          snapshot: Json
+          template_id: string
+          version: number
+        }
+        Insert: {
+          changelog?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          snapshot: Json
+          template_id: string
+          version: number
+        }
+        Update: {
+          changelog?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          snapshot?: Json
+          template_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tpl_versions_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "tpl_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trend_alerts: {
         Row: {
           alert_type: string
@@ -29765,6 +30204,13 @@ export type Database = {
         | "resolved"
         | "closed"
         | "admin_replied"
+      tpl_difficulty: "beginner" | "intermediate" | "advanced"
+      tpl_status:
+        | "draft"
+        | "pending_review"
+        | "approved"
+        | "rejected"
+        | "archived"
       vs_asset_kind:
         | "video"
         | "thumbnail"
@@ -30830,6 +31276,14 @@ export const Constants = {
         "resolved",
         "closed",
         "admin_replied",
+      ],
+      tpl_difficulty: ["beginner", "intermediate", "advanced"],
+      tpl_status: [
+        "draft",
+        "pending_review",
+        "approved",
+        "rejected",
+        "archived",
       ],
       vs_asset_kind: [
         "video",
