@@ -81,7 +81,7 @@ function BillingPage() {
               <div className="flex items-center gap-4">
                 <span className="text-xs text-muted-foreground">{date}</span>
                 <span className="font-medium">{amt}</span>
-                <Badge variant={status === "Paid" ? "default" : "secondary"}>{status}</Badge>
+                <Badge variant={status === "Paid" ? "default" : "muted"}>{status}</Badge>
               </div>
             </div>
           ))}

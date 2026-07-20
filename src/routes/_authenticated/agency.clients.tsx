@@ -77,7 +77,7 @@ function ClientsPage() {
                   <td className="px-4 py-3">{c.projects}</td>
                   <td className="px-4 py-3">{c.usage}</td>
                   <td className="px-4 py-3">
-                    <Badge variant={c.status === "Active" ? "default" : c.status === "Trial" ? "secondary" : "destructive"}>{c.status}</Badge>
+                    <Badge variant={c.status === "Active" ? "default" : c.status === "Trial" ? "muted" : "danger"}>{c.status}</Badge>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{c.created}</td>
                   <td className="px-4 py-3 text-right">
