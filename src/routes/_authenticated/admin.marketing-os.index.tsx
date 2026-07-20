@@ -51,7 +51,7 @@ function MarketingDashboard() {
 
   const { data: dashData } = useQuery({ queryKey: ["mkt-dashboard"], queryFn: () => dash() });
   const { data: campaignsData } = useQuery({ queryKey: ["mkt-campaigns-recent"], queryFn: () => list() });
-  const { data: pubData } = useQuery({ queryKey: ["publisher-stats"], queryFn: () => pubStats({ data: {} }) });
+  const { data: pubData } = useQuery({ queryKey: ["publisher-stats"], queryFn: () => pubStats() });
 
   // Month range for calendar
   const [monthCursor, setMonthCursor] = useState<Date>(() => startOfMonth(new Date()));
