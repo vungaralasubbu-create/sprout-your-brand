@@ -117,8 +117,8 @@ function MarketingDashboard() {
   const leads = dashData?.totals?.leads ?? 0;
   const scheduled = pubData?.scheduled ?? 0;
   const upcomingWeek = pubData?.upcomingWeek ?? 0;
-  const publishedWeek = pubData?.publishedThisWeek ?? 0;
-  const failedWeek = pubData?.failedThisWeek ?? 0;
+  const publishedWeek = pubData?.publishedToday ?? 0;
+  const failedWeek = pubData?.failed ?? 0;
 
   const sparkPosts = sparkSeries.map((s: any) => ({ v: s.posts }));
   const sparkLeads = sparkSeries.map((s: any) => ({ v: s.leads }));
