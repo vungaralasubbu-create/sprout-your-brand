@@ -175,7 +175,7 @@ function SocialAccountsPage() {
           ) : (
             <ul className="divide-y">
               {accounts.map((a) => {
-                const Icon = a.platform === "facebook" ? Facebook : Instagram;
+                const Icon = a.platform === "facebook" ? Facebook : a.platform === "linkedin" ? Linkedin : Instagram;
                 const expires = a.token_expires_at ? new Date(a.token_expires_at) : null;
                 const expiresSoon = expires && expires.getTime() - Date.now() < 7 * 86400_000;
                 return (
