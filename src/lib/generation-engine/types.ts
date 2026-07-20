@@ -84,13 +84,13 @@ export interface GenerationRequest {
   bulkCount?: number;
   scheduledAt?: string;
 
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, string | number | boolean | null>;
 }
 
 export interface GenerationOutput {
   kind: OutputKind;
   textContent?: string;
-  jsonContent?: Record<string, unknown> | string | number | boolean | null;
+  jsonContent?: string; // serialized JSON string
   storagePath?: string;
   publicUrl?: string;
   mediaAssetId?: string;
@@ -99,7 +99,7 @@ export interface GenerationOutput {
   width?: number;
   height?: number;
   durationSeconds?: number;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, string | number | boolean | null>;
 }
 
 export interface GenerationJobRecord {
