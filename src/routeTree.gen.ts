@@ -174,6 +174,7 @@ import { Route as CommunitySpaceIndexRouteImport } from './routes/community.$spa
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
 import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
+import { Route as AuthenticatedBillingIndexRouteImport } from './routes/_authenticated/billing.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as WorkspaceVoiceSettingsRouteImport } from './routes/workspace.voice.settings'
 import { Route as WorkspaceVoiceHistoryRouteImport } from './routes/workspace.voice.history'
@@ -1386,6 +1387,12 @@ const AuthenticatedInstructorIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedInstructorRoute,
+  } as any)
+const AuthenticatedBillingIndexRoute =
+  AuthenticatedBillingIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedBillingRoute,
   } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
@@ -3972,6 +3979,7 @@ export interface FileRoutesByFullPath {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/billing/': typeof AuthenticatedBillingIndexRoute
   '/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
@@ -4246,7 +4254,6 @@ export interface FileRoutesByTo {
   '/trust-center': typeof TrustCenterRoute
   '/white-label-edtech': typeof WhiteLabelEdtechRoute
   '/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
-  '/billing': typeof AuthenticatedBillingRouteWithChildren
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/cloud': typeof CloudIndexRoute
   '/hq': typeof AuthenticatedHqRoute
@@ -4502,6 +4509,7 @@ export interface FileRoutesByTo {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/billing': typeof AuthenticatedBillingIndexRoute
   '/instructor': typeof AuthenticatedInstructorIndexRoute
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
@@ -5051,6 +5059,7 @@ export interface FileRoutesById {
   '/workspace/voice/history': typeof WorkspaceVoiceHistoryRoute
   '/workspace/voice/settings': typeof WorkspaceVoiceSettingsRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/billing/': typeof AuthenticatedBillingIndexRoute
   '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
@@ -5599,6 +5608,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin/'
+    | '/billing/'
     | '/instructor/'
     | '/notifications/'
     | '/student/'
@@ -5873,7 +5883,6 @@ export interface FileRouteTypes {
     | '/trust-center'
     | '/white-label-edtech'
     | '/ambassador'
-    | '/billing'
     | '/brand'
     | '/cloud'
     | '/hq'
@@ -6129,6 +6138,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/admin'
+    | '/billing'
     | '/instructor'
     | '/notifications'
     | '/student'
@@ -6677,6 +6687,7 @@ export interface FileRouteTypes {
     | '/workspace/voice/history'
     | '/workspace/voice/settings'
     | '/_authenticated/admin/'
+    | '/_authenticated/billing/'
     | '/_authenticated/instructor/'
     | '/_authenticated/notifications/'
     | '/_authenticated/student/'
@@ -8178,6 +8189,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/instructor/'
       preLoaderRoute: typeof AuthenticatedInstructorIndexRouteImport
       parentRoute: typeof AuthenticatedInstructorRoute
+    }
+    '/_authenticated/billing/': {
+      id: '/_authenticated/billing/'
+      path: '/'
+      fullPath: '/billing/'
+      preLoaderRoute: typeof AuthenticatedBillingIndexRouteImport
+      parentRoute: typeof AuthenticatedBillingRoute
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -11613,6 +11631,7 @@ interface AuthenticatedBillingRouteChildren {
   AuthenticatedBillingPaymentMethodsRoute: typeof AuthenticatedBillingPaymentMethodsRoute
   AuthenticatedBillingPlansRoute: typeof AuthenticatedBillingPlansRoute
   AuthenticatedBillingUsageRoute: typeof AuthenticatedBillingUsageRoute
+  AuthenticatedBillingIndexRoute: typeof AuthenticatedBillingIndexRoute
 }
 
 const AuthenticatedBillingRouteChildren: AuthenticatedBillingRouteChildren = {
@@ -11623,6 +11642,7 @@ const AuthenticatedBillingRouteChildren: AuthenticatedBillingRouteChildren = {
     AuthenticatedBillingPaymentMethodsRoute,
   AuthenticatedBillingPlansRoute: AuthenticatedBillingPlansRoute,
   AuthenticatedBillingUsageRoute: AuthenticatedBillingUsageRoute,
+  AuthenticatedBillingIndexRoute: AuthenticatedBillingIndexRoute,
 }
 
 const AuthenticatedBillingRouteWithChildren =
