@@ -255,7 +255,10 @@ function MediaLibrary() {
                 qc.invalidateQueries({ queryKey: ["media-collections"] });
               }}
               onAdd={async (id) => {
-                if (!selected.size) return toast.error("Select assets first");
+                if (!selected.size) {
+                  toast.error("Select assets first");
+                  return;
+                }
                 await addCollFn({ data: { collection_id: id, asset_ids: Array.from(selected) } });
                 toast.success("Added to collection");
                 setCollectionOpen(false);
