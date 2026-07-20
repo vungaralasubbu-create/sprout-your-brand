@@ -9,7 +9,7 @@ export const LI_API = "https://api.linkedin.com";
 export const LI_DEFAULT_SCOPES = ["openid", "profile", "email", "w_member_social"].join(" ");
 
 export function requireEnv(name: string): string {
-  const v = Deno.env.get(name)?.trim();
+  const v = Deno.env.get(name);
   if (!v) throw new Error(`Missing environment variable: ${name}`);
   return v;
 }
@@ -31,8 +31,12 @@ export async function exchangeCodeForToken(code: string): Promise<{
   const redirectUri = getRedirectUri();
 
   console.info("LinkedIn token exchange config", {
+    client_id_exists: Boolean(Deno.env.get("LINKEDIN_CLIENT_ID")),
+    client_secret_exists: Boolean(Deno.env.get("LINKEDIN_CLIENT_SECRET")),
     client_id_prefix: clientId.slice(0, 8),
-    client_secret_present: Boolean(clientSecret),
+    client_id_length: clientId.length,
+    client_secret_length: clientSecret.length,
+    expected_secret: "LinkedIn Primary Client Secret (from Auth tab)",
     grant_type: "authorization_code",
     redirect_uri: redirectUri,
     includes_code: Boolean(code),
@@ -45,6 +49,7 @@ export async function exchangeCodeForToken(code: string): Promise<{
     client_id: clientId,
     client_secret: clientSecret,
   });
+
   const res = await fetch(LI_TOKEN, {
     method: "POST",
     headers: { "content-type": "application/x-www-form-urlencoded" },
