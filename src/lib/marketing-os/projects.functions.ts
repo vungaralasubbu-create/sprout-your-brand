@@ -164,6 +164,130 @@ export const renameMarketingProject = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ---------------- copilot chat ----------------
+type CopilotMessage = {
+  role: "user" | "assistant" | "system";
+  content: string;
+  createdAt: string;
+};
+
+function summarizeProjectForCopilot(project: any): string {
+  const r = project.result ?? {};
+  const brief = r.brief ?? {};
+  const content = Array.isArray(r.content) ? r.content : [];
+  const posters = Array.isArray(r.posters) ? r.posters : [];
+  const emails = Array.isArray(r.emails) ? r.emails : [];
+  const calendar = Array.isArray(r.calendar) ? r.calendar : [];
+  const byPlatform: Record<string, number> = {};
+  for (const p of content) {
+    const k = String(p?.platform ?? "unknown").toLowerCase();
+    byPlatform[k] = (byPlatform[k] ?? 0) + 1;
+  }
+  return [
+    `Project: ${project.name}`,
+    `Prompt: ${project.prompt}`,
+    `Status: ${project.status}`,
+    brief.audience ? `Audience: ${brief.audience}` : "",
+    brief.goals ? `Goals: ${Array.isArray(brief.goals) ? brief.goals.join(", ") : brief.goals}` : "",
+    brief.summary ? `Summary: ${brief.summary}` : "",
+    r.campaign?.name ? `Campaign: ${r.campaign.name}` : "",
+    `Assets — posts: ${content.length} (${Object.entries(byPlatform).map(([k, v]) => `${k}:${v}`).join(", ") || "none"}), posters: ${posters.length}, emails: ${emails.length}, calendar entries: ${calendar.length}, landing: ${r.landing ? "yes" : "no"}, form: ${r.form ? "yes" : "no"}, workflow: ${r.workflow ? "yes" : "no"}`,
+  ].filter(Boolean).join("\n");
+}
+
+export const chatWithCopilot = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) =>
+    z.object({
+      projectId: z.string().uuid(),
+      message: z.string().min(1).max(4000),
+    }).parse(v),
+  )
+  .handler(async ({ data, context }) => {
+    const supabase = context.supabase as any;
+    const { data: project, error } = await supabase
+      .from("marketing_projects")
+      .select("*")
+      .eq("id", data.projectId)
+      .single();
+    if (error || !project) throw new Error(error?.message ?? "Project not found");
+
+    const result: any = project.result ?? {};
+    const history: CopilotMessage[] = Array.isArray(result.copilot_messages)
+      ? result.copilot_messages.slice(-16)
+      : [];
+
+    const brand = await loadBrandContext(supabase, context.userId);
+    const contextSummary = summarizeProjectForCopilot(project);
+    const system = [
+      brand ?? "",
+      "You are Glintr AI Copilot — a dedicated marketing teammate embedded inside a Marketing Project workspace.",
+      "You have full context of the project below. Never ask the user for information already present.",
+      "Answer with concise markdown. Use lists, tables, and code blocks where helpful.",
+      "When the user asks you to create, update, regenerate, or publish assets, describe the plan clearly and end your reply with a line: `ACTION: <step>` where <step> is one of: understand, campaign, strategy, content, posters, landing, forms, email, calendar, workflow. Only include ACTION when a regeneration is truly needed.",
+      "",
+      "PROJECT CONTEXT:",
+      contextSummary,
+    ].filter(Boolean).join("\n");
+
+    const userMsg: CopilotMessage = {
+      role: "user", content: data.message, createdAt: new Date().toISOString(),
+    };
+
+    const reply = (await aiChat({
+      system,
+      messages: [
+        ...history.map((m) => ({ role: m.role, content: m.content })),
+        { role: "user", content: data.message },
+      ],
+      temperature: 0.6,
+      maxTokens: 900,
+    })) as string;
+
+    const replyText = typeof reply === "string" ? reply : JSON.stringify(reply);
+    const actionMatch = replyText.match(/ACTION:\s*([a-z_]+)/i);
+    const suggestedAction = actionMatch ? actionMatch[1].toLowerCase() : null;
+    const cleanText = replyText.replace(/ACTION:\s*[a-z_]+\s*$/i, "").trim();
+
+    const assistantMsg: CopilotMessage = {
+      role: "assistant", content: cleanText, createdAt: new Date().toISOString(),
+    };
+
+    const nextMessages = [...(result.copilot_messages ?? []), userMsg, assistantMsg].slice(-100);
+    await supabase
+      .from("marketing_projects")
+      .update({ result: { ...result, copilot_messages: nextMessages } })
+      .eq("id", data.projectId);
+
+    return { message: assistantMsg, suggestedAction };
+  });
+
+export const getCopilotMessages = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => z.object({ projectId: z.string().uuid() }).parse(v))
+  .handler(async ({ data, context }) => {
+    const { data: p, error } = await (context.supabase as any)
+      .from("marketing_projects")
+      .select("result")
+      .eq("id", data.projectId)
+      .single();
+    if (error) throw new Error(error.message);
+    const msgs = Array.isArray(p?.result?.copilot_messages) ? p.result.copilot_messages : [];
+    return { messages: msgs as CopilotMessage[] };
+  });
+
+export const clearCopilotMessages = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) => z.object({ projectId: z.string().uuid() }).parse(v))
+  .handler(async ({ data, context }) => {
+    const supabase = context.supabase as any;
+    const { data: p } = await supabase.from("marketing_projects").select("result").eq("id", data.projectId).single();
+    const result = p?.result ?? {};
+    delete result.copilot_messages;
+    await supabase.from("marketing_projects").update({ result }).eq("id", data.projectId);
+    return { ok: true };
+  });
+
 // ---------------- run step ----------------
 type StepEntry = { key: string; label: string; status: string };
 
