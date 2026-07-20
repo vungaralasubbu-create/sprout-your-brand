@@ -464,12 +464,12 @@ Return a JSON object with a top-level "result" key holding the answer for mode "
       maxTokens: 2400,
     });
 
-    const parsed = typeof out === "string" ? {} : out;
+    const parsed = (typeof out === "string" ? {} : out) as Record<string, any>;
     // Persist under ai_strategy[mode]
     const nextStrategy = { ...(c.ai_strategy ?? {}), [data.mode]: { generated_at: new Date().toISOString(), payload: parsed } };
     await context.supabase.from("mkt_campaigns").update({ ai_strategy: nextStrategy }).eq("id", c.id);
 
-    return { mode: data.mode, result: parsed };
+    return { mode: data.mode as string, result: parsed as any };
   });
 
 // ---------- Campaign Report ----------
