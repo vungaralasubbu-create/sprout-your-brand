@@ -225,6 +225,7 @@ import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authe
 import { Route as AuthenticatedPartnerAcademyBuilderRouteImport } from './routes/_authenticated/partner.academy-builder'
 import { Route as AuthenticatedInstructorDashboardRouteImport } from './routes/_authenticated/instructor.dashboard'
 import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
+import { Route as AuthenticatedCloudOnboardingRouteImport } from './routes/_authenticated/cloud.onboarding'
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
 import { Route as AuthenticatedBrandWebsiteRouteImport } from './routes/_authenticated/brand.website'
@@ -1659,6 +1660,12 @@ const AuthenticatedCounsellorCopilotRoute =
     id: '/counsellor/copilot',
     path: '/counsellor/copilot',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCloudOnboardingRoute =
+  AuthenticatedCloudOnboardingRouteImport.update({
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => AuthenticatedCloudRoute,
   } as any)
 const AuthenticatedCampusAmbassadorStatusRoute =
   AuthenticatedCampusAmbassadorStatusRouteImport.update({
@@ -3479,7 +3486,7 @@ export interface FileRoutesByFullPath {
   '/brand-setup': typeof BrandSetupRoute
   '/career-maps': typeof CareerMapsRouteWithChildren
   '/careers': typeof CareersRouteWithChildren
-  '/cloud': typeof AuthenticatedCloudRoute
+  '/cloud': typeof AuthenticatedCloudRouteWithChildren
   '/compare': typeof CompareRouteWithChildren
   '/contact': typeof ContactRoute
   '/cookie-policy': typeof CookiePolicyRoute
@@ -3716,6 +3723,7 @@ export interface FileRoutesByFullPath {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/cloud/onboarding': typeof AuthenticatedCloudOnboardingRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
@@ -4220,6 +4228,7 @@ export interface FileRoutesByTo {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/cloud/onboarding': typeof AuthenticatedCloudOnboardingRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
@@ -4561,7 +4570,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/ambassador': typeof AuthenticatedAmbassadorRouteWithChildren
   '/_authenticated/brand': typeof AuthenticatedBrandRouteWithChildren
-  '/_authenticated/cloud': typeof AuthenticatedCloudRoute
+  '/_authenticated/cloud': typeof AuthenticatedCloudRouteWithChildren
   '/_authenticated/hq': typeof AuthenticatedHqRoute
   '/_authenticated/instructor': typeof AuthenticatedInstructorRouteWithChildren
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
@@ -4743,6 +4752,7 @@ export interface FileRoutesById {
   '/_authenticated/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/_authenticated/cloud/onboarding': typeof AuthenticatedCloudOnboardingRoute
   '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/_authenticated/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/_authenticated/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
@@ -5265,6 +5275,7 @@ export interface FileRouteTypes {
     | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
+    | '/cloud/onboarding'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
     | '/partner/academy-builder'
@@ -5769,6 +5780,7 @@ export interface FileRouteTypes {
     | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
+    | '/cloud/onboarding'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
     | '/partner/academy-builder'
@@ -6291,6 +6303,7 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/website'
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
+    | '/_authenticated/cloud/onboarding'
     | '/_authenticated/counsellor/copilot'
     | '/_authenticated/instructor/dashboard'
     | '/_authenticated/partner/academy-builder'
@@ -8207,6 +8220,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/counsellor/copilot'
       preLoaderRoute: typeof AuthenticatedCounsellorCopilotRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cloud/onboarding': {
+      id: '/_authenticated/cloud/onboarding'
+      path: '/onboarding'
+      fullPath: '/cloud/onboarding'
+      preLoaderRoute: typeof AuthenticatedCloudOnboardingRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
     }
     '/_authenticated/campus-ambassador/status': {
       id: '/_authenticated/campus-ambassador/status'
@@ -11148,6 +11168,17 @@ const AuthenticatedBrandRouteChildren: AuthenticatedBrandRouteChildren = {
 const AuthenticatedBrandRouteWithChildren =
   AuthenticatedBrandRoute._addFileChildren(AuthenticatedBrandRouteChildren)
 
+interface AuthenticatedCloudRouteChildren {
+  AuthenticatedCloudOnboardingRoute: typeof AuthenticatedCloudOnboardingRoute
+}
+
+const AuthenticatedCloudRouteChildren: AuthenticatedCloudRouteChildren = {
+  AuthenticatedCloudOnboardingRoute: AuthenticatedCloudOnboardingRoute,
+}
+
+const AuthenticatedCloudRouteWithChildren =
+  AuthenticatedCloudRoute._addFileChildren(AuthenticatedCloudRouteChildren)
+
 interface AuthenticatedInstructorRouteChildren {
   AuthenticatedInstructorDashboardRoute: typeof AuthenticatedInstructorDashboardRoute
   AuthenticatedInstructorIndexRoute: typeof AuthenticatedInstructorIndexRoute
@@ -11468,7 +11499,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAmbassadorRoute: typeof AuthenticatedAmbassadorRouteWithChildren
   AuthenticatedBrandRoute: typeof AuthenticatedBrandRouteWithChildren
-  AuthenticatedCloudRoute: typeof AuthenticatedCloudRoute
+  AuthenticatedCloudRoute: typeof AuthenticatedCloudRouteWithChildren
   AuthenticatedHqRoute: typeof AuthenticatedHqRoute
   AuthenticatedInstructorRoute: typeof AuthenticatedInstructorRouteWithChildren
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
@@ -11485,7 +11516,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAmbassadorRoute: AuthenticatedAmbassadorRouteWithChildren,
   AuthenticatedBrandRoute: AuthenticatedBrandRouteWithChildren,
-  AuthenticatedCloudRoute: AuthenticatedCloudRoute,
+  AuthenticatedCloudRoute: AuthenticatedCloudRouteWithChildren,
   AuthenticatedHqRoute: AuthenticatedHqRoute,
   AuthenticatedInstructorRoute: AuthenticatedInstructorRouteWithChildren,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
