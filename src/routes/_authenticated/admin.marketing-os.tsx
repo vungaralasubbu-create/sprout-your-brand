@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   Sparkles, LayoutDashboard, CalendarDays, Send, BarChart3, Wand2,
   CheckSquare, Palette, Megaphone, FolderOpen, FileText, Settings,
-  Search, Bell, Zap, ChevronsUpDown, Plus, ChevronDown,
+  Search, Bell, Zap, ChevronsUpDown, Plus, ChevronDown, TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,7 @@ const NAV: Array<{ to: string; label: string; icon: typeof LayoutDashboard; exac
   { to: "/admin/marketing-os/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/admin/marketing-os/brand-kit", label: "Brand Kit", icon: Palette },
   { to: "/admin/marketing-os/media-library", label: "Media Library", icon: FolderOpen },
+  { to: "/admin/marketing-os/seo-hub", label: "SEO Hub", icon: TrendingUp },
 ];
 
 function MarketingOSShell() {

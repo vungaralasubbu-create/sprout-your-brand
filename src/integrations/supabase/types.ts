@@ -23377,6 +23377,281 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_audits: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          issues: Json | null
+          owner_id: string | null
+          score: number | null
+          started_at: string
+          status: string
+          summary: Json | null
+          target_ref: string | null
+          target_type: string
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          issues?: Json | null
+          owner_id?: string | null
+          score?: number | null
+          started_at?: string
+          status?: string
+          summary?: Json | null
+          target_ref?: string | null
+          target_type?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          issues?: Json | null
+          owner_id?: string | null
+          score?: number | null
+          started_at?: string
+          status?: string
+          summary?: Json | null
+          target_ref?: string | null
+          target_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      seo_clusters: {
+        Row: {
+          category: string | null
+          color: string | null
+          created_at: string
+          description: string | null
+          id: string
+          intent: string | null
+          name: string
+          owner_id: string | null
+          pillar_title: string | null
+          pillar_url: string | null
+          status: string
+          supporting_keywords: string[] | null
+          target_keyword: string | null
+          updated_at: string
+          visualization: Json | null
+        }
+        Insert: {
+          category?: string | null
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          intent?: string | null
+          name: string
+          owner_id?: string | null
+          pillar_title?: string | null
+          pillar_url?: string | null
+          status?: string
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          updated_at?: string
+          visualization?: Json | null
+        }
+        Update: {
+          category?: string | null
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          intent?: string | null
+          name?: string
+          owner_id?: string | null
+          pillar_title?: string | null
+          pillar_url?: string | null
+          status?: string
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          updated_at?: string
+          visualization?: Json | null
+        }
+        Relationships: []
+      }
+      seo_integrations: {
+        Row: {
+          config: Json | null
+          created_at: string
+          id: string
+          last_synced_at: string | null
+          owner_id: string | null
+          provider: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          owner_id?: string | null
+          provider: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string
+          id?: string
+          last_synced_at?: string | null
+          owner_id?: string | null
+          provider?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      seo_pages: {
+        Row: {
+          alt_coverage: number | null
+          canonical: string | null
+          cluster_id: string | null
+          content_score: number | null
+          created_at: string
+          external_links: number | null
+          heading_score: number | null
+          id: string
+          internal_links: number | null
+          last_audited_at: string | null
+          meta_description: string | null
+          meta_title: string | null
+          notes: string | null
+          og_tags: Json | null
+          owner_id: string | null
+          page_type: string | null
+          readability_score: number | null
+          schema_type: string | null
+          seo_score: number | null
+          slug: string | null
+          supporting_keywords: string[] | null
+          target_keyword: string | null
+          title: string | null
+          twitter_tags: Json | null
+          updated_at: string
+          url: string
+          word_count: number | null
+        }
+        Insert: {
+          alt_coverage?: number | null
+          canonical?: string | null
+          cluster_id?: string | null
+          content_score?: number | null
+          created_at?: string
+          external_links?: number | null
+          heading_score?: number | null
+          id?: string
+          internal_links?: number | null
+          last_audited_at?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          notes?: string | null
+          og_tags?: Json | null
+          owner_id?: string | null
+          page_type?: string | null
+          readability_score?: number | null
+          schema_type?: string | null
+          seo_score?: number | null
+          slug?: string | null
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          title?: string | null
+          twitter_tags?: Json | null
+          updated_at?: string
+          url: string
+          word_count?: number | null
+        }
+        Update: {
+          alt_coverage?: number | null
+          canonical?: string | null
+          cluster_id?: string | null
+          content_score?: number | null
+          created_at?: string
+          external_links?: number | null
+          heading_score?: number | null
+          id?: string
+          internal_links?: number | null
+          last_audited_at?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          notes?: string | null
+          og_tags?: Json | null
+          owner_id?: string | null
+          page_type?: string | null
+          readability_score?: number | null
+          schema_type?: string | null
+          seo_score?: number | null
+          slug?: string | null
+          supporting_keywords?: string[] | null
+          target_keyword?: string | null
+          title?: string | null
+          twitter_tags?: Json | null
+          updated_at?: string
+          url?: string
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seo_pages_cluster_id_fkey"
+            columns: ["cluster_id"]
+            isOneToOne: false
+            referencedRelation: "seo_clusters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seo_reports: {
+        Row: {
+          created_at: string
+          generated_by: string | null
+          highlights: Json | null
+          id: string
+          metrics: Json | null
+          owner_id: string | null
+          period_end: string
+          period_start: string
+          recommendations: Json | null
+          report_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          generated_by?: string | null
+          highlights?: Json | null
+          id?: string
+          metrics?: Json | null
+          owner_id?: string | null
+          period_end: string
+          period_start: string
+          recommendations?: Json | null
+          report_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          generated_by?: string | null
+          highlights?: Json | null
+          id?: string
+          metrics?: Json | null
+          owner_id?: string | null
+          period_end?: string
+          period_start?: string
+          recommendations?: Json | null
+          report_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       session_attendance: {
         Row: {
           confirmed_at: string | null
