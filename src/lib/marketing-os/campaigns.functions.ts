@@ -528,7 +528,7 @@ Assets: ${JSON.stringify(assets ?? [])}`,
         title: `${data.report_type.replace(/_/g, " ")} report`,
         summary: typeof insights === "object" && insights && "summary" in insights ? String((insights as any).summary ?? "") : "",
         data: { metrics: metrics ?? [], assets: assets ?? [] },
-        ai_insights: insights,
+        ai_insights: insights as any,
         format: "json",
         generated_by: context.userId,
       })
