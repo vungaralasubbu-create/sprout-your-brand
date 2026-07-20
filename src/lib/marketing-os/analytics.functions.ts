@@ -357,7 +357,7 @@ export const createAnalyticsReport = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => CreateReportSchema.parse(raw))
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase.from("mkt_analytics_reports")
-      .insert({ ...data, owner_id: context.userId }).select("*").maybeSingle();
+      .insert({ ...data, owner_id: context.userId } as Any).select("*").maybeSingle();
     if (error) throw new Error(error.message);
     return { report: row };
   });
