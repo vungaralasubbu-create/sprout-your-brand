@@ -347,7 +347,6 @@ import { Route as AuthenticatedAdminLeadManagementRouteImport } from './routes/_
 import { Route as AuthenticatedAdminLeadIntelligenceRouteImport } from './routes/_authenticated/admin.lead-intelligence'
 import { Route as AuthenticatedAdminKnowledgeBaseRouteImport } from './routes/_authenticated/admin.knowledge-base'
 import { Route as AuthenticatedAdminKeywordResearchRouteImport } from './routes/_authenticated/admin.keyword-research'
-import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminInfrastructureRouteImport } from './routes/_authenticated/admin.infrastructure'
 import { Route as AuthenticatedAdminExecutiveRouteImport } from './routes/_authenticated/admin.executive'
 import { Route as AuthenticatedAdminExecutionRouteImport } from './routes/_authenticated/admin.execution'
@@ -2424,12 +2423,6 @@ const AuthenticatedAdminKeywordResearchRoute =
     path: '/keyword-research',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const AuthenticatedAdminIntegrationsRoute =
-  AuthenticatedAdminIntegrationsRouteImport.update({
-    id: '/integrations',
-    path: '/integrations',
-    getParentRoute: () => AuthenticatedAdminRoute,
-  } as any)
 const AuthenticatedAdminInfrastructureRoute =
   AuthenticatedAdminInfrastructureRouteImport.update({
     id: '/infrastructure',
@@ -4010,7 +4003,6 @@ export interface FileRoutesByFullPath {
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
-  '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
   '/admin/knowledge-base': typeof AuthenticatedAdminKnowledgeBaseRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -4565,7 +4557,6 @@ export interface FileRoutesByTo {
   '/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
-  '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
   '/admin/knowledge-base': typeof AuthenticatedAdminKnowledgeBaseRoute
   '/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -5138,7 +5129,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/execution': typeof AuthenticatedAdminExecutionRoute
   '/_authenticated/admin/executive': typeof AuthenticatedAdminExecutiveRoute
   '/_authenticated/admin/infrastructure': typeof AuthenticatedAdminInfrastructureRoute
-  '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/_authenticated/admin/keyword-research': typeof AuthenticatedAdminKeywordResearchRoute
   '/_authenticated/admin/knowledge-base': typeof AuthenticatedAdminKnowledgeBaseRoute
   '/_authenticated/admin/lead-intelligence': typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -5712,7 +5702,6 @@ export interface FileRouteTypes {
     | '/admin/execution'
     | '/admin/executive'
     | '/admin/infrastructure'
-    | '/admin/integrations'
     | '/admin/keyword-research'
     | '/admin/knowledge-base'
     | '/admin/lead-intelligence'
@@ -6267,7 +6256,6 @@ export interface FileRouteTypes {
     | '/admin/execution'
     | '/admin/executive'
     | '/admin/infrastructure'
-    | '/admin/integrations'
     | '/admin/keyword-research'
     | '/admin/knowledge-base'
     | '/admin/lead-intelligence'
@@ -6839,7 +6827,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/execution'
     | '/_authenticated/admin/executive'
     | '/_authenticated/admin/infrastructure'
-    | '/_authenticated/admin/integrations'
     | '/_authenticated/admin/keyword-research'
     | '/_authenticated/admin/knowledge-base'
     | '/_authenticated/admin/lead-intelligence'
@@ -9721,13 +9708,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminKeywordResearchRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/_authenticated/admin/integrations': {
-      id: '/_authenticated/admin/integrations'
-      path: '/integrations'
-      fullPath: '/admin/integrations'
-      preLoaderRoute: typeof AuthenticatedAdminIntegrationsRouteImport
-      parentRoute: typeof AuthenticatedAdminRoute
-    }
     '/_authenticated/admin/infrastructure': {
       id: '/_authenticated/admin/infrastructure'
       path: '/infrastructure'
@@ -11834,7 +11814,6 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminExecutionRoute: typeof AuthenticatedAdminExecutionRoute
   AuthenticatedAdminExecutiveRoute: typeof AuthenticatedAdminExecutiveRoute
   AuthenticatedAdminInfrastructureRoute: typeof AuthenticatedAdminInfrastructureRoute
-  AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
   AuthenticatedAdminKeywordResearchRoute: typeof AuthenticatedAdminKeywordResearchRoute
   AuthenticatedAdminKnowledgeBaseRoute: typeof AuthenticatedAdminKnowledgeBaseRoute
   AuthenticatedAdminLeadIntelligenceRoute: typeof AuthenticatedAdminLeadIntelligenceRoute
@@ -11945,7 +11924,6 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminExecutionRoute: AuthenticatedAdminExecutionRoute,
   AuthenticatedAdminExecutiveRoute: AuthenticatedAdminExecutiveRoute,
   AuthenticatedAdminInfrastructureRoute: AuthenticatedAdminInfrastructureRoute,
-  AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
   AuthenticatedAdminKeywordResearchRoute:
     AuthenticatedAdminKeywordResearchRoute,
   AuthenticatedAdminKnowledgeBaseRoute: AuthenticatedAdminKnowledgeBaseRoute,
