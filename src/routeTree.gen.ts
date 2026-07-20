@@ -133,6 +133,7 @@ import { Route as FaqsSlugRouteImport } from './routes/faqs.$slug'
 import { Route as EntitiesSlugRouteImport } from './routes/entities.$slug'
 import { Route as CompareSlugRouteImport } from './routes/compare.$slug'
 import { Route as CommunityNewRouteImport } from './routes/community.new'
+import { Route as CloudVerifyEmailRouteImport } from './routes/cloud.verify-email'
 import { Route as CloudTermsRouteImport } from './routes/cloud.terms'
 import { Route as CloudTemplatesRouteImport } from './routes/cloud.templates'
 import { Route as CloudStatusRouteImport } from './routes/cloud.status'
@@ -140,9 +141,11 @@ import { Route as CloudSolutionsRouteImport } from './routes/cloud.solutions'
 import { Route as CloudSignupRouteImport } from './routes/cloud.signup'
 import { Route as CloudSecurityRouteImport } from './routes/cloud.security'
 import { Route as CloudResourcesRouteImport } from './routes/cloud.resources'
+import { Route as CloudResetPasswordRouteImport } from './routes/cloud.reset-password'
 import { Route as CloudPrivacyRouteImport } from './routes/cloud.privacy'
 import { Route as CloudPricingRouteImport } from './routes/cloud.pricing'
 import { Route as CloudLoginRouteImport } from './routes/cloud.login'
+import { Route as CloudForgotPasswordRouteImport } from './routes/cloud.forgot-password'
 import { Route as CloudFeaturesRouteImport } from './routes/cloud.features'
 import { Route as CloudEnterpriseRouteImport } from './routes/cloud.enterprise'
 import { Route as CloudCustomersRouteImport } from './routes/cloud.customers'
@@ -1168,6 +1171,11 @@ const CommunityNewRoute = CommunityNewRouteImport.update({
   path: '/community/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CloudVerifyEmailRoute = CloudVerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => CloudRoute,
+} as any)
 const CloudTermsRoute = CloudTermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -1203,6 +1211,11 @@ const CloudResourcesRoute = CloudResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => CloudRoute,
 } as any)
+const CloudResetPasswordRoute = CloudResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => CloudRoute,
+} as any)
 const CloudPrivacyRoute = CloudPrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -1216,6 +1229,11 @@ const CloudPricingRoute = CloudPricingRouteImport.update({
 const CloudLoginRoute = CloudLoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => CloudRoute,
+} as any)
+const CloudForgotPasswordRoute = CloudForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => CloudRoute,
 } as any)
 const CloudFeaturesRoute = CloudFeaturesRouteImport.update({
@@ -3648,9 +3666,11 @@ export interface FileRoutesByFullPath {
   '/cloud/customers': typeof CloudCustomersRoute
   '/cloud/enterprise': typeof CloudEnterpriseRoute
   '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/forgot-password': typeof CloudForgotPasswordRoute
   '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/reset-password': typeof CloudResetPasswordRoute
   '/cloud/resources': typeof CloudResourcesRoute
   '/cloud/security': typeof CloudSecurityRoute
   '/cloud/signup': typeof CloudSignupRoute
@@ -3658,6 +3678,7 @@ export interface FileRoutesByFullPath {
   '/cloud/status': typeof CloudStatusRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
+  '/cloud/verify-email': typeof CloudVerifyEmailRoute
   '/community/new': typeof CommunityNewRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/entities/$slug': typeof EntitiesSlugRoute
@@ -4177,9 +4198,11 @@ export interface FileRoutesByTo {
   '/cloud/customers': typeof CloudCustomersRoute
   '/cloud/enterprise': typeof CloudEnterpriseRoute
   '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/forgot-password': typeof CloudForgotPasswordRoute
   '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/reset-password': typeof CloudResetPasswordRoute
   '/cloud/resources': typeof CloudResourcesRoute
   '/cloud/security': typeof CloudSecurityRoute
   '/cloud/signup': typeof CloudSignupRoute
@@ -4187,6 +4210,7 @@ export interface FileRoutesByTo {
   '/cloud/status': typeof CloudStatusRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
+  '/cloud/verify-email': typeof CloudVerifyEmailRoute
   '/community/new': typeof CommunityNewRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/entities/$slug': typeof EntitiesSlugRoute
@@ -4705,9 +4729,11 @@ export interface FileRoutesById {
   '/cloud/customers': typeof CloudCustomersRoute
   '/cloud/enterprise': typeof CloudEnterpriseRoute
   '/cloud/features': typeof CloudFeaturesRoute
+  '/cloud/forgot-password': typeof CloudForgotPasswordRoute
   '/cloud/login': typeof CloudLoginRoute
   '/cloud/pricing': typeof CloudPricingRoute
   '/cloud/privacy': typeof CloudPrivacyRoute
+  '/cloud/reset-password': typeof CloudResetPasswordRoute
   '/cloud/resources': typeof CloudResourcesRoute
   '/cloud/security': typeof CloudSecurityRoute
   '/cloud/signup': typeof CloudSignupRoute
@@ -4715,6 +4741,7 @@ export interface FileRoutesById {
   '/cloud/status': typeof CloudStatusRoute
   '/cloud/templates': typeof CloudTemplatesRoute
   '/cloud/terms': typeof CloudTermsRoute
+  '/cloud/verify-email': typeof CloudVerifyEmailRoute
   '/community/new': typeof CommunityNewRoute
   '/compare/$slug': typeof CompareSlugRoute
   '/entities/$slug': typeof EntitiesSlugRoute
@@ -5242,9 +5269,11 @@ export interface FileRouteTypes {
     | '/cloud/customers'
     | '/cloud/enterprise'
     | '/cloud/features'
+    | '/cloud/forgot-password'
     | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/reset-password'
     | '/cloud/resources'
     | '/cloud/security'
     | '/cloud/signup'
@@ -5252,6 +5281,7 @@ export interface FileRouteTypes {
     | '/cloud/status'
     | '/cloud/templates'
     | '/cloud/terms'
+    | '/cloud/verify-email'
     | '/community/new'
     | '/compare/$slug'
     | '/entities/$slug'
@@ -5771,9 +5801,11 @@ export interface FileRouteTypes {
     | '/cloud/customers'
     | '/cloud/enterprise'
     | '/cloud/features'
+    | '/cloud/forgot-password'
     | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/reset-password'
     | '/cloud/resources'
     | '/cloud/security'
     | '/cloud/signup'
@@ -5781,6 +5813,7 @@ export interface FileRouteTypes {
     | '/cloud/status'
     | '/cloud/templates'
     | '/cloud/terms'
+    | '/cloud/verify-email'
     | '/community/new'
     | '/compare/$slug'
     | '/entities/$slug'
@@ -6298,9 +6331,11 @@ export interface FileRouteTypes {
     | '/cloud/customers'
     | '/cloud/enterprise'
     | '/cloud/features'
+    | '/cloud/forgot-password'
     | '/cloud/login'
     | '/cloud/pricing'
     | '/cloud/privacy'
+    | '/cloud/reset-password'
     | '/cloud/resources'
     | '/cloud/security'
     | '/cloud/signup'
@@ -6308,6 +6343,7 @@ export interface FileRouteTypes {
     | '/cloud/status'
     | '/cloud/templates'
     | '/cloud/terms'
+    | '/cloud/verify-email'
     | '/community/new'
     | '/compare/$slug'
     | '/entities/$slug'
@@ -7752,6 +7788,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cloud/verify-email': {
+      id: '/cloud/verify-email'
+      path: '/verify-email'
+      fullPath: '/cloud/verify-email'
+      preLoaderRoute: typeof CloudVerifyEmailRouteImport
+      parentRoute: typeof CloudRoute
+    }
     '/cloud/terms': {
       id: '/cloud/terms'
       path: '/terms'
@@ -7801,6 +7844,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CloudResourcesRouteImport
       parentRoute: typeof CloudRoute
     }
+    '/cloud/reset-password': {
+      id: '/cloud/reset-password'
+      path: '/reset-password'
+      fullPath: '/cloud/reset-password'
+      preLoaderRoute: typeof CloudResetPasswordRouteImport
+      parentRoute: typeof CloudRoute
+    }
     '/cloud/privacy': {
       id: '/cloud/privacy'
       path: '/privacy'
@@ -7820,6 +7870,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/cloud/login'
       preLoaderRoute: typeof CloudLoginRouteImport
+      parentRoute: typeof CloudRoute
+    }
+    '/cloud/forgot-password': {
+      id: '/cloud/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/cloud/forgot-password'
+      preLoaderRoute: typeof CloudForgotPasswordRouteImport
       parentRoute: typeof CloudRoute
     }
     '/cloud/features': {
@@ -11866,9 +11923,11 @@ interface CloudRouteChildren {
   CloudCustomersRoute: typeof CloudCustomersRoute
   CloudEnterpriseRoute: typeof CloudEnterpriseRoute
   CloudFeaturesRoute: typeof CloudFeaturesRoute
+  CloudForgotPasswordRoute: typeof CloudForgotPasswordRoute
   CloudLoginRoute: typeof CloudLoginRoute
   CloudPricingRoute: typeof CloudPricingRoute
   CloudPrivacyRoute: typeof CloudPrivacyRoute
+  CloudResetPasswordRoute: typeof CloudResetPasswordRoute
   CloudResourcesRoute: typeof CloudResourcesRoute
   CloudSecurityRoute: typeof CloudSecurityRoute
   CloudSignupRoute: typeof CloudSignupRoute
@@ -11876,6 +11935,7 @@ interface CloudRouteChildren {
   CloudStatusRoute: typeof CloudStatusRoute
   CloudTemplatesRoute: typeof CloudTemplatesRoute
   CloudTermsRoute: typeof CloudTermsRoute
+  CloudVerifyEmailRoute: typeof CloudVerifyEmailRoute
   CloudIndexRoute: typeof CloudIndexRoute
 }
 
@@ -11885,9 +11945,11 @@ const CloudRouteChildren: CloudRouteChildren = {
   CloudCustomersRoute: CloudCustomersRoute,
   CloudEnterpriseRoute: CloudEnterpriseRoute,
   CloudFeaturesRoute: CloudFeaturesRoute,
+  CloudForgotPasswordRoute: CloudForgotPasswordRoute,
   CloudLoginRoute: CloudLoginRoute,
   CloudPricingRoute: CloudPricingRoute,
   CloudPrivacyRoute: CloudPrivacyRoute,
+  CloudResetPasswordRoute: CloudResetPasswordRoute,
   CloudResourcesRoute: CloudResourcesRoute,
   CloudSecurityRoute: CloudSecurityRoute,
   CloudSignupRoute: CloudSignupRoute,
@@ -11895,6 +11957,7 @@ const CloudRouteChildren: CloudRouteChildren = {
   CloudStatusRoute: CloudStatusRoute,
   CloudTemplatesRoute: CloudTemplatesRoute,
   CloudTermsRoute: CloudTermsRoute,
+  CloudVerifyEmailRoute: CloudVerifyEmailRoute,
   CloudIndexRoute: CloudIndexRoute,
 }
 
