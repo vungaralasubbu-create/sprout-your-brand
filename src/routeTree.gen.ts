@@ -272,6 +272,7 @@ import { Route as AuthenticatedAdminPartnerApplicationsRouteImport } from './rou
 import { Route as AuthenticatedAdminModelApprovalsRouteImport } from './routes/_authenticated/admin.model-approvals'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
 import { Route as AuthenticatedAdminMarketplaceRouteImport } from './routes/_authenticated/admin.marketplace'
+import { Route as AuthenticatedAdminMarketingOsRouteImport } from './routes/_authenticated/admin.marketing-os'
 import { Route as AuthenticatedAdminMarketingCopyRouteImport } from './routes/_authenticated/admin.marketing-copy'
 import { Route as AuthenticatedAdminLlmRouteImport } from './routes/_authenticated/admin.llm'
 import { Route as AuthenticatedAdminLiveClassesRouteImport } from './routes/_authenticated/admin.live-classes'
@@ -335,6 +336,7 @@ import { Route as AuthenticatedAdminProgrammaticSeoIndexRouteImport } from './ro
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
 import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
+import { Route as AuthenticatedAdminMarketingOsIndexRouteImport } from './routes/_authenticated/admin.marketing-os.index'
 import { Route as AuthenticatedAdminLlmIndexRouteImport } from './routes/_authenticated/admin.llm.index'
 import { Route as AuthenticatedAdminEngageIndexRouteImport } from './routes/_authenticated/admin/engage/index'
 import { Route as AuthenticatedAdminEmployeesIndexRouteImport } from './routes/_authenticated/admin.employees.index'
@@ -397,6 +399,7 @@ import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './route
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
+import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
 import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
 import { Route as AuthenticatedAdminLlmSectionsRouteImport } from './routes/_authenticated/admin.llm.sections'
 import { Route as AuthenticatedAdminEmployeesIdRouteImport } from './routes/_authenticated/admin.employees.$id'
@@ -487,6 +490,7 @@ import { Route as AuthenticatedStudentCareerInterviewSetupRouteImport } from './
 import { Route as AuthenticatedStudentCareerInterviewIdRouteImport } from './routes/_authenticated/student.career.interview.$id'
 import { Route as AuthenticatedPartnerEmploymentSalarySlipsIdRouteImport } from './routes/_authenticated/partner.employment.salary-slips.$id'
 import { Route as AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport } from './routes/_authenticated/ambassador.marketing-resources.programs.$slug'
+import { Route as AuthenticatedAdminMarketingOsPlansIdRouteImport } from './routes/_authenticated/admin.marketing-os.plans.$id'
 import { Route as AuthenticatedAdminCoursesIdAiStudioRouteImport } from './routes/_authenticated/admin.courses.$id.ai-studio'
 import { Route as AuthenticatedAdminContentArticlesIdRouteImport } from './routes/_authenticated/admin.content.articles.$id'
 import { Route as AuthenticatedAdminAutomationHubWorkflowsIdRouteImport } from './routes/_authenticated/admin/automation-hub/workflows.$id'
@@ -1913,6 +1917,12 @@ const AuthenticatedAdminMarketplaceRoute =
     path: '/marketplace',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMarketingOsRoute =
+  AuthenticatedAdminMarketingOsRouteImport.update({
+    id: '/marketing-os',
+    path: '/marketing-os',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminMarketingCopyRoute =
   AuthenticatedAdminMarketingCopyRouteImport.update({
     id: '/marketing-copy',
@@ -2286,6 +2296,12 @@ const AuthenticatedAdminPartnersIndexRoute =
     path: '/partners/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMarketingOsIndexRoute =
+  AuthenticatedAdminMarketingOsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminLlmIndexRoute =
   AuthenticatedAdminLlmIndexRouteImport.update({
     id: '/',
@@ -2650,6 +2666,12 @@ const AuthenticatedAdminPartnersIdRoute =
     id: '/partners/$id',
     path: '/partners/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminMarketingOsPlannerRoute =
+  AuthenticatedAdminMarketingOsPlannerRouteImport.update({
+    id: '/planner',
+    path: '/planner',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
 const AuthenticatedAdminLlmSettingsRoute =
   AuthenticatedAdminLlmSettingsRouteImport.update({
@@ -3191,6 +3213,12 @@ const AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute =
     path: '/marketing-resources/programs/$slug',
     getParentRoute: () => AuthenticatedAmbassadorRoute,
   } as any)
+const AuthenticatedAdminMarketingOsPlansIdRoute =
+  AuthenticatedAdminMarketingOsPlansIdRouteImport.update({
+    id: '/plans/$id',
+    path: '/plans/$id',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminCoursesIdAiStudioRoute =
   AuthenticatedAdminCoursesIdAiStudioRouteImport.update({
     id: '/ai-studio',
@@ -3398,6 +3426,7 @@ export interface FileRoutesByFullPath {
   '/admin/live-classes': typeof AuthenticatedAdminLiveClassesRoute
   '/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
   '/admin/marketing-copy': typeof AuthenticatedAdminMarketingCopyRoute
+  '/admin/marketing-os': typeof AuthenticatedAdminMarketingOsRouteWithChildren
   '/admin/marketplace': typeof AuthenticatedAdminMarketplaceRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
   '/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
@@ -3606,6 +3635,7 @@ export interface FileRoutesByFullPath {
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -3668,6 +3698,7 @@ export interface FileRoutesByFullPath {
   '/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/engage/': typeof AuthenticatedAdminEngageIndexRoute
   '/admin/llm/': typeof AuthenticatedAdminLlmIndexRoute
+  '/admin/marketing-os/': typeof AuthenticatedAdminMarketingOsIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
@@ -3692,6 +3723,7 @@ export interface FileRoutesByFullPath {
   '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -4076,6 +4108,7 @@ export interface FileRoutesByTo {
   '/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -4138,6 +4171,7 @@ export interface FileRoutesByTo {
   '/admin/employees': typeof AuthenticatedAdminEmployeesIndexRoute
   '/admin/engage': typeof AuthenticatedAdminEngageIndexRoute
   '/admin/llm': typeof AuthenticatedAdminLlmIndexRoute
+  '/admin/marketing-os': typeof AuthenticatedAdminMarketingOsIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
@@ -4162,6 +4196,7 @@ export interface FileRoutesByTo {
   '/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -4354,6 +4389,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/live-classes': typeof AuthenticatedAdminLiveClassesRoute
   '/_authenticated/admin/llm': typeof AuthenticatedAdminLlmRouteWithChildren
   '/_authenticated/admin/marketing-copy': typeof AuthenticatedAdminMarketingCopyRoute
+  '/_authenticated/admin/marketing-os': typeof AuthenticatedAdminMarketingOsRouteWithChildren
   '/_authenticated/admin/marketplace': typeof AuthenticatedAdminMarketplaceRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
   '/_authenticated/admin/model-approvals': typeof AuthenticatedAdminModelApprovalsRoute
@@ -4562,6 +4598,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/employees/$id': typeof AuthenticatedAdminEmployeesIdRoute
   '/_authenticated/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
+  '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -4624,6 +4661,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/employees/': typeof AuthenticatedAdminEmployeesIndexRoute
   '/_authenticated/admin/engage/': typeof AuthenticatedAdminEngageIndexRoute
   '/_authenticated/admin/llm/': typeof AuthenticatedAdminLlmIndexRoute
+  '/_authenticated/admin/marketing-os/': typeof AuthenticatedAdminMarketingOsIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
@@ -4648,6 +4686,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/automation-hub/workflows/$id': typeof AuthenticatedAdminAutomationHubWorkflowsIdRoute
   '/_authenticated/admin/content/articles/$id': typeof AuthenticatedAdminContentArticlesIdRoute
   '/_authenticated/admin/courses/$id/ai-studio': typeof AuthenticatedAdminCoursesIdAiStudioRoute
+  '/_authenticated/admin/marketing-os/plans/$id': typeof AuthenticatedAdminMarketingOsPlansIdRoute
   '/_authenticated/ambassador/marketing-resources/programs/$slug': typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRoute
   '/_authenticated/partner/employment/salary-slips/$id': typeof AuthenticatedPartnerEmploymentSalarySlipsIdRoute
   '/_authenticated/student/career/interview/$id': typeof AuthenticatedStudentCareerInterviewIdRouteWithChildren
@@ -4840,6 +4879,7 @@ export interface FileRouteTypes {
     | '/admin/live-classes'
     | '/admin/llm'
     | '/admin/marketing-copy'
+    | '/admin/marketing-os'
     | '/admin/marketplace'
     | '/admin/media'
     | '/admin/model-approvals'
@@ -5048,6 +5088,7 @@ export interface FileRouteTypes {
     | '/admin/employees/$id'
     | '/admin/llm/sections'
     | '/admin/llm/settings'
+    | '/admin/marketing-os/planner'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -5110,6 +5151,7 @@ export interface FileRouteTypes {
     | '/admin/employees/'
     | '/admin/engage/'
     | '/admin/llm/'
+    | '/admin/marketing-os/'
     | '/admin/partners/'
     | '/admin/payment-links/'
     | '/admin/payouts/'
@@ -5134,6 +5176,7 @@ export interface FileRouteTypes {
     | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
+    | '/admin/marketing-os/plans/$id'
     | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -5518,6 +5561,7 @@ export interface FileRouteTypes {
     | '/admin/employees/$id'
     | '/admin/llm/sections'
     | '/admin/llm/settings'
+    | '/admin/marketing-os/planner'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -5580,6 +5624,7 @@ export interface FileRouteTypes {
     | '/admin/employees'
     | '/admin/engage'
     | '/admin/llm'
+    | '/admin/marketing-os'
     | '/admin/partners'
     | '/admin/payment-links'
     | '/admin/payouts'
@@ -5604,6 +5649,7 @@ export interface FileRouteTypes {
     | '/admin/automation-hub/workflows/$id'
     | '/admin/content/articles/$id'
     | '/admin/courses/$id/ai-studio'
+    | '/admin/marketing-os/plans/$id'
     | '/ambassador/marketing-resources/programs/$slug'
     | '/partner/employment/salary-slips/$id'
     | '/student/career/interview/$id'
@@ -5795,6 +5841,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/live-classes'
     | '/_authenticated/admin/llm'
     | '/_authenticated/admin/marketing-copy'
+    | '/_authenticated/admin/marketing-os'
     | '/_authenticated/admin/marketplace'
     | '/_authenticated/admin/media'
     | '/_authenticated/admin/model-approvals'
@@ -6003,6 +6050,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/employees/$id'
     | '/_authenticated/admin/llm/sections'
     | '/_authenticated/admin/llm/settings'
+    | '/_authenticated/admin/marketing-os/planner'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payouts/$id'
@@ -6065,6 +6113,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/employees/'
     | '/_authenticated/admin/engage/'
     | '/_authenticated/admin/llm/'
+    | '/_authenticated/admin/marketing-os/'
     | '/_authenticated/admin/partners/'
     | '/_authenticated/admin/payment-links/'
     | '/_authenticated/admin/payouts/'
@@ -6089,6 +6138,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/automation-hub/workflows/$id'
     | '/_authenticated/admin/content/articles/$id'
     | '/_authenticated/admin/courses/$id/ai-studio'
+    | '/_authenticated/admin/marketing-os/plans/$id'
     | '/_authenticated/ambassador/marketing-resources/programs/$slug'
     | '/_authenticated/partner/employment/salary-slips/$id'
     | '/_authenticated/student/career/interview/$id'
@@ -8073,6 +8123,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMarketplaceRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/marketing-os': {
+      id: '/_authenticated/admin/marketing-os'
+      path: '/marketing-os'
+      fullPath: '/admin/marketing-os'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/marketing-copy': {
       id: '/_authenticated/admin/marketing-copy'
       path: '/marketing-copy'
@@ -8514,6 +8571,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/marketing-os/': {
+      id: '/_authenticated/admin/marketing-os/'
+      path: '/'
+      fullPath: '/admin/marketing-os/'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/llm/': {
       id: '/_authenticated/admin/llm/'
       path: '/'
@@ -8947,6 +9011,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/partners/$id'
       preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/marketing-os/planner': {
+      id: '/_authenticated/admin/marketing-os/planner'
+      path: '/planner'
+      fullPath: '/admin/marketing-os/planner'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsPlannerRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
     '/_authenticated/admin/llm/settings': {
       id: '/_authenticated/admin/llm/settings'
@@ -9578,6 +9649,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAmbassadorMarketingResourcesProgramsSlugRouteImport
       parentRoute: typeof AuthenticatedAmbassadorRoute
     }
+    '/_authenticated/admin/marketing-os/plans/$id': {
+      id: '/_authenticated/admin/marketing-os/plans/$id'
+      path: '/plans/$id'
+      fullPath: '/admin/marketing-os/plans/$id'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsPlansIdRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/courses/$id/ai-studio': {
       id: '/_authenticated/admin/courses/$id/ai-studio'
       path: '/ai-studio'
@@ -9924,6 +10002,27 @@ const AuthenticatedAdminLlmRouteWithChildren =
     AuthenticatedAdminLlmRouteChildren,
   )
 
+interface AuthenticatedAdminMarketingOsRouteChildren {
+  AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
+  AuthenticatedAdminMarketingOsIndexRoute: typeof AuthenticatedAdminMarketingOsIndexRoute
+  AuthenticatedAdminMarketingOsPlansIdRoute: typeof AuthenticatedAdminMarketingOsPlansIdRoute
+}
+
+const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsRouteChildren =
+  {
+    AuthenticatedAdminMarketingOsPlannerRoute:
+      AuthenticatedAdminMarketingOsPlannerRoute,
+    AuthenticatedAdminMarketingOsIndexRoute:
+      AuthenticatedAdminMarketingOsIndexRoute,
+    AuthenticatedAdminMarketingOsPlansIdRoute:
+      AuthenticatedAdminMarketingOsPlansIdRoute,
+  }
+
+const AuthenticatedAdminMarketingOsRouteWithChildren =
+  AuthenticatedAdminMarketingOsRoute._addFileChildren(
+    AuthenticatedAdminMarketingOsRouteChildren,
+  )
+
 interface AuthenticatedAdminRiskReviewRouteChildren {
   AuthenticatedAdminRiskReviewIdRoute: typeof AuthenticatedAdminRiskReviewIdRoute
 }
@@ -10010,6 +10109,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminLiveClassesRoute: typeof AuthenticatedAdminLiveClassesRoute
   AuthenticatedAdminLlmRoute: typeof AuthenticatedAdminLlmRouteWithChildren
   AuthenticatedAdminMarketingCopyRoute: typeof AuthenticatedAdminMarketingCopyRoute
+  AuthenticatedAdminMarketingOsRoute: typeof AuthenticatedAdminMarketingOsRouteWithChildren
   AuthenticatedAdminMarketplaceRoute: typeof AuthenticatedAdminMarketplaceRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
   AuthenticatedAdminModelApprovalsRoute: typeof AuthenticatedAdminModelApprovalsRoute
@@ -10122,6 +10222,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminLiveClassesRoute: AuthenticatedAdminLiveClassesRoute,
   AuthenticatedAdminLlmRoute: AuthenticatedAdminLlmRouteWithChildren,
   AuthenticatedAdminMarketingCopyRoute: AuthenticatedAdminMarketingCopyRoute,
+  AuthenticatedAdminMarketingOsRoute:
+    AuthenticatedAdminMarketingOsRouteWithChildren,
   AuthenticatedAdminMarketplaceRoute: AuthenticatedAdminMarketplaceRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
   AuthenticatedAdminModelApprovalsRoute: AuthenticatedAdminModelApprovalsRoute,

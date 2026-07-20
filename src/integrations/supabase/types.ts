@@ -16021,6 +16021,148 @@ export type Database = {
           },
         ]
       }
+      marketing_plan_versions: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          owner_id: string
+          plan_id: string
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          owner_id: string
+          plan_id: string
+          snapshot: Json
+          version: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          owner_id?: string
+          plan_id?: string
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_plan_versions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_plans: {
+        Row: {
+          brand_keywords: Json
+          brand_personality: string | null
+          brand_tone: string | null
+          business_name: string
+          campaigns: Json
+          competitors: Json
+          content_mix: Json
+          content_types: Json
+          countries: Json
+          courses: Json
+          created_at: string
+          cta_preference: string | null
+          goals: Json
+          id: string
+          industry: string | null
+          owner_id: string
+          parent_plan_id: string | null
+          planner_json: Json | null
+          planning_period: string
+          platforms: Json
+          posting_frequency: Json
+          primary_language: string | null
+          products: Json
+          secondary_languages: Json
+          services: Json
+          status: string
+          target_audience: Json
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          brand_keywords?: Json
+          brand_personality?: string | null
+          brand_tone?: string | null
+          business_name: string
+          campaigns?: Json
+          competitors?: Json
+          content_mix?: Json
+          content_types?: Json
+          countries?: Json
+          courses?: Json
+          created_at?: string
+          cta_preference?: string | null
+          goals?: Json
+          id?: string
+          industry?: string | null
+          owner_id: string
+          parent_plan_id?: string | null
+          planner_json?: Json | null
+          planning_period?: string
+          platforms?: Json
+          posting_frequency?: Json
+          primary_language?: string | null
+          products?: Json
+          secondary_languages?: Json
+          services?: Json
+          status?: string
+          target_audience?: Json
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          brand_keywords?: Json
+          brand_personality?: string | null
+          brand_tone?: string | null
+          business_name?: string
+          campaigns?: Json
+          competitors?: Json
+          content_mix?: Json
+          content_types?: Json
+          countries?: Json
+          courses?: Json
+          created_at?: string
+          cta_preference?: string | null
+          goals?: Json
+          id?: string
+          industry?: string | null
+          owner_id?: string
+          parent_plan_id?: string | null
+          planner_json?: Json | null
+          planning_period?: string
+          platforms?: Json
+          posting_frequency?: Json
+          primary_language?: string | null
+          products?: Json
+          secondary_languages?: Json
+          services?: Json
+          status?: string
+          target_audience?: Json
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_plans_parent_plan_id_fkey"
+            columns: ["parent_plan_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_resource_interactions: {
         Row: {
           ambassador_id: string
