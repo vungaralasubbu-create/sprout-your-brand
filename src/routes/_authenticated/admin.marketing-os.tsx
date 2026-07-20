@@ -16,6 +16,7 @@ const TABS: Array<{ to: string; label: string; icon: typeof LayoutDashboard; liv
   { to: "/admin/marketing-os/calendar", label: "Calendar", icon: CalendarDays, live: true },
   { to: "/admin/marketing-os/analytics", label: "Analytics", icon: BarChart3, live: true },
   { to: "/admin/marketing-os/brand-kit", label: "Brand Kit", icon: Palette, live: true },
+  { to: "/admin/marketing-os/media-library", label: "Media Library", icon: FolderOpen, live: true },
 ];
 
 function MarketingOSShell() {
