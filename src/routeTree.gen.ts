@@ -356,6 +356,7 @@ import { Route as ApiPublicWebhooksCashfreeRouteImport } from './routes/api/publ
 import { Route as ApiPublicTopicsJsonRouteImport } from './routes/api/public/topics.json'
 import { Route as ApiPublicHooksTechSeoTickRouteImport } from './routes/api/public/hooks/tech-seo-tick'
 import { Route as ApiPublicHooksSeoPingRouteImport } from './routes/api/public/hooks/seo-ping'
+import { Route as ApiPublicHooksPublisherTickRouteImport } from './routes/api/public/hooks/publisher-tick'
 import { Route as ApiPublicHooksPseoTickRouteImport } from './routes/api/public/hooks/pseo-tick'
 import { Route as ApiPublicHooksMktPublishRouteImport } from './routes/api/public/hooks/mkt-publish'
 import { Route as ApiPublicHooksMarketingAgentTickRouteImport } from './routes/api/public/hooks/marketing-agent-tick'
@@ -399,7 +400,9 @@ import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './route
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
+import { Route as AuthenticatedAdminMarketingOsPublisherRouteImport } from './routes/_authenticated/admin.marketing-os.publisher'
 import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
+import { Route as AuthenticatedAdminMarketingOsCalendarRouteImport } from './routes/_authenticated/admin.marketing-os.calendar'
 import { Route as AuthenticatedAdminMarketingOsApprovalsRouteImport } from './routes/_authenticated/admin.marketing-os.approvals'
 import { Route as AuthenticatedAdminLlmSettingsRouteImport } from './routes/_authenticated/admin.llm.settings'
 import { Route as AuthenticatedAdminLlmSectionsRouteImport } from './routes/_authenticated/admin.llm.sections'
@@ -2415,6 +2418,12 @@ const ApiPublicHooksSeoPingRoute = ApiPublicHooksSeoPingRouteImport.update({
   path: '/api/public/hooks/seo-ping',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksPublisherTickRoute =
+  ApiPublicHooksPublisherTickRouteImport.update({
+    id: '/api/public/hooks/publisher-tick',
+    path: '/api/public/hooks/publisher-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksPseoTickRoute = ApiPublicHooksPseoTickRouteImport.update({
   id: '/api/public/hooks/pseo-tick',
   path: '/api/public/hooks/pseo-tick',
@@ -2668,10 +2677,22 @@ const AuthenticatedAdminPartnersIdRoute =
     path: '/partners/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMarketingOsPublisherRoute =
+  AuthenticatedAdminMarketingOsPublisherRouteImport.update({
+    id: '/publisher',
+    path: '/publisher',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminMarketingOsPlannerRoute =
   AuthenticatedAdminMarketingOsPlannerRouteImport.update({
     id: '/planner',
     path: '/planner',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
+const AuthenticatedAdminMarketingOsCalendarRoute =
+  AuthenticatedAdminMarketingOsCalendarRouteImport.update({
+    id: '/calendar',
+    path: '/calendar',
     getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
 const AuthenticatedAdminMarketingOsApprovalsRoute =
@@ -3643,7 +3664,9 @@ export interface FileRoutesByFullPath {
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
+  '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -3687,6 +3710,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
+  '/api/public/hooks/publisher-tick': typeof ApiPublicHooksPublisherTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
@@ -4117,7 +4141,9 @@ export interface FileRoutesByTo {
   '/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
+  '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -4161,6 +4187,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
+  '/api/public/hooks/publisher-tick': typeof ApiPublicHooksPublisherTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
@@ -4608,7 +4635,9 @@ export interface FileRoutesById {
   '/_authenticated/admin/llm/sections': typeof AuthenticatedAdminLlmSectionsRoute
   '/_authenticated/admin/llm/settings': typeof AuthenticatedAdminLlmSettingsRoute
   '/_authenticated/admin/marketing-os/approvals': typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  '/_authenticated/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
+  '/_authenticated/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
@@ -4652,6 +4681,7 @@ export interface FileRoutesById {
   '/api/public/hooks/marketing-agent-tick': typeof ApiPublicHooksMarketingAgentTickRoute
   '/api/public/hooks/mkt-publish': typeof ApiPublicHooksMktPublishRoute
   '/api/public/hooks/pseo-tick': typeof ApiPublicHooksPseoTickRoute
+  '/api/public/hooks/publisher-tick': typeof ApiPublicHooksPublisherTickRoute
   '/api/public/hooks/seo-ping': typeof ApiPublicHooksSeoPingRoute
   '/api/public/hooks/tech-seo-tick': typeof ApiPublicHooksTechSeoTickRoute
   '/api/public/topics/json': typeof ApiPublicTopicsJsonRoute
@@ -5099,7 +5129,9 @@ export interface FileRouteTypes {
     | '/admin/llm/sections'
     | '/admin/llm/settings'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/planner'
+    | '/admin/marketing-os/publisher'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -5143,6 +5175,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
+    | '/api/public/hooks/publisher-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
@@ -5573,7 +5606,9 @@ export interface FileRouteTypes {
     | '/admin/llm/sections'
     | '/admin/llm/settings'
     | '/admin/marketing-os/approvals'
+    | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/planner'
+    | '/admin/marketing-os/publisher'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payouts/$id'
@@ -5617,6 +5652,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
+    | '/api/public/hooks/publisher-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
@@ -6063,7 +6099,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/llm/sections'
     | '/_authenticated/admin/llm/settings'
     | '/_authenticated/admin/marketing-os/approvals'
+    | '/_authenticated/admin/marketing-os/calendar'
     | '/_authenticated/admin/marketing-os/planner'
+    | '/_authenticated/admin/marketing-os/publisher'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payouts/$id'
@@ -6107,6 +6145,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/marketing-agent-tick'
     | '/api/public/hooks/mkt-publish'
     | '/api/public/hooks/pseo-tick'
+    | '/api/public/hooks/publisher-tick'
     | '/api/public/hooks/seo-ping'
     | '/api/public/hooks/tech-seo-tick'
     | '/api/public/topics/json'
@@ -6281,6 +6320,7 @@ export interface RootRouteChildren {
   ApiPublicHooksMarketingAgentTickRoute: typeof ApiPublicHooksMarketingAgentTickRoute
   ApiPublicHooksMktPublishRoute: typeof ApiPublicHooksMktPublishRoute
   ApiPublicHooksPseoTickRoute: typeof ApiPublicHooksPseoTickRoute
+  ApiPublicHooksPublisherTickRoute: typeof ApiPublicHooksPublisherTickRoute
   ApiPublicHooksSeoPingRoute: typeof ApiPublicHooksSeoPingRoute
   ApiPublicHooksTechSeoTickRoute: typeof ApiPublicHooksTechSeoTickRoute
   ApiPublicTopicsJsonRoute: typeof ApiPublicTopicsJsonRoute
@@ -8724,6 +8764,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksSeoPingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/publisher-tick': {
+      id: '/api/public/hooks/publisher-tick'
+      path: '/api/public/hooks/publisher-tick'
+      fullPath: '/api/public/hooks/publisher-tick'
+      preLoaderRoute: typeof ApiPublicHooksPublisherTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/pseo-tick': {
       id: '/api/public/hooks/pseo-tick'
       path: '/api/public/hooks/pseo-tick'
@@ -9025,11 +9072,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/marketing-os/publisher': {
+      id: '/_authenticated/admin/marketing-os/publisher'
+      path: '/publisher'
+      fullPath: '/admin/marketing-os/publisher'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsPublisherRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/marketing-os/planner': {
       id: '/_authenticated/admin/marketing-os/planner'
       path: '/planner'
       fullPath: '/admin/marketing-os/planner'
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsPlannerRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
+    '/_authenticated/admin/marketing-os/calendar': {
+      id: '/_authenticated/admin/marketing-os/calendar'
+      path: '/calendar'
+      fullPath: '/admin/marketing-os/calendar'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsCalendarRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
     '/_authenticated/admin/marketing-os/approvals': {
@@ -10024,7 +10085,9 @@ const AuthenticatedAdminLlmRouteWithChildren =
 
 interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsApprovalsRoute: typeof AuthenticatedAdminMarketingOsApprovalsRoute
+  AuthenticatedAdminMarketingOsCalendarRoute: typeof AuthenticatedAdminMarketingOsCalendarRoute
   AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
+  AuthenticatedAdminMarketingOsPublisherRoute: typeof AuthenticatedAdminMarketingOsPublisherRoute
   AuthenticatedAdminMarketingOsIndexRoute: typeof AuthenticatedAdminMarketingOsIndexRoute
   AuthenticatedAdminMarketingOsPlansIdRoute: typeof AuthenticatedAdminMarketingOsPlansIdRoute
 }
@@ -10033,8 +10096,12 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
   {
     AuthenticatedAdminMarketingOsApprovalsRoute:
       AuthenticatedAdminMarketingOsApprovalsRoute,
+    AuthenticatedAdminMarketingOsCalendarRoute:
+      AuthenticatedAdminMarketingOsCalendarRoute,
     AuthenticatedAdminMarketingOsPlannerRoute:
       AuthenticatedAdminMarketingOsPlannerRoute,
+    AuthenticatedAdminMarketingOsPublisherRoute:
+      AuthenticatedAdminMarketingOsPublisherRoute,
     AuthenticatedAdminMarketingOsIndexRoute:
       AuthenticatedAdminMarketingOsIndexRoute,
     AuthenticatedAdminMarketingOsPlansIdRoute:
@@ -11179,6 +11246,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksMarketingAgentTickRoute: ApiPublicHooksMarketingAgentTickRoute,
   ApiPublicHooksMktPublishRoute: ApiPublicHooksMktPublishRoute,
   ApiPublicHooksPseoTickRoute: ApiPublicHooksPseoTickRoute,
+  ApiPublicHooksPublisherTickRoute: ApiPublicHooksPublisherTickRoute,
   ApiPublicHooksSeoPingRoute: ApiPublicHooksSeoPingRoute,
   ApiPublicHooksTechSeoTickRoute: ApiPublicHooksTechSeoTickRoute,
   ApiPublicTopicsJsonRoute: ApiPublicTopicsJsonRoute,

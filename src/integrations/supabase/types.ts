@@ -20770,6 +20770,241 @@ export type Database = {
         }
         Relationships: []
       }
+      publishing_history: {
+        Row: {
+          account_id: string | null
+          actor: string | null
+          attempt: number
+          content_id: string | null
+          created_at: string
+          duration_ms: number | null
+          error_code: string | null
+          error_message: string | null
+          id: string
+          job_id: string | null
+          owner_id: string
+          platform: string
+          platform_post_id: string | null
+          platform_url: string | null
+          request_payload: Json | null
+          response_payload: Json | null
+          status: string
+        }
+        Insert: {
+          account_id?: string | null
+          actor?: string | null
+          attempt?: number
+          content_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          job_id?: string | null
+          owner_id: string
+          platform: string
+          platform_post_id?: string | null
+          platform_url?: string | null
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status: string
+        }
+        Update: {
+          account_id?: string | null
+          actor?: string | null
+          attempt?: number
+          content_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          id?: string
+          job_id?: string | null
+          owner_id?: string
+          platform?: string
+          platform_post_id?: string | null
+          platform_url?: string | null
+          request_payload?: Json | null
+          response_payload?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_history_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "publishing_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publishing_jobs: {
+        Row: {
+          account_id: string | null
+          account_label: string | null
+          campaign: string | null
+          campaign_id: string | null
+          cancelled_at: string | null
+          content_id: string | null
+          created_at: string
+          created_by: string | null
+          error_code: string | null
+          error_message: string | null
+          evergreen: boolean
+          evergreen_interval_days: number | null
+          id: string
+          last_evergreen_at: string | null
+          max_retries: number
+          mode: string
+          next_retry_at: string | null
+          owner_id: string
+          payload: Json
+          platform: string
+          platform_post_id: string | null
+          platform_url: string | null
+          priority: number
+          published_at: string | null
+          recurrence: Json | null
+          response_payload: Json | null
+          retry_count: number
+          scheduled_at: string
+          started_at: string | null
+          status: string
+          timezone: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          account_label?: string | null
+          campaign?: string | null
+          campaign_id?: string | null
+          cancelled_at?: string | null
+          content_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          error_code?: string | null
+          error_message?: string | null
+          evergreen?: boolean
+          evergreen_interval_days?: number | null
+          id?: string
+          last_evergreen_at?: string | null
+          max_retries?: number
+          mode?: string
+          next_retry_at?: string | null
+          owner_id: string
+          payload?: Json
+          platform: string
+          platform_post_id?: string | null
+          platform_url?: string | null
+          priority?: number
+          published_at?: string | null
+          recurrence?: Json | null
+          response_payload?: Json | null
+          retry_count?: number
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          account_label?: string | null
+          campaign?: string | null
+          campaign_id?: string | null
+          cancelled_at?: string | null
+          content_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          error_code?: string | null
+          error_message?: string | null
+          evergreen?: boolean
+          evergreen_interval_days?: number | null
+          id?: string
+          last_evergreen_at?: string | null
+          max_retries?: number
+          mode?: string
+          next_retry_at?: string | null
+          owner_id?: string
+          payload?: Json
+          platform?: string
+          platform_post_id?: string | null
+          platform_url?: string | null
+          priority?: number
+          published_at?: string | null
+          recurrence?: Json | null
+          response_payload?: Json | null
+          retry_count?: number
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_jobs_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "soc_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_jobs_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "approval_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publishing_notifications: {
+        Row: {
+          created_at: string
+          event: string
+          id: string
+          job_id: string | null
+          message: string | null
+          owner_id: string
+          read_at: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          id?: string
+          job_id?: string | null
+          message?: string | null
+          owner_id: string
+          read_at?: string | null
+          severity?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          id?: string
+          job_id?: string | null
+          message?: string | null
+          owner_id?: string
+          read_at?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_notifications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "publishing_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rate_limit_buckets: {
         Row: {
           bucket_key: string
