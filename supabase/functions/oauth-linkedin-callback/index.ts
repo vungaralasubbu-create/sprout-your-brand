@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     try {
       tok = await exchangeCodeForToken(code);
     } catch (e) {
-      return json({ ok: false, stage: "token_exchange", error: (e as Error).message });
+      console.error("LI token_exchange failed", e); return json({ ok: false, stage: "token_exchange", error: (e as Error).message });
     }
     const accessToken = tok.access_token;
     const expiresAt = tok.expires_in
@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     try {
       profile = await fetchUserInfo(accessToken);
     } catch (e) {
-      return json({ ok: false, stage: "userinfo", error: (e as Error).message });
+      console.error("LI userinfo failed", e); return json({ ok: false, stage: "userinfo", error: (e as Error).message });
     }
     const memberUrn = `urn:li:person:${profile.sub}`;
     const displayName = profile.name || [profile.given_name, profile.family_name].filter(Boolean).join(" ") || profile.email || profile.sub;
@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
       { onConflict: "owner_id,platform,account_external_id" as unknown as string },
     );
     if (upsertErr) {
-      return json({ ok: false, stage: "db_upsert", error: upsertErr.message, details: upsertErr });
+      console.error("LI db_upsert failed", upsertErr); return json({ ok: false, stage: "db_upsert", error: upsertErr.message, details: upsertErr });
     }
 
     return json({
