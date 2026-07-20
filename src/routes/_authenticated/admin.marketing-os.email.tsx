@@ -217,8 +217,8 @@ function AutomationPane() {
             {(data?.sequences ?? []).map((s) => (
               <div key={s.id} className="flex items-center gap-3 px-2 py-2 text-sm">
                 <span className="flex-1 truncate">{s.name}</span>
-                <Badge variant="outline" className="text-[10px] capitalize">{s.trigger_type ?? "manual"}</Badge>
-                <Badge variant="outline" className="text-[10px] capitalize">{s.status}</Badge>
+                <Badge variant="outline" className="text-[10px] capitalize">{s.trigger_event ?? "manual"}</Badge>
+                <Badge variant={s.is_active ? "success" : "outline"} className="text-[10px]">{s.is_active ? "Active" : "Inactive"}</Badge>
               </div>
             ))}
           </div>
