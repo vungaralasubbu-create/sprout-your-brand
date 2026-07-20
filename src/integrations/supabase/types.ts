@@ -17316,50 +17316,381 @@ export type Database = {
           },
         ]
       }
-      mkt_campaigns: {
+      mkt_campaign_assets: {
         Row: {
-          approval_mode: Database["public"]["Enums"]["mkt_approval_mode"]
-          brand_id: string
-          budget_cents: number | null
+          asset_type: string
+          campaign_id: string
           created_at: string
           created_by: string | null
+          description: string | null
+          id: string
+          meta: Json
+          platform: string | null
+          ref_id: string | null
+          ref_table: string | null
+          status: string
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          asset_type: string
+          campaign_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          meta?: Json
+          platform?: string | null
+          ref_id?: string | null
+          ref_table?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          asset_type?: string
+          campaign_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          meta?: Json
+          platform?: string | null
+          ref_id?: string | null
+          ref_table?: string | null
+          status?: string
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_campaign_assets_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_campaign_members: {
+        Row: {
+          added_by: string | null
+          campaign_id: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          added_by?: string | null
+          campaign_id: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          added_by?: string | null
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_campaign_members_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_campaign_metrics: {
+        Row: {
+          admissions: number
+          campaign_id: string
+          captured_on: string
+          clicks: number
+          conversions: number
+          created_at: string
+          ctr: number | null
+          engagement: number
+          followers_delta: number
+          id: string
+          impressions: number
+          leads: number
+          meta: Json
+          platform: string | null
+          reach: number
+          revenue_cents: number
+          spend_cents: number
+        }
+        Insert: {
+          admissions?: number
+          campaign_id: string
+          captured_on?: string
+          clicks?: number
+          conversions?: number
+          created_at?: string
+          ctr?: number | null
+          engagement?: number
+          followers_delta?: number
+          id?: string
+          impressions?: number
+          leads?: number
+          meta?: Json
+          platform?: string | null
+          reach?: number
+          revenue_cents?: number
+          spend_cents?: number
+        }
+        Update: {
+          admissions?: number
+          campaign_id?: string
+          captured_on?: string
+          clicks?: number
+          conversions?: number
+          created_at?: string
+          ctr?: number | null
+          engagement?: number
+          followers_delta?: number
+          id?: string
+          impressions?: number
+          leads?: number
+          meta?: Json
+          platform?: string | null
+          reach?: number
+          revenue_cents?: number
+          spend_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_campaign_metrics_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_campaign_reports: {
+        Row: {
+          ai_insights: Json | null
+          campaign_id: string
+          created_at: string
+          data: Json
+          format: string
+          generated_by: string | null
+          id: string
+          report_type: string
+          summary: string | null
+          title: string
+        }
+        Insert: {
+          ai_insights?: Json | null
+          campaign_id: string
+          created_at?: string
+          data?: Json
+          format?: string
+          generated_by?: string | null
+          id?: string
+          report_type: string
+          summary?: string | null
+          title: string
+        }
+        Update: {
+          ai_insights?: Json | null
+          campaign_id?: string
+          created_at?: string
+          data?: Json
+          format?: string
+          generated_by?: string | null
+          id?: string
+          report_type?: string
+          summary?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_campaign_reports_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_campaign_tasks: {
+        Row: {
+          campaign_id: string
+          checklist: Json
+          created_at: string
+          created_by: string | null
+          deadline: string | null
+          depends_on: string[]
+          description: string | null
+          id: string
+          owner_id: string | null
+          priority: string
+          progress: number
+          stage: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_id: string
+          checklist?: Json
+          created_at?: string
+          created_by?: string | null
+          deadline?: string | null
+          depends_on?: string[]
+          description?: string | null
+          id?: string
+          owner_id?: string | null
+          priority?: string
+          progress?: number
+          stage?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_id?: string
+          checklist?: Json
+          created_at?: string
+          created_by?: string | null
+          deadline?: string | null
+          depends_on?: string[]
+          description?: string | null
+          id?: string
+          owner_id?: string | null
+          priority?: string
+          progress?: number
+          stage?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_campaign_tasks_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_campaigns: {
+        Row: {
+          actual_admissions: number | null
+          actual_leads: number | null
+          actual_revenue_cents: number | null
+          ai_strategy: Json | null
+          approval_mode: Database["public"]["Enums"]["mkt_approval_mode"]
+          archived_at: string | null
+          brand_id: string
+          budget_cents: number | null
+          business_unit: string | null
+          campaign_type: string | null
+          color: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
           ends_at: string | null
+          expected_leads: number | null
+          expected_revenue_cents: number | null
+          goals: string[]
           id: string
           meta: Json
           name: string
           objective: string | null
+          owner_id: string | null
+          priority: string
           starts_at: string | null
           status: string
+          tags: string[]
+          target_audience: Json
+          target_platforms: string[]
+          template_key: string | null
+          timeline_stage: string
           updated_at: string
         }
         Insert: {
+          actual_admissions?: number | null
+          actual_leads?: number | null
+          actual_revenue_cents?: number | null
+          ai_strategy?: Json | null
           approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          archived_at?: string | null
           brand_id: string
           budget_cents?: number | null
+          business_unit?: string | null
+          campaign_type?: string | null
+          color?: string | null
           created_at?: string
           created_by?: string | null
+          description?: string | null
           ends_at?: string | null
+          expected_leads?: number | null
+          expected_revenue_cents?: number | null
+          goals?: string[]
           id?: string
           meta?: Json
           name: string
           objective?: string | null
+          owner_id?: string | null
+          priority?: string
           starts_at?: string | null
           status?: string
+          tags?: string[]
+          target_audience?: Json
+          target_platforms?: string[]
+          template_key?: string | null
+          timeline_stage?: string
           updated_at?: string
         }
         Update: {
+          actual_admissions?: number | null
+          actual_leads?: number | null
+          actual_revenue_cents?: number | null
+          ai_strategy?: Json | null
           approval_mode?: Database["public"]["Enums"]["mkt_approval_mode"]
+          archived_at?: string | null
           brand_id?: string
           budget_cents?: number | null
+          business_unit?: string | null
+          campaign_type?: string | null
+          color?: string | null
           created_at?: string
           created_by?: string | null
+          description?: string | null
           ends_at?: string | null
+          expected_leads?: number | null
+          expected_revenue_cents?: number | null
+          goals?: string[]
           id?: string
           meta?: Json
           name?: string
           objective?: string | null
+          owner_id?: string | null
+          priority?: string
           starts_at?: string | null
           status?: string
+          tags?: string[]
+          target_audience?: Json
+          target_platforms?: string[]
+          template_key?: string | null
+          timeline_stage?: string
           updated_at?: string
         }
         Relationships: [
