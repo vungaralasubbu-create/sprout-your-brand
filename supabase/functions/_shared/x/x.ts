@@ -21,6 +21,14 @@ export function requireEnv(name: string): string {
   return v;
 }
 
+function getTwitterClientId(): string {
+  return requireEnv("TWITTER_CLIENT_ID");
+}
+
+function getTwitterClientSecret(): string {
+  return requireEnv("TWITTER_CLIENT_SECRET");
+}
+
 export function getRedirectUri(): string {
   return Deno.env.get("X_REDIRECT_URI") || "https://glintr.com/auth/x/callback";
 }
@@ -55,8 +63,8 @@ export async function codeChallengeS256(verifier: string): Promise<string> {
 
 // ---------- HTTP helpers ----------
 function basicAuth(): string {
-  const id = requireEnv("X_CLIENT_ID");
-  const secret = requireEnv("X_CLIENT_SECRET");
+  const id = getTwitterClientId();
+  const secret = getTwitterClientSecret();
   return "Basic " + btoa(`${id}:${secret}`);
 }
 
@@ -72,12 +80,27 @@ export async function exchangeCodeForToken(
   code: string,
   codeVerifier: string,
 ): Promise<XTokenResponse> {
+  const clientId = getTwitterClientId();
+  const clientSecret = getTwitterClientSecret();
+  const redirectUri = getRedirectUri();
+
+  console.log("[X OAuth] token exchange diagnostics", {
+    hasClientId: !!clientId,
+    clientIdPrefix: clientId.slice(0, 8),
+    clientIdLength: clientId.length,
+    hasClientSecret: !!clientSecret,
+    clientSecretLength: clientSecret.length,
+    redirectUri,
+    codeVerifierLength: codeVerifier.length,
+    expectedSecret: "Twitter/X App Primary Client Secret (not trimmed)",
+  });
+
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code,
-    redirect_uri: getRedirectUri(),
+    redirect_uri: redirectUri,
     code_verifier: codeVerifier,
-    client_id: requireEnv("X_CLIENT_ID"),
+    client_id: clientId,
   });
   const res = await fetch(X_TOKEN, {
     method: "POST",
@@ -88,7 +111,10 @@ export async function exchangeCodeForToken(
     body,
   });
   const j = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`X token exchange failed: ${res.status} ${JSON.stringify(j)}`);
+  if (!res.ok) {
+    console.error("[X OAuth] token exchange failed", { status: res.status, body: j });
+    throw new Error(`X token exchange failed: ${res.status} ${JSON.stringify(j)}`);
+  }
   return j as XTokenResponse;
 }
 
@@ -96,7 +122,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<XTokenRe
   const body = new URLSearchParams({
     grant_type: "refresh_token",
     refresh_token: refreshToken,
-    client_id: requireEnv("X_CLIENT_ID"),
+    client_id: getTwitterClientId(),
   });
   const res = await fetch(X_TOKEN, {
     method: "POST",
@@ -115,7 +141,7 @@ export async function revokeToken(token: string, tokenTypeHint: "access_token" |
   const body = new URLSearchParams({
     token,
     token_type_hint: tokenTypeHint,
-    client_id: requireEnv("X_CLIENT_ID"),
+    client_id: getTwitterClientId(),
   });
   await fetch(X_REVOKE, {
     method: "POST",
@@ -274,7 +300,7 @@ export interface StatePayload {
 }
 
 export async function buildState(userId: string, brandId: string | null, codeVerifier: string): Promise<string> {
-  const secret = requireEnv("X_CLIENT_SECRET");
+  const secret = getTwitterClientSecret();
   const payload: StatePayload = { u: userId, b: brandId, v: codeVerifier, n: crypto.randomUUID(), t: Date.now() };
   const body = b64url(new TextEncoder().encode(JSON.stringify(payload)));
   const sig = await hmacSign(body, secret);
@@ -286,7 +312,7 @@ export async function verifyState(
 ): Promise<{ userId: string; brandId: string | null; codeVerifier: string } | null> {
   const [body, sig] = state.split(".");
   if (!body || !sig) return null;
-  const secret = requireEnv("X_CLIENT_SECRET");
+  const secret = getTwitterClientSecret();
   const expected = await hmacSign(body, secret);
   if (expected !== sig) return null;
   const decoded = JSON.parse(new TextDecoder().decode(b64urlDecode(body))) as StatePayload;
