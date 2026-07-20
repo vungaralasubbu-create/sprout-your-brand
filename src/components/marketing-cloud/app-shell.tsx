@@ -20,9 +20,9 @@ import { useQueryClient } from "@tanstack/react-query";
 const NAV: { to: string; label: string; icon: any }[] = [
   { to: "/cloud/dashboard", label: "Home", icon: Home },
   { to: "/cloud/projects", label: "Projects", icon: FolderKanban },
-  { to: "/cloud/templates", label: "Templates", icon: LayoutTemplate },
+  { to: "/templates", label: "Templates", icon: LayoutTemplate },
   { to: "/cloud/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/cloud/billing", label: "Billing", icon: CreditCard },
+  { to: "/billing", label: "Billing", icon: CreditCard },
   { to: "/cloud/settings", label: "Settings", icon: SettingsIcon },
 ];
 

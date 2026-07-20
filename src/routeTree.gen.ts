@@ -157,8 +157,11 @@ import { Route as CareerHubTypeRouteImport } from './routes/career-hub.$type'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 import { Route as AiAgentsIdRouteImport } from './routes/ai-agents.$id'
+import { Route as AuthenticatedTemplateMarketplaceRouteImport } from './routes/_authenticated/template-marketplace'
+import { Route as AuthenticatedTemplateBuilderRouteImport } from './routes/_authenticated/template-builder'
 import { Route as AuthenticatedStudentRouteImport } from './routes/_authenticated/student'
 import { Route as AuthenticatedPartnerRouteImport } from './routes/_authenticated/partner'
+import { Route as AuthenticatedMyTemplatesRouteImport } from './routes/_authenticated/my-templates'
 import { Route as AuthenticatedInstructorRouteImport } from './routes/_authenticated/instructor'
 import { Route as AuthenticatedHqRouteImport } from './routes/_authenticated/hq'
 import { Route as AuthenticatedCloudRouteImport } from './routes/_authenticated/cloud'
@@ -171,6 +174,7 @@ import { Route as WorkspaceNotebooksIndexRouteImport } from './routes/workspace.
 import { Route as TopicsPillarIndexRouteImport } from './routes/topics.$pillar.index'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as CommunitySpaceIndexRouteImport } from './routes/community.$space.index'
+import { Route as AuthenticatedTemplatesIndexRouteImport } from './routes/_authenticated/templates.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
 import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
@@ -194,6 +198,7 @@ import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
+import { Route as AuthenticatedTemplatesSlugRouteImport } from './routes/_authenticated/templates.$slug'
 import { Route as AuthenticatedSubmitReviewTokenRouteImport } from './routes/_authenticated/submit-review.$token'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
 import { Route as AuthenticatedStudentNotificationsRouteImport } from './routes/_authenticated/student.notifications'
@@ -1300,6 +1305,18 @@ const AiAgentsIdRoute = AiAgentsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AiAgentsRoute,
 } as any)
+const AuthenticatedTemplateMarketplaceRoute =
+  AuthenticatedTemplateMarketplaceRouteImport.update({
+    id: '/template-marketplace',
+    path: '/template-marketplace',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTemplateBuilderRoute =
+  AuthenticatedTemplateBuilderRouteImport.update({
+    id: '/template-builder',
+    path: '/template-builder',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudentRoute = AuthenticatedStudentRouteImport.update({
   id: '/student',
   path: '/student',
@@ -1310,6 +1327,12 @@ const AuthenticatedPartnerRoute = AuthenticatedPartnerRouteImport.update({
   path: '/partner',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMyTemplatesRoute =
+  AuthenticatedMyTemplatesRouteImport.update({
+    id: '/my-templates',
+    path: '/my-templates',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedInstructorRoute = AuthenticatedInstructorRouteImport.update({
   id: '/instructor',
   path: '/instructor',
@@ -1370,6 +1393,12 @@ const CommunitySpaceIndexRoute = CommunitySpaceIndexRouteImport.update({
   path: '/community/$space/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedTemplatesIndexRoute =
+  AuthenticatedTemplatesIndexRouteImport.update({
+    id: '/templates/',
+    path: '/templates/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStudentIndexRoute =
   AuthenticatedStudentIndexRouteImport.update({
     id: '/',
@@ -1491,6 +1520,12 @@ const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   path: '/api/public/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedTemplatesSlugRoute =
+  AuthenticatedTemplatesSlugRouteImport.update({
+    id: '/templates/$slug',
+    path: '/templates/$slug',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSubmitReviewTokenRoute =
   AuthenticatedSubmitReviewTokenRouteImport.update({
     id: '/submit-review/$token',
@@ -3716,8 +3751,11 @@ export interface FileRoutesByFullPath {
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/hq': typeof AuthenticatedHqRoute
   '/instructor': typeof AuthenticatedInstructorRouteWithChildren
+  '/my-templates': typeof AuthenticatedMyTemplatesRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/student': typeof AuthenticatedStudentRouteWithChildren
+  '/template-builder': typeof AuthenticatedTemplateBuilderRoute
+  '/template-marketplace': typeof AuthenticatedTemplateMarketplaceRoute
   '/ai-agents/$id': typeof AiAgentsIdRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -3960,6 +3998,7 @@ export interface FileRoutesByFullPath {
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
+  '/templates/$slug': typeof AuthenticatedTemplatesSlugRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
@@ -3983,6 +4022,7 @@ export interface FileRoutesByFullPath {
   '/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
+  '/templates/': typeof AuthenticatedTemplatesIndexRoute
   '/community/$space/': typeof CommunitySpaceIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar/': typeof TopicsPillarIndexRoute
@@ -4257,7 +4297,10 @@ export interface FileRoutesByTo {
   '/brand': typeof AuthenticatedBrandRouteWithChildren
   '/cloud': typeof CloudIndexRoute
   '/hq': typeof AuthenticatedHqRoute
+  '/my-templates': typeof AuthenticatedMyTemplatesRoute
   '/partner': typeof AuthenticatedPartnerRouteWithChildren
+  '/template-builder': typeof AuthenticatedTemplateBuilderRoute
+  '/template-marketplace': typeof AuthenticatedTemplateMarketplaceRoute
   '/ai-agents/$id': typeof AiAgentsIdRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -4490,6 +4533,7 @@ export interface FileRoutesByTo {
   '/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
+  '/templates/$slug': typeof AuthenticatedTemplatesSlugRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
@@ -4513,6 +4557,7 @@ export interface FileRoutesByTo {
   '/instructor': typeof AuthenticatedInstructorIndexRoute
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
+  '/templates': typeof AuthenticatedTemplatesIndexRoute
   '/community/$space': typeof CommunitySpaceIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar': typeof TopicsPillarIndexRoute
@@ -4796,8 +4841,11 @@ export interface FileRoutesById {
   '/_authenticated/cloud': typeof AuthenticatedCloudRouteWithChildren
   '/_authenticated/hq': typeof AuthenticatedHqRoute
   '/_authenticated/instructor': typeof AuthenticatedInstructorRouteWithChildren
+  '/_authenticated/my-templates': typeof AuthenticatedMyTemplatesRoute
   '/_authenticated/partner': typeof AuthenticatedPartnerRouteWithChildren
   '/_authenticated/student': typeof AuthenticatedStudentRouteWithChildren
+  '/_authenticated/template-builder': typeof AuthenticatedTemplateBuilderRoute
+  '/_authenticated/template-marketplace': typeof AuthenticatedTemplateMarketplaceRoute
   '/ai-agents/$id': typeof AiAgentsIdRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -5040,6 +5088,7 @@ export interface FileRoutesById {
   '/_authenticated/student/notifications': typeof AuthenticatedStudentNotificationsRoute
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
   '/_authenticated/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
+  '/_authenticated/templates/$slug': typeof AuthenticatedTemplatesSlugRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
@@ -5063,6 +5112,7 @@ export interface FileRoutesById {
   '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
+  '/_authenticated/templates/': typeof AuthenticatedTemplatesIndexRoute
   '/community/$space/': typeof CommunitySpaceIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar/': typeof TopicsPillarIndexRoute
@@ -5345,8 +5395,11 @@ export interface FileRouteTypes {
     | '/brand'
     | '/hq'
     | '/instructor'
+    | '/my-templates'
     | '/partner'
     | '/student'
+    | '/template-builder'
+    | '/template-marketplace'
     | '/ai-agents/$id'
     | '/authors/$slug'
     | '/blog/$slug'
@@ -5589,6 +5642,7 @@ export interface FileRouteTypes {
     | '/student/notifications'
     | '/student/profile'
     | '/submit-review/$token'
+    | '/templates/$slug'
     | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
@@ -5612,6 +5666,7 @@ export interface FileRouteTypes {
     | '/instructor/'
     | '/notifications/'
     | '/student/'
+    | '/templates/'
     | '/community/$space/'
     | '/programs/$category/'
     | '/topics/$pillar/'
@@ -5886,7 +5941,10 @@ export interface FileRouteTypes {
     | '/brand'
     | '/cloud'
     | '/hq'
+    | '/my-templates'
     | '/partner'
+    | '/template-builder'
+    | '/template-marketplace'
     | '/ai-agents/$id'
     | '/authors/$slug'
     | '/blog/$slug'
@@ -6119,6 +6177,7 @@ export interface FileRouteTypes {
     | '/student/notifications'
     | '/student/profile'
     | '/submit-review/$token'
+    | '/templates/$slug'
     | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
@@ -6142,6 +6201,7 @@ export interface FileRouteTypes {
     | '/instructor'
     | '/notifications'
     | '/student'
+    | '/templates'
     | '/community/$space'
     | '/programs/$category'
     | '/topics/$pillar'
@@ -6424,8 +6484,11 @@ export interface FileRouteTypes {
     | '/_authenticated/cloud'
     | '/_authenticated/hq'
     | '/_authenticated/instructor'
+    | '/_authenticated/my-templates'
     | '/_authenticated/partner'
     | '/_authenticated/student'
+    | '/_authenticated/template-builder'
+    | '/_authenticated/template-marketplace'
     | '/ai-agents/$id'
     | '/authors/$slug'
     | '/blog/$slug'
@@ -6668,6 +6731,7 @@ export interface FileRouteTypes {
     | '/_authenticated/student/notifications'
     | '/_authenticated/student/profile'
     | '/_authenticated/submit-review/$token'
+    | '/_authenticated/templates/$slug'
     | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
@@ -6691,6 +6755,7 @@ export interface FileRouteTypes {
     | '/_authenticated/instructor/'
     | '/_authenticated/notifications/'
     | '/_authenticated/student/'
+    | '/_authenticated/templates/'
     | '/community/$space/'
     | '/programs/$category/'
     | '/topics/$pillar/'
@@ -8071,6 +8136,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiAgentsIdRouteImport
       parentRoute: typeof AiAgentsRoute
     }
+    '/_authenticated/template-marketplace': {
+      id: '/_authenticated/template-marketplace'
+      path: '/template-marketplace'
+      fullPath: '/template-marketplace'
+      preLoaderRoute: typeof AuthenticatedTemplateMarketplaceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/template-builder': {
+      id: '/_authenticated/template-builder'
+      path: '/template-builder'
+      fullPath: '/template-builder'
+      preLoaderRoute: typeof AuthenticatedTemplateBuilderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/student': {
       id: '/_authenticated/student'
       path: '/student'
@@ -8083,6 +8162,13 @@ declare module '@tanstack/react-router' {
       path: '/partner'
       fullPath: '/partner'
       preLoaderRoute: typeof AuthenticatedPartnerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/my-templates': {
+      id: '/_authenticated/my-templates'
+      path: '/my-templates'
+      fullPath: '/my-templates'
+      preLoaderRoute: typeof AuthenticatedMyTemplatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/instructor': {
@@ -8168,6 +8254,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/community/$space/'
       preLoaderRoute: typeof CommunitySpaceIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/templates/': {
+      id: '/_authenticated/templates/'
+      path: '/templates'
+      fullPath: '/templates/'
+      preLoaderRoute: typeof AuthenticatedTemplatesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/student/': {
       id: '/_authenticated/student/'
@@ -8329,6 +8422,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/health'
       preLoaderRoute: typeof ApiPublicHealthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/templates/$slug': {
+      id: '/_authenticated/templates/$slug'
+      path: '/templates/$slug'
+      fullPath: '/templates/$slug'
+      preLoaderRoute: typeof AuthenticatedTemplatesSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/submit-review/$token': {
       id: '/_authenticated/submit-review/$token'
@@ -12051,13 +12151,18 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCloudRoute: typeof AuthenticatedCloudRouteWithChildren
   AuthenticatedHqRoute: typeof AuthenticatedHqRoute
   AuthenticatedInstructorRoute: typeof AuthenticatedInstructorRouteWithChildren
+  AuthenticatedMyTemplatesRoute: typeof AuthenticatedMyTemplatesRoute
   AuthenticatedPartnerRoute: typeof AuthenticatedPartnerRouteWithChildren
   AuthenticatedStudentRoute: typeof AuthenticatedStudentRouteWithChildren
+  AuthenticatedTemplateBuilderRoute: typeof AuthenticatedTemplateBuilderRoute
+  AuthenticatedTemplateMarketplaceRoute: typeof AuthenticatedTemplateMarketplaceRoute
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
   AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
   AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
+  AuthenticatedTemplatesSlugRoute: typeof AuthenticatedTemplatesSlugRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
+  AuthenticatedTemplatesIndexRoute: typeof AuthenticatedTemplatesIndexRoute
   AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
 }
 
@@ -12069,8 +12174,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCloudRoute: AuthenticatedCloudRouteWithChildren,
   AuthenticatedHqRoute: AuthenticatedHqRoute,
   AuthenticatedInstructorRoute: AuthenticatedInstructorRouteWithChildren,
+  AuthenticatedMyTemplatesRoute: AuthenticatedMyTemplatesRoute,
   AuthenticatedPartnerRoute: AuthenticatedPartnerRouteWithChildren,
   AuthenticatedStudentRoute: AuthenticatedStudentRouteWithChildren,
+  AuthenticatedTemplateBuilderRoute: AuthenticatedTemplateBuilderRoute,
+  AuthenticatedTemplateMarketplaceRoute: AuthenticatedTemplateMarketplaceRoute,
   AuthenticatedCampusAmbassadorApplyRoute:
     AuthenticatedCampusAmbassadorApplyRoute,
   AuthenticatedCampusAmbassadorStatusRoute:
@@ -12078,7 +12186,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCounsellorCopilotRoute:
     AuthenticatedCounsellorCopilotRouteWithChildren,
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
+  AuthenticatedTemplatesSlugRoute: AuthenticatedTemplatesSlugRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
+  AuthenticatedTemplatesIndexRoute: AuthenticatedTemplatesIndexRoute,
   AuthenticatedWorkspaceProjectProjectIdRoute:
     AuthenticatedWorkspaceProjectProjectIdRouteWithChildren,
 }
