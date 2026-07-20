@@ -340,7 +340,7 @@ function AnalyticsWorkspace() {
             <div className="text-sm font-medium mb-3 flex items-center justify-between">
               <span>Posting Heatmap (day × hour)</span>
               {heatmap.data && (
-                <Badge variant="secondary">
+                <Badge variant="info">
                   Best: {["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][heatmap.data.bestDay]} @ {heatmap.data.bestHour}:00
                 </Badge>
               )}
