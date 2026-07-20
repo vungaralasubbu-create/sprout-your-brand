@@ -61,7 +61,8 @@ export const createMarketingProject = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const steps = PROJECT_STEPS.map((s) => ({ ...s, status: "pending" }));
-    const { data: created, error } = await context.supabase
+    const sb: any = context.supabase;
+    const { data: created, error } = await sb
       .from("marketing_projects")
       .insert({
         created_by: context.userId,
