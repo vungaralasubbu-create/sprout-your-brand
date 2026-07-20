@@ -499,7 +499,7 @@ function EmptyMini({ text, action }: { text: string; action?: { label: string; t
 }
 
 /* ------------------------------ content performance ------------------------------ */
-function ContentPerformance({ timeseries }: { timeseries: ReturnType<typeof useServerFn<typeof getTimeseries>> }) {
+function ContentPerformance({ timeseries }: { timeseries: (opts: { data: { from: string; to: string } }) => Promise<{ series: Array<{ date: string; posts: number; leads: number; admissions: number; revenue: number }> }> }) {
   const [range, setRange] = useState<"7" | "30" | "90" | "365">("30");
   const [metric, setMetric] = useState<"posts" | "leads" | "admissions" | "revenue">("leads");
   const { data, isLoading } = useQuery({
@@ -592,7 +592,7 @@ function ContentPerformance({ timeseries }: { timeseries: ReturnType<typeof useS
 }
 
 /* ------------------------------ platform performance ------------------------------ */
-function PlatformPerformance({ fn }: { fn: ReturnType<typeof useServerFn<typeof getPlatformAnalytics>> }) {
+function PlatformPerformance({ fn }: { fn: (opts: { data: Record<string, unknown> }) => Promise<{ rows: Array<Record<string, any>> }> }) {
   const { data, isLoading } = useQuery({
     queryKey: ["mkt-platform-analytics"],
     queryFn: () => fn({ data: {} }),
