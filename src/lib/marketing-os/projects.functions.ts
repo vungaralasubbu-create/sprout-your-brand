@@ -149,6 +149,21 @@ export const deleteMarketingProject = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ---------------- rename ----------------
+export const renameMarketingProject = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((v: unknown) =>
+    z.object({ id: z.string().uuid(), name: z.string().min(1).max(200) }).parse(v),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await (context.supabase as any)
+      .from("marketing_projects")
+      .update({ name: data.name })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 // ---------------- run step ----------------
 type StepEntry = { key: string; label: string; status: string };
 
