@@ -8,6 +8,7 @@ export const Route = createFileRoute("/_authenticated/admin/marketing-os")({
 
 const TABS: Array<{ to: string; label: string; icon: typeof LayoutDashboard; live: boolean; exact?: boolean }> = [
   { to: "/admin/marketing-os", label: "Dashboard", icon: LayoutDashboard, live: true, exact: true },
+  { to: "/admin/marketing-os/campaigns", label: "Campaign Manager", icon: Megaphone, live: true },
   { to: "/admin/marketing-os/planner", label: "AI Planner", icon: Wand2, live: true },
   { to: "/admin/marketing-os/approvals", label: "Approval Center", icon: CheckSquare, live: true },
   { to: "/admin/marketing-os/queue", label: "Content Queue", icon: ListTodo, live: false },
