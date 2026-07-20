@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/admin/social-accounts")({
   head: () => ({
     meta: [
       { title: "Social Accounts · Admin · Glintr" },
-      { name: "description", content: "Connect and manage Meta (Facebook & Instagram) publishing accounts." },
+      { name: "description", content: "Connect and manage Meta (Facebook & Instagram) and LinkedIn publishing accounts." },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
