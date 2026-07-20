@@ -17600,6 +17600,107 @@ export type Database = {
           },
         ]
       }
+      mc_workspace_members: {
+        Row: {
+          created_at: string
+          id: string
+          invited_email: string | null
+          role: string
+          user_id: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invited_email?: string | null
+          role?: string
+          user_id: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invited_email?: string | null
+          role?: string
+          user_id?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mc_workspace_members_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "mc_workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mc_workspaces: {
+        Row: {
+          brand_colors: Json
+          brand_fonts: Json
+          brand_voice: string | null
+          business_name: string | null
+          country: string | null
+          created_at: string
+          id: string
+          industry: string | null
+          language: string | null
+          logo_url: string | null
+          name: string
+          onboarding_complete: boolean
+          owner_id: string
+          plan: string
+          plan_period: string
+          slug: string | null
+          timezone: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          brand_colors?: Json
+          brand_fonts?: Json
+          brand_voice?: string | null
+          business_name?: string | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          language?: string | null
+          logo_url?: string | null
+          name: string
+          onboarding_complete?: boolean
+          owner_id: string
+          plan?: string
+          plan_period?: string
+          slug?: string | null
+          timezone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          brand_colors?: Json
+          brand_fonts?: Json
+          brand_voice?: string | null
+          business_name?: string | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          industry?: string | null
+          language?: string | null
+          logo_url?: string | null
+          name?: string
+          onboarding_complete?: boolean
+          owner_id?: string
+          plan?: string
+          plan_period?: string
+          slug?: string | null
+          timezone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       media_assets: {
         Row: {
           ai_generated: boolean
@@ -28020,6 +28121,14 @@ export type Database = {
       ma_agent_accessible: { Args: { _agent_id: string }; Returns: boolean }
       mask_account_number: { Args: { _num: string }; Returns: string }
       mask_upi_id: { Args: { _upi: string }; Returns: string }
+      mc_is_workspace_member: {
+        Args: { _user_id: string; _workspace_id: string }
+        Returns: boolean
+      }
+      mc_workspace_role: {
+        Args: { _user_id: string; _workspace_id: string }
+        Returns: string
+      }
       mkt_is_staff: { Args: { _uid: string }; Returns: boolean }
       normalize_email: { Args: { _email: string }; Returns: string }
       normalize_phone: { Args: { _phone: string }; Returns: string }
