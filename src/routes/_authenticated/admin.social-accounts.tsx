@@ -66,7 +66,12 @@ function SocialAccountsPage() {
       if (error) throw new Error(error.message);
       const url = (data as { authorize_url?: string })?.authorize_url;
       if (!url) throw new Error("No authorize URL returned");
-      window.location.href = url;
+      // Break out of preview iframe — Facebook OAuth sets X-Frame-Options: DENY.
+      if (window.top && window.top !== window.self) {
+        window.top.location.href = url;
+      } else {
+        window.location.href = url;
+      }
     } catch (e) {
       toast.error((e as Error).message);
       setBusy(null);
