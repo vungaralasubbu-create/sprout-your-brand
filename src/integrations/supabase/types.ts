@@ -16945,6 +16945,278 @@ export type Database = {
           },
         ]
       }
+      mkt_brand_kit_assets: {
+        Row: {
+          brand_kit_id: string
+          created_at: string
+          folder: string
+          id: string
+          kind: string
+          metadata: Json
+          mime_type: string | null
+          owner_id: string
+          size_bytes: number | null
+          thumbnail_url: string | null
+          title: string | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          brand_kit_id: string
+          created_at?: string
+          folder?: string
+          id?: string
+          kind: string
+          metadata?: Json
+          mime_type?: string | null
+          owner_id: string
+          size_bytes?: number | null
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          brand_kit_id?: string
+          created_at?: string
+          folder?: string
+          id?: string
+          kind?: string
+          metadata?: Json
+          mime_type?: string | null
+          owner_id?: string
+          size_bytes?: number | null
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_brand_kit_assets_brand_kit_id_fkey"
+            columns: ["brand_kit_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brand_kits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_brand_kit_templates: {
+        Row: {
+          body: string
+          brand_kit_id: string
+          channel: string
+          created_at: string
+          id: string
+          is_default: boolean
+          metadata: Json
+          name: string
+          owner_id: string
+          updated_at: string
+          variables: Json
+        }
+        Insert: {
+          body: string
+          brand_kit_id: string
+          channel: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          metadata?: Json
+          name: string
+          owner_id: string
+          updated_at?: string
+          variables?: Json
+        }
+        Update: {
+          body?: string
+          brand_kit_id?: string
+          channel?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          metadata?: Json
+          name?: string
+          owner_id?: string
+          updated_at?: string
+          variables?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_brand_kit_templates_brand_kit_id_fkey"
+            columns: ["brand_kit_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brand_kits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_brand_kit_versions: {
+        Row: {
+          brand_kit_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          owner_id: string
+          snapshot: Json
+          version: number
+        }
+        Insert: {
+          brand_kit_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          owner_id: string
+          snapshot: Json
+          version: number
+        }
+        Update: {
+          brand_kit_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          owner_id?: string
+          snapshot?: Json
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_brand_kit_versions_brand_kit_id_fkey"
+            columns: ["brand_kit_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brand_kits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mkt_brand_kits: {
+        Row: {
+          address: string | null
+          ai_rules: Json
+          approval_policy: Json
+          brand_id: string | null
+          business_name: string | null
+          colors: Json
+          compliance: Json
+          content_rules: Json
+          core_values: string[]
+          created_at: string
+          description: string | null
+          guidelines: Json
+          id: string
+          industry: string | null
+          is_default: boolean
+          keywords: Json
+          logos: Json
+          metadata: Json
+          mission: string | null
+          name: string
+          owner_id: string
+          personality: string[]
+          phone: string | null
+          reading_level: string | null
+          slug: string | null
+          social_links: Json
+          support_email: string | null
+          tagline: string | null
+          target_audience: Json
+          tone_of_voice: string[]
+          typography: Json
+          updated_at: string
+          vision: string | null
+          website: string | null
+          writing_rules: Json
+          writing_style: string[]
+        }
+        Insert: {
+          address?: string | null
+          ai_rules?: Json
+          approval_policy?: Json
+          brand_id?: string | null
+          business_name?: string | null
+          colors?: Json
+          compliance?: Json
+          content_rules?: Json
+          core_values?: string[]
+          created_at?: string
+          description?: string | null
+          guidelines?: Json
+          id?: string
+          industry?: string | null
+          is_default?: boolean
+          keywords?: Json
+          logos?: Json
+          metadata?: Json
+          mission?: string | null
+          name: string
+          owner_id: string
+          personality?: string[]
+          phone?: string | null
+          reading_level?: string | null
+          slug?: string | null
+          social_links?: Json
+          support_email?: string | null
+          tagline?: string | null
+          target_audience?: Json
+          tone_of_voice?: string[]
+          typography?: Json
+          updated_at?: string
+          vision?: string | null
+          website?: string | null
+          writing_rules?: Json
+          writing_style?: string[]
+        }
+        Update: {
+          address?: string | null
+          ai_rules?: Json
+          approval_policy?: Json
+          brand_id?: string | null
+          business_name?: string | null
+          colors?: Json
+          compliance?: Json
+          content_rules?: Json
+          core_values?: string[]
+          created_at?: string
+          description?: string | null
+          guidelines?: Json
+          id?: string
+          industry?: string | null
+          is_default?: boolean
+          keywords?: Json
+          logos?: Json
+          metadata?: Json
+          mission?: string | null
+          name?: string
+          owner_id?: string
+          personality?: string[]
+          phone?: string | null
+          reading_level?: string | null
+          slug?: string | null
+          social_links?: Json
+          support_email?: string | null
+          tagline?: string | null
+          target_audience?: Json
+          tone_of_voice?: string[]
+          typography?: Json
+          updated_at?: string
+          vision?: string | null
+          website?: string | null
+          writing_rules?: Json
+          writing_style?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mkt_brand_kits_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "mkt_brands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mkt_brands: {
         Row: {
           accent_color: string | null
