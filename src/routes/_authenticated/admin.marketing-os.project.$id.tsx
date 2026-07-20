@@ -259,7 +259,7 @@ function ProjectOverview() {
                       <div className="text-xs font-mono w-24">{e.date}</div>
                       <Badge variant="outline" className="uppercase text-[10px]">{e.platform}</Badge>
                       <div className="text-sm flex-1 truncate">{e.hook}</div>
-                      <Badge variant="secondary">{e.status}</Badge>
+                      <Badge variant="muted">{e.status}</Badge>
                     </div>
                   ))}
                 </div>
