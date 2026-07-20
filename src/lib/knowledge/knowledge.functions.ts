@@ -65,7 +65,7 @@ export const createDocument = createServerFn({ method: "POST" })
       workspace_id: m.workspace_id, title: data.title, content: data.content, summary: data.summary,
       category: data.category, tags: data.tags, external_url: data.external_url, file_url: data.file_url,
       source_id: data.source_id, created_by: context.userId,
-    }).select().maybeSingle();
+    }).select("id,title,category,updated_at").maybeSingle();
     if (error) throw new Error(error.message);
     return { document: row };
   });

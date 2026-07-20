@@ -55,9 +55,9 @@ function ProductsPage() {
           <div className="w-full max-w-md rounded-2xl border bg-card shadow-2xl">
             <div className="border-b p-5 text-sm font-semibold">New product</div>
             <div className="space-y-3 p-5">
-              <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
-              <Field label="Price" value={form.price} onChange={(v) => setForm({ ...form, price: v })} />
-              <Field label="Target audience" value={form.target_audience} onChange={(v) => setForm({ ...form, target_audience: v })} />
+              <Field label="Name" value={form.name} onChange={(v: string) => setForm({ ...form, name: v })} />
+              <Field label="Price" value={form.price} onChange={(v: string) => setForm({ ...form, price: v })} />
+              <Field label="Target audience" value={form.target_audience} onChange={(v: string) => setForm({ ...form, target_audience: v })} />
               <div>
                 <label className="text-xs font-medium text-muted-foreground">Description</label>
                 <textarea rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}
