@@ -114,7 +114,7 @@ function TemplateBuilder() {
                 key={p.key}
                 label={p.label}
                 value={prompts[p.key] ?? ""}
-                onChange={(v) => setPrompts((s) => ({ ...s, [p.key]: v }))}
+                onChange={(v: string) => setPrompts((s) => ({ ...s, [p.key]: v }))}
                 placeholder={p.ph}
                 rows={3}
               />
@@ -129,7 +129,7 @@ function TemplateBuilder() {
               <SelectField
                 label="Difficulty"
                 value={difficulty}
-                onChange={(v) => setDifficulty(v as any)}
+                onChange={(v: string) => setDifficulty(v as any)}
                 options={[{ v: "beginner", l: "Beginner" }, { v: "intermediate", l: "Intermediate" }, { v: "advanced", l: "Advanced" }]}
               />
               <NumField label="Est. minutes" value={minutes} onChange={setMinutes} />
