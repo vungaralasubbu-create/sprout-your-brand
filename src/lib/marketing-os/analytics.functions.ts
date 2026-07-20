@@ -337,7 +337,7 @@ Snapshot: ${JSON.stringify(snapshot)}`;
       messages: [{ role: "user", content: prompt }],
       responseFormat: "json", temperature: 0.3, maxTokens: 500,
     })) as Record<string, unknown>;
-    return { snapshot, forecast: result };
+    return { snapshot, forecast: result as unknown as Record<string, string | number> };
   });
 
 /* ---------------- Reports ---------------- */
