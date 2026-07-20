@@ -188,11 +188,11 @@ function CalendarWorkspace() {
 
       <JobDetailDialog
         job={detail} onClose={() => setDetail(null)}
-        onPublishNow={async (id) => { await nowFn({ data: { id } }); invalidate(); setDetail(null); toast.success("Publishing"); }}
-        onCancel={async (id) => { await cancelFn({ data: { ids: [id] } }); invalidate(); setDetail(null); }}
-        onDelete={async (id) => { await delFn({ data: { ids: [id] } }); invalidate(); setDetail(null); }}
-        onDuplicate={async (id) => { await dupFn({ data: { id } }); invalidate(); setDetail(null); toast.success("Duplicated"); }}
-        onReschedule={async (id, when) => { await reFn({ data: { ids: [id], scheduled_at: when } }); invalidate(); setDetail(null); toast.success("Rescheduled"); }}
+        onPublishNow={async (id: string) => { await nowFn({ data: { id } }); invalidate(); setDetail(null); toast.success("Publishing"); }}
+        onCancel={async (id: string) => { await cancelFn({ data: { ids: [id] } }); invalidate(); setDetail(null); }}
+        onDelete={async (id: string) => { await delFn({ data: { ids: [id] } }); invalidate(); setDetail(null); }}
+        onDuplicate={async (id: string) => { await dupFn({ data: { id } }); invalidate(); setDetail(null); toast.success("Duplicated"); }}
+        onReschedule={async (id: string, when: string) => { await reFn({ data: { ids: [id], scheduled_at: when } }); invalidate(); setDetail(null); toast.success("Rescheduled"); }}
       />
     </div>
   );
