@@ -265,24 +265,29 @@ export const runSchedulerTick = createServerFn({ method: "POST" })
   });
 
 // ---------- Legacy compat aliases (do not remove — kept for /admin/automation-hub UI) ----------
-type LegacyWf = { id: string; name: string; description: string | null; status: string };
+type LegacyWf = {
+  id: string; name: string; description: string | null; status: string;
+  trigger: Record<string, string | number | boolean | null> | null;
+  graph: Record<string, string | number | boolean | null> | null;
+};
 type LegacyRun = { id: string; workflow_id: string; status: string; started_at: string };
 
-export const listAutomationWorkflows = createServerFn({ method: "GET" })
+export const listAutomationWorkflows = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ ok: true; workflows: LegacyWf[] }> => {
+  .inputValidator((v: unknown) => z.object({}).parse(v ?? {}))
+  .handler(async ({ context }): Promise<{ ok: true; error?: string; workflows: LegacyWf[] }> => {
     const { data } = await context.supabase
       .from("automation_workflows")
-      .select("id, name, description, status")
+      .select("id, name, description, status, trigger, graph")
       .order("updated_at", { ascending: false })
       .limit(200);
-    return { ok: true, workflows: (data ?? []) as LegacyWf[] };
+    return { ok: true, workflows: (data ?? []) as unknown as LegacyWf[] };
   });
 
 export const listAutomationRuns = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => z.object({ limit: z.number().optional() }).parse(v ?? {}))
-  .handler(async ({ data, context }): Promise<{ ok: true; runs: LegacyRun[] }> => {
+  .handler(async ({ data, context }): Promise<{ ok: true; error?: string; runs: LegacyRun[] }> => {
     const { data: rows } = await context.supabase
       .from("automation_workflow_runs")
       .select("id, workflow_id, status, started_at")
@@ -294,9 +299,12 @@ export const listAutomationRuns = createServerFn({ method: "POST" })
 export const getAutomationWorkflow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => z.object({ id: z.string().uuid() }).parse(v))
-  .handler(async ({ data, context }): Promise<{ ok: true; workflow: Record<string, string | number | boolean | null> | null }> => {
-    const { data: row } = await context.supabase.from("automation_workflows").select("id, name, description, status").eq("id", data.id).maybeSingle();
-    return { ok: true, workflow: (row as Record<string, string | number | boolean | null> | null) ?? null };
+  .handler(async ({ data, context }): Promise<{ ok: true; error?: string; workflow: LegacyWf | null }> => {
+    const { data: row } = await context.supabase
+      .from("automation_workflows")
+      .select("id, name, description, status, trigger, graph")
+      .eq("id", data.id).maybeSingle();
+    return { ok: true, workflow: (row as unknown as LegacyWf | null) ?? null };
   });
 
 export const upsertAutomationWorkflow = createServerFn({ method: "POST" })
@@ -309,29 +317,36 @@ export const upsertAutomationWorkflow = createServerFn({ method: "POST" })
     graph: z.record(z.string(), z.unknown()).optional(),
     trigger: z.record(z.string(), z.unknown()).optional(),
   }).parse(v))
-  .handler(async ({ data, context }): Promise<{ ok: true; id: string }> => {
-    if (data.id) {
+  .handler(async ({ data, context }): Promise<{ ok: true; error?: string; id: string; workflow: LegacyWf | null }> => {
+    let id = data.id;
+    if (id) {
       await context.supabase.from("automation_workflows").update({
         name: data.name, description: data.description ?? null, status: data.status ?? "draft",
         graph: (data.graph ?? { nodes: [], edges: [] }) as never,
         trigger: (data.trigger ?? {}) as never,
-      } as never).eq("id", data.id);
-      return { ok: true, id: data.id };
+      } as never).eq("id", id);
+    } else {
+      const { data: row } = await context.supabase.from("automation_workflows").insert({
+        owner_id: context.userId, name: data.name, description: data.description ?? null,
+        status: data.status ?? "draft",
+        graph: (data.graph ?? { nodes: [], edges: [] }) as never,
+        trigger: (data.trigger ?? {}) as never,
+      }).select("id").single();
+      id = row!.id;
     }
-    const { data: row } = await context.supabase.from("automation_workflows").insert({
-      owner_id: context.userId, name: data.name, description: data.description ?? null,
-      status: data.status ?? "draft",
-      graph: (data.graph ?? { nodes: [], edges: [] }) as never,
-      trigger: (data.trigger ?? {}) as never,
-    }).select("id").single();
-    return { ok: true, id: row!.id };
+    const { data: wfRow } = await context.supabase
+      .from("automation_workflows")
+      .select("id, name, description, status, trigger, graph")
+      .eq("id", id!).maybeSingle();
+    return { ok: true, id: id!, workflow: (wfRow as unknown as LegacyWf | null) ?? null };
   });
 
 export const testRunAutomationWorkflow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => z.object({ id: z.string().uuid() }).parse(v))
-  .handler(async ({ data, context }): Promise<{ ok: true; runId: string }> => {
+  .handler(async ({ data, context }): Promise<{ ok: true; runId: string; run_id: string }> => {
     const runId = await startWorkflowRun(context.supabase, context.userId, data.id, { triggerSource: "test-run" });
-    return { ok: true, runId };
+    return { ok: true, runId, run_id: runId };
   });
+
 
