@@ -187,7 +187,8 @@ export const runProjectStep = createServerFn({ method: "POST" })
       .parse(v),
   )
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
+    const { userId } = context;
+    const supabase: any = context.supabase;
     const { data: proj, error: pErr } = await supabase
       .from("marketing_projects")
       .select("*")
@@ -195,7 +196,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
       .maybeSingle();
     if (pErr || !proj) throw new Error(pErr?.message ?? "Project not found");
 
-    const steps: StepEntry[] = Array.isArray(proj.steps) ? [...proj.steps] : [];
+    const steps: StepEntry[] = Array.isArray(proj.steps) ? [...proj.steps] as StepEntry[] : [];
     const idx = steps.findIndex((s) => s.key === data.step);
     if (idx >= 0) steps[idx] = { ...steps[idx], status: "running" };
 
