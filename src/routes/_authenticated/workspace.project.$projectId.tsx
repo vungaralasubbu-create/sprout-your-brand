@@ -57,6 +57,7 @@ function WorkspaceProject() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const [active, setActive] = useState<NavKey>("overview");
+  const [copilotOpen, setCopilotOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [device, setDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [editingName, setEditingName] = useState(false);
