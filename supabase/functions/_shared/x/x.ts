@@ -21,6 +21,14 @@ export function requireEnv(name: string): string {
   return v;
 }
 
+function getTwitterClientId(): string {
+  return requireEnv("TWITTER_CLIENT_ID");
+}
+
+function getTwitterClientSecret(): string {
+  return requireEnv("TWITTER_CLIENT_SECRET");
+}
+
 export function getRedirectUri(): string {
   return Deno.env.get("X_REDIRECT_URI") || "https://glintr.com/auth/x/callback";
 }
