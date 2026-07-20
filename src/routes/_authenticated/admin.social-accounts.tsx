@@ -203,10 +203,15 @@ function SocialAccountsPage() {
                       <Badge variant={a.connection_status === "connected" ? "success" : "muted"}>
                         {a.connection_status ?? "unknown"}
                       </Badge>
-                      <Button variant="outline" size="sm" onClick={() => refresh(a.id)} disabled={busy === a.id}>
+                      <Button variant="outline" size="sm" onClick={() => refresh(a.id, a.platform)} disabled={busy === a.id} title="Refresh token">
                         <RefreshCw className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => disconnect(a.id)} disabled={busy === a.id}>
+                      {a.platform === "linkedin" && (
+                        <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id}>
+                          Test Publish
+                        </Button>
+                      )}
+                      <Button variant="outline" size="sm" onClick={() => disconnect(a.id, a.platform)} disabled={busy === a.id} title="Disconnect">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
