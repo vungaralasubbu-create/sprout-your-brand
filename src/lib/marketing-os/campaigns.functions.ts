@@ -211,9 +211,8 @@ export const setCampaignStatus = createServerFn({ method: "POST" })
     }).parse(v),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = { status: data.status };
-    if (data.status === "archived") patch.archived_at = new Date().toISOString();
-    const { error } = await context.supabase.from("mkt_campaigns").update(patch).eq("id", data.id);
+    const patch = { status: data.status, ...(data.status === "archived" ? { archived_at: new Date().toISOString() } : {}) };
+    const { error } = await context.supabase.from("mkt_campaigns").update(patch as any).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
