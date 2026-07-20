@@ -295,7 +295,7 @@ function NewsPane() {
             <Card key={n.id} className="p-4">
               <div className="flex items-center gap-2 mb-1">
                 <Badge variant="outline" className="text-[10px]">{n.industry ?? "General"}</Badge>
-                <Badge variant={n.impact === "high" ? "destructive" : "outline"} className="text-[10px] capitalize">{n.impact ?? "medium"}</Badge>
+                <Badge variant={n.impact === "high" ? "danger" : "outline"} className="text-[10px] capitalize">{n.impact ?? "medium"}</Badge>
               </div>
               <div className="font-medium text-sm">{n.headline}</div>
               <p className="text-xs text-muted-foreground mt-1 line-clamp-3">{n.ai_summary || n.summary}</p>
@@ -426,7 +426,7 @@ function AlertsPane() {
         <div className="divide-y divide-border/60 -mx-2">
           {(data?.alerts ?? []).map((a) => (
             <div key={a.id} className={cn("flex items-center gap-3 px-2 py-2 text-sm", !a.is_read && "bg-primary/5")}>
-              <Badge variant={a.severity === "high" ? "destructive" : "outline"} className="text-[10px] capitalize">{a.severity}</Badge>
+              <Badge variant={a.severity === "high" ? "danger" : "outline"} className="text-[10px] capitalize">{a.severity}</Badge>
               <span className="flex-1 truncate">{a.title}</span>
               <span className="text-[10px] text-muted-foreground">{new Date(a.created_at).toLocaleDateString()}</span>
               {!a.is_read && <Button size="sm" variant="ghost" onClick={() => mark.mutate(a.id)}>Mark read</Button>}
