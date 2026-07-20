@@ -123,7 +123,7 @@ function PublisherPage() {
           <Button size="sm" variant="outline" onClick={async () => { await cancelFn({ data: { ids: bulkIds } }); setSelected(new Set()); invalidate(); toast.success("Cancelled"); }}>
             <Pause className="size-4 mr-1" /> Cancel
           </Button>
-          <Button size="sm" variant="destructive" onClick={async () => { if (confirm(`Delete ${bulkIds.length} jobs?`)) { await delFn({ data: { ids: bulkIds } }); setSelected(new Set()); invalidate(); } }}>
+          <Button size="sm" variant="danger" onClick={async () => { if (confirm(`Delete ${bulkIds.length} jobs?`)) { await delFn({ data: { ids: bulkIds } }); setSelected(new Set()); invalidate(); } }}>
             <Trash2 className="size-4 mr-1" /> Delete
           </Button>
           <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>Clear</Button>
