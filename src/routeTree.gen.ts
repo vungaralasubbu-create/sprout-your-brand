@@ -225,7 +225,14 @@ import { Route as AuthenticatedPartnerAccountRouteImport } from './routes/_authe
 import { Route as AuthenticatedPartnerAcademyBuilderRouteImport } from './routes/_authenticated/partner.academy-builder'
 import { Route as AuthenticatedInstructorDashboardRouteImport } from './routes/_authenticated/instructor.dashboard'
 import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
+import { Route as AuthenticatedCloudTeamRouteImport } from './routes/_authenticated/cloud.team'
+import { Route as AuthenticatedCloudSettingsRouteImport } from './routes/_authenticated/cloud.settings'
+import { Route as AuthenticatedCloudProjectsRouteImport } from './routes/_authenticated/cloud.projects'
 import { Route as AuthenticatedCloudOnboardingRouteImport } from './routes/_authenticated/cloud.onboarding'
+import { Route as AuthenticatedCloudDashboardRouteImport } from './routes/_authenticated/cloud.dashboard'
+import { Route as AuthenticatedCloudBillingRouteImport } from './routes/_authenticated/cloud.billing'
+import { Route as AuthenticatedCloudAnalyticsRouteImport } from './routes/_authenticated/cloud.analytics'
+import { Route as AuthenticatedCloudAccountRouteImport } from './routes/_authenticated/cloud.account'
 import { Route as AuthenticatedCampusAmbassadorStatusRouteImport } from './routes/_authenticated/campus-ambassador.status'
 import { Route as AuthenticatedCampusAmbassadorApplyRouteImport } from './routes/_authenticated/campus-ambassador.apply'
 import { Route as AuthenticatedBrandWebsiteRouteImport } from './routes/_authenticated/brand.website'
@@ -401,6 +408,7 @@ import { Route as AuthenticatedPartnerAcademyWorkspaceRouteImport } from './rout
 import { Route as AuthenticatedPartnerAcademyOnboardingRouteImport } from './routes/_authenticated/partner.academy.onboarding'
 import { Route as AuthenticatedPartnerAcademySlugRouteImport } from './routes/_authenticated/partner.academy.$slug'
 import { Route as AuthenticatedCounsellorCopilotLeadIdRouteImport } from './routes/_authenticated/counsellor.copilot.$leadId'
+import { Route as AuthenticatedCloudProjectIdRouteImport } from './routes/_authenticated/cloud.project.$id'
 import { Route as AuthenticatedAmbassadorReferralsIdRouteImport } from './routes/_authenticated/ambassador.referrals.$id'
 import { Route as AuthenticatedAmbassadorPayoutsIdRouteImport } from './routes/_authenticated/ambassador.payouts.$id'
 import { Route as AuthenticatedAmbassadorEnrollmentsIdRouteImport } from './routes/_authenticated/ambassador.enrollments.$id'
@@ -1661,10 +1669,51 @@ const AuthenticatedCounsellorCopilotRoute =
     path: '/counsellor/copilot',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCloudTeamRoute = AuthenticatedCloudTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthenticatedCloudRoute,
+} as any)
+const AuthenticatedCloudSettingsRoute =
+  AuthenticatedCloudSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedCloudRoute,
+  } as any)
+const AuthenticatedCloudProjectsRoute =
+  AuthenticatedCloudProjectsRouteImport.update({
+    id: '/projects',
+    path: '/projects',
+    getParentRoute: () => AuthenticatedCloudRoute,
+  } as any)
 const AuthenticatedCloudOnboardingRoute =
   AuthenticatedCloudOnboardingRouteImport.update({
     id: '/onboarding',
     path: '/onboarding',
+    getParentRoute: () => AuthenticatedCloudRoute,
+  } as any)
+const AuthenticatedCloudDashboardRoute =
+  AuthenticatedCloudDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedCloudRoute,
+  } as any)
+const AuthenticatedCloudBillingRoute =
+  AuthenticatedCloudBillingRouteImport.update({
+    id: '/billing',
+    path: '/billing',
+    getParentRoute: () => AuthenticatedCloudRoute,
+  } as any)
+const AuthenticatedCloudAnalyticsRoute =
+  AuthenticatedCloudAnalyticsRouteImport.update({
+    id: '/analytics',
+    path: '/analytics',
+    getParentRoute: () => AuthenticatedCloudRoute,
+  } as any)
+const AuthenticatedCloudAccountRoute =
+  AuthenticatedCloudAccountRouteImport.update({
+    id: '/account',
+    path: '/account',
     getParentRoute: () => AuthenticatedCloudRoute,
   } as any)
 const AuthenticatedCampusAmbassadorStatusRoute =
@@ -2699,6 +2748,12 @@ const AuthenticatedCounsellorCopilotLeadIdRoute =
     path: '/$leadId',
     getParentRoute: () => AuthenticatedCounsellorCopilotRoute,
   } as any)
+const AuthenticatedCloudProjectIdRoute =
+  AuthenticatedCloudProjectIdRouteImport.update({
+    id: '/project/$id',
+    path: '/project/$id',
+    getParentRoute: () => AuthenticatedCloudRoute,
+  } as any)
 const AuthenticatedAmbassadorReferralsIdRoute =
   AuthenticatedAmbassadorReferralsIdRouteImport.update({
     id: '/referrals/$id',
@@ -3723,7 +3778,14 @@ export interface FileRoutesByFullPath {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/cloud/account': typeof AuthenticatedCloudAccountRoute
+  '/cloud/analytics': typeof AuthenticatedCloudAnalyticsRoute
+  '/cloud/billing': typeof AuthenticatedCloudBillingRoute
+  '/cloud/dashboard': typeof AuthenticatedCloudDashboardRoute
   '/cloud/onboarding': typeof AuthenticatedCloudOnboardingRoute
+  '/cloud/projects': typeof AuthenticatedCloudProjectsRoute
+  '/cloud/settings': typeof AuthenticatedCloudSettingsRoute
+  '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
@@ -3900,6 +3962,7 @@ export interface FileRoutesByFullPath {
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/cloud/project/$id': typeof AuthenticatedCloudProjectIdRoute
   '/counsellor/copilot/$leadId': typeof AuthenticatedCounsellorCopilotLeadIdRoute
   '/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/partner/academy/onboarding': typeof AuthenticatedPartnerAcademyOnboardingRoute
@@ -4228,7 +4291,14 @@ export interface FileRoutesByTo {
   '/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/cloud/account': typeof AuthenticatedCloudAccountRoute
+  '/cloud/analytics': typeof AuthenticatedCloudAnalyticsRoute
+  '/cloud/billing': typeof AuthenticatedCloudBillingRoute
+  '/cloud/dashboard': typeof AuthenticatedCloudDashboardRoute
   '/cloud/onboarding': typeof AuthenticatedCloudOnboardingRoute
+  '/cloud/projects': typeof AuthenticatedCloudProjectsRoute
+  '/cloud/settings': typeof AuthenticatedCloudSettingsRoute
+  '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
@@ -4405,6 +4475,7 @@ export interface FileRoutesByTo {
   '/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/cloud/project/$id': typeof AuthenticatedCloudProjectIdRoute
   '/counsellor/copilot/$leadId': typeof AuthenticatedCounsellorCopilotLeadIdRoute
   '/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/partner/academy/onboarding': typeof AuthenticatedPartnerAcademyOnboardingRoute
@@ -4752,7 +4823,14 @@ export interface FileRoutesById {
   '/_authenticated/brand/website': typeof AuthenticatedBrandWebsiteRoute
   '/_authenticated/campus-ambassador/apply': typeof AuthenticatedCampusAmbassadorApplyRoute
   '/_authenticated/campus-ambassador/status': typeof AuthenticatedCampusAmbassadorStatusRoute
+  '/_authenticated/cloud/account': typeof AuthenticatedCloudAccountRoute
+  '/_authenticated/cloud/analytics': typeof AuthenticatedCloudAnalyticsRoute
+  '/_authenticated/cloud/billing': typeof AuthenticatedCloudBillingRoute
+  '/_authenticated/cloud/dashboard': typeof AuthenticatedCloudDashboardRoute
   '/_authenticated/cloud/onboarding': typeof AuthenticatedCloudOnboardingRoute
+  '/_authenticated/cloud/projects': typeof AuthenticatedCloudProjectsRoute
+  '/_authenticated/cloud/settings': typeof AuthenticatedCloudSettingsRoute
+  '/_authenticated/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/_authenticated/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/_authenticated/partner/academy-builder': typeof AuthenticatedPartnerAcademyBuilderRoute
@@ -4929,6 +5007,7 @@ export interface FileRoutesById {
   '/_authenticated/ambassador/enrollments/$id': typeof AuthenticatedAmbassadorEnrollmentsIdRoute
   '/_authenticated/ambassador/payouts/$id': typeof AuthenticatedAmbassadorPayoutsIdRoute
   '/_authenticated/ambassador/referrals/$id': typeof AuthenticatedAmbassadorReferralsIdRoute
+  '/_authenticated/cloud/project/$id': typeof AuthenticatedCloudProjectIdRoute
   '/_authenticated/counsellor/copilot/$leadId': typeof AuthenticatedCounsellorCopilotLeadIdRoute
   '/_authenticated/partner/academy/$slug': typeof AuthenticatedPartnerAcademySlugRoute
   '/_authenticated/partner/academy/onboarding': typeof AuthenticatedPartnerAcademyOnboardingRoute
@@ -5275,7 +5354,14 @@ export interface FileRouteTypes {
     | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
+    | '/cloud/account'
+    | '/cloud/analytics'
+    | '/cloud/billing'
+    | '/cloud/dashboard'
     | '/cloud/onboarding'
+    | '/cloud/projects'
+    | '/cloud/settings'
+    | '/cloud/team'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
     | '/partner/academy-builder'
@@ -5452,6 +5538,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
     | '/ambassador/referrals/$id'
+    | '/cloud/project/$id'
     | '/counsellor/copilot/$leadId'
     | '/partner/academy/$slug'
     | '/partner/academy/onboarding'
@@ -5780,7 +5867,14 @@ export interface FileRouteTypes {
     | '/brand/website'
     | '/campus-ambassador/apply'
     | '/campus-ambassador/status'
+    | '/cloud/account'
+    | '/cloud/analytics'
+    | '/cloud/billing'
+    | '/cloud/dashboard'
     | '/cloud/onboarding'
+    | '/cloud/projects'
+    | '/cloud/settings'
+    | '/cloud/team'
     | '/counsellor/copilot'
     | '/instructor/dashboard'
     | '/partner/academy-builder'
@@ -5957,6 +6051,7 @@ export interface FileRouteTypes {
     | '/ambassador/enrollments/$id'
     | '/ambassador/payouts/$id'
     | '/ambassador/referrals/$id'
+    | '/cloud/project/$id'
     | '/counsellor/copilot/$leadId'
     | '/partner/academy/$slug'
     | '/partner/academy/onboarding'
@@ -6303,7 +6398,14 @@ export interface FileRouteTypes {
     | '/_authenticated/brand/website'
     | '/_authenticated/campus-ambassador/apply'
     | '/_authenticated/campus-ambassador/status'
+    | '/_authenticated/cloud/account'
+    | '/_authenticated/cloud/analytics'
+    | '/_authenticated/cloud/billing'
+    | '/_authenticated/cloud/dashboard'
     | '/_authenticated/cloud/onboarding'
+    | '/_authenticated/cloud/projects'
+    | '/_authenticated/cloud/settings'
+    | '/_authenticated/cloud/team'
     | '/_authenticated/counsellor/copilot'
     | '/_authenticated/instructor/dashboard'
     | '/_authenticated/partner/academy-builder'
@@ -6480,6 +6582,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ambassador/enrollments/$id'
     | '/_authenticated/ambassador/payouts/$id'
     | '/_authenticated/ambassador/referrals/$id'
+    | '/_authenticated/cloud/project/$id'
     | '/_authenticated/counsellor/copilot/$leadId'
     | '/_authenticated/partner/academy/$slug'
     | '/_authenticated/partner/academy/onboarding'
@@ -8221,11 +8324,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCounsellorCopilotRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/cloud/team': {
+      id: '/_authenticated/cloud/team'
+      path: '/team'
+      fullPath: '/cloud/team'
+      preLoaderRoute: typeof AuthenticatedCloudTeamRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
+    }
+    '/_authenticated/cloud/settings': {
+      id: '/_authenticated/cloud/settings'
+      path: '/settings'
+      fullPath: '/cloud/settings'
+      preLoaderRoute: typeof AuthenticatedCloudSettingsRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
+    }
+    '/_authenticated/cloud/projects': {
+      id: '/_authenticated/cloud/projects'
+      path: '/projects'
+      fullPath: '/cloud/projects'
+      preLoaderRoute: typeof AuthenticatedCloudProjectsRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
+    }
     '/_authenticated/cloud/onboarding': {
       id: '/_authenticated/cloud/onboarding'
       path: '/onboarding'
       fullPath: '/cloud/onboarding'
       preLoaderRoute: typeof AuthenticatedCloudOnboardingRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
+    }
+    '/_authenticated/cloud/dashboard': {
+      id: '/_authenticated/cloud/dashboard'
+      path: '/dashboard'
+      fullPath: '/cloud/dashboard'
+      preLoaderRoute: typeof AuthenticatedCloudDashboardRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
+    }
+    '/_authenticated/cloud/billing': {
+      id: '/_authenticated/cloud/billing'
+      path: '/billing'
+      fullPath: '/cloud/billing'
+      preLoaderRoute: typeof AuthenticatedCloudBillingRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
+    }
+    '/_authenticated/cloud/analytics': {
+      id: '/_authenticated/cloud/analytics'
+      path: '/analytics'
+      fullPath: '/cloud/analytics'
+      preLoaderRoute: typeof AuthenticatedCloudAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
+    }
+    '/_authenticated/cloud/account': {
+      id: '/_authenticated/cloud/account'
+      path: '/account'
+      fullPath: '/cloud/account'
+      preLoaderRoute: typeof AuthenticatedCloudAccountRouteImport
       parentRoute: typeof AuthenticatedCloudRoute
     }
     '/_authenticated/campus-ambassador/status': {
@@ -9452,6 +9604,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/counsellor/copilot/$leadId'
       preLoaderRoute: typeof AuthenticatedCounsellorCopilotLeadIdRouteImport
       parentRoute: typeof AuthenticatedCounsellorCopilotRoute
+    }
+    '/_authenticated/cloud/project/$id': {
+      id: '/_authenticated/cloud/project/$id'
+      path: '/project/$id'
+      fullPath: '/cloud/project/$id'
+      preLoaderRoute: typeof AuthenticatedCloudProjectIdRouteImport
+      parentRoute: typeof AuthenticatedCloudRoute
     }
     '/_authenticated/ambassador/referrals/$id': {
       id: '/_authenticated/ambassador/referrals/$id'
@@ -11169,11 +11328,27 @@ const AuthenticatedBrandRouteWithChildren =
   AuthenticatedBrandRoute._addFileChildren(AuthenticatedBrandRouteChildren)
 
 interface AuthenticatedCloudRouteChildren {
+  AuthenticatedCloudAccountRoute: typeof AuthenticatedCloudAccountRoute
+  AuthenticatedCloudAnalyticsRoute: typeof AuthenticatedCloudAnalyticsRoute
+  AuthenticatedCloudBillingRoute: typeof AuthenticatedCloudBillingRoute
+  AuthenticatedCloudDashboardRoute: typeof AuthenticatedCloudDashboardRoute
   AuthenticatedCloudOnboardingRoute: typeof AuthenticatedCloudOnboardingRoute
+  AuthenticatedCloudProjectsRoute: typeof AuthenticatedCloudProjectsRoute
+  AuthenticatedCloudSettingsRoute: typeof AuthenticatedCloudSettingsRoute
+  AuthenticatedCloudTeamRoute: typeof AuthenticatedCloudTeamRoute
+  AuthenticatedCloudProjectIdRoute: typeof AuthenticatedCloudProjectIdRoute
 }
 
 const AuthenticatedCloudRouteChildren: AuthenticatedCloudRouteChildren = {
+  AuthenticatedCloudAccountRoute: AuthenticatedCloudAccountRoute,
+  AuthenticatedCloudAnalyticsRoute: AuthenticatedCloudAnalyticsRoute,
+  AuthenticatedCloudBillingRoute: AuthenticatedCloudBillingRoute,
+  AuthenticatedCloudDashboardRoute: AuthenticatedCloudDashboardRoute,
   AuthenticatedCloudOnboardingRoute: AuthenticatedCloudOnboardingRoute,
+  AuthenticatedCloudProjectsRoute: AuthenticatedCloudProjectsRoute,
+  AuthenticatedCloudSettingsRoute: AuthenticatedCloudSettingsRoute,
+  AuthenticatedCloudTeamRoute: AuthenticatedCloudTeamRoute,
+  AuthenticatedCloudProjectIdRoute: AuthenticatedCloudProjectIdRoute,
 }
 
 const AuthenticatedCloudRouteWithChildren =
