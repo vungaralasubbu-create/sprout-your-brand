@@ -124,7 +124,7 @@ function MarketingOSHome() {
         setRunningProject(null);
         qc.invalidateQueries({ queryKey: ["marketing-projects"] });
         navigate({
-          to: "/admin/marketing-os/project/$id" as any,
+          to: "/admin/marketing-os/project/$id",
           params: { id: project.id },
         });
       }, 700);
@@ -287,7 +287,7 @@ function MarketingOSHome() {
                 key={p.id}
                 project={p}
                 onOpen={() =>
-                  navigate({ to: "/admin/marketing-os/project/$id" as any, params: { id: p.id } })
+                  navigate({ to: "/admin/marketing-os/project/$id", params: { id: p.id } })
                 }
                 onDuplicate={() => dupMut.mutate(p.id)}
                 onDelete={() => { if (confirm("Delete this project?")) delMut.mutate(p.id); }}

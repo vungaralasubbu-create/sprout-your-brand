@@ -72,7 +72,7 @@ function ProjectOverview() {
             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{project.prompt}</p>
           </div>
         </div>
-        <Badge variant={project.status === "completed" ? "default" : "secondary"} className="capitalize shrink-0">
+        <Badge variant={project.status === "completed" ? "success" : "muted"} className="capitalize shrink-0">
           {project.status}
         </Badge>
       </div>
@@ -259,7 +259,7 @@ function ProjectOverview() {
                       <div className="text-xs font-mono w-24">{e.date}</div>
                       <Badge variant="outline" className="uppercase text-[10px]">{e.platform}</Badge>
                       <div className="text-sm flex-1 truncate">{e.hook}</div>
-                      <Badge variant="secondary">{e.status}</Badge>
+                      <Badge variant="muted">{e.status}</Badge>
                     </div>
                   ))}
                 </div>
