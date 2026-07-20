@@ -82,10 +82,10 @@ function MarketingDashboard() {
     return map;
   }, [jobs]);
 
-  const totalCampaigns = dashData?.stats?.total ?? campaignsData?.campaigns.length ?? 0;
-  const activeCampaigns = dashData?.stats?.active ?? 0;
-  const revenue = dashData?.stats?.totalRevenueCents ?? 0;
-  const leads = dashData?.stats?.totalLeads ?? 0;
+  const totalCampaigns = dashData?.campaigns?.length ?? campaignsData?.campaigns.length ?? 0;
+  const activeCampaigns = dashData?.counts?.active ?? 0;
+  const revenue = dashData?.totals?.revenueCents ?? 0;
+  const leads = dashData?.totals?.leads ?? 0;
   const scheduled = pubData?.scheduled ?? 0;
   const upcomingWeek = pubData?.upcomingWeek ?? 0;
 
