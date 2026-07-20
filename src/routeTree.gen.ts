@@ -163,6 +163,7 @@ import { Route as HelpCCategoryRouteImport } from './routes/help.c.$category'
 import { Route as CommunitySpaceSlugRouteImport } from './routes/community.$space.$slug'
 import { Route as CareerHubTypeSlugRouteImport } from './routes/career-hub.$type.$slug'
 import { Route as AuthMetaCallbackRouteImport } from './routes/auth_.meta.callback'
+import { Route as AuthLinkedinCallbackRouteImport } from './routes/auth_.linkedin.callback'
 import { Route as ApiVoiceTranscribeRouteImport } from './routes/api/voice/transcribe'
 import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
@@ -1267,6 +1268,11 @@ const CareerHubTypeSlugRoute = CareerHubTypeSlugRouteImport.update({
 const AuthMetaCallbackRoute = AuthMetaCallbackRouteImport.update({
   id: '/auth_/meta/callback',
   path: '/auth/meta/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLinkedinCallbackRoute = AuthLinkedinCallbackRouteImport.update({
+  id: '/auth_/linkedin/callback',
+  path: '/auth/linkedin/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiVoiceTranscribeRoute = ApiVoiceTranscribeRouteImport.update({
@@ -3493,6 +3499,7 @@ export interface FileRoutesByFullPath {
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/auth/linkedin/callback': typeof AuthLinkedinCallbackRoute
   '/auth/meta/callback': typeof AuthMetaCallbackRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
@@ -3961,6 +3968,7 @@ export interface FileRoutesByTo {
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/auth/linkedin/callback': typeof AuthLinkedinCallbackRoute
   '/auth/meta/callback': typeof AuthMetaCallbackRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
@@ -4445,6 +4453,7 @@ export interface FileRoutesById {
   '/api/v1/version': typeof ApiV1VersionRoute
   '/api/voice/speak': typeof ApiVoiceSpeakRoute
   '/api/voice/transcribe': typeof ApiVoiceTranscribeRoute
+  '/auth_/linkedin/callback': typeof AuthLinkedinCallbackRoute
   '/auth_/meta/callback': typeof AuthMetaCallbackRoute
   '/career-hub/$type/$slug': typeof CareerHubTypeSlugRoute
   '/community/$space/$slug': typeof CommunitySpaceSlugRoute
@@ -4929,6 +4938,7 @@ export interface FileRouteTypes {
     | '/api/v1/version'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/auth/linkedin/callback'
     | '/auth/meta/callback'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
@@ -5397,6 +5407,7 @@ export interface FileRouteTypes {
     | '/api/v1/version'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/auth/linkedin/callback'
     | '/auth/meta/callback'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
@@ -5880,6 +5891,7 @@ export interface FileRouteTypes {
     | '/api/v1/version'
     | '/api/voice/speak'
     | '/api/voice/transcribe'
+    | '/auth_/linkedin/callback'
     | '/auth_/meta/callback'
     | '/career-hub/$type/$slug'
     | '/community/$space/$slug'
@@ -6175,6 +6187,7 @@ export interface RootRouteChildren {
   ApiV1VersionRoute: typeof ApiV1VersionRoute
   ApiVoiceSpeakRoute: typeof ApiVoiceSpeakRoute
   ApiVoiceTranscribeRoute: typeof ApiVoiceTranscribeRoute
+  AuthLinkedinCallbackRoute: typeof AuthLinkedinCallbackRoute
   AuthMetaCallbackRoute: typeof AuthMetaCallbackRoute
   CommunitySpaceSlugRoute: typeof CommunitySpaceSlugRoute
   HelpCCategoryRoute: typeof HelpCCategoryRoute
@@ -7282,6 +7295,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/meta/callback'
       fullPath: '/auth/meta/callback'
       preLoaderRoute: typeof AuthMetaCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth_/linkedin/callback': {
+      id: '/auth_/linkedin/callback'
+      path: '/auth/linkedin/callback'
+      fullPath: '/auth/linkedin/callback'
+      preLoaderRoute: typeof AuthLinkedinCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/voice/transcribe': {
@@ -10994,6 +11014,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiV1VersionRoute: ApiV1VersionRoute,
   ApiVoiceSpeakRoute: ApiVoiceSpeakRoute,
   ApiVoiceTranscribeRoute: ApiVoiceTranscribeRoute,
+  AuthLinkedinCallbackRoute: AuthLinkedinCallbackRoute,
   AuthMetaCallbackRoute: AuthMetaCallbackRoute,
   CommunitySpaceSlugRoute: CommunitySpaceSlugRoute,
   HelpCCategoryRoute: HelpCCategoryRoute,

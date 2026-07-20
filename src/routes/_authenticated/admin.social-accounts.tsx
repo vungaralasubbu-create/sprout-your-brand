@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
-import { Facebook, Instagram, Plus, RefreshCw, Trash2, ExternalLink } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Plus, RefreshCw, Trash2, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/admin/social-accounts")({
   head: () => ({
     meta: [
       { title: "Social Accounts · Admin · Glintr" },
-      { name: "description", content: "Connect and manage Meta (Facebook & Instagram) publishing accounts." },
+      { name: "description", content: "Connect and manage Meta (Facebook & Instagram) and LinkedIn publishing accounts." },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
@@ -48,7 +48,7 @@ function SocialAccountsPage() {
       .from("soc_accounts")
       .select("id, platform, account_name, account_external_id, connection_status, token_expires_at, last_synced_at, metadata")
       .eq("owner_id", uid)
-      .in("platform", ["facebook", "instagram"])
+      .in("platform", ["facebook", "instagram", "linkedin"])
       .order("platform", { ascending: true });
     if (error) toast.error(error.message);
     setAccounts((data ?? []) as Account[]);
@@ -59,14 +59,16 @@ function SocialAccountsPage() {
     void load();
   }, [load]);
 
-  const connectMeta = async () => {
-    setBusy("connect");
+  const startOAuth = async (provider: "meta" | "linkedin") => {
+    const key = `connect-${provider}`;
+    setBusy(key);
     try {
-      const { data, error } = await supabase.functions.invoke("connect-meta", { body: {} });
+      const fnName = provider === "meta" ? "connect-meta" : "connect-linkedin";
+      const { data, error } = await supabase.functions.invoke(fnName, { body: {} });
       if (error) throw new Error(error.message);
       const url = (data as { authorize_url?: string })?.authorize_url;
       if (!url) throw new Error("No authorize URL returned");
-      // Break out of preview iframe — Facebook OAuth sets X-Frame-Options: DENY.
+      // Break out of preview iframe — providers set X-Frame-Options: DENY.
       if (window.top && window.top !== window.self) {
         window.top.location.href = url;
       } else {
@@ -78,11 +80,18 @@ function SocialAccountsPage() {
     }
   };
 
-  const disconnect = async (id: string) => {
+  const fnFor = (platform: string, action: "disconnect" | "refresh") => {
+    if (platform === "linkedin") {
+      return action === "disconnect" ? "disconnect-linkedin" : "refresh-linkedin-token";
+    }
+    return action === "disconnect" ? "disconnect-meta" : "refresh-meta-token";
+  };
+
+  const disconnect = async (id: string, platform: string) => {
     if (!confirm("Disconnect this account? Its access token will be revoked.")) return;
     setBusy(id);
     try {
-      const { data, error } = await supabase.functions.invoke("disconnect-meta", { body: { account_id: id } });
+      const { data, error } = await supabase.functions.invoke(fnFor(platform, "disconnect"), { body: { account_id: id } });
       if (error) throw new Error(error.message);
       const err = (data as { error?: string })?.error;
       if (err) throw new Error(err);
@@ -95,15 +104,35 @@ function SocialAccountsPage() {
     }
   };
 
-  const refresh = async (id: string) => {
+  const refresh = async (id: string, platform: string) => {
     setBusy(id);
     try {
-      const { data, error } = await supabase.functions.invoke("refresh-meta-token", { body: { account_id: id } });
+      const { data, error } = await supabase.functions.invoke(fnFor(platform, "refresh"), { body: { account_id: id } });
       if (error) throw new Error(error.message);
       const err = (data as { error?: string })?.error;
       if (err) throw new Error(err);
       toast.success("Token refreshed");
       await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const testPublish = async (id: string, platform: string) => {
+    if (platform !== "linkedin") { toast.info("Test publish is available for LinkedIn only."); return; }
+    const message = prompt("Post text to publish on LinkedIn:", "Hello from Glintr 🚀");
+    if (!message) return;
+    setBusy(id);
+    try {
+      const { data, error } = await supabase.functions.invoke("publish-linkedin", {
+        body: { account_id: id, message },
+      });
+      if (error) throw new Error(error.message);
+      const err = (data as { error?: string })?.error;
+      if (err) throw new Error(err);
+      toast.success("Published to LinkedIn");
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
@@ -117,13 +146,19 @@ function SocialAccountsPage() {
         <div>
           <h1 className="text-2xl font-semibold">Social Accounts</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Connect Meta to publish to Facebook Pages and Instagram Business accounts.
+            Connect Meta (Facebook & Instagram) and LinkedIn for publishing.
           </p>
         </div>
-        <Button onClick={connectMeta} disabled={busy === "connect"}>
-          <Plus className="mr-2 h-4 w-4" />
-          {busy === "connect" ? "Redirecting…" : "Connect Meta"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button onClick={() => startOAuth("meta")} disabled={busy === "connect-meta"}>
+            <Plus className="mr-2 h-4 w-4" />
+            {busy === "connect-meta" ? "Redirecting…" : "Connect Meta"}
+          </Button>
+          <Button variant="secondary" onClick={() => startOAuth("linkedin")} disabled={busy === "connect-linkedin"}>
+            <Linkedin className="mr-2 h-4 w-4" />
+            {busy === "connect-linkedin" ? "Redirecting…" : "Connect LinkedIn"}
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -140,7 +175,7 @@ function SocialAccountsPage() {
           ) : (
             <ul className="divide-y">
               {accounts.map((a) => {
-                const Icon = a.platform === "facebook" ? Facebook : Instagram;
+                const Icon = a.platform === "facebook" ? Facebook : a.platform === "linkedin" ? Linkedin : Instagram;
                 const expires = a.token_expires_at ? new Date(a.token_expires_at) : null;
                 const expiresSoon = expires && expires.getTime() - Date.now() < 7 * 86400_000;
                 return (
@@ -168,10 +203,15 @@ function SocialAccountsPage() {
                       <Badge variant={a.connection_status === "connected" ? "success" : "muted"}>
                         {a.connection_status ?? "unknown"}
                       </Badge>
-                      <Button variant="outline" size="sm" onClick={() => refresh(a.id)} disabled={busy === a.id}>
+                      <Button variant="outline" size="sm" onClick={() => refresh(a.id, a.platform)} disabled={busy === a.id} title="Refresh token">
                         <RefreshCw className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => disconnect(a.id)} disabled={busy === a.id}>
+                      {a.platform === "linkedin" && (
+                        <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id}>
+                          Test Publish
+                        </Button>
+                      )}
+                      <Button variant="outline" size="sm" onClick={() => disconnect(a.id, a.platform)} disabled={busy === a.id} title="Disconnect">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
