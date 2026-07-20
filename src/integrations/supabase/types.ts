@@ -16661,6 +16661,396 @@ export type Database = {
           },
         ]
       }
+      media_assets: {
+        Row: {
+          ai_generated: boolean
+          ai_model: string | null
+          ai_prompt: string | null
+          ai_tags: string[]
+          alt_text: string | null
+          brand_id: string | null
+          bucket: string
+          campaign_id: string | null
+          caption: string | null
+          checksum: string | null
+          color_palette: Json | null
+          created_at: string
+          current_version: number
+          deleted_at: string | null
+          description: string | null
+          duration_seconds: number | null
+          file_name: string
+          folder_id: string | null
+          height: number | null
+          id: string
+          keywords: string[]
+          kind: string
+          metadata: Json
+          mime_type: string | null
+          orientation: string | null
+          original_name: string | null
+          owner_id: string | null
+          public_url: string | null
+          size_bytes: number | null
+          source: string
+          status: string
+          storage_path: string
+          tags: string[]
+          title: string | null
+          updated_at: string
+          visibility: string
+          width: number | null
+        }
+        Insert: {
+          ai_generated?: boolean
+          ai_model?: string | null
+          ai_prompt?: string | null
+          ai_tags?: string[]
+          alt_text?: string | null
+          brand_id?: string | null
+          bucket?: string
+          campaign_id?: string | null
+          caption?: string | null
+          checksum?: string | null
+          color_palette?: Json | null
+          created_at?: string
+          current_version?: number
+          deleted_at?: string | null
+          description?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          folder_id?: string | null
+          height?: number | null
+          id?: string
+          keywords?: string[]
+          kind?: string
+          metadata?: Json
+          mime_type?: string | null
+          orientation?: string | null
+          original_name?: string | null
+          owner_id?: string | null
+          public_url?: string | null
+          size_bytes?: number | null
+          source?: string
+          status?: string
+          storage_path: string
+          tags?: string[]
+          title?: string | null
+          updated_at?: string
+          visibility?: string
+          width?: number | null
+        }
+        Update: {
+          ai_generated?: boolean
+          ai_model?: string | null
+          ai_prompt?: string | null
+          ai_tags?: string[]
+          alt_text?: string | null
+          brand_id?: string | null
+          bucket?: string
+          campaign_id?: string | null
+          caption?: string | null
+          checksum?: string | null
+          color_palette?: Json | null
+          created_at?: string
+          current_version?: number
+          deleted_at?: string | null
+          description?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          folder_id?: string | null
+          height?: number | null
+          id?: string
+          keywords?: string[]
+          kind?: string
+          metadata?: Json
+          mime_type?: string | null
+          orientation?: string | null
+          original_name?: string | null
+          owner_id?: string | null
+          public_url?: string | null
+          size_bytes?: number | null
+          source?: string
+          status?: string
+          storage_path?: string
+          tags?: string[]
+          title?: string | null
+          updated_at?: string
+          visibility?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_assets_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "media_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_collection_items: {
+        Row: {
+          added_at: string
+          added_by: string | null
+          asset_id: string
+          collection_id: string
+          sort_order: number
+        }
+        Insert: {
+          added_at?: string
+          added_by?: string | null
+          asset_id: string
+          collection_id: string
+          sort_order?: number
+        }
+        Update: {
+          added_at?: string
+          added_by?: string | null
+          asset_id?: string
+          collection_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_collection_items_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_collection_items_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "media_collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_collections: {
+        Row: {
+          brand_id: string | null
+          campaign_id: string | null
+          cover_asset_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          kind: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          brand_id?: string | null
+          campaign_id?: string | null
+          cover_asset_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          kind?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          brand_id?: string | null
+          campaign_id?: string | null
+          cover_asset_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          kind?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_collections_cover_asset_id_fkey"
+            columns: ["cover_asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_favorites: {
+        Row: {
+          asset_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_favorites_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_folders: {
+        Row: {
+          color: string | null
+          created_at: string
+          created_by: string | null
+          icon: string | null
+          id: string
+          is_system: boolean
+          name: string
+          parent_id: string | null
+          slug: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          icon?: string | null
+          id?: string
+          is_system?: boolean
+          name: string
+          parent_id?: string | null
+          slug?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          icon?: string | null
+          id?: string
+          is_system?: boolean
+          name?: string
+          parent_id?: string | null
+          slug?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "media_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_usage: {
+        Row: {
+          asset_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          ref_id: string | null
+          ref_table: string | null
+          ref_url: string | null
+          usage_type: string
+        }
+        Insert: {
+          asset_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          ref_id?: string | null
+          ref_table?: string | null
+          ref_url?: string | null
+          usage_type: string
+        }
+        Update: {
+          asset_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          ref_id?: string | null
+          ref_table?: string | null
+          ref_url?: string | null
+          usage_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_usage_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      media_versions: {
+        Row: {
+          asset_id: string
+          bucket: string
+          created_at: string
+          created_by: string | null
+          file_name: string | null
+          height: number | null
+          id: string
+          mime_type: string | null
+          note: string | null
+          size_bytes: number | null
+          storage_path: string
+          version: number
+          width: number | null
+        }
+        Insert: {
+          asset_id: string
+          bucket: string
+          created_at?: string
+          created_by?: string | null
+          file_name?: string | null
+          height?: number | null
+          id?: string
+          mime_type?: string | null
+          note?: string | null
+          size_bytes?: number | null
+          storage_path: string
+          version: number
+          width?: number | null
+        }
+        Update: {
+          asset_id?: string
+          bucket?: string
+          created_at?: string
+          created_by?: string | null
+          file_name?: string | null
+          height?: number | null
+          id?: string
+          mime_type?: string | null
+          note?: string | null
+          size_bytes?: number | null
+          storage_path?: string
+          version?: number
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_versions_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "media_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mkt_analytics: {
         Row: {
           brand_id: string
