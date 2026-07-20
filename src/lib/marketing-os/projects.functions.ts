@@ -61,7 +61,7 @@ export const createMarketingProject = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const steps = PROJECT_STEPS.map((s) => ({ ...s, status: "pending" }));
-    const sb: any = context.supabase;
+    const sb: any = (context.supabase as any);
     const { data: created, error } = await sb
       .from("marketing_projects")
       .insert({
@@ -84,7 +84,7 @@ export const getMarketingProject = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => z.object({ id: z.string().uuid() }).parse(v))
   .handler(async ({ data, context }) => {
-    const { data: proj, error } = await context.supabase
+    const { data: proj, error } = await (context.supabase as any)
       .from("marketing_projects")
       .select("*")
       .eq("id", data.id)
@@ -98,7 +98,7 @@ export const getMarketingProject = createServerFn({ method: "GET" })
 export const listMarketingProjects = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const { data, error } = await (context.supabase as any)
       .from("marketing_projects")
       .select("*")
       .order("created_at", { ascending: false })
@@ -112,13 +112,13 @@ export const duplicateMarketingProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => z.object({ id: z.string().uuid() }).parse(v))
   .handler(async ({ data, context }) => {
-    const { data: src } = await context.supabase
+    const { data: src } = await (context.supabase as any)
       .from("marketing_projects")
       .select("*")
       .eq("id", data.id)
       .maybeSingle();
     if (!src) throw new Error("Not found");
-    const { data: copy, error } = await context.supabase
+    const { data: copy, error } = await (context.supabase as any)
       .from("marketing_projects")
       .insert({
         created_by: context.userId,
@@ -141,7 +141,7 @@ export const deleteMarketingProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => z.object({ id: z.string().uuid() }).parse(v))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
+    const { error } = await (context.supabase as any)
       .from("marketing_projects")
       .delete()
       .eq("id", data.id);
@@ -188,7 +188,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { userId } = context;
-    const supabase: any = context.supabase;
+    const supabase: any = (context.supabase as any);
     const { data: proj, error: pErr } = await supabase
       .from("marketing_projects")
       .select("*")
