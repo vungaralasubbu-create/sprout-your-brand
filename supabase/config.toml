@@ -16,3 +16,6 @@ verify_jwt = false
 
 [functions.publish-instagram]
 verify_jwt = false
+
+[functions.linkedin-orgs]
+verify_jwt = false

@@ -82,6 +82,10 @@ const linkedin: PlatformConnector = {
     account_id: i.accountId,
     message: buildCaption(i, { maxLen: 3000 }),
     image_url: i.mediaUrls[0],
+    // Optional per-request author override (Company Page vs Personal).
+    // When omitted, the edge function falls back to the account's saved default.
+    author_urn: (i.metadata.author_urn as string | undefined) ?? undefined,
+    author_kind: (i.metadata.author_kind as "person" | "organization" | undefined) ?? undefined,
   }),
 };
 

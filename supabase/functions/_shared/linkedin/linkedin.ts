@@ -6,7 +6,20 @@ export const LI_API = "https://api.linkedin.com";
 
 // openid+profile+email → /v2/userinfo (sub, name, email, picture)
 // w_member_social       → publish /v2/ugcPosts as the member
-export const LI_DEFAULT_SCOPES = ["openid", "profile", "email", "w_member_social"].join(" ");
+// openid+profile+email       → /v2/userinfo (sub, name, email, picture)
+// w_member_social             → publish /v2/ugcPosts as the member
+// r_organization_admin        → list organizations the member administers
+// w_organization_social       → publish /v2/ugcPosts as an organization
+// r_organization_social       → read organization posts/analytics
+export const LI_DEFAULT_SCOPES = [
+  "openid",
+  "profile",
+  "email",
+  "w_member_social",
+  "r_organization_admin",
+  "w_organization_social",
+  "r_organization_social",
+].join(" ");
 
 export function requireEnv(name: string): string {
   const v = Deno.env.get(name);
@@ -291,3 +304,70 @@ export async function verifyState(
   if (Date.now() - decoded.t > 15 * 60_000) return null;
   return { userId: decoded.u, brandId: decoded.b ?? null };
 }
+
+// ---------- Organizations (Company Pages) ----------
+
+export interface LiOrganization {
+  id: string;                       // numeric org id
+  urn: string;                      // urn:li:organization:{id}
+  name: string;
+  vanityName: string | null;
+  logoUrn: string | null;
+  role: string;                     // e.g. ADMINISTRATOR
+  state: string;                    // e.g. APPROVED
+}
+
+/**
+ * List LinkedIn Organizations (Company Pages) the authenticated member
+ * administers. Requires `r_organization_admin` scope on the access token.
+ *
+ * Uses the classic ACL projection so we can return names/vanity URLs in a
+ * single request. When scope is missing, LinkedIn returns HTTP 403.
+ */
+export async function fetchAdminOrganizations(
+  accessToken: string,
+): Promise<LiOrganization[]> {
+  const url =
+    `${LI_API}/v2/organizationAcls?q=roleAssignee` +
+    `&role=ADMINISTRATOR&state=APPROVED&count=100` +
+    `&projection=(elements*(*,organization~(id,localizedName,vanityName,logoV2)))`;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "X-Restli-Protocol-Version": "2.0.0",
+    },
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = `LinkedIn organizations fetch failed: ${res.status} ${JSON.stringify(json)}`;
+    if (res.status === 401 || res.status === 403) {
+      throw new Error(`insufficient_scope: ${msg}. Reconnect LinkedIn to grant r_organization_admin.`);
+    }
+    throw new Error(msg);
+  }
+  const elements = (json as { elements?: Array<Record<string, unknown>> }).elements ?? [];
+  const orgs: LiOrganization[] = [];
+  for (const el of elements) {
+    // organization can appear as "organization" (urn) and "organization~" (expanded).
+    const urn = String(el.organization ?? "");
+    const expanded = (el["organization~"] ?? {}) as {
+      id?: number | string;
+      localizedName?: string;
+      vanityName?: string;
+      logoV2?: { original?: string };
+    };
+    const id = String(expanded.id ?? urn.split(":").pop() ?? "");
+    if (!id) continue;
+    orgs.push({
+      id,
+      urn: urn || `urn:li:organization:${id}`,
+      name: expanded.localizedName ?? id,
+      vanityName: expanded.vanityName ?? null,
+      logoUrn: expanded.logoV2?.original ?? null,
+      role: String(el.role ?? "ADMINISTRATOR"),
+      state: String(el.state ?? "APPROVED"),
+    });
+  }
+  return orgs;
+}
+

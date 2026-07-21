@@ -1,14 +1,15 @@
-// publish-linkedin: publishes a text or image post to a connected LinkedIn member.
-import { createUgcPost, json, preflight, uploadImageAsset } from "../_shared/linkedin/linkedin.ts";
+// linkedin-orgs: list LinkedIn Organizations (Company Pages) the connected
+// LinkedIn member administers. Reuses the stored access token — no new OAuth.
+import {
+  fetchAdminOrganizations,
+  json,
+  preflight,
+} from "../_shared/linkedin/linkedin.ts";
 import { decryptToken } from "../_shared/meta/crypto.ts";
 import { getAdminClient, getUserFromRequest } from "../_shared/meta/auth.ts";
 
 interface Payload {
-  account_id: string; // soc_accounts.id
-  message?: string;
-  image_url?: string;
-  author_urn?: string;   // optional per-request override (urn:li:person:... or urn:li:organization:...)
-  author_kind?: "person" | "organization"; // optional hint; inferred from author_urn otherwise
+  account_id: string;
 }
 
 Deno.serve(async (req) => {
@@ -21,14 +22,11 @@ Deno.serve(async (req) => {
 
     const body = (await req.json().catch(() => ({}))) as Partial<Payload>;
     if (!body.account_id) return json({ error: "account_id required" }, { status: 400 });
-    if (!body.message && !body.image_url) {
-      return json({ error: "message or image_url required" }, { status: 400 });
-    }
 
     const admin = getAdminClient();
     const { data: acc, error } = await admin
       .from("soc_accounts")
-      .select("id, owner_id, account_external_id, access_token_ciphertext, metadata")
+      .select("id, owner_id, account_external_id, account_name, access_token_ciphertext, metadata")
       .eq("id", body.account_id)
       .eq("owner_id", user.id)
       .eq("platform", "linkedin")
@@ -42,22 +40,36 @@ Deno.serve(async (req) => {
       member_urn?: string;
       default_author_urn?: string;
       default_author_kind?: "person" | "organization";
+      default_author_name?: string;
     };
-    // Precedence: explicit per-request override > saved default > personal member URN.
     const personUrn = md.member_urn ?? `urn:li:person:${acc.account_external_id}`;
-    const requestedUrn = body.author_urn?.trim() || md.default_author_urn || personUrn;
-    const ownerUrn = requestedUrn.startsWith("urn:li:") ? requestedUrn : `urn:li:person:${requestedUrn}`;
-    const authorKind: "person" | "organization" =
-      body.author_kind ??
-      (ownerUrn.includes(":organization:") ? "organization" : "person");
 
-    let assetUrn: string | null = null;
-    if (body.image_url) {
-      assetUrn = await uploadImageAsset(accessToken, ownerUrn, body.image_url);
+    let orgs;
+    try {
+      orgs = await fetchAdminOrganizations(accessToken);
+    } catch (e) {
+      const msg = (e as Error).message;
+      const insufficient = msg.startsWith("insufficient_scope:");
+      return json({
+        error: msg,
+        code: insufficient ? "insufficient_scope" : "linkedin_error",
+        reconnect_required: insufficient,
+        person: { urn: personUrn, name: acc.account_name ?? "Personal profile" },
+        organizations: [],
+        default: { urn: md.default_author_urn ?? personUrn, kind: md.default_author_kind ?? "person" },
+      }, { status: insufficient ? 200 : 502 });
     }
 
-    const result = await createUgcPost(accessToken, ownerUrn, body.message ?? "", assetUrn);
-    return json({ ok: true, result, author_urn: ownerUrn, author_kind: authorKind });
+    return json({
+      ok: true,
+      person: { urn: personUrn, name: acc.account_name ?? "Personal profile" },
+      organizations: orgs,
+      default: {
+        urn: md.default_author_urn ?? personUrn,
+        kind: md.default_author_kind ?? "person",
+        name: md.default_author_name ?? acc.account_name ?? "Personal profile",
+      },
+    });
   } catch (err) {
     return json({ error: (err as Error).message }, { status: 500 });
   }

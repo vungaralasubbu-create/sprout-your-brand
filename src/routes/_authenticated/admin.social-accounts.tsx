@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
-import { Facebook, Instagram, Linkedin, Plus, RefreshCw, Trash2, ExternalLink, Twitter, Send } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Plus, RefreshCw, Trash2, ExternalLink, Twitter, Send, Building2, User as UserIcon, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 
@@ -8,7 +8,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { testPublishAccount, testPublishAllAccounts } from "@/lib/marketing-os/publisher.functions";
+import {
+  testPublishAccount,
+  testPublishAllAccounts,
+  listLinkedInOrgs,
+  setLinkedInDefaultAuthor,
+  testPublishLinkedInAuthor,
+} from "@/lib/marketing-os/publisher.functions";
 
 
 export const Route = createFileRoute("/_authenticated/admin/social-accounts")({
@@ -50,6 +56,21 @@ function SocialAccountsPage() {
   const [results, setResults] = useState<Record<string, TestResult>>({});
   const runTestOne = useServerFn(testPublishAccount);
   const runTestAll = useServerFn(testPublishAllAccounts);
+  const runListLiOrgs = useServerFn(listLinkedInOrgs);
+  const runSetLiAuthor = useServerFn(setLinkedInDefaultAuthor);
+  const runTestLiAuthor = useServerFn(testPublishLinkedInAuthor);
+
+  type LiOrg = { id: string; urn: string; name: string; vanityName: string | null; logoUrn: string | null; role: string; state: string };
+  type LiPickerState = {
+    loading: boolean;
+    person: { urn: string; name: string } | null;
+    orgs: LiOrg[];
+    defaultUrn: string | null;
+    reconnectRequired: boolean;
+    error: string | null;
+    open: boolean;
+  };
+  const [liPicker, setLiPicker] = useState<Record<string, LiPickerState>>({});
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -216,6 +237,68 @@ function SocialAccountsPage() {
   };
 
 
+  const openLiPicker = async (accountId: string) => {
+    setLiPicker((prev) => ({
+      ...prev,
+      [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, error: null, open: false }), loading: true, open: true, error: null },
+    }));
+    try {
+      const res = await runListLiOrgs({ data: { account_id: accountId } });
+      setLiPicker((prev) => ({
+        ...prev,
+        [accountId]: {
+          loading: false,
+          open: true,
+          person: res.person ?? null,
+          orgs: res.organizations ?? [],
+          defaultUrn: res.default?.urn ?? res.person?.urn ?? null,
+          reconnectRequired: !!res.reconnect_required,
+          error: res.error ?? null,
+        },
+      }));
+    } catch (e) {
+      setLiPicker((prev) => ({
+        ...prev,
+        [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, open: true, loading: false, error: null }), loading: false, open: true, error: (e as Error).message },
+      }));
+    }
+  };
+
+  const closeLiPicker = (accountId: string) => {
+    setLiPicker((prev) => ({ ...prev, [accountId]: { ...(prev[accountId]!), open: false } }));
+  };
+
+  const chooseLiAuthor = async (
+    accountId: string,
+    author: { urn: string; kind: "person" | "organization"; name: string },
+  ) => {
+    setBusy(accountId);
+    try {
+      await runSetLiAuthor({ data: { account_id: accountId, author_urn: author.urn, author_kind: author.kind, author_name: author.name } });
+      setLiPicker((prev) => ({ ...prev, [accountId]: { ...(prev[accountId]!), defaultUrn: author.urn } }));
+      toast.success(`Default LinkedIn destination set to ${author.name}`);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const testLiCompanyPage = async (accountId: string, org: LiOrg) => {
+    const message = prompt(`Post text for "${org.name}":`, `Testing Glintr AI Publishing to LinkedIn Company Page 🚀`);
+    if (!message) return;
+    setBusy(accountId);
+    try {
+      const r = (await runTestLiAuthor({ data: { account_id: accountId, author_urn: org.urn, message } })) as TestResult;
+      applyResult(accountId, r, `LinkedIn · ${org.name}`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex items-start justify-between gap-4">
@@ -294,6 +377,12 @@ function SocialAccountsPage() {
                             Test Publish
                           </Button>
                         )}
+                        {a.platform === "linkedin" && a.connection_status === "connected" && (
+                          <Button variant="outline" size="sm" onClick={() => openLiPicker(a.id)} disabled={busy === a.id} title="Choose Personal profile or a Company Page">
+                            <Building2 className="mr-1 h-3.5 w-3.5" />
+                            Company Page
+                          </Button>
+                        )}
                         <Button variant="outline" size="sm" onClick={() => disconnect(a.id, a.platform)} disabled={busy === a.id} title="Disconnect">
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -312,6 +401,78 @@ function SocialAccountsPage() {
                           {results[a.id].error_code && <span>· {results[a.id].error_code}</span>}
                         </div>
                         {results[a.id].error_message && <div className="mt-1 text-red-700 dark:text-red-300">{results[a.id].error_message}</div>}
+                      </div>
+                    )}
+                    {a.platform === "linkedin" && liPicker[a.id]?.open && (
+                      <div className="ml-8 rounded-md border bg-muted/30 p-3 text-xs space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="font-medium text-sm">Publish as</div>
+                          <Button variant="ghost" size="sm" onClick={() => closeLiPicker(a.id)}>Close</Button>
+                        </div>
+                        {liPicker[a.id]?.loading ? (
+                          <div className="text-muted-foreground">Loading LinkedIn Company Pages…</div>
+                        ) : liPicker[a.id]?.reconnectRequired ? (
+                          <div className="space-y-2">
+                            <div className="text-amber-700 dark:text-amber-300">
+                              LinkedIn didn't return your Company Pages. This account is missing the <code>r_organization_admin</code> scope.
+                            </div>
+                            <Button size="sm" variant="secondary" onClick={() => startOAuth("linkedin")}>
+                              <Linkedin className="mr-1 h-3.5 w-3.5" />
+                              Reconnect LinkedIn
+                            </Button>
+                          </div>
+                        ) : liPicker[a.id]?.error ? (
+                          <div className="text-red-700 dark:text-red-300">{liPicker[a.id]?.error}</div>
+                        ) : (
+                          <ul className="divide-y">
+                            {liPicker[a.id]?.person && (
+                              <li className="py-2 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <UserIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+                                  <div className="min-w-0">
+                                    <div className="font-medium truncate">{liPicker[a.id]!.person!.name}</div>
+                                    <div className="text-muted-foreground">Personal profile</div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  {liPicker[a.id]?.defaultUrn === liPicker[a.id]!.person!.urn && (
+                                    <Badge variant="success"><Check className="h-3 w-3 mr-1" />Default</Badge>
+                                  )}
+                                  <Button size="sm" variant="outline" disabled={busy === a.id} onClick={() => chooseLiAuthor(a.id, { urn: liPicker[a.id]!.person!.urn, kind: "person", name: liPicker[a.id]!.person!.name })}>
+                                    Set default
+                                  </Button>
+                                </div>
+                              </li>
+                            )}
+                            {(liPicker[a.id]?.orgs ?? []).length === 0 ? (
+                              <li className="py-2 text-muted-foreground">No Company Pages found for this LinkedIn account.</li>
+                            ) : (
+                              liPicker[a.id]!.orgs.map((org) => (
+                                <li key={org.urn} className="py-2 flex items-center justify-between gap-3">
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="font-medium truncate">{org.name}</div>
+                                      <div className="text-muted-foreground truncate">{org.urn}{org.vanityName ? ` · @${org.vanityName}` : ""}</div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    {liPicker[a.id]?.defaultUrn === org.urn && (
+                                      <Badge variant="success"><Check className="h-3 w-3 mr-1" />Default</Badge>
+                                    )}
+                                    <Button size="sm" variant="outline" disabled={busy === a.id} onClick={() => chooseLiAuthor(a.id, { urn: org.urn, kind: "organization", name: org.name })}>
+                                      Set default
+                                    </Button>
+                                    <Button size="sm" disabled={busy === a.id} onClick={() => testLiCompanyPage(a.id, org)}>
+                                      <Send className="mr-1 h-3.5 w-3.5" />
+                                      Test
+                                    </Button>
+                                  </div>
+                                </li>
+                              ))
+                            )}
+                          </ul>
+                        )}
                       </div>
                     )}
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs pl-8">
