@@ -72,6 +72,58 @@ function routerAuthHeaders(): Record<string, string> {
 }
 
 /**
+ * Pre-flight validation for the app-side gateway. Fails fast with a clear
+ * message before the edge function is even called, so callers see the real
+ * problem (empty prompt / invalid role / bad temperature) instead of an
+ * opaque 400 from downstream.
+ */
+const VALID_ROLES = new Set(["system", "user", "assistant", "tool"]);
+const MAX_PROMPT_CHARS = 200_000;
+
+function validateChatInput(opts: {
+  messages: ChatMessage[];
+  temperature?: number;
+  model?: string;
+}): void {
+  if (!Array.isArray(opts.messages) || opts.messages.length === 0) {
+    throw new Error("AI Router: `messages` must be a non-empty array.");
+  }
+  let totalChars = 0;
+  for (let i = 0; i < opts.messages.length; i++) {
+    const m = opts.messages[i] as ChatMessage & { role?: unknown; content?: unknown };
+    if (!m || typeof m !== "object") {
+      throw new Error(`AI Router: messages[${i}] must be an object.`);
+    }
+    if (typeof m.role !== "string" || !VALID_ROLES.has(m.role)) {
+      throw new Error(
+        `AI Router: messages[${i}].role must be one of system|user|assistant|tool.`,
+      );
+    }
+    if (typeof m.content !== "string") {
+      throw new Error(`AI Router: messages[${i}].content must be a string.`);
+    }
+    totalChars += m.content.length;
+  }
+  if (totalChars === 0) {
+    throw new Error("AI Router: prompt is empty — every message has empty content.");
+  }
+  if (totalChars > MAX_PROMPT_CHARS) {
+    throw new Error(
+      `AI Router: total message length ${totalChars} exceeds max ${MAX_PROMPT_CHARS} chars.`,
+    );
+  }
+  if (opts.temperature !== undefined) {
+    const t = opts.temperature;
+    if (typeof t !== "number" || Number.isNaN(t) || t < 0 || t > 2) {
+      throw new Error("AI Router: `temperature` must be a number between 0 and 2.");
+    }
+  }
+  if (opts.model !== undefined && (typeof opts.model !== "string" || !opts.model.trim())) {
+    throw new Error("AI Router: `model` must be a non-empty string when provided.");
+  }
+}
+
+/**
  * Low-level: call the centralized AI Router `chat` task and return the
  * raw assistant content as a string. Every AI feature in the platform
  * ultimately routes through here.
@@ -83,6 +135,9 @@ async function callRouterChat(opts: {
   response_format?: { type: "json_object" | "text" };
   bypassCache?: boolean;
 }): Promise<string> {
+  // Pre-flight: catch malformed requests before hitting the edge function.
+  validateChatInput(opts);
+
   const jsonMode = opts.response_format?.type === "json_object";
   const cKey = cacheKey({ ...opts, jsonMode });
 
@@ -120,8 +175,31 @@ async function callRouterChat(opts: {
     if (res.status === 429) throw new Error("AI service rate limit reached. Please retry shortly.");
     if (res.status === 402) throw new Error("AI service credits exhausted.");
     if (!res.ok) {
+      // Try to parse the router's JSON error envelope so callers see the
+      // provider error code, request ID, and endpoint instead of an opaque
+      // "AI Router error (400)" blob.
       const t = await res.text().catch(() => "");
-      throw new Error(`AI Router error (${res.status}): ${t.slice(0, 300)}`);
+      let requestId: string | undefined;
+      let providerCode: string | undefined;
+      let providerMsg: string | undefined;
+      try {
+        const parsed = JSON.parse(t) as {
+          error?: { code?: string; message?: string; details?: { error?: { code?: string; message?: string; type?: string }; requestId?: string } };
+          meta?: { requestId?: string };
+        };
+        requestId = parsed?.meta?.requestId ?? parsed?.error?.details?.requestId;
+        providerCode = parsed?.error?.details?.error?.code ?? parsed?.error?.code;
+        providerMsg = parsed?.error?.details?.error?.message ?? parsed?.error?.message;
+      } catch {
+        /* body was not JSON — fall through */
+      }
+      const summary = [
+        `AI Router error (${res.status})`,
+        providerCode ? `[${providerCode}]` : null,
+        providerMsg ?? t.slice(0, 300),
+        requestId ? `(requestId=${requestId})` : null,
+      ].filter(Boolean).join(" ");
+      throw new Error(summary);
     }
     const data = (await res.json()) as {
       success?: boolean;
