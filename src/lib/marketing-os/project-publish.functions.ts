@@ -136,7 +136,7 @@ export const getProjectPublishStatus = createServerFn({ method: "POST" })
       .eq("campaign", campaign)
       .order("scheduled_at", { ascending: true });
     return {
-      publish: project.result?.publish ?? { state: "draft" },
+      publish: (project.result as Any)?.publish ?? { state: "draft" },
       jobs: jobs ?? [],
     };
   });
