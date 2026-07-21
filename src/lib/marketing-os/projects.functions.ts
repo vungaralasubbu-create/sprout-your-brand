@@ -14,6 +14,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { aiChat } from "@/lib/ai/router.server";
 import { buildBrandSystemPrompt } from "@/lib/marketing-os/brand-context.server";
+import { generateImageBase64 } from "@/lib/ai/image.server";
 
 export const PROJECT_STEPS = [
   { key: "understand", label: "Understanding request" },
@@ -521,9 +522,41 @@ export const runProjectStep = createServerFn({ method: "POST" })
           const brief = result.brief || {};
           const raw = await aiJson(
             brandSystem,
-            `Generate 6 poster concepts. Respond as JSON: { posters: [ { title, concept, style, dominant_colors: [], layout_note } ] }. Brief: ${JSON.stringify(brief)}.`,
+            `Generate 4 poster concepts. Respond as JSON: { posters: [ { title, concept, style, dominant_colors: [], layout_note } ] }. Brief: ${JSON.stringify(brief)}.`,
           );
-          result.posters = Array.isArray(raw.posters) ? raw.posters : [];
+          const concepts = Array.isArray(raw.posters) ? raw.posters.slice(0, 4) : [];
+          // Additive: actually generate images for each concept via the shared
+          // image gateway. Brand context is prepended by generateImageBase64's
+          // caller; we include the concept + brand cues inline for fidelity.
+          // Failures per poster are non-fatal — the concept still renders.
+          const rendered = await Promise.allSettled(
+            concepts.map(async (c: any) => {
+              const brandLine = brandSystem
+                ? `Follow this brand system strictly:\n${brandSystem}\n\n`
+                : "";
+              const colors = Array.isArray(c?.dominant_colors) && c.dominant_colors.length
+                ? ` Use these brand colors: ${c.dominant_colors.join(", ")}.`
+                : "";
+              const layout = c?.layout_note ? ` Layout: ${c.layout_note}.` : "";
+              const style = c?.style ? ` Style: ${c.style}.` : "";
+              const prompt =
+                `${brandLine}Design a high-quality social media poster titled "${c?.title ?? "Untitled"}".` +
+                ` Concept: ${c?.concept ?? ""}.${style}${colors}${layout}` +
+                ` No text placeholders. Production-ready. Square 1:1 composition.`;
+              try {
+                const b64 = await generateImageBase64(prompt, {
+                  size: "1024x1024",
+                  quality: "low",
+                });
+                return { ...c, image_url: `data:image/png;base64,${b64}` };
+              } catch (imgErr: any) {
+                return { ...c, image_error: imgErr?.message ?? "Image generation failed" };
+              }
+            }),
+          );
+          result.posters = rendered.map((r, i) =>
+            r.status === "fulfilled" ? r.value : { ...concepts[i], image_error: "Image generation failed" },
+          );
           break;
         }
         case "landing": {
