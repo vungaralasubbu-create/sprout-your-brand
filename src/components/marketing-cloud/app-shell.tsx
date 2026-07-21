@@ -14,6 +14,7 @@ import {
   LogOut,
   Sparkles,
   Building2,
+  Workflow as WorkflowIcon,
 } from "lucide-react";
 import { CloudLogo } from "./logo";
 import { cn } from "@/lib/utils";
@@ -24,9 +25,10 @@ import { useQueryClient } from "@tanstack/react-query";
 const NAV: { to: string; label: string; icon: any }[] = [
   { to: "/cloud/dashboard", label: "Home", icon: Home },
   { to: "/cloud/projects", label: "Projects", icon: FolderKanban },
+  { to: "/workflows", label: "Workflow Studio", icon: WorkflowIcon },
+  { to: "/integrations", label: "Integrations", icon: Plug },
   { to: "/templates", label: "Templates", icon: LayoutTemplate },
   { to: "/knowledge", label: "Knowledge", icon: Brain },
-  { to: "/integrations", label: "Integrations", icon: Plug },
   { to: "/agents", label: "AI Agents", icon: Bot },
   { to: "/agency", label: "Agency", icon: Building2 },
   { to: "/cloud/analytics", label: "Analytics", icon: BarChart3 },
