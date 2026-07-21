@@ -350,8 +350,14 @@ function MarketingOSHome() {
       </section>
 
       {/* PROGRESS MODAL */}
-      <Dialog open={runningProject !== null}>
-        <DialogContent className="max-w-lg">
+      <Dialog
+        open={runningProject !== null}
+        onOpenChange={(open) => { if (!open) closeRunningModal(); }}
+      >
+        <DialogContent
+          className="max-w-lg"
+          onEscapeKeyDown={() => closeRunningModal()}
+        >
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-primary/60 grid place-items-center text-white">
@@ -388,11 +394,22 @@ function MarketingOSHome() {
               </div>
             ))}
           </div>
+          {runError && (
+            <div className="mt-3 text-xs text-red-600 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 break-words">
+              {runError}
+            </div>
+          )}
+          <div className="mt-4 flex justify-end">
+            <Button variant="outline" size="sm" onClick={closeRunningModal}>
+              {runningRef.current && !runError ? "Cancel" : "Close"}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
+
 
 function ProjectCard({
   project, onOpen, onDuplicate, onDelete,
