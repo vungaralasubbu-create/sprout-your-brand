@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
-import { Facebook, Instagram, Linkedin, Plus, RefreshCw, Trash2, ExternalLink, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Plus, RefreshCw, Trash2, ExternalLink, Twitter, Send } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
 
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { testPublishAccount, testPublishAllAccounts } from "@/lib/marketing-os/publisher.functions";
+
 
 export const Route = createFileRoute("/_authenticated/admin/social-accounts")({
   component: SocialAccountsPage,
@@ -31,10 +34,22 @@ type Account = {
   metadata: Record<string, unknown> | null;
 };
 
+type TestResult = {
+  status: string;
+  platform_post_id: string | null;
+  platform_url: string | null;
+  error_code: string | null;
+  error_message: string | null;
+  published_at?: string | null;
+};
+
 function SocialAccountsPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
+  const [results, setResults] = useState<Record<string, TestResult>>({});
+  const runTestOne = useServerFn(testPublishAccount);
+  const runTestAll = useServerFn(testPublishAllAccounts);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -151,30 +166,55 @@ function SocialAccountsPage() {
     }
   };
 
-  const testPublish = async (id: string, platform: string) => {
-    if (platform !== "linkedin" && platform !== "x") {
-      toast.info("Test publish is available for LinkedIn and X.");
-      return;
+  const applyResult = (accountId: string, r: TestResult, platformLabel: string) => {
+    setResults((prev) => ({ ...prev, [accountId]: r }));
+    if (r.status === "posted" || r.status === "succeeded") {
+      toast.success(`Published to ${platformLabel}${r.platform_post_id ? ` · ${r.platform_post_id}` : ""}`);
+    } else {
+      toast.error(`${platformLabel}: ${r.error_message ?? r.error_code ?? r.status}`);
     }
-    const label = platform === "x" ? "X" : "LinkedIn";
-    const message = prompt(`Post text to publish on ${label}:`, `Hello from Glintr 🚀`);
+  };
+
+  const testPublish = async (id: string, platform: string) => {
+    const label = platform === "x" ? "X" : platform === "linkedin" ? "LinkedIn" : platform === "facebook" ? "Facebook" : "Instagram";
+    const message = prompt(`Post text to publish on ${label}:`, `Testing Glintr AI Publishing 🚀`);
     if (!message) return;
-    const fn = platform === "x" ? "publish-x" : "publish-linkedin";
     setBusy(id);
     try {
-      const { data, error } = await supabase.functions.invoke(fn, {
-        body: { account_id: id, message },
-      });
-      if (error) throw new Error(error.message);
-      const err = (data as { error?: string })?.error;
-      if (err) throw new Error(err);
-      toast.success(`Published to ${label}`);
+      const r = (await runTestOne({ data: { account_id: id, message } })) as TestResult;
+      applyResult(id, r, label);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
       setBusy(null);
     }
   };
+
+  const testPublishAll = async () => {
+    const message = prompt("Post text to publish on ALL connected accounts:", `Testing Glintr AI Publishing 🚀`);
+    if (!message) return;
+    setBusy("test-all");
+    try {
+      const res = (await runTestAll({ data: { message } })) as { total: number; results: Array<TestResult & { account_id: string; platform: string }> };
+      const next: Record<string, TestResult> = {};
+      let ok = 0;
+      let failed = 0;
+      for (const r of res.results ?? []) {
+        next[r.account_id] = r;
+        if (r.status === "posted" || r.status === "succeeded") ok++;
+        else failed++;
+      }
+      setResults((prev) => ({ ...prev, ...next }));
+      if (ok && !failed) toast.success(`Published to all ${ok} account(s)`);
+      else if (ok && failed) toast.warning(`Published ${ok}, failed ${failed}`);
+      else toast.error(`Failed on all ${failed} account(s)`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
 
   return (
     <div className="space-y-6 p-6">
@@ -198,8 +238,13 @@ function SocialAccountsPage() {
             <Twitter className="mr-2 h-4 w-4" />
             {busy === "connect-x" ? "Redirecting…" : "Connect X"}
           </Button>
+          <Button variant="outline" onClick={testPublishAll} disabled={busy === "test-all" || accounts.filter((x) => x.connection_status === "connected").length === 0}>
+            <Send className="mr-2 h-4 w-4" />
+            {busy === "test-all" ? "Publishing…" : "Test Publish (All)"}
+          </Button>
         </div>
       </div>
+
 
       <Card>
         <CardHeader>
@@ -243,8 +288,9 @@ function SocialAccountsPage() {
                         <Button variant="outline" size="sm" onClick={() => refresh(a.id, a.platform)} disabled={busy === a.id} title="Refresh token now">
                           <RefreshCw className="h-4 w-4" />
                         </Button>
-                        {(a.platform === "linkedin" || a.platform === "x") && (
-                          <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id}>
+                        {a.connection_status === "connected" && (
+                          <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id || busy === "test-all"}>
+                            <Send className="mr-1 h-3.5 w-3.5" />
                             Test Publish
                           </Button>
                         )}
@@ -253,11 +299,27 @@ function SocialAccountsPage() {
                         </Button>
                       </div>
                     </div>
+                    {results[a.id] && (
+                      <div className={`text-xs rounded-md border p-2 ml-8 ${results[a.id].status === "posted" || results[a.id].status === "succeeded" ? "border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30" : "border-red-200 bg-red-50 dark:bg-red-950/30"}`}>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-medium capitalize">{results[a.id].status}</span>
+                          {results[a.id].platform_post_id && <span>· post_id: <code>{results[a.id].platform_post_id}</code></span>}
+                          {results[a.id].platform_url && (
+                            <a href={results[a.id].platform_url!} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline">
+                              open <ExternalLink className="h-3 w-3" />
+                            </a>
+                          )}
+                          {results[a.id].error_code && <span>· {results[a.id].error_code}</span>}
+                        </div>
+                        {results[a.id].error_message && <div className="mt-1 text-red-700 dark:text-red-300">{results[a.id].error_message}</div>}
+                      </div>
+                    )}
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs pl-8">
                       <div className="flex justify-between gap-2">
                         <dt className="text-muted-foreground">Last refreshed</dt>
                         <dd className="font-medium">{fmt(lastSynced)}</dd>
                       </div>
+
                       <div className="flex justify-between gap-2">
                         <dt className="text-muted-foreground">Access token expires</dt>
                         <dd className={`font-medium ${warn ? "text-amber-600" : accessExpired && rotatingRefresh ? "text-muted-foreground" : ""}`}>
