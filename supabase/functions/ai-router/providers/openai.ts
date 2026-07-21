@@ -98,13 +98,45 @@ export const openAiProvider: AIProvider = {
 
         if (!r.ok) {
           const openaiError = await readOpenAiError(r);
-          // Retry on transient upstream errors; fail fast on 4xx (except 429).
-          const retryable = r.status === 429 || r.status >= 500;
-          const err = new UpstreamError(
-            openaiError.message || `OpenAI request failed (${r.status})`,
-            { provider: "openai", openaiError },
-          );
-          (err as any).__retryable = retryable;
+          const requestId = r.headers.get("x-request-id") ??
+            r.headers.get("openai-request-id") ?? undefined;
+          const details = {
+            provider: "openai",
+            endpoint: OPENAI_RESPONSES_URL,
+            model: chosenModel,
+            family,
+            status: r.status,
+            requestId,
+            error: openaiError,
+          };
+          const upstreamMessage = openaiError.message || `OpenAI request failed (${r.status})`;
+
+          logger.warn({
+            provider: "openai",
+            task,
+            message: "openai_responses_error",
+            status: r.status,
+            requestId,
+            errorType: openaiError.type,
+            errorCode: openaiError.code,
+            errorParam: openaiError.param,
+            errorMessage: upstreamMessage,
+          });
+
+          // 4xx (except 429) — surface provider error verbatim, do NOT retry.
+          if (r.status >= 400 && r.status < 500 && r.status !== 429) {
+            const bad = new ProviderBadRequestError(
+              `OpenAI request failed (${r.status} ${openaiError.type ?? "invalid_request_error"}): ${upstreamMessage}`,
+              details,
+              r.status,
+            );
+            (bad as any).__retryable = false;
+            throw bad;
+          }
+
+          // 429 / 5xx — retryable upstream error.
+          const err = new UpstreamError(upstreamMessage, details);
+          (err as any).__retryable = true;
           throw err;
         }
         return r.json();
