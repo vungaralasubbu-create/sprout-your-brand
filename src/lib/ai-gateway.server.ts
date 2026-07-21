@@ -196,7 +196,8 @@ async function callRouterChat(opts: {
         // anthropic/* -> Anthropic, otherwise OpenAI). Hardcoding "openai"
         // caused Gemini models like "google/gemini-2.5-flash" to be sent to
         // the OpenAI endpoint and rejected as invalid_model.
-        model: opts.model ?? DEFAULT_MODEL,
+        model: normalizeModel(opts.model ?? DEFAULT_MODEL),
+
         prompt: lastUser.slice(0, 100_000),
         options: {
           messages: opts.messages,
