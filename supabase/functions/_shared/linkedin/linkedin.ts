@@ -6,7 +6,20 @@ export const LI_API = "https://api.linkedin.com";
 
 // openid+profile+email → /v2/userinfo (sub, name, email, picture)
 // w_member_social       → publish /v2/ugcPosts as the member
-export const LI_DEFAULT_SCOPES = ["openid", "profile", "email", "w_member_social"].join(" ");
+// openid+profile+email       → /v2/userinfo (sub, name, email, picture)
+// w_member_social             → publish /v2/ugcPosts as the member
+// r_organization_admin        → list organizations the member administers
+// w_organization_social       → publish /v2/ugcPosts as an organization
+// r_organization_social       → read organization posts/analytics
+export const LI_DEFAULT_SCOPES = [
+  "openid",
+  "profile",
+  "email",
+  "w_member_social",
+  "r_organization_admin",
+  "w_organization_social",
+  "r_organization_social",
+].join(" ");
 
 export function requireEnv(name: string): string {
   const v = Deno.env.get(name);
