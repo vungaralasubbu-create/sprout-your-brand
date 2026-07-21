@@ -34,9 +34,14 @@ function AdminPaymentsPage() {
             Manual UPI verification for course enrollments.
           </p>
         </div>
-        <Button asChild variant="outline">
-          <Link to="/admin/payments/settings">Settings</Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild variant="outline">
+            <Link to="/admin/payments/gateway">Payment Gateway</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/admin/payments/settings">Settings</Link>
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">

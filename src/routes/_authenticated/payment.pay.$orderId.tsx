@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import {
   createScreenshotUploadUrl,
   getMyPayment,
+  getPaymentDisplayForOrder,
   submitPaymentConfirmation,
 } from "@/lib/payments/central/checkout.functions";
 import {
@@ -36,6 +37,7 @@ function PayPage() {
 
   const getPay = useServerFn(getMyPayment);
   const getSettings = useServerFn(getActivePaymentSettings);
+  const getDisplay = useServerFn(getPaymentDisplayForOrder);
   const getSignedQr = useServerFn(getPaymentConfigSignedUrl);
   const getUpload = useServerFn(createScreenshotUploadUrl);
   const submit = useServerFn(submitPaymentConfirmation);
@@ -60,8 +62,16 @@ function PayPage() {
     queryFn: () => getSettings(),
     staleTime: 30_000,
   });
+  // Prefer the gateway account snapshotted on this order over legacy settings.
+  const displayQ = useQuery({
+    queryKey: ["central-payment-display", orderId],
+    queryFn: () => getDisplay({ data: { orderId } }),
+    staleTime: 30_000,
+  });
 
-  const qrPath = settingsQ.data?.qr_image_url ?? null;
+  const merchantName = displayQ.data?.merchant_name ?? settingsQ.data?.merchant_name ?? "Glintr";
+  const upiId = displayQ.data?.upi_id ?? settingsQ.data?.upi_id ?? null;
+  const qrPath = displayQ.data?.qr_image_url ?? settingsQ.data?.qr_image_url ?? null;
   const logoPath = settingsQ.data?.logo_url ?? null;
   const qrQ = useQuery({
     queryKey: ["central-qr", qrPath],
@@ -87,7 +97,10 @@ function PayPage() {
   const amount = payQ.data?.final_amount_inr ?? 0;
   const studentName = `${(payQ.data as any)?.first_name ?? ""} ${(payQ.data as any)?.last_name ?? ""}`.trim();
   const courseName = (payQ.data as any)?.courses?.name;
-  const maintenance = !!settingsQ.data?.maintenance_mode || settingsQ.data?.is_enabled === false;
+  const maintenance =
+    !!displayQ.data?.maintenance ||
+    !!settingsQ.data?.maintenance_mode ||
+    settingsQ.data?.is_enabled === false;
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -195,7 +208,7 @@ function PayPage() {
         </div>
         <div>
           <div className="text-[11px] uppercase tracking-wide text-muted-foreground">Merchant</div>
-          <div className="mt-0.5 font-medium">{settingsQ.data?.merchant_name ?? "Glintr"}</div>
+          <div className="mt-0.5 font-medium">{merchantName}</div>
         </div>
       </div>
 
@@ -217,17 +230,17 @@ function PayPage() {
                 QR code will appear here
               </div>
             )}
-            {settingsQ.data?.upi_id ? (
+            {upiId ? (
               <div className="text-center text-sm">
                 UPI ID:{" "}
                 <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                  {settingsQ.data.upi_id}
+                  {upiId}
                 </span>
               </div>
             ) : null}
-            {settingsQ.data?.merchant_name ? (
+            {merchantName ? (
               <div className="text-xs text-muted-foreground">
-                Payee: {settingsQ.data.merchant_name}
+                Payee: {merchantName}
               </div>
             ) : null}
           </div>
