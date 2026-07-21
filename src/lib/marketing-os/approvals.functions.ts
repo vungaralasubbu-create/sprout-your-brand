@@ -197,13 +197,76 @@ export const changeApprovalStatus = createServerFn({ method: "POST" })
         const accounts = (accs ?? []) as Array<{ id: string; platform: string; can_post: boolean | null }>;
         const norm = (s: string) => (s ?? "").toLowerCase().trim();
         const SOCIAL = new Set(["facebook","instagram","linkedin","x","twitter","threads","youtube","pinterest","tiktok"]);
+        const BLOG_ALIASES = new Set(["blog","article","blog_post","blogpost"]);
 
         const jobRows: Record<string, unknown>[] = [];
+        // Blog rows we auto-publish directly to blog_posts (not via publishing_jobs).
+        const blogPublished: Array<{ item_id: string; blog_post_id: string; slug: string }> = [];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         for (const r of rows as any[]) {
           const itemId = r.id as string;
           const platformRaw = String(r.platform ?? "");
           const platform = norm(platformRaw);
+
+          // ---- Blog publishing path (writes to blog_posts, not publishing_jobs) ----
+          if (BLOG_ALIASES.has(platform)) {
+            try {
+              const content = (r.content ?? {}) as Record<string, unknown>;
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const c = content as any;
+              const title = String(r.title ?? c.title ?? c.seo_title ?? "Untitled Post");
+              const body = String(r.body ?? c.content_markdown ?? c.body ?? r.preview ?? "");
+              const summary = String(c.meta_description ?? c.short_summary ?? r.preview ?? title).slice(0, 300);
+              const intro = c.intro ? String(c.intro) : null;
+              const seoTitle = c.seo_title ? String(c.seo_title) : title;
+              const seoDesc = c.meta_description ? String(c.meta_description) : summary;
+              const keywords: string[] = Array.isArray(c.keywords)
+                ? c.keywords.filter((k: unknown) => typeof k === "string")
+                : Array.isArray(r.hashtags) ? r.hashtags.filter((k: unknown) => typeof k === "string") : [];
+              const faqs = Array.isArray(c.faqs) ? c.faqs : [];
+              const baseSlug = String(c.slug ?? title)
+                .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 80) || "post";
+              const slug = `${baseSlug}-${Date.now().toString(36).slice(-4)}`;
+              const words = body.split(/\s+/).filter(Boolean).length;
+              const readingTime = Math.max(1, Math.round(words / 220));
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const { data: post, error: bErr } = await (supabase as any)
+                .from("blog_posts")
+                .insert({
+                  slug,
+                  title,
+                  short_summary: summary,
+                  intro,
+                  content_markdown: body || summary || title,
+                  seo_title: seoTitle,
+                  seo_description: seoDesc,
+                  keywords,
+                  faqs,
+                  status: "published",
+                  is_published: true,
+                  published_at: now,
+                  reading_time_minutes: readingTime,
+                })
+                .select("id, slug")
+                .maybeSingle();
+              if (bErr) {
+                console.error(`[approval.autoEnqueue] blog insert failed item=${itemId}: ${bErr.message}`);
+                publishing.skipped.push({ item_id: itemId, platform: platformRaw, reason: `blog_insert_failed: ${bErr.message}` });
+              } else if (post) {
+                blogPublished.push({ item_id: itemId, blog_post_id: post.id, slug: post.slug });
+                await supabase.from("approval_queue")
+                  .update({ status: "published", published_at: now } as never)
+                  .eq("id", itemId);
+                console.log(`[approval.autoEnqueue] blog published item=${itemId} slug=${post.slug}`);
+              }
+            } catch (e) {
+              const msg = e instanceof Error ? e.message : String(e);
+              console.error(`[approval.autoEnqueue] blog path error item=${itemId}: ${msg}`);
+              publishing.skipped.push({ item_id: itemId, platform: platformRaw, reason: `blog_error: ${msg}` });
+            }
+            continue;
+          }
+
           if (!SOCIAL.has(platform)) {
             publishing.skipped.push({ item_id: itemId, platform: platformRaw, reason: "non_social_platform" });
             console.log(`[approval.autoEnqueue] skip item=${itemId} platform=${platformRaw} reason=non_social_platform`);
