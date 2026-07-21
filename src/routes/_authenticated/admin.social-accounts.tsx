@@ -288,8 +288,9 @@ function SocialAccountsPage() {
                         <Button variant="outline" size="sm" onClick={() => refresh(a.id, a.platform)} disabled={busy === a.id} title="Refresh token now">
                           <RefreshCw className="h-4 w-4" />
                         </Button>
-                        {(a.platform === "linkedin" || a.platform === "x") && (
-                          <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id}>
+                        {a.connection_status === "connected" && (
+                          <Button variant="outline" size="sm" onClick={() => testPublish(a.id, a.platform)} disabled={busy === a.id || busy === "test-all"}>
+                            <Send className="mr-1 h-3.5 w-3.5" />
                             Test Publish
                           </Button>
                         )}
@@ -298,11 +299,27 @@ function SocialAccountsPage() {
                         </Button>
                       </div>
                     </div>
+                    {results[a.id] && (
+                      <div className={`text-xs rounded-md border p-2 ml-8 ${results[a.id].status === "posted" || results[a.id].status === "succeeded" ? "border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30" : "border-red-200 bg-red-50 dark:bg-red-950/30"}`}>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-medium capitalize">{results[a.id].status}</span>
+                          {results[a.id].platform_post_id && <span>· post_id: <code>{results[a.id].platform_post_id}</code></span>}
+                          {results[a.id].platform_url && (
+                            <a href={results[a.id].platform_url!} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline">
+                              open <ExternalLink className="h-3 w-3" />
+                            </a>
+                          )}
+                          {results[a.id].error_code && <span>· {results[a.id].error_code}</span>}
+                        </div>
+                        {results[a.id].error_message && <div className="mt-1 text-red-700 dark:text-red-300">{results[a.id].error_message}</div>}
+                      </div>
+                    )}
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs pl-8">
                       <div className="flex justify-between gap-2">
                         <dt className="text-muted-foreground">Last refreshed</dt>
                         <dd className="font-medium">{fmt(lastSynced)}</dd>
                       </div>
+
                       <div className="flex justify-between gap-2">
                         <dt className="text-muted-foreground">Access token expires</dt>
                         <dd className={`font-medium ${warn ? "text-amber-600" : accessExpired && rotatingRefresh ? "text-muted-foreground" : ""}`}>
