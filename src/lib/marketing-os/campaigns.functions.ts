@@ -196,6 +196,25 @@ async function resolveAccessibleBrandId(
       .maybeSingle();
     if (data?.id) return data.id as string;
   }
+
+  const { data: kit } = await supabase
+    .from("mkt_brand_kits")
+    .select("id,brand_id,business_name,name,tone_of_voice,colors,logos,updated_at")
+    .eq("owner_id", userId)
+    .order("is_default", { ascending: false })
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (kit?.brand_id) {
+    const { data: kitBrand } = await supabase
+      .from("mkt_brands")
+      .select("id")
+      .eq("id", kit.brand_id)
+      .maybeSingle();
+    if (kitBrand?.id) return kitBrand.id as string;
+  }
+
   const { data: own } = await supabase
     .from("mkt_brands")
     .select("id, updated_at")
@@ -205,15 +224,43 @@ async function resolveAccessibleBrandId(
     .maybeSingle();
   if (own?.id) return own.id as string;
 
+  let brandName = "My Brand";
+  let tone: string | null = null;
+  let primaryColor: string | null = null;
+  let logoUrl: string | null = null;
+  if (kit) {
+    brandName = (kit.business_name || kit.name || brandName) as string;
+    if (Array.isArray(kit.tone_of_voice) && kit.tone_of_voice.length) {
+      tone = String(kit.tone_of_voice[0]);
+    }
+    const colors = (kit.colors ?? {}) as Record<string, unknown>;
+    if (typeof (colors as any)?.primary === "string") primaryColor = (colors as any).primary;
+    const logos = (kit.logos ?? {}) as Record<string, unknown>;
+    if (typeof (logos as any)?.primary === "string") logoUrl = (logos as any).primary;
+  }
+
   const { data: created, error } = await supabase
     .from("mkt_brands")
-    .insert({ owner_id: userId, name: "My Brand" })
+    .insert({
+      owner_id: userId,
+      name: brandName,
+      tone,
+      primary_color: primaryColor,
+      logo_url: logoUrl,
+    })
     .select("id")
     .single();
   if (error || !created?.id) {
     throw new Error(
       `Unable to prepare a brand workspace for campaigns: ${error?.message ?? "unknown error"}`,
     );
+  }
+  if (kit?.id) {
+    await supabase
+      .from("mkt_brand_kits")
+      .update({ brand_id: created.id })
+      .eq("id", kit.id)
+      .eq("owner_id", userId);
   }
   return created.id as string;
 }
