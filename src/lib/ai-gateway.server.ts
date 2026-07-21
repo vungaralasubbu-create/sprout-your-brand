@@ -161,7 +161,11 @@ async function callRouterChat(opts: {
       },
       body: JSON.stringify({
         task: "chat",
-        provider: "openai",
+        // NOTE: do NOT hardcode `provider` here. The AI Router resolves the
+        // provider from the requested model (google/* -> Gemini,
+        // anthropic/* -> Anthropic, otherwise OpenAI). Hardcoding "openai"
+        // caused Gemini models like "google/gemini-2.5-flash" to be sent to
+        // the OpenAI endpoint and rejected as invalid_model.
         model: opts.model ?? DEFAULT_MODEL,
         prompt: lastUser.slice(0, 100_000),
         options: {
