@@ -104,20 +104,24 @@ function Page() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => {
-              navigator.clipboard.writeText(data.link.url);
-              toast.success("URL copied");
-            }}
-          >
-            <Copy className="size-4" /> Copy URL
-          </Button>
-          <a href={data.link.url} target="_blank" rel="noreferrer">
-            <Button variant="outline">
-              <ExternalLink className="size-4" /> Open
-            </Button>
-          </a>
+          {data.link.url ? (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  navigator.clipboard.writeText(data.link.url ?? "");
+                  toast.success("URL copied");
+                }}
+              >
+                <Copy className="size-4" /> Copy URL
+              </Button>
+              <a href={data.link.url} target="_blank" rel="noreferrer">
+                <Button variant="outline">
+                  <ExternalLink className="size-4" /> Open
+                </Button>
+              </a>
+            </>
+          ) : null}
           {data.link.status === "active" ? (
             <Button variant="outline" onClick={() => toggle.mutate("disabled")}>
               <Ban className="size-4" /> Disable
