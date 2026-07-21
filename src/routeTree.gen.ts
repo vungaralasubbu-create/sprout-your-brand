@@ -222,6 +222,7 @@ import { Route as AuthenticatedStudentDashboardRouteImport } from './routes/_aut
 import { Route as AuthenticatedStudentCoursesRouteImport } from './routes/_authenticated/student.courses'
 import { Route as AuthenticatedStudentCertificatesRouteImport } from './routes/_authenticated/student.certificates'
 import { Route as AuthenticatedStudentAssessmentsRouteImport } from './routes/_authenticated/student.assessments'
+import { Route as AuthenticatedPaymentCourseIdRouteImport } from './routes/_authenticated/payment.$courseId'
 import { Route as AuthenticatedPartnerSupportRouteImport } from './routes/_authenticated/partner.support'
 import { Route as AuthenticatedPartnerSearchRouteImport } from './routes/_authenticated/partner.search'
 import { Route as AuthenticatedPartnerSalesAiRouteImport } from './routes/_authenticated/partner.sales-ai'
@@ -422,6 +423,7 @@ import { Route as AuthenticatedAdminWorkflowsIndexRouteImport } from './routes/_
 import { Route as AuthenticatedAdminTeamIndexRouteImport } from './routes/_authenticated/admin.team.index'
 import { Route as AuthenticatedAdminProgrammaticSeoIndexRouteImport } from './routes/_authenticated/admin.programmatic-seo.index'
 import { Route as AuthenticatedAdminPayoutsIndexRouteImport } from './routes/_authenticated/admin.payouts.index'
+import { Route as AuthenticatedAdminPaymentsIndexRouteImport } from './routes/_authenticated/admin.payments.index'
 import { Route as AuthenticatedAdminPaymentLinksIndexRouteImport } from './routes/_authenticated/admin.payment-links.index'
 import { Route as AuthenticatedAdminPartnersIndexRouteImport } from './routes/_authenticated/admin.partners.index'
 import { Route as AuthenticatedAdminMarketingOsIndexRouteImport } from './routes/_authenticated/admin.marketing-os.index'
@@ -468,6 +470,10 @@ import { Route as AuthenticatedStudentCareerResumeRouteImport } from './routes/_
 import { Route as AuthenticatedStudentCareerOsRouteImport } from './routes/_authenticated/student.career.os'
 import { Route as AuthenticatedStudentCareerInterviewRouteImport } from './routes/_authenticated/student.career.interview'
 import { Route as AuthenticatedStudentAssignmentsIdRouteImport } from './routes/_authenticated/student.assignments.$id'
+import { Route as AuthenticatedPaymentSuccessOrderIdRouteImport } from './routes/_authenticated/payment.success.$orderId'
+import { Route as AuthenticatedPaymentPendingOrderIdRouteImport } from './routes/_authenticated/payment.pending.$orderId'
+import { Route as AuthenticatedPaymentPayOrderIdRouteImport } from './routes/_authenticated/payment.pay.$orderId'
+import { Route as AuthenticatedPaymentFailedOrderIdRouteImport } from './routes/_authenticated/payment.failed.$orderId'
 import { Route as AuthenticatedPartnerSupportIdRouteImport } from './routes/_authenticated/partner.support.$id'
 import { Route as AuthenticatedPartnerProgramsSlugRouteImport } from './routes/_authenticated/partner.programs.$slug'
 import { Route as AuthenticatedPartnerAiEmployeesSlugRouteImport } from './routes/_authenticated/partner.ai-employees.$slug'
@@ -489,6 +495,8 @@ import { Route as AuthenticatedAdminRiskReviewIdRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminProgrammaticSeoNewRouteImport } from './routes/_authenticated/admin.programmatic-seo.new'
 import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './routes/_authenticated/admin.programmatic-seo.$id'
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
+import { Route as AuthenticatedAdminPaymentsSettingsRouteImport } from './routes/_authenticated/admin.payments.settings'
+import { Route as AuthenticatedAdminPaymentsIdRouteImport } from './routes/_authenticated/admin.payments.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
 import { Route as AuthenticatedAdminMarketingOsSeoHubRouteImport } from './routes/_authenticated/admin.marketing-os.seo-hub'
@@ -1707,6 +1715,12 @@ const AuthenticatedStudentAssessmentsRoute =
     path: '/assessments',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedPaymentCourseIdRoute =
+  AuthenticatedPaymentCourseIdRouteImport.update({
+    id: '/payment/$courseId',
+    path: '/payment/$courseId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPartnerSupportRoute =
   AuthenticatedPartnerSupportRouteImport.update({
     id: '/support',
@@ -2896,6 +2910,12 @@ const AuthenticatedAdminPayoutsIndexRoute =
     path: '/payouts/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPaymentsIndexRoute =
+  AuthenticatedAdminPaymentsIndexRouteImport.update({
+    id: '/payments/',
+    path: '/payments/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPaymentLinksIndexRoute =
   AuthenticatedAdminPaymentLinksIndexRouteImport.update({
     id: '/payment-links/',
@@ -3164,6 +3184,30 @@ const AuthenticatedStudentAssignmentsIdRoute =
     path: '/assignments/$id',
     getParentRoute: () => AuthenticatedStudentRoute,
   } as any)
+const AuthenticatedPaymentSuccessOrderIdRoute =
+  AuthenticatedPaymentSuccessOrderIdRouteImport.update({
+    id: '/payment/success/$orderId',
+    path: '/payment/success/$orderId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPaymentPendingOrderIdRoute =
+  AuthenticatedPaymentPendingOrderIdRouteImport.update({
+    id: '/payment/pending/$orderId',
+    path: '/payment/pending/$orderId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPaymentPayOrderIdRoute =
+  AuthenticatedPaymentPayOrderIdRouteImport.update({
+    id: '/payment/pay/$orderId',
+    path: '/payment/pay/$orderId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPaymentFailedOrderIdRoute =
+  AuthenticatedPaymentFailedOrderIdRouteImport.update({
+    id: '/payment/failed/$orderId',
+    path: '/payment/failed/$orderId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPartnerSupportIdRoute =
   AuthenticatedPartnerSupportIdRouteImport.update({
     id: '/$id',
@@ -3288,6 +3332,18 @@ const AuthenticatedAdminPayoutsIdRoute =
   AuthenticatedAdminPayoutsIdRouteImport.update({
     id: '/payouts/$id',
     path: '/payouts/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPaymentsSettingsRoute =
+  AuthenticatedAdminPaymentsSettingsRouteImport.update({
+    id: '/payments/settings',
+    path: '/payments/settings',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPaymentsIdRoute =
+  AuthenticatedAdminPaymentsIdRouteImport.update({
+    id: '/payments/$id',
+    path: '/payments/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminPaymentLinksIdRoute =
@@ -4336,6 +4392,7 @@ export interface FileRoutesByFullPath {
   '/partner/sales-ai': typeof AuthenticatedPartnerSalesAiRoute
   '/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
+  '/payment/$courseId': typeof AuthenticatedPaymentCourseIdRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
   '/student/courses': typeof AuthenticatedStudentCoursesRoute
@@ -4480,6 +4537,8 @@ export interface FileRoutesByFullPath {
   '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
+  '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
+  '/admin/payments/settings': typeof AuthenticatedAdminPaymentsSettingsRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
@@ -4501,6 +4560,10 @@ export interface FileRoutesByFullPath {
   '/partner/ai-employees/$slug': typeof AuthenticatedPartnerAiEmployeesSlugRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
+  '/payment/failed/$orderId': typeof AuthenticatedPaymentFailedOrderIdRoute
+  '/payment/pay/$orderId': typeof AuthenticatedPaymentPayOrderIdRoute
+  '/payment/pending/$orderId': typeof AuthenticatedPaymentPendingOrderIdRoute
+  '/payment/success/$orderId': typeof AuthenticatedPaymentSuccessOrderIdRoute
   '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
   '/student/career/interview': typeof AuthenticatedStudentCareerInterviewRouteWithChildren
   '/student/career/os': typeof AuthenticatedStudentCareerOsRoute
@@ -4547,6 +4610,7 @@ export interface FileRoutesByFullPath {
   '/admin/marketing-os/': typeof AuthenticatedAdminMarketingOsIndexRoute
   '/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
+  '/admin/payments/': typeof AuthenticatedAdminPaymentsIndexRoute
   '/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/programmatic-seo/': typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   '/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
@@ -4913,6 +4977,7 @@ export interface FileRoutesByTo {
   '/partner/sales-ai': typeof AuthenticatedPartnerSalesAiRoute
   '/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
+  '/payment/$courseId': typeof AuthenticatedPaymentCourseIdRoute
   '/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/student/certificates': typeof AuthenticatedStudentCertificatesRoute
   '/student/courses': typeof AuthenticatedStudentCoursesRoute
@@ -5057,6 +5122,8 @@ export interface FileRoutesByTo {
   '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
+  '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
+  '/admin/payments/settings': typeof AuthenticatedAdminPaymentsSettingsRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
@@ -5078,6 +5145,10 @@ export interface FileRoutesByTo {
   '/partner/ai-employees/$slug': typeof AuthenticatedPartnerAiEmployeesSlugRoute
   '/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
+  '/payment/failed/$orderId': typeof AuthenticatedPaymentFailedOrderIdRoute
+  '/payment/pay/$orderId': typeof AuthenticatedPaymentPayOrderIdRoute
+  '/payment/pending/$orderId': typeof AuthenticatedPaymentPendingOrderIdRoute
+  '/payment/success/$orderId': typeof AuthenticatedPaymentSuccessOrderIdRoute
   '/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
   '/student/career/interview': typeof AuthenticatedStudentCareerInterviewRouteWithChildren
   '/student/career/os': typeof AuthenticatedStudentCareerOsRoute
@@ -5124,6 +5195,7 @@ export interface FileRoutesByTo {
   '/admin/marketing-os': typeof AuthenticatedAdminMarketingOsIndexRoute
   '/admin/partners': typeof AuthenticatedAdminPartnersIndexRoute
   '/admin/payment-links': typeof AuthenticatedAdminPaymentLinksIndexRoute
+  '/admin/payments': typeof AuthenticatedAdminPaymentsIndexRoute
   '/admin/payouts': typeof AuthenticatedAdminPayoutsIndexRoute
   '/admin/programmatic-seo': typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   '/admin/team': typeof AuthenticatedAdminTeamIndexRoute
@@ -5513,6 +5585,7 @@ export interface FileRoutesById {
   '/_authenticated/partner/sales-ai': typeof AuthenticatedPartnerSalesAiRoute
   '/_authenticated/partner/search': typeof AuthenticatedPartnerSearchRoute
   '/_authenticated/partner/support': typeof AuthenticatedPartnerSupportRouteWithChildren
+  '/_authenticated/payment/$courseId': typeof AuthenticatedPaymentCourseIdRoute
   '/_authenticated/student/assessments': typeof AuthenticatedStudentAssessmentsRoute
   '/_authenticated/student/certificates': typeof AuthenticatedStudentCertificatesRoute
   '/_authenticated/student/courses': typeof AuthenticatedStudentCoursesRoute
@@ -5657,6 +5730,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
+  '/_authenticated/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
+  '/_authenticated/admin/payments/settings': typeof AuthenticatedAdminPaymentsSettingsRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/_authenticated/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
   '/_authenticated/admin/programmatic-seo/new': typeof AuthenticatedAdminProgrammaticSeoNewRoute
@@ -5678,6 +5753,10 @@ export interface FileRoutesById {
   '/_authenticated/partner/ai-employees/$slug': typeof AuthenticatedPartnerAiEmployeesSlugRoute
   '/_authenticated/partner/programs/$slug': typeof AuthenticatedPartnerProgramsSlugRoute
   '/_authenticated/partner/support/$id': typeof AuthenticatedPartnerSupportIdRoute
+  '/_authenticated/payment/failed/$orderId': typeof AuthenticatedPaymentFailedOrderIdRoute
+  '/_authenticated/payment/pay/$orderId': typeof AuthenticatedPaymentPayOrderIdRoute
+  '/_authenticated/payment/pending/$orderId': typeof AuthenticatedPaymentPendingOrderIdRoute
+  '/_authenticated/payment/success/$orderId': typeof AuthenticatedPaymentSuccessOrderIdRoute
   '/_authenticated/student/assignments/$id': typeof AuthenticatedStudentAssignmentsIdRoute
   '/_authenticated/student/career/interview': typeof AuthenticatedStudentCareerInterviewRouteWithChildren
   '/_authenticated/student/career/os': typeof AuthenticatedStudentCareerOsRoute
@@ -5724,6 +5803,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/marketing-os/': typeof AuthenticatedAdminMarketingOsIndexRoute
   '/_authenticated/admin/partners/': typeof AuthenticatedAdminPartnersIndexRoute
   '/_authenticated/admin/payment-links/': typeof AuthenticatedAdminPaymentLinksIndexRoute
+  '/_authenticated/admin/payments/': typeof AuthenticatedAdminPaymentsIndexRoute
   '/_authenticated/admin/payouts/': typeof AuthenticatedAdminPayoutsIndexRoute
   '/_authenticated/admin/programmatic-seo/': typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   '/_authenticated/admin/team/': typeof AuthenticatedAdminTeamIndexRoute
@@ -6112,6 +6192,7 @@ export interface FileRouteTypes {
     | '/partner/sales-ai'
     | '/partner/search'
     | '/partner/support'
+    | '/payment/$courseId'
     | '/student/assessments'
     | '/student/certificates'
     | '/student/courses'
@@ -6256,6 +6337,8 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/seo-hub'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
+    | '/admin/payments/$id'
+    | '/admin/payments/settings'
     | '/admin/payouts/$id'
     | '/admin/programmatic-seo/$id'
     | '/admin/programmatic-seo/new'
@@ -6277,6 +6360,10 @@ export interface FileRouteTypes {
     | '/partner/ai-employees/$slug'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
+    | '/payment/failed/$orderId'
+    | '/payment/pay/$orderId'
+    | '/payment/pending/$orderId'
+    | '/payment/success/$orderId'
     | '/student/assignments/$id'
     | '/student/career/interview'
     | '/student/career/os'
@@ -6323,6 +6410,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/'
     | '/admin/partners/'
     | '/admin/payment-links/'
+    | '/admin/payments/'
     | '/admin/payouts/'
     | '/admin/programmatic-seo/'
     | '/admin/team/'
@@ -6689,6 +6777,7 @@ export interface FileRouteTypes {
     | '/partner/sales-ai'
     | '/partner/search'
     | '/partner/support'
+    | '/payment/$courseId'
     | '/student/assessments'
     | '/student/certificates'
     | '/student/courses'
@@ -6833,6 +6922,8 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/seo-hub'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
+    | '/admin/payments/$id'
+    | '/admin/payments/settings'
     | '/admin/payouts/$id'
     | '/admin/programmatic-seo/$id'
     | '/admin/programmatic-seo/new'
@@ -6854,6 +6945,10 @@ export interface FileRouteTypes {
     | '/partner/ai-employees/$slug'
     | '/partner/programs/$slug'
     | '/partner/support/$id'
+    | '/payment/failed/$orderId'
+    | '/payment/pay/$orderId'
+    | '/payment/pending/$orderId'
+    | '/payment/success/$orderId'
     | '/student/assignments/$id'
     | '/student/career/interview'
     | '/student/career/os'
@@ -6900,6 +6995,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os'
     | '/admin/partners'
     | '/admin/payment-links'
+    | '/admin/payments'
     | '/admin/payouts'
     | '/admin/programmatic-seo'
     | '/admin/team'
@@ -7288,6 +7384,7 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/sales-ai'
     | '/_authenticated/partner/search'
     | '/_authenticated/partner/support'
+    | '/_authenticated/payment/$courseId'
     | '/_authenticated/student/assessments'
     | '/_authenticated/student/certificates'
     | '/_authenticated/student/courses'
@@ -7432,6 +7529,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/marketing-os/seo-hub'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
+    | '/_authenticated/admin/payments/$id'
+    | '/_authenticated/admin/payments/settings'
     | '/_authenticated/admin/payouts/$id'
     | '/_authenticated/admin/programmatic-seo/$id'
     | '/_authenticated/admin/programmatic-seo/new'
@@ -7453,6 +7552,10 @@ export interface FileRouteTypes {
     | '/_authenticated/partner/ai-employees/$slug'
     | '/_authenticated/partner/programs/$slug'
     | '/_authenticated/partner/support/$id'
+    | '/_authenticated/payment/failed/$orderId'
+    | '/_authenticated/payment/pay/$orderId'
+    | '/_authenticated/payment/pending/$orderId'
+    | '/_authenticated/payment/success/$orderId'
     | '/_authenticated/student/assignments/$id'
     | '/_authenticated/student/career/interview'
     | '/_authenticated/student/career/os'
@@ -7499,6 +7602,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/marketing-os/'
     | '/_authenticated/admin/partners/'
     | '/_authenticated/admin/payment-links/'
+    | '/_authenticated/admin/payments/'
     | '/_authenticated/admin/payouts/'
     | '/_authenticated/admin/programmatic-seo/'
     | '/_authenticated/admin/team/'
@@ -9168,6 +9272,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentAssessmentsRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/payment/$courseId': {
+      id: '/_authenticated/payment/$courseId'
+      path: '/payment/$courseId'
+      fullPath: '/payment/$courseId'
+      preLoaderRoute: typeof AuthenticatedPaymentCourseIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/partner/support': {
       id: '/_authenticated/partner/support'
       path: '/support'
@@ -10568,6 +10679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPayoutsIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/payments/': {
+      id: '/_authenticated/admin/payments/'
+      path: '/payments'
+      fullPath: '/admin/payments/'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentsIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/payment-links/': {
       id: '/_authenticated/admin/payment-links/'
       path: '/payment-links'
@@ -10890,6 +11008,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentAssignmentsIdRouteImport
       parentRoute: typeof AuthenticatedStudentRoute
     }
+    '/_authenticated/payment/success/$orderId': {
+      id: '/_authenticated/payment/success/$orderId'
+      path: '/payment/success/$orderId'
+      fullPath: '/payment/success/$orderId'
+      preLoaderRoute: typeof AuthenticatedPaymentSuccessOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payment/pending/$orderId': {
+      id: '/_authenticated/payment/pending/$orderId'
+      path: '/payment/pending/$orderId'
+      fullPath: '/payment/pending/$orderId'
+      preLoaderRoute: typeof AuthenticatedPaymentPendingOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payment/pay/$orderId': {
+      id: '/_authenticated/payment/pay/$orderId'
+      path: '/payment/pay/$orderId'
+      fullPath: '/payment/pay/$orderId'
+      preLoaderRoute: typeof AuthenticatedPaymentPayOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payment/failed/$orderId': {
+      id: '/_authenticated/payment/failed/$orderId'
+      path: '/payment/failed/$orderId'
+      fullPath: '/payment/failed/$orderId'
+      preLoaderRoute: typeof AuthenticatedPaymentFailedOrderIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/partner/support/$id': {
       id: '/_authenticated/partner/support/$id'
       path: '/$id'
@@ -11035,6 +11181,20 @@ declare module '@tanstack/react-router' {
       path: '/payouts/$id'
       fullPath: '/admin/payouts/$id'
       preLoaderRoute: typeof AuthenticatedAdminPayoutsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/payments/settings': {
+      id: '/_authenticated/admin/payments/settings'
+      path: '/payments/settings'
+      fullPath: '/admin/payments/settings'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentsSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/payments/$id': {
+      id: '/_authenticated/admin/payments/$id'
+      path: '/payments/$id'
+      fullPath: '/admin/payments/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentsIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/payment-links/$id': {
@@ -12379,6 +12539,8 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminEmployeesIdRoute: typeof AuthenticatedAdminEmployeesIdRoute
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
   AuthenticatedAdminPaymentLinksIdRoute: typeof AuthenticatedAdminPaymentLinksIdRoute
+  AuthenticatedAdminPaymentsIdRoute: typeof AuthenticatedAdminPaymentsIdRoute
+  AuthenticatedAdminPaymentsSettingsRoute: typeof AuthenticatedAdminPaymentsSettingsRoute
   AuthenticatedAdminPayoutsIdRoute: typeof AuthenticatedAdminPayoutsIdRoute
   AuthenticatedAdminProgrammaticSeoIdRoute: typeof AuthenticatedAdminProgrammaticSeoIdRoute
   AuthenticatedAdminProgrammaticSeoNewRoute: typeof AuthenticatedAdminProgrammaticSeoNewRoute
@@ -12394,6 +12556,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminEngageIndexRoute: typeof AuthenticatedAdminEngageIndexRoute
   AuthenticatedAdminPartnersIndexRoute: typeof AuthenticatedAdminPartnersIndexRoute
   AuthenticatedAdminPaymentLinksIndexRoute: typeof AuthenticatedAdminPaymentLinksIndexRoute
+  AuthenticatedAdminPaymentsIndexRoute: typeof AuthenticatedAdminPaymentsIndexRoute
   AuthenticatedAdminPayoutsIndexRoute: typeof AuthenticatedAdminPayoutsIndexRoute
   AuthenticatedAdminProgrammaticSeoIndexRoute: typeof AuthenticatedAdminProgrammaticSeoIndexRoute
   AuthenticatedAdminTeamIndexRoute: typeof AuthenticatedAdminTeamIndexRoute
@@ -12503,6 +12666,9 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminEmployeesIdRoute: AuthenticatedAdminEmployeesIdRoute,
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
   AuthenticatedAdminPaymentLinksIdRoute: AuthenticatedAdminPaymentLinksIdRoute,
+  AuthenticatedAdminPaymentsIdRoute: AuthenticatedAdminPaymentsIdRoute,
+  AuthenticatedAdminPaymentsSettingsRoute:
+    AuthenticatedAdminPaymentsSettingsRoute,
   AuthenticatedAdminPayoutsIdRoute: AuthenticatedAdminPayoutsIdRoute,
   AuthenticatedAdminProgrammaticSeoIdRoute:
     AuthenticatedAdminProgrammaticSeoIdRoute,
@@ -12524,6 +12690,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPartnersIndexRoute: AuthenticatedAdminPartnersIndexRoute,
   AuthenticatedAdminPaymentLinksIndexRoute:
     AuthenticatedAdminPaymentLinksIndexRoute,
+  AuthenticatedAdminPaymentsIndexRoute: AuthenticatedAdminPaymentsIndexRoute,
   AuthenticatedAdminPayoutsIndexRoute: AuthenticatedAdminPayoutsIndexRoute,
   AuthenticatedAdminProgrammaticSeoIndexRoute:
     AuthenticatedAdminProgrammaticSeoIndexRoute,
@@ -13146,6 +13313,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDevelopersPlaygroundRoute: typeof AuthenticatedDevelopersPlaygroundRoute
   AuthenticatedDevelopersSdkRoute: typeof AuthenticatedDevelopersSdkRoute
   AuthenticatedDevelopersWebhooksRoute: typeof AuthenticatedDevelopersWebhooksRoute
+  AuthenticatedPaymentCourseIdRoute: typeof AuthenticatedPaymentCourseIdRoute
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedTemplatesSlugRoute: typeof AuthenticatedTemplatesSlugRoute
   AuthenticatedWorkflowsIdRoute: typeof AuthenticatedWorkflowsIdRoute
@@ -13159,6 +13327,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
   AuthenticatedTemplatesIndexRoute: typeof AuthenticatedTemplatesIndexRoute
   AuthenticatedWorkflowsIndexRoute: typeof AuthenticatedWorkflowsIndexRoute
+  AuthenticatedPaymentFailedOrderIdRoute: typeof AuthenticatedPaymentFailedOrderIdRoute
+  AuthenticatedPaymentPayOrderIdRoute: typeof AuthenticatedPaymentPayOrderIdRoute
+  AuthenticatedPaymentPendingOrderIdRoute: typeof AuthenticatedPaymentPendingOrderIdRoute
+  AuthenticatedPaymentSuccessOrderIdRoute: typeof AuthenticatedPaymentSuccessOrderIdRoute
   AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
 }
 
@@ -13196,6 +13368,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedDevelopersPlaygroundRoute,
   AuthenticatedDevelopersSdkRoute: AuthenticatedDevelopersSdkRoute,
   AuthenticatedDevelopersWebhooksRoute: AuthenticatedDevelopersWebhooksRoute,
+  AuthenticatedPaymentCourseIdRoute: AuthenticatedPaymentCourseIdRoute,
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedTemplatesSlugRoute: AuthenticatedTemplatesSlugRoute,
   AuthenticatedWorkflowsIdRoute: AuthenticatedWorkflowsIdRoute,
@@ -13209,6 +13382,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
   AuthenticatedTemplatesIndexRoute: AuthenticatedTemplatesIndexRoute,
   AuthenticatedWorkflowsIndexRoute: AuthenticatedWorkflowsIndexRoute,
+  AuthenticatedPaymentFailedOrderIdRoute:
+    AuthenticatedPaymentFailedOrderIdRoute,
+  AuthenticatedPaymentPayOrderIdRoute: AuthenticatedPaymentPayOrderIdRoute,
+  AuthenticatedPaymentPendingOrderIdRoute:
+    AuthenticatedPaymentPendingOrderIdRoute,
+  AuthenticatedPaymentSuccessOrderIdRoute:
+    AuthenticatedPaymentSuccessOrderIdRoute,
   AuthenticatedWorkspaceProjectProjectIdRoute:
     AuthenticatedWorkspaceProjectProjectIdRouteWithChildren,
 }

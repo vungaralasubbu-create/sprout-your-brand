@@ -1,97 +1,107 @@
-# Glintr Performance & Modular Architecture Plan
+## Scope
 
-This is a large refactor. Attempting all of it in one pass would break the running app. I'll ship it in **5 phases**, each independently verifiable, so the platform stays live throughout.
+Add a centralized UPI-QR payment flow used by every course. Strictly additive: no changes to existing pages, components, tables, or the AI/Marketing stack. Existing `enrollments`, `courses`, `payment_links`, `partner_lead_payment_links`, and `bill_*` tables stay untouched; existing admin pages (`admin.payment-verification`, `admin.payment-links.*`) stay as-is — the new admin UI is a separate menu item.
 
----
+## New database objects (one migration)
 
-## Phase 1 — Route-level code splitting & bundle diet (biggest single win)
+All new tables use `owner`/`admin` RLS, timestamps, `updated_at` triggers, and full `GRANT` blocks.
 
-Goal: cut initial JS by 60–80%. Every dashboard becomes its own chunk.
+1. `public.payment_settings` — singleton config row.
+   Columns: `id uuid pk`, `qr_image_url text`, `upi_id text`, `merchant_name text`, `support_email text`, `support_phone text`, `is_active bool default true`, `updated_by uuid`, timestamps.
+   RLS: `SELECT` for `authenticated` when `is_active`; full CRUD for admin role via `has_role(auth.uid(),'admin')`.
 
-- Convert heavy route files to `.lazy.tsx` split: `admin.*`, `partner.*`, `brand.*`, `instructor.*`, `student.*`, `_authenticated/counsellor/*`, `_authenticated/admin/*`, `launch-your-brand/*`, `academy-builder`, `business-os`, `sales-ai`, `ai-os`, `automation-hub`, `engage`, `enrollment-brain`.
-- Move Homepage 3D hero, ecosystem grid, success stories carousel, mobile carousels behind `React.lazy` + `<Suspense>` with skeletons.
-- Remove any `export function XComponent` from route files (blocks auto-splitting).
-- Configure per-route `codeSplitGroupings` for the biggest routes.
-- Add `vite-bundle-visualizer` script; commit a baseline size report in `.lovable/perf-baseline.md`.
+2. `public.course_payments` — one row per checkout attempt. NOT a replacement for `enrollments`; a sibling record that the flow uses to track UPI payment + verification. Links to `enrollments.id` once approved.
+   Columns: `id uuid pk`, `order_id text unique` (human ref, e.g. `GLR-YYYYMMDD-XXXX`), `user_id uuid` (nullable — supports guest→signup), `course_id uuid references courses(id)`, `enrollment_id uuid references enrollments(id) on delete set null`, form fields (`first_name`, `last_name`, `email`, `phone`, `college`, `degree`, `graduation_year int`, `city`, `state`, `country`), `referral_code text`, `coupon_code text`, `base_amount_inr numeric(12,2)`, `discount_inr numeric(12,2) default 0`, `final_amount_inr numeric(12,2)`, `utr_number text`, `screenshot_url text`, `status text check in ('pending','submitted','verified','rejected','refunded') default 'pending'`, `rejection_reason text`, `verified_by uuid`, `verified_at timestamptz`, `provider text default 'upi_manual'`, `provider_ref text`, timestamps.
+   Unique index on `(utr_number)` where `utr_number is not null` (dedupe).
+   Indexes: `(user_id, created_at desc)`, `(status, created_at desc)`, `(course_id)`.
+   RLS: owner (`auth.uid() = user_id`) can SELECT/INSERT/UPDATE own pending row; admin full CRUD.
 
-Success: Homepage JS < 250KB gzipped, Admin routes lazy-loaded, no admin code in public bundles.
+3. `public.course_payment_events` — append-only audit trail (`payment_id`, `type`, `actor_user_id`, `meta jsonb`, `created_at`). Admin-only reads.
 
----
+4. Storage bucket `payment-screenshots` (private). Policies: owner can upload to `${auth.uid()}/*`, admin can read all, size ≤ 5 MB, mime in image/*.
 
-## Phase 2 — Data layer: TanStack Query everywhere + query hygiene
+5. Storage bucket `payment-config` (public read) for QR image uploads.
 
-Goal: kill duplicate fetches, add real caching, tighten Supabase reads.
+## New server functions (`.functions.ts`)
 
-- Standardize on `queryOptions` + `ensureQueryData` (loader) + `useSuspenseQuery` (component) across all dashboards.
-- Set global defaults: `staleTime` 60s for reference data (categories, programs, templates, settings, navigation), 5m for brand data, 10s for dashboard stats.
-- Audit every `.select('*')` — replace with explicit column lists. Priority tables: `programs`, `blog_posts`, `brand_applications`, `lead_intelligence`, `email_logs`, `automation_runs`, `enrollments`.
-- Add cursor pagination helpers (`useCursorPage`) for admin tables: leads, email logs, automation runs, enrollments, brand applications.
-- Parallelize independent loader fetches with `Promise.all` inside server fns.
-- Add indexes for common WHERE/ORDER BY combos found via `supabase--slow_queries` (created_at DESC, status, brand_id, user_id).
+`src/lib/payments/central/settings.functions.ts`
+- `getActivePaymentSettings()` — public, returns latest active row (used by payment page).
+- `updatePaymentSettings(...)` — admin only.
 
-Success: no `select('*')` in hot paths, dashboard stats P95 < 500ms.
+`src/lib/payments/central/checkout.functions.ts`
+- `createCoursePayment({ courseId, form, couponCode?, referralCode? })` — authenticated. Loads course, computes final amount, creates `course_payments` row (`status='pending'`), returns `{ orderId, amount, qr, upiId, merchantName }`.
+- `submitPaymentConfirmation({ orderId, utrNumber, screenshotUrl? })` — authenticated, owner-only. Sets `status='submitted'`. Rejects duplicate UTRs. Enqueues admin-notification email.
+- `getMyPayment({ orderId })` — authenticated, owner-only.
 
----
+`src/lib/payments/central/admin.functions.ts` — all gated by `has_role('admin')`:
+- `listPayments({ status?, q?, cursor? })`
+- `getPaymentDetail({ id })`
+- `approvePayment({ id })` → creates/activates `enrollments` row (reusing existing enrollment status enum via `verified`), sets `course_payments.status='verified'`, writes event, sends student email.
+- `rejectPayment({ id, reason })`
+- `requestMoreInfo({ id, note })`
 
-## Phase 3 — AI & heavy jobs → background queue
+`src/lib/payments/central/upload.functions.ts`
+- `getScreenshotUploadUrl({ orderId, mime, sizeBytes })` — returns signed upload URL scoped to `${userId}/${orderId}.ext`.
 
-Goal: no AI call blocks the UI; heavy generation is durable.
+Emails go through the existing send helper; templates added under the existing `react-email` registry (additive, no changes to existing templates).
 
-- Introduce **Inngest** connector for durable background execution (already documented in stack).
-- Move to Inngest: AI Academy Builder generation, Brand Website generation, AI blog batch generation, AI email content, bulk campaign send, CSV/PDF exports, certificate generation, nightly analytics rollups, automation workflow resumes.
-- Replace synchronous AI calls in UI with: enqueue → return `job_id` → poll job status → stream/reveal result. Add `ai_jobs` table with status + result.
-- Stream AI Gateway responses (SSE) where the UI expects a single completion (Ask GlintrAI, counsellor copilot, AI content writer).
-- Cache identical AI prompts (hash of prompt+model) in `ai_response_cache` with TTL.
+## New client routes (all additive, no edits to existing files)
 
-Success: Website generation, AI batch runs, exports never freeze the tab.
+- `src/routes/_authenticated/payment.$courseId.tsx` — enrollment form → order summary (single page, two steps in local state).
+- `src/routes/_authenticated/payment.tsx` — pathless helper (redirects `/payment` → `/programs`).
+- `src/routes/_authenticated/payment.pay.$orderId.tsx` — QR + UTR + screenshot upload; polls status.
+- `src/routes/_authenticated/payment.success.$orderId.tsx`
+- `src/routes/_authenticated/payment.failed.$orderId.tsx`
+- `src/routes/_authenticated/payment.pending.$orderId.tsx`
+- `src/routes/_authenticated/admin.payments.index.tsx` — tabs: Pending / Verified / Rejected / All. Reuses existing admin shell.
+- `src/routes/_authenticated/admin.payments.$id.tsx` — detail + Approve/Reject/Request-info actions.
+- `src/routes/_authenticated/admin.payments.settings.tsx` — QR/UPI/merchant editor.
 
----
+Routes are all under `_authenticated/`, so the platform's auth gate covers them. Guest checkout is out of scope for v1 (spec says "Generate Student Account if required" — approval flow can invite via existing auth); a follow-up can add a public entry.
 
-## Phase 4 — Assets, images, and animations
+## Course "Enroll Now" wiring
 
-- Image transformer route with allow-list + `sharp` for WebP/AVIF (see `perf` knowledge).
-- `<Img>` component: `loading="lazy"`, `decoding="async"`, `srcset`, WebP first with JPEG fallback.
-- Preload only the homepage LCP hero via `head().links`.
-- Wrap Framer Motion sections in `IntersectionObserver` — pause when off-screen; respect `prefers-reduced-motion`.
-- Compress upload path in the brand website builder (client-side resize before Supabase Storage put).
+The only touch to existing UI. Find every `<Link>` / `<button>` currently labelled "Enroll Now" / "Apply Now" / "Buy Now" on the course pages and make the click navigate to `/payment/${course.id}`. No visual change — only the `to` / `onClick` handler. Files expected: `src/routes/programs.$category.$course.index.tsx`, `src/components/course/*` CTA components, and course cards used elsewhere. Existing `programs.$category.$course.apply.tsx` (lead form) is left as-is; the new payment route is the paid enrollment path.
 
-Success: LCP < 2.0s on Homepage & Programs.
+If a course page's CTA is deeply nested inside a shared component used outside programs, we add an opt-in prop (default preserves current behaviour) rather than editing that component's default.
 
----
+## Admin menu
 
-## Phase 5 — Monitoring, preloading & production hygiene
+Add exactly one item — "Payments" — pointing to `/admin/payments`, appended to the existing admin sidebar registry. No other admin UI change.
 
-- Web Vitals reporter → new `perf_metrics` table (FCP/LCP/TTI/INP/CLS + route + user role).
-- Admin **Performance Dashboard** at `/admin/performance`: Web Vitals p50/p95, slowest queries (from `pg_stat_statements`), largest routes, top AI cache misses, background job queue depth.
-- Router preload rules: `Homepage→Programs`, `Programs→Course Detail`, `Dashboard→Analytics` only (never global).
-- Sign-out cache teardown + `onAuthStateChange` filtering audit (already partially in place).
-- Compute-size check via `db_health`; recommend Cloud instance upgrade only if metrics justify it.
+## Emails (additive templates only)
 
-Success: Admin can see real numbers; no accidental global preload.
+- `PaymentReceivedEmail` → student on submit.
+- `PaymentApprovedEmail` → student on approve (+ enrollment link).
+- `PaymentRejectedEmail` → student on reject (with reason).
+- `EnrollmentActivatedEmail` → student.
+- `NewPaymentAdminEmail` → admins on submit.
 
----
+Wired via existing `sendLovableEmail` helper; if the project has no email domain configured yet, sending is a no-op and the flow still succeeds (logged).
 
-## Non-goals / clarifications
+## Security
 
-- **No repo-splitting into micro-frontends.** "Independently deployable modules" in a single TanStack Start app = route-level chunks + shared services. True multi-repo micro-frontends aren't compatible with this stack and would slow you down, not speed you up.
-- **Website Builder isolation**: achieved via Phase 1 code split + Phase 3 background jobs — the generator runs on Inngest workers, not in the user's tab.
-- **No rewrite of Supabase client** or authentication flow.
-- **No visual/UX changes** unless a component is genuinely dead-duplicated.
+- All form input validated with `zod` (lengths, regex for phone/UTR).
+- Screenshot upload: max 5 MB, `image/png|image/jpeg|image/webp`, scoped to owner path.
+- Duplicate UTR rejected at DB (partial unique index) and in server fn.
+- Every server fn re-verifies auth / role. Admin fns re-check `has_role`.
+- No secrets read at module scope.
 
----
+## Provider abstraction (future-ready)
 
-## Technical anchor points
+Reuse the existing `PaymentProvider` interface in `src/lib/billing/providers/types.ts` by adding a new `upi_manual` implementation under `src/lib/payments/central/providers/upi-manual.server.ts`. The checkout server fn depends on that interface, so adding Razorpay/Stripe later is one new adapter + one registry entry. `payments--enable_stripe_payments` / Cashfree paths are untouched.
 
-- `src/routes/_authenticated/admin/*` — biggest offenders, split first.
-- `src/lib/automation/*`, `src/lib/engage/*` — already server-fn shaped; wrap dispatchers in Inngest handlers.
-- `src/components/home/*` — lazy-load carousels + ecosystem grid.
-- New `src/lib/perf/` — Web Vitals reporter, `<Img>`, `useVisible`, `useCursorPage`.
-- New tables: `ai_jobs`, `ai_response_cache`, `perf_metrics`, plus indexes on hot tables.
+## Verification
 
----
+- `bun run build` and `tsgo --noEmit` pass.
+- Manual walkthrough via Playwright of one course → `/payment/:id` → form submit → payment page (mock QR) → UTR submit → admin approve → success page.
+- Confirm no existing routes changed behaviour (spot-check `/`, `/programs`, `/admin`).
 
-## Execution order
+## What is intentionally NOT done
 
-I'll start with **Phase 1** (code splitting) because it's the highest-leverage change with the lowest risk and gives you visible speed today. I'll ship each phase as a discrete change so you can approve and verify before the next one begins.
+- No changes to `enrollments` schema. Approval writes a new `enrollments` row using existing columns.
+- No changes to existing admin dashboards, `admin.payment-verification`, `admin.payment-links.*`, or partner payment flows.
+- No auto gateway integration (Cashfree/Stripe/etc.) — interface is ready but v1 ships UPI manual only, per spec.
+- No refund UI — DB status supports it; UI is deferred.
 
-Reply **"go"** to start Phase 1, or tell me to reorder / drop phases.
+Reply "go" to implement, or tell me which parts to trim/expand. This is ~15 new files + 1 migration + storage buckets + 5 email templates.

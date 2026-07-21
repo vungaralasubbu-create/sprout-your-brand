@@ -372,6 +372,12 @@ function CoursePage() {
                     <ArrowRight className="size-4" />
                   </Link>
                 </Button>
+                <Button asChild size="lg" variant="primary">
+                  <Link to="/payment/$courseId" params={{ courseId: c.id }}>
+                    Enroll Now
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
                 <CounsellorForm size="lg" variant="outline" context={counsellorCtx} />
                 {c.brochure ? (
                   <a
