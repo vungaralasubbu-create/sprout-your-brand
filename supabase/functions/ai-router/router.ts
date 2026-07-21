@@ -123,7 +123,29 @@ export async function handle(req: Request): Promise<Response> {
           ? "openai"
           : null;
 
-      const resolvedProviderId = input.provider ?? inferredFromModel ?? "openai";
+      let resolvedProviderId: "openai" | "gemini" | "anthropic" =
+        input.provider ?? inferredFromModel ?? "openai";
+
+      // AVAILABILITY FALLBACK: if the resolved provider has no API key
+      // configured, transparently fall back to OpenAI. This guarantees
+      // "if only OpenAI is configured, every module uses OpenAI" without
+      // requiring every caller to know which providers are live.
+      const providerConfigured = (id: "openai" | "gemini" | "anthropic"): boolean => {
+        // deno-lint-ignore no-explicit-any
+        const env = (globalThis as any).Deno?.env;
+        const name = id === "openai"
+          ? "OPENAI_API_KEY"
+          : id === "gemini"
+          ? "GEMINI_API_KEY"
+          : "ANTHROPIC_API_KEY";
+        return !!env?.get?.(name);
+      };
+      const originalProviderId = resolvedProviderId;
+      let providerFallback: string | null = null;
+      if (!providerConfigured(resolvedProviderId) && providerConfigured("openai")) {
+        providerFallback = `${resolvedProviderId}_not_configured_falling_back_to_openai`;
+        resolvedProviderId = "openai";
+      }
 
       let provider;
       if (input.task === "chat") {
@@ -143,9 +165,44 @@ export async function handle(req: Request): Promise<Response> {
 
       // Strip the vendor prefix before forwarding — real provider APIs
       // reject `google/gemini-2.5-flash` / `openai/gpt-4o-mini` etc.
-      const forwardedModel = input.model
+      let forwardedModel = input.model
         ? input.model.replace(/^(openai|google|anthropic)\//i, "")
         : input.model;
+
+      // MODEL-PROVIDER MISMATCH GUARD: if we fell back to OpenAI (or the
+      // caller pinned OpenAI) but the model string still refers to a
+      // non-OpenAI model, remap it to a safe OpenAI default. This is the
+      // last line of defense that prevents "google/gemini-2.5-flash" from
+      // ever reaching the OpenAI endpoint.
+      const OPENAI_FALLBACK_MODEL = "gpt-4o-mini";
+      if (resolvedProviderId === "openai" && forwardedModel) {
+        const ml = forwardedModel.toLowerCase();
+        const looksNonOpenAi = /(^|\b)(gemini|claude)[-/]/.test(ml);
+        if (looksNonOpenAi) {
+          logger.warn({
+            requestId,
+            provider: "openai",
+            task: input.task,
+            message: "model_remapped_to_openai_default",
+            originalModel: input.model,
+            remappedModel: OPENAI_FALLBACK_MODEL,
+            reason: providerFallback ?? "explicit_openai_provider_with_non_openai_model",
+          });
+          forwardedModel = OPENAI_FALLBACK_MODEL;
+        }
+      }
+
+      if (providerFallback) {
+        logger.warn({
+          requestId,
+          task: input.task,
+          message: providerFallback,
+          requestedProvider: originalProviderId,
+          activeProvider: "openai",
+          requestedModel: input.model,
+          activeModel: forwardedModel,
+        });
+      }
 
       const { data, model } = await withTimeout(CONFIG.requestTimeoutMs, (signal) =>
         provider.execute({ task: input.task, model: forwardedModel, prompt: input.prompt, options: input.options, signal }),
