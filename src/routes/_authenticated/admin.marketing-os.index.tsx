@@ -94,28 +94,49 @@ function MarketingOSHome() {
   }, [projects, filter, search]);
 
   const runningRef = useRef(false);
+  const abortRef = useRef<AbortController | null>(null);
+  const cancelledRef = useRef(false);
+  const [runError, setRunError] = useState<string | null>(null);
+
+  function closeRunningModal() {
+    // Abort any in-flight step and release all UI locks.
+    if (abortRef.current) {
+      try { abortRef.current.abort(); } catch { /* noop */ }
+    }
+    cancelledRef.current = true;
+    runningRef.current = false;
+    abortRef.current = null;
+    setRunningProject(null);
+    setRunError(null);
+    qc.invalidateQueries({ queryKey: ["marketing-projects"] });
+  }
+
   async function orchestrate(project: MarketingProject) {
     if (runningRef.current) return;
     runningRef.current = true;
+    cancelledRef.current = false;
+    abortRef.current = new AbortController();
+    setRunError(null);
     setRunningProject(project);
     const steps = PROJECT_STEPS.map((s) => ({ ...s, status: "pending" }));
     setRunningSteps(steps);
     try {
       let hadFailure = false;
       for (let i = 0; i < PROJECT_STEPS.length; i++) {
+        if (cancelledRef.current) break;
         const stepKey = PROJECT_STEPS[i].key;
         setRunningSteps((prev) =>
           prev.map((s, idx) => (idx === i ? { ...s, status: "running" } : s)),
         );
         try {
           const res: any = await runStepFn({ data: { id: project.id, step: stepKey } });
+          if (cancelledRef.current) break;
           if (res && res.ok === false) {
             hadFailure = true;
             setRunningSteps((prev) =>
               prev.map((s, idx) => (idx === i ? { ...s, status: "error" } : s)),
             );
             toast.error(`${PROJECT_STEPS[i].label} failed: ${res.error ?? "unknown error"}`);
-            // Continue with the remaining steps instead of halting.
             continue;
           }
           setRunningSteps((prev) =>
@@ -123,25 +144,37 @@ function MarketingOSHome() {
           );
         } catch (e: any) {
           hadFailure = true;
+          const msg = e?.message ?? "unknown error";
+          setRunError(msg);
           setRunningSteps((prev) =>
             prev.map((s, idx) => (idx === i ? { ...s, status: "error" } : s)),
           );
-          toast.error(`${PROJECT_STEPS[i].label} failed: ${e?.message ?? "unknown error"}`);
-          // Continue — don't freeze the workflow.
+          toast.error(`${PROJECT_STEPS[i].label} failed: ${msg}`);
         }
+      }
+      if (cancelledRef.current) {
+        return;
       }
       if (hadFailure) toast.warning("Some steps failed — open the project to retry them");
       else toast.success("Marketing project ready");
       setTimeout(() => {
+        if (cancelledRef.current) return;
         setRunningProject(null);
+        setRunError(null);
         qc.invalidateQueries({ queryKey: ["marketing-projects"] });
         navigate({
           to: "/admin/marketing-os/project/$id",
           params: { id: project.id },
         });
       }, 700);
+    } catch (e: any) {
+      // Catch-all: never leave the modal in a stuck state.
+      const msg = e?.message ?? "Generation failed";
+      setRunError(msg);
+      toast.error(msg);
     } finally {
       runningRef.current = false;
+      abortRef.current = null;
     }
   }
 
@@ -155,9 +188,16 @@ function MarketingOSHome() {
       await orchestrate(res.project);
       setPrompt("");
     } catch (e: any) {
-      toast.error(e?.message ?? "Failed to create project");
+      const msg = e?.message ?? "Failed to create project";
+      setRunError(msg);
+      toast.error(msg);
+      // Ensure no UI lock remains if creation itself failed.
+      runningRef.current = false;
+      abortRef.current = null;
+      setRunningProject(null);
     }
   }
+
 
   return (
     <div className="max-w-[1400px] mx-auto space-y-10 pb-16">
@@ -310,8 +350,14 @@ function MarketingOSHome() {
       </section>
 
       {/* PROGRESS MODAL */}
-      <Dialog open={runningProject !== null}>
-        <DialogContent className="max-w-lg">
+      <Dialog
+        open={runningProject !== null}
+        onOpenChange={(open) => { if (!open) closeRunningModal(); }}
+      >
+        <DialogContent
+          className="max-w-lg"
+          onEscapeKeyDown={() => closeRunningModal()}
+        >
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-primary/60 grid place-items-center text-white">
@@ -348,11 +394,22 @@ function MarketingOSHome() {
               </div>
             ))}
           </div>
+          {runError && (
+            <div className="mt-3 text-xs text-red-600 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2 break-words">
+              {runError}
+            </div>
+          )}
+          <div className="mt-4 flex justify-end">
+            <Button variant="outline" size="sm" onClick={closeRunningModal}>
+              {runningRef.current && !runError ? "Cancel" : "Close"}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
+
 
 function ProjectCard({
   project, onOpen, onDuplicate, onDelete,
