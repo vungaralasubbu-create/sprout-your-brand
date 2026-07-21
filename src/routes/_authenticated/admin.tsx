@@ -248,8 +248,9 @@ function AdminShell() {
                     const Icon = item.icon;
                     return (
                       <Link
-                        key={item.to}
+                        key={`${item.to}#${item.hash ?? ""}:${item.label}`}
                         to={item.to as any}
+                        hash={item.hash as any}
                         className={cn(
                           "relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors",
                           active
