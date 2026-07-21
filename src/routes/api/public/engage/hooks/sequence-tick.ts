@@ -6,19 +6,14 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
+import { verifyCronRequest, cronUnauthorizedResponse } from "@/lib/security/cron-auth.server";
 
 export const Route = createFileRoute("/api/public/engage/hooks/sequence-tick")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apiKey = request.headers.get("apikey") ?? "";
-        const expected = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY ?? "";
-        if (!expected || apiKey !== expected) {
-          return new Response(JSON.stringify({ error: "unauthorized" }), {
-            status: 401,
-            headers: { "Content-Type": "application/json" },
-          });
-        }
+        if (!verifyCronRequest(request)) return cronUnauthorizedResponse();
+
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 

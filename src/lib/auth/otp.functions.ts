@@ -217,6 +217,54 @@ export const completeOtpPasswordAuth = createServerFn({ method: "POST" })
           return { ok: false as const, step: "session" as const, error: authErrorMessage(created.error.message) };
         }
       }
+    } else {
+      // SIGN-IN: prove the submitted mobile actually belongs to this email's
+      // account before minting a session. Otherwise anyone who knows a
+      // victim's email could receive an OTP on their OWN phone and take over
+      // the victim's account. Compare against student_profiles.mobile and
+      // auth user_metadata.mobile, both normalized to last-10-digits.
+      const { data: prof } = await supabaseAdmin
+        .from("student_profiles")
+        .select("user_id, mobile, email")
+        .eq("email", email)
+        .maybeSingle();
+      const profMobile = prof?.mobile ? normalizeMobile(String(prof.mobile)) : null;
+
+      let metaMobile: string | null = null;
+      let accountExists = Boolean(prof);
+      if (!accountExists) {
+        // Fall back to auth admin lookup — profile row may not exist yet.
+        try {
+          const found = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1 });
+          // listUsers doesn't filter by email; use getUserByEmail-like lookup via listUsers is expensive.
+          // Instead try to fetch a single user by email through the admin API when available.
+          void found;
+        } catch { /* noop */ }
+      }
+      if (prof?.user_id) {
+        const { data: userRes } = await supabaseAdmin.auth.admin.getUserById(prof.user_id);
+        const rawMobile = (userRes?.user?.user_metadata as { mobile?: string } | undefined)?.mobile;
+        metaMobile = rawMobile ? normalizeMobile(String(rawMobile)) : null;
+        accountExists = true;
+      }
+
+      if (!accountExists) {
+        return {
+          ok: false as const,
+          step: "session" as const,
+          error: "No account found for this email. Create an account first.",
+        };
+      }
+
+      const matches = (profMobile && profMobile === mobile) || (metaMobile && metaMobile === mobile);
+      if (!matches) {
+        // Do not reveal whether the account has a different mobile on file.
+        return {
+          ok: false as const,
+          step: "otp" as const,
+          error: "This mobile number is not linked to that email. Sign in from the device you registered with, or contact support.",
+        };
+      }
     }
 
     // Mint a session via magiclink token — no password check.
@@ -231,6 +279,7 @@ export const completeOtpPasswordAuth = createServerFn({ method: "POST" })
       }
       return { ok: false as const, step: "session" as const, error: authErrorMessage(msg || "Session creation failed.") };
     }
+
 
     const verifyRes = await authClient.auth.verifyOtp({
       token_hash: linkRes.data.properties.hashed_token,

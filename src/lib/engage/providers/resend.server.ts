@@ -69,7 +69,33 @@ export const resendAdapter: EngageProviderAdapter = {
 
   async parseWebhook(request: Request): Promise<WebhookEvent[]> {
     try {
-      const body = (await request.json()) as {
+      // Resend uses Svix-signed webhooks. Require RESEND_WEBHOOK_SECRET and
+      // verify svix-id / svix-timestamp / svix-signature before trusting.
+      const secret = process.env.RESEND_WEBHOOK_SECRET;
+      if (!secret) return [];
+      const svixId = request.headers.get("svix-id");
+      const svixTs = request.headers.get("svix-timestamp");
+      const svixSig = request.headers.get("svix-signature");
+      const raw = await request.text();
+      if (!svixId || !svixTs || !svixSig) return [];
+      // Reject replays older than 5 minutes.
+      const tsSec = Number(svixTs);
+      if (!Number.isFinite(tsSec) || Math.abs(Date.now() / 1000 - tsSec) > 300) return [];
+      const { createHmac, timingSafeEqual } = await import("crypto");
+      // Svix secrets are formatted `whsec_<base64>`; strip the prefix.
+      const key = secret.startsWith("whsec_") ? secret.slice(6) : secret;
+      const secretBuf = Buffer.from(key, "base64");
+      const signed = `${svixId}.${svixTs}.${raw}`;
+      const expected = createHmac("sha256", secretBuf).update(signed).digest("base64");
+      const parts = svixSig.split(" ").map((p) => p.trim()).filter(Boolean);
+      const ok = parts.some((p) => {
+        const [, sig] = p.split(",");
+        if (!sig || sig.length !== expected.length) return false;
+        try { return timingSafeEqual(Buffer.from(sig), Buffer.from(expected)); } catch { return false; }
+      });
+      if (!ok) return [];
+
+      const body = JSON.parse(raw) as {
         type?: string;
         data?: { email_id?: string; to?: string[] };
       };
@@ -95,4 +121,5 @@ export const resendAdapter: EngageProviderAdapter = {
       return [];
     }
   },
+
 };

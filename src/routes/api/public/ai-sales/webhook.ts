@@ -30,9 +30,15 @@ export const Route = createFileRoute("/api/public/ai-sales/webhook")({
         const rawText = await request.text();
         const headers: Record<string, string> = {};
         request.headers.forEach((v, k) => (headers[k.toLowerCase()] = v));
-        if (provider.verifySignature && !provider.verifySignature(rawText, headers)) {
-          return new Response("Invalid signature", { status: 401 });
+        // Every non-web provider MUST implement verifySignature. The web
+        // provider is a no-op sender used by the on-site widget which goes
+        // through authenticated server functions, not this webhook.
+        if (provider.id !== "web") {
+          if (!provider.verifySignature || !provider.verifySignature(rawText, headers)) {
+            return new Response("Invalid signature", { status: 401 });
+          }
         }
+
 
         let payload: unknown;
         try {

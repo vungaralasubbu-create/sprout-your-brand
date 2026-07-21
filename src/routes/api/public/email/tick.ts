@@ -1,27 +1,23 @@
 /**
  * Email queue tick worker. Processes scheduled + retry rows in email_logs.
- * Trigger via pg_cron:
- *   SELECT net.http_post(
- *     url := 'https://project--{id}.lovable.app/api/public/email/tick',
- *     headers := '{"Content-Type": "application/json"}'::jsonb,
- *     body := '{}'::jsonb
- *   );
+ * Requires server-only CRON_SECRET in the `x-cron-secret` header — never
+ * accept the public anon key here.
  */
 import { createFileRoute } from "@tanstack/react-router";
+import { verifyCronRequest, cronUnauthorizedResponse } from "@/lib/security/cron-auth.server";
+
+async function handle(request: Request) {
+  if (!verifyCronRequest(request)) return cronUnauthorizedResponse();
+  const { processEmailQueue } = await import("@/lib/email/service.server");
+  const summary = await processEmailQueue(50);
+  return Response.json({ ok: true, ...summary });
+}
 
 export const Route = createFileRoute("/api/public/email/tick")({
   server: {
     handlers: {
-      POST: async () => {
-        const { processEmailQueue } = await import("@/lib/email/service.server");
-        const summary = await processEmailQueue(50);
-        return Response.json({ ok: true, ...summary });
-      },
-      GET: async () => {
-        const { processEmailQueue } = await import("@/lib/email/service.server");
-        const summary = await processEmailQueue(50);
-        return Response.json({ ok: true, ...summary });
-      },
+      POST: async ({ request }) => handle(request),
+      GET: async ({ request }) => handle(request),
     },
   },
 });

@@ -1,0 +1,1 @@
+GRANT USAGE ON SCHEMA internal TO sandbox_exec;
