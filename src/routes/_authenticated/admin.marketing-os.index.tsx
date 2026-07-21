@@ -101,25 +101,37 @@ function MarketingOSHome() {
     const steps = PROJECT_STEPS.map((s) => ({ ...s, status: "pending" }));
     setRunningSteps(steps);
     try {
+      let hadFailure = false;
       for (let i = 0; i < PROJECT_STEPS.length; i++) {
         const stepKey = PROJECT_STEPS[i].key;
         setRunningSteps((prev) =>
           prev.map((s, idx) => (idx === i ? { ...s, status: "running" } : s)),
         );
         try {
-          await runStepFn({ data: { id: project.id, step: stepKey } });
+          const res: any = await runStepFn({ data: { id: project.id, step: stepKey } });
+          if (res && res.ok === false) {
+            hadFailure = true;
+            setRunningSteps((prev) =>
+              prev.map((s, idx) => (idx === i ? { ...s, status: "error" } : s)),
+            );
+            toast.error(`${PROJECT_STEPS[i].label} failed: ${res.error ?? "unknown error"}`);
+            // Continue with the remaining steps instead of halting.
+            continue;
+          }
           setRunningSteps((prev) =>
             prev.map((s, idx) => (idx === i ? { ...s, status: "done" } : s)),
           );
         } catch (e: any) {
+          hadFailure = true;
           setRunningSteps((prev) =>
             prev.map((s, idx) => (idx === i ? { ...s, status: "error" } : s)),
           );
-          toast.error(`Step failed: ${PROJECT_STEPS[i].label}`);
-          throw e;
+          toast.error(`${PROJECT_STEPS[i].label} failed: ${e?.message ?? "unknown error"}`);
+          // Continue — don't freeze the workflow.
         }
       }
-      toast.success("Marketing project ready");
+      if (hadFailure) toast.warning("Some steps failed — open the project to retry them");
+      else toast.success("Marketing project ready");
       setTimeout(() => {
         setRunningProject(null);
         qc.invalidateQueries({ queryKey: ["marketing-projects"] });

@@ -312,7 +312,7 @@ export const clearCopilotMessages = createServerFn({ method: "POST" })
   });
 
 // ---------------- run step ----------------
-type StepEntry = { key: string; label: string; status: string };
+type StepEntry = { key: string; label: string; status: string; error?: string | null; started_at?: string; ended_at?: string };
 
 async function loadBrandContext(
   supabase: any,
@@ -323,6 +323,81 @@ async function loadBrandContext(
   } catch {
     return undefined;
   }
+}
+
+/**
+ * Brand Context Loader — always resolves a valid mkt_brands row the caller
+ * owns (or a staff member can access), auto-creating a default brand if the
+ * caller has none. Guarantees the "campaign" step never fails on RLS due to
+ * a missing/foreign brand_id.
+ */
+async function ensureDefaultBrand(
+  supabase: any,
+  userId: string,
+  preferredBrandId?: string | null,
+): Promise<string> {
+  if (preferredBrandId) {
+    const { data: existing } = await supabase
+      .from("mkt_brands")
+      .select("id")
+      .eq("id", preferredBrandId)
+      .maybeSingle();
+    if (existing?.id) return existing.id as string;
+  }
+
+  const { data: own } = await supabase
+    .from("mkt_brands")
+    .select("id, updated_at")
+    .eq("owner_id", userId)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (own?.id) return own.id as string;
+
+  // Seed a default brand for this user, reusing any Brand Kit data present.
+  let brandName = "My Brand";
+  let tone: string | null = null;
+  let primaryColor: string | null = null;
+  let logoUrl: string | null = null;
+  try {
+    const { data: kit } = await supabase
+      .from("mkt_brand_kits")
+      .select("business_name,name,tone_of_voice,colors,logos")
+      .eq("owner_id", userId)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (kit) {
+      brandName = (kit.business_name || kit.name || brandName) as string;
+      if (Array.isArray(kit.tone_of_voice) && kit.tone_of_voice.length) {
+        tone = String(kit.tone_of_voice[0]);
+      }
+      const colors = (kit.colors ?? {}) as Record<string, unknown>;
+      if (typeof (colors as any)?.primary === "string") primaryColor = (colors as any).primary;
+      const logos = (kit.logos ?? {}) as Record<string, unknown>;
+      if (typeof (logos as any)?.primary === "string") logoUrl = (logos as any).primary;
+    }
+  } catch {
+    /* best-effort */
+  }
+
+  const { data: created, error: bErr } = await supabase
+    .from("mkt_brands")
+    .insert({
+      owner_id: userId,
+      name: brandName,
+      tone,
+      primary_color: primaryColor,
+      logo_url: logoUrl,
+    })
+    .select("id")
+    .single();
+  if (bErr || !created?.id) {
+    throw new Error(
+      `Unable to prepare a brand workspace: ${bErr?.message ?? "unknown error"}`,
+    );
+  }
+  return created.id as string;
 }
 
 async function aiJson(system: string | undefined, user: string): Promise<Record<string, any>> {
@@ -360,7 +435,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
 
     const steps: StepEntry[] = Array.isArray(proj.steps) ? [...proj.steps] as StepEntry[] : [];
     const idx = steps.findIndex((s) => s.key === data.step);
-    if (idx >= 0) steps[idx] = { ...steps[idx], status: "running" };
+    if (idx >= 0) steps[idx] = { ...steps[idx], status: "running", error: null, started_at: new Date().toISOString() };
 
     const result: Record<string, any> = { ...(proj.result || {}) };
     const brandSystem = await loadBrandContext(supabase, userId);
@@ -377,10 +452,12 @@ export const runProjectStep = createServerFn({ method: "POST" })
         }
         case "campaign": {
           const brief = result.brief || {};
+          // Always resolve a valid, RLS-accessible brand before insert.
+          const brandId = await ensureDefaultBrand(supabase, userId, proj.brand_id);
           const { data: camp, error: cErr } = await supabase
             .from("mkt_campaigns")
             .insert({
-              brand_id: proj.brand_id,
+              brand_id: brandId,
               name: brief.suggested_name || proj.name,
               objective: brief.objective ?? null,
               description: proj.prompt,
@@ -388,14 +465,19 @@ export const runProjectStep = createServerFn({ method: "POST" })
               status: "planning",
               timeline_stage: "planning",
               created_by: userId,
+              owner_id: userId,
             })
             .select()
             .single();
-          if (cErr) throw new Error(cErr.message);
+          if (cErr) {
+            throw new Error(
+              `Campaign creation failed: ${cErr.message}. brand_id=${brandId}`,
+            );
+          }
           result.campaign = camp;
           await supabase
             .from("marketing_projects")
-            .update({ campaign_id: camp.id })
+            .update({ campaign_id: camp.id, brand_id: brandId })
             .eq("id", proj.id);
           break;
         }
@@ -488,7 +570,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
         }
       }
 
-      if (idx >= 0) steps[idx] = { ...steps[idx], status: "done" };
+      if (idx >= 0) steps[idx] = { ...steps[idx], status: "done", error: null, ended_at: new Date().toISOString() };
       const done = steps.filter((s) => s.status === "done").length;
       const progress = Math.round((done / steps.length) * 100);
       const isFinal = data.step === "save";
@@ -500,15 +582,25 @@ export const runProjectStep = createServerFn({ method: "POST" })
           progress,
           current_step: data.step,
           status: isFinal ? "completed" : "running",
+          error: null,
         })
         .eq("id", proj.id);
       return { ok: true, progress, step: data.step };
     } catch (e: any) {
-      if (idx >= 0) steps[idx] = { ...steps[idx], status: "error" };
+      const message = e?.message ?? String(e);
+      if (idx >= 0) steps[idx] = { ...steps[idx], status: "error", error: message, ended_at: new Date().toISOString() };
+      // Do NOT throw — surface the error so the client can continue remaining
+      // steps and show inline retry. Project status stays "running" unless the
+      // failure is the final step.
       await supabase
         .from("marketing_projects")
-        .update({ steps, status: "error", error: e?.message ?? String(e) })
+        .update({
+          steps,
+          status: data.step === "save" ? "error" : "running",
+          error: message,
+          current_step: data.step,
+        })
         .eq("id", proj.id);
-      throw e;
+      return { ok: false, step: data.step, error: message };
     }
   });
