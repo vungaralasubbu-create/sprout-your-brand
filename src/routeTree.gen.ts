@@ -183,6 +183,7 @@ import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedKnowledgeIndexRouteImport } from './routes/_authenticated/knowledge.index'
 import { Route as AuthenticatedIntegrationsIndexRouteImport } from './routes/_authenticated/integrations.index'
 import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
+import { Route as AuthenticatedDevelopersIndexRouteImport } from './routes/_authenticated/developers.index'
 import { Route as AuthenticatedBillingIndexRouteImport } from './routes/_authenticated/billing.index'
 import { Route as AuthenticatedAgentsIndexRouteImport } from './routes/_authenticated/agents.index'
 import { Route as AuthenticatedAgencyIndexRouteImport } from './routes/_authenticated/agency.index'
@@ -1473,6 +1474,12 @@ const AuthenticatedInstructorIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedInstructorRoute,
+  } as any)
+const AuthenticatedDevelopersIndexRoute =
+  AuthenticatedDevelopersIndexRouteImport.update({
+    id: '/developers/',
+    path: '/developers/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedBillingIndexRoute =
   AuthenticatedBillingIndexRouteImport.update({
@@ -4247,6 +4254,7 @@ export interface FileRoutesByFullPath {
   '/agency/': typeof AuthenticatedAgencyIndexRoute
   '/agents/': typeof AuthenticatedAgentsIndexRoute
   '/billing/': typeof AuthenticatedBillingIndexRoute
+  '/developers/': typeof AuthenticatedDevelopersIndexRoute
   '/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
@@ -4808,6 +4816,7 @@ export interface FileRoutesByTo {
   '/agency': typeof AuthenticatedAgencyIndexRoute
   '/agents': typeof AuthenticatedAgentsIndexRoute
   '/billing': typeof AuthenticatedBillingIndexRoute
+  '/developers': typeof AuthenticatedDevelopersIndexRoute
   '/instructor': typeof AuthenticatedInstructorIndexRoute
   '/integrations': typeof AuthenticatedIntegrationsIndexRoute
   '/knowledge': typeof AuthenticatedKnowledgeIndexRoute
@@ -5392,6 +5401,7 @@ export interface FileRoutesById {
   '/_authenticated/agency/': typeof AuthenticatedAgencyIndexRoute
   '/_authenticated/agents/': typeof AuthenticatedAgentsIndexRoute
   '/_authenticated/billing/': typeof AuthenticatedBillingIndexRoute
+  '/_authenticated/developers/': typeof AuthenticatedDevelopersIndexRoute
   '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/_authenticated/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/_authenticated/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
@@ -5975,6 +5985,7 @@ export interface FileRouteTypes {
     | '/agency/'
     | '/agents/'
     | '/billing/'
+    | '/developers/'
     | '/instructor/'
     | '/integrations/'
     | '/knowledge/'
@@ -6536,6 +6547,7 @@ export interface FileRouteTypes {
     | '/agency'
     | '/agents'
     | '/billing'
+    | '/developers'
     | '/instructor'
     | '/integrations'
     | '/knowledge'
@@ -7119,6 +7131,7 @@ export interface FileRouteTypes {
     | '/_authenticated/agency/'
     | '/_authenticated/agents/'
     | '/_authenticated/billing/'
+    | '/_authenticated/developers/'
     | '/_authenticated/instructor/'
     | '/_authenticated/integrations/'
     | '/_authenticated/knowledge/'
@@ -8686,6 +8699,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/instructor/'
       preLoaderRoute: typeof AuthenticatedInstructorIndexRouteImport
       parentRoute: typeof AuthenticatedInstructorRoute
+    }
+    '/_authenticated/developers/': {
+      id: '/_authenticated/developers/'
+      path: '/developers'
+      fullPath: '/developers/'
+      preLoaderRoute: typeof AuthenticatedDevelopersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/billing/': {
       id: '/_authenticated/billing/'
@@ -12821,6 +12841,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedTemplatesSlugRoute: typeof AuthenticatedTemplatesSlugRoute
   AuthenticatedAgentsIndexRoute: typeof AuthenticatedAgentsIndexRoute
+  AuthenticatedDevelopersIndexRoute: typeof AuthenticatedDevelopersIndexRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
   AuthenticatedTemplatesIndexRoute: typeof AuthenticatedTemplatesIndexRoute
   AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
@@ -12854,6 +12875,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedTemplatesSlugRoute: AuthenticatedTemplatesSlugRoute,
   AuthenticatedAgentsIndexRoute: AuthenticatedAgentsIndexRoute,
+  AuthenticatedDevelopersIndexRoute: AuthenticatedDevelopersIndexRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
   AuthenticatedTemplatesIndexRoute: AuthenticatedTemplatesIndexRoute,
   AuthenticatedWorkspaceProjectProjectIdRoute:
