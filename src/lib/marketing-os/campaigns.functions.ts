@@ -246,16 +246,15 @@ export const duplicateCampaign = createServerFn({ method: "POST" })
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!src) throw new Error("Campaign not found");
-    const { id: _id, created_at: _c, updated_at: _u, ...rest } = src as any;
-    const { data: dup, error: dupErr } = await context.supabase
-      .from("mkt_campaigns")
-      .insert({
-        ...rest,
-        name: `${rest.name} (Copy)`,
-        status: "draft",
-        archived_at: null,
-        created_by: context.userId,
-      })
+    const { id: _id, created_at: _c, updated_at: _u, brand_id: srcBrandId, ...rest } = src as any;
+    const { createCampaignForUser } = await import("@/lib/marketing-os/campaign-service.server");
+    const dup = await createCampaignForUser(
+      context.supabase,
+      context.userId,
+      { ...rest, name: `${rest.name} (Copy)`, status: "draft", archived_at: null },
+      { preferredBrandId: srcBrandId },
+    );
+
       .select()
       .single();
     if (dupErr) throw new Error(dupErr.message);
