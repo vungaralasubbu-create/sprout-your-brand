@@ -18,9 +18,18 @@ export async function getUserFromRequest(req: Request): Promise<{ id: string } |
   // user id header. Legacy user-token path below is unchanged.
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const runAs = req.headers.get("x-run-as-user-id");
-  if (serviceKey && token === serviceKey && runAs && /^[0-9a-f-]{36}$/i.test(runAs)) {
-    return { id: runAs };
+  const isUuid = runAs && /^[0-9a-f-]{36}$/i.test(runAs);
+  if (serviceKey && token === serviceKey && isUuid) {
+    return { id: runAs! };
   }
+  // Additive: internal dispatch shared-secret path — resilient when the
+  // worker's SERVICE_ROLE key differs from the edge function's at runtime.
+  const dispatchSecret = Deno.env.get("INTERNAL_DISPATCH_SECRET");
+  const providedSecret = req.headers.get("x-internal-secret");
+  if (dispatchSecret && providedSecret && providedSecret === dispatchSecret && isUuid) {
+    return { id: runAs! };
+  }
+
 
   const url = Deno.env.get("SUPABASE_URL");
   const anon = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY");

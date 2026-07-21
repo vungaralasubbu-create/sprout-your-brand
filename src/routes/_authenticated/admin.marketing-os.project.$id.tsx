@@ -1,22 +1,32 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Sparkles, ArrowLeft, FileText, Image as ImageIcon, Video, LayoutTemplate,
   ClipboardList, Mail, CalendarDays, Workflow, BarChart3, LayoutDashboard,
   TrendingUp, Users, DollarSign, Target, Lightbulb, Activity,
+  Send, Clock, Save, Check, X as XIcon, Loader2, ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { getMarketingProject } from "@/lib/marketing-os/projects.functions";
+import {
+  getProjectPublishStatus, saveProjectDraft, approveProject, rejectProject,
+  publishProjectNow, scheduleProject,
+} from "@/lib/marketing-os/project-publish.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/marketing-os/project/$id")({
   component: ProjectOverview,
 });
+
 
 function ProjectOverview() {
   const { id } = Route.useParams();
@@ -76,6 +86,10 @@ function ProjectOverview() {
           {project.status}
         </Badge>
       </div>
+
+      <ProjectPublishToolbar projectId={id} />
+
+
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">
@@ -349,6 +363,164 @@ function RailCard({ icon: Icon, title, children }: { icon: any; title: string; c
         <div className="text-sm font-semibold">{title}</div>
       </div>
       {children}
+    </div>
+  );
+}
+
+/* ================= Publish Toolbar (additive, non-redesigning) ================= */
+
+const PUBLISH_STATE_TONE: Record<string, { label: string; variant: "success" | "muted" | "outline" | "destructive" | "default" }> = {
+  draft:      { label: "Draft",      variant: "outline" },
+  approved:   { label: "Approved",   variant: "default" },
+  scheduled:  { label: "Scheduled",  variant: "default" },
+  publishing: { label: "Publishing", variant: "default" },
+  published:  { label: "Published",  variant: "success" },
+  failed:     { label: "Failed",     variant: "destructive" },
+  rejected:   { label: "Rejected",   variant: "muted" },
+};
+
+function ProjectPublishToolbar({ projectId }: { projectId: string }) {
+  const qc = useQueryClient();
+  const statusFn = useServerFn(getProjectPublishStatus);
+  const saveFn = useServerFn(saveProjectDraft);
+  const approveFn = useServerFn(approveProject);
+  const rejectFn = useServerFn(rejectProject);
+  const publishNowFn = useServerFn(publishProjectNow);
+  const scheduleFn = useServerFn(scheduleProject);
+  const [busy, setBusy] = useState<null | "draft" | "approve" | "reject" | "publish" | "schedule">(null);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [when, setWhen] = useState<string>(() => {
+    const d = new Date(Date.now() + 60 * 60 * 1000);
+    d.setSeconds(0, 0);
+    return d.toISOString().slice(0, 16); // local-format for datetime-local
+  });
+  const [tz, setTz] = useState<string>(() => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
+
+  const q = useQuery({
+    queryKey: ["project-publish-status", projectId],
+    queryFn: () => statusFn({ data: { projectId } }),
+    refetchInterval: (query) => {
+      const s = (query.state.data as any)?.publish?.state;
+      const jobs = (query.state.data as any)?.jobs as any[] | undefined;
+      const hasActive = jobs?.some((j) => j.status === "queued" || j.status === "publishing" || j.status === "retrying");
+      return s === "publishing" || hasActive ? 3000 : false;
+    },
+  });
+
+  const publish = (q.data as any)?.publish ?? { state: "draft" };
+  const jobs: any[] = (q.data as any)?.jobs ?? [];
+  const tone = PUBLISH_STATE_TONE[publish.state] ?? PUBLISH_STATE_TONE.draft;
+
+  const wrap = async (name: NonNullable<typeof busy>, fn: () => Promise<unknown>, ok: string) => {
+    try {
+      setBusy(name);
+      await fn();
+      toast.success(ok);
+      await qc.invalidateQueries({ queryKey: ["project-publish-status", projectId] });
+    } catch (e) {
+      toast.error((e as Error).message ?? "Action failed");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const summary = (() => {
+    if (!jobs.length) return null;
+    const c = (s: string) => jobs.filter((j) => j.status === s).length;
+    return { pending: c("queued") + c("retrying"), publishing: c("publishing"), published: c("published"), failed: c("failed") };
+  })();
+
+  return (
+    <div className="mb-6 rounded-2xl border border-border/60 bg-card p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2 mr-2">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Publish</span>
+          <Badge variant={tone.variant as any} className="capitalize">{tone.label}</Badge>
+        </div>
+        <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => wrap("draft", () => saveFn({ data: { projectId } }), "Saved as draft")}>
+          {busy === "draft" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Save className="size-3.5 mr-1.5" />} Save Draft
+        </Button>
+        <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => wrap("approve", () => approveFn({ data: { projectId } }), "Approved")}>
+          {busy === "approve" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Check className="size-3.5 mr-1.5" />} Approve
+        </Button>
+        <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => wrap("reject", () => rejectFn({ data: { projectId } }), "Rejected")}>
+          {busy === "reject" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <XIcon className="size-3.5 mr-1.5" />} Reject
+        </Button>
+        <div className="flex-1" />
+        <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => setScheduleOpen(true)}>
+          <Clock className="size-3.5 mr-1.5" /> Schedule
+        </Button>
+        <Button size="sm" disabled={busy !== null} onClick={() => wrap("publish", () => publishNowFn({ data: { projectId } }), "Publishing started")}>
+          {busy === "publish" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Send className="size-3.5 mr-1.5" />} Publish Now
+        </Button>
+      </div>
+
+      {summary && (
+        <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted-foreground">
+          <span>{summary.pending} pending</span>
+          <span>·</span>
+          <span>{summary.publishing} publishing</span>
+          <span>·</span>
+          <span>{summary.published} published</span>
+          <span>·</span>
+          <span className={summary.failed > 0 ? "text-destructive" : ""}>{summary.failed} failed</span>
+        </div>
+      )}
+
+      {jobs.length > 0 && (
+        <div className="mt-3 border-t border-border/60 pt-3 space-y-1.5 max-h-56 overflow-auto">
+          {jobs.map((j) => (
+            <div key={j.id} className="flex items-center gap-2 text-xs">
+              <Badge variant="outline" className="uppercase text-[10px] min-w-[70px] justify-center">{j.platform}</Badge>
+              <span className="capitalize text-muted-foreground min-w-[80px]">{j.status}</span>
+              <span className="text-muted-foreground truncate flex-1">{j.account_label ?? "—"}</span>
+              {j.platform_url ? (
+                <a href={j.platform_url} target="_blank" rel="noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
+                  View <ExternalLink className="size-3" />
+                </a>
+              ) : j.error_message ? (
+                <span className="text-destructive truncate max-w-[240px]" title={j.error_message}>{j.error_message}</span>
+              ) : (
+                <span className="text-muted-foreground">{new Date(j.scheduled_at).toLocaleString()}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Dialog open={scheduleOpen} onOpenChange={setScheduleOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Schedule publish</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="pp-when">Date &amp; time</Label>
+              <Input id="pp-when" type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="pp-tz">Timezone</Label>
+              <Input id="pp-tz" value={tz} onChange={(e) => setTz(e.target.value)} placeholder="e.g. Asia/Kolkata" />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Posts publish to every connected account (Instagram, Facebook, LinkedIn, X).
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setScheduleOpen(false)}>Cancel</Button>
+            <Button
+              disabled={busy !== null}
+              onClick={async () => {
+                const iso = new Date(when).toISOString();
+                await wrap("schedule", () => scheduleFn({ data: { projectId, scheduled_at: iso, timezone: tz } }), "Scheduled");
+                setScheduleOpen(false);
+              }}
+            >
+              {busy === "schedule" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Clock className="size-3.5 mr-1.5" />} Schedule
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
