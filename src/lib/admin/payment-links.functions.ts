@@ -349,7 +349,7 @@ export const getPaymentLinkDetail = createServerFn({ method: "GET" })
     const { data: link, error } = await supabase
       .from("payment_links")
       .select(
-        "id, code, name, plan, amount, url, status, notes, created_at, created_by, disabled_by, disabled_at, course_id, courses:course_id(id, name, slug)",
+        "id, code, name, plan, amount, url, status, notes, created_at, created_by, disabled_by, disabled_at, course_id, merchant_name, upi_id, account_holder, bank_name, qr_image_url, is_default_active, courses:course_id(id, name, slug)",
       )
       .eq("id", data.id)
       .maybeSingle();
