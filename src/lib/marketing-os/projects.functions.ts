@@ -65,6 +65,11 @@ export const createMarketingProject = createServerFn({ method: "POST" })
     const sb: any = (context.supabase as any);
     const { resolveOwnedBrandId } = await import("@/lib/marketing-os/campaign-service.server");
     const brandId = await resolveOwnedBrandId(sb, context.userId, data.brand_id);
+    console.info("[verify:createMarketingProject]", JSON.stringify({
+      userId: context.userId,
+      requested_brand_id: data.brand_id ?? null,
+      resolved_brand_id: brandId,
+    }));
     const { data: created, error } = await sb
       .from("marketing_projects")
       .insert({
@@ -78,9 +83,16 @@ export const createMarketingProject = createServerFn({ method: "POST" })
       })
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) {
+      console.error("[verify:createMarketingProject:insert_error]", JSON.stringify({
+        code: (error as any).code, message: error.message, brandId, userId: context.userId,
+      }));
+      throw new Error(error.message);
+    }
+    console.info("[verify:createMarketingProject:ok]", JSON.stringify({ projectId: (created as any)?.id, brandId }));
     return { project: created as MarketingProject };
   });
+
 
 
 // ---------------- get ----------------
