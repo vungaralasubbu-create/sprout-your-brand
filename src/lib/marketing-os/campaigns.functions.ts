@@ -254,12 +254,9 @@ export const duplicateCampaign = createServerFn({ method: "POST" })
       { ...rest, name: `${rest.name} (Copy)`, status: "draft", archived_at: null },
       { preferredBrandId: srcBrandId },
     );
-
-      .select()
-      .single();
-    if (dupErr) throw new Error(dupErr.message);
     return { campaign: dup as Campaign };
   });
+
 
 // ---------- Tasks ----------
 const TaskInputSchema = z.object({
