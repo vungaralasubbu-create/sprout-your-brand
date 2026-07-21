@@ -25692,6 +25692,13 @@ export type Database = {
             referencedRelation: "student_reviews"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "review_requests_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "student_reviews_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       risk_flag_activity: {
@@ -30351,6 +30358,119 @@ export type Database = {
           title: string | null
         }
         Relationships: []
+      }
+      student_reviews_public: {
+        Row: {
+          after_snapshot: Json | null
+          before_snapshot: Json | null
+          career_growth_notes: string | null
+          company_logo_url: string | null
+          company_name: string | null
+          created_at: string | null
+          display_locations: string[] | null
+          featured: boolean | null
+          id: string | null
+          published_at: string | null
+          rating: number | null
+          review_text: string | null
+          reviewer_avatar_url: string | null
+          reviewer_linkedin_url: string | null
+          reviewer_name: string | null
+          salary_after_lpa: number | null
+          salary_before_lpa: number | null
+          salary_growth_pct: number | null
+          seo_slug: string | null
+          source: string | null
+          status: string | null
+          success_story_id: string | null
+          target_id: string | null
+          target_label: string | null
+          target_slug: string | null
+          target_type: string | null
+          title: string | null
+          trigger_event: string | null
+          updated_at: string | null
+          user_id: string | null
+          video_thumbnail_url: string | null
+          video_url: string | null
+        }
+        Insert: {
+          after_snapshot?: Json | null
+          before_snapshot?: Json | null
+          career_growth_notes?: string | null
+          company_logo_url?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          display_locations?: string[] | null
+          featured?: boolean | null
+          id?: string | null
+          published_at?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_avatar_url?: string | null
+          reviewer_linkedin_url?: string | null
+          reviewer_name?: string | null
+          salary_after_lpa?: number | null
+          salary_before_lpa?: number | null
+          salary_growth_pct?: number | null
+          seo_slug?: string | null
+          source?: string | null
+          status?: string | null
+          success_story_id?: string | null
+          target_id?: string | null
+          target_label?: string | null
+          target_slug?: string | null
+          target_type?: string | null
+          title?: string | null
+          trigger_event?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          video_thumbnail_url?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          after_snapshot?: Json | null
+          before_snapshot?: Json | null
+          career_growth_notes?: string | null
+          company_logo_url?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          display_locations?: string[] | null
+          featured?: boolean | null
+          id?: string | null
+          published_at?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_avatar_url?: string | null
+          reviewer_linkedin_url?: string | null
+          reviewer_name?: string | null
+          salary_after_lpa?: number | null
+          salary_before_lpa?: number | null
+          salary_growth_pct?: number | null
+          seo_slug?: string | null
+          source?: string | null
+          status?: string | null
+          success_story_id?: string | null
+          target_id?: string | null
+          target_label?: string | null
+          target_slug?: string | null
+          target_type?: string | null
+          title?: string | null
+          trigger_event?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          video_thumbnail_url?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "student_reviews_success_story_id_fkey"
+            columns: ["success_story_id"]
+            isOneToOne: false
+            referencedRelation: "success_stories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
