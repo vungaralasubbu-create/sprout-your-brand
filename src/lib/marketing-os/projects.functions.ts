@@ -435,7 +435,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
 
     const steps: StepEntry[] = Array.isArray(proj.steps) ? [...proj.steps] as StepEntry[] : [];
     const idx = steps.findIndex((s) => s.key === data.step);
-    if (idx >= 0) steps[idx] = { ...steps[idx], status: "running" };
+    if (idx >= 0) steps[idx] = { ...steps[idx], status: "running", error: null, started_at: new Date().toISOString() };
 
     const result: Record<string, any> = { ...(proj.result || {}) };
     const brandSystem = await loadBrandContext(supabase, userId);
