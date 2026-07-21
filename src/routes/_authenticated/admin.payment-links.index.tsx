@@ -77,16 +77,18 @@ function Page() {
     <div className="space-y-6 max-w-[1600px]">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-2xl font-display font-semibold tracking-tight">Payment Links</h2>
+          <h2 className="text-2xl font-display font-semibold tracking-tight">Payment Gateway</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Master payment links used by sales partners. Only active links are visible to partners.
+            Glintr Managed Payment Accounts. Manage QR-based UPI accounts and legacy payment URLs. Only
+            one account can be marked as the platform-wide default at a time.
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus className="size-4" />
-          Create Payment Link
+          Create Payment Account
         </Button>
       </div>
+
 
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
         <StatCard label="Total Links" value={summary?.total ?? 0} icon={Link2Icon} />
