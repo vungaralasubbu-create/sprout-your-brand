@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Copy, Plus, Link2, Ban, CheckCircle2, ExternalLink, Search } from "lucide-react";
+import { Copy, Plus, Link2, Ban, CheckCircle2, ExternalLink, Search, Upload, Star } from "lucide-react";
 
 import {
   getPaymentLinkSummary,
@@ -10,10 +10,14 @@ import {
   listProgramsForLinks,
   createPaymentLink,
   setPaymentLinkStatus,
+  setPaymentLinkActive,
+  clearPaymentLinkActive,
   PLAN_LABELS,
   PLAN_DEFAULT_AMOUNT,
   type PaymentPlan,
 } from "@/lib/admin/payment-links.functions";
+import { createPaymentAccountUploadUrl } from "@/lib/payments/central/gateway.functions";
+import { getPaymentConfigSignedUrl } from "@/lib/payments/central/settings.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,6 +46,7 @@ import { Link2 as Link2Icon, ShieldCheck, Wallet, Ban as BanIcon, Users2, CheckC
 export const Route = createFileRoute("/_authenticated/admin/payment-links/")({
   component: Page,
 });
+
 
 const inr = (n: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(
