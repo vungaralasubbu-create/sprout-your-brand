@@ -89,7 +89,11 @@ function AdminPaymentDetail() {
           <Detail k="Coupon" v={r.coupon_code} />
           <Detail k="Referral" v={r.referral_code} />
           <Detail k="Provider" v={r.provider} />
+          <Detail k="QR version used" v={r.qr_version_used ?? "—"} />
+          <Detail k="UPI ID used" v={r.upi_id_used ?? "—"} />
+          <Detail k="Merchant used" v={r.merchant_name_used ?? "—"} />
         </dl>
+
 
         {r.screenshotSignedUrl ? (
           <div className="mt-5">

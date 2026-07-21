@@ -12209,16 +12209,20 @@ export type Database = {
           id: string
           info_request_note: string | null
           last_name: string
+          merchant_name_used: string | null
           order_id: string
           phone: string
           provider: string
           provider_ref: string | null
+          qr_version_used: number | null
           referral_code: string | null
           rejection_reason: string | null
           screenshot_url: string | null
+          settings_id: string | null
           state: string | null
           status: string
           updated_at: string
+          upi_id_used: string | null
           user_id: string
           utr_number: string | null
           verified_at: string | null
@@ -12242,16 +12246,20 @@ export type Database = {
           id?: string
           info_request_note?: string | null
           last_name: string
+          merchant_name_used?: string | null
           order_id: string
           phone: string
           provider?: string
           provider_ref?: string | null
+          qr_version_used?: number | null
           referral_code?: string | null
           rejection_reason?: string | null
           screenshot_url?: string | null
+          settings_id?: string | null
           state?: string | null
           status?: string
           updated_at?: string
+          upi_id_used?: string | null
           user_id: string
           utr_number?: string | null
           verified_at?: string | null
@@ -12275,16 +12283,20 @@ export type Database = {
           id?: string
           info_request_note?: string | null
           last_name?: string
+          merchant_name_used?: string | null
           order_id?: string
           phone?: string
           provider?: string
           provider_ref?: string | null
+          qr_version_used?: number | null
           referral_code?: string | null
           rejection_reason?: string | null
           screenshot_url?: string | null
+          settings_id?: string | null
           state?: string | null
           status?: string
           updated_at?: string
+          upi_id_used?: string | null
           user_id?: string
           utr_number?: string | null
           verified_at?: string | null
@@ -12303,6 +12315,13 @@ export type Database = {
             columns: ["enrollment_id"]
             isOneToOne: false
             referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_payments_settings_id_fkey"
+            columns: ["settings_id"]
+            isOneToOne: false
+            referencedRelation: "payment_settings"
             referencedColumns: ["id"]
           },
         ]
@@ -24324,42 +24343,60 @@ export type Database = {
       payment_settings: {
         Row: {
           created_at: string
+          created_by: string | null
           id: string
           instructions: string | null
           is_active: boolean
+          is_enabled: boolean
+          logo_url: string | null
+          maintenance_mode: boolean
           merchant_name: string | null
           qr_image_url: string | null
+          success_message: string | null
           support_email: string | null
           support_phone: string | null
           updated_at: string
           updated_by: string | null
           upi_id: string | null
+          version: number
         }
         Insert: {
           created_at?: string
+          created_by?: string | null
           id?: string
           instructions?: string | null
           is_active?: boolean
+          is_enabled?: boolean
+          logo_url?: string | null
+          maintenance_mode?: boolean
           merchant_name?: string | null
           qr_image_url?: string | null
+          success_message?: string | null
           support_email?: string | null
           support_phone?: string | null
           updated_at?: string
           updated_by?: string | null
           upi_id?: string | null
+          version?: number
         }
         Update: {
           created_at?: string
+          created_by?: string | null
           id?: string
           instructions?: string | null
           is_active?: boolean
+          is_enabled?: boolean
+          logo_url?: string | null
+          maintenance_mode?: boolean
           merchant_name?: string | null
           qr_image_url?: string | null
+          success_message?: string | null
           support_email?: string | null
           support_phone?: string | null
           updated_at?: string
           updated_by?: string | null
           upi_id?: string | null
+          version?: number
         }
         Relationships: []
       }

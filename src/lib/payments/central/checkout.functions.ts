@@ -46,6 +46,19 @@ export const createCoursePayment = createServerFn({ method: "POST" })
       return { orderId: existing.order_id, reused: true };
     }
 
+    // Snapshot the active payment settings so admins can see which QR / UPI was shown.
+    const { data: settings } = await supabase
+      .from("payment_settings")
+      .select("id, version, upi_id, merchant_name, is_active, is_enabled, maintenance_mode")
+      .eq("is_active", true)
+      .order("version", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (settings && (settings.maintenance_mode || settings.is_enabled === false)) {
+      throw new Error("Payments are temporarily unavailable. Please try again shortly.");
+    }
+
     const orderId = generateOrderId();
     const { error: insErr } = await supabase.from("course_payments").insert({
       order_id: orderId,
@@ -68,6 +81,10 @@ export const createCoursePayment = createServerFn({ method: "POST" })
       final_amount_inr: base,
       status: "pending",
       provider: "upi_manual",
+      settings_id: settings?.id ?? null,
+      qr_version_used: settings?.version ?? null,
+      upi_id_used: settings?.upi_id ?? null,
+      merchant_name_used: settings?.merchant_name ?? null,
     });
     if (insErr) throw new Error(insErr.message);
 
