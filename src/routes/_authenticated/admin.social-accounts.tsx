@@ -238,8 +238,13 @@ function SocialAccountsPage() {
             <Twitter className="mr-2 h-4 w-4" />
             {busy === "connect-x" ? "Redirecting…" : "Connect X"}
           </Button>
+          <Button variant="outline" onClick={testPublishAll} disabled={busy === "test-all" || accounts.filter((x) => x.connection_status === "connected").length === 0}>
+            <Send className="mr-2 h-4 w-4" />
+            {busy === "test-all" ? "Publishing…" : "Test Publish (All)"}
+          </Button>
         </div>
       </div>
+
 
       <Card>
         <CardHeader>
