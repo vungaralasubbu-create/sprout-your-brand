@@ -24477,7 +24477,9 @@ export type Database = {
       }
       payment_links: {
         Row: {
+          account_holder: string | null
           amount: number
+          bank_name: string | null
           code: string
           course_id: string
           created_at: string
@@ -24486,15 +24488,21 @@ export type Database = {
           disabled_by: string | null
           id: string
           is_active: boolean
+          is_default_active: boolean
+          merchant_name: string | null
           name: string
           notes: string | null
           plan: Database["public"]["Enums"]["payment_plan"]
+          qr_image_url: string | null
           status: string
           updated_at: string
-          url: string
+          upi_id: string | null
+          url: string | null
         }
         Insert: {
+          account_holder?: string | null
           amount: number
+          bank_name?: string | null
           code: string
           course_id: string
           created_at?: string
@@ -24503,15 +24511,21 @@ export type Database = {
           disabled_by?: string | null
           id?: string
           is_active?: boolean
+          is_default_active?: boolean
+          merchant_name?: string | null
           name: string
           notes?: string | null
           plan: Database["public"]["Enums"]["payment_plan"]
+          qr_image_url?: string | null
           status?: string
           updated_at?: string
-          url: string
+          upi_id?: string | null
+          url?: string | null
         }
         Update: {
+          account_holder?: string | null
           amount?: number
+          bank_name?: string | null
           code?: string
           course_id?: string
           created_at?: string
@@ -24520,12 +24534,16 @@ export type Database = {
           disabled_by?: string | null
           id?: string
           is_active?: boolean
+          is_default_active?: boolean
+          merchant_name?: string | null
           name?: string
           notes?: string | null
           plan?: Database["public"]["Enums"]["payment_plan"]
+          qr_image_url?: string | null
           status?: string
           updated_at?: string
-          url?: string
+          upi_id?: string | null
+          url?: string | null
         }
         Relationships: [
           {
