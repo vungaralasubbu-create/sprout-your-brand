@@ -14,6 +14,8 @@ export interface AIRouterSuccess<T = unknown> {
   provider: ProviderId | null;
   task: TaskType | null;
   message?: string;
+  /** Convenience: assistant text content, mirrored from `data.content` when available. */
+  content?: string;
   data?: T;
   meta?: {
     requestId: string;
