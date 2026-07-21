@@ -480,35 +480,29 @@ export const runProjectStep = createServerFn({ method: "POST" })
         }
         case "campaign": {
           const brief = result.brief || {};
-          // Always resolve a valid, RLS-accessible brand before insert.
-          const brandId = await ensureDefaultBrand(supabase, userId, proj.brand_id);
-          const { data: camp, error: cErr } = await supabase
-            .from("mkt_campaigns")
-            .insert({
-              brand_id: brandId,
+          // Single validated campaign-creation service — enforces RLS-safe brand_id.
+          const { createCampaignForUser } = await import("@/lib/marketing-os/campaign-service.server");
+          const camp = await createCampaignForUser(
+            supabase,
+            userId,
+            {
               name: brief.suggested_name || proj.name,
               objective: brief.objective ?? null,
               description: proj.prompt,
               target_platforms: Array.isArray(brief.platforms) ? brief.platforms : [],
               status: "planning",
               timeline_stage: "planning",
-              created_by: userId,
-              owner_id: userId,
-            })
-            .select()
-            .single();
-          if (cErr) {
-            throw new Error(
-              `Campaign creation failed: ${cErr.message}. brand_id=${brandId}`,
-            );
-          }
+            },
+            { preferredBrandId: proj.brand_id },
+          );
           result.campaign = camp;
           await supabase
             .from("marketing_projects")
-            .update({ campaign_id: camp.id, brand_id: brandId })
+            .update({ campaign_id: camp.id, brand_id: camp.brand_id })
             .eq("id", proj.id);
           break;
         }
+
         case "strategy": {
           const brief = result.brief || {};
           result.strategy = await aiJson(
