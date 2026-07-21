@@ -1,1 +1,18 @@
 project_id = "sqkfyhqlyqfpidyoempm"
+
+# Publishing worker calls these functions with an internal shared secret
+# (`x-internal-secret` + `x-run-as-user-id`) verified in `_shared/meta/auth.ts`.
+# Disable platform JWT gateway so the SERVICE_ROLE key format (JWT vs opaque
+# `sb_secret_`) on the worker cannot mismatch the edge function's env key.
+# Security remains enforced by our own auth check inside each handler.
+[functions.publish-linkedin]
+verify_jwt = false
+
+[functions.publish-x]
+verify_jwt = false
+
+[functions.publish-facebook]
+verify_jwt = false
+
+[functions.publish-instagram]
+verify_jwt = false
