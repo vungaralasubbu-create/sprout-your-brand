@@ -155,12 +155,50 @@ export const approveProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ projectId: z.string().uuid() }).parse(raw))
   .handler(async ({ data, context }) => {
-    await markProjectPublishState(context.supabase, data.projectId, {
-      state: "approved",
-      approved_by: context.userId,
-      approved_at: new Date().toISOString(),
+    const { supabase, userId } = context;
+    const now = new Date().toISOString();
+    console.log(`[project.approve] approve clicked userId=${userId} projectId=${data.projectId}`);
+
+    const { project, accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId);
+    const rows = makeJobRows({
+      userId,
+      project,
+      accounts,
+      scheduledAt: now,
+      timezone: "UTC",
+      mode: "publish_now",
     });
-    return { ok: true };
+
+    console.log(`[project.approve] inserting publishing_jobs count=${rows.length}`);
+    const { data: ins, error } = await supabase
+      .from("publishing_jobs")
+      .insert(rows as Any)
+      .select("id, platform, account_id");
+    if (error) {
+      console.error(`[project.approve] publishing_jobs insert failed: ${error.message}`);
+      throw new Error(`Failed to enqueue publishing jobs: ${error.message}`);
+    }
+
+    const jobs = (ins ?? []) as Array<{ id: string; platform: string; account_id: string }>;
+    console.log(`[project.approve] publishing job ids=${jobs.map((j) => j.id).join(",")}`);
+    await markProjectPublishState(supabase, data.projectId, {
+      state: "publishing",
+      approved_by: userId,
+      approved_at: now,
+      last_action: "approve",
+      last_action_at: now,
+      job_count: jobs.length,
+    });
+
+    try {
+      const { runPublisherWorker } = await import("./publisher-worker.server");
+      const worker = await runPublisherWorker({ maxJobs: jobs.length });
+      console.log(`[project.approve] worker picked jobs processed=${worker.processed}`);
+    } catch (e) {
+      console.error(`[project.approve] worker error: ${(e as Error).message}`);
+    }
+
+    return { ok: true, publishing: { created: jobs.length, jobs } };
   });
 
 export const rejectProject = createServerFn({ method: "POST" })
