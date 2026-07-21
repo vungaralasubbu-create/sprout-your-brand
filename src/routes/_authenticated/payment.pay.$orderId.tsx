@@ -208,7 +208,7 @@ function PayPage() {
         </div>
         <div>
           <div className="text-[11px] uppercase tracking-wide text-muted-foreground">Merchant</div>
-          <div className="mt-0.5 font-medium">{settingsQ.data?.merchant_name ?? "Glintr"}</div>
+          <div className="mt-0.5 font-medium">{merchantName}</div>
         </div>
       </div>
 
