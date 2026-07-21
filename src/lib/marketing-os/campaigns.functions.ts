@@ -174,6 +174,50 @@ const CampaignInputSchema = z.object({
   ends_at: z.string().optional().nullable(),
 });
 
+/**
+ * Resolve a brand the caller can write to. If the supplied brand_id is not
+ * accessible under RLS (missing row, foreign owner, or empty brand table for
+ * this user), fall back to the caller's most-recent owned brand, and finally
+ * auto-create a default "My Brand" row. This keeps campaign creation from
+ * failing on `new row violates row-level security policy for table
+ * mkt_campaigns` when no user-owned brand exists yet. Additive: existing
+ * callers that pass a valid, owned brand_id keep the same behavior.
+ */
+async function resolveAccessibleBrandId(
+  supabase: any,
+  userId: string,
+  preferredBrandId?: string | null,
+): Promise<string> {
+  if (preferredBrandId) {
+    const { data } = await supabase
+      .from("mkt_brands")
+      .select("id")
+      .eq("id", preferredBrandId)
+      .maybeSingle();
+    if (data?.id) return data.id as string;
+  }
+  const { data: own } = await supabase
+    .from("mkt_brands")
+    .select("id, updated_at")
+    .eq("owner_id", userId)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (own?.id) return own.id as string;
+
+  const { data: created, error } = await supabase
+    .from("mkt_brands")
+    .insert({ owner_id: userId, name: "My Brand" })
+    .select("id")
+    .single();
+  if (error || !created?.id) {
+    throw new Error(
+      `Unable to prepare a brand workspace for campaigns: ${error?.message ?? "unknown error"}`,
+    );
+  }
+  return created.id as string;
+}
+
 export const saveCampaign = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => CampaignInputSchema.parse(v))
@@ -192,12 +236,22 @@ export const saveCampaign = createServerFn({ method: "POST" })
       if (error) throw new Error(error.message);
       return { campaign: updated as Campaign };
     }
+    // Ensure the brand_id we insert is one the caller actually owns under RLS.
+    const safeBrandId = await resolveAccessibleBrandId(
+      context.supabase,
+      context.userId,
+      data.brand_id,
+    );
     const { data: created, error } = await context.supabase
       .from("mkt_campaigns")
-      .insert({ ...payload, created_by: context.userId })
+      .insert({ ...payload, brand_id: safeBrandId, created_by: context.userId })
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) {
+      throw new Error(
+        `Failed to create campaign (${error.code ?? "db_error"}): ${error.message}`,
+      );
+    }
     return { campaign: created as Campaign };
   });
 
