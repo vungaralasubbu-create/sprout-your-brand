@@ -570,7 +570,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
         }
       }
 
-      if (idx >= 0) steps[idx] = { ...steps[idx], status: "done" };
+      if (idx >= 0) steps[idx] = { ...steps[idx], status: "done", error: null, ended_at: new Date().toISOString() };
       const done = steps.filter((s) => s.status === "done").length;
       const progress = Math.round((done / steps.length) * 100);
       const isFinal = data.step === "save";
@@ -582,15 +582,25 @@ export const runProjectStep = createServerFn({ method: "POST" })
           progress,
           current_step: data.step,
           status: isFinal ? "completed" : "running",
+          error: null,
         })
         .eq("id", proj.id);
       return { ok: true, progress, step: data.step };
     } catch (e: any) {
-      if (idx >= 0) steps[idx] = { ...steps[idx], status: "error" };
+      const message = e?.message ?? String(e);
+      if (idx >= 0) steps[idx] = { ...steps[idx], status: "error", error: message, ended_at: new Date().toISOString() };
+      // Do NOT throw — surface the error so the client can continue remaining
+      // steps and show inline retry. Project status stays "running" unless the
+      // failure is the final step.
       await supabase
         .from("marketing_projects")
-        .update({ steps, status: "error", error: e?.message ?? String(e) })
+        .update({
+          steps,
+          status: data.step === "save" ? "error" : "running",
+          error: message,
+          current_step: data.step,
+        })
         .eq("id", proj.id);
-      throw e;
+      return { ok: false, step: data.step, error: message };
     }
   });
