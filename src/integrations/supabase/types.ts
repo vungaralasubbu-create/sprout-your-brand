@@ -12155,6 +12155,158 @@ export type Database = {
           },
         ]
       }
+      course_payment_events: {
+        Row: {
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          meta: Json
+          payment_id: string
+          type: string
+        }
+        Insert: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          meta?: Json
+          payment_id: string
+          type: string
+        }
+        Update: {
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          meta?: Json
+          payment_id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_payment_events_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "course_payments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_payments: {
+        Row: {
+          base_amount_inr: number
+          city: string | null
+          college: string | null
+          country: string | null
+          coupon_code: string | null
+          course_id: string
+          created_at: string
+          degree: string | null
+          discount_inr: number
+          email: string
+          enrollment_id: string | null
+          final_amount_inr: number
+          first_name: string
+          graduation_year: number | null
+          id: string
+          info_request_note: string | null
+          last_name: string
+          order_id: string
+          phone: string
+          provider: string
+          provider_ref: string | null
+          referral_code: string | null
+          rejection_reason: string | null
+          screenshot_url: string | null
+          state: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          utr_number: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          base_amount_inr?: number
+          city?: string | null
+          college?: string | null
+          country?: string | null
+          coupon_code?: string | null
+          course_id: string
+          created_at?: string
+          degree?: string | null
+          discount_inr?: number
+          email: string
+          enrollment_id?: string | null
+          final_amount_inr?: number
+          first_name: string
+          graduation_year?: number | null
+          id?: string
+          info_request_note?: string | null
+          last_name: string
+          order_id: string
+          phone: string
+          provider?: string
+          provider_ref?: string | null
+          referral_code?: string | null
+          rejection_reason?: string | null
+          screenshot_url?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          utr_number?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          base_amount_inr?: number
+          city?: string | null
+          college?: string | null
+          country?: string | null
+          coupon_code?: string | null
+          course_id?: string
+          created_at?: string
+          degree?: string | null
+          discount_inr?: number
+          email?: string
+          enrollment_id?: string | null
+          final_amount_inr?: number
+          first_name?: string
+          graduation_year?: number | null
+          id?: string
+          info_request_note?: string | null
+          last_name?: string
+          order_id?: string
+          phone?: string
+          provider?: string
+          provider_ref?: string | null
+          referral_code?: string | null
+          rejection_reason?: string | null
+          screenshot_url?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          utr_number?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_payments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_payments_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_placement_support: {
         Row: {
           course_id: string
@@ -24168,6 +24320,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      payment_settings: {
+        Row: {
+          created_at: string
+          id: string
+          instructions: string | null
+          is_active: boolean
+          merchant_name: string | null
+          qr_image_url: string | null
+          support_email: string | null
+          support_phone: string | null
+          updated_at: string
+          updated_by: string | null
+          upi_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          instructions?: string | null
+          is_active?: boolean
+          merchant_name?: string | null
+          qr_image_url?: string | null
+          support_email?: string | null
+          support_phone?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          upi_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          instructions?: string | null
+          is_active?: boolean
+          merchant_name?: string | null
+          qr_image_url?: string | null
+          support_email?: string | null
+          support_phone?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          upi_id?: string | null
+        }
+        Relationships: []
       }
       payout_items: {
         Row: {
