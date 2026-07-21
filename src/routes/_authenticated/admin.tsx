@@ -48,6 +48,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/lead-ownership", label: "Lead Ownership Review", icon: Scale, perms: ["lead_ownership.view"] },
       { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck, perms: ["payments.view"] },
       { to: "/admin/payment-links", label: "Payment Links", icon: FileSignature, perms: ["payment_links.view", "payment_links.manage"] },
+      { to: "/admin/payments", label: "Course Payments", icon: ShieldCheck, perms: ["payments.view"] },
       { to: "/admin/partner-payouts", label: "Partner Payouts", icon: Wallet, perms: ["payouts.view"] },
     ],
   },
