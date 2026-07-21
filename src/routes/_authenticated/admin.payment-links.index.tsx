@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Copy, Plus, Link2, Ban, CheckCircle2, ExternalLink, Search } from "lucide-react";
+import { Copy, Plus, Link2, Ban, CheckCircle2, ExternalLink, Search, Upload, Star } from "lucide-react";
 
 import {
   getPaymentLinkSummary,
@@ -10,10 +10,14 @@ import {
   listProgramsForLinks,
   createPaymentLink,
   setPaymentLinkStatus,
+  setPaymentLinkActive,
+  clearPaymentLinkActive,
   PLAN_LABELS,
   PLAN_DEFAULT_AMOUNT,
   type PaymentPlan,
 } from "@/lib/admin/payment-links.functions";
+import { createPaymentAccountUploadUrl } from "@/lib/payments/central/gateway.functions";
+import { getPaymentConfigSignedUrl } from "@/lib/payments/central/settings.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,6 +46,7 @@ import { Link2 as Link2Icon, ShieldCheck, Wallet, Ban as BanIcon, Users2, CheckC
 export const Route = createFileRoute("/_authenticated/admin/payment-links/")({
   component: Page,
 });
+
 
 const inr = (n: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(
@@ -72,16 +77,18 @@ function Page() {
     <div className="space-y-6 max-w-[1600px]">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-2xl font-display font-semibold tracking-tight">Payment Links</h2>
+          <h2 className="text-2xl font-display font-semibold tracking-tight">Payment Gateway</h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Master payment links used by sales partners. Only active links are visible to partners.
+            Glintr Managed Payment Accounts. Manage QR-based UPI accounts and legacy payment URLs. Only
+            one account can be marked as the platform-wide default at a time.
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus className="size-4" />
-          Create Payment Link
+          Create Payment Account
         </Button>
       </div>
+
 
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
         <StatCard label="Total Links" value={summary?.total ?? 0} icon={Link2Icon} />
@@ -162,29 +169,59 @@ function Page() {
 
 function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
   const setStatus = useServerFn(setPaymentLinkStatus);
+  const setActive = useServerFn(setPaymentLinkActive);
+  const clearActive = useServerFn(clearPaymentLinkActive);
   const [confirmDisable, setConfirmDisable] = useState(false);
 
   const mut = useMutation({
     mutationFn: (status: "active" | "disabled" | "archived") => setStatus({ data: { id: row.id, status } }),
     onSuccess: () => {
-      toast.success("Payment link updated");
+      toast.success("Payment account updated");
       onChanged();
     },
     onError: (e: any) => toast.error(e.message ?? "Failed to update"),
+  });
+
+  const activeMut = useMutation({
+    mutationFn: () => setActive({ data: { id: row.id } }),
+    onSuccess: () => {
+      toast.success("Marked as active payment account");
+      onChanged();
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
+  });
+
+  const clearMut = useMutation({
+    mutationFn: () => clearActive({ data: { id: row.id } }),
+    onSuccess: () => {
+      toast.success("Deactivated");
+      onChanged();
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
   });
 
   return (
     <>
       <TableRow>
         <TableCell className="font-mono text-xs">{row.code}</TableCell>
-        <TableCell className="text-sm font-medium max-w-[220px] truncate">{row.name}</TableCell>
+        <TableCell className="text-sm font-medium max-w-[220px] truncate">
+          <div className="flex items-center gap-1.5">
+            {row.is_default_active ? (
+              <Star className="size-3.5 fill-amber-400 text-amber-500" />
+            ) : null}
+            <span className="truncate">{row.name}</span>
+          </div>
+          {row.upi_id ? (
+            <div className="font-mono text-[10px] text-muted-foreground truncate">{row.upi_id}</div>
+          ) : null}
+        </TableCell>
         <TableCell className="text-sm max-w-[200px] truncate">{row.program_name}</TableCell>
         <TableCell>
           <Badge variant="muted">{row.plan_label}</Badge>
         </TableCell>
         <TableCell className="text-right font-mono text-sm">{inr(row.amount)}</TableCell>
         <TableCell>
-          <StatusBadge status={row.status} />
+          <StatusBadge status={row.status} isDefault={row.is_default_active} />
         </TableCell>
         <TableCell className="text-right font-mono text-sm">{row.assigned_count}</TableCell>
         <TableCell className="text-right font-mono text-sm">{row.verified_count}</TableCell>
@@ -194,27 +231,46 @@ function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
         </TableCell>
         <TableCell className="text-right">
           <div className="flex items-center justify-end gap-1">
-            <Button
-              size="icon"
-              variant="ghost"
-              title="Copy URL"
-              onClick={() => {
-                navigator.clipboard.writeText(row.url);
-                toast.success("URL copied");
-              }}
-            >
-              <Copy className="size-4" />
-            </Button>
-            <a href={row.url} target="_blank" rel="noreferrer">
-              <Button size="icon" variant="ghost" title="Open">
-                <ExternalLink className="size-4" />
-              </Button>
-            </a>
+            {row.url ? (
+              <>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  title="Copy URL"
+                  onClick={() => {
+                    navigator.clipboard.writeText(row.url);
+                    toast.success("URL copied");
+                  }}
+                >
+                  <Copy className="size-4" />
+                </Button>
+                <a href={row.url} target="_blank" rel="noreferrer">
+                  <Button size="icon" variant="ghost" title="Open">
+                    <ExternalLink className="size-4" />
+                  </Button>
+                </a>
+              </>
+            ) : null}
             <Link to="/admin/payment-links/$id" params={{ id: row.id }}>
               <Button size="sm" variant="outline">
                 View
               </Button>
             </Link>
+            {row.is_default_active ? (
+              <Button size="sm" variant="outline" onClick={() => clearMut.mutate()} disabled={clearMut.isPending}>
+                Deactivate
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => activeMut.mutate()}
+                disabled={activeMut.isPending || row.status !== "active"}
+                title={row.status !== "active" ? "Enable this account first" : "Make Active"}
+              >
+                <Star className="size-3.5" /> Make Active
+              </Button>
+            )}
             {row.status === "active" ? (
               <Button size="sm" variant="outline" onClick={() => setConfirmDisable(true)}>
                 <Ban className="size-3.5" /> Disable
@@ -227,6 +283,7 @@ function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
           </div>
         </TableCell>
       </TableRow>
+
 
       <Dialog open={confirmDisable} onOpenChange={setConfirmDisable}>
         <DialogContent>
@@ -258,20 +315,28 @@ function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, isDefault }: { status: string; isDefault?: boolean }) {
   const map: Record<string, string> = {
     active: "bg-success-soft text-success",
     disabled: "bg-warning-soft text-warning",
     archived: "bg-muted text-muted-foreground",
   };
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium capitalize ${map[status] ?? ""}`}
-    >
-      {status}
-    </span>
+    <div className="flex flex-col gap-1 items-start">
+      <span
+        className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium capitalize ${map[status] ?? ""}`}
+      >
+        {status}
+      </span>
+      {isDefault ? (
+        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-800">
+          <Star className="size-3" /> Default
+        </span>
+      ) : null}
+    </div>
   );
 }
+
 
 function CreateDialog({
   open,
@@ -294,13 +359,57 @@ function CreateDialog({
   const [courseId, setCourseId] = useState<string>("");
   const [plan, setPlan] = useState<PaymentPlan>("self_paced_edge");
   const [amount, setAmount] = useState<number>(PLAN_DEFAULT_AMOUNT.self_paced_edge);
-  const [url, setUrl] = useState("");
+  const [merchantName, setMerchantName] = useState("");
+  const [upiId, setUpiId] = useState("");
+  const [accountHolder, setAccountHolder] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [qrPath, setQrPath] = useState<string | null>(null);
+  const [qrPreview, setQrPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [notes, setNotes] = useState("");
+
+  const createUploadUrl = useServerFn(createPaymentAccountUploadUrl);
+  const getSigned = useServerFn(getPaymentConfigSignedUrl);
+
+  async function handleQrUpload(file: File) {
+    try {
+      setUploading(true);
+      const mime = file.type as any;
+      if (!["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(mime)) {
+        toast.error("Use PNG, JPG, WEBP or SVG");
+        return;
+      }
+      const { uploadUrl, path } = await createUploadUrl({ data: { kind: "qr", mime } });
+      if (!uploadUrl || !path) throw new Error("Failed to sign upload");
+      const res = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": mime }, body: file });
+      if (!res.ok) throw new Error("Upload failed");
+      setQrPath(path);
+      const signed = await getSigned({ data: { path } });
+      setQrPreview(signed.url);
+      toast.success("QR uploaded");
+    } catch (e: any) {
+      toast.error(e.message ?? "Upload error");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   const mut = useMutation({
     mutationFn: () =>
       create({
-        data: { name, course_id: courseId, plan, amount, url, notes: notes || null },
+        data: {
+          name,
+          course_id: courseId,
+          plan,
+          amount,
+          url: null,
+          notes: notes || null,
+          merchant_name: merchantName || null,
+          upi_id: upiId || null,
+          account_holder: accountHolder || null,
+          bank_name: bankName || null,
+          qr_image_url: qrPath,
+        },
       }),
     onSuccess: (r: any) => {
       toast.success(`Created ${r.code}`);
@@ -308,7 +417,12 @@ function CreateDialog({
       setCourseId("");
       setPlan("self_paced_edge");
       setAmount(PLAN_DEFAULT_AMOUNT.self_paced_edge);
-      setUrl("");
+      setMerchantName("");
+      setUpiId("");
+      setAccountHolder("");
+      setBankName("");
+      setQrPath(null);
+      setQrPreview(null);
       setNotes("");
       onCreated();
       onOpenChange(false);
@@ -318,15 +432,18 @@ function CreateDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create Payment Link</DialogTitle>
-          <DialogDescription>Connect a master payment URL to a published program and plan.</DialogDescription>
+          <DialogTitle>Create Payment Account</DialogTitle>
+          <DialogDescription>
+            Glintr Managed Payment Account. Upload a UPI QR code and merchant details — no external payment
+            URL required.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <Label htmlFor="name">Payment Link Name</Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Career Launch — Instamojo" />
+            <Label htmlFor="name">Account Name</Label>
+            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Glintr Primary UPI" />
           </div>
           <div>
             <Label>Program</Label>
@@ -377,10 +494,50 @@ function CreateDialog({
               />
             </div>
           </div>
-          <div>
-            <Label htmlFor="url">Payment URL</Label>
-            <Input id="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" />
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="merchant">Merchant Name</Label>
+              <Input id="merchant" value={merchantName} onChange={(e) => setMerchantName(e.target.value)} placeholder="e.g. Glintr Academy" />
+            </div>
+            <div>
+              <Label htmlFor="upi">UPI ID</Label>
+              <Input id="upi" value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="name@bank" />
+            </div>
           </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="holder">Account Holder</Label>
+              <Input id="holder" value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="bank">Bank Name (optional)</Label>
+              <Input id="bank" value={bankName} onChange={(e) => setBankName(e.target.value)} />
+            </div>
+          </div>
+
+          <div>
+            <Label>Upload QR Code</Label>
+            <div className="mt-1 flex items-center gap-3">
+              <label className="inline-flex items-center gap-2 px-3 py-2 border rounded-md text-sm cursor-pointer hover:bg-muted">
+                <Upload className="size-4" />
+                {uploading ? "Uploading..." : qrPath ? "Replace QR" : "Choose QR image"}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleQrUpload(f);
+                  }}
+                />
+              </label>
+              {qrPreview ? (
+                <img src={qrPreview} alt="QR preview" className="size-16 rounded border" />
+              ) : null}
+            </div>
+          </div>
+
           <div>
             <Label htmlFor="notes">Internal Notes (optional)</Label>
             <Textarea id="notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
@@ -392,13 +549,14 @@ function CreateDialog({
           </Button>
           <Button
             onClick={() => mut.mutate()}
-            disabled={mut.isPending || !name || !courseId || !url || amount <= 0}
+            disabled={mut.isPending || !name || !courseId || amount <= 0}
           >
             <Link2 className="size-4" />
-            Create Payment Link
+            Create Payment Account
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+

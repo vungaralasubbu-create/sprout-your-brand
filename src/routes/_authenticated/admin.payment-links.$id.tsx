@@ -1,14 +1,18 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
-import { ArrowLeft, Copy, ExternalLink, Ban, CheckCircle2, Save } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Copy, ExternalLink, Ban, CheckCircle2, Save, Upload, Star } from "lucide-react";
 
 import {
   getPaymentLinkDetail,
   updatePaymentLink,
   setPaymentLinkStatus,
+  setPaymentLinkActive,
+  clearPaymentLinkActive,
 } from "@/lib/admin/payment-links.functions";
+import { createPaymentAccountUploadUrl } from "@/lib/payments/central/gateway.functions";
+import { getPaymentConfigSignedUrl } from "@/lib/payments/central/settings.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,6 +45,10 @@ function Page() {
   const fn = useServerFn(getPaymentLinkDetail);
   const editFn = useServerFn(updatePaymentLink);
   const setStatus = useServerFn(setPaymentLinkStatus);
+  const setActive = useServerFn(setPaymentLinkActive);
+  const clearActive = useServerFn(clearPaymentLinkActive);
+  const createUploadUrl = useServerFn(createPaymentAccountUploadUrl);
+  const getSigned = useServerFn(getPaymentConfigSignedUrl);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-payment-link-detail", id],
@@ -51,20 +59,88 @@ function Page() {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatusVal] = useState<string>("active");
+  const [merchantName, setMerchantName] = useState("");
+  const [upiId, setUpiId] = useState("");
+  const [accountHolder, setAccountHolder] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [qrPath, setQrPath] = useState<string | null>(null);
+  const [qrPreview, setQrPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [initialised, setInitialised] = useState(false);
 
   if (data && !initialised) {
     setName(data.link.name);
-    setUrl(data.link.url);
+    setUrl(data.link.url ?? "");
     setNotes(data.link.notes ?? "");
     setStatusVal(data.link.status);
+    setMerchantName(data.link.merchant_name ?? "");
+    setUpiId(data.link.upi_id ?? "");
+    setAccountHolder(data.link.account_holder ?? "");
+    setBankName(data.link.bank_name ?? "");
+    setQrPath(data.link.qr_image_url ?? null);
     setInitialised(true);
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadPreview() {
+      if (!qrPath) {
+        setQrPreview(null);
+        return;
+      }
+      if (/^https?:\/\//i.test(qrPath)) {
+        setQrPreview(qrPath);
+        return;
+      }
+      try {
+        const signed = await getSigned({ data: { path: qrPath } });
+        if (!cancelled) setQrPreview(signed.url);
+      } catch {
+        if (!cancelled) setQrPreview(null);
+      }
+    }
+    loadPreview();
+    return () => {
+      cancelled = true;
+    };
+  }, [qrPath]);
+
+  async function handleQrUpload(file: File) {
+    try {
+      setUploading(true);
+      const mime = file.type as any;
+      if (!["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(mime)) {
+        toast.error("Use PNG, JPG, WEBP or SVG");
+        return;
+      }
+      const { uploadUrl, path } = await createUploadUrl({ data: { kind: "qr", mime } });
+      if (!uploadUrl || !path) throw new Error("Failed to sign upload");
+      const res = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": mime }, body: file });
+      if (!res.ok) throw new Error("Upload failed");
+      setQrPath(path);
+      toast.success("QR uploaded — remember to Save changes");
+    } catch (e: any) {
+      toast.error(e.message ?? "Upload error");
+    } finally {
+      setUploading(false);
+    }
   }
 
   const save = useMutation({
     mutationFn: () =>
       editFn({
-        data: { id, name, url, notes: notes || null, status: status as any },
+        data: {
+          id,
+          name,
+          url: url || null,
+          notes: notes || null,
+          status: status as any,
+          merchant_name: merchantName || null,
+          upi_id: upiId || null,
+          account_holder: accountHolder || null,
+          bank_name: bankName || null,
+          qr_image_url: qrPath,
+        },
       }),
     onSuccess: () => {
       toast.success("Saved");
@@ -82,6 +158,28 @@ function Page() {
     },
     onError: (e: any) => toast.error(e.message ?? "Failed"),
   });
+
+  const activeMut = useMutation({
+    mutationFn: () => setActive({ data: { id } }),
+    onSuccess: () => {
+      toast.success("Marked as active");
+      qc.invalidateQueries({ queryKey: ["admin-payment-link-detail", id] });
+      qc.invalidateQueries({ queryKey: ["admin-payment-links"] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
+  });
+
+  const clearMut = useMutation({
+    mutationFn: () => clearActive({ data: { id } }),
+    onSuccess: () => {
+      toast.success("Deactivated");
+      qc.invalidateQueries({ queryKey: ["admin-payment-link-detail", id] });
+      qc.invalidateQueries({ queryKey: ["admin-payment-links"] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
+  });
+
+
 
   if (isLoading || !data) {
     return <div className="text-muted-foreground">Loading…</div>;
@@ -104,20 +202,38 @@ function Page() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => {
-              navigator.clipboard.writeText(data.link.url);
-              toast.success("URL copied");
-            }}
-          >
-            <Copy className="size-4" /> Copy URL
-          </Button>
-          <a href={data.link.url} target="_blank" rel="noreferrer">
-            <Button variant="outline">
-              <ExternalLink className="size-4" /> Open
+          {data.link.url ? (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  navigator.clipboard.writeText(data.link.url ?? "");
+                  toast.success("URL copied");
+                }}
+              >
+                <Copy className="size-4" /> Copy URL
+              </Button>
+              <a href={data.link.url} target="_blank" rel="noreferrer">
+                <Button variant="outline">
+                  <ExternalLink className="size-4" /> Open
+                </Button>
+              </a>
+            </>
+          ) : null}
+          {data.link.is_default_active ? (
+            <Button variant="outline" onClick={() => clearMut.mutate()} disabled={clearMut.isPending}>
+              <Star className="size-4 text-amber-500 fill-amber-400" /> Deactivate Default
             </Button>
-          </a>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={() => activeMut.mutate()}
+              disabled={activeMut.isPending || data.link.status !== "active"}
+              title={data.link.status !== "active" ? "Enable this account first" : "Make Active"}
+            >
+              <Star className="size-4" /> Make Active
+            </Button>
+          )}
           {data.link.status === "active" ? (
             <Button variant="outline" onClick={() => toggle.mutate("disabled")}>
               <Ban className="size-4" /> Disable
@@ -127,6 +243,7 @@ function Page() {
               <CheckCircle2 className="size-4" /> Enable
             </Button>
           )}
+
         </div>
       </div>
 
@@ -156,14 +273,69 @@ function Page() {
               <Label>Payment Link Name</Label>
               <Input value={name} onChange={(e) => setName(e.target.value)} />
             </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Merchant Name</Label>
+                <Input value={merchantName} onChange={(e) => setMerchantName(e.target.value)} />
+              </div>
+              <div>
+                <Label>UPI ID</Label>
+                <Input value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="name@bank" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Account Holder</Label>
+                <Input value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} />
+              </div>
+              <div>
+                <Label>Bank Name (optional)</Label>
+                <Input value={bankName} onChange={(e) => setBankName(e.target.value)} />
+              </div>
+            </div>
             <div>
-              <Label>Payment URL</Label>
-              <Input value={url} onChange={(e) => setUrl(e.target.value)} />
+              <Label>QR Code</Label>
+              <div className="mt-1 flex items-center gap-3 flex-wrap">
+                <label className="inline-flex items-center gap-2 px-3 py-2 border rounded-md text-sm cursor-pointer hover:bg-muted">
+                  <Upload className="size-4" />
+                  {uploading ? "Uploading..." : qrPath ? "Replace QR" : "Upload QR"}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleQrUpload(f);
+                    }}
+                  />
+                </label>
+                {qrPath ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setQrPath(null);
+                      setQrPreview(null);
+                      toast.info("QR removed — Save changes to apply");
+                    }}
+                  >
+                    Remove QR
+                  </Button>
+                ) : null}
+                {qrPreview ? (
+                  <img src={qrPreview} alt="QR preview" className="size-20 rounded border" />
+                ) : null}
+              </div>
+            </div>
+            <div>
+              <Label>Legacy Payment URL (optional)</Label>
+              <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Not required for QR accounts" />
             </div>
             <div>
               <Label>Internal Notes</Label>
               <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
             </div>
+
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Status</Label>

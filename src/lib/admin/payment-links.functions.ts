@@ -5,6 +5,15 @@ import { z } from "zod";
 const PLANS = ["self_paced_edge", "career_launch", "career_pro"] as const;
 export type PaymentPlan = (typeof PLANS)[number];
 
+const trimmedOrNull = z
+  .string()
+  .trim()
+  .max(500)
+  .optional()
+  .nullable()
+  .transform((v) => (v && v.length > 0 ? v : null));
+
+
 export const PLAN_LABELS: Record<PaymentPlan, string> = {
   self_paced_edge: "Self-Paced Edge",
   career_launch: "Career Launch",
@@ -95,7 +104,7 @@ export const listPaymentLinks = createServerFn({ method: "GET" })
     let q = supabase
       .from("payment_links")
       .select(
-        "id, code, name, plan, amount, url, status, notes, created_at, disabled_at, course_id, courses:course_id(id, name, slug)",
+        "id, code, name, plan, amount, url, status, notes, created_at, disabled_at, course_id, merchant_name, upi_id, account_holder, bank_name, qr_image_url, is_default_active, courses:course_id(id, name, slug)",
       )
       .order("created_at", { ascending: false });
     if (data.status !== "all") q = q.eq("status", data.status);
@@ -144,29 +153,46 @@ export const listPaymentLinks = createServerFn({ method: "GET" })
       plan: r.plan as PaymentPlan,
       plan_label: PLAN_LABELS[r.plan as PaymentPlan],
       amount: Number(r.amount),
-      url: r.url,
+      url: r.url as string | null,
       status: r.status as "active" | "disabled" | "archived",
       notes: r.notes ?? null,
       created_at: r.created_at,
       program_id: r.course_id,
       program_name: r.courses?.name ?? "—",
       program_slug: r.courses?.slug ?? null,
+      merchant_name: r.merchant_name ?? null,
+      upi_id: r.upi_id ?? null,
+      account_holder: r.account_holder ?? null,
+      bank_name: r.bank_name ?? null,
+      qr_image_url: r.qr_image_url ?? null,
+      is_default_active: !!r.is_default_active,
       assigned_count: assignCounts[r.id] ?? 0,
       verified_count: verifiedCounts[r.id] ?? 0,
       verified_amount: verifiedAmounts[r.id] ?? 0,
     }));
   });
 
-const createSchema = z.object({
-  name: z.string().trim().min(2).max(120),
-  course_id: z.string().uuid(),
-  plan: z.enum(PLANS),
-  amount: z.coerce.number().min(0).max(10_000_000),
-  url: z.string().trim().url().max(500),
-  notes: z.string().trim().max(1000).optional().nullable(),
-});
+const createSchema = z
+  .object({
+    name: z.string().trim().min(2).max(120),
+    course_id: z.string().uuid(),
+    plan: z.enum(PLANS),
+    amount: z.coerce.number().min(0).max(10_000_000),
+    // Legacy URL is now optional — QR-based accounts don't need it.
+    url: z.string().trim().url().max(500).optional().nullable().or(z.literal("")),
+    notes: z.string().trim().max(1000).optional().nullable(),
+    merchant_name: trimmedOrNull,
+    upi_id: trimmedOrNull,
+    account_holder: trimmedOrNull,
+    bank_name: trimmedOrNull,
+    qr_image_url: trimmedOrNull,
+  })
+  .refine((v) => !!(v.url && v.url.length) || !!(v.upi_id && v.qr_image_url), {
+    message: "Provide either a payment URL, or a UPI ID + QR code image.",
+    path: ["upi_id"],
+  });
 
-/** Create a master payment link. */
+/** Create a master payment link / payment gateway account. */
 export const createPaymentLink = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => createSchema.parse(data))
@@ -192,8 +218,13 @@ export const createPaymentLink = createServerFn({ method: "POST" })
         course_id: data.course_id,
         plan: data.plan,
         amount: data.amount,
-        url: data.url,
+        url: data.url && data.url.length ? data.url : null,
         notes: data.notes ?? null,
+        merchant_name: data.merchant_name,
+        upi_id: data.upi_id,
+        account_holder: data.account_holder,
+        bank_name: data.bank_name,
+        qr_image_url: data.qr_image_url,
         status: "active",
         created_by: userId,
       } as any)
@@ -206,9 +237,14 @@ export const createPaymentLink = createServerFn({ method: "POST" })
 const editSchema = z.object({
   id: z.string().uuid(),
   name: z.string().trim().min(2).max(120),
-  url: z.string().trim().url().max(500),
+  url: z.string().trim().max(500).optional().nullable(),
   notes: z.string().trim().max(1000).optional().nullable(),
   status: z.enum(["active", "disabled", "archived"]),
+  merchant_name: trimmedOrNull,
+  upi_id: trimmedOrNull,
+  account_holder: trimmedOrNull,
+  bank_name: trimmedOrNull,
+  qr_image_url: trimmedOrNull,
 });
 
 /** Edit safe fields on a payment link — never mutates plan/amount/course. */
@@ -221,9 +257,14 @@ export const updatePaymentLink = createServerFn({ method: "POST" })
 
     const patch: Record<string, unknown> = {
       name: data.name,
-      url: data.url,
+      url: data.url && data.url.length ? data.url : null,
       notes: data.notes ?? null,
       status: data.status,
+      merchant_name: data.merchant_name,
+      upi_id: data.upi_id,
+      account_holder: data.account_holder,
+      bank_name: data.bank_name,
+      qr_image_url: data.qr_image_url,
     };
     if (data.status === "disabled") {
       patch.disabled_by = userId;
@@ -235,6 +276,43 @@ export const updatePaymentLink = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/** Mark this payment account as the single platform-wide default. */
+export const setPaymentLinkActive = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    // Clear the current default first, then set the new one (partial unique index enforces single row).
+    const clr = await supabase
+      .from("payment_links")
+      .update({ is_default_active: false } as any)
+      .eq("is_default_active", true);
+    if (clr.error) throw new Error(clr.error.message);
+    const upd = await supabase
+      .from("payment_links")
+      .update({ is_default_active: true, status: "active", disabled_at: null, disabled_by: null } as any)
+      .eq("id", data.id);
+    if (upd.error) throw new Error(upd.error.message);
+    return { ok: true };
+  });
+
+/** Clear the platform-wide default (deactivate). */
+export const clearPaymentLinkActive = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => z.object({ id: z.string().uuid() }).parse(data))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+    const { error } = await supabase
+      .from("payment_links")
+      .update({ is_default_active: false } as any)
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 
 const setStatusSchema = z.object({
   id: z.string().uuid(),
@@ -271,7 +349,7 @@ export const getPaymentLinkDetail = createServerFn({ method: "GET" })
     const { data: link, error } = await supabase
       .from("payment_links")
       .select(
-        "id, code, name, plan, amount, url, status, notes, created_at, created_by, disabled_by, disabled_at, course_id, courses:course_id(id, name, slug)",
+        "id, code, name, plan, amount, url, status, notes, created_at, created_by, disabled_by, disabled_at, course_id, merchant_name, upi_id, account_holder, bank_name, qr_image_url, is_default_active, courses:course_id(id, name, slug)",
       )
       .eq("id", data.id)
       .maybeSingle();
@@ -367,19 +445,25 @@ export const getPaymentLinkDetail = createServerFn({ method: "GET" })
 
     return {
       link: {
-        id: link.id,
-        code: link.code,
-        name: link.name,
-        plan: link.plan as PaymentPlan,
-        plan_label: PLAN_LABELS[link.plan as PaymentPlan],
-        amount: Number(link.amount),
-        url: link.url,
-        status: link.status,
-        notes: link.notes,
-        created_at: link.created_at,
-        disabled_at: link.disabled_at,
-        program_id: link.course_id,
-        program_name: link.courses?.name ?? "—",
+        id: (link as any).id,
+        code: (link as any).code,
+        name: (link as any).name,
+        plan: (link as any).plan as PaymentPlan,
+        plan_label: PLAN_LABELS[(link as any).plan as PaymentPlan],
+        amount: Number((link as any).amount),
+        url: (link as any).url as string | null,
+        status: (link as any).status,
+        notes: (link as any).notes,
+        created_at: (link as any).created_at,
+        disabled_at: (link as any).disabled_at,
+        program_id: (link as any).course_id,
+        program_name: (link as any).courses?.name ?? "—",
+        merchant_name: (link as any).merchant_name ?? null,
+        upi_id: (link as any).upi_id ?? null,
+        account_holder: (link as any).account_holder ?? null,
+        bank_name: (link as any).bank_name ?? null,
+        qr_image_url: (link as any).qr_image_url ?? null,
+        is_default_active: !!(link as any).is_default_active,
       },
       analytics: {
         totalAssignments,
