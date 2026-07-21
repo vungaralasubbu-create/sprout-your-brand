@@ -109,15 +109,49 @@ export async function handle(req: Request): Promise<Response> {
     // Career Coach, Blog / Email / Marketing generators, Support agents).
     // `generate_blog` retains its Responses-API path for long-form editorial.
     if (input.task === "chat" || input.task === "generate_blog") {
-      const { openAiChatProvider } = await import("./providers/openai-chat.ts");
-      const provider = input.task === "chat"
-        ? openAiChatProvider
-        : PROVIDERS[input.provider ?? "openai"];
+      // Resolve provider by model prefix so we never send a Gemini model
+      // to OpenAI, or a Claude model to Google. Callers may still pin
+      // `provider` explicitly; when they do, that wins over the model
+      // heuristic (backward compatible with existing generate_blog calls).
+      const modelLower = (input.model ?? "").toLowerCase();
+      const inferredFromModel: "openai" | "gemini" | "anthropic" | null =
+        /^google\//.test(modelLower) || /(^|\b)gemini[-/]/.test(modelLower)
+          ? "gemini"
+          : /^anthropic\//.test(modelLower) || /(^|\b)claude[-/]/.test(modelLower)
+          ? "anthropic"
+          : /^openai\//.test(modelLower) || /(^|\b)(gpt-|o[13]-|chatgpt)/.test(modelLower)
+          ? "openai"
+          : null;
+
+      const resolvedProviderId = input.provider ?? inferredFromModel ?? "openai";
+
+      let provider;
+      if (input.task === "chat") {
+        if (resolvedProviderId === "gemini") {
+          const { geminiChatProvider } = await import("./providers/gemini-chat.ts");
+          provider = geminiChatProvider;
+        } else if (resolvedProviderId === "anthropic") {
+          const { anthropicChatProvider } = await import("./providers/anthropic-chat.ts");
+          provider = anthropicChatProvider;
+        } else {
+          const { openAiChatProvider } = await import("./providers/openai-chat.ts");
+          provider = openAiChatProvider;
+        }
+      } else {
+        provider = PROVIDERS[resolvedProviderId];
+      }
+
+      // Strip the vendor prefix before forwarding — real provider APIs
+      // reject `google/gemini-2.5-flash` / `openai/gpt-4o-mini` etc.
+      const forwardedModel = input.model
+        ? input.model.replace(/^(openai|google|anthropic)\//i, "")
+        : input.model;
+
       const { data, model } = await withTimeout(CONFIG.requestTimeoutMs, (signal) =>
-        provider.execute({ task: input.task, model: input.model, prompt: input.prompt, options: input.options, signal }),
+        provider.execute({ task: input.task, model: forwardedModel, prompt: input.prompt, options: input.options, signal }),
       );
       const executionMs = Date.now() - started;
-      logger.info({ requestId, provider: provider.id, task: input.task, status: 200, executionMs, message: "task_ok" });
+      logger.info({ requestId, provider: provider.id, task: input.task, status: 200, executionMs, message: "task_ok", model });
       return json(200, {
         success: true,
         provider: provider.id,
