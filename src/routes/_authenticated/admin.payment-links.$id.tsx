@@ -179,10 +179,7 @@ function Page() {
     onError: (e: any) => toast.error(e.message ?? "Failed"),
   });
 
-      qc.invalidateQueries({ queryKey: ["admin-payment-link-detail", id] });
-    },
-    onError: (e: any) => toast.error(e.message ?? "Failed"),
-  });
+
 
   if (isLoading || !data) {
     return <div className="text-muted-foreground">Loading…</div>;
