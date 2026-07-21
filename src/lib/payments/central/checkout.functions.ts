@@ -7,6 +7,7 @@ import {
   resolveCourseAmount,
   utrSchema,
 } from "./shared";
+import { resolveActiveAccountForCourse } from "./gateway.functions";
 
 const createInput = z.object({
   courseId: z.string().uuid(),
