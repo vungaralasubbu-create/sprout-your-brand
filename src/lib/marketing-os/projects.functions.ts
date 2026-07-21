@@ -63,7 +63,8 @@ export const createMarketingProject = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const steps = PROJECT_STEPS.map((s) => ({ ...s, status: "pending" }));
     const sb: any = (context.supabase as any);
-    const brandId = await ensureDefaultBrand(sb, context.userId, data.brand_id);
+    const { resolveOwnedBrandId } = await import("@/lib/marketing-os/campaign-service.server");
+    const brandId = await resolveOwnedBrandId(sb, context.userId, data.brand_id);
     const { data: created, error } = await sb
       .from("marketing_projects")
       .insert({
@@ -80,6 +81,7 @@ export const createMarketingProject = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { project: created as MarketingProject };
   });
+
 
 // ---------------- get ----------------
 export const getMarketingProject = createServerFn({ method: "GET" })
@@ -332,101 +334,19 @@ async function loadBrandContext(
 }
 
 /**
- * Brand Context Loader — always resolves a valid mkt_brands row the caller
- * owns (or a staff member can access), auto-creating a default brand if the
- * caller has none. Guarantees the "campaign" step never fails on RLS due to
- * a missing/foreign brand_id.
+ * Backward-compatible wrapper — delegates to the single shared brand
+ * resolver in `campaign-service.server`. Do not add logic here; extend
+ * `resolveOwnedBrandId` instead.
  */
 async function ensureDefaultBrand(
   supabase: any,
   userId: string,
   preferredBrandId?: string | null,
 ): Promise<string> {
-  if (preferredBrandId) {
-    // CRITICAL: verify the caller OWNS this brand. The mkt_campaigns RLS
-    // policy requires `b.owner_id = auth.uid()`, so a brand the user can
-    // merely SELECT (e.g. a shared/legacy brand) will still fail the
-    // WITH CHECK on insert. Filtering by owner_id here guarantees the
-    // returned brand_id will satisfy the campaigns policy.
-    const { data: existing } = await supabase
-      .from("mkt_brands")
-      .select("id")
-      .eq("id", preferredBrandId)
-      .eq("owner_id", userId)
-      .maybeSingle();
-    if (existing?.id) return existing.id as string;
-  }
-
-  const { data: kit } = await supabase
-    .from("mkt_brand_kits")
-    .select("id,brand_id,business_name,name,tone_of_voice,colors,logos,updated_at")
-    .eq("owner_id", userId)
-    .order("is_default", { ascending: false })
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (kit?.brand_id) {
-    const { data: kitBrand } = await supabase
-      .from("mkt_brands")
-      .select("id")
-      .eq("id", kit.brand_id)
-      .eq("owner_id", userId)
-      .maybeSingle();
-    if (kitBrand?.id) return kitBrand.id as string;
-  }
-
-
-  const { data: own } = await supabase
-    .from("mkt_brands")
-    .select("id, updated_at")
-    .eq("owner_id", userId)
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  if (own?.id) return own.id as string;
-
-  // Seed a default brand for this user, reusing any Brand Kit data present.
-  let brandName = "My Brand";
-  let tone: string | null = null;
-  let primaryColor: string | null = null;
-  let logoUrl: string | null = null;
-  if (kit) {
-    brandName = (kit.business_name || kit.name || brandName) as string;
-    if (Array.isArray(kit.tone_of_voice) && kit.tone_of_voice.length) {
-      tone = String(kit.tone_of_voice[0]);
-    }
-    const colors = (kit.colors ?? {}) as Record<string, unknown>;
-    if (typeof (colors as any)?.primary === "string") primaryColor = (colors as any).primary;
-    const logos = (kit.logos ?? {}) as Record<string, unknown>;
-    if (typeof (logos as any)?.primary === "string") logoUrl = (logos as any).primary;
-  }
-
-  const { data: created, error: bErr } = await supabase
-    .from("mkt_brands")
-    .insert({
-      owner_id: userId,
-      name: brandName,
-      tone,
-      primary_color: primaryColor,
-      logo_url: logoUrl,
-    })
-    .select("id")
-    .single();
-  if (bErr || !created?.id) {
-    throw new Error(
-      `Unable to prepare a brand workspace: ${bErr?.message ?? "unknown error"}`,
-    );
-  }
-  if (kit?.id) {
-    await supabase
-      .from("mkt_brand_kits")
-      .update({ brand_id: created.id })
-      .eq("id", kit.id)
-      .eq("owner_id", userId);
-  }
-  return created.id as string;
+  const { resolveOwnedBrandId } = await import("@/lib/marketing-os/campaign-service.server");
+  return resolveOwnedBrandId(supabase, userId, preferredBrandId ?? null);
 }
+
 
 async function aiJson(system: string | undefined, user: string): Promise<Record<string, any>> {
   const res = await aiChat({
@@ -480,35 +400,29 @@ export const runProjectStep = createServerFn({ method: "POST" })
         }
         case "campaign": {
           const brief = result.brief || {};
-          // Always resolve a valid, RLS-accessible brand before insert.
-          const brandId = await ensureDefaultBrand(supabase, userId, proj.brand_id);
-          const { data: camp, error: cErr } = await supabase
-            .from("mkt_campaigns")
-            .insert({
-              brand_id: brandId,
+          // Single validated campaign-creation service — enforces RLS-safe brand_id.
+          const { createCampaignForUser } = await import("@/lib/marketing-os/campaign-service.server");
+          const camp = await createCampaignForUser(
+            supabase,
+            userId,
+            {
               name: brief.suggested_name || proj.name,
               objective: brief.objective ?? null,
               description: proj.prompt,
               target_platforms: Array.isArray(brief.platforms) ? brief.platforms : [],
               status: "planning",
               timeline_stage: "planning",
-              created_by: userId,
-              owner_id: userId,
-            })
-            .select()
-            .single();
-          if (cErr) {
-            throw new Error(
-              `Campaign creation failed: ${cErr.message}. brand_id=${brandId}`,
-            );
-          }
+            },
+            { preferredBrandId: proj.brand_id },
+          );
           result.campaign = camp;
           await supabase
             .from("marketing_projects")
-            .update({ campaign_id: camp.id, brand_id: brandId })
+            .update({ campaign_id: camp.id, brand_id: camp.brand_id })
             .eq("id", proj.id);
           break;
         }
+
         case "strategy": {
           const brief = result.brief || {};
           result.strategy = await aiJson(
