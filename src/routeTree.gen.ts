@@ -260,6 +260,7 @@ import { Route as AuthenticatedIntegrationsInstalledRouteImport } from './routes
 import { Route as AuthenticatedIntegrationsDiscoverRouteImport } from './routes/_authenticated/integrations.discover'
 import { Route as AuthenticatedIntegrationsProviderRouteImport } from './routes/_authenticated/integrations.$provider'
 import { Route as AuthenticatedInstructorDashboardRouteImport } from './routes/_authenticated/instructor.dashboard'
+import { Route as AuthenticatedDevelopersSdkRouteImport } from './routes/_authenticated/developers.sdk'
 import { Route as AuthenticatedDevelopersApiRouteImport } from './routes/_authenticated/developers.api'
 import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
 import { Route as AuthenticatedCloudTeamRouteImport } from './routes/_authenticated/cloud.team'
@@ -1920,6 +1921,12 @@ const AuthenticatedInstructorDashboardRoute =
     id: '/dashboard',
     path: '/dashboard',
     getParentRoute: () => AuthenticatedInstructorRoute,
+  } as any)
+const AuthenticatedDevelopersSdkRoute =
+  AuthenticatedDevelopersSdkRouteImport.update({
+    id: '/developers/sdk',
+    path: '/developers/sdk',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDevelopersApiRoute =
   AuthenticatedDevelopersApiRouteImport.update({
@@ -4186,6 +4193,7 @@ export interface FileRoutesByFullPath {
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/developers/api': typeof AuthenticatedDevelopersApiRoute
+  '/developers/sdk': typeof AuthenticatedDevelopersSdkRoute
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
   '/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
@@ -4749,6 +4757,7 @@ export interface FileRoutesByTo {
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/developers/api': typeof AuthenticatedDevelopersApiRoute
+  '/developers/sdk': typeof AuthenticatedDevelopersSdkRoute
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
   '/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
@@ -5335,6 +5344,7 @@ export interface FileRoutesById {
   '/_authenticated/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
   '/_authenticated/developers/api': typeof AuthenticatedDevelopersApiRoute
+  '/_authenticated/developers/sdk': typeof AuthenticatedDevelopersSdkRoute
   '/_authenticated/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/_authenticated/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
   '/_authenticated/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
@@ -5920,6 +5930,7 @@ export interface FileRouteTypes {
     | '/cloud/team'
     | '/counsellor/copilot'
     | '/developers/api'
+    | '/developers/sdk'
     | '/instructor/dashboard'
     | '/integrations/$provider'
     | '/integrations/discover'
@@ -6483,6 +6494,7 @@ export interface FileRouteTypes {
     | '/cloud/team'
     | '/counsellor/copilot'
     | '/developers/api'
+    | '/developers/sdk'
     | '/instructor/dashboard'
     | '/integrations/$provider'
     | '/integrations/discover'
@@ -7068,6 +7080,7 @@ export interface FileRouteTypes {
     | '/_authenticated/cloud/team'
     | '/_authenticated/counsellor/copilot'
     | '/_authenticated/developers/api'
+    | '/_authenticated/developers/sdk'
     | '/_authenticated/instructor/dashboard'
     | '/_authenticated/integrations/$provider'
     | '/_authenticated/integrations/discover'
@@ -9251,6 +9264,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/instructor/dashboard'
       preLoaderRoute: typeof AuthenticatedInstructorDashboardRouteImport
       parentRoute: typeof AuthenticatedInstructorRoute
+    }
+    '/_authenticated/developers/sdk': {
+      id: '/_authenticated/developers/sdk'
+      path: '/developers/sdk'
+      fullPath: '/developers/sdk'
+      preLoaderRoute: typeof AuthenticatedDevelopersSdkRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/developers/api': {
       id: '/_authenticated/developers/api'
@@ -12859,6 +12879,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
   AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
   AuthenticatedDevelopersApiRoute: typeof AuthenticatedDevelopersApiRoute
+  AuthenticatedDevelopersSdkRoute: typeof AuthenticatedDevelopersSdkRoute
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedTemplatesSlugRoute: typeof AuthenticatedTemplatesSlugRoute
   AuthenticatedAgentsIndexRoute: typeof AuthenticatedAgentsIndexRoute
@@ -12894,6 +12915,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCounsellorCopilotRoute:
     AuthenticatedCounsellorCopilotRouteWithChildren,
   AuthenticatedDevelopersApiRoute: AuthenticatedDevelopersApiRoute,
+  AuthenticatedDevelopersSdkRoute: AuthenticatedDevelopersSdkRoute,
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedTemplatesSlugRoute: AuthenticatedTemplatesSlugRoute,
   AuthenticatedAgentsIndexRoute: AuthenticatedAgentsIndexRoute,
