@@ -69,10 +69,10 @@ const NAV: NavGroup[] = [
     collapsible: true,
     items: [
       { to: "/admin/payments/gateway", label: "Payment Gateway", icon: ShieldCheck },
-      { to: "/admin/payments/gateway?tab=accounts", label: "Payment Accounts", icon: Wallet },
+      { to: "/admin/payments/gateway", label: "Payment Accounts", icon: Wallet, hash: "accounts" },
       { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck },
       { to: "/admin/payments", label: "Transactions", icon: FileSignature },
-      { to: "/admin/payments?view=reports", label: "Reports", icon: Activity },
+      { to: "/admin/payments", label: "Reports", icon: Activity, hash: "reports" },
       { to: "/admin/payments/settings", label: "Settings", icon: Settings },
     ],
   },
