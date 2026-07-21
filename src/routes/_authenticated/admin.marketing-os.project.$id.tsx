@@ -1,22 +1,32 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Sparkles, ArrowLeft, FileText, Image as ImageIcon, Video, LayoutTemplate,
   ClipboardList, Mail, CalendarDays, Workflow, BarChart3, LayoutDashboard,
   TrendingUp, Users, DollarSign, Target, Lightbulb, Activity,
+  Send, Clock, Save, Check, X as XIcon, Loader2, ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { getMarketingProject } from "@/lib/marketing-os/projects.functions";
+import {
+  getProjectPublishStatus, saveProjectDraft, approveProject, rejectProject,
+  publishProjectNow, scheduleProject,
+} from "@/lib/marketing-os/project-publish.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/marketing-os/project/$id")({
   component: ProjectOverview,
 });
+
 
 function ProjectOverview() {
   const { id } = Route.useParams();
