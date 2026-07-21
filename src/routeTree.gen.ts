@@ -496,6 +496,7 @@ import { Route as AuthenticatedAdminProgrammaticSeoNewRouteImport } from './rout
 import { Route as AuthenticatedAdminProgrammaticSeoIdRouteImport } from './routes/_authenticated/admin.programmatic-seo.$id'
 import { Route as AuthenticatedAdminPayoutsIdRouteImport } from './routes/_authenticated/admin.payouts.$id'
 import { Route as AuthenticatedAdminPaymentsSettingsRouteImport } from './routes/_authenticated/admin.payments.settings'
+import { Route as AuthenticatedAdminPaymentsGatewayRouteImport } from './routes/_authenticated/admin.payments.gateway'
 import { Route as AuthenticatedAdminPaymentsIdRouteImport } from './routes/_authenticated/admin.payments.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
@@ -3340,6 +3341,12 @@ const AuthenticatedAdminPaymentsSettingsRoute =
     path: '/payments/settings',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPaymentsGatewayRoute =
+  AuthenticatedAdminPaymentsGatewayRouteImport.update({
+    id: '/payments/gateway',
+    path: '/payments/gateway',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminPaymentsIdRoute =
   AuthenticatedAdminPaymentsIdRouteImport.update({
     id: '/payments/$id',
@@ -4538,6 +4545,7 @@ export interface FileRoutesByFullPath {
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
+  '/admin/payments/gateway': typeof AuthenticatedAdminPaymentsGatewayRoute
   '/admin/payments/settings': typeof AuthenticatedAdminPaymentsSettingsRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
@@ -5123,6 +5131,7 @@ export interface FileRoutesByTo {
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
+  '/admin/payments/gateway': typeof AuthenticatedAdminPaymentsGatewayRoute
   '/admin/payments/settings': typeof AuthenticatedAdminPaymentsSettingsRoute
   '/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
@@ -5731,6 +5740,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
+  '/_authenticated/admin/payments/gateway': typeof AuthenticatedAdminPaymentsGatewayRoute
   '/_authenticated/admin/payments/settings': typeof AuthenticatedAdminPaymentsSettingsRoute
   '/_authenticated/admin/payouts/$id': typeof AuthenticatedAdminPayoutsIdRoute
   '/_authenticated/admin/programmatic-seo/$id': typeof AuthenticatedAdminProgrammaticSeoIdRoute
@@ -6338,6 +6348,7 @@ export interface FileRouteTypes {
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payments/$id'
+    | '/admin/payments/gateway'
     | '/admin/payments/settings'
     | '/admin/payouts/$id'
     | '/admin/programmatic-seo/$id'
@@ -6923,6 +6934,7 @@ export interface FileRouteTypes {
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payments/$id'
+    | '/admin/payments/gateway'
     | '/admin/payments/settings'
     | '/admin/payouts/$id'
     | '/admin/programmatic-seo/$id'
@@ -7530,6 +7542,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payments/$id'
+    | '/_authenticated/admin/payments/gateway'
     | '/_authenticated/admin/payments/settings'
     | '/_authenticated/admin/payouts/$id'
     | '/_authenticated/admin/programmatic-seo/$id'
@@ -11190,6 +11203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPaymentsSettingsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/payments/gateway': {
+      id: '/_authenticated/admin/payments/gateway'
+      path: '/payments/gateway'
+      fullPath: '/admin/payments/gateway'
+      preLoaderRoute: typeof AuthenticatedAdminPaymentsGatewayRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/payments/$id': {
       id: '/_authenticated/admin/payments/$id'
       path: '/payments/$id'
@@ -12540,6 +12560,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminPartnersIdRoute: typeof AuthenticatedAdminPartnersIdRoute
   AuthenticatedAdminPaymentLinksIdRoute: typeof AuthenticatedAdminPaymentLinksIdRoute
   AuthenticatedAdminPaymentsIdRoute: typeof AuthenticatedAdminPaymentsIdRoute
+  AuthenticatedAdminPaymentsGatewayRoute: typeof AuthenticatedAdminPaymentsGatewayRoute
   AuthenticatedAdminPaymentsSettingsRoute: typeof AuthenticatedAdminPaymentsSettingsRoute
   AuthenticatedAdminPayoutsIdRoute: typeof AuthenticatedAdminPayoutsIdRoute
   AuthenticatedAdminProgrammaticSeoIdRoute: typeof AuthenticatedAdminProgrammaticSeoIdRoute
@@ -12667,6 +12688,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminPartnersIdRoute: AuthenticatedAdminPartnersIdRoute,
   AuthenticatedAdminPaymentLinksIdRoute: AuthenticatedAdminPaymentLinksIdRoute,
   AuthenticatedAdminPaymentsIdRoute: AuthenticatedAdminPaymentsIdRoute,
+  AuthenticatedAdminPaymentsGatewayRoute:
+    AuthenticatedAdminPaymentsGatewayRoute,
   AuthenticatedAdminPaymentsSettingsRoute:
     AuthenticatedAdminPaymentsSettingsRoute,
   AuthenticatedAdminPayoutsIdRoute: AuthenticatedAdminPayoutsIdRoute,
