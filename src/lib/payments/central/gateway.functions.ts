@@ -229,8 +229,8 @@ export const restorePaymentAccountVersion = createServerFn({ method: "POST" })
       .from("payment_accounts")
       .update({
         qr_image_url: ver.qr_image_url,
-        upi_id: ver.upi_id,
-        merchant_name: ver.merchant_name,
+        upi_id: ver.upi_id ?? undefined,
+        merchant_name: ver.merchant_name ?? undefined,
         version: nextVersion,
         updated_by: userId,
       })
