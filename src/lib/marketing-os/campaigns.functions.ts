@@ -206,24 +206,18 @@ export const saveCampaign = createServerFn({ method: "POST" })
       if (error) throw new Error(error.message);
       return { campaign: updated as Campaign };
     }
-    // Ensure the brand_id we insert is one the caller actually owns under RLS.
-    const safeBrandId = await resolveAccessibleBrandId(
+    // Route creation through the ONE shared, RLS-validated service.
+    const { createCampaignForUser } = await import("@/lib/marketing-os/campaign-service.server");
+    const { brand_id: _b, ...rest } = payload as any;
+    const created = await createCampaignForUser(
       context.supabase,
       context.userId,
-      data.brand_id,
+      rest,
+      { preferredBrandId: data.brand_id },
     );
-    const { data: created, error } = await context.supabase
-      .from("mkt_campaigns")
-      .insert({ ...payload, brand_id: safeBrandId, created_by: context.userId })
-      .select()
-      .single();
-    if (error) {
-      throw new Error(
-        `Failed to create campaign (${error.code ?? "db_error"}): ${error.message}`,
-      );
-    }
     return { campaign: created as Campaign };
   });
+
 
 // ---------- setStatus / archive / duplicate ----------
 export const setCampaignStatus = createServerFn({ method: "POST" })
