@@ -237,6 +237,68 @@ function SocialAccountsPage() {
   };
 
 
+  const openLiPicker = async (accountId: string) => {
+    setLiPicker((prev) => ({
+      ...prev,
+      [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, error: null, open: false }), loading: true, open: true, error: null },
+    }));
+    try {
+      const res = await runListLiOrgs({ data: { account_id: accountId } });
+      setLiPicker((prev) => ({
+        ...prev,
+        [accountId]: {
+          loading: false,
+          open: true,
+          person: res.person ?? null,
+          orgs: res.organizations ?? [],
+          defaultUrn: res.default?.urn ?? res.person?.urn ?? null,
+          reconnectRequired: !!res.reconnect_required,
+          error: res.error ?? null,
+        },
+      }));
+    } catch (e) {
+      setLiPicker((prev) => ({
+        ...prev,
+        [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, open: true, loading: false, error: null }), loading: false, open: true, error: (e as Error).message },
+      }));
+    }
+  };
+
+  const closeLiPicker = (accountId: string) => {
+    setLiPicker((prev) => ({ ...prev, [accountId]: { ...(prev[accountId]!), open: false } }));
+  };
+
+  const chooseLiAuthor = async (
+    accountId: string,
+    author: { urn: string; kind: "person" | "organization"; name: string },
+  ) => {
+    setBusy(accountId);
+    try {
+      await runSetLiAuthor({ data: { account_id: accountId, author_urn: author.urn, author_kind: author.kind, author_name: author.name } });
+      setLiPicker((prev) => ({ ...prev, [accountId]: { ...(prev[accountId]!), defaultUrn: author.urn } }));
+      toast.success(`Default LinkedIn destination set to ${author.name}`);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const testLiCompanyPage = async (accountId: string, org: LiOrg) => {
+    const message = prompt(`Post text for "${org.name}":`, `Testing Glintr AI Publishing to LinkedIn Company Page 🚀`);
+    if (!message) return;
+    setBusy(accountId);
+    try {
+      const r = (await runTestLiAuthor({ data: { account_id: accountId, author_urn: org.urn, message } })) as TestResult;
+      applyResult(accountId, r, `LinkedIn · ${org.name}`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex items-start justify-between gap-4">
