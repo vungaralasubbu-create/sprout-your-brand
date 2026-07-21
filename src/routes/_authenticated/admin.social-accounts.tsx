@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
-import { Facebook, Instagram, Linkedin, Plus, RefreshCw, Trash2, ExternalLink, Twitter, Send } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Plus, RefreshCw, Trash2, ExternalLink, Twitter, Send, Building2, User as UserIcon, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 
@@ -8,7 +8,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { testPublishAccount, testPublishAllAccounts } from "@/lib/marketing-os/publisher.functions";
+import {
+  testPublishAccount,
+  testPublishAllAccounts,
+  listLinkedInOrgs,
+  setLinkedInDefaultAuthor,
+  testPublishLinkedInAuthor,
+} from "@/lib/marketing-os/publisher.functions";
 
 
 export const Route = createFileRoute("/_authenticated/admin/social-accounts")({
