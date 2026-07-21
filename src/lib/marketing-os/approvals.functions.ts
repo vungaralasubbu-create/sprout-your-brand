@@ -333,8 +333,9 @@ export const changeApprovalStatus = createServerFn({ method: "POST" })
             console.error(`[approval.autoEnqueue] worker error: ${(e as Error).message}`);
           }
         } else {
-          console.log(`[approval.autoEnqueue] no eligible jobs; skipped=${publishing.skipped.length}`);
+          console.log(`[approval.autoEnqueue] no eligible social jobs; skipped=${publishing.skipped.length} blogs=${blogPublished.length}`);
         }
+        publishing.blogs = blogPublished;
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         console.error(`[approval.autoEnqueue] fatal: ${msg}`);
