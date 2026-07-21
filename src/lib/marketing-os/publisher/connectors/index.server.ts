@@ -19,8 +19,10 @@ async function edgePublish(fn: string, ownerId: string, body: Record<string, unk
     const { status, json } = await invokeEdgeAs(fn, ownerId, body);
     if (status >= 200 && status < 300 && json && typeof json === "object") {
       const j = json as Record<string, unknown>;
-      const post = (j.post_id ?? j.id ?? j.platform_post_id ?? null) as string | null;
-      const url = (j.url ?? j.permalink ?? j.platform_url ?? null) as string | null;
+      const result = (j.result && typeof j.result === "object" ? j.result : {}) as Record<string, unknown>;
+      const root = (result.root && typeof result.root === "object" ? result.root : {}) as Record<string, unknown>;
+      const post = (j.post_id ?? j.id ?? j.platform_post_id ?? result.post_id ?? result.id ?? root.id ?? null) as string | null;
+      const url = (j.url ?? j.permalink ?? j.platform_url ?? result.url ?? result.permalink ?? root.url ?? null) as string | null;
       return { ok: true, platformPostId: post ? String(post) : null, platformUrl: url ? String(url) : null, response: j };
     }
     const err = classifyError(status, json);
