@@ -477,3 +477,195 @@ export const testPublishAllAccounts = createServerFn({ method: "POST" })
   });
 
 
+/* ------------------- LINKEDIN AUTHOR (Personal vs Company Page) ------------------- */
+
+// Helper: invoke a Supabase edge function using the caller's bearer token or
+// the internal dispatch secret + service role, mirroring the publisher path.
+async function invokeEdgeAsUser(
+  fnName: string,
+  userId: string,
+  body: Record<string, unknown>,
+): Promise<{ status: number; json: Any }> {
+  const url = process.env.SUPABASE_URL!;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const dispatchSecret = process.env.INTERNAL_DISPATCH_SECRET;
+  if (!url || !key) throw new Error("Supabase server env missing");
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    "x-run-as-user-id": userId,
+  };
+  if (dispatchSecret) headers["x-internal-secret"] = dispatchSecret;
+  const res = await fetch(`${url}/functions/v1/${fnName}`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  let parsed: Any = null;
+  try { parsed = text ? JSON.parse(text) : null; } catch { parsed = text; }
+  return { status: res.status, json: parsed };
+}
+
+const ListOrgsSchema = z.object({ account_id: z.string().uuid() });
+
+/**
+ * List LinkedIn Organizations (Company Pages) the connected member administers.
+ * Reuses the existing LinkedIn access token — no OAuth restart.
+ */
+export const listLinkedInOrgs = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => ListOrgsSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    // Verify the caller owns this account before hitting LinkedIn.
+    const { data: acc, error } = await context.supabase
+      .from("soc_accounts")
+      .select("id, platform")
+      .eq("id", data.account_id)
+      .eq("owner_id", context.userId)
+      .eq("platform", "linkedin")
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!acc) throw new Error("LinkedIn account not found");
+
+    const { status, json } = await invokeEdgeAsUser("linkedin-orgs", context.userId, {
+      account_id: data.account_id,
+    });
+    if (status >= 400) throw new Error((json as Any)?.error ?? `linkedin-orgs failed (${status})`);
+    return json as {
+      ok?: boolean;
+      person: { urn: string; name: string };
+      organizations: Array<{ id: string; urn: string; name: string; vanityName: string | null; logoUrn: string | null; role: string; state: string }>;
+      default: { urn: string; kind: "person" | "organization"; name?: string };
+      reconnect_required?: boolean;
+      code?: string;
+      error?: string;
+    };
+  });
+
+const SetAuthorSchema = z.object({
+  account_id: z.string().uuid(),
+  author_urn: z.string().min(1).regex(/^urn:li:(person|organization):/, "Must be urn:li:person: or urn:li:organization:"),
+  author_kind: z.enum(["person", "organization"]),
+  author_name: z.string().min(1).max(200),
+});
+
+/**
+ * Persist the LinkedIn publishing target (Personal profile OR a specific
+ * Company Page) as the default author on the connected account. The publisher
+ * uses this on every subsequent publish unless the caller overrides it.
+ */
+export const setLinkedInDefaultAuthor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => SetAuthorSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: acc, error } = await supabase
+      .from("soc_accounts")
+      .select("id, metadata")
+      .eq("id", data.account_id)
+      .eq("owner_id", userId)
+      .eq("platform", "linkedin")
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!acc) throw new Error("LinkedIn account not found");
+    const md = ((acc as Any).metadata ?? {}) as Record<string, unknown>;
+    const nextMd = {
+      ...md,
+      default_author_urn: data.author_urn,
+      default_author_kind: data.author_kind,
+      default_author_name: data.author_name,
+      default_author_updated_at: new Date().toISOString(),
+    };
+    const { error: uerr } = await (supabase as Any)
+      .from("soc_accounts")
+      .update({ metadata: nextMd })
+      .eq("id", data.account_id)
+      .eq("owner_id", userId);
+    if (uerr) throw new Error(uerr.message);
+    return { ok: true, default: { urn: data.author_urn, kind: data.author_kind, name: data.author_name } };
+  });
+
+const TestOrgSchema = z.object({
+  account_id: z.string().uuid(),
+  author_urn: z.string().regex(/^urn:li:organization:/, "Company page URN required").optional(),
+  message: z.string().min(1).max(3000).optional(),
+});
+
+/**
+ * "Test Publish to Company Page" — creates a real publishing_jobs row with the
+ * given LinkedIn organization URN as the author override, runs the worker
+ * inline, and returns the provider post ID / URL / error. If author_urn is
+ * omitted, uses the saved default (which may be personal or a company page).
+ */
+export const testPublishLinkedInAuthor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => TestOrgSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: acc, error } = await supabase
+      .from("soc_accounts")
+      .select("id, platform, account_name, connection_status, metadata")
+      .eq("id", data.account_id)
+      .eq("owner_id", userId)
+      .eq("platform", "linkedin")
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!acc) throw new Error("LinkedIn account not found");
+    if ((acc as Any).connection_status !== "connected") {
+      throw new Error(`Account not connected (${(acc as Any).connection_status ?? "unknown"})`);
+    }
+
+    const message = data.message ?? "Testing Glintr AI Publishing to LinkedIn Company Page 🚀";
+    const row = {
+      owner_id: userId,
+      created_by: userId,
+      platform: "linkedin",
+      account_id: (acc as Any).id,
+      account_label: (acc as Any).account_name ?? null,
+      campaign: "publish-test",
+      mode: "publish_now",
+      status: "queued",
+      scheduled_at: new Date().toISOString(),
+      priority: 1,
+      payload: {
+        title: "Publish Test",
+        body: message,
+        hashtags: [],
+        cta: null,
+        media_urls: [],
+        thread: null,
+        // Connector forwards this to the edge function as `author_urn`.
+        metadata: { source: "social-accounts.test-linkedin", author_urn: data.author_urn ?? null },
+      },
+    };
+    const { data: ins, error: ie } = await (supabase as Any)
+      .from("publishing_jobs")
+      .insert(row as Any)
+      .select("id")
+      .maybeSingle();
+    if (ie) throw new Error(ie.message);
+    const jobId = (ins as Any)?.id as string;
+
+    const { runPublisherWorker } = await import("./publisher-worker.server");
+    await runPublisherWorker({ maxJobs: 1, jobId });
+
+    const { data: final } = await supabase
+      .from("publishing_jobs")
+      .select("id, status, platform_post_id, platform_url, error_code, error_message, response_payload, published_at")
+      .eq("id", jobId)
+      .maybeSingle();
+    const f = final as Any;
+    return {
+      job_id: jobId,
+      status: f?.status ?? "unknown",
+      platform_post_id: f?.platform_post_id ?? null,
+      platform_url: f?.platform_url ?? null,
+      published_at: f?.published_at ?? null,
+      error_code: f?.error_code ?? null,
+      error_message: f?.error_message ?? null,
+      response: f?.response_payload ?? null,
+    };
+  });
+
