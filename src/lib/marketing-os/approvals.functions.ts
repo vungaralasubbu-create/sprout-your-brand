@@ -182,7 +182,8 @@ export const changeApprovalStatus = createServerFn({ method: "POST" })
       created: number;
       jobs: Array<{ id: string; platform: string; account_id: string }>;
       skipped: Array<{ item_id: string; platform: string; reason: string }>;
-    } = { created: 0, jobs: [], skipped: [] };
+      blogs: Array<{ item_id: string; blog_post_id: string; slug: string }>;
+    } = { created: 0, jobs: [], skipped: [], blogs: [] };
 
     if (data.status === "approved" && rows && rows.length) {
       console.log(`[approval.autoEnqueue] approve clicked userId=${userId} items=${rows.length}`);
