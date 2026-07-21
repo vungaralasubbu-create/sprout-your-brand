@@ -63,7 +63,8 @@ export const createMarketingProject = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const steps = PROJECT_STEPS.map((s) => ({ ...s, status: "pending" }));
     const sb: any = (context.supabase as any);
-    const brandId = await ensureDefaultBrand(sb, context.userId, data.brand_id);
+    const { resolveOwnedBrandId } = await import("@/lib/marketing-os/campaign-service.server");
+    const brandId = await resolveOwnedBrandId(sb, context.userId, data.brand_id);
     const { data: created, error } = await sb
       .from("marketing_projects")
       .insert({
@@ -80,6 +81,7 @@ export const createMarketingProject = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { project: created as MarketingProject };
   });
+
 
 // ---------------- get ----------------
 export const getMarketingProject = createServerFn({ method: "GET" })
