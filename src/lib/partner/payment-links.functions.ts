@@ -155,7 +155,7 @@ export const assignPaymentLinkToLead = createServerFn({ method: "POST" })
         course_id: link.course_id,
         plan: link.plan,
         amount: link.amount,
-        url: link.url,
+        url: link.url ?? "",
       })
       .select("id, url, amount, plan, assigned_at")
       .single();
