@@ -1198,9 +1198,11 @@ export const submitAssessment = createServerFn({ method: "POST" })
 
     const { data: a } = await context.supabase
       .from("course_assessments").select("id, name, pass_percentage").eq("id", attempt.assessment_id).maybeSingle();
-    const { data: qs } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: qs } = await supabaseAdmin
       .from("assessment_questions").select("id, question_type, correct_answers, points")
       .eq("assessment_id", attempt.assessment_id);
+
 
     let score = 0;
     let max = 0;
