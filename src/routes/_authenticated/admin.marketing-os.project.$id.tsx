@@ -381,6 +381,7 @@ const PUBLISH_STATE_TONE: Record<string, { label: string; variant: "success" | "
 
 function ProjectPublishToolbar({ projectId }: { projectId: string }) {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const statusFn = useServerFn(getProjectPublishStatus);
   const saveFn = useServerFn(saveProjectDraft);
   const approveFn = useServerFn(approveProject);
@@ -440,7 +441,14 @@ function ProjectPublishToolbar({ projectId }: { projectId: string }) {
         <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => wrap("draft", () => saveFn({ data: { projectId } }), "Saved as draft")}>
           {busy === "draft" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Save className="size-3.5 mr-1.5" />} Save Draft
         </Button>
-        <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => wrap("approve", () => approveFn({ data: { projectId } }), "Approved")}>
+        <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => wrap("approve", async () => {
+          const res = await approveFn({ data: { projectId } }) as { publishing?: { jobs?: Array<{ id: string }> } };
+          const firstId = res?.publishing?.jobs?.[0]?.id;
+          await navigate({
+            to: "/admin/marketing-os/publisher",
+            search: firstId ? { highlight: firstId } : undefined,
+          }).catch(() => { /* route may not accept search; ignore */ });
+        }, "Approved — publishing jobs queued")}>
           {busy === "approve" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Check className="size-3.5 mr-1.5" />} Approve
         </Button>
         <Button size="sm" variant="outline" disabled={busy !== null} onClick={() => wrap("reject", () => rejectFn({ data: { projectId } }), "Rejected")}>
