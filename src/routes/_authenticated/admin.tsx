@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminShell,
 });
 
-type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; perms?: string[] };
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; perms?: string[]; hash?: string };
 type NavGroup = { key: string; label: string | null; items: NavItem[]; collapsible?: boolean };
 
 const NAV: NavGroup[] = [
@@ -68,12 +68,12 @@ const NAV: NavGroup[] = [
     label: "Payments",
     collapsible: true,
     items: [
-      { to: "/admin/payments/gateway", label: "Payment Gateway", icon: ShieldCheck, perms: ["payments.view"] },
-      { to: "/admin/payments/gateway", label: "Payment Accounts", icon: Wallet, perms: ["payments.view"] },
-      { to: "/admin/payments", label: "Transactions", icon: FileSignature, perms: ["payments.view"] },
-      { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck, perms: ["payments.view"] },
-      { to: "/admin/payments", label: "Reports", icon: Activity, perms: ["payments.view"] },
-      { to: "/admin/payments/settings", label: "Settings", icon: Settings, perms: ["payments.view"] },
+      { to: "/admin/payments/gateway", label: "Payment Gateway", icon: ShieldCheck },
+      { to: "/admin/payments/gateway", label: "Payment Accounts", icon: Wallet, hash: "accounts" },
+      { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck },
+      { to: "/admin/payments", label: "Transactions", icon: FileSignature },
+      { to: "/admin/payments", label: "Reports", icon: Activity, hash: "reports" },
+      { to: "/admin/payments/settings", label: "Settings", icon: Settings },
     ],
   },
   {
@@ -248,8 +248,9 @@ function AdminShell() {
                     const Icon = item.icon;
                     return (
                       <Link
-                        key={item.to}
+                        key={`${item.to}#${item.hash ?? ""}:${item.label}`}
                         to={item.to as any}
+                        hash={item.hash as any}
                         className={cn(
                           "relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors",
                           active
