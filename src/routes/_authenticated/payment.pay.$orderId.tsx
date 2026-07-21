@@ -37,6 +37,7 @@ function PayPage() {
 
   const getPay = useServerFn(getMyPayment);
   const getSettings = useServerFn(getActivePaymentSettings);
+  const getDisplay = useServerFn(getPaymentDisplayForOrder);
   const getSignedQr = useServerFn(getPaymentConfigSignedUrl);
   const getUpload = useServerFn(createScreenshotUploadUrl);
   const submit = useServerFn(submitPaymentConfirmation);
@@ -61,8 +62,16 @@ function PayPage() {
     queryFn: () => getSettings(),
     staleTime: 30_000,
   });
+  // Prefer the gateway account snapshotted on this order over legacy settings.
+  const displayQ = useQuery({
+    queryKey: ["central-payment-display", orderId],
+    queryFn: () => getDisplay({ data: { orderId } }),
+    staleTime: 30_000,
+  });
 
-  const qrPath = settingsQ.data?.qr_image_url ?? null;
+  const merchantName = displayQ.data?.merchant_name ?? settingsQ.data?.merchant_name ?? "Glintr";
+  const upiId = displayQ.data?.upi_id ?? settingsQ.data?.upi_id ?? null;
+  const qrPath = displayQ.data?.qr_image_url ?? settingsQ.data?.qr_image_url ?? null;
   const logoPath = settingsQ.data?.logo_url ?? null;
   const qrQ = useQuery({
     queryKey: ["central-qr", qrPath],
@@ -88,7 +97,10 @@ function PayPage() {
   const amount = payQ.data?.final_amount_inr ?? 0;
   const studentName = `${(payQ.data as any)?.first_name ?? ""} ${(payQ.data as any)?.last_name ?? ""}`.trim();
   const courseName = (payQ.data as any)?.courses?.name;
-  const maintenance = !!settingsQ.data?.maintenance_mode || settingsQ.data?.is_enabled === false;
+  const maintenance =
+    !!displayQ.data?.maintenance ||
+    !!settingsQ.data?.maintenance_mode ||
+    settingsQ.data?.is_enabled === false;
 
   const mutation = useMutation({
     mutationFn: async () => {
