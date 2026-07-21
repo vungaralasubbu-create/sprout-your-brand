@@ -63,7 +63,7 @@ export function ReviewShowcase({
 
   return (
     <section className={`py-16 ${className}`} aria-label="Student reviews">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029") }} />
       <div className="max-w-7xl mx-auto px-4">
         <header className="text-center mb-10">
           <div className="inline-flex items-center gap-2 mb-3">
