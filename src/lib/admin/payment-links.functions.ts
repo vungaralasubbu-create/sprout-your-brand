@@ -5,6 +5,15 @@ import { z } from "zod";
 const PLANS = ["self_paced_edge", "career_launch", "career_pro"] as const;
 export type PaymentPlan = (typeof PLANS)[number];
 
+const trimmedOrNull = z
+  .string()
+  .trim()
+  .max(500)
+  .optional()
+  .nullable()
+  .transform((v) => (v && v.length > 0 ? v : null));
+
+
 export const PLAN_LABELS: Record<PaymentPlan, string> = {
   self_paced_edge: "Self-Paced Edge",
   career_launch: "Career Launch",
