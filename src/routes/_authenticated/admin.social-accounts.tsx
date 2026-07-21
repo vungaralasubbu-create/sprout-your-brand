@@ -34,10 +34,22 @@ type Account = {
   metadata: Record<string, unknown> | null;
 };
 
+type TestResult = {
+  status: string;
+  platform_post_id: string | null;
+  platform_url: string | null;
+  error_code: string | null;
+  error_message: string | null;
+  published_at?: string | null;
+};
+
 function SocialAccountsPage() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
+  const [results, setResults] = useState<Record<string, TestResult>>({});
+  const runTestOne = useServerFn(testPublishAccount);
+  const runTestAll = useServerFn(testPublishAllAccounts);
 
   const load = useCallback(async () => {
     setLoading(true);
