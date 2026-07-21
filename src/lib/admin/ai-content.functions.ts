@@ -509,11 +509,89 @@ export const submitAiReviewAction = createServerFn({ method: "POST" })
   }).parse(i))
   .handler(async ({ data, context }) => {
     await ensureAdmin(context);
-    const nextStatus = data.action === "approve" ? "approved" : data.action === "reject" ? "archived" : "draft";
-    const { error: updErr } = await context.supabase.from("content_items")
-      .update({ status: nextStatus, last_edited_by: context.userId })
+    // On approve → publish (status='published') so the article becomes visible.
+    // On reject → archive. On request_changes → back to draft.
+    const nextStatus =
+      data.action === "approve" ? "published"
+      : data.action === "reject" ? "archived"
+      : "draft";
+    const now = new Date().toISOString();
+
+    // Fetch item first so we can mirror it into blog_posts for the public site.
+    const { data: item, error: fetchErr } = await context.supabase
+      .from("content_items")
+      .select("id, type, title, slug, summary, body_markdown, seo_title, seo_description, featured_image, focus_topic, reading_time_min, metadata")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (fetchErr) throw new Error(fetchErr.message);
+    if (!item) throw new Error("Content item not found");
+
+    const updatePayload: Record<string, unknown> = {
+      status: nextStatus,
+      last_edited_by: context.userId,
+    };
+    if (data.action === "approve") updatePayload.published_at = now;
+
+    const { error: updErr } = await (context.supabase as any)
+      .from("content_items")
+      .update(updatePayload)
       .eq("id", data.id);
     if (updErr) throw new Error(updErr.message);
+
+    let blogPostId: string | null = null;
+    let blogSlug: string | null = null;
+    // Bridge: mirror approved article to blog_posts so /blog displays it.
+    if (data.action === "approve") {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const it = item as any;
+        const title = String(it.title ?? "Untitled Post");
+        const body = String(it.body_markdown ?? "");
+        const summary = String(it.summary ?? it.seo_description ?? title).slice(0, 300);
+        const baseSlug = slugify(String(it.slug ?? title) || "post") || "post";
+        const rt = Number(it.reading_time_min ?? readingTime(wordCount(body))) || 1;
+        const keywords: string[] = Array.isArray(it.metadata?.suggestions?.blogs)
+          ? it.metadata.suggestions.blogs.filter((k: unknown) => typeof k === "string")
+          : [];
+        const faqs = Array.isArray(it.metadata?.suggestions?.faqs) ? it.metadata.suggestions.faqs : [];
+
+        const insertRow = (slug: string) => (context.supabase as any)
+          .from("blog_posts")
+          .insert({
+            slug,
+            title,
+            short_summary: summary,
+            content_markdown: body || summary || title,
+            seo_title: it.seo_title ?? title,
+            seo_description: it.seo_description ?? summary,
+            featured_image_url: it.featured_image ?? null,
+            keywords,
+            faqs,
+            status: "published",
+            is_published: true,
+            published_at: now,
+            reading_time_minutes: rt,
+          })
+          .select("id, slug")
+          .maybeSingle();
+
+        let { data: post, error: bErr } = await insertRow(baseSlug);
+        if (bErr && /duplicate|unique/i.test(bErr.message)) {
+          const suffix = Date.now().toString(36).slice(-4);
+          ({ data: post, error: bErr } = await insertRow(`${baseSlug}-${suffix}`));
+        }
+        if (bErr) {
+          console.error(`[ai-content.approve] blog_posts insert failed id=${data.id}: ${bErr.message}`);
+        } else if (post) {
+          blogPostId = post.id;
+          blogSlug = post.slug;
+          console.log(`[ai-content.approve] published to /blog/${post.slug} (item=${data.id})`);
+        }
+      } catch (e) {
+        console.error(`[ai-content.approve] bridge error: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    }
+
     if (data.note) {
       await context.supabase.from("content_comments").insert({
         content_id: data.id,
@@ -521,7 +599,7 @@ export const submitAiReviewAction = createServerFn({ method: "POST" })
         author_user_id: context.userId,
       });
     }
-    return { ok: true, status: nextStatus };
+    return { ok: true, status: nextStatus, blog_post_id: blogPostId, blog_slug: blogSlug };
   });
 
 // ============= REVIEW QUEUE =============
