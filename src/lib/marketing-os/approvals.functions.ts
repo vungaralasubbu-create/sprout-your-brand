@@ -168,14 +168,117 @@ export const changeApprovalStatus = createServerFn({ method: "POST" })
       .from("approval_queue")
       .update(patch as never)
       .in("id", data.ids)
-      .select("id, owner_id");
+      // Select full row so we can auto-enqueue publishing_jobs when approved.
+      .select("*");
     if (error) throw new Error(error.message);
     const acts = (rows ?? []).map((r) => ({
       queue_id: r.id, owner_id: r.owner_id, actor_id: userId,
       event: data.status, detail: { note: data.note ?? null },
     }));
     if (acts.length) await supabase.from("approval_activity").insert(acts);
-    return { updated: rows?.length ?? 0 };
+
+    // ---- Auto-enqueue into Publishing Queue on approval (additive, reuses existing Publisher) ----
+    const publishing: {
+      created: number;
+      jobs: Array<{ id: string; platform: string; account_id: string }>;
+      skipped: Array<{ item_id: string; platform: string; reason: string }>;
+    } = { created: 0, jobs: [], skipped: [] };
+
+    if (data.status === "approved" && rows && rows.length) {
+      console.log(`[approval.autoEnqueue] approve clicked userId=${userId} items=${rows.length}`);
+      try {
+        const { data: accs, error: aerr } = await supabase
+          .from("soc_accounts")
+          .select("id, platform, connection_status, can_post")
+          .eq("owner_id", userId)
+          .eq("connection_status", "connected");
+        if (aerr) console.error(`[approval.autoEnqueue] soc_accounts error: ${aerr.message}`);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const accounts = (accs ?? []) as Array<{ id: string; platform: string; can_post: boolean | null }>;
+        const norm = (s: string) => (s ?? "").toLowerCase().trim();
+        const SOCIAL = new Set(["facebook","instagram","linkedin","x","twitter","threads","youtube","pinterest","tiktok"]);
+
+        const jobRows: Record<string, unknown>[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        for (const r of rows as any[]) {
+          const itemId = r.id as string;
+          const platformRaw = String(r.platform ?? "");
+          const platform = norm(platformRaw);
+          if (!SOCIAL.has(platform)) {
+            publishing.skipped.push({ item_id: itemId, platform: platformRaw, reason: "non_social_platform" });
+            console.log(`[approval.autoEnqueue] skip item=${itemId} platform=${platformRaw} reason=non_social_platform`);
+            continue;
+          }
+          const alias = platform === "twitter" ? "x" : platform;
+          const matched = accounts.filter((a) => norm(a.platform) === alias && a.can_post !== false);
+          if (!matched.length) {
+            publishing.skipped.push({ item_id: itemId, platform: platformRaw, reason: "no_connected_account" });
+            console.log(`[approval.autoEnqueue] skip item=${itemId} platform=${platformRaw} reason=no_connected_account`);
+            continue;
+          }
+          const content = (r.content ?? {}) as Record<string, unknown>;
+          const mediaUrls: string[] = [];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const c = content as any;
+          if (Array.isArray(c.media_urls)) mediaUrls.push(...c.media_urls.filter((x: unknown) => typeof x === "string"));
+          if (typeof c.image_url === "string") mediaUrls.push(c.image_url);
+          if (Array.isArray(c.images)) mediaUrls.push(...c.images.filter((x: unknown) => typeof x === "string"));
+
+          const scheduledAt = (r.scheduled_at as string | null) ?? now;
+          for (const a of matched) {
+            jobRows.push({
+              owner_id: userId, created_by: userId,
+              content_id: itemId,
+              campaign: r.campaign ?? null,
+              platform: alias, account_id: a.id,
+              mode: "publish_now", status: "queued",
+              scheduled_at: scheduledAt, timezone: "UTC", priority: 5,
+              payload: {
+                title: r.title,
+                body: r.body ?? r.preview ?? "",
+                hashtags: Array.isArray(r.hashtags) ? r.hashtags : [],
+                cta: r.cta ?? null,
+                media_urls: mediaUrls,
+                thread: null,
+                metadata: content,
+              },
+            });
+          }
+        }
+
+        if (jobRows.length) {
+          console.log(`[approval.autoEnqueue] inserting publishing_jobs count=${jobRows.length}`);
+          const { data: ins, error: ierr } = await supabase
+            .from("publishing_jobs")
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .insert(jobRows as any)
+            .select("id, platform, account_id");
+          if (ierr) {
+            console.error(`[approval.autoEnqueue] insert publishing_jobs failed: ${ierr.message}`);
+            throw new Error(`Failed to enqueue publishing jobs: ${ierr.message}`);
+          }
+          publishing.jobs = (ins ?? []) as Array<{ id: string; platform: string; account_id: string }>;
+          publishing.created = publishing.jobs.length;
+          console.log(`[approval.autoEnqueue] job ids=${publishing.jobs.map((j) => j.id).join(",")}`);
+
+          try {
+            const { runPublisherWorker } = await import("./publisher-worker.server");
+            await runPublisherWorker({ maxJobs: publishing.created });
+            console.log(`[approval.autoEnqueue] worker dispatched maxJobs=${publishing.created}`);
+          } catch (e) {
+            console.error(`[approval.autoEnqueue] worker error: ${(e as Error).message}`);
+          }
+        } else {
+          console.log(`[approval.autoEnqueue] no eligible jobs; skipped=${publishing.skipped.length}`);
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.error(`[approval.autoEnqueue] fatal: ${msg}`);
+        throw new Error(msg);
+      }
+    }
+
+    return { updated: rows?.length ?? 0, publishing };
   });
 
 export const bulkDeleteApprovals = createServerFn({ method: "POST" })

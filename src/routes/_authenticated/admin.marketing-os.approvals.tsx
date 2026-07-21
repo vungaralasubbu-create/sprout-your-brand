@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
@@ -509,9 +509,31 @@ function ApprovalDrawer({ id, onClose }: { id: string | null; onClose: () => voi
     onSuccess: () => { toast.success("AI review complete"); inv(); },
     onError: (e: Error) => toast.error(e.message),
   });
+  const navigate = useNavigate();
   const mChange = useMutation({
     mutationFn: (status: Item["status"]) => change({ data: { ids: [id!], status } }),
-    onSuccess: () => { toast.success("Updated"); inv(); },
+    onSuccess: (res: { updated?: number; publishing?: { created: number; jobs: Array<{ id: string }>; skipped: Array<{ platform: string; reason: string }> } }, status) => {
+      const pub = res?.publishing;
+      if (status === "approved" && pub) {
+        if (pub.created > 0) {
+          toast.success(`Approved — ${pub.created} publishing job${pub.created === 1 ? "" : "s"} queued`);
+          const firstId = pub.jobs?.[0]?.id;
+          navigate({
+            to: "/admin/marketing-os/publisher",
+            search: firstId ? { highlight: firstId } : undefined,
+          }).catch(() => { /* route may not accept search; ignore */ });
+        } else if (pub.skipped?.length) {
+          const reasons = Array.from(new Set(pub.skipped.map((s) => s.reason))).join(", ");
+          toast.warning(`Approved — no publishing jobs created (${reasons}). Connect an account or check platform.`);
+        } else {
+          toast.success("Approved");
+        }
+      } else {
+        toast.success("Updated");
+      }
+      inv();
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
   const mComment = useMutation({
     mutationFn: () => addComment({ data: { queue_id: id!, body: newComment } }),
