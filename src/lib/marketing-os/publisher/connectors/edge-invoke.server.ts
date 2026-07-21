@@ -9,17 +9,24 @@ export async function invokeEdgeAs(
 ): Promise<{ status: number; json: unknown }> {
   const url = process.env.SUPABASE_URL!;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const dispatchSecret = process.env.INTERNAL_DISPATCH_SECRET;
   if (!url || !key) throw new Error("Supabase server env missing");
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    apikey: key,
+    Authorization: `Bearer ${key}`,
+    "x-run-as-user-id": ownerId,
+  };
+  // Additive: send shared-secret so edge function can authenticate the
+  // dispatcher even when the worker's SERVICE_ROLE key drifts from the
+  // edge function's env at runtime.
+  if (dispatchSecret) headers["x-internal-secret"] = dispatchSecret;
   const res = await fetch(`${url}/functions/v1/${fnName}`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      "x-run-as-user-id": ownerId,
-    },
+    headers,
     body: JSON.stringify(body),
   });
+
   const text = await res.text();
   let parsed: unknown = null;
   try { parsed = text ? JSON.parse(text) : null; } catch { parsed = text; }
