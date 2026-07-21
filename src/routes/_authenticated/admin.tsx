@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminShell,
 });
 
-type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; perms?: string[] };
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; perms?: string[]; hash?: string };
 type NavGroup = { key: string; label: string | null; items: NavItem[]; collapsible?: boolean };
 
 const NAV: NavGroup[] = [
