@@ -512,16 +512,19 @@ function ApprovalDrawer({ id, onClose }: { id: string | null; onClose: () => voi
   const navigate = useNavigate();
   const mChange = useMutation({
     mutationFn: (status: Item["status"]) => change({ data: { ids: [id!], status } }),
-    onSuccess: (res: { updated?: number; publishing?: { created: number; jobs: Array<{ id: string }>; skipped: Array<{ platform: string; reason: string }> } }, status) => {
+    onSuccess: (res: { updated?: number; publishing?: { created: number; jobs: Array<{ id: string }>; skipped: Array<{ platform: string; reason: string }>; blogs?: Array<{ slug: string }> } }, status) => {
       const pub = res?.publishing;
       if (status === "approved" && pub) {
+        const blogCount = pub.blogs?.length ?? 0;
         if (pub.created > 0) {
-          toast.success(`Approved — ${pub.created} publishing job${pub.created === 1 ? "" : "s"} queued`);
+          toast.success(`Approved — ${pub.created} publishing job${pub.created === 1 ? "" : "s"} queued${blogCount ? ` + ${blogCount} blog post${blogCount === 1 ? "" : "s"} published` : ""}`);
           const firstId = pub.jobs?.[0]?.id;
           navigate({
             to: "/admin/marketing-os/publisher",
             search: firstId ? { highlight: firstId } : undefined,
           }).catch(() => { /* route may not accept search; ignore */ });
+        } else if (blogCount > 0) {
+          toast.success(`Approved — ${blogCount} blog post${blogCount === 1 ? "" : "s"} published`);
         } else if (pub.skipped?.length) {
           const reasons = Array.from(new Set(pub.skipped.map((s) => s.reason))).join(", ");
           toast.warning(`Approved — no publishing jobs created (${reasons}). Connect an account or check platform.`);
