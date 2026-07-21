@@ -7,6 +7,36 @@ import { AiJsonParseError, parseAiJson } from "./ai-json";
 type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
 const DEFAULT_MODEL = "gpt-4o-mini";
+const OPENAI_FALLBACK_MODEL = "gpt-4o-mini";
+
+/**
+ * Normalize a caller-supplied model id before it is sent to the AI Router.
+ *
+ * This is a defensive client-side guard that mirrors the AI Router's own
+ * model-provider mismatch guard. It ensures that when the platform only has
+ * OpenAI configured, a legacy caller passing `google/gemini-2.5-flash` or
+ * `anthropic/claude-*` never reaches the OpenAI endpoint with an invalid
+ * model id. The router still applies its own guard — this one is additive
+ * and keeps behavior consistent even if the edge function is running an
+ * older build.
+ *
+ * Rule: if the platform has no Gemini / Anthropic key configured (checked
+ * via env), remap non-OpenAI models to the OpenAI fallback. If the keys
+ * ARE present, leave the model alone and let the router pick the right
+ * provider.
+ */
+function normalizeModel(model: string | undefined): string | undefined {
+  if (!model) return model;
+  const geminiConfigured = !!process.env.GEMINI_API_KEY || !!process.env.GOOGLE_API_KEY;
+  const anthropicConfigured = !!process.env.ANTHROPIC_API_KEY;
+  const ml = model.toLowerCase();
+  const looksGemini = /^google\//.test(ml) || /(^|\b)gemini[-/]/.test(ml);
+  const looksAnthropic = /^anthropic\//.test(ml) || /(^|\b)claude[-/]/.test(ml);
+  if (looksGemini && !geminiConfigured) return OPENAI_FALLBACK_MODEL;
+  if (looksAnthropic && !anthropicConfigured) return OPENAI_FALLBACK_MODEL;
+  return model;
+}
+
 const CACHE_TTL_MS = 60_000;
 const CACHE_MAX_ENTRIES = 200;
 
@@ -166,7 +196,8 @@ async function callRouterChat(opts: {
         // anthropic/* -> Anthropic, otherwise OpenAI). Hardcoding "openai"
         // caused Gemini models like "google/gemini-2.5-flash" to be sent to
         // the OpenAI endpoint and rejected as invalid_model.
-        model: opts.model ?? DEFAULT_MODEL,
+        model: normalizeModel(opts.model ?? DEFAULT_MODEL),
+
         prompt: lastUser.slice(0, 100_000),
         options: {
           messages: opts.messages,

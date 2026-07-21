@@ -189,10 +189,14 @@ async function resolveAccessibleBrandId(
   preferredBrandId?: string | null,
 ): Promise<string> {
   if (preferredBrandId) {
+    // CRITICAL: verify the caller OWNS this brand. mkt_campaigns RLS
+    // WITH CHECK requires b.owner_id = auth.uid(); a brand the caller
+    // can merely SELECT is not sufficient and will fail on insert.
     const { data } = await supabase
       .from("mkt_brands")
       .select("id")
       .eq("id", preferredBrandId)
+      .eq("owner_id", userId)
       .maybeSingle();
     if (data?.id) return data.id as string;
   }
@@ -211,9 +215,11 @@ async function resolveAccessibleBrandId(
       .from("mkt_brands")
       .select("id")
       .eq("id", kit.brand_id)
+      .eq("owner_id", userId)
       .maybeSingle();
     if (kitBrand?.id) return kitBrand.id as string;
   }
+
 
   const { data: own } = await supabase
     .from("mkt_brands")

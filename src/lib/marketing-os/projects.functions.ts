@@ -343,10 +343,16 @@ async function ensureDefaultBrand(
   preferredBrandId?: string | null,
 ): Promise<string> {
   if (preferredBrandId) {
+    // CRITICAL: verify the caller OWNS this brand. The mkt_campaigns RLS
+    // policy requires `b.owner_id = auth.uid()`, so a brand the user can
+    // merely SELECT (e.g. a shared/legacy brand) will still fail the
+    // WITH CHECK on insert. Filtering by owner_id here guarantees the
+    // returned brand_id will satisfy the campaigns policy.
     const { data: existing } = await supabase
       .from("mkt_brands")
       .select("id")
       .eq("id", preferredBrandId)
+      .eq("owner_id", userId)
       .maybeSingle();
     if (existing?.id) return existing.id as string;
   }
@@ -365,9 +371,11 @@ async function ensureDefaultBrand(
       .from("mkt_brands")
       .select("id")
       .eq("id", kit.brand_id)
+      .eq("owner_id", userId)
       .maybeSingle();
     if (kitBrand?.id) return kitBrand.id as string;
   }
+
 
   const { data: own } = await supabase
     .from("mkt_brands")
