@@ -273,14 +273,69 @@ function Page() {
               <Label>Payment Link Name</Label>
               <Input value={name} onChange={(e) => setName(e.target.value)} />
             </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Merchant Name</Label>
+                <Input value={merchantName} onChange={(e) => setMerchantName(e.target.value)} />
+              </div>
+              <div>
+                <Label>UPI ID</Label>
+                <Input value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="name@bank" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label>Account Holder</Label>
+                <Input value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} />
+              </div>
+              <div>
+                <Label>Bank Name (optional)</Label>
+                <Input value={bankName} onChange={(e) => setBankName(e.target.value)} />
+              </div>
+            </div>
             <div>
-              <Label>Payment URL</Label>
-              <Input value={url} onChange={(e) => setUrl(e.target.value)} />
+              <Label>QR Code</Label>
+              <div className="mt-1 flex items-center gap-3 flex-wrap">
+                <label className="inline-flex items-center gap-2 px-3 py-2 border rounded-md text-sm cursor-pointer hover:bg-muted">
+                  <Upload className="size-4" />
+                  {uploading ? "Uploading..." : qrPath ? "Replace QR" : "Upload QR"}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleQrUpload(f);
+                    }}
+                  />
+                </label>
+                {qrPath ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setQrPath(null);
+                      setQrPreview(null);
+                      toast.info("QR removed — Save changes to apply");
+                    }}
+                  >
+                    Remove QR
+                  </Button>
+                ) : null}
+                {qrPreview ? (
+                  <img src={qrPreview} alt="QR preview" className="size-20 rounded border" />
+                ) : null}
+              </div>
+            </div>
+            <div>
+              <Label>Legacy Payment URL (optional)</Label>
+              <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Not required for QR accounts" />
             </div>
             <div>
               <Label>Internal Notes</Label>
               <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
             </div>
+
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Status</Label>
