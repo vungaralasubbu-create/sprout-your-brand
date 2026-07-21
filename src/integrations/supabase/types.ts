@@ -12192,6 +12192,7 @@ export type Database = {
       }
       course_payments: {
         Row: {
+          account_version_used: number | null
           base_amount_inr: number
           city: string | null
           college: string | null
@@ -12211,6 +12212,7 @@ export type Database = {
           last_name: string
           merchant_name_used: string | null
           order_id: string
+          payment_account_id: string | null
           phone: string
           provider: string
           provider_ref: string | null
@@ -12229,6 +12231,7 @@ export type Database = {
           verified_by: string | null
         }
         Insert: {
+          account_version_used?: number | null
           base_amount_inr?: number
           city?: string | null
           college?: string | null
@@ -12248,6 +12251,7 @@ export type Database = {
           last_name: string
           merchant_name_used?: string | null
           order_id: string
+          payment_account_id?: string | null
           phone: string
           provider?: string
           provider_ref?: string | null
@@ -12266,6 +12270,7 @@ export type Database = {
           verified_by?: string | null
         }
         Update: {
+          account_version_used?: number | null
           base_amount_inr?: number
           city?: string | null
           college?: string | null
@@ -12285,6 +12290,7 @@ export type Database = {
           last_name?: string
           merchant_name_used?: string | null
           order_id?: string
+          payment_account_id?: string | null
           phone?: string
           provider?: string
           provider_ref?: string | null
@@ -12315,6 +12321,13 @@ export type Database = {
             columns: ["enrollment_id"]
             isOneToOne: false
             referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_payments_payment_account_id_fkey"
+            columns: ["payment_account_id"]
+            isOneToOne: false
+            referencedRelation: "payment_accounts"
             referencedColumns: ["id"]
           },
           {
@@ -24274,6 +24287,190 @@ export type Database = {
             columns: ["application_id"]
             isOneToOne: false
             referencedRelation: "partner_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_account_course_assignments: {
+        Row: {
+          account_id: string
+          course_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+        }
+        Insert: {
+          account_id: string
+          course_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+        }
+        Update: {
+          account_id?: string
+          course_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_account_course_assignments_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "payment_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_account_course_assignments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: true
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_account_versions: {
+        Row: {
+          account_id: string
+          created_at: string
+          id: string
+          merchant_name: string | null
+          previous_qr_url: string | null
+          qr_image_url: string | null
+          reason: string | null
+          upi_id: string | null
+          uploaded_by: string | null
+          version_number: number
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          id?: string
+          merchant_name?: string | null
+          previous_qr_url?: string | null
+          qr_image_url?: string | null
+          reason?: string | null
+          upi_id?: string | null
+          uploaded_by?: string | null
+          version_number: number
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          id?: string
+          merchant_name?: string | null
+          previous_qr_url?: string | null
+          qr_image_url?: string | null
+          reason?: string | null
+          upi_id?: string | null
+          uploaded_by?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_account_versions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "payment_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_accounts: {
+        Row: {
+          account_holder: string | null
+          account_name: string
+          bank_name: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          merchant_name: string
+          notes: string | null
+          priority: number
+          qr_image_url: string | null
+          status: string
+          updated_at: string
+          updated_by: string | null
+          upi_id: string
+          version: number
+          weight: number
+        }
+        Insert: {
+          account_holder?: string | null
+          account_name: string
+          bank_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          merchant_name: string
+          notes?: string | null
+          priority?: number
+          qr_image_url?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          upi_id: string
+          version?: number
+          weight?: number
+        }
+        Update: {
+          account_holder?: string | null
+          account_name?: string
+          bank_name?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          merchant_name?: string
+          notes?: string | null
+          priority?: number
+          qr_image_url?: string | null
+          status?: string
+          updated_at?: string
+          updated_by?: string | null
+          upi_id?: string
+          version?: number
+          weight?: number
+        }
+        Relationships: []
+      }
+      payment_gateway_settings: {
+        Row: {
+          active_account_id: string | null
+          created_at: string
+          id: string
+          round_robin_cursor: number
+          routing_mode: string
+          singleton: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active_account_id?: string | null
+          created_at?: string
+          id?: string
+          round_robin_cursor?: number
+          routing_mode?: string
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active_account_id?: string | null
+          created_at?: string
+          id?: string
+          round_robin_cursor?: number
+          routing_mode?: string
+          singleton?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_gateway_settings_active_account_id_fkey"
+            columns: ["active_account_id"]
+            isOneToOne: false
+            referencedRelation: "payment_accounts"
             referencedColumns: ["id"]
           },
         ]
