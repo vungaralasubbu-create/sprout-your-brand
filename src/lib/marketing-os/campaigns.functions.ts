@@ -727,10 +727,11 @@ export const createFromTemplate = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const tpl = CAMPAIGN_TEMPLATES.find((t) => t.key === data.template_key);
     if (!tpl) throw new Error("Template not found");
-    const { data: campaign, error } = await context.supabase
-      .from("mkt_campaigns")
-      .insert({
-        brand_id: data.brand_id,
+    const { createCampaignForUser } = await import("@/lib/marketing-os/campaign-service.server");
+    const campaign = await createCampaignForUser(
+      context.supabase,
+      context.userId,
+      {
         name: data.name,
         campaign_type: tpl.campaign_type,
         objective: tpl.objective,
@@ -739,11 +740,10 @@ export const createFromTemplate = createServerFn({ method: "POST" })
         target_platforms: tpl.target_platforms,
         template_key: tpl.key,
         status: "draft",
-        created_by: context.userId,
-      })
-      .select()
-      .single();
-    if (error) throw new Error(error.message);
+      },
+      { preferredBrandId: data.brand_id },
+    );
+
     const tasks = tpl.suggested_tasks.map((t) => ({
       campaign_id: campaign.id,
       title: t.title,
