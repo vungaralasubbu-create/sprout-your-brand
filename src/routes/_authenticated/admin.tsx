@@ -68,12 +68,12 @@ const NAV: NavGroup[] = [
     label: "Payments",
     collapsible: true,
     items: [
-      { to: "/admin/payments/gateway", label: "Payment Gateway", icon: ShieldCheck, perms: ["payments.view"] },
-      { to: "/admin/payments/gateway", label: "Payment Accounts", icon: Wallet, perms: ["payments.view"] },
-      { to: "/admin/payments", label: "Transactions", icon: FileSignature, perms: ["payments.view"] },
-      { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck, perms: ["payments.view"] },
-      { to: "/admin/payments", label: "Reports", icon: Activity, perms: ["payments.view"] },
-      { to: "/admin/payments/settings", label: "Settings", icon: Settings, perms: ["payments.view"] },
+      { to: "/admin/payments/gateway", label: "Payment Gateway", icon: ShieldCheck },
+      { to: "/admin/payments/gateway?tab=accounts", label: "Payment Accounts", icon: Wallet },
+      { to: "/admin/payment-verification", label: "Payment Verification", icon: ShieldCheck },
+      { to: "/admin/payments", label: "Transactions", icon: FileSignature },
+      { to: "/admin/payments?view=reports", label: "Reports", icon: Activity },
+      { to: "/admin/payments/settings", label: "Settings", icon: Settings },
     ],
   },
   {
