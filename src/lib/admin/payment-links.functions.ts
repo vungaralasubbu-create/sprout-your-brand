@@ -104,7 +104,7 @@ export const listPaymentLinks = createServerFn({ method: "GET" })
     let q = supabase
       .from("payment_links")
       .select(
-        "id, code, name, plan, amount, url, status, notes, created_at, disabled_at, course_id, courses:course_id(id, name, slug)",
+        "id, code, name, plan, amount, url, status, notes, created_at, disabled_at, course_id, merchant_name, upi_id, account_holder, bank_name, qr_image_url, is_default_active, courses:course_id(id, name, slug)",
       )
       .order("created_at", { ascending: false });
     if (data.status !== "all") q = q.eq("status", data.status);
