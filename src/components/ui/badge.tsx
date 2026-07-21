@@ -36,6 +36,8 @@ const badgeVariants = cva(
           "border-transparent bg-gradient-violet text-primary-foreground shadow-sm",
         upcoming: "border-border-strong bg-surface-2 text-muted-foreground",
         live: "border-transparent bg-danger-soft text-danger",
+        secondary: "border-transparent bg-secondary text-secondary-foreground",
+        destructive: "border-transparent bg-danger-soft text-danger",
       },
       size: {
         sm: "text-[10px] px-2 py-0.5",
