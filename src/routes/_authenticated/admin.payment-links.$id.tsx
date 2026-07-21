@@ -55,7 +55,7 @@ function Page() {
 
   if (data && !initialised) {
     setName(data.link.name);
-    setUrl(data.link.url);
+    setUrl(data.link.url ?? "");
     setNotes(data.link.notes ?? "");
     setStatusVal(data.link.status);
     setInitialised(true);
