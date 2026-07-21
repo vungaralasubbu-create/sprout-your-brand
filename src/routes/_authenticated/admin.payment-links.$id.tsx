@@ -1,14 +1,18 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
-import { ArrowLeft, Copy, ExternalLink, Ban, CheckCircle2, Save } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Copy, ExternalLink, Ban, CheckCircle2, Save, Upload, Star } from "lucide-react";
 
 import {
   getPaymentLinkDetail,
   updatePaymentLink,
   setPaymentLinkStatus,
+  setPaymentLinkActive,
+  clearPaymentLinkActive,
 } from "@/lib/admin/payment-links.functions";
+import { createPaymentAccountUploadUrl } from "@/lib/payments/central/gateway.functions";
+import { getPaymentConfigSignedUrl } from "@/lib/payments/central/settings.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,6 +45,10 @@ function Page() {
   const fn = useServerFn(getPaymentLinkDetail);
   const editFn = useServerFn(updatePaymentLink);
   const setStatus = useServerFn(setPaymentLinkStatus);
+  const setActive = useServerFn(setPaymentLinkActive);
+  const clearActive = useServerFn(clearPaymentLinkActive);
+  const createUploadUrl = useServerFn(createPaymentAccountUploadUrl);
+  const getSigned = useServerFn(getPaymentConfigSignedUrl);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-payment-link-detail", id],
@@ -51,6 +59,13 @@ function Page() {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatusVal] = useState<string>("active");
+  const [merchantName, setMerchantName] = useState("");
+  const [upiId, setUpiId] = useState("");
+  const [accountHolder, setAccountHolder] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [qrPath, setQrPath] = useState<string | null>(null);
+  const [qrPreview, setQrPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [initialised, setInitialised] = useState(false);
 
   if (data && !initialised) {
@@ -58,13 +73,74 @@ function Page() {
     setUrl(data.link.url ?? "");
     setNotes(data.link.notes ?? "");
     setStatusVal(data.link.status);
+    setMerchantName(data.link.merchant_name ?? "");
+    setUpiId(data.link.upi_id ?? "");
+    setAccountHolder(data.link.account_holder ?? "");
+    setBankName(data.link.bank_name ?? "");
+    setQrPath(data.link.qr_image_url ?? null);
     setInitialised(true);
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadPreview() {
+      if (!qrPath) {
+        setQrPreview(null);
+        return;
+      }
+      if (/^https?:\/\//i.test(qrPath)) {
+        setQrPreview(qrPath);
+        return;
+      }
+      try {
+        const signed = await getSigned({ data: { path: qrPath } });
+        if (!cancelled) setQrPreview(signed.url);
+      } catch {
+        if (!cancelled) setQrPreview(null);
+      }
+    }
+    loadPreview();
+    return () => {
+      cancelled = true;
+    };
+  }, [qrPath]);
+
+  async function handleQrUpload(file: File) {
+    try {
+      setUploading(true);
+      const mime = file.type as any;
+      if (!["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(mime)) {
+        toast.error("Use PNG, JPG, WEBP or SVG");
+        return;
+      }
+      const { uploadUrl, path } = await createUploadUrl({ data: { kind: "qr", mime } });
+      if (!uploadUrl || !path) throw new Error("Failed to sign upload");
+      const res = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": mime }, body: file });
+      if (!res.ok) throw new Error("Upload failed");
+      setQrPath(path);
+      toast.success("QR uploaded — remember to Save changes");
+    } catch (e: any) {
+      toast.error(e.message ?? "Upload error");
+    } finally {
+      setUploading(false);
+    }
   }
 
   const save = useMutation({
     mutationFn: () =>
       editFn({
-        data: { id, name, url, notes: notes || null, status: status as any },
+        data: {
+          id,
+          name,
+          url: url || null,
+          notes: notes || null,
+          status: status as any,
+          merchant_name: merchantName || null,
+          upi_id: upiId || null,
+          account_holder: accountHolder || null,
+          bank_name: bankName || null,
+          qr_image_url: qrPath,
+        },
       }),
     onSuccess: () => {
       toast.success("Saved");
@@ -78,6 +154,31 @@ function Page() {
     mutationFn: (s: "active" | "disabled") => setStatus({ data: { id, status: s } }),
     onSuccess: () => {
       toast.success("Status updated");
+      qc.invalidateQueries({ queryKey: ["admin-payment-link-detail", id] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
+  });
+
+  const activeMut = useMutation({
+    mutationFn: () => setActive({ data: { id } }),
+    onSuccess: () => {
+      toast.success("Marked as active");
+      qc.invalidateQueries({ queryKey: ["admin-payment-link-detail", id] });
+      qc.invalidateQueries({ queryKey: ["admin-payment-links"] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
+  });
+
+  const clearMut = useMutation({
+    mutationFn: () => clearActive({ data: { id } }),
+    onSuccess: () => {
+      toast.success("Deactivated");
+      qc.invalidateQueries({ queryKey: ["admin-payment-link-detail", id] });
+      qc.invalidateQueries({ queryKey: ["admin-payment-links"] });
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
+  });
+
       qc.invalidateQueries({ queryKey: ["admin-payment-link-detail", id] });
     },
     onError: (e: any) => toast.error(e.message ?? "Failed"),
