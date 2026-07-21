@@ -177,6 +177,7 @@ import { Route as WorkspaceNotebooksIndexRouteImport } from './routes/workspace.
 import { Route as TopicsPillarIndexRouteImport } from './routes/topics.$pillar.index'
 import { Route as ProgramsCategoryIndexRouteImport } from './routes/programs.$category.index'
 import { Route as CommunitySpaceIndexRouteImport } from './routes/community.$space.index'
+import { Route as AuthenticatedWorkflowsIndexRouteImport } from './routes/_authenticated/workflows.index'
 import { Route as AuthenticatedTemplatesIndexRouteImport } from './routes/_authenticated/templates.index'
 import { Route as AuthenticatedStudentIndexRouteImport } from './routes/_authenticated/student.index'
 import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
@@ -206,6 +207,12 @@ import { Route as ApiVoiceSpeakRouteImport } from './routes/api/voice/speak'
 import { Route as ApiV1VersionRouteImport } from './routes/api/v1/version'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
+import { Route as AuthenticatedWorkflowsTemplatesRouteImport } from './routes/_authenticated/workflows.templates'
+import { Route as AuthenticatedWorkflowsNewRouteImport } from './routes/_authenticated/workflows.new'
+import { Route as AuthenticatedWorkflowsLogsRouteImport } from './routes/_authenticated/workflows.logs'
+import { Route as AuthenticatedWorkflowsHistoryRouteImport } from './routes/_authenticated/workflows.history'
+import { Route as AuthenticatedWorkflowsExecutionsRouteImport } from './routes/_authenticated/workflows.executions'
+import { Route as AuthenticatedWorkflowsIdRouteImport } from './routes/_authenticated/workflows.$id'
 import { Route as AuthenticatedTemplatesSlugRouteImport } from './routes/_authenticated/templates.$slug'
 import { Route as AuthenticatedSubmitReviewTokenRouteImport } from './routes/_authenticated/submit-review.$token'
 import { Route as AuthenticatedStudentProfileRouteImport } from './routes/_authenticated/student.profile'
@@ -1447,6 +1454,12 @@ const CommunitySpaceIndexRoute = CommunitySpaceIndexRouteImport.update({
   path: '/community/$space/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedWorkflowsIndexRoute =
+  AuthenticatedWorkflowsIndexRouteImport.update({
+    id: '/workflows/',
+    path: '/workflows/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTemplatesIndexRoute =
   AuthenticatedTemplatesIndexRouteImport.update({
     id: '/templates/',
@@ -1604,6 +1617,42 @@ const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   path: '/api/public/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedWorkflowsTemplatesRoute =
+  AuthenticatedWorkflowsTemplatesRouteImport.update({
+    id: '/workflows/templates',
+    path: '/workflows/templates',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWorkflowsNewRoute =
+  AuthenticatedWorkflowsNewRouteImport.update({
+    id: '/workflows/new',
+    path: '/workflows/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWorkflowsLogsRoute =
+  AuthenticatedWorkflowsLogsRouteImport.update({
+    id: '/workflows/logs',
+    path: '/workflows/logs',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWorkflowsHistoryRoute =
+  AuthenticatedWorkflowsHistoryRouteImport.update({
+    id: '/workflows/history',
+    path: '/workflows/history',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWorkflowsExecutionsRoute =
+  AuthenticatedWorkflowsExecutionsRouteImport.update({
+    id: '/workflows/executions',
+    path: '/workflows/executions',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWorkflowsIdRoute =
+  AuthenticatedWorkflowsIdRouteImport.update({
+    id: '/workflows/$id',
+    path: '/workflows/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTemplatesSlugRoute =
   AuthenticatedTemplatesSlugRouteImport.update({
     id: '/templates/$slug',
@@ -4296,6 +4345,12 @@ export interface FileRoutesByFullPath {
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/templates/$slug': typeof AuthenticatedTemplatesSlugRoute
+  '/workflows/$id': typeof AuthenticatedWorkflowsIdRoute
+  '/workflows/executions': typeof AuthenticatedWorkflowsExecutionsRoute
+  '/workflows/history': typeof AuthenticatedWorkflowsHistoryRoute
+  '/workflows/logs': typeof AuthenticatedWorkflowsLogsRoute
+  '/workflows/new': typeof AuthenticatedWorkflowsNewRoute
+  '/workflows/templates': typeof AuthenticatedWorkflowsTemplatesRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
@@ -4325,6 +4380,7 @@ export interface FileRoutesByFullPath {
   '/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/student/': typeof AuthenticatedStudentIndexRoute
   '/templates/': typeof AuthenticatedTemplatesIndexRoute
+  '/workflows/': typeof AuthenticatedWorkflowsIndexRoute
   '/community/$space/': typeof CommunitySpaceIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar/': typeof TopicsPillarIndexRoute
@@ -4866,6 +4922,12 @@ export interface FileRoutesByTo {
   '/student/profile': typeof AuthenticatedStudentProfileRoute
   '/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/templates/$slug': typeof AuthenticatedTemplatesSlugRoute
+  '/workflows/$id': typeof AuthenticatedWorkflowsIdRoute
+  '/workflows/executions': typeof AuthenticatedWorkflowsExecutionsRoute
+  '/workflows/history': typeof AuthenticatedWorkflowsHistoryRoute
+  '/workflows/logs': typeof AuthenticatedWorkflowsLogsRoute
+  '/workflows/new': typeof AuthenticatedWorkflowsNewRoute
+  '/workflows/templates': typeof AuthenticatedWorkflowsTemplatesRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
@@ -4895,6 +4957,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/student': typeof AuthenticatedStudentIndexRoute
   '/templates': typeof AuthenticatedTemplatesIndexRoute
+  '/workflows': typeof AuthenticatedWorkflowsIndexRoute
   '/community/$space': typeof CommunitySpaceIndexRoute
   '/programs/$category': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar': typeof TopicsPillarIndexRoute
@@ -5459,6 +5522,12 @@ export interface FileRoutesById {
   '/_authenticated/student/profile': typeof AuthenticatedStudentProfileRoute
   '/_authenticated/submit-review/$token': typeof AuthenticatedSubmitReviewTokenRoute
   '/_authenticated/templates/$slug': typeof AuthenticatedTemplatesSlugRoute
+  '/_authenticated/workflows/$id': typeof AuthenticatedWorkflowsIdRoute
+  '/_authenticated/workflows/executions': typeof AuthenticatedWorkflowsExecutionsRoute
+  '/_authenticated/workflows/history': typeof AuthenticatedWorkflowsHistoryRoute
+  '/_authenticated/workflows/logs': typeof AuthenticatedWorkflowsLogsRoute
+  '/_authenticated/workflows/new': typeof AuthenticatedWorkflowsNewRoute
+  '/_authenticated/workflows/templates': typeof AuthenticatedWorkflowsTemplatesRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/version': typeof ApiV1VersionRoute
@@ -5488,6 +5557,7 @@ export interface FileRoutesById {
   '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/_authenticated/student/': typeof AuthenticatedStudentIndexRoute
   '/_authenticated/templates/': typeof AuthenticatedTemplatesIndexRoute
+  '/_authenticated/workflows/': typeof AuthenticatedWorkflowsIndexRoute
   '/community/$space/': typeof CommunitySpaceIndexRoute
   '/programs/$category/': typeof ProgramsCategoryIndexRoute
   '/topics/$pillar/': typeof TopicsPillarIndexRoute
@@ -6051,6 +6121,12 @@ export interface FileRouteTypes {
     | '/student/profile'
     | '/submit-review/$token'
     | '/templates/$slug'
+    | '/workflows/$id'
+    | '/workflows/executions'
+    | '/workflows/history'
+    | '/workflows/logs'
+    | '/workflows/new'
+    | '/workflows/templates'
     | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
@@ -6080,6 +6156,7 @@ export interface FileRouteTypes {
     | '/notifications/'
     | '/student/'
     | '/templates/'
+    | '/workflows/'
     | '/community/$space/'
     | '/programs/$category/'
     | '/topics/$pillar/'
@@ -6621,6 +6698,12 @@ export interface FileRouteTypes {
     | '/student/profile'
     | '/submit-review/$token'
     | '/templates/$slug'
+    | '/workflows/$id'
+    | '/workflows/executions'
+    | '/workflows/history'
+    | '/workflows/logs'
+    | '/workflows/new'
+    | '/workflows/templates'
     | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
@@ -6650,6 +6733,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/student'
     | '/templates'
+    | '/workflows'
     | '/community/$space'
     | '/programs/$category'
     | '/topics/$pillar'
@@ -7213,6 +7297,12 @@ export interface FileRouteTypes {
     | '/_authenticated/student/profile'
     | '/_authenticated/submit-review/$token'
     | '/_authenticated/templates/$slug'
+    | '/_authenticated/workflows/$id'
+    | '/_authenticated/workflows/executions'
+    | '/_authenticated/workflows/history'
+    | '/_authenticated/workflows/logs'
+    | '/_authenticated/workflows/new'
+    | '/_authenticated/workflows/templates'
     | '/api/public/health'
     | '/api/v1/health'
     | '/api/v1/version'
@@ -7242,6 +7332,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notifications/'
     | '/_authenticated/student/'
     | '/_authenticated/templates/'
+    | '/_authenticated/workflows/'
     | '/community/$space/'
     | '/programs/$category/'
     | '/topics/$pillar/'
@@ -8762,6 +8853,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunitySpaceIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/workflows/': {
+      id: '/_authenticated/workflows/'
+      path: '/workflows'
+      fullPath: '/workflows/'
+      preLoaderRoute: typeof AuthenticatedWorkflowsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/templates/': {
       id: '/_authenticated/templates/'
       path: '/templates'
@@ -8964,6 +9062,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/health'
       preLoaderRoute: typeof ApiPublicHealthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/workflows/templates': {
+      id: '/_authenticated/workflows/templates'
+      path: '/workflows/templates'
+      fullPath: '/workflows/templates'
+      preLoaderRoute: typeof AuthenticatedWorkflowsTemplatesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workflows/new': {
+      id: '/_authenticated/workflows/new'
+      path: '/workflows/new'
+      fullPath: '/workflows/new'
+      preLoaderRoute: typeof AuthenticatedWorkflowsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workflows/logs': {
+      id: '/_authenticated/workflows/logs'
+      path: '/workflows/logs'
+      fullPath: '/workflows/logs'
+      preLoaderRoute: typeof AuthenticatedWorkflowsLogsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workflows/history': {
+      id: '/_authenticated/workflows/history'
+      path: '/workflows/history'
+      fullPath: '/workflows/history'
+      preLoaderRoute: typeof AuthenticatedWorkflowsHistoryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workflows/executions': {
+      id: '/_authenticated/workflows/executions'
+      path: '/workflows/executions'
+      fullPath: '/workflows/executions'
+      preLoaderRoute: typeof AuthenticatedWorkflowsExecutionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workflows/$id': {
+      id: '/_authenticated/workflows/$id'
+      path: '/workflows/$id'
+      fullPath: '/workflows/$id'
+      preLoaderRoute: typeof AuthenticatedWorkflowsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/templates/$slug': {
       id: '/_authenticated/templates/$slug'
@@ -13008,10 +13148,17 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDevelopersWebhooksRoute: typeof AuthenticatedDevelopersWebhooksRoute
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedTemplatesSlugRoute: typeof AuthenticatedTemplatesSlugRoute
+  AuthenticatedWorkflowsIdRoute: typeof AuthenticatedWorkflowsIdRoute
+  AuthenticatedWorkflowsExecutionsRoute: typeof AuthenticatedWorkflowsExecutionsRoute
+  AuthenticatedWorkflowsHistoryRoute: typeof AuthenticatedWorkflowsHistoryRoute
+  AuthenticatedWorkflowsLogsRoute: typeof AuthenticatedWorkflowsLogsRoute
+  AuthenticatedWorkflowsNewRoute: typeof AuthenticatedWorkflowsNewRoute
+  AuthenticatedWorkflowsTemplatesRoute: typeof AuthenticatedWorkflowsTemplatesRoute
   AuthenticatedAgentsIndexRoute: typeof AuthenticatedAgentsIndexRoute
   AuthenticatedDevelopersIndexRoute: typeof AuthenticatedDevelopersIndexRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
   AuthenticatedTemplatesIndexRoute: typeof AuthenticatedTemplatesIndexRoute
+  AuthenticatedWorkflowsIndexRoute: typeof AuthenticatedWorkflowsIndexRoute
   AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
 }
 
@@ -13051,10 +13198,17 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDevelopersWebhooksRoute: AuthenticatedDevelopersWebhooksRoute,
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedTemplatesSlugRoute: AuthenticatedTemplatesSlugRoute,
+  AuthenticatedWorkflowsIdRoute: AuthenticatedWorkflowsIdRoute,
+  AuthenticatedWorkflowsExecutionsRoute: AuthenticatedWorkflowsExecutionsRoute,
+  AuthenticatedWorkflowsHistoryRoute: AuthenticatedWorkflowsHistoryRoute,
+  AuthenticatedWorkflowsLogsRoute: AuthenticatedWorkflowsLogsRoute,
+  AuthenticatedWorkflowsNewRoute: AuthenticatedWorkflowsNewRoute,
+  AuthenticatedWorkflowsTemplatesRoute: AuthenticatedWorkflowsTemplatesRoute,
   AuthenticatedAgentsIndexRoute: AuthenticatedAgentsIndexRoute,
   AuthenticatedDevelopersIndexRoute: AuthenticatedDevelopersIndexRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
   AuthenticatedTemplatesIndexRoute: AuthenticatedTemplatesIndexRoute,
+  AuthenticatedWorkflowsIndexRoute: AuthenticatedWorkflowsIndexRoute,
   AuthenticatedWorkspaceProjectProjectIdRoute:
     AuthenticatedWorkspaceProjectProjectIdRouteWithChildren,
 }
