@@ -345,6 +345,84 @@ const TestOneSchema = z.object({
   media_urls: z.array(z.string().url()).optional(),
 });
 
+async function runTestPublishForAccount(
+  supabase: Any,
+  userId: string,
+  accountId: string,
+  message: string,
+  mediaUrls?: string[],
+): Promise<Any> {
+  const { data: acc, error: aerr } = await supabase
+    .from("soc_accounts")
+    .select("id, platform, account_name, connection_status")
+    .eq("id", accountId)
+    .eq("owner_id", userId)
+    .maybeSingle();
+  if (aerr) throw new Error(aerr.message);
+  if (!acc) throw new Error("Account not found");
+  const a = acc as Any;
+  if (a.connection_status !== "connected") {
+    throw new Error(`Account not connected (${a.connection_status ?? "unknown"})`);
+  }
+
+  const platform = String(a.platform).toLowerCase();
+  const media = mediaUrls ?? (platform === "instagram"
+    ? ["https://images.unsplash.com/photo-1518770660439-4636190af475?w=1080&h=1080&fit=crop"]
+    : []);
+
+  const row = {
+    owner_id: userId,
+    created_by: userId,
+    platform,
+    account_id: a.id,
+    account_label: a.account_name ?? null,
+    campaign: "publish-test",
+    mode: "publish_now",
+    status: "queued",
+    scheduled_at: new Date().toISOString(),
+    priority: 1,
+    payload: {
+      title: "Publish Test",
+      body: message,
+      hashtags: [],
+      cta: null,
+      media_urls: media,
+      thread: null,
+      metadata: { source: "social-accounts.test-publish" },
+    },
+  };
+  const { data: ins, error: ie } = await supabase
+    .from("publishing_jobs")
+    .insert(row as Any)
+    .select("id")
+    .maybeSingle();
+  if (ie) throw new Error(ie.message);
+  const jobId = (ins as Any)?.id as string;
+
+  const { runPublisherWorker } = await import("./publisher-worker.server");
+  await runPublisherWorker({ maxJobs: 1, jobId });
+
+  const { data: final } = await supabase
+    .from("publishing_jobs")
+    .select("id, status, platform, account_id, account_label, platform_post_id, platform_url, error_code, error_message, response_payload, published_at")
+    .eq("id", jobId)
+    .maybeSingle();
+  const f = final as Any;
+  return {
+    job_id: jobId,
+    platform,
+    account_id: a.id,
+    account_name: a.account_name,
+    status: f?.status ?? "unknown",
+    platform_post_id: f?.platform_post_id ?? null,
+    platform_url: f?.platform_url ?? null,
+    published_at: f?.published_at ?? null,
+    error_code: f?.error_code ?? null,
+    error_message: f?.error_message ?? null,
+    response: f?.response_payload ?? null,
+  };
+}
+
 // Publish a test post to ONE connected account.
 // Creates a real publishing_jobs row, runs the worker inline, returns the
 // provider post ID / URL / error so the UI can show the exact result.
@@ -352,84 +430,16 @@ export const testPublishAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => TestOneSchema.parse(raw))
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-    const { data: acc, error: aerr } = await supabase
-      .from("soc_accounts")
-      .select("id, platform, account_name, connection_status")
-      .eq("id", data.account_id)
-      .eq("owner_id", userId)
-      .maybeSingle();
-    if (aerr) throw new Error(aerr.message);
-    if (!acc) throw new Error("Account not found");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const a = acc as any;
-    if (a.connection_status !== "connected") throw new Error(`Account not connected (${a.connection_status})`);
-
-    const platform = String(a.platform).toLowerCase();
-    // Instagram requires media — provide a default test image if none supplied.
-    const media = data.media_urls ?? (platform === "instagram"
-      ? ["https://images.unsplash.com/photo-1518770660439-4636190af475?w=1080&h=1080&fit=crop"]
-      : []);
-
-    const row = {
-      owner_id: userId,
-      created_by: userId,
-      platform,
-      account_id: a.id,
-      account_label: a.account_name ?? null,
-      campaign: "publish-test",
-      mode: "publish_now",
-      status: "queued",
-      scheduled_at: new Date().toISOString(),
-      priority: 1,
-      payload: {
-        title: "Publish Test",
-        body: data.message ?? TEST_MESSAGE_DEFAULT,
-        hashtags: [],
-        cta: null,
-        media_urls: media,
-        thread: null,
-        metadata: { source: "social-accounts.test-publish" },
-      },
-    };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: ins, error: ie } = await (supabase as any)
-      .from("publishing_jobs")
-      .insert(row as Any)
-      .select("id")
-      .maybeSingle();
-    if (ie) throw new Error(ie.message);
-    const jobId = (ins as Any)?.id as string;
-
-    const { runPublisherWorker } = await import("./publisher-worker.server");
-    await runPublisherWorker({ maxJobs: 1, jobId });
-
-    // Read final state so we can return the provider IDs/URLs/errors.
-    const { data: final } = await supabase
-      .from("publishing_jobs")
-      .select("id, status, platform, account_id, account_label, platform_post_id, platform_url, error_code, error_message, response_payload, published_at")
-      .eq("id", jobId)
-      .maybeSingle();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const f = final as any;
-    return {
-      job_id: jobId,
-      platform,
-      account_id: a.id,
-      account_name: a.account_name,
-      status: f?.status ?? "unknown",
-      platform_post_id: f?.platform_post_id ?? null,
-      platform_url: f?.platform_url ?? null,
-      published_at: f?.published_at ?? null,
-      error_code: f?.error_code ?? null,
-      error_message: f?.error_message ?? null,
-      response: f?.response_payload ?? null,
-    };
+    return runTestPublishForAccount(
+      context.supabase as Any,
+      context.userId,
+      data.account_id,
+      data.message ?? TEST_MESSAGE_DEFAULT,
+      data.media_urls,
+    );
   });
 
 // Publish a test post to ALL connected accounts of the current user.
-// Fans out to testPublishAccount so each provider result is recorded and
-// individual failures don't stop the others.
 export const testPublishAllAccounts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({
@@ -443,17 +453,14 @@ export const testPublishAllAccounts = createServerFn({ method: "POST" })
       .eq("owner_id", userId)
       .eq("connection_status", "connected");
     if (error) throw new Error(error.message);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const list = (accs ?? []) as any[];
+    const list = ((accs ?? []) as Any[]);
     if (!list.length) return { total: 0, results: [] as Any[] };
 
     const message = data.message ?? TEST_MESSAGE_DEFAULT;
     const results: Any[] = [];
     for (const a of list) {
       try {
-        const r = await (testPublishAccount as unknown as (args: { data: { account_id: string; message: string } }) => Promise<Any>)({
-          data: { account_id: a.id, message },
-        });
+        const r = await runTestPublishForAccount(supabase as Any, userId, a.id, message);
         results.push(r);
       } catch (e) {
         results.push({
@@ -468,4 +475,5 @@ export const testPublishAllAccounts = createServerFn({ method: "POST" })
     }
     return { total: list.length, results };
   });
+
 
