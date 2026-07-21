@@ -166,30 +166,55 @@ function SocialAccountsPage() {
     }
   };
 
-  const testPublish = async (id: string, platform: string) => {
-    if (platform !== "linkedin" && platform !== "x") {
-      toast.info("Test publish is available for LinkedIn and X.");
-      return;
+  const applyResult = (accountId: string, r: TestResult, platformLabel: string) => {
+    setResults((prev) => ({ ...prev, [accountId]: r }));
+    if (r.status === "posted" || r.status === "succeeded") {
+      toast.success(`Published to ${platformLabel}${r.platform_post_id ? ` · ${r.platform_post_id}` : ""}`);
+    } else {
+      toast.error(`${platformLabel}: ${r.error_message ?? r.error_code ?? r.status}`);
     }
-    const label = platform === "x" ? "X" : "LinkedIn";
-    const message = prompt(`Post text to publish on ${label}:`, `Hello from Glintr 🚀`);
+  };
+
+  const testPublish = async (id: string, platform: string) => {
+    const label = platform === "x" ? "X" : platform === "linkedin" ? "LinkedIn" : platform === "facebook" ? "Facebook" : "Instagram";
+    const message = prompt(`Post text to publish on ${label}:`, `Testing Glintr AI Publishing 🚀`);
     if (!message) return;
-    const fn = platform === "x" ? "publish-x" : "publish-linkedin";
     setBusy(id);
     try {
-      const { data, error } = await supabase.functions.invoke(fn, {
-        body: { account_id: id, message },
-      });
-      if (error) throw new Error(error.message);
-      const err = (data as { error?: string })?.error;
-      if (err) throw new Error(err);
-      toast.success(`Published to ${label}`);
+      const r = (await runTestOne({ data: { account_id: id, message } })) as TestResult;
+      applyResult(id, r, label);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
       setBusy(null);
     }
   };
+
+  const testPublishAll = async () => {
+    const message = prompt("Post text to publish on ALL connected accounts:", `Testing Glintr AI Publishing 🚀`);
+    if (!message) return;
+    setBusy("test-all");
+    try {
+      const res = (await runTestAll({ data: { message } })) as { total: number; results: Array<TestResult & { account_id: string; platform: string }> };
+      const next: Record<string, TestResult> = {};
+      let ok = 0;
+      let failed = 0;
+      for (const r of res.results ?? []) {
+        next[r.account_id] = r;
+        if (r.status === "posted" || r.status === "succeeded") ok++;
+        else failed++;
+      }
+      setResults((prev) => ({ ...prev, ...next }));
+      if (ok && !failed) toast.success(`Published to all ${ok} account(s)`);
+      else if (ok && failed) toast.warning(`Published ${ok}, failed ${failed}`);
+      else toast.error(`Failed on all ${failed} account(s)`);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBusy(null);
+    }
+  };
+
 
   return (
     <div className="space-y-6 p-6">
