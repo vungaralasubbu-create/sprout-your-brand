@@ -334,3 +334,138 @@ export const listHolidays = createServerFn({ method: "POST" })
     return { holidays: rows ?? [] };
   });
 
+/* ------------------- TEST PUBLISH (Social Accounts page) ------------------- */
+
+const TEST_MESSAGE_DEFAULT =
+  "Testing Glintr AI Publishing 🚀\nThis is an automated test post.";
+
+const TestOneSchema = z.object({
+  account_id: z.string().uuid(),
+  message: z.string().min(1).max(6000).optional(),
+  media_urls: z.array(z.string().url()).optional(),
+});
+
+// Publish a test post to ONE connected account.
+// Creates a real publishing_jobs row, runs the worker inline, returns the
+// provider post ID / URL / error so the UI can show the exact result.
+export const testPublishAccount = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => TestOneSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: acc, error: aerr } = await supabase
+      .from("soc_accounts")
+      .select("id, platform, account_name, connection_status")
+      .eq("id", data.account_id)
+      .eq("owner_id", userId)
+      .maybeSingle();
+    if (aerr) throw new Error(aerr.message);
+    if (!acc) throw new Error("Account not found");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const a = acc as any;
+    if (a.connection_status !== "connected") throw new Error(`Account not connected (${a.connection_status})`);
+
+    const platform = String(a.platform).toLowerCase();
+    // Instagram requires media — provide a default test image if none supplied.
+    const media = data.media_urls ?? (platform === "instagram"
+      ? ["https://images.unsplash.com/photo-1518770660439-4636190af475?w=1080&h=1080&fit=crop"]
+      : []);
+
+    const row = {
+      owner_id: userId,
+      created_by: userId,
+      platform,
+      account_id: a.id,
+      account_label: a.account_name ?? null,
+      campaign: "publish-test",
+      mode: "publish_now",
+      status: "queued",
+      scheduled_at: new Date().toISOString(),
+      priority: 1,
+      payload: {
+        title: "Publish Test",
+        body: data.message ?? TEST_MESSAGE_DEFAULT,
+        hashtags: [],
+        cta: null,
+        media_urls: media,
+        thread: null,
+        metadata: { source: "social-accounts.test-publish" },
+      },
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: ins, error: ie } = await (supabase as any)
+      .from("publishing_jobs")
+      .insert(row as Any)
+      .select("id")
+      .maybeSingle();
+    if (ie) throw new Error(ie.message);
+    const jobId = (ins as Any)?.id as string;
+
+    const { runPublisherWorker } = await import("./publisher-worker.server");
+    await runPublisherWorker({ maxJobs: 1, jobId });
+
+    // Read final state so we can return the provider IDs/URLs/errors.
+    const { data: final } = await supabase
+      .from("publishing_jobs")
+      .select("id, status, platform, account_id, account_label, platform_post_id, platform_url, error_code, error_message, response_payload, published_at")
+      .eq("id", jobId)
+      .maybeSingle();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const f = final as any;
+    return {
+      job_id: jobId,
+      platform,
+      account_id: a.id,
+      account_name: a.account_name,
+      status: f?.status ?? "unknown",
+      platform_post_id: f?.platform_post_id ?? null,
+      platform_url: f?.platform_url ?? null,
+      published_at: f?.published_at ?? null,
+      error_code: f?.error_code ?? null,
+      error_message: f?.error_message ?? null,
+      response: f?.response_payload ?? null,
+    };
+  });
+
+// Publish a test post to ALL connected accounts of the current user.
+// Fans out to testPublishAccount so each provider result is recorded and
+// individual failures don't stop the others.
+export const testPublishAllAccounts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({
+    message: z.string().min(1).max(6000).optional(),
+  }).parse(raw ?? {}))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: accs, error } = await supabase
+      .from("soc_accounts")
+      .select("id, platform, account_name")
+      .eq("owner_id", userId)
+      .eq("connection_status", "connected");
+    if (error) throw new Error(error.message);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const list = (accs ?? []) as any[];
+    if (!list.length) return { total: 0, results: [] as Any[] };
+
+    const message = data.message ?? TEST_MESSAGE_DEFAULT;
+    const results: Any[] = [];
+    for (const a of list) {
+      try {
+        const r = await (testPublishAccount as unknown as (args: { data: { account_id: string; message: string } }) => Promise<Any>)({
+          data: { account_id: a.id, message },
+        });
+        results.push(r);
+      } catch (e) {
+        results.push({
+          account_id: a.id,
+          account_name: a.account_name,
+          platform: a.platform,
+          status: "failed",
+          error_code: "invoke_failed",
+          error_message: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+    return { total: list.length, results };
+  });
+
