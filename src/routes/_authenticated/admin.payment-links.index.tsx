@@ -359,13 +359,57 @@ function CreateDialog({
   const [courseId, setCourseId] = useState<string>("");
   const [plan, setPlan] = useState<PaymentPlan>("self_paced_edge");
   const [amount, setAmount] = useState<number>(PLAN_DEFAULT_AMOUNT.self_paced_edge);
-  const [url, setUrl] = useState("");
+  const [merchantName, setMerchantName] = useState("");
+  const [upiId, setUpiId] = useState("");
+  const [accountHolder, setAccountHolder] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [qrPath, setQrPath] = useState<string | null>(null);
+  const [qrPreview, setQrPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [notes, setNotes] = useState("");
+
+  const createUploadUrl = useServerFn(createPaymentAccountUploadUrl);
+  const getSigned = useServerFn(getPaymentConfigSignedUrl);
+
+  async function handleQrUpload(file: File) {
+    try {
+      setUploading(true);
+      const mime = file.type as any;
+      if (!["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(mime)) {
+        toast.error("Use PNG, JPG, WEBP or SVG");
+        return;
+      }
+      const { uploadUrl, path } = await createUploadUrl({ data: { kind: "qr", mime } });
+      if (!uploadUrl || !path) throw new Error("Failed to sign upload");
+      const res = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": mime }, body: file });
+      if (!res.ok) throw new Error("Upload failed");
+      setQrPath(path);
+      const signed = await getSigned({ data: { path } });
+      setQrPreview(signed.url);
+      toast.success("QR uploaded");
+    } catch (e: any) {
+      toast.error(e.message ?? "Upload error");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   const mut = useMutation({
     mutationFn: () =>
       create({
-        data: { name, course_id: courseId, plan, amount, url, notes: notes || null },
+        data: {
+          name,
+          course_id: courseId,
+          plan,
+          amount,
+          url: null,
+          notes: notes || null,
+          merchant_name: merchantName || null,
+          upi_id: upiId || null,
+          account_holder: accountHolder || null,
+          bank_name: bankName || null,
+          qr_image_url: qrPath,
+        },
       }),
     onSuccess: (r: any) => {
       toast.success(`Created ${r.code}`);
@@ -373,7 +417,12 @@ function CreateDialog({
       setCourseId("");
       setPlan("self_paced_edge");
       setAmount(PLAN_DEFAULT_AMOUNT.self_paced_edge);
-      setUrl("");
+      setMerchantName("");
+      setUpiId("");
+      setAccountHolder("");
+      setBankName("");
+      setQrPath(null);
+      setQrPreview(null);
       setNotes("");
       onCreated();
       onOpenChange(false);
@@ -383,15 +432,18 @@ function CreateDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create Payment Link</DialogTitle>
-          <DialogDescription>Connect a master payment URL to a published program and plan.</DialogDescription>
+          <DialogTitle>Create Payment Account</DialogTitle>
+          <DialogDescription>
+            Glintr Managed Payment Account. Upload a UPI QR code and merchant details — no external payment
+            URL required.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <Label htmlFor="name">Payment Link Name</Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Career Launch — Instamojo" />
+            <Label htmlFor="name">Account Name</Label>
+            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Glintr Primary UPI" />
           </div>
           <div>
             <Label>Program</Label>
@@ -442,10 +494,50 @@ function CreateDialog({
               />
             </div>
           </div>
-          <div>
-            <Label htmlFor="url">Payment URL</Label>
-            <Input id="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" />
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="merchant">Merchant Name</Label>
+              <Input id="merchant" value={merchantName} onChange={(e) => setMerchantName(e.target.value)} placeholder="e.g. Glintr Academy" />
+            </div>
+            <div>
+              <Label htmlFor="upi">UPI ID</Label>
+              <Input id="upi" value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="name@bank" />
+            </div>
           </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="holder">Account Holder</Label>
+              <Input id="holder" value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="bank">Bank Name (optional)</Label>
+              <Input id="bank" value={bankName} onChange={(e) => setBankName(e.target.value)} />
+            </div>
+          </div>
+
+          <div>
+            <Label>Upload QR Code</Label>
+            <div className="mt-1 flex items-center gap-3">
+              <label className="inline-flex items-center gap-2 px-3 py-2 border rounded-md text-sm cursor-pointer hover:bg-muted">
+                <Upload className="size-4" />
+                {uploading ? "Uploading..." : qrPath ? "Replace QR" : "Choose QR image"}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleQrUpload(f);
+                  }}
+                />
+              </label>
+              {qrPreview ? (
+                <img src={qrPreview} alt="QR preview" className="size-16 rounded border" />
+              ) : null}
+            </div>
+          </div>
+
           <div>
             <Label htmlFor="notes">Internal Notes (optional)</Label>
             <Textarea id="notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
@@ -457,13 +549,14 @@ function CreateDialog({
           </Button>
           <Button
             onClick={() => mut.mutate()}
-            disabled={mut.isPending || !name || !courseId || !url || amount <= 0}
+            disabled={mut.isPending || !name || !courseId || amount <= 0}
           >
             <Link2 className="size-4" />
-            Create Payment Link
+            Create Payment Account
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+
