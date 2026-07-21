@@ -67,7 +67,7 @@ function AdminPaymentDetail() {
             <div className="font-mono text-xs text-muted-foreground">{r.order_id}</div>
             <h1 className="mt-1 text-xl font-semibold">
               {r.first_name} {r.last_name}
-              {r.status ? <Badge className="ml-3" variant={r.status === "verified" ? "default" : r.status === "rejected" ? "destructive" : "secondary"}>{r.status}</Badge> : null}
+              {r.status ? <Badge className="ml-3" variant={r.status === "verified" ? "primary" : r.status === "rejected" ? "danger" : "secondary"}>{r.status}</Badge> : null}
             </h1>
             <div className="text-sm text-muted-foreground">
               {r.email} · {r.phone}
