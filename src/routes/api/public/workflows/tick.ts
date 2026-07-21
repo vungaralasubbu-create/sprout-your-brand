@@ -1,14 +1,15 @@
 /**
  * Public scheduler tick — invoked by pg_cron every minute.
- * Resumes waiting/retrying runs whose wait_until has elapsed and dispatches
- * event-triggered workflows from automation_events_queue.
+ * Requires server-only CRON_SECRET in the `x-cron-secret` header.
  */
 import { createFileRoute } from "@tanstack/react-router";
+import { verifyCronRequest, cronUnauthorizedResponse } from "@/lib/security/cron-auth.server";
 
 export const Route = createFileRoute("/api/public/workflows/tick")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        if (!verifyCronRequest(request)) return cronUnauthorizedResponse();
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
         // 1. Resume waiting/retrying runs

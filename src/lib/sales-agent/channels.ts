@@ -78,6 +78,21 @@ registerChannelProvider(new WebChannelProvider());
 class WhatsAppCloudProvider implements ChannelProvider {
   readonly id = "whatsapp_cloud";
   readonly channel: ChannelId = "whatsapp";
+  verifySignature(payload: string, headers: Record<string, string>): boolean {
+    const appSecret = process.env.META_WHATSAPP_APP_SECRET;
+    if (!appSecret) return false; // require configured secret before trusting webhook
+    const sig = headers["x-hub-signature-256"] || headers["X-Hub-Signature-256"];
+    if (!sig || !sig.startsWith("sha256=")) return false;
+    try {
+      const { createHmac, timingSafeEqual } = require("crypto") as typeof import("crypto");
+      const expected = createHmac("sha256", appSecret).update(payload, "utf8").digest("hex");
+      const provided = sig.slice(7);
+      if (provided.length !== expected.length) return false;
+      return timingSafeEqual(Buffer.from(provided, "hex"), Buffer.from(expected, "hex"));
+    } catch {
+      return false;
+    }
+  }
   async send(to: string, message: OutboundMessage) {
     const token = process.env.META_WHATSAPP_TOKEN;
     const phoneId = process.env.META_WHATSAPP_PHONE_ID;
@@ -142,6 +157,28 @@ registerChannelProvider(new WhatsAppCloudProvider());
 class TwilioProvider implements ChannelProvider {
   readonly id = "twilio";
   readonly channel: ChannelId = "whatsapp";
+  verifySignature(payload: string, headers: Record<string, string>): boolean {
+    // Twilio signs the concatenation of the full URL + sorted form params.
+    // Webhook body is form-encoded; we reconstruct signing string from the raw payload.
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const webhookUrl = process.env.TWILIO_WEBHOOK_URL; // must be set to the exact URL Twilio calls
+    const provided = headers["x-twilio-signature"] || headers["X-Twilio-Signature"];
+    if (!authToken || !webhookUrl || !provided) return false;
+    try {
+      const { createHmac, timingSafeEqual } = require("crypto") as typeof import("crypto");
+      const params = new URLSearchParams(payload);
+      const sorted = Array.from(params.keys()).sort();
+      let data = webhookUrl;
+      for (const k of sorted) data += k + (params.get(k) ?? "");
+      const expected = createHmac("sha1", authToken).update(data, "utf8").digest("base64");
+      const a = Buffer.from(provided);
+      const b = Buffer.from(expected);
+      if (a.length !== b.length) return false;
+      return timingSafeEqual(a, b);
+    } catch {
+      return false;
+    }
+  }
   async send(to: string, message: OutboundMessage) {
     const sid = process.env.TWILIO_ACCOUNT_SID;
     const token = process.env.TWILIO_AUTH_TOKEN;
@@ -178,6 +215,7 @@ class TwilioProvider implements ChannelProvider {
   }
 }
 registerChannelProvider(new TwilioProvider());
+
 
 // Gupshup, Interakt, AiSensy stubs — normalized shape, ready for wiring
 class GupshupProvider implements ChannelProvider {
