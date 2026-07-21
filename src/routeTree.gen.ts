@@ -183,6 +183,7 @@ import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedKnowledgeIndexRouteImport } from './routes/_authenticated/knowledge.index'
 import { Route as AuthenticatedIntegrationsIndexRouteImport } from './routes/_authenticated/integrations.index'
 import { Route as AuthenticatedInstructorIndexRouteImport } from './routes/_authenticated/instructor.index'
+import { Route as AuthenticatedDevelopersIndexRouteImport } from './routes/_authenticated/developers.index'
 import { Route as AuthenticatedBillingIndexRouteImport } from './routes/_authenticated/billing.index'
 import { Route as AuthenticatedAgentsIndexRouteImport } from './routes/_authenticated/agents.index'
 import { Route as AuthenticatedAgencyIndexRouteImport } from './routes/_authenticated/agency.index'
@@ -259,6 +260,14 @@ import { Route as AuthenticatedIntegrationsInstalledRouteImport } from './routes
 import { Route as AuthenticatedIntegrationsDiscoverRouteImport } from './routes/_authenticated/integrations.discover'
 import { Route as AuthenticatedIntegrationsProviderRouteImport } from './routes/_authenticated/integrations.$provider'
 import { Route as AuthenticatedInstructorDashboardRouteImport } from './routes/_authenticated/instructor.dashboard'
+import { Route as AuthenticatedDevelopersWebhooksRouteImport } from './routes/_authenticated/developers.webhooks'
+import { Route as AuthenticatedDevelopersSdkRouteImport } from './routes/_authenticated/developers.sdk'
+import { Route as AuthenticatedDevelopersPlaygroundRouteImport } from './routes/_authenticated/developers.playground'
+import { Route as AuthenticatedDevelopersOauthRouteImport } from './routes/_authenticated/developers.oauth'
+import { Route as AuthenticatedDevelopersLogsRouteImport } from './routes/_authenticated/developers.logs'
+import { Route as AuthenticatedDevelopersDocsRouteImport } from './routes/_authenticated/developers.docs'
+import { Route as AuthenticatedDevelopersAppsRouteImport } from './routes/_authenticated/developers.apps'
+import { Route as AuthenticatedDevelopersApiRouteImport } from './routes/_authenticated/developers.api'
 import { Route as AuthenticatedCounsellorCopilotRouteImport } from './routes/_authenticated/counsellor.copilot'
 import { Route as AuthenticatedCloudTeamRouteImport } from './routes/_authenticated/cloud.team'
 import { Route as AuthenticatedCloudSettingsRouteImport } from './routes/_authenticated/cloud.settings'
@@ -1474,6 +1483,12 @@ const AuthenticatedInstructorIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedInstructorRoute,
   } as any)
+const AuthenticatedDevelopersIndexRoute =
+  AuthenticatedDevelopersIndexRouteImport.update({
+    id: '/developers/',
+    path: '/developers/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBillingIndexRoute =
   AuthenticatedBillingIndexRouteImport.update({
     id: '/',
@@ -1912,6 +1927,54 @@ const AuthenticatedInstructorDashboardRoute =
     id: '/dashboard',
     path: '/dashboard',
     getParentRoute: () => AuthenticatedInstructorRoute,
+  } as any)
+const AuthenticatedDevelopersWebhooksRoute =
+  AuthenticatedDevelopersWebhooksRouteImport.update({
+    id: '/developers/webhooks',
+    path: '/developers/webhooks',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevelopersSdkRoute =
+  AuthenticatedDevelopersSdkRouteImport.update({
+    id: '/developers/sdk',
+    path: '/developers/sdk',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevelopersPlaygroundRoute =
+  AuthenticatedDevelopersPlaygroundRouteImport.update({
+    id: '/developers/playground',
+    path: '/developers/playground',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevelopersOauthRoute =
+  AuthenticatedDevelopersOauthRouteImport.update({
+    id: '/developers/oauth',
+    path: '/developers/oauth',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevelopersLogsRoute =
+  AuthenticatedDevelopersLogsRouteImport.update({
+    id: '/developers/logs',
+    path: '/developers/logs',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevelopersDocsRoute =
+  AuthenticatedDevelopersDocsRouteImport.update({
+    id: '/developers/docs',
+    path: '/developers/docs',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevelopersAppsRoute =
+  AuthenticatedDevelopersAppsRouteImport.update({
+    id: '/developers/apps',
+    path: '/developers/apps',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDevelopersApiRoute =
+  AuthenticatedDevelopersApiRouteImport.update({
+    id: '/developers/api',
+    path: '/developers/api',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCounsellorCopilotRoute =
   AuthenticatedCounsellorCopilotRouteImport.update({
@@ -4171,6 +4234,14 @@ export interface FileRoutesByFullPath {
   '/cloud/settings': typeof AuthenticatedCloudSettingsRoute
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  '/developers/api': typeof AuthenticatedDevelopersApiRoute
+  '/developers/apps': typeof AuthenticatedDevelopersAppsRoute
+  '/developers/docs': typeof AuthenticatedDevelopersDocsRoute
+  '/developers/logs': typeof AuthenticatedDevelopersLogsRoute
+  '/developers/oauth': typeof AuthenticatedDevelopersOauthRoute
+  '/developers/playground': typeof AuthenticatedDevelopersPlaygroundRoute
+  '/developers/sdk': typeof AuthenticatedDevelopersSdkRoute
+  '/developers/webhooks': typeof AuthenticatedDevelopersWebhooksRoute
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
   '/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
@@ -4247,6 +4318,7 @@ export interface FileRoutesByFullPath {
   '/agency/': typeof AuthenticatedAgencyIndexRoute
   '/agents/': typeof AuthenticatedAgentsIndexRoute
   '/billing/': typeof AuthenticatedBillingIndexRoute
+  '/developers/': typeof AuthenticatedDevelopersIndexRoute
   '/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
@@ -4732,6 +4804,14 @@ export interface FileRoutesByTo {
   '/cloud/settings': typeof AuthenticatedCloudSettingsRoute
   '/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  '/developers/api': typeof AuthenticatedDevelopersApiRoute
+  '/developers/apps': typeof AuthenticatedDevelopersAppsRoute
+  '/developers/docs': typeof AuthenticatedDevelopersDocsRoute
+  '/developers/logs': typeof AuthenticatedDevelopersLogsRoute
+  '/developers/oauth': typeof AuthenticatedDevelopersOauthRoute
+  '/developers/playground': typeof AuthenticatedDevelopersPlaygroundRoute
+  '/developers/sdk': typeof AuthenticatedDevelopersSdkRoute
+  '/developers/webhooks': typeof AuthenticatedDevelopersWebhooksRoute
   '/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
   '/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
@@ -4808,6 +4888,7 @@ export interface FileRoutesByTo {
   '/agency': typeof AuthenticatedAgencyIndexRoute
   '/agents': typeof AuthenticatedAgentsIndexRoute
   '/billing': typeof AuthenticatedBillingIndexRoute
+  '/developers': typeof AuthenticatedDevelopersIndexRoute
   '/instructor': typeof AuthenticatedInstructorIndexRoute
   '/integrations': typeof AuthenticatedIntegrationsIndexRoute
   '/knowledge': typeof AuthenticatedKnowledgeIndexRoute
@@ -5316,6 +5397,14 @@ export interface FileRoutesById {
   '/_authenticated/cloud/settings': typeof AuthenticatedCloudSettingsRoute
   '/_authenticated/cloud/team': typeof AuthenticatedCloudTeamRoute
   '/_authenticated/counsellor/copilot': typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  '/_authenticated/developers/api': typeof AuthenticatedDevelopersApiRoute
+  '/_authenticated/developers/apps': typeof AuthenticatedDevelopersAppsRoute
+  '/_authenticated/developers/docs': typeof AuthenticatedDevelopersDocsRoute
+  '/_authenticated/developers/logs': typeof AuthenticatedDevelopersLogsRoute
+  '/_authenticated/developers/oauth': typeof AuthenticatedDevelopersOauthRoute
+  '/_authenticated/developers/playground': typeof AuthenticatedDevelopersPlaygroundRoute
+  '/_authenticated/developers/sdk': typeof AuthenticatedDevelopersSdkRoute
+  '/_authenticated/developers/webhooks': typeof AuthenticatedDevelopersWebhooksRoute
   '/_authenticated/instructor/dashboard': typeof AuthenticatedInstructorDashboardRoute
   '/_authenticated/integrations/$provider': typeof AuthenticatedIntegrationsProviderRoute
   '/_authenticated/integrations/discover': typeof AuthenticatedIntegrationsDiscoverRoute
@@ -5392,6 +5481,7 @@ export interface FileRoutesById {
   '/_authenticated/agency/': typeof AuthenticatedAgencyIndexRoute
   '/_authenticated/agents/': typeof AuthenticatedAgentsIndexRoute
   '/_authenticated/billing/': typeof AuthenticatedBillingIndexRoute
+  '/_authenticated/developers/': typeof AuthenticatedDevelopersIndexRoute
   '/_authenticated/instructor/': typeof AuthenticatedInstructorIndexRoute
   '/_authenticated/integrations/': typeof AuthenticatedIntegrationsIndexRoute
   '/_authenticated/knowledge/': typeof AuthenticatedKnowledgeIndexRoute
@@ -5899,6 +5989,14 @@ export interface FileRouteTypes {
     | '/cloud/settings'
     | '/cloud/team'
     | '/counsellor/copilot'
+    | '/developers/api'
+    | '/developers/apps'
+    | '/developers/docs'
+    | '/developers/logs'
+    | '/developers/oauth'
+    | '/developers/playground'
+    | '/developers/sdk'
+    | '/developers/webhooks'
     | '/instructor/dashboard'
     | '/integrations/$provider'
     | '/integrations/discover'
@@ -5975,6 +6073,7 @@ export interface FileRouteTypes {
     | '/agency/'
     | '/agents/'
     | '/billing/'
+    | '/developers/'
     | '/instructor/'
     | '/integrations/'
     | '/knowledge/'
@@ -6460,6 +6559,14 @@ export interface FileRouteTypes {
     | '/cloud/settings'
     | '/cloud/team'
     | '/counsellor/copilot'
+    | '/developers/api'
+    | '/developers/apps'
+    | '/developers/docs'
+    | '/developers/logs'
+    | '/developers/oauth'
+    | '/developers/playground'
+    | '/developers/sdk'
+    | '/developers/webhooks'
     | '/instructor/dashboard'
     | '/integrations/$provider'
     | '/integrations/discover'
@@ -6536,6 +6643,7 @@ export interface FileRouteTypes {
     | '/agency'
     | '/agents'
     | '/billing'
+    | '/developers'
     | '/instructor'
     | '/integrations'
     | '/knowledge'
@@ -7043,6 +7151,14 @@ export interface FileRouteTypes {
     | '/_authenticated/cloud/settings'
     | '/_authenticated/cloud/team'
     | '/_authenticated/counsellor/copilot'
+    | '/_authenticated/developers/api'
+    | '/_authenticated/developers/apps'
+    | '/_authenticated/developers/docs'
+    | '/_authenticated/developers/logs'
+    | '/_authenticated/developers/oauth'
+    | '/_authenticated/developers/playground'
+    | '/_authenticated/developers/sdk'
+    | '/_authenticated/developers/webhooks'
     | '/_authenticated/instructor/dashboard'
     | '/_authenticated/integrations/$provider'
     | '/_authenticated/integrations/discover'
@@ -7119,6 +7235,7 @@ export interface FileRouteTypes {
     | '/_authenticated/agency/'
     | '/_authenticated/agents/'
     | '/_authenticated/billing/'
+    | '/_authenticated/developers/'
     | '/_authenticated/instructor/'
     | '/_authenticated/integrations/'
     | '/_authenticated/knowledge/'
@@ -8687,6 +8804,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInstructorIndexRouteImport
       parentRoute: typeof AuthenticatedInstructorRoute
     }
+    '/_authenticated/developers/': {
+      id: '/_authenticated/developers/'
+      path: '/developers'
+      fullPath: '/developers/'
+      preLoaderRoute: typeof AuthenticatedDevelopersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/billing/': {
       id: '/_authenticated/billing/'
       path: '/'
@@ -9218,6 +9342,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/instructor/dashboard'
       preLoaderRoute: typeof AuthenticatedInstructorDashboardRouteImport
       parentRoute: typeof AuthenticatedInstructorRoute
+    }
+    '/_authenticated/developers/webhooks': {
+      id: '/_authenticated/developers/webhooks'
+      path: '/developers/webhooks'
+      fullPath: '/developers/webhooks'
+      preLoaderRoute: typeof AuthenticatedDevelopersWebhooksRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/developers/sdk': {
+      id: '/_authenticated/developers/sdk'
+      path: '/developers/sdk'
+      fullPath: '/developers/sdk'
+      preLoaderRoute: typeof AuthenticatedDevelopersSdkRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/developers/playground': {
+      id: '/_authenticated/developers/playground'
+      path: '/developers/playground'
+      fullPath: '/developers/playground'
+      preLoaderRoute: typeof AuthenticatedDevelopersPlaygroundRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/developers/oauth': {
+      id: '/_authenticated/developers/oauth'
+      path: '/developers/oauth'
+      fullPath: '/developers/oauth'
+      preLoaderRoute: typeof AuthenticatedDevelopersOauthRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/developers/logs': {
+      id: '/_authenticated/developers/logs'
+      path: '/developers/logs'
+      fullPath: '/developers/logs'
+      preLoaderRoute: typeof AuthenticatedDevelopersLogsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/developers/docs': {
+      id: '/_authenticated/developers/docs'
+      path: '/developers/docs'
+      fullPath: '/developers/docs'
+      preLoaderRoute: typeof AuthenticatedDevelopersDocsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/developers/apps': {
+      id: '/_authenticated/developers/apps'
+      path: '/developers/apps'
+      fullPath: '/developers/apps'
+      preLoaderRoute: typeof AuthenticatedDevelopersAppsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/developers/api': {
+      id: '/_authenticated/developers/api'
+      path: '/developers/api'
+      fullPath: '/developers/api'
+      preLoaderRoute: typeof AuthenticatedDevelopersApiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/counsellor/copilot': {
       id: '/_authenticated/counsellor/copilot'
@@ -12818,9 +12998,18 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCampusAmbassadorApplyRoute: typeof AuthenticatedCampusAmbassadorApplyRoute
   AuthenticatedCampusAmbassadorStatusRoute: typeof AuthenticatedCampusAmbassadorStatusRoute
   AuthenticatedCounsellorCopilotRoute: typeof AuthenticatedCounsellorCopilotRouteWithChildren
+  AuthenticatedDevelopersApiRoute: typeof AuthenticatedDevelopersApiRoute
+  AuthenticatedDevelopersAppsRoute: typeof AuthenticatedDevelopersAppsRoute
+  AuthenticatedDevelopersDocsRoute: typeof AuthenticatedDevelopersDocsRoute
+  AuthenticatedDevelopersLogsRoute: typeof AuthenticatedDevelopersLogsRoute
+  AuthenticatedDevelopersOauthRoute: typeof AuthenticatedDevelopersOauthRoute
+  AuthenticatedDevelopersPlaygroundRoute: typeof AuthenticatedDevelopersPlaygroundRoute
+  AuthenticatedDevelopersSdkRoute: typeof AuthenticatedDevelopersSdkRoute
+  AuthenticatedDevelopersWebhooksRoute: typeof AuthenticatedDevelopersWebhooksRoute
   AuthenticatedSubmitReviewTokenRoute: typeof AuthenticatedSubmitReviewTokenRoute
   AuthenticatedTemplatesSlugRoute: typeof AuthenticatedTemplatesSlugRoute
   AuthenticatedAgentsIndexRoute: typeof AuthenticatedAgentsIndexRoute
+  AuthenticatedDevelopersIndexRoute: typeof AuthenticatedDevelopersIndexRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
   AuthenticatedTemplatesIndexRoute: typeof AuthenticatedTemplatesIndexRoute
   AuthenticatedWorkspaceProjectProjectIdRoute: typeof AuthenticatedWorkspaceProjectProjectIdRouteWithChildren
@@ -12851,9 +13040,19 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCampusAmbassadorStatusRoute,
   AuthenticatedCounsellorCopilotRoute:
     AuthenticatedCounsellorCopilotRouteWithChildren,
+  AuthenticatedDevelopersApiRoute: AuthenticatedDevelopersApiRoute,
+  AuthenticatedDevelopersAppsRoute: AuthenticatedDevelopersAppsRoute,
+  AuthenticatedDevelopersDocsRoute: AuthenticatedDevelopersDocsRoute,
+  AuthenticatedDevelopersLogsRoute: AuthenticatedDevelopersLogsRoute,
+  AuthenticatedDevelopersOauthRoute: AuthenticatedDevelopersOauthRoute,
+  AuthenticatedDevelopersPlaygroundRoute:
+    AuthenticatedDevelopersPlaygroundRoute,
+  AuthenticatedDevelopersSdkRoute: AuthenticatedDevelopersSdkRoute,
+  AuthenticatedDevelopersWebhooksRoute: AuthenticatedDevelopersWebhooksRoute,
   AuthenticatedSubmitReviewTokenRoute: AuthenticatedSubmitReviewTokenRoute,
   AuthenticatedTemplatesSlugRoute: AuthenticatedTemplatesSlugRoute,
   AuthenticatedAgentsIndexRoute: AuthenticatedAgentsIndexRoute,
+  AuthenticatedDevelopersIndexRoute: AuthenticatedDevelopersIndexRoute,
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
   AuthenticatedTemplatesIndexRoute: AuthenticatedTemplatesIndexRoute,
   AuthenticatedWorkspaceProjectProjectIdRoute:

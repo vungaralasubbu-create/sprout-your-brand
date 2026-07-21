@@ -13265,6 +13265,307 @@ export type Database = {
         }
         Relationships: []
       }
+      dev_api_keys: {
+        Row: {
+          created_at: string
+          created_by: string
+          environment: string
+          expires_at: string | null
+          id: string
+          ip_allowlist: string[]
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          rate_limit_per_min: number
+          revoked_at: string | null
+          scopes: string[]
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          environment?: string
+          expires_at?: string | null
+          id?: string
+          ip_allowlist?: string[]
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name: string
+          rate_limit_per_min?: number
+          revoked_at?: string | null
+          scopes?: string[]
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          environment?: string
+          expires_at?: string | null
+          id?: string
+          ip_allowlist?: string[]
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          rate_limit_per_min?: number
+          revoked_at?: string | null
+          scopes?: string[]
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      dev_api_requests: {
+        Row: {
+          api_key_id: string | null
+          cost_usd: number
+          created_at: string
+          endpoint: string
+          id: string
+          ip: string | null
+          latency_ms: number
+          method: string
+          response_size: number
+          status: number
+          tokens: number
+          user_id: string | null
+          workspace_id: string
+        }
+        Insert: {
+          api_key_id?: string | null
+          cost_usd?: number
+          created_at?: string
+          endpoint: string
+          id?: string
+          ip?: string | null
+          latency_ms?: number
+          method: string
+          response_size?: number
+          status: number
+          tokens?: number
+          user_id?: string | null
+          workspace_id: string
+        }
+        Update: {
+          api_key_id?: string | null
+          cost_usd?: number
+          created_at?: string
+          endpoint?: string
+          id?: string
+          ip?: string | null
+          latency_ms?: number
+          method?: string
+          response_size?: number
+          status?: number
+          tokens?: number
+          user_id?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dev_api_requests_api_key_id_fkey"
+            columns: ["api_key_id"]
+            isOneToOne: false
+            referencedRelation: "dev_api_keys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dev_apps: {
+        Row: {
+          category: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          downloads: number
+          icon_url: string | null
+          id: string
+          name: string
+          rating: number
+          slug: string
+          status: string
+          updated_at: string
+          verified: boolean
+          visibility: string
+          workspace_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          created_by: string
+          description?: string | null
+          downloads?: number
+          icon_url?: string | null
+          id?: string
+          name: string
+          rating?: number
+          slug: string
+          status?: string
+          updated_at?: string
+          verified?: boolean
+          visibility?: string
+          workspace_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          downloads?: number
+          icon_url?: string | null
+          id?: string
+          name?: string
+          rating?: number
+          slug?: string
+          status?: string
+          updated_at?: string
+          verified?: boolean
+          visibility?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      dev_oauth_apps: {
+        Row: {
+          app_type: string
+          client_id: string
+          client_secret_hash: string
+          created_at: string
+          created_by: string
+          description: string | null
+          homepage_url: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          redirect_uris: string[]
+          scopes: string[]
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          app_type?: string
+          client_id: string
+          client_secret_hash: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          homepage_url?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          redirect_uris?: string[]
+          scopes?: string[]
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          app_type?: string
+          client_id?: string
+          client_secret_hash?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          homepage_url?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          redirect_uris?: string[]
+          scopes?: string[]
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
+      dev_webhook_deliveries: {
+        Row: {
+          attempts: number
+          created_at: string
+          event: string
+          http_status: number | null
+          id: string
+          latency_ms: number | null
+          payload: Json | null
+          response: string | null
+          status: string
+          webhook_id: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          event: string
+          http_status?: number | null
+          id?: string
+          latency_ms?: number | null
+          payload?: Json | null
+          response?: string | null
+          status?: string
+          webhook_id: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          event?: string
+          http_status?: number | null
+          id?: string
+          latency_ms?: number | null
+          payload?: Json | null
+          response?: string | null
+          status?: string
+          webhook_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dev_webhook_deliveries_webhook_id_fkey"
+            columns: ["webhook_id"]
+            isOneToOne: false
+            referencedRelation: "dev_webhooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dev_webhooks: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string
+          description: string | null
+          events: string[]
+          id: string
+          secret: string
+          updated_at: string
+          url: string
+          workspace_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by: string
+          description?: string | null
+          events?: string[]
+          id?: string
+          secret: string
+          updated_at?: string
+          url: string
+          workspace_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          events?: string[]
+          id?: string
+          secret?: string
+          updated_at?: string
+          url?: string
+          workspace_id?: string
+        }
+        Relationships: []
+      }
       email_brand_settings: {
         Row: {
           accent_color: string | null
