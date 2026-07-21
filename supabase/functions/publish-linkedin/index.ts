@@ -7,6 +7,8 @@ interface Payload {
   account_id: string; // soc_accounts.id
   message?: string;
   image_url?: string;
+  author_urn?: string;   // optional per-request override (urn:li:person:... or urn:li:organization:...)
+  author_kind?: "person" | "organization"; // optional hint; inferred from author_urn otherwise
 }
 
 Deno.serve(async (req) => {
@@ -36,8 +38,18 @@ Deno.serve(async (req) => {
     const accessToken = await decryptToken(acc.access_token_ciphertext);
     if (!accessToken) return json({ error: "Access token missing" }, { status: 500 });
 
-    const md = (acc.metadata ?? {}) as { member_urn?: string };
-    const ownerUrn = md.member_urn ?? `urn:li:person:${acc.account_external_id}`;
+    const md = (acc.metadata ?? {}) as {
+      member_urn?: string;
+      default_author_urn?: string;
+      default_author_kind?: "person" | "organization";
+    };
+    // Precedence: explicit per-request override > saved default > personal member URN.
+    const personUrn = md.member_urn ?? `urn:li:person:${acc.account_external_id}`;
+    const requestedUrn = body.author_urn?.trim() || md.default_author_urn || personUrn;
+    const ownerUrn = requestedUrn.startsWith("urn:li:") ? requestedUrn : `urn:li:person:${requestedUrn}`;
+    const authorKind: "person" | "organization" =
+      body.author_kind ??
+      (ownerUrn.includes(":organization:") ? "organization" : "person");
 
     let assetUrn: string | null = null;
     if (body.image_url) {
@@ -45,7 +57,7 @@ Deno.serve(async (req) => {
     }
 
     const result = await createUgcPost(accessToken, ownerUrn, body.message ?? "", assetUrn);
-    return json({ ok: true, result });
+    return json({ ok: true, result, author_urn: ownerUrn, author_kind: authorKind });
   } catch (err) {
     return json({ error: (err as Error).message }, { status: 500 });
   }
