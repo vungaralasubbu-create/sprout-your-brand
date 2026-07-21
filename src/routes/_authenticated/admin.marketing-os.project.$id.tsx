@@ -87,6 +87,10 @@ function ProjectOverview() {
         </Badge>
       </div>
 
+      <ProjectPublishToolbar projectId={id} />
+
+
+
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
         <div className="min-w-0">
           <Tabs defaultValue="overview" className="w-full">
