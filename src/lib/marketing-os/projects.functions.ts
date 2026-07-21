@@ -317,8 +317,12 @@ type StepEntry = { key: string; label: string; status: string; error?: string | 
 async function loadBrandContext(
   supabase: any,
   ownerId: string,
+  query?: string,
 ): Promise<string | undefined> {
   try {
+    const { buildAiContext } = await import("@/lib/marketing-os/brand-context-engine.server");
+    const { systemPrompt } = await buildAiContext(supabase, ownerId, { query });
+    if (systemPrompt) return systemPrompt;
     return await buildBrandSystemPrompt(supabase, ownerId);
   } catch {
     return undefined;

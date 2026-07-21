@@ -1,15 +1,21 @@
 /**
- * Context pipeline — brand + campaign + user injection.
+ * Context pipeline — brand + knowledge + memory + campaign injection.
+ *
+ * Delegates to the Brand Context Engine, which is the single source of truth
+ * for AI context (Brand Center + Knowledge Hub + AI Memory + caching).
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { buildBrandSystemPrompt } from "@/lib/marketing-os/brand-context.server";
+import { buildAiContext } from "@/lib/marketing-os/brand-context-engine.server";
 
 export async function buildEngineContext(
   supabase: SupabaseClient,
   userId: string,
   campaignId?: string | null,
+  query?: string,
 ): Promise<{ brandSystemPrompt: string; campaignSummary: string; campaign?: unknown }> {
-  const brandSystemPrompt = await buildBrandSystemPrompt(supabase, userId).catch(() => "");
+  const { systemPrompt } = await buildAiContext(supabase, userId, { query }).catch(() => ({
+    systemPrompt: "",
+  }));
 
   let campaignSummary = "";
   let campaign: unknown = undefined;
@@ -28,5 +34,5 @@ export async function buildEngineContext(
       ].filter(Boolean).join("\n");
     }
   }
-  return { brandSystemPrompt, campaignSummary, campaign };
+  return { brandSystemPrompt: systemPrompt, campaignSummary, campaign };
 }
