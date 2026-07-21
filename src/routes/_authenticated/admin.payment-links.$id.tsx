@@ -220,6 +220,20 @@ function Page() {
               </a>
             </>
           ) : null}
+          {data.link.is_default_active ? (
+            <Button variant="outline" onClick={() => clearMut.mutate()} disabled={clearMut.isPending}>
+              <Star className="size-4 text-amber-500 fill-amber-400" /> Deactivate Default
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              onClick={() => activeMut.mutate()}
+              disabled={activeMut.isPending || data.link.status !== "active"}
+              title={data.link.status !== "active" ? "Enable this account first" : "Make Active"}
+            >
+              <Star className="size-4" /> Make Active
+            </Button>
+          )}
           {data.link.status === "active" ? (
             <Button variant="outline" onClick={() => toggle.mutate("disabled")}>
               <Ban className="size-4" /> Disable
@@ -229,6 +243,7 @@ function Page() {
               <CheckCircle2 className="size-4" /> Enable
             </Button>
           )}
+
         </div>
       </div>
 
