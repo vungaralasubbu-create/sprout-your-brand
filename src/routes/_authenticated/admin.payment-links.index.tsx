@@ -315,20 +315,28 @@ function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
   );
 }
 
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, isDefault }: { status: string; isDefault?: boolean }) {
   const map: Record<string, string> = {
     active: "bg-success-soft text-success",
     disabled: "bg-warning-soft text-warning",
     archived: "bg-muted text-muted-foreground",
   };
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium capitalize ${map[status] ?? ""}`}
-    >
-      {status}
-    </span>
+    <div className="flex flex-col gap-1 items-start">
+      <span
+        className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium capitalize ${map[status] ?? ""}`}
+      >
+        {status}
+      </span>
+      {isDefault ? (
+        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium bg-amber-100 text-amber-800">
+          <Star className="size-3" /> Default
+        </span>
+      ) : null}
+    </div>
   );
 }
+
 
 function CreateDialog({
   open,
