@@ -1,4 +1,9 @@
-import { ProviderNotConfiguredError, ProviderTaskUnsupportedError, UpstreamError } from "../errors.ts";
+import {
+  ProviderBadRequestError,
+  ProviderNotConfiguredError,
+  ProviderTaskUnsupportedError,
+  UpstreamError,
+} from "../errors.ts";
 import { withRetry } from "../helpers/retry.ts";
 import { logger } from "../helpers/logger.ts";
 import {
