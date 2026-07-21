@@ -175,101 +175,18 @@ const CampaignInputSchema = z.object({
 });
 
 /**
- * Resolve a brand the caller can write to. If the supplied brand_id is not
- * accessible under RLS (missing row, foreign owner, or empty brand table for
- * this user), fall back to the caller's most-recent owned brand, and finally
- * auto-create a default "My Brand" row. This keeps campaign creation from
- * failing on `new row violates row-level security policy for table
- * mkt_campaigns` when no user-owned brand exists yet. Additive: existing
- * callers that pass a valid, owned brand_id keep the same behavior.
+ * Backward-compatible wrapper — delegates to the shared brand resolver in
+ * `campaign-service.server` so campaign creation is validated in ONE place.
  */
 async function resolveAccessibleBrandId(
   supabase: any,
   userId: string,
   preferredBrandId?: string | null,
 ): Promise<string> {
-  if (preferredBrandId) {
-    // CRITICAL: verify the caller OWNS this brand. mkt_campaigns RLS
-    // WITH CHECK requires b.owner_id = auth.uid(); a brand the caller
-    // can merely SELECT is not sufficient and will fail on insert.
-    const { data } = await supabase
-      .from("mkt_brands")
-      .select("id")
-      .eq("id", preferredBrandId)
-      .eq("owner_id", userId)
-      .maybeSingle();
-    if (data?.id) return data.id as string;
-  }
-
-  const { data: kit } = await supabase
-    .from("mkt_brand_kits")
-    .select("id,brand_id,business_name,name,tone_of_voice,colors,logos,updated_at")
-    .eq("owner_id", userId)
-    .order("is_default", { ascending: false })
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (kit?.brand_id) {
-    const { data: kitBrand } = await supabase
-      .from("mkt_brands")
-      .select("id")
-      .eq("id", kit.brand_id)
-      .eq("owner_id", userId)
-      .maybeSingle();
-    if (kitBrand?.id) return kitBrand.id as string;
-  }
-
-
-  const { data: own } = await supabase
-    .from("mkt_brands")
-    .select("id, updated_at")
-    .eq("owner_id", userId)
-    .order("updated_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  if (own?.id) return own.id as string;
-
-  let brandName = "My Brand";
-  let tone: string | null = null;
-  let primaryColor: string | null = null;
-  let logoUrl: string | null = null;
-  if (kit) {
-    brandName = (kit.business_name || kit.name || brandName) as string;
-    if (Array.isArray(kit.tone_of_voice) && kit.tone_of_voice.length) {
-      tone = String(kit.tone_of_voice[0]);
-    }
-    const colors = (kit.colors ?? {}) as Record<string, unknown>;
-    if (typeof (colors as any)?.primary === "string") primaryColor = (colors as any).primary;
-    const logos = (kit.logos ?? {}) as Record<string, unknown>;
-    if (typeof (logos as any)?.primary === "string") logoUrl = (logos as any).primary;
-  }
-
-  const { data: created, error } = await supabase
-    .from("mkt_brands")
-    .insert({
-      owner_id: userId,
-      name: brandName,
-      tone,
-      primary_color: primaryColor,
-      logo_url: logoUrl,
-    })
-    .select("id")
-    .single();
-  if (error || !created?.id) {
-    throw new Error(
-      `Unable to prepare a brand workspace for campaigns: ${error?.message ?? "unknown error"}`,
-    );
-  }
-  if (kit?.id) {
-    await supabase
-      .from("mkt_brand_kits")
-      .update({ brand_id: created.id })
-      .eq("id", kit.id)
-      .eq("owner_id", userId);
-  }
-  return created.id as string;
+  const { resolveOwnedBrandId } = await import("@/lib/marketing-os/campaign-service.server");
+  return resolveOwnedBrandId(supabase, userId, preferredBrandId ?? null);
 }
+
 
 export const saveCampaign = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
