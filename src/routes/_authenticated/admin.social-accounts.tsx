@@ -403,6 +403,78 @@ function SocialAccountsPage() {
                         {results[a.id].error_message && <div className="mt-1 text-red-700 dark:text-red-300">{results[a.id].error_message}</div>}
                       </div>
                     )}
+                    {a.platform === "linkedin" && liPicker[a.id]?.open && (
+                      <div className="ml-8 rounded-md border bg-muted/30 p-3 text-xs space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="font-medium text-sm">Publish as</div>
+                          <Button variant="ghost" size="sm" onClick={() => closeLiPicker(a.id)}>Close</Button>
+                        </div>
+                        {liPicker[a.id]?.loading ? (
+                          <div className="text-muted-foreground">Loading LinkedIn Company Pages…</div>
+                        ) : liPicker[a.id]?.reconnectRequired ? (
+                          <div className="space-y-2">
+                            <div className="text-amber-700 dark:text-amber-300">
+                              LinkedIn didn't return your Company Pages. This account is missing the <code>r_organization_admin</code> scope.
+                            </div>
+                            <Button size="sm" variant="secondary" onClick={() => startOAuth("linkedin")}>
+                              <Linkedin className="mr-1 h-3.5 w-3.5" />
+                              Reconnect LinkedIn
+                            </Button>
+                          </div>
+                        ) : liPicker[a.id]?.error ? (
+                          <div className="text-red-700 dark:text-red-300">{liPicker[a.id]?.error}</div>
+                        ) : (
+                          <ul className="divide-y">
+                            {liPicker[a.id]?.person && (
+                              <li className="py-2 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <UserIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+                                  <div className="min-w-0">
+                                    <div className="font-medium truncate">{liPicker[a.id]!.person!.name}</div>
+                                    <div className="text-muted-foreground">Personal profile</div>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  {liPicker[a.id]?.defaultUrn === liPicker[a.id]!.person!.urn && (
+                                    <Badge variant="success"><Check className="h-3 w-3 mr-1" />Default</Badge>
+                                  )}
+                                  <Button size="sm" variant="outline" disabled={busy === a.id} onClick={() => chooseLiAuthor(a.id, { urn: liPicker[a.id]!.person!.urn, kind: "person", name: liPicker[a.id]!.person!.name })}>
+                                    Set default
+                                  </Button>
+                                </div>
+                              </li>
+                            )}
+                            {(liPicker[a.id]?.orgs ?? []).length === 0 ? (
+                              <li className="py-2 text-muted-foreground">No Company Pages found for this LinkedIn account.</li>
+                            ) : (
+                              liPicker[a.id]!.orgs.map((org) => (
+                                <li key={org.urn} className="py-2 flex items-center justify-between gap-3">
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="font-medium truncate">{org.name}</div>
+                                      <div className="text-muted-foreground truncate">{org.urn}{org.vanityName ? ` · @${org.vanityName}` : ""}</div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    {liPicker[a.id]?.defaultUrn === org.urn && (
+                                      <Badge variant="success"><Check className="h-3 w-3 mr-1" />Default</Badge>
+                                    )}
+                                    <Button size="sm" variant="outline" disabled={busy === a.id} onClick={() => chooseLiAuthor(a.id, { urn: org.urn, kind: "organization", name: org.name })}>
+                                      Set default
+                                    </Button>
+                                    <Button size="sm" disabled={busy === a.id} onClick={() => testLiCompanyPage(a.id, org)}>
+                                      <Send className="mr-1 h-3.5 w-3.5" />
+                                      Test
+                                    </Button>
+                                  </div>
+                                </li>
+                              ))
+                            )}
+                          </ul>
+                        )}
+                      </div>
+                    )}
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs pl-8">
                       <div className="flex justify-between gap-2">
                         <dt className="text-muted-foreground">Last refreshed</dt>
