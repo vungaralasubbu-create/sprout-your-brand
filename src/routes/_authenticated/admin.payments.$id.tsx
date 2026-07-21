@@ -114,7 +114,7 @@ function AdminPaymentDetail() {
           <div className="rounded-2xl border bg-card p-4">
             <div className="mb-2 text-sm font-semibold">Reject</div>
             <Textarea placeholder="Reason (shown to student)" value={reason} onChange={(e) => setReason(e.target.value)} className="mb-2 text-sm" />
-            <Button variant="destructive" onClick={() => rejectM.mutate()} disabled={rejectM.isPending || reason.trim().length < 3} className="w-full">
+            <Button variant="danger" onClick={() => rejectM.mutate()} disabled={rejectM.isPending || reason.trim().length < 3} className="w-full">
               {rejectM.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <XCircle className="mr-2 h-4 w-4" />}
               Reject payment
             </Button>
