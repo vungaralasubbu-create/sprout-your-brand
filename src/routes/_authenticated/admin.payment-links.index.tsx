@@ -169,29 +169,59 @@ function Page() {
 
 function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
   const setStatus = useServerFn(setPaymentLinkStatus);
+  const setActive = useServerFn(setPaymentLinkActive);
+  const clearActive = useServerFn(clearPaymentLinkActive);
   const [confirmDisable, setConfirmDisable] = useState(false);
 
   const mut = useMutation({
     mutationFn: (status: "active" | "disabled" | "archived") => setStatus({ data: { id: row.id, status } }),
     onSuccess: () => {
-      toast.success("Payment link updated");
+      toast.success("Payment account updated");
       onChanged();
     },
     onError: (e: any) => toast.error(e.message ?? "Failed to update"),
+  });
+
+  const activeMut = useMutation({
+    mutationFn: () => setActive({ data: { id: row.id } }),
+    onSuccess: () => {
+      toast.success("Marked as active payment account");
+      onChanged();
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
+  });
+
+  const clearMut = useMutation({
+    mutationFn: () => clearActive({ data: { id: row.id } }),
+    onSuccess: () => {
+      toast.success("Deactivated");
+      onChanged();
+    },
+    onError: (e: any) => toast.error(e.message ?? "Failed"),
   });
 
   return (
     <>
       <TableRow>
         <TableCell className="font-mono text-xs">{row.code}</TableCell>
-        <TableCell className="text-sm font-medium max-w-[220px] truncate">{row.name}</TableCell>
+        <TableCell className="text-sm font-medium max-w-[220px] truncate">
+          <div className="flex items-center gap-1.5">
+            {row.is_default_active ? (
+              <Star className="size-3.5 fill-amber-400 text-amber-500" />
+            ) : null}
+            <span className="truncate">{row.name}</span>
+          </div>
+          {row.upi_id ? (
+            <div className="font-mono text-[10px] text-muted-foreground truncate">{row.upi_id}</div>
+          ) : null}
+        </TableCell>
         <TableCell className="text-sm max-w-[200px] truncate">{row.program_name}</TableCell>
         <TableCell>
           <Badge variant="muted">{row.plan_label}</Badge>
         </TableCell>
         <TableCell className="text-right font-mono text-sm">{inr(row.amount)}</TableCell>
         <TableCell>
-          <StatusBadge status={row.status} />
+          <StatusBadge status={row.status} isDefault={row.is_default_active} />
         </TableCell>
         <TableCell className="text-right font-mono text-sm">{row.assigned_count}</TableCell>
         <TableCell className="text-right font-mono text-sm">{row.verified_count}</TableCell>
@@ -201,27 +231,46 @@ function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
         </TableCell>
         <TableCell className="text-right">
           <div className="flex items-center justify-end gap-1">
-            <Button
-              size="icon"
-              variant="ghost"
-              title="Copy URL"
-              onClick={() => {
-                navigator.clipboard.writeText(row.url);
-                toast.success("URL copied");
-              }}
-            >
-              <Copy className="size-4" />
-            </Button>
-            <a href={row.url} target="_blank" rel="noreferrer">
-              <Button size="icon" variant="ghost" title="Open">
-                <ExternalLink className="size-4" />
-              </Button>
-            </a>
+            {row.url ? (
+              <>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  title="Copy URL"
+                  onClick={() => {
+                    navigator.clipboard.writeText(row.url);
+                    toast.success("URL copied");
+                  }}
+                >
+                  <Copy className="size-4" />
+                </Button>
+                <a href={row.url} target="_blank" rel="noreferrer">
+                  <Button size="icon" variant="ghost" title="Open">
+                    <ExternalLink className="size-4" />
+                  </Button>
+                </a>
+              </>
+            ) : null}
             <Link to="/admin/payment-links/$id" params={{ id: row.id }}>
               <Button size="sm" variant="outline">
                 View
               </Button>
             </Link>
+            {row.is_default_active ? (
+              <Button size="sm" variant="outline" onClick={() => clearMut.mutate()} disabled={clearMut.isPending}>
+                Deactivate
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => activeMut.mutate()}
+                disabled={activeMut.isPending || row.status !== "active"}
+                title={row.status !== "active" ? "Enable this account first" : "Make Active"}
+              >
+                <Star className="size-3.5" /> Make Active
+              </Button>
+            )}
             {row.status === "active" ? (
               <Button size="sm" variant="outline" onClick={() => setConfirmDisable(true)}>
                 <Ban className="size-3.5" /> Disable
@@ -234,6 +283,7 @@ function Row({ row, onChanged }: { row: any; onChanged: () => void }) {
           </div>
         </TableCell>
       </TableRow>
+
 
       <Dialog open={confirmDisable} onOpenChange={setConfirmDisable}>
         <DialogContent>
