@@ -62,11 +62,12 @@ export const createMarketingProject = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const steps = PROJECT_STEPS.map((s) => ({ ...s, status: "pending" }));
     const sb: any = (context.supabase as any);
+    const brandId = await ensureDefaultBrand(sb, context.userId, data.brand_id);
     const { data: created, error } = await sb
       .from("marketing_projects")
       .insert({
         created_by: context.userId,
-        brand_id: data.brand_id ?? null,
+        brand_id: brandId,
         name: data.prompt.slice(0, 80),
         prompt: data.prompt,
         status: "running",
@@ -349,6 +350,24 @@ async function ensureDefaultBrand(
     if (existing?.id) return existing.id as string;
   }
 
+  const { data: kit } = await supabase
+    .from("mkt_brand_kits")
+    .select("id,brand_id,business_name,name,tone_of_voice,colors,logos,updated_at")
+    .eq("owner_id", userId)
+    .order("is_default", { ascending: false })
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (kit?.brand_id) {
+    const { data: kitBrand } = await supabase
+      .from("mkt_brands")
+      .select("id")
+      .eq("id", kit.brand_id)
+      .maybeSingle();
+    if (kitBrand?.id) return kitBrand.id as string;
+  }
+
   const { data: own } = await supabase
     .from("mkt_brands")
     .select("id, updated_at")
@@ -363,26 +382,15 @@ async function ensureDefaultBrand(
   let tone: string | null = null;
   let primaryColor: string | null = null;
   let logoUrl: string | null = null;
-  try {
-    const { data: kit } = await supabase
-      .from("mkt_brand_kits")
-      .select("business_name,name,tone_of_voice,colors,logos")
-      .eq("owner_id", userId)
-      .order("updated_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (kit) {
-      brandName = (kit.business_name || kit.name || brandName) as string;
-      if (Array.isArray(kit.tone_of_voice) && kit.tone_of_voice.length) {
-        tone = String(kit.tone_of_voice[0]);
-      }
-      const colors = (kit.colors ?? {}) as Record<string, unknown>;
-      if (typeof (colors as any)?.primary === "string") primaryColor = (colors as any).primary;
-      const logos = (kit.logos ?? {}) as Record<string, unknown>;
-      if (typeof (logos as any)?.primary === "string") logoUrl = (logos as any).primary;
+  if (kit) {
+    brandName = (kit.business_name || kit.name || brandName) as string;
+    if (Array.isArray(kit.tone_of_voice) && kit.tone_of_voice.length) {
+      tone = String(kit.tone_of_voice[0]);
     }
-  } catch {
-    /* best-effort */
+    const colors = (kit.colors ?? {}) as Record<string, unknown>;
+    if (typeof (colors as any)?.primary === "string") primaryColor = (colors as any).primary;
+    const logos = (kit.logos ?? {}) as Record<string, unknown>;
+    if (typeof (logos as any)?.primary === "string") logoUrl = (logos as any).primary;
   }
 
   const { data: created, error: bErr } = await supabase
@@ -400,6 +408,13 @@ async function ensureDefaultBrand(
     throw new Error(
       `Unable to prepare a brand workspace: ${bErr?.message ?? "unknown error"}`,
     );
+  }
+  if (kit?.id) {
+    await supabase
+      .from("mkt_brand_kits")
+      .update({ brand_id: created.id })
+      .eq("id", kit.id)
+      .eq("owner_id", userId);
   }
   return created.id as string;
 }
