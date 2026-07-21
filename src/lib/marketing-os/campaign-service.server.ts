@@ -137,29 +137,17 @@ export async function createCampaignForUser(
     owner_id: (payload as any).owner_id ?? userId,
   };
 
-  console.info("[verify:createCampaignForUser]", JSON.stringify({
-    userId,
-    resolved_brand_id: brandId,
-    owner_id: insertRow.owner_id,
-    created_by: insertRow.created_by,
-    payload_keys: Object.keys(insertRow),
-    name: (insertRow as any).name,
-  }));
-
   const { data, error } = await supabase
     .from("mkt_campaigns")
     .insert(insertRow)
     .select()
     .single();
   if (error) {
-    console.error("[verify:createCampaignForUser:insert_error]", JSON.stringify({
-      code: (error as any).code, message: error.message, brandId, userId,
-    }));
     throw new Error(
       `Failed to create campaign (${(error as any).code ?? "db_error"}): ${error.message}. brand_id=${brandId}`,
     );
   }
-  console.info("[verify:createCampaignForUser:ok]", JSON.stringify({ campaignId: (data as any)?.id, brandId }));
   return data;
 }
+
 
