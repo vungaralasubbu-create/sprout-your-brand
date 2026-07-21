@@ -47,7 +47,11 @@ export const createCoursePayment = createServerFn({ method: "POST" })
       return { orderId: existing.order_id, reused: true };
     }
 
-    // Snapshot the active payment settings so admins can see which QR / UPI was shown.
+    // Resolve the payment account for this course via the gateway (course
+    // override → routing mode → active pool). Falls back to the legacy
+    // `payment_settings` singleton so pre-gateway installs keep working.
+    const account = await resolveActiveAccountForCourse(supabase, courseId);
+
     const { data: settings } = await supabase
       .from("payment_settings")
       .select("id, version, upi_id, merchant_name, is_active, is_enabled, maintenance_mode")
@@ -56,7 +60,10 @@ export const createCoursePayment = createServerFn({ method: "POST" })
       .limit(1)
       .maybeSingle();
 
-    if (settings && (settings.maintenance_mode || settings.is_enabled === false)) {
+    if (!account && settings && (settings.maintenance_mode || settings.is_enabled === false)) {
+      throw new Error("Payments are temporarily unavailable. Please try again shortly.");
+    }
+    if (!account && !settings) {
       throw new Error("Payments are temporarily unavailable. Please try again shortly.");
     }
 
@@ -83,13 +90,49 @@ export const createCoursePayment = createServerFn({ method: "POST" })
       status: "pending",
       provider: "upi_manual",
       settings_id: settings?.id ?? null,
-      qr_version_used: settings?.version ?? null,
-      upi_id_used: settings?.upi_id ?? null,
-      merchant_name_used: settings?.merchant_name ?? null,
+      qr_version_used: account?.version ?? settings?.version ?? null,
+      upi_id_used: account?.upi_id ?? settings?.upi_id ?? null,
+      merchant_name_used: account?.merchant_name ?? settings?.merchant_name ?? null,
+      payment_account_id: account?.id ?? null,
+      account_version_used: account?.version ?? null,
     });
     if (insErr) throw new Error(insErr.message);
 
     return { orderId, reused: false };
+  });
+
+/** Display data for the student payment page. Prefers the snapshotted
+ * gateway account for this order; falls back to legacy `payment_settings`. */
+export const getPaymentDisplayForOrder = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ orderId: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: p } = await supabase
+      .from("course_payments")
+      .select("user_id, payment_account_id, upi_id_used, merchant_name_used, account_version_used")
+      .eq("order_id", data.orderId)
+      .maybeSingle();
+    if (!p || p.user_id !== userId) throw new Error("Forbidden");
+
+    if (p.payment_account_id) {
+      const { data: acc } = await supabase
+        .from("payment_accounts")
+        .select("id, merchant_name, upi_id, qr_image_url, status, version")
+        .eq("id", p.payment_account_id)
+        .maybeSingle();
+      if (acc) {
+        return {
+          source: "account" as const,
+          merchant_name: acc.merchant_name,
+          upi_id: acc.upi_id,
+          qr_image_url: acc.qr_image_url as string | null,
+          maintenance: acc.status === "maintenance" || acc.status === "inactive",
+          version: acc.version,
+        };
+      }
+    }
+    return null;
   });
 
 export const getMyPayment = createServerFn({ method: "GET" })
