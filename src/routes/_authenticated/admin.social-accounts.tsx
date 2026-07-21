@@ -56,6 +56,21 @@ function SocialAccountsPage() {
   const [results, setResults] = useState<Record<string, TestResult>>({});
   const runTestOne = useServerFn(testPublishAccount);
   const runTestAll = useServerFn(testPublishAllAccounts);
+  const runListLiOrgs = useServerFn(listLinkedInOrgs);
+  const runSetLiAuthor = useServerFn(setLinkedInDefaultAuthor);
+  const runTestLiAuthor = useServerFn(testPublishLinkedInAuthor);
+
+  type LiOrg = { id: string; urn: string; name: string; vanityName: string | null; logoUrn: string | null; role: string; state: string };
+  type LiPickerState = {
+    loading: boolean;
+    person: { urn: string; name: string } | null;
+    orgs: LiOrg[];
+    defaultUrn: string | null;
+    reconnectRequired: boolean;
+    error: string | null;
+    open: boolean;
+  };
+  const [liPicker, setLiPicker] = useState<Record<string, LiPickerState>>({});
 
   const load = useCallback(async () => {
     setLoading(true);
