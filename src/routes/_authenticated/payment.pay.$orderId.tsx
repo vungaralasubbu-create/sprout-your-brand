@@ -230,17 +230,17 @@ function PayPage() {
                 QR code will appear here
               </div>
             )}
-            {settingsQ.data?.upi_id ? (
+            {upiId ? (
               <div className="text-center text-sm">
                 UPI ID:{" "}
                 <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
-                  {settingsQ.data.upi_id}
+                  {upiId}
                 </span>
               </div>
             ) : null}
-            {settingsQ.data?.merchant_name ? (
+            {merchantName ? (
               <div className="text-xs text-muted-foreground">
-                Payee: {settingsQ.data.merchant_name}
+                Payee: {merchantName}
               </div>
             ) : null}
           </div>
