@@ -80,15 +80,20 @@ const linkedin: PlatformConnector = {
     if (!i.body?.trim() && !i.mediaUrls[0]) issues.push({ code: "empty", message: "LinkedIn post needs text or an image", fatal: true });
     return issues;
   },
-  publish: (i) => edgePublish("publish-linkedin", i.ownerId, {
-    account_id: i.accountId,
-    message: buildCaption(i, { maxLen: 3000 }),
-    image_url: i.mediaUrls[0],
-    // Optional per-request author override (Company Page vs Personal).
-    // When omitted, the edge function falls back to the account's saved default.
-    author_urn: (i.metadata.author_urn as string | undefined) ?? undefined,
-    author_kind: (i.metadata.author_kind as "person" | "organization" | undefined) ?? undefined,
-  }),
+  publish: (i) => {
+    if (!isLinkedInPublishingEnabled()) {
+      return Promise.resolve({ ok: false, errorCode: "linkedin_publishing_disabled", errorMessage: LINKEDIN_PUBLISHING_DISABLED_MESSAGE, retryable: false } as PublishResult);
+    }
+    return edgePublish("publish-linkedin", i.ownerId, {
+      account_id: i.accountId,
+      message: buildCaption(i, { maxLen: 3000 }),
+      image_url: i.mediaUrls[0],
+      // Optional per-request author override (Company Page vs Personal).
+      // When omitted, the edge function falls back to the account's saved default.
+      author_urn: (i.metadata.author_urn as string | undefined) ?? undefined,
+      author_kind: (i.metadata.author_kind as "person" | "organization" | undefined) ?? undefined,
+    });
+  },
 };
 
 const x: PlatformConnector = {
