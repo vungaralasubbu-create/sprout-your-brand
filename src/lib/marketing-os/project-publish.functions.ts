@@ -505,3 +505,54 @@ export const schedulePosts = createServerFn({ method: "POST" })
     await writePostStates(supabase, data.projectId, patch);
     return { created: ins?.length ?? 0, indexes: data.indexes, scheduled_at: data.scheduled_at };
   });
+
+/* ------------------- REGENERATE (per post) ------------------- */
+
+export const regeneratePost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({
+    projectId: z.string().uuid(),
+    index: z.number().int().nonnegative(),
+    instructions: z.string().max(500).optional(),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const project = await readProjectResult(supabase, userId, data.projectId);
+    const content: Any[] = Array.isArray(project.result?.content) ? project.result.content : [];
+    const current = content[data.index];
+    if (!current) throw new Error("Post not found");
+    const brief = project.result?.brief ?? {};
+
+    const { aiChat } = await import("@/lib/ai/router.server");
+    const res = await aiChat({
+      messages: [{
+        role: "user",
+        content: `Rewrite this social post to be fresh and higher-performing. Keep the same platform (${current.platform ?? "social"}). Respond as JSON: { hook, body, cta, hashtags: [] }. ${data.instructions ? `Extra guidance: ${data.instructions}. ` : ""}Brief: ${JSON.stringify(brief)}. Current post: ${JSON.stringify({ hook: current.hook, body: current.body, cta: current.cta, hashtags: current.hashtags })}`,
+      }],
+      responseFormat: "json",
+      temperature: 0.8,
+      maxTokens: 700,
+    });
+    const parsed = (res && typeof res === "object" ? res : {}) as Record<string, Any>;
+
+    const { data: cur } = await supabase.from("marketing_projects").select("result").eq("id", data.projectId).maybeSingle();
+    const result: Record<string, Any> = { ...((cur?.result ?? {}) as Record<string, Any>) };
+    const list: Any[] = Array.isArray(result.content) ? [...result.content] : [];
+    list[data.index] = {
+      ...(list[data.index] ?? {}),
+      hook: parsed.hook ?? list[data.index]?.hook,
+      body: parsed.body ?? list[data.index]?.body,
+      cta: parsed.cta ?? list[data.index]?.cta,
+      hashtags: Array.isArray(parsed.hashtags) ? parsed.hashtags : list[data.index]?.hashtags,
+    };
+    result.content = list;
+    const post_states = { ...(result.post_states ?? {}) };
+    post_states[String(data.index)] = {
+      ...(post_states[String(data.index)] ?? {}),
+      state: "draft",
+      last_action_at: new Date().toISOString(),
+    };
+    result.post_states = post_states;
+    await supabase.from("marketing_projects").update({ result }).eq("id", data.projectId);
+    return { ok: true, post: list[data.index] };
+  });
