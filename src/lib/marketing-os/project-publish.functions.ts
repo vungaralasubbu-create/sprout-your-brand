@@ -533,13 +533,13 @@ export const regeneratePost = createServerFn({ method: "POST" })
       temperature: 0.8,
       maxTokens: 700,
     });
-    const parsed = (typeof res === "object" ? res : {}) as Any;
+    const parsed = (res && typeof res === "object" ? res : {}) as Record<string, Any>;
 
     const { data: cur } = await supabase.from("marketing_projects").select("result").eq("id", data.projectId).maybeSingle();
-    const result: Any = { ...(cur?.result ?? {}) };
+    const result: Record<string, Any> = { ...((cur?.result ?? {}) as Record<string, Any>) };
     const list: Any[] = Array.isArray(result.content) ? [...result.content] : [];
     list[data.index] = {
-      ...list[data.index],
+      ...(list[data.index] ?? {}),
       hook: parsed.hook ?? list[data.index]?.hook,
       body: parsed.body ?? list[data.index]?.body,
       cta: parsed.cta ?? list[data.index]?.cta,
