@@ -419,15 +419,33 @@ type PostState = {
 };
 
 async function readProjectResult(supabase: Any, userId: string, projectId: string) {
+  // We used to `select("... , result")` here, which pulled the multi-MB
+  // JSONB blob (posters store 1.5MB base64 per image). That was the
+  // dominant contributor to statement_timeout on Publish Now. Fetch only
+  // the two JSON sub-paths we actually need to build publishing_jobs rows.
+  const t0 = Date.now();
   const { data: project, error } = await supabase
     .from("marketing_projects")
-    .select("id, created_by, campaign_id, name, result")
+    .select("id, created_by, campaign_id, name, result_content:result->content, result_posters:result->posters")
     .eq("id", projectId)
     .eq("created_by", userId)
     .maybeSingle();
+  console.log(`[publish.readProjectResult] in ${Date.now() - t0}ms err=${error?.message ?? "-"}`);
   if (error || !project) throw new Error("Project not found");
-  return project as Any;
+  // Re-shape so downstream code that reads `project.result.content` /
+  // `project.result.posters` keeps working unchanged.
+  return {
+    id: (project as Any).id,
+    created_by: (project as Any).created_by,
+    campaign_id: (project as Any).campaign_id,
+    name: (project as Any).name,
+    result: {
+      content: (project as Any).result_content ?? [],
+      posters: (project as Any).result_posters ?? [],
+    },
+  } as Any;
 }
+
 
 async function writePostStates(supabase: Any, projectId: string, states: Record<string, PostState>) {
   // Persist per-post state to the dedicated `post_states` column so we no
