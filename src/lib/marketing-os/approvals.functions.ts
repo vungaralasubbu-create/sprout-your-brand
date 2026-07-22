@@ -4,7 +4,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { callLovableAiJson } from "@/lib/ai-gateway.server";
 import { z } from "zod";
-import { syncProjectToApprovalQueue } from "./approval-sync.server";
+// NOTE: approval-sync.server is dynamically imported inside handlers only.
+// See note in projects.functions.ts — static .server.* imports from a
+// client-reachable *.functions.ts silently break every server fn here.
 
 // ---- Marketing Project → Approval Queue sync (idempotent) ----
 export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
