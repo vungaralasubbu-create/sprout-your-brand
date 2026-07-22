@@ -24,6 +24,57 @@ export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
     return summary;
   });
 
+// Back-fill: sync every marketing_project the caller owns that already has
+// generated assets. Idempotent — existing approval rows are updated in place
+// and approved/scheduled/published rows are never overwritten. Safe to run on
+// every Approval Center mount.
+export const syncMyMarketingProjectApprovals = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const sb: any = context.supabase; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const { data: projects, error } = await sb
+      .from("marketing_projects")
+      .select("id, status, result, updated_at")
+      .eq("created_by", context.userId)
+      .order("updated_at", { ascending: false })
+      .limit(50);
+    if (error) throw new Error(error.message);
+    let totalInserted = 0;
+    let totalUpdated = 0;
+    let totalSkipped = 0;
+    let projectsTouched = 0;
+    const failures: Array<{ project_id: string; error: string }> = [];
+    for (const p of (projects ?? []) as Array<{ id: string; result: unknown }>) {
+      const r: any = p.result ?? {}; // eslint-disable-line @typescript-eslint/no-explicit-any
+      const hasAssets =
+        (Array.isArray(r.content) && r.content.length > 0) ||
+        (Array.isArray(r.posters) && r.posters.length > 0) ||
+        (Array.isArray(r.emails) && r.emails.length > 0) ||
+        (r.landing && typeof r.landing === "object") ||
+        (r.blog && typeof r.blog === "object");
+      if (!hasAssets) continue;
+      try {
+        const s = await syncProjectToApprovalQueue(sb, context.userId, p.id);
+        totalInserted += s.inserted;
+        totalUpdated += s.updated;
+        totalSkipped += s.skipped;
+        projectsTouched += 1;
+      } catch (e: any) {
+        failures.push({ project_id: p.id, error: e?.message ?? String(e) });
+      }
+    }
+    console.log(
+      `[approval.sync.bulk] user=${context.userId} projects=${projectsTouched} inserted=${totalInserted} updated=${totalUpdated} skipped=${totalSkipped} failures=${failures.length}`,
+    );
+    return {
+      projects: projectsTouched,
+      inserted: totalInserted,
+      updated: totalUpdated,
+      skipped: totalSkipped,
+      failures,
+    };
+  });
+
 const StatusEnum = z.enum(["draft","review","approved","scheduled","published","rejected","failed","archived"]);
 export type ApprovalStatus = z.infer<typeof StatusEnum>;
 
