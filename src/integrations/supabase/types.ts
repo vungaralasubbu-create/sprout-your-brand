@@ -8559,6 +8559,126 @@ export type Database = {
           },
         ]
       }
+      ci_funnel_events: {
+        Row: {
+          campaign: string | null
+          channel: string | null
+          entity_id: string | null
+          id: number
+          lead_id: string | null
+          medium: string | null
+          metadata: Json
+          occurred_at: string
+          page_path: string | null
+          revenue_cents: number
+          session_id: string
+          source: string | null
+          stage: string
+          user_id: string | null
+        }
+        Insert: {
+          campaign?: string | null
+          channel?: string | null
+          entity_id?: string | null
+          id?: number
+          lead_id?: string | null
+          medium?: string | null
+          metadata?: Json
+          occurred_at?: string
+          page_path?: string | null
+          revenue_cents?: number
+          session_id: string
+          source?: string | null
+          stage: string
+          user_id?: string | null
+        }
+        Update: {
+          campaign?: string | null
+          channel?: string | null
+          entity_id?: string | null
+          id?: number
+          lead_id?: string | null
+          medium?: string | null
+          metadata?: Json
+          occurred_at?: string
+          page_path?: string | null
+          revenue_cents?: number
+          session_id?: string
+          source?: string | null
+          stage?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      ci_sessions: {
+        Row: {
+          country: string | null
+          created_at: string
+          device: string | null
+          first_campaign: string | null
+          first_channel: string | null
+          first_landing_path: string | null
+          first_medium: string | null
+          first_referrer: string | null
+          first_seen_at: string
+          first_source: string | null
+          last_campaign: string | null
+          last_channel: string | null
+          last_medium: string | null
+          last_referrer: string | null
+          last_seen_at: string
+          last_source: string | null
+          metadata: Json
+          session_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          device?: string | null
+          first_campaign?: string | null
+          first_channel?: string | null
+          first_landing_path?: string | null
+          first_medium?: string | null
+          first_referrer?: string | null
+          first_seen_at?: string
+          first_source?: string | null
+          last_campaign?: string | null
+          last_channel?: string | null
+          last_medium?: string | null
+          last_referrer?: string | null
+          last_seen_at?: string
+          last_source?: string | null
+          metadata?: Json
+          session_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          device?: string | null
+          first_campaign?: string | null
+          first_channel?: string | null
+          first_landing_path?: string | null
+          first_medium?: string | null
+          first_referrer?: string | null
+          first_seen_at?: string
+          first_source?: string | null
+          last_campaign?: string | null
+          last_channel?: string | null
+          last_medium?: string | null
+          last_referrer?: string | null
+          last_seen_at?: string
+          last_source?: string | null
+          metadata?: Json
+          session_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       client_ai_profiles: {
         Row: {
           ai_name: string | null
