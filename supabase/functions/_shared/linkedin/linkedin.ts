@@ -338,6 +338,12 @@ export async function fetchAdminOrganizations(
     },
   });
   const json = await res.json().catch(() => ({}));
+  console.info("LinkedIn organizations raw response", {
+    endpoint: url,
+    status: res.status,
+    ok: res.ok,
+    body: json,
+  });
   if (!res.ok) {
     const msg = `LinkedIn organizations fetch failed: ${res.status} ${JSON.stringify(json)}`;
     if (res.status === 401 || res.status === 403) {
