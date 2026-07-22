@@ -23,6 +23,14 @@ import { nextFireAt } from "./scheduler.server";
 const platformEnum = z.enum(SOC_PLATFORMS as readonly [SocPlatform, ...SocPlatform[]]);
 const postTypeEnum = z.enum(SOC_POST_TYPES as readonly [SocPostType, ...SocPostType[]]);
 
+async function canManagePlatformSocialAccounts(supabase: any, userId: string): Promise<boolean> {
+  const [{ data: isSuper }, { data: isAdmin }] = await Promise.all([
+    supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
+    supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+  ]);
+  return !!isSuper || !!isAdmin;
+}
+
 // -------------------- Accounts --------------------
 
 const connectAccountSchema = z.object({
@@ -65,9 +73,14 @@ export const connectSocialAccount = createServerFn({ method: "POST" })
 export const listSocialAccounts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const canManageAll = await canManagePlatformSocialAccounts(context.supabase as any, context.userId);
+    const db = canManageAll
+      ? (await import("@/integrations/supabase/client.server")).supabaseAdmin
+      : context.supabase;
+    const { data, error } = await (db as any)
       .from("soc_accounts")
-      .select("id, platform, account_name, organization, connection_status, webhook_status, token_expires_at, brand_id, last_synced_at, created_at")
+      .select("id, owner_id, platform, account_name, account_external_id, organization, connection_status, webhook_status, token_expires_at, refresh_token_ciphertext, brand_id, metadata, last_synced_at, created_at")
+      .in("platform", ["facebook", "instagram", "linkedin", "x"])
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];

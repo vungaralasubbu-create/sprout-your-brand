@@ -11,6 +11,21 @@ type Any = any;
 const StatusEnum = z.enum(["draft","approved","queued","publishing","published","failed","cancelled","retrying","skipped"]);
 const ModeEnum = z.enum(["publish_now","schedule","recurring","evergreen","campaign"]);
 
+async function canManagePlatformPublishing(supabase: Any, userId: string): Promise<boolean> {
+  const [{ data: isSuper }, { data: isAdmin }] = await Promise.all([
+    supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
+    supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+  ]);
+  return !!isSuper || !!isAdmin;
+}
+
+async function getPublishingReadClient(supabase: Any, userId: string): Promise<{ db: Any; canManageAll: boolean }> {
+  const canManageAll = await canManagePlatformPublishing(supabase, userId);
+  if (!canManageAll) return { db: supabase, canManageAll };
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  return { db: supabaseAdmin as Any, canManageAll };
+}
+
 /* ------------------- LIST + STATS ------------------- */
 
 const ListSchema = z.object({
@@ -48,14 +63,21 @@ export const getPublishingStats = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const start = new Date(); start.setHours(0,0,0,0);
     const weekEnd = new Date(start); weekEnd.setDate(start.getDate() + 7);
+    const { db, canManageAll } = await getPublishingReadClient(context.supabase as Any, context.userId);
+    let accQ = db.from("soc_accounts").select("platform, connection_status");
+    let jobQ = db.from("publishing_jobs").select("id, status, scheduled_at, published_at");
+    if (!canManageAll) {
+      accQ = accQ.eq("owner_id", context.userId);
+      jobQ = jobQ.eq("owner_id", context.userId);
+    }
     const [accs, jobs] = await Promise.all([
-      context.supabase.from("soc_accounts").select("platform, connection_status").eq("owner_id", context.userId),
-      context.supabase.from("publishing_jobs").select("id, status, scheduled_at, published_at").eq("owner_id", context.userId),
+      accQ,
+      jobQ,
     ]);
     const j = (jobs.data ?? []) as Any[];
     const c = (s: string) => j.filter((r) => r.status === s).length;
     return {
-      connectedAccounts: (accs.data ?? []).filter((a) => a.connection_status === "connected").length,
+      connectedAccounts: (accs.data ?? []).filter((a: Any) => a.connection_status === "connected").length,
       pending: c("approved"),
       scheduled: c("queued") + c("retrying"),
       publishing: c("publishing"),
@@ -276,12 +298,30 @@ export const listPublishingNotifications = createServerFn({ method: "POST" })
 export const listConnectedAccounts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
+    const { db, canManageAll } = await getPublishingReadClient(context.supabase as Any, context.userId);
+    let q = db
       .from("soc_accounts")
-      .select("id, platform, account_name, connection_status, can_post, brand_id, token_expires_at")
-      .eq("owner_id", context.userId).eq("connection_status", "connected");
+      .select("id, owner_id, platform, account_name, connection_status, can_post, brand_id, token_expires_at")
+      .eq("connection_status", "connected");
+    if (!canManageAll) q = q.eq("owner_id", context.userId);
+    const { data, error } = await q;
     if (error) throw new Error(error.message);
     return { accounts: data ?? [] };
+  });
+
+export const listManagedSocialAccounts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { db, canManageAll } = await getPublishingReadClient(context.supabase as Any, context.userId);
+    let q = db
+      .from("soc_accounts")
+      .select("id, owner_id, platform, account_name, account_external_id, connection_status, token_expires_at, last_synced_at, metadata, refresh_token_ciphertext")
+      .in("platform", ["facebook", "instagram", "linkedin", "x"])
+      .order("platform", { ascending: true });
+    if (!canManageAll) q = q.eq("owner_id", context.userId);
+    const { data, error } = await q;
+    if (error) throw new Error(error.message);
+    return data ?? [];
   });
 
 export const listApprovedForPublishing = createServerFn({ method: "GET" })
@@ -352,12 +392,14 @@ async function runTestPublishForAccount(
   message: string,
   mediaUrls?: string[],
 ): Promise<Any> {
-  const { data: acc, error: aerr } = await supabase
+  const { db, canManageAll } = await getPublishingReadClient(supabase, userId);
+  let accountQuery = db
     .from("soc_accounts")
-    .select("id, platform, account_name, connection_status")
+    .select("id, owner_id, platform, account_name, connection_status")
     .eq("id", accountId)
-    .eq("owner_id", userId)
     .maybeSingle();
+  if (!canManageAll) accountQuery = accountQuery.eq("owner_id", userId);
+  const { data: acc, error: aerr } = await accountQuery;
   if (aerr) throw new Error(aerr.message);
   if (!acc) throw new Error("Account not found");
   const a = acc as Any;
@@ -371,7 +413,7 @@ async function runTestPublishForAccount(
     : []);
 
   const row = {
-    owner_id: userId,
+    owner_id: a.owner_id ?? userId,
     created_by: userId,
     platform,
     account_id: a.id,
@@ -391,7 +433,7 @@ async function runTestPublishForAccount(
       metadata: { source: "social-accounts.test-publish" },
     },
   };
-  const { data: ins, error: ie } = await supabase
+  const { data: ins, error: ie } = await db
     .from("publishing_jobs")
     .insert(row as Any)
     .select("id")
@@ -402,7 +444,7 @@ async function runTestPublishForAccount(
   const { runPublisherWorker } = await import("./publisher-worker.server");
   await runPublisherWorker({ maxJobs: 1, jobId });
 
-  const { data: final } = await supabase
+  const { data: final } = await db
     .from("publishing_jobs")
     .select("id, status, platform, account_id, account_label, platform_post_id, platform_url, error_code, error_message, response_payload, published_at")
     .eq("id", jobId)
@@ -447,11 +489,13 @@ export const testPublishAllAccounts = createServerFn({ method: "POST" })
   }).parse(raw ?? {}))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: accs, error } = await supabase
+    const { db, canManageAll } = await getPublishingReadClient(supabase as Any, userId);
+    let q = db
       .from("soc_accounts")
       .select("id, platform, account_name")
-      .eq("owner_id", userId)
       .eq("connection_status", "connected");
+    if (!canManageAll) q = q.eq("owner_id", userId);
+    const { data: accs, error } = await q;
     if (error) throw new Error(error.message);
     const list = ((accs ?? []) as Any[]);
     if (!list.length) return { total: 0, results: [] as Any[] };
@@ -519,17 +563,19 @@ export const listLinkedInOrgs = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => ListOrgsSchema.parse(raw))
   .handler(async ({ data, context }) => {
     // Verify the caller owns this account before hitting LinkedIn.
-    const { data: acc, error } = await context.supabase
+    const { db, canManageAll } = await getPublishingReadClient(context.supabase as Any, context.userId);
+    let q = db
       .from("soc_accounts")
-      .select("id, platform")
+      .select("id, owner_id, platform")
       .eq("id", data.account_id)
-      .eq("owner_id", context.userId)
       .eq("platform", "linkedin")
       .maybeSingle();
+    if (!canManageAll) q = q.eq("owner_id", context.userId);
+    const { data: acc, error } = await q;
     if (error) throw new Error(error.message);
     if (!acc) throw new Error("LinkedIn account not found");
 
-    const { status, json } = await invokeEdgeAsUser("linkedin-orgs", context.userId, {
+    const { status, json } = await invokeEdgeAsUser("linkedin-orgs", (acc as Any).owner_id ?? context.userId, {
       account_id: data.account_id,
     });
     if (status >= 400) throw new Error((json as Any)?.error ?? `linkedin-orgs failed (${status})`);
@@ -563,13 +609,15 @@ export const setLinkedInDefaultAuthor = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => SetAuthorSchema.parse(raw))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: acc, error } = await supabase
+    const { db, canManageAll } = await getPublishingReadClient(supabase as Any, userId);
+    let q = db
       .from("soc_accounts")
       .select("id, metadata")
       .eq("id", data.account_id)
-      .eq("owner_id", userId)
       .eq("platform", "linkedin")
       .maybeSingle();
+    if (!canManageAll) q = q.eq("owner_id", userId);
+    const { data: acc, error } = await q;
     if (error) throw new Error(error.message);
     if (!acc) throw new Error("LinkedIn account not found");
     const md = ((acc as Any).metadata ?? {}) as Record<string, unknown>;
@@ -580,11 +628,10 @@ export const setLinkedInDefaultAuthor = createServerFn({ method: "POST" })
       default_author_name: data.author_name,
       default_author_updated_at: new Date().toISOString(),
     };
-    const { error: uerr } = await (supabase as Any)
+    const { error: uerr } = await (db as Any)
       .from("soc_accounts")
       .update({ metadata: nextMd })
-      .eq("id", data.account_id)
-      .eq("owner_id", userId);
+      .eq("id", data.account_id);
     if (uerr) throw new Error(uerr.message);
     return { ok: true, default: { urn: data.author_urn, kind: data.author_kind, name: data.author_name } };
   });
@@ -606,13 +653,15 @@ export const testPublishLinkedInAuthor = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => TestOrgSchema.parse(raw))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: acc, error } = await supabase
+    const { db, canManageAll } = await getPublishingReadClient(supabase as Any, userId);
+    let q = db
       .from("soc_accounts")
-      .select("id, platform, account_name, connection_status, metadata")
+      .select("id, owner_id, platform, account_name, connection_status, metadata")
       .eq("id", data.account_id)
-      .eq("owner_id", userId)
       .eq("platform", "linkedin")
       .maybeSingle();
+    if (!canManageAll) q = q.eq("owner_id", userId);
+    const { data: acc, error } = await q;
     if (error) throw new Error(error.message);
     if (!acc) throw new Error("LinkedIn account not found");
     if ((acc as Any).connection_status !== "connected") {
@@ -621,7 +670,7 @@ export const testPublishLinkedInAuthor = createServerFn({ method: "POST" })
 
     const message = data.message ?? "Testing Glintr AI Publishing to LinkedIn Company Page 🚀";
     const row = {
-      owner_id: userId,
+      owner_id: (acc as Any).owner_id ?? userId,
       created_by: userId,
       platform: "linkedin",
       account_id: (acc as Any).id,
@@ -642,7 +691,7 @@ export const testPublishLinkedInAuthor = createServerFn({ method: "POST" })
         metadata: { source: "social-accounts.test-linkedin", author_urn: data.author_urn ?? null },
       },
     };
-    const { data: ins, error: ie } = await (supabase as Any)
+    const { data: ins, error: ie } = await (db as Any)
       .from("publishing_jobs")
       .insert(row as Any)
       .select("id")
@@ -653,7 +702,7 @@ export const testPublishLinkedInAuthor = createServerFn({ method: "POST" })
     const { runPublisherWorker } = await import("./publisher-worker.server");
     await runPublisherWorker({ maxJobs: 1, jobId });
 
-    const { data: final } = await supabase
+    const { data: final } = await db
       .from("publishing_jobs")
       .select("id, status, platform_post_id, platform_url, error_code, error_message, response_payload, published_at")
       .eq("id", jobId)

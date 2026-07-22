@@ -9,6 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
+  listSocialAccounts,
+} from "@/lib/social-automation/social.functions";
+import {
   testPublishAccount,
   testPublishAllAccounts,
   listLinkedInOrgs,
@@ -54,6 +57,7 @@ function SocialAccountsPage() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, TestResult>>({});
+  const runListAccounts = useServerFn(listSocialAccounts);
   const runTestOne = useServerFn(testPublishAccount);
   const runTestAll = useServerFn(testPublishAllAccounts);
   const runListLiOrgs = useServerFn(listLinkedInOrgs);
@@ -76,23 +80,16 @@ function SocialAccountsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data: sess } = await supabase.auth.getUser();
-    const uid = sess.user?.id;
-    if (!uid) {
+    try {
+      const data = await runListAccounts();
+      setAccounts((data ?? []) as Account[]);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to load connected accounts");
       setAccounts([]);
+    } finally {
       setLoading(false);
-      return;
     }
-    const { data, error } = await supabase
-      .from("soc_accounts")
-      .select("id, platform, account_name, account_external_id, connection_status, token_expires_at, last_synced_at, metadata, refresh_token_ciphertext")
-      .eq("owner_id", uid)
-      .in("platform", ["facebook", "instagram", "linkedin", "x"])
-      .order("platform", { ascending: true });
-    if (error) toast.error(error.message);
-    setAccounts((data ?? []) as Account[]);
-    setLoading(false);
-  }, []);
+  }, [runListAccounts]);
 
   useEffect(() => {
     void load();
