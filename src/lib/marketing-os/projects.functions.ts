@@ -453,29 +453,50 @@ export const runProjectStep = createServerFn({ method: "POST" })
         }
         case "posters": {
           const brief = result.brief || {};
+          // Copy + artwork are generated separately so the final rendered
+          // poster has crisp, editable text overlays (drawn client-side)
+          // and the image model only produces the *background artwork*.
           const raw = await aiJson(
             brandSystem,
-            `Generate 4 poster concepts. Respond as JSON: { posters: [ { title, concept, style, dominant_colors: [], layout_note } ] }. Brief: ${JSON.stringify(brief)}.`,
+            `Generate 4 poster designs for the campaign. For each poster provide fully-formed copy plus a description of a text-free background artwork the image model should paint.
+
+Respond as JSON:
+{ posters: [ {
+    title, concept, style,
+    headline,           // <= 6 words, punchy hero line
+    subtitle,           // <= 12 words, supporting line
+    cta,                // <= 4 words, call to action button label
+    description,        // <= 20 words, small footer / value prop
+    dominant_colors: [], // 2-3 hex colors that fit the brand
+    text_color,         // hex, must be readable over dominant_colors
+    accent_color,       // hex, used for CTA button
+    layout,             // one of: centered, top_left, bottom_bar, split
+    background_prompt   // vivid description of an ABSTRACT / photographic
+                        // background artwork. MUST NOT contain any words,
+                        // letters, numbers, logos, or typography.
+} ] }
+
+Brief: ${JSON.stringify(brief)}.`,
           );
           const concepts = Array.isArray(raw.posters) ? raw.posters.slice(0, 4) : [];
-          // Additive: actually generate images for each concept via the shared
-          // image gateway. Brand context is prepended by generateImageBase64's
-          // caller; we include the concept + brand cues inline for fidelity.
-          // Failures per poster are non-fatal — the concept still renders.
           const rendered = await Promise.allSettled(
             concepts.map(async (c: any) => {
               const brandLine = brandSystem
-                ? `Follow this brand system strictly:\n${brandSystem}\n\n`
+                ? `Follow this brand system strictly for palette and mood:\n${brandSystem}\n\n`
                 : "";
               const colors = Array.isArray(c?.dominant_colors) && c.dominant_colors.length
-                ? ` Use these brand colors: ${c.dominant_colors.join(", ")}.`
+                ? ` Palette: ${c.dominant_colors.join(", ")}.`
                 : "";
-              const layout = c?.layout_note ? ` Layout: ${c.layout_note}.` : "";
               const style = c?.style ? ` Style: ${c.style}.` : "";
+              const backgroundPrompt = c?.background_prompt ?? c?.concept ?? c?.title ?? "";
+              // Hard-negative on text so the image model returns pure artwork.
               const prompt =
-                `${brandLine}Design a high-quality social media poster titled "${c?.title ?? "Untitled"}".` +
-                ` Concept: ${c?.concept ?? ""}.${style}${colors}${layout}` +
-                ` No text placeholders. Production-ready. Square 1:1 composition.`;
+                `${brandLine}Design an ABSTRACT background artwork for a social media poster.` +
+                ` ${backgroundPrompt}.${style}${colors}` +
+                ` Square 1:1 composition, production-quality, cinematic lighting.` +
+                ` STRICT: absolutely NO text, NO letters, NO numbers, NO logos,` +
+                ` NO typography, NO watermarks, NO captions. Pure artwork only —` +
+                ` all copy will be overlaid separately by the design system.`;
               try {
                 const b64 = await generateImageBase64(prompt, {
                   size: "1024x1024",
@@ -492,6 +513,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
           );
           break;
         }
+
         case "landing": {
           const brief = result.brief || {};
           result.landing = await aiJson(
