@@ -474,7 +474,10 @@ function ProjectPublishToolbar({ projectId }: { projectId: string }) {
               <Input id="pp-tz" value={tz} onChange={(e) => setTz(e.target.value)} placeholder="e.g. Asia/Kolkata" />
             </div>
             <p className="text-xs text-muted-foreground">
-              Posts publish to every connected account (Instagram, Facebook, LinkedIn, X).
+              Posts publish to every connected account (Instagram, Facebook, X).
+            </p>
+            <p className="text-[11px] text-amber-600 dark:text-amber-500">
+              LinkedIn: Temporarily Disabled – Waiting for LinkedIn Company Page API approval.
             </p>
           </div>
           <DialogFooter>
@@ -686,7 +689,10 @@ function PostReviewList({ projectId, content, posters, postStates, onChanged }: 
               <Input id="post-when" type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} />
             </div>
             <p className="text-xs text-muted-foreground">
-              Enqueues to every connected account (Instagram, Facebook, LinkedIn, X).
+              Enqueues to every connected account (Instagram, Facebook, X).
+            </p>
+            <p className="text-[11px] text-amber-600 dark:text-amber-500">
+              LinkedIn: Temporarily Disabled – Waiting for LinkedIn Company Page API approval.
             </p>
           </div>
           <DialogFooter>
