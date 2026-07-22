@@ -82,6 +82,7 @@ function ApprovalCenter() {
   const bulkCamp = useServerFn(bulkMoveCampaign);
   const bulkPlat = useServerFn(bulkChangePlatform);
   const seed = useServerFn(seedApprovalDemo);
+  const syncMktProjects = useServerFn(syncMyMarketingProjectApprovals);
   const qc = useQueryClient();
 
   const [view, setView] = useState<"kanban" | "list">("kanban");
