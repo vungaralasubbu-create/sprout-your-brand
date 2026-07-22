@@ -15,7 +15,11 @@ import { z } from "zod";
 import { aiChat } from "@/lib/ai/router.server";
 import { buildBrandSystemPrompt } from "@/lib/marketing-os/brand-context.server";
 import { generateImageBase64, isImageProviderAvailable } from "@/lib/ai/image.server";
-import { syncProjectToApprovalQueue } from "@/lib/marketing-os/approval-sync.server";
+// NOTE: approval-sync.server is dynamically imported inside handlers only.
+// Static import from a client-reachable *.functions.ts leaks a .server.*
+// module into the browser bundle guard and breaks the module load, which
+// silently kills every server fn exported here (Planner submit, image gen,
+// project pipeline, etc.). Do not hoist this back to a top-level import.
 import {
   designBrief as cdDesignBrief,
   proposeConcepts as cdProposeConcepts,
