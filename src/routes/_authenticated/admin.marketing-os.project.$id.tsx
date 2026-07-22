@@ -885,3 +885,44 @@ function ContentEditorDialog({
     </Dialog>
   );
 }
+
+function PosterGrid({ projectId, posters }: { projectId: string; posters: any[] }) {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const active = openIdx !== null ? (posters[openIdx] as PosterModel) : null;
+  return (
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {posters.map((p, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setOpenIdx(i)}
+            className="text-left rounded-2xl border border-border/60 overflow-hidden bg-card group focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <PosterCanvas poster={p as PosterModel} className="rounded-none border-b border-border/60" />
+            <div className="p-3">
+              <div className="font-medium text-sm line-clamp-1">{p.title ?? p.headline ?? "Poster"}</div>
+              <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{p.concept ?? p.subtitle}</p>
+              <div className="mt-2 flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Click to edit</span>
+              </div>
+              {p.image_error && (
+                <p className="text-[11px] text-destructive mt-1">Image: {p.image_error}</p>
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
+      {active && openIdx !== null ? (
+        <PosterEditorDialog
+          open={openIdx !== null}
+          onOpenChange={(v) => !v && setOpenIdx(null)}
+          projectId={projectId}
+          index={openIdx}
+          poster={active}
+        />
+      ) : null}
+    </>
+  );
+}
+
