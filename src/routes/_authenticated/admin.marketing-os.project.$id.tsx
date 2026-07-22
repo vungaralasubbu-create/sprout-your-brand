@@ -519,3 +519,271 @@ function ProjectPublishToolbar({ projectId }: { projectId: string }) {
     </div>
   );
 }
+
+/* ================= Per-post review list (additive) ================= */
+
+type PostStateRow = {
+  state?: "draft" | "approved" | "rejected" | "scheduled" | "publishing" | "published" | "failed";
+  scheduled_at?: string;
+  timezone?: string;
+  job_ids?: string[];
+};
+
+const POST_STATE_TONE: Record<string, "outline" | "default" | "success" | "destructive" | "muted"> = {
+  draft: "outline", approved: "default", rejected: "muted",
+  scheduled: "default", publishing: "default", published: "success", failed: "destructive",
+};
+
+function PostReviewList({ projectId, content, postStates, onChanged }: {
+  projectId: string;
+  content: any[];
+  postStates: Record<string, PostStateRow>;
+  onChanged: () => void;
+}) {
+  const approveFn = useServerFn(approvePosts);
+  const rejectFn = useServerFn(rejectPosts);
+  const publishFn = useServerFn(publishPostsNow);
+  const scheduleFn = useServerFn(schedulePosts);
+  const updateFn = useServerFn(updatePost);
+
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [busy, setBusy] = useState<string | null>(null);
+  const [scheduleFor, setScheduleFor] = useState<number[] | null>(null);
+  const [editIdx, setEditIdx] = useState<number | null>(null);
+  const [previewIdx, setPreviewIdx] = useState<number | null>(null);
+  const [when, setWhen] = useState<string>(() => {
+    const d = new Date(Date.now() + 60 * 60 * 1000);
+    d.setSeconds(0, 0);
+    return d.toISOString().slice(0, 16);
+  });
+  const [tz] = useState<string>(() => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
+
+  if (!content.length) {
+    return <Empty text="No content generated." />;
+  }
+
+  const allIdx = content.map((_, i) => i);
+  const allSelected = selected.size === content.length;
+  const toggle = (i: number) => {
+    const next = new Set(selected);
+    if (next.has(i)) next.delete(i); else next.add(i);
+    setSelected(next);
+  };
+  const selectAll = () => setSelected(allSelected ? new Set() : new Set(allIdx));
+
+  const run = async (label: string, fn: () => Promise<unknown>, ok: string) => {
+    try {
+      setBusy(label);
+      await fn();
+      toast.success(ok);
+      setSelected(new Set());
+      onChanged();
+    } catch (e) {
+      toast.error((e as Error).message ?? "Action failed");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const doBulk = (action: "approve" | "reject" | "publish", indexes: number[]) => {
+    if (!indexes.length) { toast.error("Select at least one post"); return; }
+    if (action === "approve") return run("approve", () => approveFn({ data: { projectId, indexes } }), `Approved ${indexes.length} post(s)`);
+    if (action === "reject") return run("reject", () => rejectFn({ data: { projectId, indexes } }), `Rejected ${indexes.length} post(s)`);
+    if (action === "publish") return run("publish", () => publishFn({ data: { projectId, indexes } }), `Publishing ${indexes.length} post(s)`);
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* Bulk toolbar */}
+      <div className="sticky top-0 z-10 flex flex-wrap items-center gap-2 rounded-2xl border border-border/60 bg-card/95 backdrop-blur px-3 py-2">
+        <label className="flex items-center gap-2 text-xs font-medium">
+          <Checkbox checked={allSelected} onCheckedChange={selectAll} />
+          {selected.size ? `${selected.size} selected` : "Select all"}
+        </label>
+        <div className="flex-1" />
+        <Button size="sm" variant="outline" disabled={busy !== null || !selected.size} onClick={() => doBulk("approve", [...selected])}>
+          <Check className="size-3.5 mr-1.5" /> Approve
+        </Button>
+        <Button size="sm" variant="outline" disabled={busy !== null || !selected.size} onClick={() => doBulk("reject", [...selected])}>
+          <XIcon className="size-3.5 mr-1.5" /> Reject
+        </Button>
+        <Button size="sm" variant="outline" disabled={busy !== null || !selected.size} onClick={() => setScheduleFor([...selected])}>
+          <Clock className="size-3.5 mr-1.5" /> Schedule
+        </Button>
+        <Button size="sm" disabled={busy !== null || !selected.size} onClick={() => doBulk("publish", [...selected])}>
+          {busy === "publish" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Send className="size-3.5 mr-1.5" />}
+          Publish Now
+        </Button>
+      </div>
+
+      {content.map((p, i) => {
+        const st = postStates[String(i)] ?? {};
+        const stateKey = st.state ?? "draft";
+        const tone = POST_STATE_TONE[stateKey] ?? "outline";
+        return (
+          <div key={i} className="rounded-2xl border border-border/60 p-4 bg-card">
+            <div className="flex items-start gap-3">
+              <Checkbox className="mt-1" checked={selected.has(i)} onCheckedChange={() => toggle(i)} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="uppercase text-[10px]">{p.platform ?? "post"}</Badge>
+                    <Badge variant={tone as any} className="capitalize text-[10px]">{stateKey}</Badge>
+                    {st.scheduled_at && (
+                      <span className="text-[11px] text-muted-foreground">
+                        {new Date(st.scheduled_at).toLocaleString()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-1 flex-wrap">
+                    <Button variant="ghost" size="sm" onClick={() => setPreviewIdx(i)}>Preview</Button>
+                    <Button variant="ghost" size="sm" onClick={() => setEditIdx(i)}>Edit</Button>
+                    <Button variant="ghost" size="sm" disabled={busy !== null}
+                      onClick={() => run("approve1", () => approveFn({ data: { projectId, indexes: [i] } }), "Approved")}>
+                      <Check className="size-3.5 mr-1" />Approve
+                    </Button>
+                    <Button variant="ghost" size="sm" disabled={busy !== null}
+                      onClick={() => run("reject1", () => rejectFn({ data: { projectId, indexes: [i] } }), "Rejected")}>
+                      <XIcon className="size-3.5 mr-1" />Reject
+                    </Button>
+                    <Button variant="ghost" size="sm" disabled={busy !== null} onClick={() => setScheduleFor([i])}>
+                      <Clock className="size-3.5 mr-1" />Schedule
+                    </Button>
+                    <Button size="sm" disabled={busy !== null}
+                      onClick={() => run("pub1", () => publishFn({ data: { projectId, indexes: [i] } }), "Publishing")}>
+                      <Send className="size-3.5 mr-1" />Publish Now
+                    </Button>
+                  </div>
+                </div>
+                <div className="font-semibold">{p.hook}</div>
+                <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{p.body}</p>
+                {p.cta && <div className="text-xs mt-2"><span className="font-mono uppercase tracking-widest text-muted-foreground">CTA</span> · {p.cta}</div>}
+                {Array.isArray(p.hashtags) && p.hashtags.length > 0 && (
+                  <div className="text-xs mt-2 text-muted-foreground">{p.hashtags.map((h: string) => h.startsWith("#") ? h : `#${h}`).join(" ")}</div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Schedule dialog */}
+      <Dialog open={scheduleFor !== null} onOpenChange={(o) => !o && setScheduleFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Schedule {scheduleFor?.length ?? 0} post(s)</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="post-when">Date &amp; time</Label>
+              <Input id="post-when" type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Posts will be enqueued for every connected account (Instagram, Facebook, LinkedIn, X).
+            </p>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setScheduleFor(null)}>Cancel</Button>
+            <Button disabled={busy !== null} onClick={async () => {
+              const iso = new Date(when).toISOString();
+              const indexes = scheduleFor ?? [];
+              await run("schedule", () => scheduleFn({ data: { projectId, indexes, scheduled_at: iso, timezone: tz } }), "Scheduled");
+              setScheduleFor(null);
+            }}>
+              {busy === "schedule" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Clock className="size-3.5 mr-1.5" />} Schedule
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit dialog */}
+      <EditPostDialog
+        open={editIdx !== null}
+        onClose={() => setEditIdx(null)}
+        post={editIdx !== null ? content[editIdx] : null}
+        onSave={async (edits) => {
+          if (editIdx === null) return;
+          await run("edit", () => updateFn({ data: { projectId, index: editIdx, edits } }), "Saved");
+          setEditIdx(null);
+        }}
+        busy={busy === "edit"}
+      />
+
+      {/* Preview dialog */}
+      <Dialog open={previewIdx !== null} onOpenChange={(o) => !o && setPreviewIdx(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader><DialogTitle>Post preview</DialogTitle></DialogHeader>
+          {previewIdx !== null && (
+            <div className="space-y-3">
+              <div className="font-semibold">{content[previewIdx].hook}</div>
+              <p className="text-sm whitespace-pre-wrap">{content[previewIdx].body}</p>
+              {content[previewIdx].cta && (
+                <div className="text-xs text-muted-foreground">CTA · {content[previewIdx].cta}</div>
+              )}
+              {Array.isArray(content[previewIdx].hashtags) && (
+                <div className="text-xs text-muted-foreground">
+                  {content[previewIdx].hashtags.map((h: string) => h.startsWith("#") ? h : `#${h}`).join(" ")}
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function EditPostDialog({ open, onClose, post, onSave, busy }: {
+  open: boolean;
+  onClose: () => void;
+  post: any;
+  onSave: (edits: { hook?: string; body?: string; cta?: string; hashtags?: string[] }) => void;
+  busy: boolean;
+}) {
+  const [hook, setHook] = useState("");
+  const [body, setBody] = useState("");
+  const [cta, setCta] = useState("");
+  const [tags, setTags] = useState("");
+  useEffect(() => {
+    if (open && post) {
+      setHook(String(post.hook ?? ""));
+      setBody(String(post.body ?? ""));
+      setCta(String(post.cta ?? ""));
+      setTags(Array.isArray(post.hashtags) ? post.hashtags.join(" ") : "");
+    }
+  }, [open, post]);
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader><DialogTitle>Edit post</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <div>
+            <Label>Hook</Label>
+            <Input value={hook} onChange={(e) => setHook(e.target.value)} />
+          </div>
+          <div>
+            <Label>Body</Label>
+            <Textarea rows={6} value={body} onChange={(e) => setBody(e.target.value)} />
+          </div>
+          <div>
+            <Label>CTA</Label>
+            <Input value={cta} onChange={(e) => setCta(e.target.value)} />
+          </div>
+          <div>
+            <Label>Hashtags (space-separated)</Label>
+            <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="#launch #ai" />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button disabled={busy} onClick={() => {
+            const hashtags = tags.split(/\s+/).filter(Boolean).map((h) => h.replace(/^#/, ""));
+            onSave({ hook, body, cta, hashtags });
+          }}>
+            {busy ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Save className="size-3.5 mr-1.5" />} Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
