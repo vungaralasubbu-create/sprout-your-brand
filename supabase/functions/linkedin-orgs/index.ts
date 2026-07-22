@@ -41,8 +41,18 @@ Deno.serve(async (req) => {
       default_author_urn?: string;
       default_author_kind?: "person" | "organization";
       default_author_name?: string;
+      scope?: string | null;
     };
     const personUrn = md.member_urn ?? `urn:li:person:${acc.account_external_id}`;
+
+    // Detect whether the token actually carries organization scopes. If
+    // LinkedIn didn't grant them at token exchange, the app is not yet
+    // approved for the Community Management API (Products tab in the
+    // LinkedIn Developer Portal). Once approval lands, users reconnect.
+    const grantedScopes = String(md.scope ?? "").split(/[ ,]+/).filter(Boolean);
+    const hasOrgScopes =
+      grantedScopes.includes("r_organization_admin") &&
+      grantedScopes.includes("w_organization_social");
 
     let orgs;
     try {
@@ -50,10 +60,15 @@ Deno.serve(async (req) => {
     } catch (e) {
       const msg = (e as Error).message;
       const insufficient = msg.startsWith("insufficient_scope:");
+      // approval_pending: app-level Community Management API not granted yet.
+      // reconnect_required: token needs re-issuing (e.g. after approval landed).
+      const approvalPending = insufficient && !hasOrgScopes;
       return json({
         error: msg,
-        code: insufficient ? "insufficient_scope" : "linkedin_error",
-        reconnect_required: insufficient,
+        code: approvalPending ? "approval_pending" : insufficient ? "insufficient_scope" : "linkedin_error",
+        approval_pending: approvalPending,
+        reconnect_required: insufficient && hasOrgScopes,
+        granted_scopes: grantedScopes,
         person: { urn: personUrn, name: acc.account_name ?? "Personal profile" },
         organizations: [],
         default: { urn: md.default_author_urn ?? personUrn, kind: md.default_author_kind ?? "person" },
