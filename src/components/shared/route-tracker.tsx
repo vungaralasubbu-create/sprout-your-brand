@@ -35,6 +35,10 @@ export function RouteTracker() {
     if (/^\/compare\/.+/.test(pathname)) track("comparison_opened");
     if (/consultation|book-consultation/.test(pathname)) track("consultation_clicked");
 
+    // Conversion Intelligence — fire-and-forget funnel stage
+    const funnel = inferFunnelStage(pathname);
+    if (funnel) void trackFunnel({ stage: funnel.stage, entityId: funnel.entityId, pagePath: pathname });
+
     // Skip suppressed / infra routes from Recently Viewed
     const skip =
       pathname === "/" ||
