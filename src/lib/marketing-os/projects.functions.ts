@@ -672,7 +672,26 @@ export const runProjectStep = createServerFn({ method: "POST" })
           error: null,
         })
         .eq("id", proj.id);
+
+      // ---- Auto-sync generated assets to the Approval Center (best-effort) ----
+      // Runs after every step that can add assets; never throws so pipeline
+      // continues even if the mirror fails.
+      const ASSET_STEPS = new Set(["content", "posters", "email", "landing", "save"]);
+      if (ASSET_STEPS.has(data.step)) {
+        try {
+          const summary = await syncProjectToApprovalQueue(supabase, userId, proj.id);
+          console.log(
+            `[project.step=${data.step}] approval sync project=${proj.id} inserted=${summary.inserted} updated=${summary.updated} skipped=${summary.skipped}`,
+          );
+        } catch (syncErr: any) {
+          console.error(
+            `[project.step=${data.step}] approval sync FAILED project=${proj.id}: ${syncErr?.message ?? syncErr}`,
+          );
+        }
+      }
+
       return { ok: true, progress, step: data.step };
+
     } catch (e: any) {
       const message = e?.message ?? String(e);
       if (idx >= 0) steps[idx] = { ...steps[idx], status: "error", error: message, ended_at: new Date().toISOString() };
