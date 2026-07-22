@@ -15,6 +15,16 @@ import { z } from "zod";
 import { aiChat } from "@/lib/ai/router.server";
 import { buildBrandSystemPrompt } from "@/lib/marketing-os/brand-context.server";
 import { generateImageBase64 } from "@/lib/ai/image.server";
+import {
+  designBrief as cdDesignBrief,
+  proposeConcepts as cdProposeConcepts,
+  filterAndRank as cdFilterAndRank,
+  scorePoster as cdScorePoster,
+  type CreativeConcept,
+} from "@/lib/marketing-os/creative-direction.server";
+
+const CREATIVE_SCORE_THRESHOLD = Number(process.env.POSTER_MIN_SCORE ?? 55);
+const CREATIVE_CONCEPT_COUNT = 6;
 
 export const PROJECT_STEPS = [
   { key: "understand", label: "Understanding request" },
