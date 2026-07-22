@@ -3,6 +3,7 @@
 // and UI need no code changes.
 import type { PlatformConnector, PlatformKey, PublishInput, PublishResult, ValidationIssue } from "./types";
 import { invokeEdgeAs, classifyError } from "./edge-invoke.server";
+import { isLinkedInPublishingEnabled, LINKEDIN_PUBLISHING_DISABLED_MESSAGE } from "@/lib/feature-flags";
 
 function buildCaption(i: PublishInput, opts: { maxLen: number | null; appendTags?: boolean; appendCta?: boolean } = { maxLen: null, appendTags: true, appendCta: true }) {
   const parts: string[] = [];
