@@ -6,7 +6,7 @@ import {
   listApprovalItems, getApprovalItem, changeApprovalStatus,
   bulkDeleteApprovals, bulkDuplicateApprovals, bulkMoveCampaign, bulkChangePlatform,
   updateApprovalItem, addApprovalComment, scoreApprovalItem, restoreApprovalVersion,
-  seedApprovalDemo,
+  seedApprovalDemo, syncMyMarketingProjectApprovals,
 } from "@/lib/marketing-os/approvals.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
