@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { submitLead, LeadStatuses, type LeadSource } from "@/lib/leads/client";
 import { LEAD_OPEN_EVENT, type OpenLeadFormPayload } from "@/lib/leads/open-lead-form";
 import { markPopupDismissed, markPopupShown } from "@/lib/smart-popup";
+import { trackFunnel } from "@/lib/conversion-intelligence/track";
 
 const DEFAULT_COPY: Record<
   LeadSource | "default",
