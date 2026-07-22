@@ -477,11 +477,17 @@ function ProjectCard({
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between">
-        <div className="text-xs text-muted-foreground line-clamp-1 flex-1 mr-3">{project.prompt}</div>
-        <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); onOpen(); }}>
-          Open
-        </Button>
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="text-xs text-muted-foreground line-clamp-1 flex-1">{project.prompt}</div>
+        {project.status === "completed" ? (
+          <Button size="sm" onClick={(e) => { e.stopPropagation(); onOpen(); }} className="gap-1.5">
+            <Send className="size-3.5" /> Review &amp; Publish
+          </Button>
+        ) : (
+          <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); onOpen(); }}>
+            Open
+          </Button>
+        )}
       </div>
     </motion.div>
   );
