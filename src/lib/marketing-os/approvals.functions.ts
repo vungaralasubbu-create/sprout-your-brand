@@ -15,6 +15,7 @@ export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
     z.object({ project_id: z.string().uuid() }).parse(raw),
   )
   .handler(async ({ data, context }) => {
+    const { syncProjectToApprovalQueue } = await import("./approval-sync.server");
     const summary = await syncProjectToApprovalQueue(
       context.supabase as never,
       context.userId,
