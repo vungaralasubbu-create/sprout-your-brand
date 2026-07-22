@@ -10400,6 +10400,57 @@ export type Database = {
           },
         ]
       }
+      content_authority_scores: {
+        Row: {
+          authoritativeness_score: number
+          computed_at: string
+          content_id: string
+          content_type: string
+          experience_score: number
+          expertise_score: number
+          freshness_score: number
+          id: string
+          originality_score: number
+          overall_score: number
+          signals: Json
+          trust_score: number
+          updated_at: string
+          workflow_status: string
+        }
+        Insert: {
+          authoritativeness_score?: number
+          computed_at?: string
+          content_id: string
+          content_type: string
+          experience_score?: number
+          expertise_score?: number
+          freshness_score?: number
+          id?: string
+          originality_score?: number
+          overall_score?: number
+          signals?: Json
+          trust_score?: number
+          updated_at?: string
+          workflow_status?: string
+        }
+        Update: {
+          authoritativeness_score?: number
+          computed_at?: string
+          content_id?: string
+          content_type?: string
+          experience_score?: number
+          expertise_score?: number
+          freshness_score?: number
+          id?: string
+          originality_score?: number
+          overall_score?: number
+          signals?: Json
+          trust_score?: number
+          updated_at?: string
+          workflow_status?: string
+        }
+        Relationships: []
+      }
       content_authors: {
         Row: {
           avatar_url: string | null
@@ -10476,6 +10527,113 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "content_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_citations: {
+        Row: {
+          accessed_at: string
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string | null
+          published_at: string | null
+          publisher: string | null
+          source_type: string
+          source_url: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          accessed_at?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          published_at?: string | null
+          publisher?: string | null
+          source_type?: string
+          source_url: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          accessed_at?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string | null
+          published_at?: string | null
+          publisher?: string | null
+          source_type?: string
+          source_url?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_claims: {
+        Row: {
+          citation_id: string | null
+          claim_text: string
+          claim_type: string
+          content_id: string
+          content_type: string
+          created_at: string
+          detected_at: string
+          detected_by: string
+          id: string
+          note: string | null
+          offset_end: number | null
+          offset_start: number | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          citation_id?: string | null
+          claim_text: string
+          claim_type?: string
+          content_id: string
+          content_type: string
+          created_at?: string
+          detected_at?: string
+          detected_by?: string
+          id?: string
+          note?: string | null
+          offset_end?: number | null
+          offset_start?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          citation_id?: string | null
+          claim_text?: string
+          claim_type?: string
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          detected_at?: string
+          detected_by?: string
+          id?: string
+          note?: string | null
+          offset_end?: number | null
+          offset_start?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_claims_citation_id_fkey"
+            columns: ["citation_id"]
+            isOneToOne: false
+            referencedRelation: "content_citations"
             referencedColumns: ["id"]
           },
         ]
@@ -10980,6 +11138,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      content_reviews: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string
+          from_status: string | null
+          id: string
+          note: string | null
+          reviewer_id: string | null
+          reviewer_name: string | null
+          to_status: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          reviewer_id?: string | null
+          reviewer_name?: string | null
+          to_status: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          reviewer_id?: string | null
+          reviewer_name?: string | null
+          to_status?: string
+        }
+        Relationships: []
       }
       content_revisions: {
         Row: {
