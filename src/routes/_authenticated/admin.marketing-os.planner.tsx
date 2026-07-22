@@ -125,7 +125,23 @@ function Planner() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const canGenerate = businessName.trim().length > 1 && platforms.length > 0 && goals.length > 0;
+  // Validation reads CURRENT state on every render (no stale refs, no debounce).
+  const trimmedName = businessName.trim();
+  const missing: string[] = [];
+  if (trimmedName.length < 1) missing.push("business name");
+  if (goals.length === 0) missing.push("at least one goal");
+  if (platforms.length === 0) missing.push("at least one platform");
+  const canGenerate = missing.length === 0;
+  // Super-admin debug — visible in browser console only when validation is off.
+  if (typeof window !== "undefined" && !canGenerate) {
+    // eslint-disable-next-line no-console
+    console.debug("[planner.validation]", {
+      businessName: trimmedName,
+      goals: goals.length,
+      platforms: platforms.length,
+      missing,
+    });
+  }
 
   return (
     <div className="space-y-6 max-w-6xl">
