@@ -162,39 +162,10 @@ function ProjectOverview() {
 
             <TabsContent value="images" className="mt-5">
               {posters.length === 0 ? <Empty text="No posters yet." /> :
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {posters.map((p, i) => (
-                    <div key={i} className="rounded-2xl border border-border/60 overflow-hidden bg-card group">
-                      <div className="aspect-square bg-gradient-to-br from-primary/20 via-fuchsia-500/10 to-amber-500/10 grid place-items-center relative overflow-hidden">
-                        {p.image_url ? (
-                          <img
-                            src={p.image_url}
-                            alt={p.title ?? "Generated poster"}
-                            className="absolute inset-0 h-full w-full object-cover"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <ImageIcon className="size-10 text-muted-foreground/40" />
-                        )}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition bg-black/40 grid place-items-center gap-2">
-                          <div className="flex gap-2">
-                            <Button size="sm" variant="secondary">Preview</Button>
-                            <Button size="sm" variant="secondary">Regenerate</Button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-3">
-                        <div className="font-medium text-sm">{p.title}</div>
-                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{p.concept}</p>
-                        {p.image_error && (
-                          <p className="text-[11px] text-destructive mt-1">Image: {p.image_error}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <PosterGrid projectId={id} posters={posters} />
               }
             </TabsContent>
+
 
             <TabsContent value="videos" className="mt-5">
               <Empty text="Video generation coming soon. Reuses existing AI Video Studio." />
