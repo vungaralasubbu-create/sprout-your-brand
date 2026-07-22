@@ -601,16 +601,20 @@ export const publishPostsNow = createServerFn({ method: "POST" })
       scheduledAt: now, timezone: "UTC", mode: "publish_now",
     });
     if (!rows.length) throw new Error("No selected posts to publish");
+    await materializeRowsMedia(rows, userId, data.projectId);
     const tIns = Date.now();
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id, platform, account_id, payload");
+    // Return only ids — payload/media_urls carry image references, no need to echo them back.
+    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
     console.log(`[publishPostsNow] inserted ${rows.length} publishing_jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
 
+    // Insert preserves row order, so map ids back to their source row index.
     const jobsByIdx: Record<string, string[]> = {};
-    for (const row of (ins ?? []) as Any[]) {
-      const idx = row.payload?.metadata?.post_index;
+    const insArr = (ins ?? []) as Any[];
+    for (let k = 0; k < insArr.length && k < rows.length; k++) {
+      const idx = rows[k].payload?.metadata?.post_index;
       if (typeof idx === "number") {
-        jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), row.id];
+        jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), insArr[k].id];
       }
     }
     const patch: Record<string, PostState> = {};
