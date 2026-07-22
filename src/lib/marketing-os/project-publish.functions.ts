@@ -391,7 +391,10 @@ export const scheduleProject = createServerFn({ method: "POST" })
       timezone: data.timezone,
       mode: "schedule",
     });
+    await materializeRowsMedia(rows, userId, data.projectId);
+    const tIns = Date.now();
     const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    console.log(`[scheduleProject] insert ${rows.length} jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
     await markProjectPublishState(supabase, data.projectId, {
       state: "scheduled",
