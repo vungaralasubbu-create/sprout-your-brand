@@ -171,6 +171,7 @@ export function LeadFormDialog() {
     e.preventDefault();
     if (!payload) return;
     setSubmitting(true);
+    void trackFunnel({ stage: "form_start", entityId: payload.source, metadata: { source_detail: payload.source_detail } });
     try {
       const lead = await submitLead({
         name: state.name,
@@ -184,6 +185,7 @@ export function LeadFormDialog() {
         metadata: payload.metadata,
       });
       setDone(true);
+      void trackFunnel({ stage: "form_submit", entityId: payload.source, leadId: lead.id, metadata: { source_detail: payload.source_detail } });
       payload.onSubmitted?.(lead.id);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
