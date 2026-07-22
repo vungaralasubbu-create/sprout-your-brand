@@ -155,23 +155,7 @@ function ProjectOverview() {
             </TabsContent>
 
             <TabsContent value="content" className="mt-5 space-y-3">
-              {content.length === 0 ? <Empty text="No content generated." /> :
-                content.map((p, i) => (
-                  <div key={i} className="rounded-2xl border border-border/60 p-4 bg-card">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="outline" className="uppercase text-[10px]">{p.platform ?? "post"}</Badge>
-                      <div className="flex gap-2">
-                        <Button variant="ghost" size="sm">Edit</Button>
-                        <Button variant="ghost" size="sm">Regenerate</Button>
-                        <Button size="sm">Approve</Button>
-                      </div>
-                    </div>
-                    <div className="font-semibold">{p.hook}</div>
-                    <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{p.body}</p>
-                    {p.cta && <div className="text-xs mt-2"><span className="font-mono uppercase tracking-widest text-muted-foreground">CTA</span> · {p.cta}</div>}
-                  </div>
-                ))
-              }
+              <PostReviewList projectId={id} content={content} onChanged={() => q.refetch()} postStates={r.post_states ?? {}} />
             </TabsContent>
 
             <TabsContent value="images" className="mt-5">
