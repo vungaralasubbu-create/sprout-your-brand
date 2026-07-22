@@ -11,6 +11,72 @@ type Any = any;
 const SUPPORTED = ["instagram", "facebook", "linkedin", "x"] as const;
 type SupportedPlatform = (typeof SUPPORTED)[number];
 
+/**
+ * The generator sometimes stores poster images inline as
+ * `data:image/png;base64,...` (~1.5 MB per poster). Two problems:
+ *  1. Meta/Facebook/Instagram Graph API rejects data URLs — it needs a
+ *     publicly reachable HTTPS URL to fetch the image server-side.
+ *  2. Inserting those multi-MB blobs into `publishing_jobs.payload` on
+ *     every publish caused Postgres `canceling statement due to statement
+ *     timeout` (TOAST rewrite + RLS on huge JSONB row).
+ *
+ * `materializeMediaUrls` uploads any `data:` URLs to the private
+ * `marketing-posters` bucket via the service-role client and swaps them
+ * for long-lived signed HTTPS URLs, so `publishing_jobs.payload.media_urls`
+ * only ever carries small strings and the Graph API can fetch them.
+ */
+async function materializeMediaUrls(
+  ownerId: string,
+  projectId: string,
+  urls: string[],
+): Promise<string[]> {
+  if (!urls.length) return urls;
+  const needsUpload = urls.some((u) => typeof u === "string" && u.startsWith("data:"));
+  if (!needsUpload) return urls;
+
+  const t0 = Date.now();
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const out: string[] = [];
+  for (let i = 0; i < urls.length; i++) {
+    const u = urls[i];
+    if (!u || typeof u !== "string" || !u.startsWith("data:")) {
+      out.push(u);
+      continue;
+    }
+    const m = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/.exec(u);
+    if (!m) {
+      // Unknown data URL shape — drop it rather than send garbage to Meta.
+      console.warn(`[materializeMediaUrls] skip non-image data URL at index ${i}`);
+      continue;
+    }
+    const mime = m[1];
+    const ext = mime.split("/")[1]?.split("+")[0] || "png";
+    const bytes = Buffer.from(m[2], "base64");
+    const path = `${ownerId}/${projectId}/${Date.now()}-${i}.${ext}`;
+    const tUp = Date.now();
+    const { error: upErr } = await supabaseAdmin.storage
+      .from("marketing-posters")
+      .upload(path, bytes, { contentType: mime, upsert: true });
+    if (upErr) {
+      console.error(`[materializeMediaUrls] upload failed ${path} in ${Date.now() - tUp}ms: ${upErr.message}`);
+      throw new Error(`Poster upload failed: ${upErr.message}`);
+    }
+    // 7 days is well above the worker retry window; Meta fetches within seconds.
+    const { data: signed, error: sErr } = await supabaseAdmin.storage
+      .from("marketing-posters")
+      .createSignedUrl(path, 60 * 60 * 24 * 7);
+    if (sErr || !signed?.signedUrl) {
+      console.error(`[materializeMediaUrls] sign failed ${path}: ${sErr?.message}`);
+      throw new Error(`Poster URL sign failed: ${sErr?.message ?? "unknown"}`);
+    }
+    console.log(`[materializeMediaUrls] uploaded+signed ${path} size=${bytes.length}B in ${Date.now() - tUp}ms`);
+    out.push(signed.signedUrl);
+  }
+  console.log(`[materializeMediaUrls] done ${urls.length} url(s) in ${Date.now() - t0}ms`);
+  return out;
+}
+
+
 /** Turn the project.result blob into per-item publish payloads. */
 function buildPayloads(result: Any): Array<{
   title: string;
