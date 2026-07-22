@@ -1,0 +1,1 @@
+update soc_accounts set owner_id='72b4f2c0-6e46-47ee-a5d9-ee50060818c3' where owner_id='df630702-d74b-4d92-8b57-163fff3a016b';
