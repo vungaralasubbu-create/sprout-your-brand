@@ -23,6 +23,7 @@ import {
   upsertBlogPost,
   listBlogPosts,
 } from "@/lib/admin/blogs.functions";
+import { AuthorityPanel } from "@/components/authority/authority-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/blogs/$id")({
   component: BlogEditor,
@@ -271,6 +272,7 @@ function BlogEditor() {
               <SelectItem value="archived">Archived</SelectItem>
             </SelectContent>
           </Select>
+          {form.id ? <AuthorityPanel contentType="blog" contentId={form.id} /> : null}
           <Button onClick={() => saveMut.mutate()} disabled={saveMut.isPending}>
             <Save className="size-4 mr-1.5" />
             {saveMut.isPending ? "Saving…" : "Save"}

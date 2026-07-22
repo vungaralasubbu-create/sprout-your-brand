@@ -383,6 +383,7 @@ import { Route as AuthenticatedAdminEmailBrandingRouteImport } from './routes/_a
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
 import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/_authenticated/admin.content-pipeline'
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
+import { Route as AuthenticatedAdminContentAuthorityRouteImport } from './routes/_authenticated/admin.content-authority'
 import { Route as AuthenticatedAdminContentRouteImport } from './routes/_authenticated/admin.content'
 import { Route as AuthenticatedAdminCommunityRouteImport } from './routes/_authenticated/admin.community'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
@@ -2673,6 +2674,12 @@ const AuthenticatedAdminContentIntelligenceRoute =
     path: '/content-intelligence',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminContentAuthorityRoute =
+  AuthenticatedAdminContentAuthorityRouteImport.update({
+    id: '/content-authority',
+    path: '/content-authority',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminContentRoute =
   AuthenticatedAdminContentRouteImport.update({
     id: '/content',
@@ -4239,6 +4246,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/community': typeof AuthenticatedAdminCommunityRoute
   '/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/admin/content-authority': typeof AuthenticatedAdminContentAuthorityRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -4828,6 +4836,7 @@ export interface FileRoutesByTo {
   '/admin/career-hub': typeof AuthenticatedAdminCareerHubRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/community': typeof AuthenticatedAdminCommunityRoute
+  '/admin/content-authority': typeof AuthenticatedAdminContentAuthorityRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/email-branding': typeof AuthenticatedAdminEmailBrandingRoute
@@ -5434,6 +5443,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/community': typeof AuthenticatedAdminCommunityRoute
   '/_authenticated/admin/content': typeof AuthenticatedAdminContentRouteWithChildren
+  '/_authenticated/admin/content-authority': typeof AuthenticatedAdminContentAuthorityRoute
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/_authenticated/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
@@ -6042,6 +6052,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/community'
     | '/admin/content'
+    | '/admin/content-authority'
     | '/admin/content-intelligence'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
@@ -6631,6 +6642,7 @@ export interface FileRouteTypes {
     | '/admin/career-hub'
     | '/admin/categories'
     | '/admin/community'
+    | '/admin/content-authority'
     | '/admin/content-pipeline'
     | '/admin/dashboard'
     | '/admin/email-branding'
@@ -7236,6 +7248,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/community'
     | '/_authenticated/admin/content'
+    | '/_authenticated/admin/content-authority'
     | '/_authenticated/admin/content-intelligence'
     | '/_authenticated/admin/content-pipeline'
     | '/_authenticated/admin/dashboard'
@@ -10412,6 +10425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminContentIntelligenceRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/content-authority': {
+      id: '/_authenticated/admin/content-authority'
+      path: '/content-authority'
+      fullPath: '/admin/content-authority'
+      preLoaderRoute: typeof AuthenticatedAdminContentAuthorityRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/content': {
       id: '/_authenticated/admin/content'
       path: '/content'
@@ -12502,6 +12522,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminCommunityRoute: typeof AuthenticatedAdminCommunityRoute
   AuthenticatedAdminContentRoute: typeof AuthenticatedAdminContentRouteWithChildren
+  AuthenticatedAdminContentAuthorityRoute: typeof AuthenticatedAdminContentAuthorityRoute
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   AuthenticatedAdminContentPipelineRoute: typeof AuthenticatedAdminContentPipelineRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
@@ -12612,6 +12633,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminCommunityRoute: AuthenticatedAdminCommunityRoute,
   AuthenticatedAdminContentRoute: AuthenticatedAdminContentRouteWithChildren,
+  AuthenticatedAdminContentAuthorityRoute:
+    AuthenticatedAdminContentAuthorityRoute,
   AuthenticatedAdminContentIntelligenceRoute:
     AuthenticatedAdminContentIntelligenceRouteWithChildren,
   AuthenticatedAdminContentPipelineRoute:
