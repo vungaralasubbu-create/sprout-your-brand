@@ -34,6 +34,7 @@ export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
 export const syncMyMarketingProjectApprovals = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { syncProjectToApprovalQueue } = await import("./approval-sync.server");
     const sb: any = context.supabase; // eslint-disable-line @typescript-eslint/no-explicit-any
     const { data: projects, error } = await sb
       .from("marketing_projects")
