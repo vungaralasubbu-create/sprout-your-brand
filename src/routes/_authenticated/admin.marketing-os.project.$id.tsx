@@ -21,10 +21,12 @@ import { getMarketingProject } from "@/lib/marketing-os/projects.functions";
 import {
   getProjectPublishStatus, saveProjectDraft, approveProject, rejectProject,
   publishProjectNow, scheduleProject,
-  approvePosts, rejectPosts, publishPostsNow, schedulePosts, updatePost,
+  approvePosts, rejectPosts, publishPostsNow, schedulePosts, updatePost, regeneratePost,
 } from "@/lib/marketing-os/project-publish.functions";
+import { listConnectedAccounts } from "@/lib/marketing-os/publisher.functions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
+import { RefreshCw } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/marketing-os/project/$id")({
   component: ProjectOverview,
