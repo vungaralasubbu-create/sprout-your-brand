@@ -683,6 +683,8 @@ export const runProjectStep = createServerFn({ method: "POST" })
       const ASSET_STEPS = new Set(["content", "posters", "email", "landing", "save"]);
       if (ASSET_STEPS.has(data.step)) {
         try {
+          // Dynamic import keeps the .server.* module out of the client bundle.
+          const { syncProjectToApprovalQueue } = await import("@/lib/marketing-os/approval-sync.server");
           const summary = await syncProjectToApprovalQueue(supabase, userId, proj.id);
           console.log(
             `[project.step=${data.step}] approval sync project=${proj.id} inserted=${summary.inserted} updated=${summary.updated} skipped=${summary.skipped}`,
