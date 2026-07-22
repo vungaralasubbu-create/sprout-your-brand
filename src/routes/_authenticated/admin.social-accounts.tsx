@@ -9,9 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  listSocialAccounts,
-} from "@/lib/social-automation/social.functions";
-import {
+  listManagedSocialAccounts,
   testPublishAccount,
   testPublishAllAccounts,
   listLinkedInOrgs,
@@ -57,7 +55,7 @@ function SocialAccountsPage() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, TestResult>>({});
-  const runListAccounts = useServerFn(listSocialAccounts);
+  const runListAccounts = useServerFn(listManagedSocialAccounts);
   const runTestOne = useServerFn(testPublishAccount);
   const runTestAll = useServerFn(testPublishAllAccounts);
   const runListLiOrgs = useServerFn(listLinkedInOrgs);
