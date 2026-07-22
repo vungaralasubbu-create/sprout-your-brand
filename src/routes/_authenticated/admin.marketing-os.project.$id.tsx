@@ -536,9 +536,10 @@ const POST_STATE_TONE: Record<string, "outline" | "default" | "success" | "destr
   scheduled: "default", publishing: "default", published: "success", failed: "destructive",
 };
 
-function PostReviewList({ projectId, content, postStates, onChanged }: {
+function PostReviewList({ projectId, content, posters, postStates, onChanged }: {
   projectId: string;
   content: any[];
+  posters: any[];
   postStates: Record<string, PostStateRow>;
   onChanged: () => void;
 }) {
@@ -547,12 +548,20 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
   const publishFn = useServerFn(publishPostsNow);
   const scheduleFn = useServerFn(schedulePosts);
   const updateFn = useServerFn(updatePost);
+  const regenFn = useServerFn(regeneratePost);
+  const accountsFn = useServerFn(listConnectedAccounts);
+
+  const accountsQ = useQuery({
+    queryKey: ["mos-connected-accounts"],
+    queryFn: () => accountsFn(),
+  });
+  const accounts: Array<{ platform: string; account_name: string | null }> =
+    ((accountsQ.data as any)?.accounts ?? []) as any[];
 
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [busy, setBusy] = useState<string | null>(null);
   const [scheduleFor, setScheduleFor] = useState<number[] | null>(null);
-  const [editIdx, setEditIdx] = useState<number | null>(null);
-  const [previewIdx, setPreviewIdx] = useState<number | null>(null);
+  const [editorIdx, setEditorIdx] = useState<number | null>(null);
   const [when, setWhen] = useState<string>(() => {
     const d = new Date(Date.now() + 60 * 60 * 1000);
     d.setSeconds(0, 0);
@@ -594,6 +603,11 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
     if (action === "publish") return run("publish", () => publishFn({ data: { projectId, indexes } }), `Publishing ${indexes.length} post(s)`);
   };
 
+  const imageFor = (i: number): string | undefined => {
+    const poster = posters[i] ?? posters[0];
+    return typeof poster?.image_url === "string" ? poster.image_url : undefined;
+  };
+
   return (
     <div className="space-y-3">
       {/* Bulk toolbar */}
@@ -622,10 +636,28 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
         const st = postStates[String(i)] ?? {};
         const stateKey = st.state ?? "draft";
         const tone = POST_STATE_TONE[stateKey] ?? "outline";
+        const img = imageFor(i);
         return (
-          <div key={i} className="rounded-2xl border border-border/60 p-4 bg-card">
+          <div
+            key={i}
+            role="button"
+            tabIndex={0}
+            onClick={() => setEditorIdx(i)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setEditorIdx(i); } }}
+            className="rounded-2xl border border-border/60 p-4 bg-card cursor-pointer hover:border-primary/40 hover:bg-accent/20 transition"
+          >
             <div className="flex items-start gap-3">
-              <Checkbox className="mt-1" checked={selected.has(i)} onCheckedChange={() => toggle(i)} />
+              <div onClick={(e) => e.stopPropagation()}>
+                <Checkbox className="mt-1" checked={selected.has(i)} onCheckedChange={() => toggle(i)} />
+              </div>
+              {img && (
+                <img
+                  src={img}
+                  alt=""
+                  loading="lazy"
+                  className="size-20 rounded-lg object-cover border border-border/60 shrink-0"
+                />
+              )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
@@ -637,9 +669,8 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
                       </span>
                     )}
                   </div>
-                  <div className="flex gap-1 flex-wrap">
-                    <Button variant="ghost" size="sm" onClick={() => setPreviewIdx(i)}>Preview</Button>
-                    <Button variant="ghost" size="sm" onClick={() => setEditIdx(i)}>Edit</Button>
+                  <div className="flex gap-1 flex-wrap" onClick={(e) => e.stopPropagation()}>
+                    <Button variant="ghost" size="sm" onClick={() => setEditorIdx(i)}>Edit</Button>
                     <Button variant="ghost" size="sm" disabled={busy !== null}
                       onClick={() => run("approve1", () => approveFn({ data: { projectId, indexes: [i] } }), "Approved")}>
                       <Check className="size-3.5 mr-1" />Approve
@@ -658,7 +689,7 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
                   </div>
                 </div>
                 <div className="font-semibold">{p.hook}</div>
-                <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">{p.body}</p>
+                <p className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap line-clamp-3">{p.body}</p>
                 {p.cta && <div className="text-xs mt-2"><span className="font-mono uppercase tracking-widest text-muted-foreground">CTA</span> · {p.cta}</div>}
                 {Array.isArray(p.hashtags) && p.hashtags.length > 0 && (
                   <div className="text-xs mt-2 text-muted-foreground">{p.hashtags.map((h: string) => h.startsWith("#") ? h : `#${h}`).join(" ")}</div>
@@ -669,7 +700,7 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
         );
       })}
 
-      {/* Schedule dialog */}
+      {/* Schedule dialog (bulk + single) */}
       <Dialog open={scheduleFor !== null} onOpenChange={(o) => !o && setScheduleFor(null)}>
         <DialogContent>
           <DialogHeader>
@@ -681,7 +712,7 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
               <Input id="post-when" type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} />
             </div>
             <p className="text-xs text-muted-foreground">
-              Posts will be enqueued for every connected account (Instagram, Facebook, LinkedIn, X).
+              Enqueues to every connected account (Instagram, Facebook, LinkedIn, X).
             </p>
           </div>
           <DialogFooter>
@@ -698,91 +729,182 @@ function PostReviewList({ projectId, content, postStates, onChanged }: {
         </DialogContent>
       </Dialog>
 
-      {/* Edit dialog */}
-      <EditPostDialog
-        open={editIdx !== null}
-        onClose={() => setEditIdx(null)}
-        post={editIdx !== null ? content[editIdx] : null}
+      {/* Content Editor */}
+      <ContentEditorDialog
+        open={editorIdx !== null}
+        onClose={() => setEditorIdx(null)}
+        index={editorIdx}
+        post={editorIdx !== null ? content[editorIdx] : null}
+        image={editorIdx !== null ? imageFor(editorIdx) : undefined}
+        stateKey={editorIdx !== null ? (postStates[String(editorIdx)]?.state ?? "draft") : "draft"}
+        accounts={accounts}
+        busy={busy}
         onSave={async (edits) => {
-          if (editIdx === null) return;
-          await run("edit", () => updateFn({ data: { projectId, index: editIdx, edits } }), "Saved");
-          setEditIdx(null);
+          if (editorIdx === null) return;
+          await run("edit", () => updateFn({ data: { projectId, index: editorIdx, edits } }), "Saved");
         }}
-        busy={busy === "edit"}
+        onRegenerate={async (instructions) => {
+          if (editorIdx === null) return;
+          await run("regen", () => regenFn({ data: { projectId, index: editorIdx, instructions } }), "Regenerated");
+        }}
+        onApprove={async () => {
+          if (editorIdx === null) return;
+          await run("approve1", () => approveFn({ data: { projectId, indexes: [editorIdx] } }), "Approved");
+        }}
+        onReject={async () => {
+          if (editorIdx === null) return;
+          await run("reject1", () => rejectFn({ data: { projectId, indexes: [editorIdx] } }), "Rejected");
+        }}
+        onPublishNow={async () => {
+          if (editorIdx === null) return;
+          await run("pub1", () => publishFn({ data: { projectId, indexes: [editorIdx] } }), "Publishing");
+          setEditorIdx(null);
+        }}
+        onSchedule={() => {
+          if (editorIdx === null) return;
+          setScheduleFor([editorIdx]);
+        }}
       />
-
-      {/* Preview dialog */}
-      <Dialog open={previewIdx !== null} onOpenChange={(o) => !o && setPreviewIdx(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader><DialogTitle>Post preview</DialogTitle></DialogHeader>
-          {previewIdx !== null && (
-            <div className="space-y-3">
-              <div className="font-semibold">{content[previewIdx].hook}</div>
-              <p className="text-sm whitespace-pre-wrap">{content[previewIdx].body}</p>
-              {content[previewIdx].cta && (
-                <div className="text-xs text-muted-foreground">CTA · {content[previewIdx].cta}</div>
-              )}
-              {Array.isArray(content[previewIdx].hashtags) && (
-                <div className="text-xs text-muted-foreground">
-                  {content[previewIdx].hashtags.map((h: string) => h.startsWith("#") ? h : `#${h}`).join(" ")}
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
 
-function EditPostDialog({ open, onClose, post, onSave, busy }: {
+function ContentEditorDialog({
+  open, onClose, index, post, image, stateKey, accounts, busy,
+  onSave, onRegenerate, onApprove, onReject, onPublishNow, onSchedule,
+}: {
   open: boolean;
   onClose: () => void;
+  index: number | null;
   post: any;
-  onSave: (edits: { hook?: string; body?: string; cta?: string; hashtags?: string[] }) => void;
-  busy: boolean;
+  image?: string;
+  stateKey: string;
+  accounts: Array<{ platform: string; account_name: string | null }>;
+  busy: string | null;
+  onSave: (edits: { hook?: string; body?: string; cta?: string; hashtags?: string[] }) => Promise<void>;
+  onRegenerate: (instructions?: string) => Promise<void>;
+  onApprove: () => Promise<void>;
+  onReject: () => Promise<void>;
+  onPublishNow: () => Promise<void>;
+  onSchedule: () => void;
 }) {
   const [hook, setHook] = useState("");
   const [body, setBody] = useState("");
   const [cta, setCta] = useState("");
   const [tags, setTags] = useState("");
+  const [regenNote, setRegenNote] = useState("");
+
   useEffect(() => {
     if (open && post) {
       setHook(String(post.hook ?? ""));
       setBody(String(post.body ?? ""));
       setCta(String(post.cta ?? ""));
       setTags(Array.isArray(post.hashtags) ? post.hashtags.join(" ") : "");
+      setRegenNote("");
     }
-  }, [open, post]);
+  }, [open, post, index]);
+
+  const tone = POST_STATE_TONE[stateKey] ?? "outline";
+  const platform = String(post?.platform ?? "").toLowerCase();
+  const matching = platform ? accounts.filter((a) => a.platform.toLowerCase() === platform) : accounts;
+
+  const save = () => {
+    const hashtags = tags.split(/\s+/).filter(Boolean).map((h) => h.replace(/^#/, ""));
+    return onSave({ hook, body, cta, hashtags });
+  };
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader><DialogTitle>Edit post</DialogTitle></DialogHeader>
-        <div className="space-y-3">
-          <div>
-            <Label>Hook</Label>
-            <Input value={hook} onChange={(e) => setHook(e.target.value)} />
+      <DialogContent className="max-w-3xl max-h-[92vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            Content editor
+            <Badge variant="outline" className="uppercase text-[10px]">{post?.platform ?? "post"}</Badge>
+            <Badge variant={tone as any} className="capitalize text-[10px]">{stateKey}</Badge>
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-5">
+          <div className="space-y-3">
+            <div className="aspect-square rounded-xl border border-border/60 overflow-hidden bg-muted/30 grid place-items-center">
+              {image ? (
+                <img src={image} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <ImageIcon className="size-8 text-muted-foreground/40" />
+              )}
+            </div>
+            <div>
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1.5">Target platforms</div>
+              {matching.length ? (
+                <div className="flex flex-wrap gap-1">
+                  {matching.map((a, i) => (
+                    <Badge key={i} variant="muted" className="text-[10px] capitalize">
+                      {a.platform}{a.account_name ? ` · ${a.account_name}` : ""}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">No connected accounts for this platform.</p>
+              )}
+            </div>
           </div>
-          <div>
-            <Label>Body</Label>
-            <Textarea rows={6} value={body} onChange={(e) => setBody(e.target.value)} />
-          </div>
-          <div>
-            <Label>CTA</Label>
-            <Input value={cta} onChange={(e) => setCta(e.target.value)} />
-          </div>
-          <div>
-            <Label>Hashtags (space-separated)</Label>
-            <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="#launch #ai" />
+
+          <div className="space-y-3">
+            <div>
+              <Label>Hook</Label>
+              <Input value={hook} onChange={(e) => setHook(e.target.value)} />
+            </div>
+            <div>
+              <Label>Caption / body</Label>
+              <Textarea rows={8} value={body} onChange={(e) => setBody(e.target.value)} />
+            </div>
+            <div>
+              <Label>CTA</Label>
+              <Input value={cta} onChange={(e) => setCta(e.target.value)} />
+            </div>
+            <div>
+              <Label>Hashtags (space-separated)</Label>
+              <Input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="#launch #ai" />
+            </div>
+            <div className="rounded-xl border border-dashed border-border/60 p-3">
+              <Label className="text-xs">Regenerate with instructions (optional)</Label>
+              <Input
+                value={regenNote}
+                onChange={(e) => setRegenNote(e.target.value)}
+                placeholder="e.g. Make it punchier, add a question hook"
+                className="mt-1"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                disabled={busy !== null}
+                onClick={() => onRegenerate(regenNote || undefined)}
+              >
+                {busy === "regen" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <RefreshCw className="size-3.5 mr-1.5" />}
+                Regenerate
+              </Button>
+            </div>
           </div>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button disabled={busy} onClick={() => {
-            const hashtags = tags.split(/\s+/).filter(Boolean).map((h) => h.replace(/^#/, ""));
-            onSave({ hook, body, cta, hashtags });
-          }}>
-            {busy ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Save className="size-3.5 mr-1.5" />} Save
+
+        <DialogFooter className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={onClose}>Close</Button>
+          <div className="flex-1" />
+          <Button variant="outline" disabled={busy !== null} onClick={onReject}>
+            <XIcon className="size-3.5 mr-1.5" /> Reject
+          </Button>
+          <Button variant="outline" disabled={busy !== null} onClick={onApprove}>
+            <Check className="size-3.5 mr-1.5" /> Approve
+          </Button>
+          <Button variant="outline" disabled={busy !== null} onClick={save}>
+            {busy === "edit" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Save className="size-3.5 mr-1.5" />} Save
+          </Button>
+          <Button variant="outline" disabled={busy !== null} onClick={onSchedule}>
+            <Clock className="size-3.5 mr-1.5" /> Schedule
+          </Button>
+          <Button disabled={busy !== null} onClick={onPublishNow}>
+            {busy === "pub1" ? <Loader2 className="size-3.5 mr-1.5 animate-spin" /> : <Send className="size-3.5 mr-1.5" />} Publish Now
           </Button>
         </DialogFooter>
       </DialogContent>
