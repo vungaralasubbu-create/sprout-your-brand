@@ -324,7 +324,7 @@ function Planner() {
 
       <div className="flex items-center justify-between gap-4 sticky bottom-0 bg-background/80 backdrop-blur border-t border-border/60 py-4">
         <div className="text-xs text-muted-foreground">
-          {canGenerate ? "Ready to generate. This takes ~15-40 seconds." : "Fill business name, at least one goal, and one platform to continue."}
+          {canGenerate ? "Ready to generate. This takes ~15-40 seconds." : `Add: ${missing.join(", ")}.`}
         </div>
         <Button size="lg" disabled={!canGenerate || m.isPending} onClick={() => m.mutate()}>
           {m.isPending ? <><Loader2 className="size-4 mr-2 animate-spin" /> Generating…</> : <><Sparkles className="size-4 mr-2" /> Generate Plan</>}
