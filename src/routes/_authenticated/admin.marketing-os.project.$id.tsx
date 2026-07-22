@@ -157,7 +157,7 @@ function ProjectOverview() {
             </TabsContent>
 
             <TabsContent value="content" className="mt-5 space-y-3">
-              <PostReviewList projectId={id} content={content} onChanged={() => q.refetch()} postStates={r.post_states ?? {}} />
+              <PostReviewList projectId={id} content={content} posters={posters} onChanged={() => q.refetch()} postStates={r.post_states ?? {}} />
             </TabsContent>
 
             <TabsContent value="images" className="mt-5">
