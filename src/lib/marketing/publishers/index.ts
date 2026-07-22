@@ -78,6 +78,8 @@ const telegramPublisher: Publisher = async (input) => {
 
 /** LinkedIn — via LINKEDIN connector gateway (Person or Organization). */
 const linkedinPublisher: Publisher = async (input) => {
+  const { isLinkedInPublishingEnabled, LINKEDIN_PUBLISHING_DISABLED_MESSAGE } = await import("@/lib/feature-flags");
+  if (!isLinkedInPublishingEnabled()) throw new Error(LINKEDIN_PUBLISHING_DISABLED_MESSAGE);
   const key = process.env.LOVABLE_API_KEY;
   const conn = process.env.LINKEDIN_API_KEY;
   if (!key || !conn) throw new Error("LinkedIn connector not linked");
