@@ -381,6 +381,7 @@ import { Route as AuthenticatedAdminEnrollmentBrainRouteImport } from './routes/
 import { Route as AuthenticatedAdminEmploymentSettingsRouteImport } from './routes/_authenticated/admin.employment-settings'
 import { Route as AuthenticatedAdminEmailBrandingRouteImport } from './routes/_authenticated/admin.email-branding'
 import { Route as AuthenticatedAdminDashboardRouteImport } from './routes/_authenticated/admin.dashboard'
+import { Route as AuthenticatedAdminConversionIntelligenceRouteImport } from './routes/_authenticated/admin.conversion-intelligence'
 import { Route as AuthenticatedAdminContentPipelineRouteImport } from './routes/_authenticated/admin.content-pipeline'
 import { Route as AuthenticatedAdminContentIntelligenceRouteImport } from './routes/_authenticated/admin.content-intelligence'
 import { Route as AuthenticatedAdminContentAuthorityRouteImport } from './routes/_authenticated/admin.content-authority'
@@ -2662,6 +2663,12 @@ const AuthenticatedAdminDashboardRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminConversionIntelligenceRoute =
+  AuthenticatedAdminConversionIntelligenceRouteImport.update({
+    id: '/conversion-intelligence',
+    path: '/conversion-intelligence',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminContentPipelineRoute =
   AuthenticatedAdminContentPipelineRouteImport.update({
     id: '/content-pipeline',
@@ -4249,6 +4256,7 @@ export interface FileRoutesByFullPath {
   '/admin/content-authority': typeof AuthenticatedAdminContentAuthorityRoute
   '/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
+  '/admin/conversion-intelligence': typeof AuthenticatedAdminConversionIntelligenceRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/email-branding': typeof AuthenticatedAdminEmailBrandingRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
@@ -4838,6 +4846,7 @@ export interface FileRoutesByTo {
   '/admin/community': typeof AuthenticatedAdminCommunityRoute
   '/admin/content-authority': typeof AuthenticatedAdminContentAuthorityRoute
   '/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
+  '/admin/conversion-intelligence': typeof AuthenticatedAdminConversionIntelligenceRoute
   '/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/admin/email-branding': typeof AuthenticatedAdminEmailBrandingRoute
   '/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
@@ -5446,6 +5455,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/content-authority': typeof AuthenticatedAdminContentAuthorityRoute
   '/_authenticated/admin/content-intelligence': typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   '/_authenticated/admin/content-pipeline': typeof AuthenticatedAdminContentPipelineRoute
+  '/_authenticated/admin/conversion-intelligence': typeof AuthenticatedAdminConversionIntelligenceRoute
   '/_authenticated/admin/dashboard': typeof AuthenticatedAdminDashboardRoute
   '/_authenticated/admin/email-branding': typeof AuthenticatedAdminEmailBrandingRoute
   '/_authenticated/admin/employment-settings': typeof AuthenticatedAdminEmploymentSettingsRoute
@@ -6055,6 +6065,7 @@ export interface FileRouteTypes {
     | '/admin/content-authority'
     | '/admin/content-intelligence'
     | '/admin/content-pipeline'
+    | '/admin/conversion-intelligence'
     | '/admin/dashboard'
     | '/admin/email-branding'
     | '/admin/employment-settings'
@@ -6644,6 +6655,7 @@ export interface FileRouteTypes {
     | '/admin/community'
     | '/admin/content-authority'
     | '/admin/content-pipeline'
+    | '/admin/conversion-intelligence'
     | '/admin/dashboard'
     | '/admin/email-branding'
     | '/admin/employment-settings'
@@ -7251,6 +7263,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/content-authority'
     | '/_authenticated/admin/content-intelligence'
     | '/_authenticated/admin/content-pipeline'
+    | '/_authenticated/admin/conversion-intelligence'
     | '/_authenticated/admin/dashboard'
     | '/_authenticated/admin/email-branding'
     | '/_authenticated/admin/employment-settings'
@@ -10411,6 +10424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminDashboardRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/conversion-intelligence': {
+      id: '/_authenticated/admin/conversion-intelligence'
+      path: '/conversion-intelligence'
+      fullPath: '/admin/conversion-intelligence'
+      preLoaderRoute: typeof AuthenticatedAdminConversionIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/content-pipeline': {
       id: '/_authenticated/admin/content-pipeline'
       path: '/content-pipeline'
@@ -12525,6 +12545,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminContentAuthorityRoute: typeof AuthenticatedAdminContentAuthorityRoute
   AuthenticatedAdminContentIntelligenceRoute: typeof AuthenticatedAdminContentIntelligenceRouteWithChildren
   AuthenticatedAdminContentPipelineRoute: typeof AuthenticatedAdminContentPipelineRoute
+  AuthenticatedAdminConversionIntelligenceRoute: typeof AuthenticatedAdminConversionIntelligenceRoute
   AuthenticatedAdminDashboardRoute: typeof AuthenticatedAdminDashboardRoute
   AuthenticatedAdminEmailBrandingRoute: typeof AuthenticatedAdminEmailBrandingRoute
   AuthenticatedAdminEmploymentSettingsRoute: typeof AuthenticatedAdminEmploymentSettingsRoute
@@ -12639,6 +12660,8 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
     AuthenticatedAdminContentIntelligenceRouteWithChildren,
   AuthenticatedAdminContentPipelineRoute:
     AuthenticatedAdminContentPipelineRoute,
+  AuthenticatedAdminConversionIntelligenceRoute:
+    AuthenticatedAdminConversionIntelligenceRoute,
   AuthenticatedAdminDashboardRoute: AuthenticatedAdminDashboardRoute,
   AuthenticatedAdminEmailBrandingRoute: AuthenticatedAdminEmailBrandingRoute,
   AuthenticatedAdminEmploymentSettingsRoute:
