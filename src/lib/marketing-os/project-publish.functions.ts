@@ -652,13 +652,17 @@ export const schedulePosts = createServerFn({ method: "POST" })
       scheduledAt: data.scheduled_at, timezone: data.timezone, mode: "schedule",
     });
     if (!rows.length) throw new Error("No selected posts to schedule");
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id, payload");
+    await materializeRowsMedia(rows, userId, data.projectId);
+    const tIns = Date.now();
+    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    console.log(`[schedulePosts] inserted ${rows.length} publishing_jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
 
     const jobsByIdx: Record<string, string[]> = {};
-    for (const row of (ins ?? []) as Any[]) {
-      const idx = row.payload?.metadata?.post_index;
-      if (typeof idx === "number") jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), row.id];
+    const insArr = (ins ?? []) as Any[];
+    for (let k = 0; k < insArr.length && k < rows.length; k++) {
+      const idx = rows[k].payload?.metadata?.post_index;
+      if (typeof idx === "number") jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), insArr[k].id];
     }
     const patch: Record<string, PostState> = {};
     const now = new Date().toISOString();
