@@ -187,8 +187,8 @@ function computeScores(input: {
   const authoritativeness_score = clamp(
     (input.citations >= 3 ? 35 : input.citations * 10) +
     (input.reviewer_display_name ? 20 : 0) +
-    ((input.body.match(/\[[^\]]+\]\(https?:\/\/[^)]+\)/g)?.length ?? 0) * 3 +
-    (input.body.match(/\b(?:according to|source:|reference:)\b/gi)?.length ? 10 : 0),
+    (((input.body.match(/\[[^\]]+\]\(https?:\/\/[^)]+\)/g)?.length ?? 0) * 3) +
+    ((input.body.match(/\b(?:according to|source:|reference:)\b/gi)?.length ?? 0) > 0 ? 10 : 0),
   );
 
   const trust_score = clamp(
