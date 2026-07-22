@@ -27,6 +27,9 @@ import { listConnectedAccounts } from "@/lib/marketing-os/publisher.functions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { RefreshCw } from "lucide-react";
+import { PosterCanvas, downloadPosterPng, type PosterModel } from "@/components/marketing-os/poster-canvas";
+import { PosterEditorDialog } from "@/components/marketing-os/poster-editor-dialog";
+
 
 export const Route = createFileRoute("/_authenticated/admin/marketing-os/project/$id")({
   component: ProjectOverview,
