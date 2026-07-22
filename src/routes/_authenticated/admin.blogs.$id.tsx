@@ -271,6 +271,7 @@ function BlogEditor() {
               <SelectItem value="archived">Archived</SelectItem>
             </SelectContent>
           </Select>
+          {form.id ? <AuthorityPanel contentType="blog" contentId={form.id} /> : null}
           <Button onClick={() => saveMut.mutate()} disabled={saveMut.isPending}>
             <Save className="size-4 mr-1.5" />
             {saveMut.isPending ? "Saving…" : "Save"}
