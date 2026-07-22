@@ -15,6 +15,16 @@ import { z } from "zod";
 import { aiChat } from "@/lib/ai/router.server";
 import { buildBrandSystemPrompt } from "@/lib/marketing-os/brand-context.server";
 import { generateImageBase64 } from "@/lib/ai/image.server";
+import {
+  designBrief as cdDesignBrief,
+  proposeConcepts as cdProposeConcepts,
+  filterAndRank as cdFilterAndRank,
+  scorePoster as cdScorePoster,
+  type CreativeConcept,
+} from "@/lib/marketing-os/creative-direction.server";
+
+const CREATIVE_SCORE_THRESHOLD = Number(process.env.POSTER_MIN_SCORE ?? 55);
+const CREATIVE_CONCEPT_COUNT = 6;
 
 export const PROJECT_STEPS = [
   { key: "understand", label: "Understanding request" },
@@ -452,35 +462,54 @@ export const runProjectStep = createServerFn({ method: "POST" })
           break;
         }
         case "posters": {
-          const brief = result.brief || {};
-          // Copy + artwork are generated separately so the final rendered
-          // poster has crisp, editable text overlays (drawn client-side)
-          // and the image model only produces the *background artwork*.
-          const raw = await aiJson(
-            brandSystem,
-            `Generate 4 poster designs for the campaign. For each poster provide fully-formed copy plus a description of a text-free background artwork the image model should paint.
+          const marketingBrief = result.brief || {};
 
-Respond as JSON:
-{ posters: [ {
-    title, concept, style,
-    headline,           // <= 6 words, punchy hero line
-    subtitle,           // <= 12 words, supporting line
-    cta,                // <= 4 words, call to action button label
-    description,        // <= 20 words, small footer / value prop
-    dominant_colors: [], // 2-3 hex colors that fit the brand
-    text_color,         // hex, must be readable over dominant_colors
-    accent_color,       // hex, used for CTA button
-    layout,             // one of: centered, top_left, bottom_bar, split
-    background_prompt   // vivid description of an ABSTRACT / photographic
-                        // background artwork. MUST NOT contain any words,
-                        // letters, numbers, logos, or typography.
-} ] }
+          // Step 1 — Design Brief (creative direction)
+          let dBrief: any = {};
+          try {
+            dBrief = await cdDesignBrief(brandSystem, marketingBrief, proj.prompt);
+          } catch {
+            dBrief = {};
+          }
+          result.design_brief = dBrief;
 
-Brief: ${JSON.stringify(brief)}.`,
+          // Step 2 — Propose N distinct creative concepts
+          let concepts: CreativeConcept[] = [];
+          try {
+            concepts = await cdProposeConcepts(
+              brandSystem,
+              dBrief,
+              marketingBrief,
+              CREATIVE_CONCEPT_COUNT,
+            );
+          } catch {
+            concepts = [];
+          }
+
+          // Step 6 (pre-render) — score and drop obviously weak concepts;
+          // regenerate once if fewer than 3 pass the threshold.
+          let ranked = cdFilterAndRank(concepts, CREATIVE_SCORE_THRESHOLD);
+          if (ranked.kept.length < 3) {
+            try {
+              const more = await cdProposeConcepts(
+                brandSystem,
+                dBrief,
+                marketingBrief,
+                CREATIVE_CONCEPT_COUNT,
+              );
+              ranked = cdFilterAndRank([...ranked.kept, ...more], CREATIVE_SCORE_THRESHOLD);
+            } catch {
+              /* keep whatever we have */
+            }
+          }
+          const finalConcepts = (ranked.kept.length ? ranked.kept : concepts).slice(
+            0,
+            CREATIVE_CONCEPT_COUNT,
           );
-          const concepts = Array.isArray(raw.posters) ? raw.posters.slice(0, 4) : [];
+
+          // Step 3 — Generate ONLY the artwork background for each concept.
           const rendered = await Promise.allSettled(
-            concepts.map(async (c: any) => {
+            finalConcepts.map(async (c: CreativeConcept) => {
               const brandLine = brandSystem
                 ? `Follow this brand system strictly for palette and mood:\n${brandSystem}\n\n`
                 : "";
@@ -488,12 +517,16 @@ Brief: ${JSON.stringify(brief)}.`,
                 ? ` Palette: ${c.dominant_colors.join(", ")}.`
                 : "";
               const style = c?.style ? ` Style: ${c.style}.` : "";
+              const direction = c?.creative_direction
+                ? ` Creative direction: ${c.creative_direction}.`
+                : "";
+              const mood = dBrief?.visual_mood ? ` Mood: ${dBrief.visual_mood}.` : "";
               const backgroundPrompt = c?.background_prompt ?? c?.concept ?? c?.title ?? "";
-              // Hard-negative on text so the image model returns pure artwork.
               const prompt =
                 `${brandLine}Design an ABSTRACT background artwork for a social media poster.` +
-                ` ${backgroundPrompt}.${style}${colors}` +
-                ` Square 1:1 composition, production-quality, cinematic lighting.` +
+                ` ${backgroundPrompt}.${direction}${style}${colors}${mood}` +
+                ` Square 1:1 composition, production-quality, cinematic lighting,` +
+                ` intentional negative space for headline overlay.` +
                 ` STRICT: absolutely NO text, NO letters, NO numbers, NO logos,` +
                 ` NO typography, NO watermarks, NO captions. Pure artwork only —` +
                 ` all copy will be overlaid separately by the design system.`;
@@ -508,11 +541,25 @@ Brief: ${JSON.stringify(brief)}.`,
               }
             }),
           );
-          result.posters = rendered.map((r, i) =>
-            r.status === "fulfilled" ? r.value : { ...concepts[i], image_error: "Image generation failed" },
-          );
+
+          // Step 6 (post-render) — attach final scores.
+          result.posters = rendered.map((r, i) => {
+            const base =
+              r.status === "fulfilled"
+                ? r.value
+                : { ...finalConcepts[i], image_error: "Image generation failed" };
+            const s = cdScorePoster(base);
+            return {
+              ...base,
+              score: s.score,
+              score_breakdown: s.breakdown,
+              score_notes: s.notes,
+            };
+          });
+          result.rejected_posters = ranked.rejected;
           break;
         }
+
 
         case "landing": {
           const brief = result.brief || {};

@@ -42,14 +42,23 @@ export function PosterCanvas({
   const accent = safeColor(poster.accent_color, safeColor(poster.dominant_colors?.[0], "#111111"));
   const layout = poster.layout ?? "centered";
 
-  const align =
-    layout === "top_left"
-      ? "items-start justify-start text-left"
-      : layout === "bottom_bar"
-        ? "items-end justify-end text-left"
-        : layout === "split"
-          ? "items-center justify-start text-left"
-          : "items-center justify-center text-center";
+  // Alignment map — additive: existing keys unchanged, new keys added.
+  const alignByLayout: Record<string, string> = {
+    centered: "items-center justify-center text-center",
+    split: "items-center justify-start text-left",
+    top_left: "items-start justify-start text-left",
+    bottom_bar: "items-end justify-end text-left",
+    hero_left: "items-start justify-start text-left",
+    hero_right: "items-end justify-start text-right",
+    magazine: "items-end justify-start text-left",
+    card_grid: "items-center justify-center text-center",
+    diagonal: "items-start justify-end text-left",
+    minimal: "items-center justify-center text-center",
+    poster: "items-start justify-end text-left",
+    social: "items-center justify-center text-center",
+    banner: "items-center justify-start text-left",
+  };
+  const align = alignByLayout[layout] ?? alignByLayout.centered;
 
   return (
     <div
