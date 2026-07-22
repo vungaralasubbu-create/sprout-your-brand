@@ -3,6 +3,24 @@ import { useEffect } from "react";
 
 import { recordVisit, track } from "@/lib/intent";
 import { inferKindFromPath, trackVisit } from "@/lib/mentor/storage";
+import { trackFunnel } from "@/lib/conversion-intelligence/track";
+import type { FunnelStage } from "@/lib/conversion-intelligence/channel";
+
+function inferFunnelStage(pathname: string): { stage: FunnelStage; entityId?: string } | null {
+  if (pathname === "/") return { stage: "homepage" };
+  const program = pathname.match(/^\/programs\/([^/]+)(?:\/([^/]+))?/);
+  if (program) return { stage: "program", entityId: program[2] ?? program[1] };
+  const course = pathname.match(/^\/courses?\/([^/]+)/);
+  if (course) return { stage: "course", entityId: course[1] };
+  const blog = pathname.match(/^\/blog\/([^/?#]+)/);
+  if (blog) return { stage: "blog", entityId: blog[1] };
+  if (/^\/(lp|landing|offer|campaigns?)\/[^/]+/.test(pathname)) {
+    const m = pathname.match(/^\/[^/]+\/([^/?#]+)/);
+    return { stage: "landing", entityId: m?.[1] };
+  }
+  return null;
+}
+
 
 /**
  * Records every route visit into the intent store and emits anonymous
