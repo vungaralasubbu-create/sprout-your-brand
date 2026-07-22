@@ -98,7 +98,29 @@ export const lovableAdapter: EngageProviderAdapter = {
 
   async parseWebhook(request: Request): Promise<WebhookEvent[]> {
     try {
-      const body = (await request.json()) as {
+      // Require HMAC signature to prevent forged delivery/bounce/unsubscribe
+      // events. Secret is set as LOVABLE_ENGAGE_WEBHOOK_SECRET in server env.
+      const secret = process.env.LOVABLE_ENGAGE_WEBHOOK_SECRET;
+      if (!secret) return [];
+      const provided =
+        request.headers.get("x-lovable-signature") ??
+        request.headers.get("x-webhook-signature") ??
+        "";
+      const timestamp = request.headers.get("x-lovable-timestamp") ?? "";
+      const raw = await request.text();
+      if (!provided || !timestamp) return [];
+      // Reject replays older than 5 minutes.
+      const tsSec = Number(timestamp);
+      if (!Number.isFinite(tsSec) || Math.abs(Date.now() / 1000 - tsSec) > 300) return [];
+      const { createHmac, timingSafeEqual } = await import("crypto");
+      const expected = createHmac("sha256", secret).update(`${timestamp}.${raw}`).digest("hex");
+      const given = provided.startsWith("sha256=") ? provided.slice(7) : provided;
+      if (given.length !== expected.length) return [];
+      let ok = false;
+      try { ok = timingSafeEqual(Buffer.from(given), Buffer.from(expected)); } catch { ok = false; }
+      if (!ok) return [];
+
+      const body = JSON.parse(raw) as {
         type?: string;
         data?: { message_id?: string; recipient?: string };
       };
@@ -126,3 +148,4 @@ export const lovableAdapter: EngageProviderAdapter = {
     }
   },
 };
+
