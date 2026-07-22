@@ -502,6 +502,7 @@ import { Route as AuthenticatedAdminPaymentsGatewayRouteImport } from './routes/
 import { Route as AuthenticatedAdminPaymentsIdRouteImport } from './routes/_authenticated/admin.payments.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
+import { Route as AuthenticatedAdminMarketingOsSettingsRouteImport } from './routes/_authenticated/admin.marketing-os.settings'
 import { Route as AuthenticatedAdminMarketingOsSeoHubRouteImport } from './routes/_authenticated/admin.marketing-os.seo-hub'
 import { Route as AuthenticatedAdminMarketingOsPublisherRouteImport } from './routes/_authenticated/admin.marketing-os.publisher'
 import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
@@ -509,6 +510,7 @@ import { Route as AuthenticatedAdminMarketingOsMediaLibraryRouteImport } from '.
 import { Route as AuthenticatedAdminMarketingOsIntelligenceRouteImport } from './routes/_authenticated/admin.marketing-os.intelligence'
 import { Route as AuthenticatedAdminMarketingOsGenerationEngineRouteImport } from './routes/_authenticated/admin.marketing-os.generation-engine'
 import { Route as AuthenticatedAdminMarketingOsEmailRouteImport } from './routes/_authenticated/admin.marketing-os.email'
+import { Route as AuthenticatedAdminMarketingOsContentRouteImport } from './routes/_authenticated/admin.marketing-os.content'
 import { Route as AuthenticatedAdminMarketingOsCampaignsRouteImport } from './routes/_authenticated/admin.marketing-os.campaigns'
 import { Route as AuthenticatedAdminMarketingOsCalendarRouteImport } from './routes/_authenticated/admin.marketing-os.calendar'
 import { Route as AuthenticatedAdminMarketingOsBrandKitRouteImport } from './routes/_authenticated/admin.marketing-os.brand-kit'
@@ -3379,6 +3381,12 @@ const AuthenticatedAdminPartnersIdRoute =
     path: '/partners/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMarketingOsSettingsRoute =
+  AuthenticatedAdminMarketingOsSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminMarketingOsSeoHubRoute =
   AuthenticatedAdminMarketingOsSeoHubRouteImport.update({
     id: '/seo-hub',
@@ -3419,6 +3427,12 @@ const AuthenticatedAdminMarketingOsEmailRoute =
   AuthenticatedAdminMarketingOsEmailRouteImport.update({
     id: '/email',
     path: '/email',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
+const AuthenticatedAdminMarketingOsContentRoute =
+  AuthenticatedAdminMarketingOsContentRouteImport.update({
+    id: '/content',
+    path: '/content',
     getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
   } as any)
 const AuthenticatedAdminMarketingOsCampaignsRoute =
@@ -4551,6 +4565,7 @@ export interface FileRoutesByFullPath {
   '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
+  '/admin/marketing-os/content': typeof AuthenticatedAdminMarketingOsContentRoute
   '/admin/marketing-os/email': typeof AuthenticatedAdminMarketingOsEmailRoute
   '/admin/marketing-os/generation-engine': typeof AuthenticatedAdminMarketingOsGenerationEngineRoute
   '/admin/marketing-os/intelligence': typeof AuthenticatedAdminMarketingOsIntelligenceRoute
@@ -4558,6 +4573,7 @@ export interface FileRoutesByFullPath {
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  '/admin/marketing-os/settings': typeof AuthenticatedAdminMarketingOsSettingsRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
@@ -5139,6 +5155,7 @@ export interface FileRoutesByTo {
   '/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
+  '/admin/marketing-os/content': typeof AuthenticatedAdminMarketingOsContentRoute
   '/admin/marketing-os/email': typeof AuthenticatedAdminMarketingOsEmailRoute
   '/admin/marketing-os/generation-engine': typeof AuthenticatedAdminMarketingOsGenerationEngineRoute
   '/admin/marketing-os/intelligence': typeof AuthenticatedAdminMarketingOsIntelligenceRoute
@@ -5146,6 +5163,7 @@ export interface FileRoutesByTo {
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  '/admin/marketing-os/settings': typeof AuthenticatedAdminMarketingOsSettingsRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
@@ -5750,6 +5768,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/marketing-os/brand-kit': typeof AuthenticatedAdminMarketingOsBrandKitRoute
   '/_authenticated/admin/marketing-os/calendar': typeof AuthenticatedAdminMarketingOsCalendarRoute
   '/_authenticated/admin/marketing-os/campaigns': typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
+  '/_authenticated/admin/marketing-os/content': typeof AuthenticatedAdminMarketingOsContentRoute
   '/_authenticated/admin/marketing-os/email': typeof AuthenticatedAdminMarketingOsEmailRoute
   '/_authenticated/admin/marketing-os/generation-engine': typeof AuthenticatedAdminMarketingOsGenerationEngineRoute
   '/_authenticated/admin/marketing-os/intelligence': typeof AuthenticatedAdminMarketingOsIntelligenceRoute
@@ -5757,6 +5776,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/_authenticated/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/_authenticated/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  '/_authenticated/admin/marketing-os/settings': typeof AuthenticatedAdminMarketingOsSettingsRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
@@ -6360,6 +6380,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/campaigns'
+    | '/admin/marketing-os/content'
     | '/admin/marketing-os/email'
     | '/admin/marketing-os/generation-engine'
     | '/admin/marketing-os/intelligence'
@@ -6367,6 +6388,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
     | '/admin/marketing-os/seo-hub'
+    | '/admin/marketing-os/settings'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payments/$id'
@@ -6948,6 +6970,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/brand-kit'
     | '/admin/marketing-os/calendar'
     | '/admin/marketing-os/campaigns'
+    | '/admin/marketing-os/content'
     | '/admin/marketing-os/email'
     | '/admin/marketing-os/generation-engine'
     | '/admin/marketing-os/intelligence'
@@ -6955,6 +6978,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
     | '/admin/marketing-os/seo-hub'
+    | '/admin/marketing-os/settings'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payments/$id'
@@ -7558,6 +7582,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/marketing-os/brand-kit'
     | '/_authenticated/admin/marketing-os/calendar'
     | '/_authenticated/admin/marketing-os/campaigns'
+    | '/_authenticated/admin/marketing-os/content'
     | '/_authenticated/admin/marketing-os/email'
     | '/_authenticated/admin/marketing-os/generation-engine'
     | '/_authenticated/admin/marketing-os/intelligence'
@@ -7565,6 +7590,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/marketing-os/planner'
     | '/_authenticated/admin/marketing-os/publisher'
     | '/_authenticated/admin/marketing-os/seo-hub'
+    | '/_authenticated/admin/marketing-os/settings'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payments/$id'
@@ -11271,6 +11297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/marketing-os/settings': {
+      id: '/_authenticated/admin/marketing-os/settings'
+      path: '/settings'
+      fullPath: '/admin/marketing-os/settings'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/marketing-os/seo-hub': {
       id: '/_authenticated/admin/marketing-os/seo-hub'
       path: '/seo-hub'
@@ -11318,6 +11351,13 @@ declare module '@tanstack/react-router' {
       path: '/email'
       fullPath: '/admin/marketing-os/email'
       preLoaderRoute: typeof AuthenticatedAdminMarketingOsEmailRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
+    '/_authenticated/admin/marketing-os/content': {
+      id: '/_authenticated/admin/marketing-os/content'
+      path: '/content'
+      fullPath: '/admin/marketing-os/content'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsContentRouteImport
       parentRoute: typeof AuthenticatedAdminMarketingOsRoute
     }
     '/_authenticated/admin/marketing-os/campaigns': {
@@ -12424,6 +12464,7 @@ interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsBrandKitRoute: typeof AuthenticatedAdminMarketingOsBrandKitRoute
   AuthenticatedAdminMarketingOsCalendarRoute: typeof AuthenticatedAdminMarketingOsCalendarRoute
   AuthenticatedAdminMarketingOsCampaignsRoute: typeof AuthenticatedAdminMarketingOsCampaignsRouteWithChildren
+  AuthenticatedAdminMarketingOsContentRoute: typeof AuthenticatedAdminMarketingOsContentRoute
   AuthenticatedAdminMarketingOsEmailRoute: typeof AuthenticatedAdminMarketingOsEmailRoute
   AuthenticatedAdminMarketingOsGenerationEngineRoute: typeof AuthenticatedAdminMarketingOsGenerationEngineRoute
   AuthenticatedAdminMarketingOsIntelligenceRoute: typeof AuthenticatedAdminMarketingOsIntelligenceRoute
@@ -12431,6 +12472,7 @@ interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
   AuthenticatedAdminMarketingOsPublisherRoute: typeof AuthenticatedAdminMarketingOsPublisherRoute
   AuthenticatedAdminMarketingOsSeoHubRoute: typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  AuthenticatedAdminMarketingOsSettingsRoute: typeof AuthenticatedAdminMarketingOsSettingsRoute
   AuthenticatedAdminMarketingOsIndexRoute: typeof AuthenticatedAdminMarketingOsIndexRoute
   AuthenticatedAdminMarketingOsPlansIdRoute: typeof AuthenticatedAdminMarketingOsPlansIdRoute
   AuthenticatedAdminMarketingOsProjectIdRoute: typeof AuthenticatedAdminMarketingOsProjectIdRoute
@@ -12450,6 +12492,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsCalendarRoute,
     AuthenticatedAdminMarketingOsCampaignsRoute:
       AuthenticatedAdminMarketingOsCampaignsRouteWithChildren,
+    AuthenticatedAdminMarketingOsContentRoute:
+      AuthenticatedAdminMarketingOsContentRoute,
     AuthenticatedAdminMarketingOsEmailRoute:
       AuthenticatedAdminMarketingOsEmailRoute,
     AuthenticatedAdminMarketingOsGenerationEngineRoute:
@@ -12464,6 +12508,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsPublisherRoute,
     AuthenticatedAdminMarketingOsSeoHubRoute:
       AuthenticatedAdminMarketingOsSeoHubRoute,
+    AuthenticatedAdminMarketingOsSettingsRoute:
+      AuthenticatedAdminMarketingOsSettingsRoute,
     AuthenticatedAdminMarketingOsIndexRoute:
       AuthenticatedAdminMarketingOsIndexRoute,
     AuthenticatedAdminMarketingOsPlansIdRoute:

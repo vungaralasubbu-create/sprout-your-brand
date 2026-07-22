@@ -15,7 +15,11 @@ import { z } from "zod";
 import { aiChat } from "@/lib/ai/router.server";
 import { buildBrandSystemPrompt } from "@/lib/marketing-os/brand-context.server";
 import { generateImageBase64, isImageProviderAvailable } from "@/lib/ai/image.server";
-import { syncProjectToApprovalQueue } from "@/lib/marketing-os/approval-sync.server";
+// NOTE: approval-sync.server is dynamically imported inside handlers only.
+// Static import from a client-reachable *.functions.ts leaks a .server.*
+// module into the browser bundle guard and breaks the module load, which
+// silently kills every server fn exported here (Planner submit, image gen,
+// project pipeline, etc.). Do not hoist this back to a top-level import.
 import {
   designBrief as cdDesignBrief,
   proposeConcepts as cdProposeConcepts,
@@ -679,6 +683,8 @@ export const runProjectStep = createServerFn({ method: "POST" })
       const ASSET_STEPS = new Set(["content", "posters", "email", "landing", "save"]);
       if (ASSET_STEPS.has(data.step)) {
         try {
+          // Dynamic import keeps the .server.* module out of the client bundle.
+          const { syncProjectToApprovalQueue } = await import("@/lib/marketing-os/approval-sync.server");
           const summary = await syncProjectToApprovalQueue(supabase, userId, proj.id);
           console.log(
             `[project.step=${data.step}] approval sync project=${proj.id} inserted=${summary.inserted} updated=${summary.updated} skipped=${summary.skipped}`,

@@ -4,7 +4,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { callLovableAiJson } from "@/lib/ai-gateway.server";
 import { z } from "zod";
-import { syncProjectToApprovalQueue } from "./approval-sync.server";
+// NOTE: approval-sync.server is dynamically imported inside handlers only.
+// See note in projects.functions.ts — static .server.* imports from a
+// client-reachable *.functions.ts silently break every server fn here.
 
 // ---- Marketing Project → Approval Queue sync (idempotent) ----
 export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
@@ -13,6 +15,7 @@ export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
     z.object({ project_id: z.string().uuid() }).parse(raw),
   )
   .handler(async ({ data, context }) => {
+    const { syncProjectToApprovalQueue } = await import("./approval-sync.server");
     const summary = await syncProjectToApprovalQueue(
       context.supabase as never,
       context.userId,
@@ -31,6 +34,7 @@ export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
 export const syncMyMarketingProjectApprovals = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { syncProjectToApprovalQueue } = await import("./approval-sync.server");
     const sb: any = context.supabase; // eslint-disable-line @typescript-eslint/no-explicit-any
     const { data: projects, error } = await sb
       .from("marketing_projects")
