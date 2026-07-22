@@ -82,7 +82,7 @@ const linkedin: PlatformConnector = {
   },
   publish: (i) => {
     if (!isLinkedInPublishingEnabled()) {
-      return Promise.resolve({ ok: false, errorCode: "linkedin_publishing_disabled", errorMessage: LINKEDIN_PUBLISHING_DISABLED_MESSAGE, retryable: false } as PublishResult);
+      return Promise.resolve({ ok: false, errorCode: "validation", errorMessage: LINKEDIN_PUBLISHING_DISABLED_MESSAGE, retryable: false } satisfies PublishResult);
     }
     return edgePublish("publish-linkedin", i.ownerId, {
       account_id: i.accountId,
