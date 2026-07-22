@@ -141,6 +141,32 @@ function ApprovalCenter() {
     mutationFn: () => seed(),
     onSuccess: (r) => { toast.success(`Seeded ${r.created} demo items`); invalidate(); },
   });
+  const mSyncMkt = useMutation({
+    mutationFn: () => syncMktProjects(),
+    onSuccess: (r) => {
+      if (r.inserted + r.updated > 0) {
+        toast.success(`Synced ${r.inserted} new + ${r.updated} refreshed across ${r.projects} project(s)`);
+      }
+      // eslint-disable-next-line no-console
+      console.debug("[approvals.sync.bulk]", r);
+      invalidate();
+    },
+    onError: (e: Error) => {
+      // eslint-disable-next-line no-console
+      console.error("[approvals.sync.bulk] failed", e);
+    },
+  });
+
+  // Auto-sync Marketing Project assets into the queue on mount so the center
+  // is never empty after a project finishes. Idempotent + guarded to run once
+  // per browser session.
+  const didAutoSync = useRef(false);
+  useEffect(() => {
+    if (didAutoSync.current) return;
+    didAutoSync.current = true;
+    mSyncMkt.mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function toggleSelected(id: string) {
     setSelected((s) => {
