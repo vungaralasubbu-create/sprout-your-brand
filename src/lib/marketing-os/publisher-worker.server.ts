@@ -62,8 +62,12 @@ export async function runPublisherWorker(opts: { maxJobs?: number; jobId?: strin
       const fatal = issues.filter((i) => i.fatal);
       if (fatal.length) throw Object.assign(new Error(fatal.map((i) => i.message).join("; ")), { code: "validation", retryable: false });
 
+      console.log(`[publisher] → ${j.platform} publish job=${j.id} account=${j.account_id}`);
+      const tApi = Date.now();
       const res = await conn.publish(input);
+      const apiMs = Date.now() - tApi;
       const duration = Date.now() - start;
+      console.log(`[publisher] ← ${j.platform} job=${j.id} ok=${res.ok} apiMs=${apiMs} totalMs=${duration}${res.ok ? "" : ` code=${res.errorCode} msg=${res.errorMessage}`}`);
 
       if (res.ok) {
         await supabaseAdmin.from("publishing_jobs").update({
