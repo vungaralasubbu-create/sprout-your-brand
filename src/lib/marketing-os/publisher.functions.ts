@@ -539,6 +539,8 @@ export const listLinkedInOrgs = createServerFn({ method: "POST" })
       organizations: Array<{ id: string; urn: string; name: string; vanityName: string | null; logoUrn: string | null; role: string; state: string }>;
       default: { urn: string; kind: "person" | "organization"; name?: string };
       reconnect_required?: boolean;
+      approval_pending?: boolean;
+      granted_scopes?: string[];
       code?: string;
       error?: string;
     };
