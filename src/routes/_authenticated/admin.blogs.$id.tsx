@@ -23,6 +23,7 @@ import {
   upsertBlogPost,
   listBlogPosts,
 } from "@/lib/admin/blogs.functions";
+import { AuthorityPanel } from "@/components/authority/authority-panel";
 
 export const Route = createFileRoute("/_authenticated/admin/blogs/$id")({
   component: BlogEditor,
