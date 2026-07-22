@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   listApprovalItems, getApprovalItem, changeApprovalStatus,
   bulkDeleteApprovals, bulkDuplicateApprovals, bulkMoveCampaign, bulkChangePlatform,
