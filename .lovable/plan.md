@@ -1,107 +1,91 @@
-## Scope
+Same discipline as the SEO Copilot ask — planning first, blog-first slice, extend the other content types on your explicit go-ahead. Nothing in this plan touches existing content, SEO, metadata, schema, or editor layout.
 
-Add a centralized UPI-QR payment flow used by every course. Strictly additive: no changes to existing pages, components, tables, or the AI/Marketing stack. Existing `enrollments`, `courses`, `payment_links`, `partner_lead_payment_links`, and `bill_*` tables stay untouched; existing admin pages (`admin.payment-verification`, `admin.payment-links.*`) stay as-is — the new admin UI is a separate menu item.
+## Reuse map (no rewrites)
 
-## New database objects (one migration)
+| Capability | Reused source |
+|---|---|
+| Author profiles | `content_authors` (already has name, bio, expertise, socials) |
+| Review workflow states | `blog_posts.status` extended via new state enum, plus new `content_reviews` audit table |
+| Freshness signals | `geo_freshness_signals`, `blog_posts.updated_at` |
+| Duplicate / thin content | Existing content-intelligence heuristics from SEO Copilot analyzer |
+| Trust display on public page | Existing `blog.$slug.tsx` author block (additive slots only) |
+| Editor dashboard shell | Existing `admin.content-intelligence.*` route pattern |
 
-All new tables use `owner`/`admin` RLS, timestamps, `updated_at` triggers, and full `GRANT` blocks.
+## New surface (additive)
 
-1. `public.payment_settings` — singleton config row.
-   Columns: `id uuid pk`, `qr_image_url text`, `upi_id text`, `merchant_name text`, `support_email text`, `support_phone text`, `is_active bool default true`, `updated_by uuid`, timestamps.
-   RLS: `SELECT` for `authenticated` when `is_active`; full CRUD for admin role via `has_role(auth.uid(),'admin')`.
+### 1. Schema — one migration, all with GRANTs + RLS
 
-2. `public.course_payments` — one row per checkout attempt. NOT a replacement for `enrollments`; a sibling record that the flow uses to track UPI payment + verification. Links to `enrollments.id` once approved.
-   Columns: `id uuid pk`, `order_id text unique` (human ref, e.g. `GLR-YYYYMMDD-XXXX`), `user_id uuid` (nullable — supports guest→signup), `course_id uuid references courses(id)`, `enrollment_id uuid references enrollments(id) on delete set null`, form fields (`first_name`, `last_name`, `email`, `phone`, `college`, `degree`, `graduation_year int`, `city`, `state`, `country`), `referral_code text`, `coupon_code text`, `base_amount_inr numeric(12,2)`, `discount_inr numeric(12,2) default 0`, `final_amount_inr numeric(12,2)`, `utr_number text`, `screenshot_url text`, `status text check in ('pending','submitted','verified','rejected','refunded') default 'pending'`, `rejection_reason text`, `verified_by uuid`, `verified_at timestamptz`, `provider text default 'upi_manual'`, `provider_ref text`, timestamps.
-   Unique index on `(utr_number)` where `utr_number is not null` (dedupe).
-   Indexes: `(user_id, created_at desc)`, `(status, created_at desc)`, `(course_id)`.
-   RLS: owner (`auth.uid() = user_id`) can SELECT/INSERT/UPDATE own pending row; admin full CRUD.
+- `content_authority_scores` — one row per (content_type, content_id): overall, experience, expertise, authoritativeness, trust, freshness, originality, computed_at, signals JSONB.
+- `content_claims` — detected claims per content item: claim_text, claim_type (stat/percentage/salary/job-growth/tech-trend/market/general), offset, status (verified/needs_citation/unverified), citation_id, detected_at.
+- `content_citations` — source_url, source_type (gov/research/university/docs/vendor/industry), title, publisher, published_at, accessed_at, notes. Shared library; a claim references one citation.
+- `content_reviews` — content_type, content_id, from_status, to_status, reviewer_id, note, created_at. Immutable audit log.
+- Extend `blog_posts.status` allowed values via app-level enum (no DB enum change): `draft | ai_generated | under_review | fact_checked | seo_approved | legal_approved | published | archived`. Existing `draft/published` rows keep working.
 
-3. `public.course_payment_events` — append-only audit trail (`payment_id`, `type`, `actor_user_id`, `meta jsonb`, `created_at`). Admin-only reads.
+All tables: RLS on, authenticated read+write scoped by admin role via `has_role`, `service_role` full, no anon.
 
-4. Storage bucket `payment-screenshots` (private). Policies: owner can upload to `${auth.uid()}/*`, admin can read all, size ≤ 5 MB, mime in image/*.
+### 2. One analyzer server fn — `src/lib/admin/content-authority.functions.ts`
 
-5. Storage bucket `payment-config` (public read) for QR image uploads.
+- `analyzeContentAuthority({ content_type, content_id, draft? })` returns:
+  - 7 scores (heuristic + light AI: `google/gemini-3.6-flash`).
+  - Extracted claims with type + offset (regex + AI pass for nuanced claims).
+  - Quality checks: duplicate paragraphs, AI repetition (n-gram overlap), weak intro/conclusion, passive-voice ratio, readability grade, missing examples/visuals/FAQ/CTA — same signal set as SEO Copilot, exposed here for authority framing.
+  - Freshness verdict: last_updated age, outdated stats (>18mo), broken references (link-health from `link_health_issues`), old tech mentions (versioned tech vocab).
+- `attachCitation({ claim_id, citation_id })`, `createCitation(...)`, `markClaimVerified/Unverified(...)` — explicit user actions only, no auto-writes.
+- `transitionReviewStatus({ content_type, content_id, to_status, note })` — writes `content_reviews` row + updates `blog_posts.status`. Guards allowed transitions.
 
-## New server functions (`.functions.ts`)
+Content-type dispatcher: `blog` (v1); `course`, `landing` added per request.
 
-`src/lib/payments/central/settings.functions.ts`
-- `getActivePaymentSettings()` — public, returns latest active row (used by payment page).
-- `updatePaymentSettings(...)` — admin only.
+### 3. One CMS side panel — `src/components/authority/authority-panel.tsx`
 
-`src/lib/payments/central/checkout.functions.ts`
-- `createCoursePayment({ courseId, form, couponCode?, referralCode? })` — authenticated. Loads course, computes final amount, creates `course_payments` row (`status='pending'`), returns `{ orderId, amount, qr, upiId, merchantName }`.
-- `submitPaymentConfirmation({ orderId, utrNumber, screenshotUrl? })` — authenticated, owner-only. Sets `status='submitted'`. Rejects duplicate UTRs. Enqueues admin-notification email.
-- `getMyPayment({ orderId })` — authenticated, owner-only.
+- Right `<Sheet>` opened from a **"Authority"** button in the blog editor toolbar (sibling to the SEO Copilot button).
+- Sections match your spec:
+  - Score header (7 scores, color-coded).
+  - Claims list — inline highlights, "Attach citation" / "Mark verified" / "Mark needs citation".
+  - Citation library — search + create.
+  - Author + reviewer picker (from `content_authors`).
+  - Quality checks (collapsible).
+  - Freshness card with refresh recommendation.
+  - Workflow bar: current status + allowed next transitions.
 
-`src/lib/payments/central/admin.functions.ts` — all gated by `has_role('admin')`:
-- `listPayments({ status?, q?, cursor? })`
-- `getPaymentDetail({ id })`
-- `approvePayment({ id })` → creates/activates `enrollments` row (reusing existing enrollment status enum via `verified`), sets `course_payments.status='verified'`, writes event, sends student email.
-- `rejectPayment({ id, reason })`
-- `requestMoreInfo({ id, note })`
+Zero auto-rewrites. Every mutation is an explicit button.
 
-`src/lib/payments/central/upload.functions.ts`
-- `getScreenshotUploadUrl({ orderId, mime, sizeBytes })` — returns signed upload URL scoped to `${userId}/${orderId}.ext`.
+### 4. Editor Dashboard — `src/routes/_authenticated/admin.content-authority.tsx`
 
-Emails go through the existing send helper; templates added under the existing `react-email` registry (additive, no changes to existing templates).
+New admin route (does not touch existing content-intelligence routes). Six lists driven by `content_authority_scores`:
 
-## New client routes (all additive, no edits to existing files)
+- Content needing updates (freshness < threshold)
+- Low authority pages (overall < 60)
+- Pages missing citations (claims with status = needs_citation)
+- Pages with outdated info (outdated stats > 0)
+- Most trusted pages (overall > 85)
+- Lowest quality pages (quality_signals.passing_ratio < 0.5)
 
-- `src/routes/_authenticated/payment.$courseId.tsx` — enrollment form → order summary (single page, two steps in local state).
-- `src/routes/_authenticated/payment.tsx` — pathless helper (redirects `/payment` → `/programs`).
-- `src/routes/_authenticated/payment.pay.$orderId.tsx` — QR + UTR + screenshot upload; polls status.
-- `src/routes/_authenticated/payment.success.$orderId.tsx`
-- `src/routes/_authenticated/payment.failed.$orderId.tsx`
-- `src/routes/_authenticated/payment.pending.$orderId.tsx`
-- `src/routes/_authenticated/admin.payments.index.tsx` — tabs: Pending / Verified / Rejected / All. Reuses existing admin shell.
-- `src/routes/_authenticated/admin.payments.$id.tsx` — detail + Approve/Reject/Request-info actions.
-- `src/routes/_authenticated/admin.payments.settings.tsx` — QR/UPI/merchant editor.
+Add "Authority" entry under the existing Content group in the admin sidebar, gated by content-editor permission.
 
-Routes are all under `_authenticated/`, so the platform's auth gate covers them. Guest checkout is out of scope for v1 (spec says "Generate Student Account if required" — approval flow can invite via existing auth); a follow-up can add a public entry.
+### 5. Public-page trust signals (additive, blog only in v1)
 
-## Course "Enroll Now" wiring
+In `blog.$slug.tsx`, add a compact "Reviewed by · Fact-checked · Last updated · N sources" strip above the article body, plus a Sources section at the end that lists attached citations. Skipped when no data — zero visual change for posts without authority data.
 
-The only touch to existing UI. Find every `<Link>` / `<button>` currently labelled "Enroll Now" / "Apply Now" / "Buy Now" on the course pages and make the click navigate to `/payment/${course.id}`. No visual change — only the `to` / `onClick` handler. Files expected: `src/routes/programs.$category.$course.index.tsx`, `src/components/course/*` CTA components, and course cards used elsewhere. Existing `programs.$category.$course.apply.tsx` (lead form) is left as-is; the new payment route is the paid enrollment path.
+## Explicit non-goals
 
-If a course page's CTA is deeply nested inside a shared component used outside programs, we add an opt-in prop (default preserves current behaviour) rather than editing that component's default.
+- No changes to existing SEO metadata, schema, canonical, OG, sitemaps.
+- No changes to existing blog editor composition or layout.
+- No changes to public blog design beyond the additive trust strip + sources block, which render only when data exists.
+- No auto-rewriting of content, ever.
+- No changes to `content_authors` schema (already sufficient).
 
-## Admin menu
+## Order of build
 
-Add exactly one item — "Payments" — pointing to `/admin/payments`, appended to the existing admin sidebar registry. No other admin UI change.
+1. Migration (5 tables + grants + RLS + trigger).
+2. Analyzer server fn + workflow transitions + citation CRUD.
+3. Authority panel wired into blog editor.
+4. Editor dashboard route + sidebar entry.
+5. Public trust strip + sources block on blog detail.
+6. Extend to courses + landing pages when you say so (adapter ~50 lines each).
 
-## Emails (additive templates only)
+## Open items I still need before I write code
 
-- `PaymentReceivedEmail` → student on submit.
-- `PaymentApprovedEmail` → student on approve (+ enrollment link).
-- `PaymentRejectedEmail` → student on reject (with reason).
-- `EnrollmentActivatedEmail` → student.
-- `NewPaymentAdminEmail` → admins on submit.
+1. **Scope**: blog-only v1 (then courses/landing per follow-up), or all three in one pass?
+2. **Unshipped prior asks** — still waiting on your steer for the blog perf/analytics/section-regen plan and the Enterprise SEO Phase 2/3/4 direction (options 1/2/3 I offered last time), and the SEO Copilot "blog only vs all 7" pick from the message before this one.
 
-Wired via existing `sendLovableEmail` helper; if the project has no email domain configured yet, sending is a no-op and the flow still succeeds (logged).
-
-## Security
-
-- All form input validated with `zod` (lengths, regex for phone/UTR).
-- Screenshot upload: max 5 MB, `image/png|image/jpeg|image/webp`, scoped to owner path.
-- Duplicate UTR rejected at DB (partial unique index) and in server fn.
-- Every server fn re-verifies auth / role. Admin fns re-check `has_role`.
-- No secrets read at module scope.
-
-## Provider abstraction (future-ready)
-
-Reuse the existing `PaymentProvider` interface in `src/lib/billing/providers/types.ts` by adding a new `upi_manual` implementation under `src/lib/payments/central/providers/upi-manual.server.ts`. The checkout server fn depends on that interface, so adding Razorpay/Stripe later is one new adapter + one registry entry. `payments--enable_stripe_payments` / Cashfree paths are untouched.
-
-## Verification
-
-- `bun run build` and `tsgo --noEmit` pass.
-- Manual walkthrough via Playwright of one course → `/payment/:id` → form submit → payment page (mock QR) → UTR submit → admin approve → success page.
-- Confirm no existing routes changed behaviour (spot-check `/`, `/programs`, `/admin`).
-
-## What is intentionally NOT done
-
-- No changes to `enrollments` schema. Approval writes a new `enrollments` row using existing columns.
-- No changes to existing admin dashboards, `admin.payment-verification`, `admin.payment-links.*`, or partner payment flows.
-- No auto gateway integration (Cashfree/Stripe/etc.) — interface is ready but v1 ships UPI manual only, per spec.
-- No refund UI — DB status supports it; UI is deferred.
-
-Reply "go" to implement, or tell me which parts to trim/expand. This is ~15 new files + 1 migration + storage buckets + 5 email templates.
+Reply with any of: `authority: blog only` / `authority: all 3` / `authority: pause, do SEO Copilot first` / `authority: pause, do blog perf first`. Whichever you pick I'll build straight through without re-asking.
