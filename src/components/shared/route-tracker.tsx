@@ -3,6 +3,24 @@ import { useEffect } from "react";
 
 import { recordVisit, track } from "@/lib/intent";
 import { inferKindFromPath, trackVisit } from "@/lib/mentor/storage";
+import { trackFunnel } from "@/lib/conversion-intelligence/track";
+import type { FunnelStage } from "@/lib/conversion-intelligence/channel";
+
+function inferFunnelStage(pathname: string): { stage: FunnelStage; entityId?: string } | null {
+  if (pathname === "/") return { stage: "homepage" };
+  const program = pathname.match(/^\/programs\/([^/]+)(?:\/([^/]+))?/);
+  if (program) return { stage: "program", entityId: program[2] ?? program[1] };
+  const course = pathname.match(/^\/courses?\/([^/]+)/);
+  if (course) return { stage: "course", entityId: course[1] };
+  const blog = pathname.match(/^\/blog\/([^/?#]+)/);
+  if (blog) return { stage: "blog", entityId: blog[1] };
+  if (/^\/(lp|landing|offer|campaigns?)\/[^/]+/.test(pathname)) {
+    const m = pathname.match(/^\/[^/]+\/([^/?#]+)/);
+    return { stage: "landing", entityId: m?.[1] };
+  }
+  return null;
+}
+
 
 /**
  * Records every route visit into the intent store and emits anonymous
@@ -16,6 +34,10 @@ export function RouteTracker() {
     if (/^\/blog\/.+/.test(pathname)) track("blog_read");
     if (/^\/compare\/.+/.test(pathname)) track("comparison_opened");
     if (/consultation|book-consultation/.test(pathname)) track("consultation_clicked");
+
+    // Conversion Intelligence — fire-and-forget funnel stage
+    const funnel = inferFunnelStage(pathname);
+    if (funnel) void trackFunnel({ stage: funnel.stage, entityId: funnel.entityId, pagePath: pathname });
 
     // Skip suppressed / infra routes from Recently Viewed
     const skip =
