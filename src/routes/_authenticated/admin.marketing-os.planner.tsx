@@ -125,7 +125,23 @@ function Planner() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const canGenerate = businessName.trim().length > 1 && platforms.length > 0 && goals.length > 0;
+  // Validation reads CURRENT state on every render (no stale refs, no debounce).
+  const trimmedName = businessName.trim();
+  const missing: string[] = [];
+  if (trimmedName.length < 1) missing.push("business name");
+  if (goals.length === 0) missing.push("at least one goal");
+  if (platforms.length === 0) missing.push("at least one platform");
+  const canGenerate = missing.length === 0;
+  // Super-admin debug — visible in browser console only when validation is off.
+  if (typeof window !== "undefined" && !canGenerate) {
+    // eslint-disable-next-line no-console
+    console.debug("[planner.validation]", {
+      businessName: trimmedName,
+      goals: goals.length,
+      platforms: platforms.length,
+      missing,
+    });
+  }
 
   return (
     <div className="space-y-6 max-w-6xl">
@@ -308,7 +324,7 @@ function Planner() {
 
       <div className="flex items-center justify-between gap-4 sticky bottom-0 bg-background/80 backdrop-blur border-t border-border/60 py-4">
         <div className="text-xs text-muted-foreground">
-          {canGenerate ? "Ready to generate. This takes ~15-40 seconds." : "Fill business name, at least one goal, and one platform to continue."}
+          {canGenerate ? "Ready to generate. This takes ~15-40 seconds." : `Add: ${missing.join(", ")}.`}
         </div>
         <Button size="lg" disabled={!canGenerate || m.isPending} onClick={() => m.mutate()}>
           {m.isPending ? <><Loader2 className="size-4 mr-2 animate-spin" /> Generating…</> : <><Sparkles className="size-4 mr-2" /> Generate Plan</>}

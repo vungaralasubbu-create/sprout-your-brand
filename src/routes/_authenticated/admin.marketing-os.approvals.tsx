@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   listApprovalItems, getApprovalItem, changeApprovalStatus,
   bulkDeleteApprovals, bulkDuplicateApprovals, bulkMoveCampaign, bulkChangePlatform,
   updateApprovalItem, addApprovalComment, scoreApprovalItem, restoreApprovalVersion,
-  seedApprovalDemo,
+  seedApprovalDemo, syncMyMarketingProjectApprovals,
 } from "@/lib/marketing-os/approvals.functions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -82,6 +82,7 @@ function ApprovalCenter() {
   const bulkCamp = useServerFn(bulkMoveCampaign);
   const bulkPlat = useServerFn(bulkChangePlatform);
   const seed = useServerFn(seedApprovalDemo);
+  const syncMktProjects = useServerFn(syncMyMarketingProjectApprovals);
   const qc = useQueryClient();
 
   const [view, setView] = useState<"kanban" | "list">("kanban");
@@ -140,6 +141,32 @@ function ApprovalCenter() {
     mutationFn: () => seed(),
     onSuccess: (r) => { toast.success(`Seeded ${r.created} demo items`); invalidate(); },
   });
+  const mSyncMkt = useMutation({
+    mutationFn: () => syncMktProjects(),
+    onSuccess: (r) => {
+      if (r.inserted + r.updated > 0) {
+        toast.success(`Synced ${r.inserted} new + ${r.updated} refreshed across ${r.projects} project(s)`);
+      }
+      // eslint-disable-next-line no-console
+      console.debug("[approvals.sync.bulk]", r);
+      invalidate();
+    },
+    onError: (e: Error) => {
+      // eslint-disable-next-line no-console
+      console.error("[approvals.sync.bulk] failed", e);
+    },
+  });
+
+  // Auto-sync Marketing Project assets into the queue on mount so the center
+  // is never empty after a project finishes. Idempotent + guarded to run once
+  // per browser session.
+  const didAutoSync = useRef(false);
+  useEffect(() => {
+    if (didAutoSync.current) return;
+    didAutoSync.current = true;
+    mSyncMkt.mutate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function toggleSelected(id: string) {
     setSelected((s) => {
@@ -177,6 +204,16 @@ function ApprovalCenter() {
           </div>
           <Button variant="outline" size="sm" onClick={() => setShowFilters((s) => !s)}>
             <Filter className="size-4 mr-2" /> Filters
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => mSyncMkt.mutate()}
+            disabled={mSyncMkt.isPending}
+            title="Pull in every generated asset from your Marketing Projects"
+          >
+            {mSyncMkt.isPending ? <Loader2 className="size-4 mr-2 animate-spin" /> : <RefreshCw className="size-4 mr-2" />}
+            Sync Marketing Projects
           </Button>
           {items.length === 0 && (
             <Button size="sm" onClick={() => mSeed.mutate()} disabled={mSeed.isPending}>
