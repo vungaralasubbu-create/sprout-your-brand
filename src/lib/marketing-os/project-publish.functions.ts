@@ -751,3 +751,99 @@ export const regeneratePost = createServerFn({ method: "POST" })
     await db.from("marketing_projects").update({ result }).eq("id", data.projectId);
     return { ok: true, post: list[data.index] };
   });
+
+/* ------------------- POSTER EDIT / REGENERATE ------------------- */
+
+const PosterEditSchema = z.object({
+  projectId: z.string().uuid(),
+  index: z.number().int().nonnegative(),
+  edits: z.object({
+    title: z.string().max(120).optional(),
+    headline: z.string().max(120).optional(),
+    subtitle: z.string().max(240).optional(),
+    cta: z.string().max(60).optional(),
+    description: z.string().max(280).optional(),
+    dominant_colors: z.array(z.string()).max(6).optional(),
+    text_color: z.string().max(20).optional(),
+    accent_color: z.string().max(20).optional(),
+    layout: z.string().max(40).optional(),
+    image_url: z.string().optional(),
+  }),
+});
+
+export const updatePoster = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => PosterEditSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    const { db } = await getProjectBridgeDb(context.supabase, context.userId);
+    const { data: cur, error: rErr } = await db
+      .from("marketing_projects")
+      .select("result")
+      .eq("id", data.projectId)
+      .maybeSingle();
+    if (rErr || !cur) throw new Error(rErr?.message ?? "Project not found");
+    const result: Any = { ...(cur.result ?? {}) };
+    const posters: Any[] = Array.isArray(result.posters) ? [...result.posters] : [];
+    if (!posters[data.index]) throw new Error("Poster not found");
+    posters[data.index] = { ...posters[data.index], ...data.edits };
+    result.posters = posters;
+    const { error } = await db
+      .from("marketing_projects")
+      .update({ result })
+      .eq("id", data.projectId);
+    if (error) throw new Error(error.message);
+    return { ok: true, poster: posters[data.index] };
+  });
+
+export const regeneratePoster = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({
+    projectId: z.string().uuid(),
+    index: z.number().int().nonnegative(),
+    backgroundPrompt: z.string().max(600).optional(),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { db } = await getProjectBridgeDb(context.supabase, context.userId);
+    const { data: cur, error: rErr } = await db
+      .from("marketing_projects")
+      .select("result")
+      .eq("id", data.projectId)
+      .maybeSingle();
+    if (rErr || !cur) throw new Error(rErr?.message ?? "Project not found");
+    const result: Any = { ...(cur.result ?? {}) };
+    const posters: Any[] = Array.isArray(result.posters) ? [...result.posters] : [];
+    const p = posters[data.index];
+    if (!p) throw new Error("Poster not found");
+
+    const { generateImageBase64 } = await import("@/lib/ai/image.server");
+    const colors = Array.isArray(p.dominant_colors) && p.dominant_colors.length
+      ? ` Palette: ${p.dominant_colors.join(", ")}.`
+      : "";
+    const style = p.style ? ` Style: ${p.style}.` : "";
+    const bg = data.backgroundPrompt ?? p.background_prompt ?? p.concept ?? p.title ?? "";
+    const prompt =
+      `Design an ABSTRACT background artwork for a social media poster.` +
+      ` ${bg}.${style}${colors}` +
+      ` Square 1:1 composition, production-quality, cinematic lighting.` +
+      ` STRICT: absolutely NO text, NO letters, NO numbers, NO logos,` +
+      ` NO typography, NO watermarks. Pure artwork only.`;
+    try {
+      const b64 = await generateImageBase64(prompt, { size: "1024x1024", quality: "low" });
+      posters[data.index] = {
+        ...p,
+        image_url: `data:image/png;base64,${b64}`,
+        image_error: undefined,
+        background_prompt: data.backgroundPrompt ?? p.background_prompt,
+      };
+    } catch (e: Any) {
+      throw new Error(e?.message ?? "Image generation failed");
+    }
+    result.posters = posters;
+    const { error } = await db
+      .from("marketing_projects")
+      .update({ result })
+      .eq("id", data.projectId);
+    if (error) throw new Error(error.message);
+    return { ok: true, poster: posters[data.index] };
+  });
+
