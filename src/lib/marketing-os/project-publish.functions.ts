@@ -11,6 +11,21 @@ type Any = any;
 const SUPPORTED = ["instagram", "facebook", "linkedin", "x"] as const;
 type SupportedPlatform = (typeof SUPPORTED)[number];
 
+async function canManagePlatformPublishing(supabase: Any, userId: string): Promise<boolean> {
+  const [{ data: isSuper }, { data: isAdmin }] = await Promise.all([
+    supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
+    supabase.rpc("has_role", { _user_id: userId, _role: "admin" }),
+  ]);
+  return !!isSuper || !!isAdmin;
+}
+
+async function getProjectBridgeDb(supabase: Any, userId: string): Promise<{ db: Any; canManageAll: boolean }> {
+  const canManageAll = await canManagePlatformPublishing(supabase, userId);
+  if (!canManageAll) return { db: supabase, canManageAll };
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  return { db: supabaseAdmin as Any, canManageAll };
+}
+
 /**
  * The generator sometimes stores poster images inline as
  * `data:image/png;base64,...` (~1.5 MB per poster). Two problems:
@@ -136,16 +151,17 @@ async function loadProjectAndAccounts(
   platforms?: SupportedPlatform[],
   opts: { includeResult?: boolean } = { includeResult: true },
 ) {
+  const { db, canManageAll } = await getProjectBridgeDb(supabase, userId);
   const t0 = Date.now();
   const cols = opts.includeResult
     ? "id, created_by, campaign_id, name, result"
     : "id, created_by, campaign_id, name";
-  const { data: project, error } = await supabase
+  let projectQ = db
     .from("marketing_projects")
     .select(cols)
-    .eq("id", projectId)
-    .eq("created_by", userId)
-    .maybeSingle();
+    .eq("id", projectId);
+  if (!canManageAll) projectQ = projectQ.eq("created_by", userId);
+  const { data: project, error } = await projectQ.maybeSingle();
   const projMs = Date.now() - t0;
   if (error || !project) {
     console.error(`[publish.loadProject] failed in ${projMs}ms: ${error?.message ?? "not found"}`);
@@ -155,17 +171,18 @@ async function loadProjectAndAccounts(
 
   const t1 = Date.now();
   const wanted = (platforms?.length ? platforms : (SUPPORTED as readonly string[])) as string[];
-  const { data: accounts, error: aErr } = await supabase
+  let accountsQ = db
     .from("soc_accounts")
-    .select("id, platform, account_name, connection_status, can_post")
-    .eq("owner_id", userId)
+    .select("id, owner_id, platform, account_name, connection_status, can_post")
     .in("platform", wanted)
     .eq("connection_status", "connected");
+  if (!canManageAll) accountsQ = accountsQ.eq("owner_id", userId);
+  const { data: accounts, error: aErr } = await accountsQ;
   console.log(`[publish.loadAccounts] ${accounts?.length ?? 0} rows in ${Date.now() - t1}ms`);
   if (aErr) throw new Error(aErr.message);
 
   const usable = (accounts ?? []).filter((a: Any) => a.can_post !== false);
-  return { project, accounts: usable as Any[] };
+  return { project, accounts: usable as Any[], db, canManageAll };
 }
 
 function makeJobRows(opts: {
@@ -184,7 +201,7 @@ function makeJobRows(opts: {
   for (const pl of payloads) {
     for (const acc of opts.accounts) {
       rows.push({
-        owner_id: opts.userId,
+        owner_id: acc.owner_id ?? opts.userId,
         created_by: opts.userId,
         campaign,
         campaign_id: opts.project.campaign_id ?? null,
@@ -210,18 +227,19 @@ function makeJobRows(opts: {
   return rows;
 }
 
-async function markProjectPublishState(supabase: Any, projectId: string, patch: Record<string, unknown>) {
+async function markProjectPublishState(supabase: Any, userId: string, projectId: string, patch: Record<string, unknown>) {
   // Write to the dedicated small `publish_state` column instead of rewriting
   // the multi-MB `result` JSONB (which triggered Postgres statement_timeout
   // on TOAST rewrite during Publish Now).
+  const { db } = await getProjectBridgeDb(supabase, userId);
   const t0 = Date.now();
-  const { data: cur } = await supabase
+  const { data: cur } = await db
     .from("marketing_projects")
     .select("publish_state")
     .eq("id", projectId)
     .maybeSingle();
   const merged = { ...((cur?.publish_state ?? {}) as Record<string, unknown>), ...patch };
-  const { error } = await supabase
+  const { error } = await db
     .from("marketing_projects")
     .update({ publish_state: merged })
     .eq("id", projectId);
@@ -236,20 +254,22 @@ export const getProjectPublishStatus = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => z.object({ projectId: z.string().uuid() }).parse(raw))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: project } = await supabase
+    const { db, canManageAll } = await getProjectBridgeDb(supabase, userId);
+    let projectQ = db
       .from("marketing_projects")
       .select("id, name, publish_state")
-      .eq("id", data.projectId)
-      .eq("created_by", userId)
-      .maybeSingle();
+      .eq("id", data.projectId);
+    if (!canManageAll) projectQ = projectQ.eq("created_by", userId);
+    const { data: project } = await projectQ.maybeSingle();
     if (!project) throw new Error("Project not found");
     const campaign = String(project.name ?? "Marketing Project");
-    const { data: jobs } = await supabase
+    let jobsQ = db
       .from("publishing_jobs")
       .select("id, platform, status, scheduled_at, published_at, platform_url, platform_post_id, error_message, account_label")
-      .eq("owner_id", userId)
       .eq("campaign", campaign)
       .order("scheduled_at", { ascending: true });
+    if (!canManageAll) jobsQ = jobsQ.eq("owner_id", userId);
+    const { data: jobs } = await jobsQ;
     const publish = (project.publish_state && Object.keys(project.publish_state).length)
       ? project.publish_state
       : { state: "draft" };
@@ -262,7 +282,7 @@ export const saveProjectDraft = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ projectId: z.string().uuid() }).parse(raw))
   .handler(async ({ data, context }) => {
-    await markProjectPublishState(context.supabase, data.projectId, { state: "draft", updated_at: new Date().toISOString() });
+    await markProjectPublishState(context.supabase, context.userId, data.projectId, { state: "draft", updated_at: new Date().toISOString() });
     return { ok: true };
   });
 
@@ -274,7 +294,7 @@ export const approveProject = createServerFn({ method: "POST" })
     const now = new Date().toISOString();
     console.log(`[project.approve] approve clicked userId=${userId} projectId=${data.projectId}`);
 
-    const { project, accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId);
+    const { project, accounts, db } = await loadProjectAndAccounts(supabase, userId, data.projectId);
     const rows = makeJobRows({
       userId,
       project,
@@ -285,7 +305,7 @@ export const approveProject = createServerFn({ method: "POST" })
     });
 
     console.log(`[project.approve] inserting publishing_jobs count=${rows.length}`);
-    const { data: ins, error } = await supabase
+    const { data: ins, error } = await db
       .from("publishing_jobs")
       .insert(rows as Any)
       .select("id, platform, account_id");
@@ -296,7 +316,7 @@ export const approveProject = createServerFn({ method: "POST" })
 
     const jobs = (ins ?? []) as Array<{ id: string; platform: string; account_id: string }>;
     console.log(`[project.approve] publishing job ids=${jobs.map((j) => j.id).join(",")}`);
-    await markProjectPublishState(supabase, data.projectId, {
+    await markProjectPublishState(supabase, userId, data.projectId, {
       state: "publishing",
       approved_by: userId,
       approved_at: now,
@@ -320,7 +340,7 @@ export const rejectProject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw: unknown) => z.object({ projectId: z.string().uuid(), reason: z.string().optional() }).parse(raw))
   .handler(async ({ data, context }) => {
-    await markProjectPublishState(context.supabase, data.projectId, {
+    await markProjectPublishState(context.supabase, context.userId, data.projectId, {
       state: "rejected",
       rejected_by: context.userId,
       rejected_at: new Date().toISOString(),
@@ -341,7 +361,7 @@ export const publishProjectNow = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => PlatformsSchema.parse(raw))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { project, accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms);
+    const { project, accounts, db } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms);
     const rows = makeJobRows({
       userId, project, accounts,
       scheduledAt: new Date().toISOString(),
@@ -350,10 +370,10 @@ export const publishProjectNow = createServerFn({ method: "POST" })
     });
     await materializeRowsMedia(rows, userId, data.projectId);
     const tIns = Date.now();
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    const { data: ins, error } = await db.from("publishing_jobs").insert(rows as Any).select("id");
     console.log(`[publishProjectNow] insert ${rows.length} jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
-    await markProjectPublishState(supabase, data.projectId, {
+    await markProjectPublishState(supabase, userId, data.projectId, {
       state: "publishing",
       last_action: "publish_now",
       last_action_at: new Date().toISOString(),
@@ -384,7 +404,7 @@ export const scheduleProject = createServerFn({ method: "POST" })
   .inputValidator((raw: unknown) => ScheduleSchema.parse(raw))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { project, accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms);
+    const { project, accounts, db } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms);
     const rows = makeJobRows({
       userId, project, accounts,
       scheduledAt: data.scheduled_at,
@@ -393,10 +413,10 @@ export const scheduleProject = createServerFn({ method: "POST" })
     });
     await materializeRowsMedia(rows, userId, data.projectId);
     const tIns = Date.now();
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    const { data: ins, error } = await db.from("publishing_jobs").insert(rows as Any).select("id");
     console.log(`[scheduleProject] insert ${rows.length} jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
-    await markProjectPublishState(supabase, data.projectId, {
+    await markProjectPublishState(supabase, userId, data.projectId, {
       state: "scheduled",
       last_action: "schedule",
       last_action_at: new Date().toISOString(),
@@ -429,13 +449,14 @@ async function readProjectResult(supabase: Any, userId: string, projectId: strin
   // JSONB blob (posters store 1.5MB base64 per image). That was the
   // dominant contributor to statement_timeout on Publish Now. Fetch only
   // the two JSON sub-paths we actually need to build publishing_jobs rows.
+  const { db, canManageAll } = await getProjectBridgeDb(supabase, userId);
   const t0 = Date.now();
-  const { data: project, error } = await supabase
+  let projectQ = db
     .from("marketing_projects")
     .select("id, created_by, campaign_id, name, result_content:result->content, result_posters:result->posters")
-    .eq("id", projectId)
-    .eq("created_by", userId)
-    .maybeSingle();
+    .eq("id", projectId);
+  if (!canManageAll) projectQ = projectQ.eq("created_by", userId);
+  const { data: project, error } = await projectQ.maybeSingle();
   console.log(`[publish.readProjectResult] in ${Date.now() - t0}ms err=${error?.message ?? "-"}`);
   if (error || !project) throw new Error("Project not found");
   // Re-shape so downstream code that reads `project.result.content` /
@@ -453,17 +474,18 @@ async function readProjectResult(supabase: Any, userId: string, projectId: strin
 }
 
 
-async function writePostStates(supabase: Any, projectId: string, states: Record<string, PostState>) {
+async function writePostStates(supabase: Any, userId: string, projectId: string, states: Record<string, PostState>) {
   // Persist per-post state to the dedicated `post_states` column so we no
   // longer read+rewrite the multi-MB `result` blob on every approve/publish.
+  const { db } = await getProjectBridgeDb(supabase, userId);
   const t0 = Date.now();
-  const { data: cur } = await supabase
+  const { data: cur } = await db
     .from("marketing_projects")
     .select("post_states")
     .eq("id", projectId)
     .maybeSingle();
   const merged = { ...((cur?.post_states ?? {}) as Record<string, PostState>), ...states };
-  const { error } = await supabase
+  const { error } = await db
     .from("marketing_projects")
     .update({ post_states: merged })
     .eq("id", projectId);
@@ -471,10 +493,11 @@ async function writePostStates(supabase: Any, projectId: string, states: Record<
   if (error) throw new Error(error.message);
 }
 
-async function writePostEdits(supabase: Any, projectId: string, index: number, edits: PostState["edited"]) {
+async function writePostEdits(supabase: Any, userId: string, projectId: string, index: number, edits: PostState["edited"]) {
   // Content lives inside `result`; edits still need to update it, but state
   // is stored separately in `post_states` to avoid two large rewrites.
-  const { data: cur } = await supabase
+  const { db } = await getProjectBridgeDb(supabase, userId);
+  const { data: cur } = await db
     .from("marketing_projects")
     .select("result, post_states")
     .eq("id", projectId)
@@ -486,7 +509,7 @@ async function writePostEdits(supabase: Any, projectId: string, index: number, e
   result.content = content;
   const post_states = { ...((cur?.post_states ?? {}) as Record<string, PostState>) };
   post_states[String(index)] = { ...(post_states[String(index)] ?? { state: "draft" }), edited: edits, last_action_at: new Date().toISOString() };
-  await supabase.from("marketing_projects").update({ result, post_states }).eq("id", projectId);
+  await db.from("marketing_projects").update({ result, post_states }).eq("id", projectId);
 }
 
 function buildRowsForIndexes(opts: {
@@ -512,7 +535,7 @@ function buildRowsForIndexes(opts: {
     const hashtags = Array.isArray(c.hashtags) ? c.hashtags.filter((h: unknown) => typeof h === "string") : [];
     for (const acc of opts.accounts) {
       rows.push({
-        owner_id: opts.userId,
+        owner_id: acc.owner_id ?? opts.userId,
         created_by: opts.userId,
         campaign,
         campaign_id: opts.project.campaign_id ?? null,
@@ -550,7 +573,7 @@ export const approvePosts = createServerFn({ method: "POST" })
     const now = new Date().toISOString();
     const patch: Record<string, PostState> = {};
     for (const i of data.indexes) patch[String(i)] = { state: "approved", last_action_at: now };
-    await writePostStates(context.supabase, data.projectId, patch);
+    await writePostStates(context.supabase, context.userId, data.projectId, patch);
     return { ok: true, count: data.indexes.length };
   });
 
@@ -561,7 +584,7 @@ export const rejectPosts = createServerFn({ method: "POST" })
     const now = new Date().toISOString();
     const patch: Record<string, PostState> = {};
     for (const i of data.indexes) patch[String(i)] = { state: "rejected", last_action_at: now };
-    await writePostStates(context.supabase, data.projectId, patch);
+    await writePostStates(context.supabase, context.userId, data.projectId, patch);
     return { ok: true, count: data.indexes.length };
   });
 
@@ -578,7 +601,7 @@ export const updatePost = createServerFn({ method: "POST" })
     }),
   }).parse(raw))
   .handler(async ({ data, context }) => {
-    await writePostEdits(context.supabase, data.projectId, data.index, data.edits);
+    await writePostEdits(context.supabase, context.userId, data.projectId, data.index, data.edits);
     return { ok: true };
   });
 
@@ -593,7 +616,7 @@ export const publishPostsNow = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const project = await readProjectResult(supabase, userId, data.projectId);
     // Second call skips fetching the multi-MB `result` blob again — accounts only.
-    const { accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms, { includeResult: false });
+    const { accounts, db } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms, { includeResult: false });
     if (!accounts.length) throw new Error("No connected accounts to publish to");
     const now = new Date().toISOString();
     const rows = buildRowsForIndexes({
@@ -604,7 +627,7 @@ export const publishPostsNow = createServerFn({ method: "POST" })
     await materializeRowsMedia(rows, userId, data.projectId);
     const tIns = Date.now();
     // Return only ids — payload/media_urls carry image references, no need to echo them back.
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    const { data: ins, error } = await db.from("publishing_jobs").insert(rows as Any).select("id");
     console.log(`[publishPostsNow] inserted ${rows.length} publishing_jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
 
@@ -621,7 +644,7 @@ export const publishPostsNow = createServerFn({ method: "POST" })
     for (const i of data.indexes) {
       patch[String(i)] = { state: "publishing", last_action_at: now, job_ids: jobsByIdx[String(i)] ?? [] };
     }
-    await writePostStates(supabase, data.projectId, patch);
+    await writePostStates(supabase, userId, data.projectId, patch);
 
     try {
       const tWorker = Date.now();
@@ -645,7 +668,7 @@ export const schedulePosts = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const project = await readProjectResult(supabase, userId, data.projectId);
-    const { accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms, { includeResult: false });
+    const { accounts, db } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms, { includeResult: false });
     if (!accounts.length) throw new Error("No connected accounts to publish to");
     const rows = buildRowsForIndexes({
       userId, project, accounts, indexes: data.indexes,
@@ -654,7 +677,7 @@ export const schedulePosts = createServerFn({ method: "POST" })
     if (!rows.length) throw new Error("No selected posts to schedule");
     await materializeRowsMedia(rows, userId, data.projectId);
     const tIns = Date.now();
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    const { data: ins, error } = await db.from("publishing_jobs").insert(rows as Any).select("id");
     console.log(`[schedulePosts] inserted ${rows.length} publishing_jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
 
@@ -673,7 +696,7 @@ export const schedulePosts = createServerFn({ method: "POST" })
         job_ids: jobsByIdx[String(i)] ?? [],
       };
     }
-    await writePostStates(supabase, data.projectId, patch);
+    await writePostStates(supabase, userId, data.projectId, patch);
     return { created: ins?.length ?? 0, indexes: data.indexes, scheduled_at: data.scheduled_at };
   });
 
@@ -706,7 +729,8 @@ export const regeneratePost = createServerFn({ method: "POST" })
     });
     const parsed = (res && typeof res === "object" ? res : {}) as Record<string, Any>;
 
-    const { data: cur } = await supabase.from("marketing_projects").select("result").eq("id", data.projectId).maybeSingle();
+    const { db } = await getProjectBridgeDb(supabase, userId);
+    const { data: cur } = await db.from("marketing_projects").select("result").eq("id", data.projectId).maybeSingle();
     const result: Record<string, Any> = { ...((cur?.result ?? {}) as Record<string, Any>) };
     const list: Any[] = Array.isArray(result.content) ? [...result.content] : [];
     list[data.index] = {
@@ -724,6 +748,6 @@ export const regeneratePost = createServerFn({ method: "POST" })
       last_action_at: new Date().toISOString(),
     };
     result.post_states = post_states;
-    await supabase.from("marketing_projects").update({ result }).eq("id", data.projectId);
+    await db.from("marketing_projects").update({ result }).eq("id", data.projectId);
     return { ok: true, post: list[data.index] };
   });
