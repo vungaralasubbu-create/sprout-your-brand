@@ -97,7 +97,16 @@ export const getMarketingProject = createServerFn({ method: "GET" })
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!proj) throw new Error("Project not found");
-    return { project: proj as MarketingProject };
+    // Surface state from dedicated columns as if it lived inside `result`,
+    // so existing UI (which reads `result.post_states` / `result.publish`)
+    // keeps working after the storage split.
+    const p: any = proj;
+    const merged = {
+      ...(p.result ?? {}),
+      post_states: { ...((p.result ?? {}).post_states ?? {}), ...(p.post_states ?? {}) },
+      publish: { ...((p.result ?? {}).publish ?? {}), ...(p.publish_state ?? {}) },
+    };
+    return { project: { ...p, result: merged } as MarketingProject };
   });
 
 // ---------------- list ----------------
