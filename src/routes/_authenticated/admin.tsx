@@ -92,6 +92,7 @@ const NAV: NavGroup[] = [
       { to: "/admin/knowledge-base", label: "Knowledge Base", icon: HelpCircle },
 
       { to: "/admin/content-intelligence", label: "Content Intelligence", icon: Activity },
+      { to: "/admin/content-authority", label: "Content Authority", icon: ShieldCheck },
       { to: "/admin/marketing-os", label: "Marketing OS", icon: Sparkles },
     ],
   },
