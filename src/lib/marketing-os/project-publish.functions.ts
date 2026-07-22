@@ -285,3 +285,223 @@ export const scheduleProject = createServerFn({ method: "POST" })
     });
     return { created: ins?.length ?? 0, scheduled_at: data.scheduled_at };
   });
+
+/* ------------------- PER-POST ACTIONS (additive) -------------------
+ *
+ * Each generated post lives at `result.content[index]`. Per-post state
+ * (approved/rejected/scheduled/publishing/published + edits) is stored at
+ * `result.post_states[index]`. The Content tab reads/writes this map so
+ * every post gains Preview / Edit / Approve / Reject / Schedule / Publish Now.
+ * ---------------------------------------------------------------------- */
+
+type PostState = {
+  state: "draft" | "approved" | "rejected" | "scheduled" | "publishing" | "published" | "failed";
+  edited?: { hook?: string; body?: string; cta?: string; hashtags?: string[] };
+  scheduled_at?: string;
+  timezone?: string;
+  last_action_at?: string;
+  job_ids?: string[];
+};
+
+async function readProjectResult(supabase: Any, userId: string, projectId: string) {
+  const { data: project, error } = await supabase
+    .from("marketing_projects")
+    .select("id, created_by, campaign_id, name, result")
+    .eq("id", projectId)
+    .eq("created_by", userId)
+    .maybeSingle();
+  if (error || !project) throw new Error("Project not found");
+  return project as Any;
+}
+
+async function writePostStates(supabase: Any, projectId: string, states: Record<string, PostState>) {
+  const { data: cur } = await supabase.from("marketing_projects").select("result").eq("id", projectId).maybeSingle();
+  const result = { ...(cur?.result ?? {}) };
+  result.post_states = { ...(result.post_states ?? {}), ...states };
+  await supabase.from("marketing_projects").update({ result }).eq("id", projectId);
+}
+
+async function writePostEdits(supabase: Any, projectId: string, index: number, edits: PostState["edited"]) {
+  const { data: cur } = await supabase.from("marketing_projects").select("result").eq("id", projectId).maybeSingle();
+  const result = { ...(cur?.result ?? {}) };
+  const content: Any[] = Array.isArray(result.content) ? [...result.content] : [];
+  if (!content[index]) throw new Error("Post not found");
+  content[index] = { ...content[index], ...edits, hashtags: edits?.hashtags ?? content[index].hashtags };
+  result.content = content;
+  const post_states = { ...(result.post_states ?? {}) };
+  post_states[String(index)] = { ...(post_states[String(index)] ?? { state: "draft" }), edited: edits, last_action_at: new Date().toISOString() };
+  result.post_states = post_states;
+  await supabase.from("marketing_projects").update({ result }).eq("id", projectId);
+}
+
+function buildRowsForIndexes(opts: {
+  userId: string;
+  project: Any;
+  accounts: Any[];
+  indexes: number[];
+  scheduledAt: string;
+  timezone: string;
+  mode: "publish_now" | "schedule";
+}) {
+  const content: Any[] = Array.isArray(opts.project.result?.content) ? opts.project.result.content : [];
+  const posters: Any[] = Array.isArray(opts.project.result?.posters) ? opts.project.result.posters : [];
+  const campaign = String(opts.project.name ?? "Marketing Project");
+  const rows: Any[] = [];
+  for (const i of opts.indexes) {
+    const c = content[i];
+    if (!c) continue;
+    const poster = posters[i] ?? posters[0];
+    const media_urls: string[] = [];
+    if (poster?.image_url && typeof poster.image_url === "string") media_urls.push(poster.image_url);
+    const body = String(c.body ?? c.caption ?? c.text ?? "");
+    const hashtags = Array.isArray(c.hashtags) ? c.hashtags.filter((h: unknown) => typeof h === "string") : [];
+    for (const acc of opts.accounts) {
+      rows.push({
+        owner_id: opts.userId,
+        created_by: opts.userId,
+        campaign,
+        campaign_id: opts.project.campaign_id ?? null,
+        platform: String(acc.platform).toLowerCase(),
+        account_id: acc.id,
+        account_label: acc.account_name ?? null,
+        mode: opts.mode,
+        status: "queued",
+        scheduled_at: opts.scheduledAt,
+        timezone: opts.timezone,
+        priority: 5,
+        payload: {
+          title: String(c.hook ?? c.title ?? "Post"),
+          body,
+          hashtags,
+          cta: c.cta ? String(c.cta) : undefined,
+          media_urls,
+          metadata: { hook: c.hook, source: "marketing_project", project_id: opts.project.id, post_index: i },
+        },
+      });
+    }
+  }
+  return rows;
+}
+
+const PostIndexesSchema = z.object({
+  projectId: z.string().uuid(),
+  indexes: z.array(z.number().int().nonnegative()).min(1),
+});
+
+export const approvePosts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => PostIndexesSchema.parse(raw))
+  .handler(async ({ data, context }) => {
+    const now = new Date().toISOString();
+    const patch: Record<string, PostState> = {};
+    for (const i of data.indexes) patch[String(i)] = { state: "approved", last_action_at: now };
+    await writePostStates(context.supabase, data.projectId, patch);
+    return { ok: true, count: data.indexes.length };
+  });
+
+export const rejectPosts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => PostIndexesSchema.extend({ reason: z.string().optional() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const now = new Date().toISOString();
+    const patch: Record<string, PostState> = {};
+    for (const i of data.indexes) patch[String(i)] = { state: "rejected", last_action_at: now };
+    await writePostStates(context.supabase, data.projectId, patch);
+    return { ok: true, count: data.indexes.length };
+  });
+
+export const updatePost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => z.object({
+    projectId: z.string().uuid(),
+    index: z.number().int().nonnegative(),
+    edits: z.object({
+      hook: z.string().optional(),
+      body: z.string().optional(),
+      cta: z.string().optional(),
+      hashtags: z.array(z.string()).optional(),
+    }),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    await writePostEdits(context.supabase, data.projectId, data.index, data.edits);
+    return { ok: true };
+  });
+
+export const publishPostsNow = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => PostIndexesSchema.extend({
+    platforms: z.array(z.enum(SUPPORTED)).optional(),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const project = await readProjectResult(supabase, userId, data.projectId);
+    const { accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms);
+    if (!accounts.length) throw new Error("No connected accounts to publish to");
+    const now = new Date().toISOString();
+    const rows = buildRowsForIndexes({
+      userId, project, accounts, indexes: data.indexes,
+      scheduledAt: now, timezone: "UTC", mode: "publish_now",
+    });
+    if (!rows.length) throw new Error("No selected posts to publish");
+    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id, platform, account_id, payload");
+    if (error) throw new Error(error.message);
+
+    const jobsByIdx: Record<string, string[]> = {};
+    for (const row of (ins ?? []) as Any[]) {
+      const idx = row.payload?.metadata?.post_index;
+      if (typeof idx === "number") {
+        jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), row.id];
+      }
+    }
+    const patch: Record<string, PostState> = {};
+    for (const i of data.indexes) {
+      patch[String(i)] = { state: "publishing", last_action_at: now, job_ids: jobsByIdx[String(i)] ?? [] };
+    }
+    await writePostStates(supabase, data.projectId, patch);
+
+    try {
+      const { runPublisherWorker } = await import("./publisher-worker.server");
+      await runPublisherWorker({ maxJobs: rows.length });
+    } catch (e) {
+      console.error("[publishPostsNow] worker error:", (e as Error).message);
+    }
+    return { created: ins?.length ?? 0, indexes: data.indexes };
+  });
+
+export const schedulePosts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) => PostIndexesSchema.extend({
+    platforms: z.array(z.enum(SUPPORTED)).optional(),
+    scheduled_at: z.string().datetime(),
+    timezone: z.string().default("UTC"),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const project = await readProjectResult(supabase, userId, data.projectId);
+    const { accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms);
+    if (!accounts.length) throw new Error("No connected accounts to publish to");
+    const rows = buildRowsForIndexes({
+      userId, project, accounts, indexes: data.indexes,
+      scheduledAt: data.scheduled_at, timezone: data.timezone, mode: "schedule",
+    });
+    if (!rows.length) throw new Error("No selected posts to schedule");
+    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id, payload");
+    if (error) throw new Error(error.message);
+
+    const jobsByIdx: Record<string, string[]> = {};
+    for (const row of (ins ?? []) as Any[]) {
+      const idx = row.payload?.metadata?.post_index;
+      if (typeof idx === "number") jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), row.id];
+    }
+    const patch: Record<string, PostState> = {};
+    const now = new Date().toISOString();
+    for (const i of data.indexes) {
+      patch[String(i)] = {
+        state: "scheduled", last_action_at: now,
+        scheduled_at: data.scheduled_at, timezone: data.timezone,
+        job_ids: jobsByIdx[String(i)] ?? [],
+      };
+    }
+    await writePostStates(supabase, data.projectId, patch);
+    return { created: ins?.length ?? 0, indexes: data.indexes, scheduled_at: data.scheduled_at };
+  });
