@@ -502,6 +502,7 @@ import { Route as AuthenticatedAdminPaymentsGatewayRouteImport } from './routes/
 import { Route as AuthenticatedAdminPaymentsIdRouteImport } from './routes/_authenticated/admin.payments.$id'
 import { Route as AuthenticatedAdminPaymentLinksIdRouteImport } from './routes/_authenticated/admin.payment-links.$id'
 import { Route as AuthenticatedAdminPartnersIdRouteImport } from './routes/_authenticated/admin.partners.$id'
+import { Route as AuthenticatedAdminMarketingOsSettingsRouteImport } from './routes/_authenticated/admin.marketing-os.settings'
 import { Route as AuthenticatedAdminMarketingOsSeoHubRouteImport } from './routes/_authenticated/admin.marketing-os.seo-hub'
 import { Route as AuthenticatedAdminMarketingOsPublisherRouteImport } from './routes/_authenticated/admin.marketing-os.publisher'
 import { Route as AuthenticatedAdminMarketingOsPlannerRouteImport } from './routes/_authenticated/admin.marketing-os.planner'
@@ -3380,6 +3381,12 @@ const AuthenticatedAdminPartnersIdRoute =
     path: '/partners/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMarketingOsSettingsRoute =
+  AuthenticatedAdminMarketingOsSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedAdminMarketingOsRoute,
+  } as any)
 const AuthenticatedAdminMarketingOsSeoHubRoute =
   AuthenticatedAdminMarketingOsSeoHubRouteImport.update({
     id: '/seo-hub',
@@ -4566,6 +4573,7 @@ export interface FileRoutesByFullPath {
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  '/admin/marketing-os/settings': typeof AuthenticatedAdminMarketingOsSettingsRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
@@ -5155,6 +5163,7 @@ export interface FileRoutesByTo {
   '/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  '/admin/marketing-os/settings': typeof AuthenticatedAdminMarketingOsSettingsRoute
   '/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
@@ -5767,6 +5776,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/marketing-os/planner': typeof AuthenticatedAdminMarketingOsPlannerRoute
   '/_authenticated/admin/marketing-os/publisher': typeof AuthenticatedAdminMarketingOsPublisherRoute
   '/_authenticated/admin/marketing-os/seo-hub': typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  '/_authenticated/admin/marketing-os/settings': typeof AuthenticatedAdminMarketingOsSettingsRoute
   '/_authenticated/admin/partners/$id': typeof AuthenticatedAdminPartnersIdRoute
   '/_authenticated/admin/payment-links/$id': typeof AuthenticatedAdminPaymentLinksIdRoute
   '/_authenticated/admin/payments/$id': typeof AuthenticatedAdminPaymentsIdRoute
@@ -6378,6 +6388,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
     | '/admin/marketing-os/seo-hub'
+    | '/admin/marketing-os/settings'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payments/$id'
@@ -6967,6 +6978,7 @@ export interface FileRouteTypes {
     | '/admin/marketing-os/planner'
     | '/admin/marketing-os/publisher'
     | '/admin/marketing-os/seo-hub'
+    | '/admin/marketing-os/settings'
     | '/admin/partners/$id'
     | '/admin/payment-links/$id'
     | '/admin/payments/$id'
@@ -7578,6 +7590,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/marketing-os/planner'
     | '/_authenticated/admin/marketing-os/publisher'
     | '/_authenticated/admin/marketing-os/seo-hub'
+    | '/_authenticated/admin/marketing-os/settings'
     | '/_authenticated/admin/partners/$id'
     | '/_authenticated/admin/payment-links/$id'
     | '/_authenticated/admin/payments/$id'
@@ -11284,6 +11297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPartnersIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/marketing-os/settings': {
+      id: '/_authenticated/admin/marketing-os/settings'
+      path: '/settings'
+      fullPath: '/admin/marketing-os/settings'
+      preLoaderRoute: typeof AuthenticatedAdminMarketingOsSettingsRouteImport
+      parentRoute: typeof AuthenticatedAdminMarketingOsRoute
+    }
     '/_authenticated/admin/marketing-os/seo-hub': {
       id: '/_authenticated/admin/marketing-os/seo-hub'
       path: '/seo-hub'
@@ -12452,6 +12472,7 @@ interface AuthenticatedAdminMarketingOsRouteChildren {
   AuthenticatedAdminMarketingOsPlannerRoute: typeof AuthenticatedAdminMarketingOsPlannerRoute
   AuthenticatedAdminMarketingOsPublisherRoute: typeof AuthenticatedAdminMarketingOsPublisherRoute
   AuthenticatedAdminMarketingOsSeoHubRoute: typeof AuthenticatedAdminMarketingOsSeoHubRoute
+  AuthenticatedAdminMarketingOsSettingsRoute: typeof AuthenticatedAdminMarketingOsSettingsRoute
   AuthenticatedAdminMarketingOsIndexRoute: typeof AuthenticatedAdminMarketingOsIndexRoute
   AuthenticatedAdminMarketingOsPlansIdRoute: typeof AuthenticatedAdminMarketingOsPlansIdRoute
   AuthenticatedAdminMarketingOsProjectIdRoute: typeof AuthenticatedAdminMarketingOsProjectIdRoute
@@ -12487,6 +12508,8 @@ const AuthenticatedAdminMarketingOsRouteChildren: AuthenticatedAdminMarketingOsR
       AuthenticatedAdminMarketingOsPublisherRoute,
     AuthenticatedAdminMarketingOsSeoHubRoute:
       AuthenticatedAdminMarketingOsSeoHubRoute,
+    AuthenticatedAdminMarketingOsSettingsRoute:
+      AuthenticatedAdminMarketingOsSettingsRoute,
     AuthenticatedAdminMarketingOsIndexRoute:
       AuthenticatedAdminMarketingOsIndexRoute,
     AuthenticatedAdminMarketingOsPlansIdRoute:
