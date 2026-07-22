@@ -20020,8 +20020,10 @@ export type Database = {
           error: string | null
           id: string
           name: string
+          post_states: Json
           progress: number
           prompt: string
+          publish_state: Json
           result: Json
           status: string
           steps: Json
@@ -20036,8 +20038,10 @@ export type Database = {
           error?: string | null
           id?: string
           name?: string
+          post_states?: Json
           progress?: number
           prompt: string
+          publish_state?: Json
           result?: Json
           status?: string
           steps?: Json
@@ -20052,8 +20056,10 @@ export type Database = {
           error?: string | null
           id?: string
           name?: string
+          post_states?: Json
           progress?: number
           prompt?: string
+          publish_state?: Json
           result?: Json
           status?: string
           steps?: Json
