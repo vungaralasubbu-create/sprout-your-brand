@@ -76,6 +76,7 @@ const linkedin: PlatformConnector = {
   capabilities: { requiresMedia: false, supportsImages: true, supportsVideo: false, supportsThread: false, captionLimit: 3000, hashtagLimit: 10 },
   validate: (i) => {
     const issues: ValidationIssue[] = [];
+    if (!isLinkedInPublishingEnabled()) issues.push({ code: "linkedin_publishing_disabled", message: LINKEDIN_PUBLISHING_DISABLED_MESSAGE, fatal: true });
     if (!i.body?.trim() && !i.mediaUrls[0]) issues.push({ code: "empty", message: "LinkedIn post needs text or an image", fatal: true });
     return issues;
   },
