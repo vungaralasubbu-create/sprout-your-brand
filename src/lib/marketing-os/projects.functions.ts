@@ -14,7 +14,8 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { aiChat } from "@/lib/ai/router.server";
 import { buildBrandSystemPrompt } from "@/lib/marketing-os/brand-context.server";
-import { generateImageBase64 } from "@/lib/ai/image.server";
+import { generateImageBase64, isImageProviderAvailable } from "@/lib/ai/image.server";
+import { syncProjectToApprovalQueue } from "@/lib/marketing-os/approval-sync.server";
 import {
   designBrief as cdDesignBrief,
   proposeConcepts as cdProposeConcepts,
@@ -463,12 +464,25 @@ export const runProjectStep = createServerFn({ method: "POST" })
         }
         case "posters": {
           const marketingBrief = result.brief || {};
+          const posterStart = Date.now();
+          const telemetry: Array<Record<string, unknown>> = [];
+          const providerReady = isImageProviderAvailable();
+          console.log(
+            `[posters] project=${proj.id} started providerReady=${providerReady}`,
+          );
+          if (!providerReady) {
+            // Surface a clear reason instead of silently marking every concept failed.
+            throw new Error(
+              "Image provider not configured (OPENAI_API_KEY missing). Text assets were generated; posters skipped.",
+            );
+          }
 
           // Step 1 — Design Brief (creative direction)
           let dBrief: any = {};
           try {
             dBrief = await cdDesignBrief(brandSystem, marketingBrief, proj.prompt);
-          } catch {
+          } catch (e: any) {
+            console.error(`[posters] design_brief failed: ${e?.message ?? e}`);
             dBrief = {};
           }
           result.design_brief = dBrief;
@@ -482,12 +496,11 @@ export const runProjectStep = createServerFn({ method: "POST" })
               marketingBrief,
               CREATIVE_CONCEPT_COUNT,
             );
-          } catch {
+          } catch (e: any) {
+            console.error(`[posters] propose_concepts failed: ${e?.message ?? e}`);
             concepts = [];
           }
 
-          // Step 6 (pre-render) — score and drop obviously weak concepts;
-          // regenerate once if fewer than 3 pass the threshold.
           let ranked = cdFilterAndRank(concepts, CREATIVE_SCORE_THRESHOLD);
           if (ranked.kept.length < 3) {
             try {
@@ -509,7 +522,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
 
           // Step 3 — Generate ONLY the artwork background for each concept.
           const rendered = await Promise.allSettled(
-            finalConcepts.map(async (c: CreativeConcept) => {
+            finalConcepts.map(async (c: CreativeConcept, i: number) => {
               const brandLine = brandSystem
                 ? `Follow this brand system strictly for palette and mood:\n${brandSystem}\n\n`
                 : "";
@@ -530,14 +543,23 @@ export const runProjectStep = createServerFn({ method: "POST" })
                 ` STRICT: absolutely NO text, NO letters, NO numbers, NO logos,` +
                 ` NO typography, NO watermarks, NO captions. Pure artwork only —` +
                 ` all copy will be overlaid separately by the design system.`;
+              const t0 = Date.now();
+              console.log(`[posters] concept=${i} started style=${c?.style ?? "?"}`);
               try {
                 const b64 = await generateImageBase64(prompt, {
                   size: "1024x1024",
                   quality: "low",
                 });
+                const ms = Date.now() - t0;
+                telemetry.push({ index: i, status: "completed", duration_ms: ms, style: c?.style });
+                console.log(`[posters] concept=${i} completed in ${ms}ms`);
                 return { ...c, image_url: `data:image/png;base64,${b64}` };
               } catch (imgErr: any) {
-                return { ...c, image_error: imgErr?.message ?? "Image generation failed" };
+                const ms = Date.now() - t0;
+                const msg = imgErr?.message ?? "Image generation failed";
+                telemetry.push({ index: i, status: "failed", duration_ms: ms, error: msg, style: c?.style });
+                console.error(`[posters] concept=${i} FAILED in ${ms}ms: ${msg}`);
+                return { ...c, image_error: msg };
               }
             }),
           );
@@ -547,7 +569,7 @@ export const runProjectStep = createServerFn({ method: "POST" })
             const base =
               r.status === "fulfilled"
                 ? r.value
-                : { ...finalConcepts[i], image_error: "Image generation failed" };
+                : { ...finalConcepts[i], image_error: (r as PromiseRejectedResult).reason?.message ?? "Image generation failed" };
             const s = cdScorePoster(base);
             return {
               ...base,
@@ -557,8 +579,19 @@ export const runProjectStep = createServerFn({ method: "POST" })
             };
           });
           result.rejected_posters = ranked.rejected;
+          result.poster_telemetry = telemetry;
+          const okCount = telemetry.filter((t) => t.status === "completed").length;
+          const failCount = telemetry.filter((t) => t.status === "failed").length;
+          console.log(
+            `[posters] project=${proj.id} finished total=${telemetry.length} ok=${okCount} failed=${failCount} totalMs=${Date.now() - posterStart}`,
+          );
+          if (okCount === 0 && failCount > 0) {
+            const firstErr = telemetry.find((t) => t.status === "failed")?.error ?? "unknown";
+            throw new Error(`All poster image generations failed. First error: ${firstErr}`);
+          }
           break;
         }
+
 
 
         case "landing": {
@@ -639,7 +672,26 @@ export const runProjectStep = createServerFn({ method: "POST" })
           error: null,
         })
         .eq("id", proj.id);
+
+      // ---- Auto-sync generated assets to the Approval Center (best-effort) ----
+      // Runs after every step that can add assets; never throws so pipeline
+      // continues even if the mirror fails.
+      const ASSET_STEPS = new Set(["content", "posters", "email", "landing", "save"]);
+      if (ASSET_STEPS.has(data.step)) {
+        try {
+          const summary = await syncProjectToApprovalQueue(supabase, userId, proj.id);
+          console.log(
+            `[project.step=${data.step}] approval sync project=${proj.id} inserted=${summary.inserted} updated=${summary.updated} skipped=${summary.skipped}`,
+          );
+        } catch (syncErr: any) {
+          console.error(
+            `[project.step=${data.step}] approval sync FAILED project=${proj.id}: ${syncErr?.message ?? syncErr}`,
+          );
+        }
+      }
+
       return { ok: true, progress, step: data.step };
+
     } catch (e: any) {
       const message = e?.message ?? String(e);
       if (idx >= 0) steps[idx] = { ...steps[idx], status: "error", error: message, ended_at: new Date().toISOString() };
