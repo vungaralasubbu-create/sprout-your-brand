@@ -67,6 +67,8 @@ function SocialAccountsPage() {
     orgs: LiOrg[];
     defaultUrn: string | null;
     reconnectRequired: boolean;
+    approvalPending: boolean;
+    grantedScopes: string[];
     error: string | null;
     open: boolean;
   };
@@ -238,9 +240,10 @@ function SocialAccountsPage() {
 
 
   const openLiPicker = async (accountId: string) => {
+    const empty: LiPickerState = { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, approvalPending: false, grantedScopes: [], error: null, open: false, loading: false };
     setLiPicker((prev) => ({
       ...prev,
-      [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, error: null, open: false }), loading: true, open: true, error: null },
+      [accountId]: { ...(prev[accountId] ?? empty), loading: true, open: true, error: null },
     }));
     try {
       const res = await runListLiOrgs({ data: { account_id: accountId } });
@@ -253,13 +256,15 @@ function SocialAccountsPage() {
           orgs: res.organizations ?? [],
           defaultUrn: res.default?.urn ?? res.person?.urn ?? null,
           reconnectRequired: !!res.reconnect_required,
-          error: res.error ?? null,
+          approvalPending: !!res.approval_pending,
+          grantedScopes: res.granted_scopes ?? [],
+          error: res.approval_pending || res.reconnect_required ? null : (res.error ?? null),
         },
       }));
     } catch (e) {
       setLiPicker((prev) => ({
         ...prev,
-        [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, open: true, loading: false, error: null }), loading: false, open: true, error: (e as Error).message },
+        [accountId]: { ...(prev[accountId] ?? empty), loading: false, open: true, error: (e as Error).message },
       }));
     }
   };
@@ -411,10 +416,31 @@ function SocialAccountsPage() {
                         </div>
                         {liPicker[a.id]?.loading ? (
                           <div className="text-muted-foreground">Loading LinkedIn Company Pages…</div>
+                        ) : liPicker[a.id]?.approvalPending ? (
+                          <div className="space-y-2 rounded-md border border-blue-300/60 bg-blue-50 dark:bg-blue-950/30 p-3">
+                            <div className="font-medium text-sm text-blue-900 dark:text-blue-200">
+                              Waiting for LinkedIn Community Management API approval
+                            </div>
+                            <div className="text-xs text-blue-900/80 dark:text-blue-200/80 space-y-1">
+                              <p>
+                                Glintr has requested the <code>r_organization_admin</code>, <code>w_organization_social</code>, and <code>r_organization_social</code> scopes so it can list and publish to Company Pages you administer. LinkedIn has not yet approved these scopes for this app, so tokens are issued with personal-profile permissions only.
+                              </p>
+                              <p>
+                                Personal-profile publishing continues to work. Once LinkedIn grants approval, reconnect this account to receive the new scopes.
+                              </p>
+                              {liPicker[a.id]?.grantedScopes?.length ? (
+                                <p className="text-muted-foreground">Current token scopes: <code>{liPicker[a.id]!.grantedScopes.join(", ")}</code></p>
+                              ) : null}
+                            </div>
+                            <Button size="sm" variant="secondary" onClick={() => startOAuth("linkedin")}>
+                              <Linkedin className="mr-1 h-3.5 w-3.5" />
+                              Reconnect once approved
+                            </Button>
+                          </div>
                         ) : liPicker[a.id]?.reconnectRequired ? (
                           <div className="space-y-2">
                             <div className="text-amber-700 dark:text-amber-300">
-                              LinkedIn didn't return your Company Pages. This account is missing the <code>r_organization_admin</code> scope.
+                              LinkedIn didn't return your Company Pages. Reconnect this account to refresh permissions.
                             </div>
                             <Button size="sm" variant="secondary" onClick={() => startOAuth("linkedin")}>
                               <Linkedin className="mr-1 h-3.5 w-3.5" />
