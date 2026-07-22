@@ -424,30 +424,39 @@ function SocialAccountsPage() {
                         ) : liPicker[a.id]?.error ? (
                           <div className="text-red-700 dark:text-red-300">{liPicker[a.id]?.error}</div>
                         ) : (
-                          <ul className="divide-y">
-                            {liPicker[a.id]?.person && (
-                              <li className="py-2 flex items-center justify-between gap-3">
-                                <div className="flex items-center gap-2 min-w-0">
-                                  <UserIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-                                  <div className="min-w-0">
-                                    <div className="font-medium truncate">{liPicker[a.id]!.person!.name}</div>
-                                    <div className="text-muted-foreground">Personal profile</div>
-                                  </div>
+                          <>
+                            {(liPicker[a.id]?.orgs ?? []).length === 0 && (
+                              <div className="rounded-md border border-amber-300/60 bg-amber-50 dark:bg-amber-950/30 p-3 text-amber-900 dark:text-amber-200 space-y-1">
+                                <div className="font-medium">No LinkedIn Company Pages found</div>
+                                <div className="text-xs">
+                                  This LinkedIn account doesn't administer any Company Pages, so posts won't be published to a Page automatically.
+                                  Ask a Page super-admin to grant you the <em>Content admin</em> or <em>Super admin</em> role, or
+                                  <button type="button" className="underline ml-1" onClick={() => startOAuth("linkedin")}>reconnect LinkedIn</button>
+                                  {" "}to refresh permissions. You may still choose to publish from your personal profile below.
                                 </div>
-                                <div className="flex items-center gap-2 shrink-0">
-                                  {liPicker[a.id]?.defaultUrn === liPicker[a.id]!.person!.urn && (
-                                    <Badge variant="success"><Check className="h-3 w-3 mr-1" />Default</Badge>
-                                  )}
-                                  <Button size="sm" variant="outline" disabled={busy === a.id} onClick={() => chooseLiAuthor(a.id, { urn: liPicker[a.id]!.person!.urn, kind: "person", name: liPicker[a.id]!.person!.name })}>
-                                    Set default
-                                  </Button>
-                                </div>
-                              </li>
+                              </div>
                             )}
-                            {(liPicker[a.id]?.orgs ?? []).length === 0 ? (
-                              <li className="py-2 text-muted-foreground">No Company Pages found for this LinkedIn account.</li>
-                            ) : (
-                              liPicker[a.id]!.orgs.map((org) => (
+                            <ul className="divide-y">
+                              {liPicker[a.id]?.person && (
+                                <li className="py-2 flex items-center justify-between gap-3">
+                                  <div className="flex items-center gap-2 min-w-0">
+                                    <UserIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+                                    <div className="min-w-0">
+                                      <div className="font-medium truncate">{liPicker[a.id]!.person!.name}</div>
+                                      <div className="text-muted-foreground">Personal profile</div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2 shrink-0">
+                                    {liPicker[a.id]?.defaultUrn === liPicker[a.id]!.person!.urn && (
+                                      <Badge variant="success"><Check className="h-3 w-3 mr-1" />Default</Badge>
+                                    )}
+                                    <Button size="sm" variant="outline" disabled={busy === a.id} onClick={() => chooseLiAuthor(a.id, { urn: liPicker[a.id]!.person!.urn, kind: "person", name: liPicker[a.id]!.person!.name })}>
+                                      Set default
+                                    </Button>
+                                  </div>
+                                </li>
+                              )}
+                              {(liPicker[a.id]?.orgs ?? []).map((org) => (
                                 <li key={org.urn} className="py-2 flex items-center justify-between gap-3">
                                   <div className="flex items-center gap-2 min-w-0">
                                     <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -469,10 +478,11 @@ function SocialAccountsPage() {
                                     </Button>
                                   </div>
                                 </li>
-                              ))
-                            )}
-                          </ul>
+                              ))}
+                            </ul>
+                          </>
                         )}
+
                       </div>
                     )}
                     <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs pl-8">
