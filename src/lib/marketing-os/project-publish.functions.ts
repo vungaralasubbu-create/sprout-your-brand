@@ -76,6 +76,30 @@ async function materializeMediaUrls(
   return out;
 }
 
+/**
+ * Walk all built publishing_job rows, upload every unique base64 data URL
+ * once to storage, and rewrite `payload.media_urls` to signed HTTPS URLs.
+ * Avoids re-uploading the same poster N times when multiple accounts share it.
+ */
+async function materializeRowsMedia(rows: Any[], ownerId: string, projectId: string) {
+  const uniq = new Set<string>();
+  for (const r of rows) {
+    for (const u of (r.payload?.media_urls ?? []) as string[]) {
+      if (typeof u === "string" && u.startsWith("data:")) uniq.add(u);
+    }
+  }
+  if (!uniq.size) return;
+  const arr = Array.from(uniq);
+  const mapped = await materializeMediaUrls(ownerId, projectId, arr);
+  const map = new Map<string, string>();
+  for (let i = 0; i < arr.length; i++) map.set(arr[i], mapped[i]);
+  for (const r of rows) {
+    const urls: string[] = (r.payload?.media_urls ?? []) as string[];
+    r.payload.media_urls = urls.map((u) => (map.get(u) ?? u)).filter((u) => typeof u === "string" && !u.startsWith("data:"));
+  }
+}
+
+
 
 /** Turn the project.result blob into per-item publish payloads. */
 function buildPayloads(result: Any): Array<{
