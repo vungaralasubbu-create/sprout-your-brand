@@ -3,6 +3,7 @@
 // and UI need no code changes.
 import type { PlatformConnector, PlatformKey, PublishInput, PublishResult, ValidationIssue } from "./types";
 import { invokeEdgeAs, classifyError } from "./edge-invoke.server";
+import { isLinkedInPublishingEnabled, LINKEDIN_PUBLISHING_DISABLED_MESSAGE } from "@/lib/feature-flags";
 
 function buildCaption(i: PublishInput, opts: { maxLen: number | null; appendTags?: boolean; appendCta?: boolean } = { maxLen: null, appendTags: true, appendCta: true }) {
   const parts: string[] = [];
@@ -75,18 +76,24 @@ const linkedin: PlatformConnector = {
   capabilities: { requiresMedia: false, supportsImages: true, supportsVideo: false, supportsThread: false, captionLimit: 3000, hashtagLimit: 10 },
   validate: (i) => {
     const issues: ValidationIssue[] = [];
+    if (!isLinkedInPublishingEnabled()) issues.push({ code: "linkedin_publishing_disabled", message: LINKEDIN_PUBLISHING_DISABLED_MESSAGE, fatal: true });
     if (!i.body?.trim() && !i.mediaUrls[0]) issues.push({ code: "empty", message: "LinkedIn post needs text or an image", fatal: true });
     return issues;
   },
-  publish: (i) => edgePublish("publish-linkedin", i.ownerId, {
-    account_id: i.accountId,
-    message: buildCaption(i, { maxLen: 3000 }),
-    image_url: i.mediaUrls[0],
-    // Optional per-request author override (Company Page vs Personal).
-    // When omitted, the edge function falls back to the account's saved default.
-    author_urn: (i.metadata.author_urn as string | undefined) ?? undefined,
-    author_kind: (i.metadata.author_kind as "person" | "organization" | undefined) ?? undefined,
-  }),
+  publish: (i) => {
+    if (!isLinkedInPublishingEnabled()) {
+      return Promise.resolve({ ok: false, errorCode: "validation", errorMessage: LINKEDIN_PUBLISHING_DISABLED_MESSAGE, retryable: false } satisfies PublishResult);
+    }
+    return edgePublish("publish-linkedin", i.ownerId, {
+      account_id: i.accountId,
+      message: buildCaption(i, { maxLen: 3000 }),
+      image_url: i.mediaUrls[0],
+      // Optional per-request author override (Company Page vs Personal).
+      // When omitted, the edge function falls back to the account's saved default.
+      author_urn: (i.metadata.author_urn as string | undefined) ?? undefined,
+      author_kind: (i.metadata.author_kind as "person" | "organization" | undefined) ?? undefined,
+    });
+  },
 };
 
 const x: PlatformConnector = {
