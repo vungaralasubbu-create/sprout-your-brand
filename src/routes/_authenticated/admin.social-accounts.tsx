@@ -67,6 +67,8 @@ function SocialAccountsPage() {
     orgs: LiOrg[];
     defaultUrn: string | null;
     reconnectRequired: boolean;
+    approvalPending: boolean;
+    grantedScopes: string[];
     error: string | null;
     open: boolean;
   };
