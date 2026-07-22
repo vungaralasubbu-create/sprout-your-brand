@@ -240,9 +240,10 @@ function SocialAccountsPage() {
 
 
   const openLiPicker = async (accountId: string) => {
+    const empty: LiPickerState = { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, approvalPending: false, grantedScopes: [], error: null, open: false, loading: false };
     setLiPicker((prev) => ({
       ...prev,
-      [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, error: null, open: false }), loading: true, open: true, error: null },
+      [accountId]: { ...(prev[accountId] ?? empty), loading: true, open: true, error: null },
     }));
     try {
       const res = await runListLiOrgs({ data: { account_id: accountId } });
@@ -255,13 +256,15 @@ function SocialAccountsPage() {
           orgs: res.organizations ?? [],
           defaultUrn: res.default?.urn ?? res.person?.urn ?? null,
           reconnectRequired: !!res.reconnect_required,
-          error: res.error ?? null,
+          approvalPending: !!res.approval_pending,
+          grantedScopes: res.granted_scopes ?? [],
+          error: res.approval_pending || res.reconnect_required ? null : (res.error ?? null),
         },
       }));
     } catch (e) {
       setLiPicker((prev) => ({
         ...prev,
-        [accountId]: { ...(prev[accountId] ?? { orgs: [], person: null, defaultUrn: null, reconnectRequired: false, open: true, loading: false, error: null }), loading: false, open: true, error: (e as Error).message },
+        [accountId]: { ...(prev[accountId] ?? empty), loading: false, open: true, error: (e as Error).message },
       }));
     }
   };
