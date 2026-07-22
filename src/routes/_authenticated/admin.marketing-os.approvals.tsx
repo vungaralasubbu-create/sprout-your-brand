@@ -205,6 +205,16 @@ function ApprovalCenter() {
           <Button variant="outline" size="sm" onClick={() => setShowFilters((s) => !s)}>
             <Filter className="size-4 mr-2" /> Filters
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => mSyncMkt.mutate()}
+            disabled={mSyncMkt.isPending}
+            title="Pull in every generated asset from your Marketing Projects"
+          >
+            {mSyncMkt.isPending ? <Loader2 className="size-4 mr-2 animate-spin" /> : <RefreshCw className="size-4 mr-2" />}
+            Sync Marketing Projects
+          </Button>
           {items.length === 0 && (
             <Button size="sm" onClick={() => mSeed.mutate()} disabled={mSeed.isPending}>
               {mSeed.isPending ? <Loader2 className="size-4 mr-2 animate-spin" /> : <Sparkles className="size-4 mr-2" />}
