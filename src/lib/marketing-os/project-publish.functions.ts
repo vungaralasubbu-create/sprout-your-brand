@@ -527,7 +527,7 @@ export const schedulePosts = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const project = await readProjectResult(supabase, userId, data.projectId);
-    const { accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms);
+    const { accounts } = await loadProjectAndAccounts(supabase, userId, data.projectId, data.platforms, { includeResult: false });
     if (!accounts.length) throw new Error("No connected accounts to publish to");
     const rows = buildRowsForIndexes({
       userId, project, accounts, indexes: data.indexes,
