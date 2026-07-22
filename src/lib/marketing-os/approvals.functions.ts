@@ -4,6 +4,25 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { callLovableAiJson } from "@/lib/ai-gateway.server";
 import { z } from "zod";
+import { syncProjectToApprovalQueue } from "./approval-sync.server";
+
+// ---- Marketing Project → Approval Queue sync (idempotent) ----
+export const syncMarketingProjectApprovals = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw: unknown) =>
+    z.object({ project_id: z.string().uuid() }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const summary = await syncProjectToApprovalQueue(
+      context.supabase as never,
+      context.userId,
+      data.project_id,
+    );
+    console.log(
+      `[approval.sync] project=${data.project_id} inserted=${summary.inserted} updated=${summary.updated} skipped=${summary.skipped} errors=${summary.errors.length}`,
+    );
+    return summary;
+  });
 
 const StatusEnum = z.enum(["draft","review","approved","scheduled","published","rejected","failed","archived"]);
 export type ApprovalStatus = z.infer<typeof StatusEnum>;
