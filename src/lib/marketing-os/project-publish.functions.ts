@@ -11,6 +11,96 @@ type Any = any;
 const SUPPORTED = ["instagram", "facebook", "linkedin", "x"] as const;
 type SupportedPlatform = (typeof SUPPORTED)[number];
 
+/**
+ * The generator sometimes stores poster images inline as
+ * `data:image/png;base64,...` (~1.5 MB per poster). Two problems:
+ *  1. Meta/Facebook/Instagram Graph API rejects data URLs — it needs a
+ *     publicly reachable HTTPS URL to fetch the image server-side.
+ *  2. Inserting those multi-MB blobs into `publishing_jobs.payload` on
+ *     every publish caused Postgres `canceling statement due to statement
+ *     timeout` (TOAST rewrite + RLS on huge JSONB row).
+ *
+ * `materializeMediaUrls` uploads any `data:` URLs to the private
+ * `marketing-posters` bucket via the service-role client and swaps them
+ * for long-lived signed HTTPS URLs, so `publishing_jobs.payload.media_urls`
+ * only ever carries small strings and the Graph API can fetch them.
+ */
+async function materializeMediaUrls(
+  ownerId: string,
+  projectId: string,
+  urls: string[],
+): Promise<string[]> {
+  if (!urls.length) return urls;
+  const needsUpload = urls.some((u) => typeof u === "string" && u.startsWith("data:"));
+  if (!needsUpload) return urls;
+
+  const t0 = Date.now();
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const out: string[] = [];
+  for (let i = 0; i < urls.length; i++) {
+    const u = urls[i];
+    if (!u || typeof u !== "string" || !u.startsWith("data:")) {
+      out.push(u);
+      continue;
+    }
+    const m = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/.exec(u);
+    if (!m) {
+      // Unknown data URL shape — drop it rather than send garbage to Meta.
+      console.warn(`[materializeMediaUrls] skip non-image data URL at index ${i}`);
+      continue;
+    }
+    const mime = m[1];
+    const ext = mime.split("/")[1]?.split("+")[0] || "png";
+    const bytes = Buffer.from(m[2], "base64");
+    const path = `${ownerId}/${projectId}/${Date.now()}-${i}.${ext}`;
+    const tUp = Date.now();
+    const { error: upErr } = await supabaseAdmin.storage
+      .from("marketing-posters")
+      .upload(path, bytes, { contentType: mime, upsert: true });
+    if (upErr) {
+      console.error(`[materializeMediaUrls] upload failed ${path} in ${Date.now() - tUp}ms: ${upErr.message}`);
+      throw new Error(`Poster upload failed: ${upErr.message}`);
+    }
+    // 7 days is well above the worker retry window; Meta fetches within seconds.
+    const { data: signed, error: sErr } = await supabaseAdmin.storage
+      .from("marketing-posters")
+      .createSignedUrl(path, 60 * 60 * 24 * 7);
+    if (sErr || !signed?.signedUrl) {
+      console.error(`[materializeMediaUrls] sign failed ${path}: ${sErr?.message}`);
+      throw new Error(`Poster URL sign failed: ${sErr?.message ?? "unknown"}`);
+    }
+    console.log(`[materializeMediaUrls] uploaded+signed ${path} size=${bytes.length}B in ${Date.now() - tUp}ms`);
+    out.push(signed.signedUrl);
+  }
+  console.log(`[materializeMediaUrls] done ${urls.length} url(s) in ${Date.now() - t0}ms`);
+  return out;
+}
+
+/**
+ * Walk all built publishing_job rows, upload every unique base64 data URL
+ * once to storage, and rewrite `payload.media_urls` to signed HTTPS URLs.
+ * Avoids re-uploading the same poster N times when multiple accounts share it.
+ */
+async function materializeRowsMedia(rows: Any[], ownerId: string, projectId: string) {
+  const uniq = new Set<string>();
+  for (const r of rows) {
+    for (const u of (r.payload?.media_urls ?? []) as string[]) {
+      if (typeof u === "string" && u.startsWith("data:")) uniq.add(u);
+    }
+  }
+  if (!uniq.size) return;
+  const arr = Array.from(uniq);
+  const mapped = await materializeMediaUrls(ownerId, projectId, arr);
+  const map = new Map<string, string>();
+  for (let i = 0; i < arr.length; i++) map.set(arr[i], mapped[i]);
+  for (const r of rows) {
+    const urls: string[] = (r.payload?.media_urls ?? []) as string[];
+    r.payload.media_urls = urls.map((u) => (map.get(u) ?? u)).filter((u) => typeof u === "string" && !u.startsWith("data:"));
+  }
+}
+
+
+
 /** Turn the project.result blob into per-item publish payloads. */
 function buildPayloads(result: Any): Array<{
   title: string;
@@ -258,7 +348,10 @@ export const publishProjectNow = createServerFn({ method: "POST" })
       timezone: "UTC",
       mode: "publish_now",
     });
+    await materializeRowsMedia(rows, userId, data.projectId);
+    const tIns = Date.now();
     const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    console.log(`[publishProjectNow] insert ${rows.length} jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
     await markProjectPublishState(supabase, data.projectId, {
       state: "publishing",
@@ -298,7 +391,10 @@ export const scheduleProject = createServerFn({ method: "POST" })
       timezone: data.timezone,
       mode: "schedule",
     });
+    await materializeRowsMedia(rows, userId, data.projectId);
+    const tIns = Date.now();
     const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    console.log(`[scheduleProject] insert ${rows.length} jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
     await markProjectPublishState(supabase, data.projectId, {
       state: "scheduled",
@@ -329,15 +425,33 @@ type PostState = {
 };
 
 async function readProjectResult(supabase: Any, userId: string, projectId: string) {
+  // We used to `select("... , result")` here, which pulled the multi-MB
+  // JSONB blob (posters store 1.5MB base64 per image). That was the
+  // dominant contributor to statement_timeout on Publish Now. Fetch only
+  // the two JSON sub-paths we actually need to build publishing_jobs rows.
+  const t0 = Date.now();
   const { data: project, error } = await supabase
     .from("marketing_projects")
-    .select("id, created_by, campaign_id, name, result")
+    .select("id, created_by, campaign_id, name, result_content:result->content, result_posters:result->posters")
     .eq("id", projectId)
     .eq("created_by", userId)
     .maybeSingle();
+  console.log(`[publish.readProjectResult] in ${Date.now() - t0}ms err=${error?.message ?? "-"}`);
   if (error || !project) throw new Error("Project not found");
-  return project as Any;
+  // Re-shape so downstream code that reads `project.result.content` /
+  // `project.result.posters` keeps working unchanged.
+  return {
+    id: (project as Any).id,
+    created_by: (project as Any).created_by,
+    campaign_id: (project as Any).campaign_id,
+    name: (project as Any).name,
+    result: {
+      content: (project as Any).result_content ?? [],
+      posters: (project as Any).result_posters ?? [],
+    },
+  } as Any;
 }
+
 
 async function writePostStates(supabase: Any, projectId: string, states: Record<string, PostState>) {
   // Persist per-post state to the dedicated `post_states` column so we no
@@ -487,16 +601,20 @@ export const publishPostsNow = createServerFn({ method: "POST" })
       scheduledAt: now, timezone: "UTC", mode: "publish_now",
     });
     if (!rows.length) throw new Error("No selected posts to publish");
+    await materializeRowsMedia(rows, userId, data.projectId);
     const tIns = Date.now();
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id, platform, account_id, payload");
+    // Return only ids — payload/media_urls carry image references, no need to echo them back.
+    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
     console.log(`[publishPostsNow] inserted ${rows.length} publishing_jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
 
+    // Insert preserves row order, so map ids back to their source row index.
     const jobsByIdx: Record<string, string[]> = {};
-    for (const row of (ins ?? []) as Any[]) {
-      const idx = row.payload?.metadata?.post_index;
+    const insArr = (ins ?? []) as Any[];
+    for (let k = 0; k < insArr.length && k < rows.length; k++) {
+      const idx = rows[k].payload?.metadata?.post_index;
       if (typeof idx === "number") {
-        jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), row.id];
+        jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), insArr[k].id];
       }
     }
     const patch: Record<string, PostState> = {};
@@ -534,13 +652,17 @@ export const schedulePosts = createServerFn({ method: "POST" })
       scheduledAt: data.scheduled_at, timezone: data.timezone, mode: "schedule",
     });
     if (!rows.length) throw new Error("No selected posts to schedule");
-    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id, payload");
+    await materializeRowsMedia(rows, userId, data.projectId);
+    const tIns = Date.now();
+    const { data: ins, error } = await supabase.from("publishing_jobs").insert(rows as Any).select("id");
+    console.log(`[schedulePosts] inserted ${rows.length} publishing_jobs in ${Date.now() - tIns}ms${error ? ` err=${error.message}` : ""}`);
     if (error) throw new Error(error.message);
 
     const jobsByIdx: Record<string, string[]> = {};
-    for (const row of (ins ?? []) as Any[]) {
-      const idx = row.payload?.metadata?.post_index;
-      if (typeof idx === "number") jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), row.id];
+    const insArr = (ins ?? []) as Any[];
+    for (let k = 0; k < insArr.length && k < rows.length; k++) {
+      const idx = rows[k].payload?.metadata?.post_index;
+      if (typeof idx === "number") jobsByIdx[String(idx)] = [...(jobsByIdx[String(idx)] ?? []), insArr[k].id];
     }
     const patch: Record<string, PostState> = {};
     const now = new Date().toISOString();
