@@ -170,7 +170,16 @@ async function loadProjectAndAccounts(
   console.log(`[publish.loadProject] ok in ${projMs}ms includeResult=${!!opts.includeResult}`);
 
   const t1 = Date.now();
-  const wanted = (platforms?.length ? platforms : (SUPPORTED as readonly string[])) as string[];
+  const { isLinkedInPublishingEnabled } = await import("@/lib/feature-flags");
+  const liEnabled = isLinkedInPublishingEnabled();
+  let wanted = (platforms?.length ? platforms : (SUPPORTED as readonly string[])) as string[];
+  if (!liEnabled) {
+    const before = wanted.length;
+    wanted = wanted.filter((p) => p !== "linkedin");
+    if (before !== wanted.length) {
+      console.log("[publish] LinkedIn publishing disabled by feature flag — skipping linkedin accounts");
+    }
+  }
   let accountsQ = db
     .from("soc_accounts")
     .select("id, owner_id, platform, account_name, connection_status, can_post")
