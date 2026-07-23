@@ -1145,7 +1145,7 @@ function SkillsNetwork() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
           <div className="relative aspect-square w-full max-w-[560px] mx-auto">
             <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full">
               <circle cx="100" cy="100" r="70" fill="none" stroke="oklch(0.7 0.05 240 / 0.25)" strokeWidth="0.3" strokeDasharray="1 2" className="cat-rotate-slow" />
