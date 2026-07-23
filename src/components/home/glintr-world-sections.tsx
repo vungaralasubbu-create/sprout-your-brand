@@ -591,7 +591,18 @@ const BRAND_SLUG: Record<string, string> = {
   Kubernetes: "kubernetes",
   TensorFlow: "tensorflow",
   PyTorch: "pytorch",
+  TCS: "tcs",
+  Infosys: "infosys",
+  Wipro: "wipro",
+  Cognizant: "cognizant",
+  Capgemini: "capgemini",
+  HCLTech: "hcl",
+  Deloitte: "deloitte",
+  PhonePe: "phonepe",
+  Razorpay: "razorpay",
+  Flipkart: "flipkart",
 };
+
 
 function BrandLogoImg({ name, className }: { name: string; className?: string }) {
   const slug = BRAND_SLUG[name];
