@@ -8,18 +8,15 @@ import {
   LayoutDashboard,
   Briefcase,
   ArrowUpRight,
-  TrendingUp,
-  Sparkles,
-  BookOpen,
-  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
  * Mobile-only hero carousel.
  * Replaces the desktop <GlintrDimension /> 3D stack with an accessible,
- * swipeable carousel of six product surfaces. Autoplay every 5s, pauses
- * on user interaction, pagination dots, momentum swipe via native scroll-snap.
+ * swipeable carousel of six product surfaces. Autoplay every 2s, pauses
+ * on user interaction and resumes 2s after interaction ends. Peek layout
+ * shows the next card partially. Seamless infinite loop via a clone slide.
  */
 
 type Slide = {
@@ -33,30 +30,40 @@ type Slide = {
   Visual: React.FC;
 };
 
-const AUTOPLAY_MS = 5000;
+const AUTOPLAY_MS = 2000;
+const RESUME_MS = 2000;
+const REVENUE_TARGET_PCT = 70;
 
 /* --------------------------------- Visuals -------------------------------- */
 
 function RevenueVisual() {
-  const [pct, setPct] = React.useState(28);
+  // Animate 0 → REVENUE_TARGET_PCT once on mount, then hold.
+  const [pct, setPct] = React.useState(0);
   React.useEffect(() => {
-    const id = window.setInterval(() => {
-      setPct((p) => (p >= 70 ? 28 : p + 2));
-    }, 90);
-    return () => window.clearInterval(id);
+    let raf = 0;
+    const start = performance.now();
+    const dur = 1400;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setPct(Math.round(eased * REVENUE_TARGET_PCT));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, []);
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-baseline gap-2">
-        <span className="font-display text-5xl font-bold tracking-tight text-gradient-brand leading-none">
+        <span className="font-display text-5xl font-bold tracking-tight text-gradient-brand leading-none tabular-nums">
           {pct}%
         </span>
         <span className="text-xs font-semibold text-muted-foreground">Revenue Share</span>
       </div>
       <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-brand transition-[width] duration-100"
-          style={{ width: `${(pct / 70) * 100}%` }}
+          className="h-full rounded-full bg-gradient-brand transition-[width] duration-[1400ms] ease-out"
+          style={{ width: `${(pct / REVENUE_TARGET_PCT) * 100}%` }}
         />
       </div>
       <div className="grid grid-cols-3 gap-2 pt-1">
@@ -281,18 +288,35 @@ export function HeroMobileCarousel() {
   const scrollerRef = React.useRef<HTMLDivElement | null>(null);
   const [index, setIndex] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
-  const userInteractedRef = React.useRef(false);
+  const resumeTimerRef = React.useRef<number | null>(null);
+  const suppressScrollSyncRef = React.useRef(false);
 
-  // Track active slide via scroll position
+  // Render one extra clone of slide 0 at the end for seamless looping.
+  const rendered = React.useMemo(() => [...SLIDES, SLIDES[0]], []);
+
+  // Measured stride (slide width + gap) via first two children.
+  const getStride = React.useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el || el.children.length < 2) return el?.clientWidth ?? 1;
+    const a = el.children[0] as HTMLElement;
+    const b = el.children[1] as HTMLElement;
+    const s = b.offsetLeft - a.offsetLeft;
+    return s > 0 ? s : el.clientWidth;
+  }, []);
+
+  // Sync index from scroll position (touch + programmatic scrolls).
   React.useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
     let raf = 0;
     const onScroll = () => {
+      if (suppressScrollSyncRef.current) return;
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        const i = Math.round(el.scrollLeft / el.clientWidth);
-        setIndex(Math.max(0, Math.min(SLIDES.length - 1, i)));
+        const stride = getStride();
+        if (stride <= 0) return;
+        const i = Math.round(el.scrollLeft / stride);
+        setIndex(Math.max(0, Math.min(rendered.length - 1, i)));
       });
     };
     el.addEventListener("scroll", onScroll, { passive: true });
@@ -300,42 +324,76 @@ export function HeroMobileCarousel() {
       el.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [getStride, rendered.length]);
 
-  // Autoplay
+  // Seamless loop: when we land on the clone (index === SLIDES.length),
+  // jump back to slide 0 with an instant scroll after the smooth transition.
+  React.useEffect(() => {
+    if (index !== SLIDES.length) return;
+    const t = window.setTimeout(() => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      suppressScrollSyncRef.current = true;
+      el.scrollTo({ left: 0, behavior: "auto" });
+      setIndex(0);
+      window.setTimeout(() => {
+        suppressScrollSyncRef.current = false;
+      }, 60);
+    }, 550);
+    return () => window.clearTimeout(t);
+  }, [index]);
+
+  // Autoplay every 2s while not paused.
   React.useEffect(() => {
     if (paused) return;
     const id = window.setInterval(() => {
       const el = scrollerRef.current;
       if (!el) return;
-      const next = (Math.round(el.scrollLeft / el.clientWidth) + 1) % SLIDES.length;
-      el.scrollTo({ left: next * el.clientWidth, behavior: "smooth" });
+      const stride = getStride();
+      if (stride <= 0) return;
+      const current = Math.round(el.scrollLeft / stride);
+      const next = current + 1; // may land on the clone; loop effect resets it
+      el.scrollTo({ left: next * stride, behavior: "smooth" });
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [paused]);
+  }, [paused, getStride]);
 
-  const pause = () => {
-    userInteractedRef.current = true;
+  const pause = React.useCallback(() => {
+    if (resumeTimerRef.current) {
+      window.clearTimeout(resumeTimerRef.current);
+      resumeTimerRef.current = null;
+    }
     setPaused(true);
-  };
-  const maybeResume = () => {
-    // Resume 8s after last interaction
-    window.setTimeout(() => {
-      if (userInteractedRef.current) {
-        userInteractedRef.current = false;
-        setPaused(false);
-      }
-    }, 8000);
-    userInteractedRef.current = true;
-  };
+  }, []);
 
-  const goTo = (i: number) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    pause();
-    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
-    maybeResume();
-  };
+  const scheduleResume = React.useCallback(() => {
+    if (resumeTimerRef.current) window.clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = window.setTimeout(() => {
+      setPaused(false);
+      resumeTimerRef.current = null;
+    }, RESUME_MS);
+  }, []);
+
+  React.useEffect(
+    () => () => {
+      if (resumeTimerRef.current) window.clearTimeout(resumeTimerRef.current);
+    },
+    [],
+  );
+
+  const goTo = React.useCallback(
+    (i: number) => {
+      const el = scrollerRef.current;
+      if (!el) return;
+      pause();
+      const stride = getStride();
+      el.scrollTo({ left: i * stride, behavior: "smooth" });
+      scheduleResume();
+    },
+    [pause, scheduleResume, getStride],
+  );
+
+  const activeDot = index % SLIDES.length;
 
   return (
     <div
@@ -345,15 +403,25 @@ export function HeroMobileCarousel() {
       aria-label="Glintr experience highlights"
       onPointerDown={pause}
       onTouchStart={pause}
-      onPointerUp={maybeResume}
-      onTouchEnd={maybeResume}
+      onPointerUp={scheduleResume}
+      onPointerCancel={scheduleResume}
+      onTouchEnd={scheduleResume}
+      onTouchCancel={scheduleResume}
     >
       <div
         ref={scrollerRef}
-        className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -mx-1 px-1"
+        className="flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden touch-pan-x"
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
-        {SLIDES.map((s, i) => (
-          <SlideCard key={s.key} slide={s} active={i === index} index={i} total={SLIDES.length} />
+        {rendered.map((s, i) => (
+          <SlideCard
+            key={`${s.key}-${i}`}
+            slide={s}
+            active={i === index}
+            index={i % SLIDES.length}
+            total={SLIDES.length}
+            isLast={i === rendered.length - 1}
+          />
         ))}
       </div>
 
@@ -364,12 +432,12 @@ export function HeroMobileCarousel() {
             key={s.key}
             type="button"
             role="tab"
-            aria-selected={i === index}
+            aria-selected={i === activeDot}
             aria-label={`Show ${s.title}`}
             onClick={() => goTo(i)}
             className={cn(
               "h-1.5 rounded-full transition-all duration-300",
-              i === index
+              i === activeDot
                 ? "w-6 bg-gradient-brand"
                 : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50",
             )}
@@ -385,24 +453,31 @@ function SlideCard({
   active,
   index,
   total,
+  isLast,
 }: {
   slide: Slide;
   active: boolean;
   index: number;
   total: number;
+  isLast: boolean;
 }) {
   const { Icon, Visual } = slide;
   return (
     <div
-      className="w-full shrink-0 snap-center px-1"
+      className={cn(
+        // 88% viewport width leaves ~12% peek of the next card on the right.
+        "w-[88%] shrink-0 snap-start",
+        isLast ? "pr-0" : "pr-3",
+      )}
       role="tabpanel"
       aria-roledescription="slide"
       aria-label={`${index + 1} of ${total}: ${slide.title}`}
+      aria-hidden={!active}
     >
       <article
         className={cn(
-          "relative overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-sm transition-transform duration-500",
-          active ? "scale-100" : "scale-[0.98]",
+          "relative overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-sm transition-transform duration-500 will-change-transform",
+          active ? "scale-100" : "scale-[0.97]",
         )}
       >
         <div
