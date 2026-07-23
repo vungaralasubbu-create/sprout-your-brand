@@ -526,7 +526,19 @@ const BRANDS: Array<{
   { name: "Kubernetes", short: "Kubernetes", color: "oklch(0.55 0.16 250)", relationship: "Container Orchestration Ecosystem", cats: ["cloud", "technology"] },
   { name: "TensorFlow", short: "TensorFlow", color: "oklch(0.65 0.19 55)", relationship: "Machine Learning Ecosystem", cats: ["ai"] },
   { name: "PyTorch", short: "PyTorch", color: "oklch(0.6 0.22 25)", relationship: "Deep Learning Ecosystem", cats: ["ai"] },
+  // Indian IT services & consumer tech leaders
+  { name: "TCS", short: "TCS", color: "oklch(0.5 0.16 250)", relationship: "IT Services Ecosystem", cats: ["enterprise"] },
+  { name: "Infosys", short: "Infosys", color: "oklch(0.5 0.14 235)", relationship: "IT Services Ecosystem", cats: ["enterprise"] },
+  { name: "Wipro", short: "Wipro", color: "oklch(0.55 0.2 300)", relationship: "IT Services Ecosystem", cats: ["enterprise"] },
+  { name: "Cognizant", short: "Cognizant", color: "oklch(0.55 0.18 240)", relationship: "Digital Services Ecosystem", cats: ["enterprise"] },
+  { name: "Capgemini", short: "Capgemini", color: "oklch(0.55 0.22 25)", relationship: "Consulting & Tech Ecosystem", cats: ["enterprise"] },
+  { name: "HCLTech", short: "HCLTech", color: "oklch(0.55 0.18 245)", relationship: "IT Services Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Deloitte", short: "Deloitte", color: "oklch(0.65 0.2 145)", relationship: "Consulting & Advisory Ecosystem", cats: ["enterprise"] },
+  { name: "PhonePe", short: "PhonePe", color: "oklch(0.5 0.2 300)", relationship: "Fintech Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Razorpay", short: "Razorpay", color: "oklch(0.55 0.18 250)", relationship: "Payments Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Flipkart", short: "Flipkart", color: "oklch(0.65 0.19 55)", relationship: "E-Commerce Ecosystem", cats: ["enterprise"] },
 ];
+
 
 /** Map brand `name` -> SimpleIcons slug (https://simpleicons.org). */
 const BRAND_SLUG: Record<string, string> = {
