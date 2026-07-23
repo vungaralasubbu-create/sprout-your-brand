@@ -691,7 +691,7 @@ function GenerativeAISpotlight() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <Reveal>
             <div
               key={activeProgram.slug}
