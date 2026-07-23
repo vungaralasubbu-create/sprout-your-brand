@@ -1004,7 +1004,7 @@ function LearningJourney() {
     <Section tone="surface" padding="lg" className="relative overflow-hidden">
       <Container>
         <Reveal>
-          <div className="max-w-3xl mb-14">
+          <div className="max-w-3xl mb-8 md:mb-14">
             <div className="text-label text-primary mb-3">LEARNING JOURNEY</div>
             <h2 className="text-section text-balance">
               From curiosity to a learning direction.
@@ -1016,13 +1016,13 @@ function LearningJourney() {
           {/* Vertical spine */}
           <div
             aria-hidden
-            className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
+            className="absolute left-5 md:left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
             style={{
               background:
                 "linear-gradient(to bottom, transparent, var(--brand-cyan), var(--brand-azure), transparent)",
             }}
           />
-          <div className="flex flex-col gap-10 md:gap-14">
+          <div className="flex flex-col gap-4 md:gap-14">
             {JOURNEY_STAGES.map((stage, i) => (
               <Reveal key={stage} delay={i * 60}>
                 <div
@@ -1045,27 +1045,28 @@ function LearningJourney() {
 
                   <div
                     className={cn(
-                      "relative rounded-2xl border border-border/60 bg-background p-5 md:p-6 shadow-sm ml-14 md:ml-0",
+                      "relative rounded-xl md:rounded-2xl border border-border/60 bg-background px-3 py-2.5 md:p-6 shadow-sm ml-10 md:ml-0",
                     )}
                   >
-                    <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                    <div className="text-[10px] md:text-xs uppercase tracking-wider text-muted-foreground">
                       Stage {i + 1}
                     </div>
-                    <div className="mt-1 font-display text-xl md:text-2xl font-semibold">
+                    <div className="mt-0.5 md:mt-1 font-display text-sm md:text-2xl font-semibold leading-snug">
                       {stage}
                     </div>
                   </div>
                   {/* Node on spine */}
                   <div
                     aria-hidden
-                    className="absolute left-6 md:left-1/2 top-6 -translate-x-1/2 grid size-4 place-items-center rounded-full bg-background border-2 border-[var(--brand-cyan)]"
+                    className="absolute left-5 md:left-1/2 top-4 md:top-6 -translate-x-1/2 grid size-3 md:size-4 place-items-center rounded-full bg-background border-2 border-[var(--brand-cyan)]"
                   >
-                    <span className="size-1.5 rounded-full bg-[var(--brand-cyan)] cat-pulse" />
+                    <span className="size-1 md:size-1.5 rounded-full bg-[var(--brand-cyan)] cat-pulse" />
                   </div>
                 </div>
               </Reveal>
             ))}
           </div>
+
         </div>
       </Container>
     </Section>
