@@ -880,7 +880,7 @@ export function LearnerInstitutions() {
       <div className="relative [mask-image:linear-gradient(90deg,transparent,black_6%,black_94%,transparent)]">
         <div
           className="flex gap-3 md:gap-4 py-3 will-change-transform"
-          style={{ animation: "campus-rail 40s linear infinite" }}
+          style={{ animation: "campus-rail 28s linear infinite" }}
         >
           {doubled.map((inst, i) => (
             <div
