@@ -1581,7 +1581,7 @@ function GlintrEcosystem() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] items-center">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.1fr] items-center">
           <div className="relative aspect-square w-full max-w-[520px] mx-auto">
             <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full">
               {(Object.keys(ECOSYSTEM) as Array<keyof typeof ECOSYSTEM>).map(
