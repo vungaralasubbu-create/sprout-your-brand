@@ -427,7 +427,7 @@ export function EarnSpotlight() {
       />
 
       <Container>
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           {/* Left — copy + model selector */}
           <div>
             <div className="text-label text-primary mb-3 inline-flex items-center gap-2">
