@@ -53,7 +53,7 @@ export function IncomeCalculator() {
           description="Adjust the inputs to see what a revenue-share model could pay you."
         />
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+        <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1.1fr]">
           {/* Inputs */}
           <article className="rounded-2xl border border-border bg-card p-7 md:p-9 shadow-sm flex flex-col gap-6">
             <NumberField
