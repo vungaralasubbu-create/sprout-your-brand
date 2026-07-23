@@ -760,32 +760,29 @@ function BrandRail({
  * ================================================================ */
 
 const INSTITUTIONS: Array<{ mono: string; sub: string; full: string; domain: string }> = [
-  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay", domain: "iitb.ac.in" },
+  // Balanced public / private mix — no over-reliance on IITs
+  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University", domain: "manipal.edu" },
+  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University", domain: "lpu.in" },
+  { mono: "VIT", sub: "VELLORE", full: "VIT University", domain: "vit.ac.in" },
+  { mono: "SRM", sub: "CHENNAI", full: "SRM Institute of Science and Technology", domain: "srmist.edu.in" },
+  { mono: "AMITY", sub: "NOIDA", full: "Amity University", domain: "amity.edu" },
+  { mono: "CU", sub: "CHANDIGARH", full: "Chandigarh University", domain: "cuchd.in" },
+  { mono: "JAIN", sub: "BENGALURU", full: "Jain University", domain: "jainuniversity.ac.in" },
+  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University", domain: "kiit.ac.in" },
+  { mono: "PES", sub: "BENGALURU", full: "PES University", domain: "pes.edu" },
+  { mono: "SASTRA", sub: "THANJAVUR", full: "SASTRA University", domain: "sastra.edu" },
+  { mono: "BITS", sub: "PILANI", full: "BITS Pilani", domain: "bits-pilani.ac.in" },
   { mono: "IIT", sub: "DELHI", full: "IIT Delhi", domain: "iitd.ac.in" },
+  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay", domain: "iitb.ac.in" },
   { mono: "IIT", sub: "MADRAS", full: "IIT Madras", domain: "iitm.ac.in" },
   { mono: "IIT", sub: "KHARAGPUR", full: "IIT Kharagpur", domain: "iitkgp.ac.in" },
-  { mono: "IIT", sub: "KANPUR", full: "IIT Kanpur", domain: "iitk.ac.in" },
-  { mono: "IIT", sub: "ROORKEE", full: "IIT Roorkee", domain: "iitr.ac.in" },
   { mono: "NIT", sub: "TRICHY", full: "NIT Trichy", domain: "nitt.edu" },
-  { mono: "NIT", sub: "WARANGAL", full: "NIT Warangal", domain: "nitw.ac.in" },
-  { mono: "NIT", sub: "SURATHKAL", full: "NIT Surathkal", domain: "nitk.ac.in" },
-  { mono: "BITS", sub: "PILANI", full: "BITS Pilani", domain: "bits-pilani.ac.in" },
-  { mono: "VIT", sub: "VELLORE", full: "VIT Vellore", domain: "vit.ac.in" },
-  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University", domain: "manipal.edu" },
-  { mono: "SRM", sub: "CHENNAI", full: "SRM University", domain: "srmist.edu.in" },
-  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University", domain: "lpu.in" },
-  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University", domain: "kiit.ac.in" },
-  { mono: "VTU", sub: "BELAGAVI", full: "VTU Belagavi", domain: "vtu.ac.in" },
-  { mono: "DTU", sub: "DELHI", full: "DTU Delhi", domain: "dtu.ac.in" },
-  { mono: "JU", sub: "KOLKATA", full: "Jadavpur University", domain: "jaduniv.edu.in" },
-  { mono: "AU", sub: "CHENNAI", full: "Anna University", domain: "annauniv.edu" },
+  { mono: "IIIT", sub: "HYDERABAD", full: "IIIT Hyderabad", domain: "iiit.ac.in" },
   { mono: "AVV", sub: "COIMBATORE", full: "Amrita Vishwa Vidyapeetham", domain: "amrita.edu" },
-  { mono: "PES", sub: "BENGALURU", full: "PES University", domain: "pes.edu" },
-  { mono: "RVCE", sub: "BENGALURU", full: "RV College of Engineering", domain: "rvce.edu.in" },
-  { mono: "MSRIT", sub: "BENGALURU", full: "MS Ramaiah Institute", domain: "msrit.edu" },
-  { mono: "OU", sub: "HYDERABAD", full: "Osmania University", domain: "osmania.ac.in" },
-  { mono: "JNTU", sub: "HYDERABAD", full: "JNTU Hyderabad", domain: "jntuh.ac.in" },
+  { mono: "DTU", sub: "DELHI", full: "Delhi Technological University", domain: "dtu.ac.in" },
+  { mono: "AU", sub: "CHENNAI", full: "Anna University", domain: "annauniv.edu" },
 ];
+
 
 function InstitutionLogo({ inst }: { inst: (typeof INSTITUTIONS)[number] }) {
   const [errored, setErrored] = React.useState(false);
