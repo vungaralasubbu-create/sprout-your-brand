@@ -526,7 +526,19 @@ const BRANDS: Array<{
   { name: "Kubernetes", short: "Kubernetes", color: "oklch(0.55 0.16 250)", relationship: "Container Orchestration Ecosystem", cats: ["cloud", "technology"] },
   { name: "TensorFlow", short: "TensorFlow", color: "oklch(0.65 0.19 55)", relationship: "Machine Learning Ecosystem", cats: ["ai"] },
   { name: "PyTorch", short: "PyTorch", color: "oklch(0.6 0.22 25)", relationship: "Deep Learning Ecosystem", cats: ["ai"] },
+  // Indian IT services & consumer tech leaders
+  { name: "TCS", short: "TCS", color: "oklch(0.5 0.16 250)", relationship: "IT Services Ecosystem", cats: ["enterprise"] },
+  { name: "Infosys", short: "Infosys", color: "oklch(0.5 0.14 235)", relationship: "IT Services Ecosystem", cats: ["enterprise"] },
+  { name: "Wipro", short: "Wipro", color: "oklch(0.55 0.2 300)", relationship: "IT Services Ecosystem", cats: ["enterprise"] },
+  { name: "Cognizant", short: "Cognizant", color: "oklch(0.55 0.18 240)", relationship: "Digital Services Ecosystem", cats: ["enterprise"] },
+  { name: "Capgemini", short: "Capgemini", color: "oklch(0.55 0.22 25)", relationship: "Consulting & Tech Ecosystem", cats: ["enterprise"] },
+  { name: "HCLTech", short: "HCLTech", color: "oklch(0.55 0.18 245)", relationship: "IT Services Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Deloitte", short: "Deloitte", color: "oklch(0.65 0.2 145)", relationship: "Consulting & Advisory Ecosystem", cats: ["enterprise"] },
+  { name: "PhonePe", short: "PhonePe", color: "oklch(0.5 0.2 300)", relationship: "Fintech Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Razorpay", short: "Razorpay", color: "oklch(0.55 0.18 250)", relationship: "Payments Ecosystem", cats: ["enterprise", "technology"] },
+  { name: "Flipkart", short: "Flipkart", color: "oklch(0.65 0.19 55)", relationship: "E-Commerce Ecosystem", cats: ["enterprise"] },
 ];
+
 
 /** Map brand `name` -> SimpleIcons slug (https://simpleicons.org). */
 const BRAND_SLUG: Record<string, string> = {
@@ -579,7 +591,18 @@ const BRAND_SLUG: Record<string, string> = {
   Kubernetes: "kubernetes",
   TensorFlow: "tensorflow",
   PyTorch: "pytorch",
+  TCS: "tcs",
+  Infosys: "infosys",
+  Wipro: "wipro",
+  Cognizant: "cognizant",
+  Capgemini: "capgemini",
+  HCLTech: "hcl",
+  Deloitte: "deloitte",
+  PhonePe: "phonepe",
+  Razorpay: "razorpay",
+  Flipkart: "flipkart",
 };
+
 
 function BrandLogoImg({ name, className }: { name: string; className?: string }) {
   const slug = BRAND_SLUG[name];
@@ -638,10 +661,11 @@ export function CertificationEcosystem() {
         </div>
       </Container>
 
-      {/* Two rails */}
+      {/* Two rails moving in opposite directions for a richer premium effect */}
       <div className="relative flex flex-col gap-3 [mask-image:linear-gradient(90deg,transparent,black_6%,black_94%,transparent)]">
-        <BrandRail items={rail1} speed={55} isHighlighted={isHighlighted} />
-        <BrandRail items={rail2} speed={45} reverse isHighlighted={isHighlighted} />
+        <BrandRail items={rail1} speed={38} isHighlighted={isHighlighted} />
+        <BrandRail items={rail2} speed={32} reverse isHighlighted={isHighlighted} />
+
       </div>
 
       <Container>
@@ -760,32 +784,29 @@ function BrandRail({
  * ================================================================ */
 
 const INSTITUTIONS: Array<{ mono: string; sub: string; full: string; domain: string }> = [
-  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay", domain: "iitb.ac.in" },
+  // Balanced public / private mix — no over-reliance on IITs
+  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University", domain: "manipal.edu" },
+  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University", domain: "lpu.in" },
+  { mono: "VIT", sub: "VELLORE", full: "VIT University", domain: "vit.ac.in" },
+  { mono: "SRM", sub: "CHENNAI", full: "SRM Institute of Science and Technology", domain: "srmist.edu.in" },
+  { mono: "AMITY", sub: "NOIDA", full: "Amity University", domain: "amity.edu" },
+  { mono: "CU", sub: "CHANDIGARH", full: "Chandigarh University", domain: "cuchd.in" },
+  { mono: "JAIN", sub: "BENGALURU", full: "Jain University", domain: "jainuniversity.ac.in" },
+  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University", domain: "kiit.ac.in" },
+  { mono: "PES", sub: "BENGALURU", full: "PES University", domain: "pes.edu" },
+  { mono: "SASTRA", sub: "THANJAVUR", full: "SASTRA University", domain: "sastra.edu" },
+  { mono: "BITS", sub: "PILANI", full: "BITS Pilani", domain: "bits-pilani.ac.in" },
   { mono: "IIT", sub: "DELHI", full: "IIT Delhi", domain: "iitd.ac.in" },
+  { mono: "IIT", sub: "BOMBAY", full: "IIT Bombay", domain: "iitb.ac.in" },
   { mono: "IIT", sub: "MADRAS", full: "IIT Madras", domain: "iitm.ac.in" },
   { mono: "IIT", sub: "KHARAGPUR", full: "IIT Kharagpur", domain: "iitkgp.ac.in" },
-  { mono: "IIT", sub: "KANPUR", full: "IIT Kanpur", domain: "iitk.ac.in" },
-  { mono: "IIT", sub: "ROORKEE", full: "IIT Roorkee", domain: "iitr.ac.in" },
   { mono: "NIT", sub: "TRICHY", full: "NIT Trichy", domain: "nitt.edu" },
-  { mono: "NIT", sub: "WARANGAL", full: "NIT Warangal", domain: "nitw.ac.in" },
-  { mono: "NIT", sub: "SURATHKAL", full: "NIT Surathkal", domain: "nitk.ac.in" },
-  { mono: "BITS", sub: "PILANI", full: "BITS Pilani", domain: "bits-pilani.ac.in" },
-  { mono: "VIT", sub: "VELLORE", full: "VIT Vellore", domain: "vit.ac.in" },
-  { mono: "MAHE", sub: "MANIPAL", full: "Manipal University", domain: "manipal.edu" },
-  { mono: "SRM", sub: "CHENNAI", full: "SRM University", domain: "srmist.edu.in" },
-  { mono: "LPU", sub: "PUNJAB", full: "Lovely Professional University", domain: "lpu.in" },
-  { mono: "KIIT", sub: "BHUBANESWAR", full: "KIIT University", domain: "kiit.ac.in" },
-  { mono: "VTU", sub: "BELAGAVI", full: "VTU Belagavi", domain: "vtu.ac.in" },
-  { mono: "DTU", sub: "DELHI", full: "DTU Delhi", domain: "dtu.ac.in" },
-  { mono: "JU", sub: "KOLKATA", full: "Jadavpur University", domain: "jaduniv.edu.in" },
-  { mono: "AU", sub: "CHENNAI", full: "Anna University", domain: "annauniv.edu" },
+  { mono: "IIIT", sub: "HYDERABAD", full: "IIIT Hyderabad", domain: "iiit.ac.in" },
   { mono: "AVV", sub: "COIMBATORE", full: "Amrita Vishwa Vidyapeetham", domain: "amrita.edu" },
-  { mono: "PES", sub: "BENGALURU", full: "PES University", domain: "pes.edu" },
-  { mono: "RVCE", sub: "BENGALURU", full: "RV College of Engineering", domain: "rvce.edu.in" },
-  { mono: "MSRIT", sub: "BENGALURU", full: "MS Ramaiah Institute", domain: "msrit.edu" },
-  { mono: "OU", sub: "HYDERABAD", full: "Osmania University", domain: "osmania.ac.in" },
-  { mono: "JNTU", sub: "HYDERABAD", full: "JNTU Hyderabad", domain: "jntuh.ac.in" },
+  { mono: "DTU", sub: "DELHI", full: "Delhi Technological University", domain: "dtu.ac.in" },
+  { mono: "AU", sub: "CHENNAI", full: "Anna University", domain: "annauniv.edu" },
 ];
+
 
 function InstitutionLogo({ inst }: { inst: (typeof INSTITUTIONS)[number] }) {
   const [errored, setErrored] = React.useState(false);
@@ -859,7 +880,7 @@ export function LearnerInstitutions() {
       <div className="relative [mask-image:linear-gradient(90deg,transparent,black_6%,black_94%,transparent)]">
         <div
           className="flex gap-3 md:gap-4 py-3 will-change-transform"
-          style={{ animation: "campus-rail 40s linear infinite" }}
+          style={{ animation: "campus-rail 28s linear infinite" }}
         >
           {doubled.map((inst, i) => (
             <div

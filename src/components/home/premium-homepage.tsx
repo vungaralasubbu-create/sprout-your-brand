@@ -360,9 +360,9 @@ function TechnologyLandscape() {
       </Container>
 
       <div className="relative mt-10 flex flex-col gap-4 [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
-        <MarqueeRow items={large} speed={70} size="lg" />
-        <MarqueeRow items={medium} speed={55} size="md" reverse />
-        <MarqueeRow items={skills} speed={45} size="sm" />
+        <MarqueeRow items={large} speed={48} size="lg" />
+        <MarqueeRow items={medium} speed={38} size="md" reverse />
+        <MarqueeRow items={skills} speed={32} size="sm" />
       </div>
 
       <Container>
