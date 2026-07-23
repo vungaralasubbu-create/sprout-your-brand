@@ -160,7 +160,7 @@ function HeroUniverse() {
       />
 
       <Container>
-        <div className="grid gap-10 items-center lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+        <div className="grid grid-cols-1 gap-10 items-center lg:grid-cols-[1.05fr_1fr] lg:gap-16">
           <div className="flex flex-col gap-6">
             <div className="inline-flex items-center gap-2 text-label text-primary">
               <span className="size-1.5 rounded-full bg-[var(--brand-cyan)] cat-pulse" />
@@ -691,7 +691,7 @@ function GenerativeAISpotlight() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <Reveal>
             <div
               key={activeProgram.slug}
@@ -858,7 +858,7 @@ function LearningDirection() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.2fr]">
           <div className="flex flex-col gap-3">
             {DIRECTIONS.map((d) => {
               const isActive = d.id === active;
@@ -1145,7 +1145,7 @@ function SkillsNetwork() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr] items-center">
           <div className="relative aspect-square w-full max-w-[560px] mx-auto">
             <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full">
               <circle cx="100" cy="100" r="70" fill="none" stroke="oklch(0.7 0.05 240 / 0.25)" strokeWidth="0.3" strokeDasharray="1 2" className="cat-rotate-slow" />
@@ -1581,7 +1581,7 @@ function GlintrEcosystem() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] items-center">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.1fr] items-center">
           <div className="relative aspect-square w-full max-w-[520px] mx-auto">
             <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full">
               {(Object.keys(ECOSYSTEM) as Array<keyof typeof ECOSYSTEM>).map(
