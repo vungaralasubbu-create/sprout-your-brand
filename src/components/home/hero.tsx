@@ -27,7 +27,7 @@ export function HomeHero() {
         }}
       />
       <Container>
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
           <div className="flex flex-col gap-5">
             <h1 className="text-hero text-balance">
               Your Sales Skills.<br />
