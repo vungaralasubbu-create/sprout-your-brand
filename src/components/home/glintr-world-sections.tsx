@@ -661,10 +661,11 @@ export function CertificationEcosystem() {
         </div>
       </Container>
 
-      {/* Two rails */}
+      {/* Two rails moving in opposite directions for a richer premium effect */}
       <div className="relative flex flex-col gap-3 [mask-image:linear-gradient(90deg,transparent,black_6%,black_94%,transparent)]">
-        <BrandRail items={rail1} speed={55} isHighlighted={isHighlighted} />
-        <BrandRail items={rail2} speed={45} reverse isHighlighted={isHighlighted} />
+        <BrandRail items={rail1} speed={38} isHighlighted={isHighlighted} />
+        <BrandRail items={rail2} speed={32} reverse isHighlighted={isHighlighted} />
+
       </div>
 
       <Container>
