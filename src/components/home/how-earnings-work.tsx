@@ -53,7 +53,7 @@ export function HowEarningsWork() {
           }
           description="Full visibility from the moment you share a program to the moment the payout hits your account."
         />
-        <div className="mt-12 grid gap-10 lg:grid-cols-[1.1fr_1fr] items-start">
+        <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_1fr] items-start">
           <Timeline steps={steps} />
           <article className="card-elevated p-6 md:p-8">
             <h3 className="font-display text-xl font-semibold">
