@@ -858,7 +858,7 @@ function LearningDirection() {
           </div>
         </Reveal>
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.2fr]">
           <div className="flex flex-col gap-3">
             {DIRECTIONS.map((d) => {
               const isActive = d.id === active;
