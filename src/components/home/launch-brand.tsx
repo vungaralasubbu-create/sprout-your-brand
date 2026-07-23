@@ -40,7 +40,7 @@ export function LaunchBrandSection() {
         }}
       />
       <Container className="relative py-16 md:py-20 lg:py-24">
-        <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.05fr_1fr] lg:items-center">
           <div className="flex flex-col gap-6 text-white">
             <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
               Launch Your EdTech Brand{" "}
