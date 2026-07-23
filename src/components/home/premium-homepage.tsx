@@ -160,7 +160,7 @@ function HeroUniverse() {
       />
 
       <Container>
-        <div className="grid gap-10 items-center lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+        <div className="grid grid-cols-1 gap-10 items-center lg:grid-cols-[1.05fr_1fr] lg:gap-16">
           <div className="flex flex-col gap-6">
             <div className="inline-flex items-center gap-2 text-label text-primary">
               <span className="size-1.5 rounded-full bg-[var(--brand-cyan)] cat-pulse" />
